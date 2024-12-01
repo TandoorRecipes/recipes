@@ -146,10 +146,15 @@ export function KeywordFromJSONTyped(json: any, ignoreDiscriminator: boolean): K
     };
 }
 
-export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'created_at'|'updated_at'|'full_name'> | null): any {
+export function KeywordToJSON(json: any): Keyword {
+    return KeywordToJSONTyped(json, false);
+}
+
+export function KeywordToJSONTyped(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'created_at'|'updated_at'|'full_name'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -157,15 +162,4 @@ export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|
         'description': value['description'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiKeywordListRequest, PaginatedKeywordList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiKeywordListRequest = {}): Promise<PaginatedKeywordList> {
-    const api = new ApiApi()
-    return api.apiKeywordList(requestParameters)
-}

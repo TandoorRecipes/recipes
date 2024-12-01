@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
 import {
     SpaceNavTextColorEnumFromJSON,
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
+    SpaceNavTextColorEnumToJSONTyped,
 } from './SpaceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { SpaceThemeEnum } from './SpaceThemeEnum';
 import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
+    SpaceThemeEnumToJSONTyped,
 } from './SpaceThemeEnum';
 
 /**
@@ -263,10 +268,15 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null): any {
+export function PatchedSpaceToJSON(json: any): PatchedSpace {
+    return PatchedSpaceToJSONTyped(json, false);
+}
+
+export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -288,15 +298,4 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'created_by'|'crea
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedSpaceListRequest, PaginatedPatchedSpaceList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedSpaceListRequest = {}): Promise<PaginatedPatchedSpaceList> {
-    const api = new ApiApi()
-    return api.apiPatchedSpaceList(requestParameters)
-}

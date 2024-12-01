@@ -13,12 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { TypeEnum } from './TypeEnum';
+import type { AutomationTypeEnum } from './AutomationTypeEnum';
 import {
-    TypeEnumFromJSON,
-    TypeEnumFromJSONTyped,
-    TypeEnumToJSON,
-} from './TypeEnum';
+    AutomationTypeEnumFromJSON,
+    AutomationTypeEnumFromJSONTyped,
+    AutomationTypeEnumToJSON,
+    AutomationTypeEnumToJSONTyped,
+} from './AutomationTypeEnum';
 
 /**
  * 
@@ -34,10 +35,10 @@ export interface Automation {
     id?: number;
     /**
      * 
-     * @type {TypeEnum}
+     * @type {AutomationTypeEnum}
      * @memberof Automation
      */
-    type: TypeEnum;
+    type: AutomationTypeEnum;
     /**
      * 
      * @type {string}
@@ -110,7 +111,7 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'type': TypeEnumFromJSON(json['type']),
+        'type': AutomationTypeEnumFromJSON(json['type']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'param1': json['param_1'] == null ? undefined : json['param_1'],
@@ -122,14 +123,19 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function AutomationToJSON(value?: Omit<Automation, 'created_by'> | null): any {
+export function AutomationToJSON(json: any): Automation {
+    return AutomationToJSONTyped(json, false);
+}
+
+export function AutomationToJSONTyped(value?: Omit<Automation, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
-        'type': TypeEnumToJSON(value['type']),
+        'type': AutomationTypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],
         'param_1': value['param1'],
@@ -139,15 +145,4 @@ export function AutomationToJSON(value?: Omit<Automation, 'created_by'> | null):
         'disabled': value['disabled'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiAutomationListRequest, PaginatedAutomationList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiAutomationListRequest = {}): Promise<PaginatedAutomationList> {
-    const api = new ApiApi()
-    return api.apiAutomationList(requestParameters)
-}

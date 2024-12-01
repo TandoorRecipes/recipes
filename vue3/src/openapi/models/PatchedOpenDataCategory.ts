@@ -18,6 +18,7 @@ import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -131,10 +132,15 @@ export function PatchedOpenDataCategoryFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedOpenDataCategoryToJSON(value?: Omit<PatchedOpenDataCategory, 'created_by'> | null): any {
+export function PatchedOpenDataCategoryToJSON(json: any): PatchedOpenDataCategory {
+    return PatchedOpenDataCategoryToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataCategoryToJSONTyped(value?: Omit<PatchedOpenDataCategory, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -145,15 +151,4 @@ export function PatchedOpenDataCategoryToJSON(value?: Omit<PatchedOpenDataCatego
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedOpenDataCategoryListRequest, PaginatedPatchedOpenDataCategoryList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedOpenDataCategoryListRequest = {}): Promise<PaginatedPatchedOpenDataCategoryList> {
-    const api = new ApiApi()
-    return api.apiPatchedOpenDataCategoryList(requestParameters)
-}

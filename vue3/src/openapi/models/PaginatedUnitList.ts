@@ -18,6 +18,7 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedUnitListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedUnitListToJSON(value?: PaginatedUnitList | null): any {
+export function PaginatedUnitListToJSON(json: any): PaginatedUnitList {
+    return PaginatedUnitListToJSONTyped(json, false);
+}
+
+export function PaginatedUnitListToJSONTyped(value?: PaginatedUnitList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedUnitListToJSON(value?: PaginatedUnitList | null): any {
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedUnitListListRequest, PaginatedPaginatedUnitListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedUnitListListRequest = {}): Promise<PaginatedPaginatedUnitListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedUnitListList(requestParameters)
-}

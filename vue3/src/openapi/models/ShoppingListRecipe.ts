@@ -110,10 +110,15 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function ShoppingListRecipeToJSON(value?: Omit<ShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null): any {
+export function ShoppingListRecipeToJSON(json: any): ShoppingListRecipe {
+    return ShoppingListRecipeToJSONTyped(json, false);
+}
+
+export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -122,15 +127,4 @@ export function ShoppingListRecipeToJSON(value?: Omit<ShoppingListRecipe, 'recip
         'servings': value['servings'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiShoppingListRecipeListRequest, PaginatedShoppingListRecipeList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiShoppingListRecipeListRequest = {}): Promise<PaginatedShoppingListRecipeList> {
-    const api = new ApiApi()
-    return api.apiShoppingListRecipeList(requestParameters)
-}

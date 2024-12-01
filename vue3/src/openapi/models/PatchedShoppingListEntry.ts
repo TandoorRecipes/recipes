@@ -18,24 +18,28 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeFromJSONTyped,
     ShoppingListRecipeToJSON,
+    ShoppingListRecipeToJSONTyped,
 } from './ShoppingListRecipe';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -157,10 +161,15 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'> | null): any {
+export function PatchedShoppingListEntryToJSON(json: any): PatchedShoppingListEntry {
+    return PatchedShoppingListEntryToJSONTyped(json, false);
+}
+
+export function PatchedShoppingListEntryToJSONTyped(value?: Omit<PatchedShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -174,15 +183,4 @@ export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListE
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedShoppingListEntryListRequest, PaginatedPatchedShoppingListEntryList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedShoppingListEntryListRequest = {}): Promise<PaginatedPatchedShoppingListEntryList> {
-    const api = new ApiApi()
-    return api.apiPatchedShoppingListEntryList(requestParameters)
-}

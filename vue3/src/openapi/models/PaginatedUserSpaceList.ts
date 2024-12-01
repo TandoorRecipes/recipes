@@ -18,6 +18,7 @@ import {
     UserSpaceFromJSON,
     UserSpaceFromJSONTyped,
     UserSpaceToJSON,
+    UserSpaceToJSONTyped,
 } from './UserSpace';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedUserSpaceListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedUserSpaceListToJSON(value?: PaginatedUserSpaceList | null): any {
+export function PaginatedUserSpaceListToJSON(json: any): PaginatedUserSpaceList {
+    return PaginatedUserSpaceListToJSONTyped(json, false);
+}
+
+export function PaginatedUserSpaceListToJSONTyped(value?: PaginatedUserSpaceList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedUserSpaceListToJSON(value?: PaginatedUserSpaceList | nu
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedUserSpaceListListRequest, PaginatedPaginatedUserSpaceListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedUserSpaceListListRequest = {}): Promise<PaginatedPaginatedUserSpaceListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedUserSpaceListList(requestParameters)
-}

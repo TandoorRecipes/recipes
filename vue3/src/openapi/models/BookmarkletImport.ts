@@ -79,10 +79,15 @@ export function BookmarkletImportFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function BookmarkletImportToJSON(value?: Omit<BookmarkletImport, 'created_by'|'created_at'> | null): any {
+export function BookmarkletImportToJSON(json: any): BookmarkletImport {
+    return BookmarkletImportToJSONTyped(json, false);
+}
+
+export function BookmarkletImportToJSONTyped(value?: Omit<BookmarkletImport, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -90,15 +95,4 @@ export function BookmarkletImportToJSON(value?: Omit<BookmarkletImport, 'created
         'html': value['html'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiBookmarkletImportListRequest, PaginatedBookmarkletImportList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiBookmarkletImportListRequest = {}): Promise<PaginatedBookmarkletImportList> {
-    const api = new ApiApi()
-    return api.apiBookmarkletImportList(requestParameters)
-}

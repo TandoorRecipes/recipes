@@ -18,6 +18,7 @@ import {
     SyncFromJSON,
     SyncFromJSONTyped,
     SyncToJSON,
+    SyncToJSONTyped,
 } from './Sync';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedSyncListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedSyncListToJSON(value?: PaginatedSyncList | null): any {
+export function PaginatedSyncListToJSON(json: any): PaginatedSyncList {
+    return PaginatedSyncListToJSONTyped(json, false);
+}
+
+export function PaginatedSyncListToJSONTyped(value?: PaginatedSyncList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedSyncListToJSON(value?: PaginatedSyncList | null): any {
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedSyncListListRequest, PaginatedPaginatedSyncListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedSyncListListRequest = {}): Promise<PaginatedPaginatedSyncListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedSyncListList(requestParameters)
-}

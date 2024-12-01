@@ -18,6 +18,7 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -103,25 +104,19 @@ export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function UserFileViewToJSON(value?: Omit<UserFileView, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null): any {
+export function UserFileViewToJSON(json: any): UserFileView {
+    return UserFileViewToJSONTyped(json, false);
+}
+
+export function UserFileViewToJSONTyped(value?: Omit<UserFileView, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'name': value['name'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiUserFileViewListRequest, PaginatedUserFileViewList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiUserFileViewListRequest = {}): Promise<PaginatedUserFileViewList> {
-    const api = new ApiApi()
-    return api.apiUserFileViewList(requestParameters)
-}

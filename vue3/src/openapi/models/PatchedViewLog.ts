@@ -69,25 +69,19 @@ export function PatchedViewLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedViewLogToJSON(value?: Omit<PatchedViewLog, 'created_by'|'created_at'> | null): any {
+export function PatchedViewLogToJSON(json: any): PatchedViewLog {
+    return PatchedViewLogToJSONTyped(json, false);
+}
+
+export function PatchedViewLogToJSONTyped(value?: Omit<PatchedViewLog, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'recipe': value['recipe'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedViewLogListRequest, PaginatedPatchedViewLogList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedViewLogListRequest = {}): Promise<PaginatedPatchedViewLogList> {
-    const api = new ApiApi()
-    return api.apiPatchedViewLogList(requestParameters)
-}

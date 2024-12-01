@@ -18,24 +18,28 @@ import {
     OpenDataFoodPropertyFromJSON,
     OpenDataFoodPropertyFromJSONTyped,
     OpenDataFoodPropertyToJSON,
+    OpenDataFoodPropertyToJSONTyped,
 } from './OpenDataFoodProperty';
 import type { OpenDataUnit } from './OpenDataUnit';
 import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
+    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataCategory } from './OpenDataCategory';
 import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
+    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -219,10 +223,15 @@ export function PatchedOpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedOpenDataFoodToJSON(value?: Omit<PatchedOpenDataFood, 'created_by'> | null): any {
+export function PatchedOpenDataFoodToJSON(json: any): PatchedOpenDataFood {
+    return PatchedOpenDataFoodToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataFoodToJSONTyped(value?: Omit<PatchedOpenDataFood, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -243,15 +252,4 @@ export function PatchedOpenDataFoodToJSON(value?: Omit<PatchedOpenDataFood, 'cre
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedOpenDataFoodListRequest, PaginatedPatchedOpenDataFoodList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedOpenDataFoodListRequest = {}): Promise<PaginatedPatchedOpenDataFoodList> {
-    const api = new ApiApi()
-    return api.apiPatchedOpenDataFoodList(requestParameters)
-}

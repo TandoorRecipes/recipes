@@ -65,25 +65,19 @@ export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function ShoppingListEntryBulkToJSON(value?: Omit<ShoppingListEntryBulk, 'timestamp'> | null): any {
+export function ShoppingListEntryBulkToJSON(json: any): ShoppingListEntryBulk {
+    return ShoppingListEntryBulkToJSONTyped(json, false);
+}
+
+export function ShoppingListEntryBulkToJSONTyped(value?: Omit<ShoppingListEntryBulk, 'timestamp'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'ids': value['ids'],
         'checked': value['checked'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiShoppingListEntryBulkListRequest, PaginatedShoppingListEntryBulkList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiShoppingListEntryBulkListRequest = {}): Promise<PaginatedShoppingListEntryBulkList> {
-    const api = new ApiApi()
-    return api.apiShoppingListEntryBulkList(requestParameters)
-}

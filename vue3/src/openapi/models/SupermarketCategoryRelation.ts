@@ -18,6 +18,7 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 
 /**
@@ -78,10 +79,15 @@ export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function SupermarketCategoryRelationToJSON(value?: SupermarketCategoryRelation | null): any {
+export function SupermarketCategoryRelationToJSON(json: any): SupermarketCategoryRelation {
+    return SupermarketCategoryRelationToJSONTyped(json, false);
+}
+
+export function SupermarketCategoryRelationToJSONTyped(value?: SupermarketCategoryRelation | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -90,15 +96,4 @@ export function SupermarketCategoryRelationToJSON(value?: SupermarketCategoryRel
         'order': value['order'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiSupermarketCategoryRelationListRequest, PaginatedSupermarketCategoryRelationList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiSupermarketCategoryRelationListRequest = {}): Promise<PaginatedSupermarketCategoryRelationList> {
-    const api = new ApiApi()
-    return api.apiSupermarketCategoryRelationList(requestParameters)
-}

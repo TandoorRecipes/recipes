@@ -96,10 +96,15 @@ export function FoodInheritFieldFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function FoodInheritFieldToJSON(value?: FoodInheritField | null): any {
+export function FoodInheritFieldToJSON(json: any): FoodInheritField {
+    return FoodInheritFieldToJSONTyped(json, false);
+}
+
+export function FoodInheritFieldToJSONTyped(value?: FoodInheritField | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -107,15 +112,4 @@ export function FoodInheritFieldToJSON(value?: FoodInheritField | null): any {
         'field': value['field'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiFoodInheritFieldListRequest, PaginatedFoodInheritFieldList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiFoodInheritFieldListRequest = {}): Promise<PaginatedFoodInheritFieldList> {
-    const api = new ApiApi()
-    return api.apiFoodInheritFieldList(requestParameters)
-}

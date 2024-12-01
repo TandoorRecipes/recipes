@@ -2,8 +2,10 @@
     <v-tabs v-model="currentTab">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
-            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{useShoppingStore().stats.countUnchecked}})</span></v-tab>
-        <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Recipes') }} ({{useShoppingStore().getAssociatedRecipes().length}})</span></v-tab>
+            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().stats.countUnchecked }})</span></v-tab>
+        <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{
+                $t('Recipes')
+            }} ({{ useShoppingStore().getAssociatedRecipes().length }})</span></v-tab>
 
         <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
@@ -40,7 +42,7 @@
                     <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')"
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
                 </v-list-item>
-                <v-list-subheader>{{$t('Information')}}</v-list-subheader>
+                <v-list-subheader>{{ $t('Information') }}</v-list-subheader>
                 <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('Recipe')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_recipe"></v-switch>
                 </v-list-item>
@@ -49,6 +51,9 @@
                 </v-list-item>
                 <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('CreatedBy')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_created_by"></v-switch>
+                </v-list-item>
+                <v-list-item v-if="useUserPreferenceStore().serverSettings.debug">
+                    <v-switch color="primary" hide-details label="Show Debug Info" v-model="useUserPreferenceStore().deviceSettings.shopping_show_debug"></v-switch>
                 </v-list-item>
 
             </v-list>
@@ -60,6 +65,16 @@
             <v-container>
                 <v-row>
                     <v-col>
+                        <v-alert v-if="useShoppingStore().hasFailedItems()" color="warning" class="mb-2">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-link-slash"></v-icon>
+                            </template>
+                            {{ $t('ShoppingBackgroundSyncWarning') }}
+                            <template #append>
+                                {{ useShoppingStore().itemCheckSyncQueue.length }}
+                            </template>
+                        </v-alert>
+
                         <v-text-field :label="$t('Shopping_input_placeholder')" density="compact" @keyup.enter="addIngredient()" v-model="ingredientInput" hide-details>
                             <template #append>
                                 <v-btn
@@ -92,10 +107,11 @@
                     </v-col>
                 </v-row>
 
-                <v-row>
+                <v-row v-if="useUserPreferenceStore().deviceSettings.shopping_show_debug">
                     <v-col cols="12" md="4">
                         <v-card>
                             <v-card-title>Auto Sync Debug</v-card-title>
+                            <v-btn @click="useShoppingStore().autoSync()">Run Sync</v-btn>
                             <v-card-text>
                                 <v-list>
                                     <v-list-item>currentlyUpdating: {{ useShoppingStore().currentlyUpdating }}</v-list-item>
@@ -148,7 +164,7 @@
                                         {{ r.recipeName }}
                                         <template #append>
                                             <v-btn icon="$delete" color="delete"></v-btn>
-                                            <number-scaler-dialog ></number-scaler-dialog>
+                                            <number-scaler-dialog></number-scaler-dialog>
                                         </template>
                                     </v-list-item>
                                 </v-list>
@@ -208,6 +224,13 @@ onMounted(() => {
     useShoppingStore().refreshFromAPI()
 
     autoSyncLoop()
+
+    // refresh selected supermarket since category ordering might have changed
+    if (Object.keys(useUserPreferenceStore().deviceSettings.shopping_selected_supermarket).length > 0) {
+        new ApiApi().apiSupermarketRetrieve({id: useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.id!}).then(r => {
+            useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = r
+        })
+    }
 })
 
 /**
@@ -221,7 +244,7 @@ function addIngredient() {
             amount: Math.max(r.amount, 1),
             unit: (r.unit != null) ? {name: r.unit} as Unit : null,
             food: {name: r.food} as Food,
-        } as ShoppingListEntry)
+        } as ShoppingListEntry, true)
         ingredientInput.value = ''
 
         ingredientInputIcon.value = 'fa-solid fa-check'

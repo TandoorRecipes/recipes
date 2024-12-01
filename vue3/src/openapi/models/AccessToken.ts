@@ -87,10 +87,15 @@ export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function AccessTokenToJSON(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null): any {
+export function AccessTokenToJSON(json: any): AccessToken {
+    return AccessTokenToJSONTyped(json, false);
+}
+
+export function AccessTokenToJSONTyped(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -98,15 +103,4 @@ export function AccessTokenToJSON(value?: Omit<AccessToken, 'token'|'created'|'u
         'scope': value['scope'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiAccessTokenListRequest, PaginatedAccessTokenList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiAccessTokenListRequest = {}): Promise<PaginatedAccessTokenList> {
-    const api = new ApiApi()
-    return api.apiAccessTokenList(requestParameters)
-}

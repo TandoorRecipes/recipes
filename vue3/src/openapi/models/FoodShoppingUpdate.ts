@@ -18,6 +18,7 @@ import {
     DeleteEnumFromJSON,
     DeleteEnumFromJSONTyped,
     DeleteEnumToJSON,
+    DeleteEnumToJSONTyped,
 } from './DeleteEnum';
 
 /**
@@ -81,10 +82,15 @@ export function FoodShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function FoodShoppingUpdateToJSON(value?: FoodShoppingUpdate | null): any {
+export function FoodShoppingUpdateToJSON(json: any): FoodShoppingUpdate {
+    return FoodShoppingUpdateToJSONTyped(json, false);
+}
+
+export function FoodShoppingUpdateToJSONTyped(value?: FoodShoppingUpdate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -93,15 +99,4 @@ export function FoodShoppingUpdateToJSON(value?: FoodShoppingUpdate | null): any
         'delete': DeleteEnumToJSON(value['_delete']),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiFoodShoppingUpdateListRequest, PaginatedFoodShoppingUpdateList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiFoodShoppingUpdateListRequest = {}): Promise<PaginatedFoodShoppingUpdateList> {
-    const api = new ApiApi()
-    return api.apiFoodShoppingUpdateList(requestParameters)
-}

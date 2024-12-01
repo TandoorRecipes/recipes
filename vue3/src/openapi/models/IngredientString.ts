@@ -49,24 +49,18 @@ export function IngredientStringFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function IngredientStringToJSON(value?: IngredientString | null): any {
+export function IngredientStringToJSON(json: any): IngredientString {
+    return IngredientStringToJSONTyped(json, false);
+}
+
+export function IngredientStringToJSONTyped(value?: IngredientString | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'text': value['text'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiIngredientStringListRequest, PaginatedIngredientStringList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiIngredientStringListRequest = {}): Promise<PaginatedIngredientStringList> {
-    const api = new ApiApi()
-    return api.apiIngredientStringList(requestParameters)
-}

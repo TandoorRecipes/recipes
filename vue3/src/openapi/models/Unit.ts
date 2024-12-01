@@ -118,10 +118,15 @@ export function UnitFromJSONTyped(json: any, ignoreDiscriminator: boolean): Unit
     };
 }
 
-export function UnitToJSON(value?: Unit | null): any {
+export function UnitToJSON(json: any): Unit {
+    return UnitToJSONTyped(json, false);
+}
+
+export function UnitToJSONTyped(value?: Unit | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -132,15 +137,4 @@ export function UnitToJSON(value?: Unit | null): any {
         'open_data_slug': value['openDataSlug'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiUnitListRequest, PaginatedUnitList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiUnitListRequest = {}): Promise<PaginatedUnitList> {
-    const api = new ApiApi()
-    return api.apiUnitList(requestParameters)
-}

@@ -18,12 +18,14 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -145,10 +147,15 @@ export function PatchedIngredientFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'used_in_recipes'> | null): any {
+export function PatchedIngredientToJSON(json: any): PatchedIngredient {
+    return PatchedIngredientToJSONTyped(json, false);
+}
+
+export function PatchedIngredientToJSONTyped(value?: Omit<PatchedIngredient, 'conversions'|'used_in_recipes'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -164,15 +171,4 @@ export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'convers
         'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedIngredientListRequest, PaginatedPatchedIngredientList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedIngredientListRequest = {}): Promise<PaginatedPatchedIngredientList> {
-    const api = new ApiApi()
-    return api.apiPatchedIngredientList(requestParameters)
-}

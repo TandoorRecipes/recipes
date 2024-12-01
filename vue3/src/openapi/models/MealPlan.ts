@@ -18,18 +18,21 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -166,10 +169,15 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealPlanToJSON(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null): any {
+export function MealPlanToJSON(json: any): MealPlan {
+    return MealPlanToJSONTyped(json, false);
+}
+
+export function MealPlanToJSONTyped(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -183,15 +191,4 @@ export function MealPlanToJSON(value?: Omit<MealPlan, 'note_markdown'|'created_b
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiMealPlanListRequest, PaginatedMealPlanList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiMealPlanListRequest = {}): Promise<PaginatedMealPlanList> {
-    const api = new ApiApi()
-    return api.apiMealPlanList(requestParameters)
-}

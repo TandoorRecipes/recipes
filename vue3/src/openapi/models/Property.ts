@@ -18,6 +18,7 @@ import {
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
+    PropertyTypeToJSONTyped,
 } from './PropertyType';
 
 /**
@@ -105,10 +106,15 @@ export function PropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function PropertyToJSON(value?: Property | null): any {
+export function PropertyToJSON(json: any): Property {
+    return PropertyToJSONTyped(json, false);
+}
+
+export function PropertyToJSONTyped(value?: Property | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -116,15 +122,4 @@ export function PropertyToJSON(value?: Property | null): any {
         'property_type': PropertyTypeToJSON(value['propertyType']),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPropertyListRequest, PaginatedPropertyList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPropertyListRequest = {}): Promise<PaginatedPropertyList> {
-    const api = new ApiApi()
-    return api.apiPropertyList(requestParameters)
-}

@@ -8,7 +8,7 @@ import {IShoppingListFood} from "@/types/Shopping";
 export function isDelayed(entry: ShoppingListEntry){
     // this function is needed because the openapi typescript fetch client always replaces null with undefined, so delayUntil cant be
     // set back to null once it has been delayed once. This will hopefully be fixed at some point, until then un-delaying will set the date to 1997-1-1 00:00
-    return entry.delayUntil !== null && entry.delayUntil > Date.now()
+    return entry.delayUntil != null && entry.delayUntil > new Date()
 }
 
 /**

@@ -18,18 +18,21 @@ import {
     BaseUnitEnumFromJSON,
     BaseUnitEnumFromJSONTyped,
     BaseUnitEnumToJSON,
+    BaseUnitEnumToJSONTyped,
 } from './BaseUnitEnum';
 import type { OpenDataUnitTypeEnum } from './OpenDataUnitTypeEnum';
 import {
     OpenDataUnitTypeEnumFromJSON,
     OpenDataUnitTypeEnumFromJSONTyped,
     OpenDataUnitTypeEnumToJSON,
+    OpenDataUnitTypeEnumToJSONTyped,
 } from './OpenDataUnitTypeEnum';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -164,10 +167,15 @@ export function OpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OpenDataUnitToJSON(value?: Omit<OpenDataUnit, 'created_by'> | null): any {
+export function OpenDataUnitToJSON(json: any): OpenDataUnit {
+    return OpenDataUnitToJSONTyped(json, false);
+}
+
+export function OpenDataUnitToJSONTyped(value?: Omit<OpenDataUnit, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -180,15 +188,4 @@ export function OpenDataUnitToJSON(value?: Omit<OpenDataUnit, 'created_by'> | nu
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataUnitListRequest, PaginatedOpenDataUnitList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataUnitListRequest = {}): Promise<PaginatedOpenDataUnitList> {
-    const api = new ApiApi()
-    return api.apiOpenDataUnitList(requestParameters)
-}

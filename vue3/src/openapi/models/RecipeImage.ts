@@ -55,25 +55,19 @@ export function RecipeImageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function RecipeImageToJSON(value?: RecipeImage | null): any {
+export function RecipeImageToJSON(json: any): RecipeImage {
+    return RecipeImageToJSONTyped(json, false);
+}
+
+export function RecipeImageToJSONTyped(value?: RecipeImage | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'image': value['image'],
         'image_url': value['imageUrl'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiRecipeImageListRequest, PaginatedRecipeImageList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiRecipeImageListRequest = {}): Promise<PaginatedRecipeImageList> {
-    const api = new ApiApi()
-    return api.apiRecipeImageList(requestParameters)
-}

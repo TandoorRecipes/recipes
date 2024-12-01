@@ -18,12 +18,14 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
+    CustomFilterToJSONTyped,
 } from './CustomFilter';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -103,10 +105,15 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'created_by'> | null): any {
+export function PatchedRecipeBookToJSON(json: any): PatchedRecipeBook {
+    return PatchedRecipeBookToJSONTyped(json, false);
+}
+
+export function PatchedRecipeBookToJSONTyped(value?: Omit<PatchedRecipeBook, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -117,15 +124,4 @@ export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'created
         'order': value['order'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedRecipeBookListRequest, PaginatedPatchedRecipeBookList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedRecipeBookListRequest = {}): Promise<PaginatedPatchedRecipeBookList> {
-    const api = new ApiApi()
-    return api.apiPatchedRecipeBookList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
+    PropertyTypeToJSONTyped,
 } from './PropertyType';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedPropertyTypeListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedPropertyTypeListToJSON(value?: PaginatedPropertyTypeList | null): any {
+export function PaginatedPropertyTypeListToJSON(json: any): PaginatedPropertyTypeList {
+    return PaginatedPropertyTypeListToJSONTyped(json, false);
+}
+
+export function PaginatedPropertyTypeListToJSONTyped(value?: PaginatedPropertyTypeList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedPropertyTypeListToJSON(value?: PaginatedPropertyTypeLis
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedPropertyTypeListListRequest, PaginatedPaginatedPropertyTypeListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedPropertyTypeListListRequest = {}): Promise<PaginatedPaginatedPropertyTypeListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedPropertyTypeListList(requestParameters)
-}

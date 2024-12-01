@@ -18,6 +18,7 @@ import {
     ViewLogFromJSON,
     ViewLogFromJSONTyped,
     ViewLogToJSON,
+    ViewLogToJSONTyped,
 } from './ViewLog';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedViewLogListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedViewLogListToJSON(value?: PaginatedViewLogList | null): any {
+export function PaginatedViewLogListToJSON(json: any): PaginatedViewLogList {
+    return PaginatedViewLogListToJSONTyped(json, false);
+}
+
+export function PaginatedViewLogListToJSONTyped(value?: PaginatedViewLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedViewLogListToJSON(value?: PaginatedViewLogList | null):
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedViewLogListListRequest, PaginatedPaginatedViewLogListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedViewLogListListRequest = {}): Promise<PaginatedPaginatedViewLogListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedViewLogListList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     ShoppingListEntryFromJSON,
     ShoppingListEntryFromJSONTyped,
     ShoppingListEntryToJSON,
+    ShoppingListEntryToJSONTyped,
 } from './ShoppingListEntry';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedShoppingListEntryListFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function PaginatedShoppingListEntryListToJSON(value?: PaginatedShoppingListEntryList | null): any {
+export function PaginatedShoppingListEntryListToJSON(json: any): PaginatedShoppingListEntryList {
+    return PaginatedShoppingListEntryListToJSONTyped(json, false);
+}
+
+export function PaginatedShoppingListEntryListToJSONTyped(value?: PaginatedShoppingListEntryList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedShoppingListEntryListToJSON(value?: PaginatedShoppingLi
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedShoppingListEntryListListRequest, PaginatedPaginatedShoppingListEntryListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedShoppingListEntryListListRequest = {}): Promise<PaginatedPaginatedShoppingListEntryListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedShoppingListEntryListList(requestParameters)
-}

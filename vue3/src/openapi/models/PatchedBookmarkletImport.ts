@@ -76,10 +76,15 @@ export function PatchedBookmarkletImportFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletImport, 'created_by'|'created_at'> | null): any {
+export function PatchedBookmarkletImportToJSON(json: any): PatchedBookmarkletImport {
+    return PatchedBookmarkletImportToJSONTyped(json, false);
+}
+
+export function PatchedBookmarkletImportToJSONTyped(value?: Omit<PatchedBookmarkletImport, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -87,15 +92,4 @@ export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletIm
         'html': value['html'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedBookmarkletImportListRequest, PaginatedPatchedBookmarkletImportList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedBookmarkletImportListRequest = {}): Promise<PaginatedPatchedBookmarkletImportList> {
-    const api = new ApiApi()
-    return api.apiPatchedBookmarkletImportList(requestParameters)
-}

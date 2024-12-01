@@ -18,6 +18,7 @@ import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -138,10 +139,15 @@ export function PatchedOpenDataPropertyFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedOpenDataPropertyToJSON(value?: Omit<PatchedOpenDataProperty, 'created_by'> | null): any {
+export function PatchedOpenDataPropertyToJSON(json: any): PatchedOpenDataProperty {
+    return PatchedOpenDataPropertyToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataPropertyToJSONTyped(value?: Omit<PatchedOpenDataProperty, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -153,15 +159,4 @@ export function PatchedOpenDataPropertyToJSON(value?: Omit<PatchedOpenDataProper
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedOpenDataPropertyListRequest, PaginatedPatchedOpenDataPropertyList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedOpenDataPropertyListRequest = {}): Promise<PaginatedPatchedOpenDataPropertyList> {
-    const api = new ApiApi()
-    return api.apiPatchedOpenDataPropertyList(requestParameters)
-}

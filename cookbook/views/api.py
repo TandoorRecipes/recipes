@@ -1980,6 +1980,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['privacy_url'] = settings.PRIVACY_URL
         s['imprint_url'] = settings.IMPRINT_URL
         s['hosted'] = settings.HOSTED
+        s['debug'] = settings.DEBUG
 
         return Response(ServerSettingsSerializer(s, many=False).data)
 

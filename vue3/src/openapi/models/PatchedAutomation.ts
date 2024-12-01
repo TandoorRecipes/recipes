@@ -13,12 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { TypeEnum } from './TypeEnum';
+import type { AutomationTypeEnum } from './AutomationTypeEnum';
 import {
-    TypeEnumFromJSON,
-    TypeEnumFromJSONTyped,
-    TypeEnumToJSON,
-} from './TypeEnum';
+    AutomationTypeEnumFromJSON,
+    AutomationTypeEnumFromJSONTyped,
+    AutomationTypeEnumToJSON,
+    AutomationTypeEnumToJSONTyped,
+} from './AutomationTypeEnum';
 
 /**
  * 
@@ -34,10 +35,10 @@ export interface PatchedAutomation {
     id?: number;
     /**
      * 
-     * @type {TypeEnum}
+     * @type {AutomationTypeEnum}
      * @memberof PatchedAutomation
      */
-    type?: TypeEnum;
+    type?: AutomationTypeEnum;
     /**
      * 
      * @type {string}
@@ -108,7 +109,7 @@ export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'type': json['type'] == null ? undefined : TypeEnumFromJSON(json['type']),
+        'type': json['type'] == null ? undefined : AutomationTypeEnumFromJSON(json['type']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'param1': json['param_1'] == null ? undefined : json['param_1'],
@@ -120,14 +121,19 @@ export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'created_by'> | null): any {
+export function PatchedAutomationToJSON(json: any): PatchedAutomation {
+    return PatchedAutomationToJSONTyped(json, false);
+}
+
+export function PatchedAutomationToJSONTyped(value?: Omit<PatchedAutomation, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
-        'type': TypeEnumToJSON(value['type']),
+        'type': AutomationTypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],
         'param_1': value['param1'],
@@ -137,15 +143,4 @@ export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'created
         'disabled': value['disabled'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedAutomationListRequest, PaginatedPatchedAutomationList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedAutomationListRequest = {}): Promise<PaginatedPatchedAutomationList> {
-    const api = new ApiApi()
-    return api.apiPatchedAutomationList(requestParameters)
-}

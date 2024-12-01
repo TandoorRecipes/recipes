@@ -18,6 +18,7 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -107,10 +108,15 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     };
 }
 
-export function CookLogToJSON(value?: Omit<CookLog, 'created_by'|'updated_at'> | null): any {
+export function CookLogToJSON(json: any): CookLog {
+    return CookLogToJSONTyped(json, false);
+}
+
+export function CookLogToJSONTyped(value?: Omit<CookLog, 'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -121,15 +127,4 @@ export function CookLogToJSON(value?: Omit<CookLog, 'created_by'|'updated_at'> |
         'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiCookLogListRequest, PaginatedCookLogList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiCookLogListRequest = {}): Promise<PaginatedCookLogList> {
-    const api = new ApiApi()
-    return api.apiCookLogList(requestParameters)
-}

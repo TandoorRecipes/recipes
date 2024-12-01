@@ -69,10 +69,15 @@ export function RecipeShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function RecipeShoppingUpdateToJSON(value?: RecipeShoppingUpdate | null): any {
+export function RecipeShoppingUpdateToJSON(json: any): RecipeShoppingUpdate {
+    return RecipeShoppingUpdateToJSONTyped(json, false);
+}
+
+export function RecipeShoppingUpdateToJSONTyped(value?: RecipeShoppingUpdate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -81,15 +86,4 @@ export function RecipeShoppingUpdateToJSON(value?: RecipeShoppingUpdate | null):
         'servings': value['servings'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiRecipeShoppingUpdateListRequest, PaginatedRecipeShoppingUpdateList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiRecipeShoppingUpdateListRequest = {}): Promise<PaginatedRecipeShoppingUpdateList> {
-    const api = new ApiApi()
-    return api.apiRecipeShoppingUpdateList(requestParameters)
-}

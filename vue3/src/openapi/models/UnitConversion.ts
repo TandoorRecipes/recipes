@@ -18,12 +18,14 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -115,10 +117,15 @@ export function UnitConversionFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UnitConversionToJSON(value?: Omit<UnitConversion, 'name'> | null): any {
+export function UnitConversionToJSON(json: any): UnitConversion {
+    return UnitConversionToJSONTyped(json, false);
+}
+
+export function UnitConversionToJSONTyped(value?: Omit<UnitConversion, 'name'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -130,15 +137,4 @@ export function UnitConversionToJSON(value?: Omit<UnitConversion, 'name'> | null
         'open_data_slug': value['openDataSlug'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiUnitConversionListRequest, PaginatedUnitConversionList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiUnitConversionListRequest = {}): Promise<PaginatedUnitConversionList> {
-    const api = new ApiApi()
-    return api.apiUnitConversionList(requestParameters)
-}

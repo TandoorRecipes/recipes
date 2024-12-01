@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 import type { Step } from './Step';
 import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
+    StepToJSONTyped,
 } from './Step';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { NutritionInformation } from './NutritionInformation';
 import {
     NutritionInformationFromJSON,
     NutritionInformationFromJSONTyped,
     NutritionInformationToJSON,
+    NutritionInformationToJSONTyped,
 } from './NutritionInformation';
 
 /**
@@ -249,10 +254,15 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
     };
 }
 
-export function RecipeToJSON(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null): any {
+export function RecipeToJSON(json: any): Recipe {
+    return RecipeToJSONTyped(json, false);
+}
+
+export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -274,15 +284,4 @@ export function RecipeToJSON(value?: Omit<Recipe, 'image'|'created_by'|'created_
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiRecipeListRequest, PaginatedRecipeList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiRecipeListRequest = {}): Promise<PaginatedRecipeList> {
-    const api = new ApiApi()
-    return api.apiRecipeList(requestParameters)
-}

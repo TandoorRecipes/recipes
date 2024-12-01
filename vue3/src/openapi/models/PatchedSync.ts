@@ -90,10 +90,15 @@ export function PatchedSyncFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'created_at'|'updated_at'> | null): any {
+export function PatchedSyncToJSON(json: any): PatchedSync {
+    return PatchedSyncToJSONTyped(json, false);
+}
+
+export function PatchedSyncToJSONTyped(value?: Omit<PatchedSync, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -103,15 +108,4 @@ export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'created_at'|'update
         'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedSyncListRequest, PaginatedPatchedSyncList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedSyncListRequest = {}): Promise<PaginatedPatchedSyncList> {
-    const api = new ApiApi()
-    return api.apiPatchedSyncList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 
 /**
@@ -122,10 +123,15 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'created_by'|'created_at'> | null): any {
+export function InviteLinkToJSON(json: any): InviteLink {
+    return InviteLinkToJSONTyped(json, false);
+}
+
+export function InviteLinkToJSONTyped(value?: Omit<InviteLink, 'uuid'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -137,15 +143,4 @@ export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'created_by'|'c
         'internal_note': value['internalNote'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiInviteLinkListRequest, PaginatedInviteLinkList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiInviteLinkListRequest = {}): Promise<PaginatedInviteLinkList> {
-    const api = new ApiApi()
-    return api.apiInviteLinkList(requestParameters)
-}

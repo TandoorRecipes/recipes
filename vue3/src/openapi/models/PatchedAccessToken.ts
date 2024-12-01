@@ -83,10 +83,15 @@ export function PatchedAccessTokenFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedAccessTokenToJSON(value?: Omit<PatchedAccessToken, 'token'|'created'|'updated'> | null): any {
+export function PatchedAccessTokenToJSON(json: any): PatchedAccessToken {
+    return PatchedAccessTokenToJSONTyped(json, false);
+}
+
+export function PatchedAccessTokenToJSONTyped(value?: Omit<PatchedAccessToken, 'token'|'created'|'updated'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -94,15 +99,4 @@ export function PatchedAccessTokenToJSON(value?: Omit<PatchedAccessToken, 'token
         'scope': value['scope'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedAccessTokenListRequest, PaginatedPatchedAccessTokenList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedAccessTokenListRequest = {}): Promise<PaginatedPatchedAccessTokenList> {
-    const api = new ApiApi()
-    return api.apiPatchedAccessTokenList(requestParameters)
-}

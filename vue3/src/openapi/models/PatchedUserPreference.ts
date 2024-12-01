@@ -18,36 +18,42 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { UserPreferenceNavTextColorEnum } from './UserPreferenceNavTextColorEnum';
 import {
     UserPreferenceNavTextColorEnumFromJSON,
     UserPreferenceNavTextColorEnumFromJSONTyped,
     UserPreferenceNavTextColorEnumToJSON,
+    UserPreferenceNavTextColorEnumToJSONTyped,
 } from './UserPreferenceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { ThemeEnum } from './ThemeEnum';
 import {
     ThemeEnumFromJSON,
     ThemeEnumFromJSONTyped,
     ThemeEnumToJSON,
+    ThemeEnumToJSONTyped,
 } from './ThemeEnum';
 import type { DefaultPageEnum } from './DefaultPageEnum';
 import {
     DefaultPageEnumFromJSON,
     DefaultPageEnumFromJSONTyped,
     DefaultPageEnumToJSON,
+    DefaultPageEnumToJSONTyped,
 } from './DefaultPageEnum';
 
 /**
@@ -283,10 +289,15 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 'food_inherit_default'|'food_children_exist'> | null): any {
+export function PatchedUserPreferenceToJSON(json: any): PatchedUserPreference {
+    return PatchedUserPreferenceToJSONTyped(json, false);
+}
+
+export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPreference, 'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'user': value['user'],
@@ -318,15 +329,4 @@ export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 
         'show_step_ingredients': value['showStepIngredients'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedUserPreferenceListRequest, PaginatedPatchedUserPreferenceList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedUserPreferenceListRequest = {}): Promise<PaginatedPatchedUserPreferenceList> {
-    const api = new ApiApi()
-    return api.apiPatchedUserPreferenceList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
+    StepToJSONTyped,
 } from './Step';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedStepListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedStepListToJSON(value?: PaginatedStepList | null): any {
+export function PaginatedStepListToJSON(json: any): PaginatedStepList {
+    return PaginatedStepListToJSONTyped(json, false);
+}
+
+export function PaginatedStepListToJSONTyped(value?: PaginatedStepList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedStepListToJSON(value?: PaginatedStepList | null): any {
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedStepListListRequest, PaginatedPaginatedStepListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedStepListListRequest = {}): Promise<PaginatedPaginatedStepListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedStepListList(requestParameters)
-}

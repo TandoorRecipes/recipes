@@ -18,6 +18,7 @@ import {
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
+    PropertyTypeToJSONTyped,
 } from './PropertyType';
 
 /**
@@ -103,10 +104,15 @@ export function PatchedPropertyFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedPropertyToJSON(value?: PatchedProperty | null): any {
+export function PatchedPropertyToJSON(json: any): PatchedProperty {
+    return PatchedPropertyToJSONTyped(json, false);
+}
+
+export function PatchedPropertyToJSONTyped(value?: PatchedProperty | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -114,15 +120,4 @@ export function PatchedPropertyToJSON(value?: PatchedProperty | null): any {
         'property_type': PropertyTypeToJSON(value['propertyType']),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedPropertyListRequest, PaginatedPatchedPropertyList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedPropertyListRequest = {}): Promise<PaginatedPatchedPropertyList> {
-    const api = new ApiApi()
-    return api.apiPatchedPropertyList(requestParameters)
-}

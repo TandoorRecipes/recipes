@@ -1,7 +1,7 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 import {useStorage} from "@vueuse/core";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {ApiApi, ServerSettings, Space, UserPreference} from "@/openapi";
+import {ApiApi, ServerSettings, Space, Supermarket, UserPreference} from "@/openapi";
 import {ShoppingGroupingOptions} from "@/types/Shopping";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
@@ -14,10 +14,11 @@ class DeviceSettings {
     shopping_show_delayed_entries = false
     shopping_show_selected_supermarket_only = false
     shopping_selected_grouping = ShoppingGroupingOptions.CATEGORY
-    shopping_selected_supermarket = null
+    shopping_selected_supermarket: Supermarket = {} as Supermarket
     shopping_item_info_created_by = false
     shopping_item_info_mealplan = false
     shopping_item_info_recipe = true
+    shopping_show_debug = false
 
     mealplan_displayPeriod = 'week'
     mealplan_displayPeriodCount = 3

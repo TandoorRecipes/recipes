@@ -104,10 +104,15 @@ export function PatchedShoppingListRecipeFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PatchedShoppingListRecipeToJSON(value?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null): any {
+export function PatchedShoppingListRecipeToJSON(json: any): PatchedShoppingListRecipe {
+    return PatchedShoppingListRecipeToJSONTyped(json, false);
+}
+
+export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -116,15 +121,4 @@ export function PatchedShoppingListRecipeToJSON(value?: Omit<PatchedShoppingList
         'servings': value['servings'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedShoppingListRecipeListRequest, PaginatedPatchedShoppingListRecipeList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedShoppingListRecipeListRequest = {}): Promise<PaginatedPatchedShoppingListRecipeList> {
-    const api = new ApiApi()
-    return api.apiPatchedShoppingListRecipeList(requestParameters)
-}

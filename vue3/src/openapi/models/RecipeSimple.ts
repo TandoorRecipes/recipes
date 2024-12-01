@@ -64,25 +64,19 @@ export function RecipeSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function RecipeSimpleToJSON(value?: Omit<RecipeSimple, 'url'> | null): any {
+export function RecipeSimpleToJSON(json: any): RecipeSimple {
+    return RecipeSimpleToJSONTyped(json, false);
+}
+
+export function RecipeSimpleToJSONTyped(value?: Omit<RecipeSimple, 'url'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'name': value['name'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiRecipeSimpleListRequest, PaginatedRecipeSimpleList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiRecipeSimpleListRequest = {}): Promise<PaginatedRecipeSimpleList> {
-    const api = new ApiApi()
-    return api.apiRecipeSimpleList(requestParameters)
-}

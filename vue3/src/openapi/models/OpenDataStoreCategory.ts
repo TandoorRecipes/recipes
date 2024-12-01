@@ -18,6 +18,7 @@ import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
+    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 
 /**
@@ -78,10 +79,15 @@ export function OpenDataStoreCategoryFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function OpenDataStoreCategoryToJSON(value?: OpenDataStoreCategory | null): any {
+export function OpenDataStoreCategoryToJSON(json: any): OpenDataStoreCategory {
+    return OpenDataStoreCategoryToJSONTyped(json, false);
+}
+
+export function OpenDataStoreCategoryToJSONTyped(value?: OpenDataStoreCategory | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -90,15 +96,4 @@ export function OpenDataStoreCategoryToJSON(value?: OpenDataStoreCategory | null
         'order': value['order'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataStoreCategoryListRequest, PaginatedOpenDataStoreCategoryList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataStoreCategoryListRequest = {}): Promise<PaginatedOpenDataStoreCategoryList> {
-    const api = new ApiApi()
-    return api.apiOpenDataStoreCategoryList(requestParameters)
-}

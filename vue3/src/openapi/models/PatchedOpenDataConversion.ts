@@ -18,18 +18,21 @@ import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
+    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataFood } from './OpenDataFood';
 import {
     OpenDataFoodFromJSON,
     OpenDataFoodFromJSONTyped,
     OpenDataFoodToJSON,
+    OpenDataFoodToJSONTyped,
 } from './OpenDataFood';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -137,10 +140,15 @@ export function PatchedOpenDataConversionFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PatchedOpenDataConversionToJSON(value?: Omit<PatchedOpenDataConversion, 'created_by'> | null): any {
+export function PatchedOpenDataConversionToJSON(json: any): PatchedOpenDataConversion {
+    return PatchedOpenDataConversionToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataConversionToJSONTyped(value?: Omit<PatchedOpenDataConversion, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -155,15 +163,4 @@ export function PatchedOpenDataConversionToJSON(value?: Omit<PatchedOpenDataConv
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedOpenDataConversionListRequest, PaginatedPatchedOpenDataConversionList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedOpenDataConversionListRequest = {}): Promise<PaginatedPatchedOpenDataConversionList> {
-    const api = new ApiApi()
-    return api.apiPatchedOpenDataConversionList(requestParameters)
-}

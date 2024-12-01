@@ -18,12 +18,14 @@ import {
     RecipeBookFromJSON,
     RecipeBookFromJSONTyped,
     RecipeBookToJSON,
+    RecipeBookToJSONTyped,
 } from './RecipeBook';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -93,10 +95,15 @@ export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'book_content'|'recipe_content'> | null): any {
+export function RecipeBookEntryToJSON(json: any): RecipeBookEntry {
+    return RecipeBookEntryToJSONTyped(json, false);
+}
+
+export function RecipeBookEntryToJSONTyped(value?: Omit<RecipeBookEntry, 'book_content'|'recipe_content'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -104,15 +111,4 @@ export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'book_conten
         'recipe': value['recipe'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiRecipeBookEntryListRequest, PaginatedRecipeBookEntryList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiRecipeBookEntryListRequest = {}): Promise<PaginatedRecipeBookEntryList> {
-    const api = new ApiApi()
-    return api.apiRecipeBookEntryList(requestParameters)
-}

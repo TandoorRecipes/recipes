@@ -18,6 +18,7 @@ import {
     SyncLogFromJSON,
     SyncLogFromJSONTyped,
     SyncLogToJSON,
+    SyncLogToJSONTyped,
 } from './SyncLog';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedSyncLogListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedSyncLogListToJSON(value?: PaginatedSyncLogList | null): any {
+export function PaginatedSyncLogListToJSON(json: any): PaginatedSyncLogList {
+    return PaginatedSyncLogListToJSONTyped(json, false);
+}
+
+export function PaginatedSyncLogListToJSONTyped(value?: PaginatedSyncLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedSyncLogListToJSON(value?: PaginatedSyncLogList | null):
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedSyncLogListListRequest, PaginatedPaginatedSyncLogListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedSyncLogListListRequest = {}): Promise<PaginatedPaginatedSyncLogListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedSyncLogListList(requestParameters)
-}

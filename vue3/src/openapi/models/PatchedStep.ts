@@ -18,12 +18,14 @@ import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { Ingredient } from './Ingredient';
 import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
+    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -145,10 +147,15 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null): any {
+export function PatchedStepToJSON(json: any): PatchedStep {
+    return PatchedStepToJSONTyped(json, false);
+}
+
+export function PatchedStepToJSONTyped(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -163,15 +170,4 @@ export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdo
         'show_ingredients_table': value['showIngredientsTable'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedStepListRequest, PaginatedPatchedStepList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedStepListRequest = {}): Promise<PaginatedPatchedStepList> {
-    const api = new ApiApi()
-    return api.apiPatchedStepList(requestParameters)
-}

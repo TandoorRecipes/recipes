@@ -18,18 +18,21 @@ import {
     BaseUnitEnumFromJSON,
     BaseUnitEnumFromJSONTyped,
     BaseUnitEnumToJSON,
+    BaseUnitEnumToJSONTyped,
 } from './BaseUnitEnum';
 import type { OpenDataUnitTypeEnum } from './OpenDataUnitTypeEnum';
 import {
     OpenDataUnitTypeEnumFromJSON,
     OpenDataUnitTypeEnumFromJSONTyped,
     OpenDataUnitTypeEnumToJSON,
+    OpenDataUnitTypeEnumToJSONTyped,
 } from './OpenDataUnitTypeEnum';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -159,10 +162,15 @@ export function PatchedOpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedOpenDataUnitToJSON(value?: Omit<PatchedOpenDataUnit, 'created_by'> | null): any {
+export function PatchedOpenDataUnitToJSON(json: any): PatchedOpenDataUnit {
+    return PatchedOpenDataUnitToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataUnitToJSONTyped(value?: Omit<PatchedOpenDataUnit, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -175,15 +183,4 @@ export function PatchedOpenDataUnitToJSON(value?: Omit<PatchedOpenDataUnit, 'cre
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedOpenDataUnitListRequest, PaginatedPatchedOpenDataUnitList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedOpenDataUnitListRequest = {}): Promise<PaginatedPatchedOpenDataUnitList> {
-    const api = new ApiApi()
-    return api.apiPatchedOpenDataUnitList(requestParameters)
-}

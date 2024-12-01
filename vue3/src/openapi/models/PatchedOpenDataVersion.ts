@@ -103,10 +103,15 @@ export function PatchedOpenDataVersionFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedOpenDataVersionToJSON(value?: PatchedOpenDataVersion | null): any {
+export function PatchedOpenDataVersionToJSON(json: any): PatchedOpenDataVersion {
+    return PatchedOpenDataVersionToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataVersionToJSONTyped(value?: PatchedOpenDataVersion | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -115,15 +120,4 @@ export function PatchedOpenDataVersionToJSON(value?: PatchedOpenDataVersion | nu
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedOpenDataVersionListRequest, PaginatedPatchedOpenDataVersionList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedOpenDataVersionListRequest = {}): Promise<PaginatedPatchedOpenDataVersionList> {
-    const api = new ApiApi()
-    return api.apiPatchedOpenDataVersionList(requestParameters)
-}

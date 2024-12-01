@@ -18,6 +18,7 @@ import {
     OpenDataPropertyFromJSON,
     OpenDataPropertyFromJSONTyped,
     OpenDataPropertyToJSON,
+    OpenDataPropertyToJSONTyped,
 } from './OpenDataProperty';
 
 /**
@@ -71,10 +72,15 @@ export function OpenDataFoodPropertyFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function OpenDataFoodPropertyToJSON(value?: OpenDataFoodProperty | null): any {
+export function OpenDataFoodPropertyToJSON(json: any): OpenDataFoodProperty {
+    return OpenDataFoodPropertyToJSONTyped(json, false);
+}
+
+export function OpenDataFoodPropertyToJSONTyped(value?: OpenDataFoodProperty | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -82,15 +88,4 @@ export function OpenDataFoodPropertyToJSON(value?: OpenDataFoodProperty | null):
         'property_amount': value['propertyAmount'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataFoodPropertyListRequest, PaginatedOpenDataFoodPropertyList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataFoodPropertyListRequest = {}): Promise<PaginatedOpenDataFoodPropertyList> {
-    const api = new ApiApi()
-    return api.apiOpenDataFoodPropertyList(requestParameters)
-}

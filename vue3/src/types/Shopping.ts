@@ -79,7 +79,7 @@ export type ShoppingListStats = {
  * DELAY: ShoppingListEntry was postponed/delayed
  * UNDELAY: ShoppingListEntry delay was removed
  */
-export type ShoppingOperationHistoryType = 'CREATED' | 'CHECKED' | 'UNCHECKED' | 'DELAY' | 'UNDELAY' | 'IGNORE' | 'UNIGNORE'
+export type ShoppingOperationHistoryType = 'CHECKED' | 'UNCHECKED' | 'DELAY' | 'UNDELAY' | 'IGNORE' | 'UNIGNORE' | 'CREATE' | 'DESTROY'
 
 /**
  * history event consisting of a type and affected entries

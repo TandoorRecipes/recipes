@@ -18,6 +18,7 @@ import {
     RecipeBookEntryFromJSON,
     RecipeBookEntryFromJSONTyped,
     RecipeBookEntryToJSON,
+    RecipeBookEntryToJSONTyped,
 } from './RecipeBookEntry';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedRecipeBookEntryListFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PaginatedRecipeBookEntryListToJSON(value?: PaginatedRecipeBookEntryList | null): any {
+export function PaginatedRecipeBookEntryListToJSON(json: any): PaginatedRecipeBookEntryList {
+    return PaginatedRecipeBookEntryListToJSONTyped(json, false);
+}
+
+export function PaginatedRecipeBookEntryListToJSONTyped(value?: PaginatedRecipeBookEntryList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedRecipeBookEntryListToJSON(value?: PaginatedRecipeBookEn
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedRecipeBookEntryListListRequest, PaginatedPaginatedRecipeBookEntryListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedRecipeBookEntryListListRequest = {}): Promise<PaginatedPaginatedRecipeBookEntryListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedRecipeBookEntryListList(requestParameters)
-}

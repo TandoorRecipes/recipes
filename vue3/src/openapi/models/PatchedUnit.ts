@@ -117,10 +117,15 @@ export function PatchedUnitFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedUnitToJSON(value?: PatchedUnit | null): any {
+export function PatchedUnitToJSON(json: any): PatchedUnit {
+    return PatchedUnitToJSONTyped(json, false);
+}
+
+export function PatchedUnitToJSONTyped(value?: PatchedUnit | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -131,15 +136,4 @@ export function PatchedUnitToJSON(value?: PatchedUnit | null): any {
         'open_data_slug': value['openDataSlug'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedUnitListRequest, PaginatedPatchedUnitList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedUnitListRequest = {}): Promise<PaginatedPatchedUnitList> {
-    const api = new ApiApi()
-    return api.apiPatchedUnitList(requestParameters)
-}

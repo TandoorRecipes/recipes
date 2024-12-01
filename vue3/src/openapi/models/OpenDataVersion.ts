@@ -105,10 +105,15 @@ export function OpenDataVersionFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function OpenDataVersionToJSON(value?: OpenDataVersion | null): any {
+export function OpenDataVersionToJSON(json: any): OpenDataVersion {
+    return OpenDataVersionToJSONTyped(json, false);
+}
+
+export function OpenDataVersionToJSONTyped(value?: OpenDataVersion | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -117,15 +122,4 @@ export function OpenDataVersionToJSON(value?: OpenDataVersion | null): any {
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataVersionListRequest, PaginatedOpenDataVersionList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataVersionListRequest = {}): Promise<PaginatedOpenDataVersionList> {
-    const api = new ApiApi()
-    return api.apiOpenDataVersionList(requestParameters)
-}

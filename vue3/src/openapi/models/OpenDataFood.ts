@@ -18,24 +18,28 @@ import {
     OpenDataFoodPropertyFromJSON,
     OpenDataFoodPropertyFromJSONTyped,
     OpenDataFoodPropertyToJSON,
+    OpenDataFoodPropertyToJSONTyped,
 } from './OpenDataFoodProperty';
 import type { OpenDataUnit } from './OpenDataUnit';
 import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
+    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataCategory } from './OpenDataCategory';
 import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
+    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -228,10 +232,15 @@ export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OpenDataFoodToJSON(value?: Omit<OpenDataFood, 'created_by'> | null): any {
+export function OpenDataFoodToJSON(json: any): OpenDataFood {
+    return OpenDataFoodToJSONTyped(json, false);
+}
+
+export function OpenDataFoodToJSONTyped(value?: Omit<OpenDataFood, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -252,15 +261,4 @@ export function OpenDataFoodToJSON(value?: Omit<OpenDataFood, 'created_by'> | nu
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataFoodListRequest, PaginatedOpenDataFoodList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataFoodListRequest = {}): Promise<PaginatedOpenDataFoodList> {
-    const api = new ApiApi()
-    return api.apiOpenDataFoodList(requestParameters)
-}

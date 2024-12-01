@@ -43,15 +43,11 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     let queueTimeoutId = ref(-1)
     let itemCheckSyncQueue = ref([] as IShoppingSyncQueueEntry[])
 
-
     /**
      * build a multi-level data structure ready for display from shopping list entries
      * group by selected grouping key
      */
     const getEntriesByGroup = computed(() => {
-        //TODO why is this called many times on each auto sync
-        console.log('running getEntriesByGroup')
-
         stats.value = {
             countChecked: 0,
             countUnchecked: 0,
@@ -73,7 +69,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
         // build structure
         entries.value.forEach(shoppingListEntry => {
-            structure = updateEntryInStructure(structure, shoppingListEntry, useUserPreferenceStore().deviceSettings.shopping_selected_grouping)
+            structure = updateEntryInStructure(structure, shoppingListEntry)
         })
 
         // statistics for UI conditions and display
@@ -115,8 +111,9 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         })
 
         // ordering
-        if (structure.categories.has(UNDEFINED_CATEGORY)) {
-            orderedStructure.push(structure.categories.get(UNDEFINED_CATEGORY))
+        let undefinedCategoryGroup = structure.categories.get(UNDEFINED_CATEGORY)
+        if (undefinedCategoryGroup != null) {
+            orderedStructure.push(undefinedCategoryGroup)
             structure.categories.delete(UNDEFINED_CATEGORY)
         }
 
@@ -207,9 +204,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             const api = new ApiApi()
             api.apiShoppingListEntryList({updatedAfter: autoSyncLastTimestamp.value}).then((r) => {
                 autoSyncLastTimestamp.value = r.timestamp!
-
                 r.results.forEach((e) => {
-                    console.log('updating entry by auto sync ', e)
                     entries.value.set(e.id!, e)
                 })
                 currentlyUpdating.value = false
@@ -220,15 +215,17 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     }
 
     /**
-     * Create a new shopping list entry
-     * adds new entry to store
-     * @param object entry object to create
-     * @return {Promise<ShoppingListEntry>} promise of creation call to subscribe to
+     * creates new ShoppingListEntry in database and updates it in store
+     * @param object entry to create
+     * @param undo if the user should be able to undo the change or not
      */
-    function createObject(object: ShoppingListEntry) {
+    function createObject(object: ShoppingListEntry, undo: boolean) {
         const api = new ApiApi()
         return api.apiShoppingListEntryCreate({shoppingListEntry: object}).then((r) => {
             entries.value.set(r.id!, r)
+            if (undo) {
+                registerChange("CREATE", [r])
+            }
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         })
@@ -259,12 +256,15 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     /**
      * delete shopping list entry object from DB and store
      * @param object entry object to delete
-     * @return {Promise<ShoppingListEntry>} promise of delete call to subscribe to
+     * @param undo if the user should be able to undo the change or not
      */
-    function deleteObject(object: ShoppingListEntry) {
+    function deleteObject(object: ShoppingListEntry, undo: boolean) {
         const api = new ApiApi()
         return api.apiShoppingListEntryDestroy({id: object.id!}).then((r) => {
             entries.value.delete(object.id!)
+            if (undo) {
+                registerChange("DESTROY", [object])
+            }
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
         })
@@ -368,7 +368,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                     })
                     itemCheckSyncQueue.value.splice(index, 1)
                 }).catch((err) => {
-                    if (err.code === "ERR_NETWORK" || err.code === "ECONNABORTED") {
+                    if (err.name === "FetchError") {
                         entry['status'] = 'waiting_failed_before'
                     } else {
                         itemCheckSyncQueue.value.splice(index, 1)
@@ -377,11 +377,14 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 })
                 promises.push(p)
             })
-            // TODO verify this all settled works
+
             Promise.allSettled(promises).finally(() => {
-                runSyncQueue(500)
+                if (itemCheckSyncQueue.value.length > 0) {
+                    runSyncQueue(500)
+                }
             })
         } else {
+            // try again if internet after a few seconds
             runSyncQueue(5000)
         }
     }
@@ -454,7 +457,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      */
     function deleteEntries(entries: ShoppingListEntry[]) {
         entries.forEach((entry) => {
-            deleteObject(entry)
+            deleteObject(entry, false)
         })
     }
 
@@ -499,10 +502,15 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 setEntriesCheckedState(entries, (type === 'UNCHECKED'), false)
             } else if (type === 'DELAY' || type === 'UNDELAY') {
                 setEntriesDelayedState(entries, (type === 'UNDELAY'), false)
-            } else if (type === 'CREATED') {
+            } else if (type === 'CREATE') {
                 for (let i in entries) {
                     let e = entries[i]
-                    deleteObject(e)
+                    deleteObject(e, false)
+                }
+            } else if (type === 'DESTROY') {
+                for (let i in entries) {
+                    let e = entries[i]
+                    createObject(e, false)
                 }
             } else if (type === 'IGNORE' || type === 'UNIGNORE') {
                 setFoodIgnoredState(entries, (type === 'UNIGNORE'), false)

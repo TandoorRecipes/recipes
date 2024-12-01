@@ -18,6 +18,7 @@ import {
     AutomationFromJSON,
     AutomationFromJSONTyped,
     AutomationToJSON,
+    AutomationToJSONTyped,
 } from './Automation';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedAutomationListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedAutomationListToJSON(value?: PaginatedAutomationList | null): any {
+export function PaginatedAutomationListToJSON(json: any): PaginatedAutomationList {
+    return PaginatedAutomationListToJSONTyped(json, false);
+}
+
+export function PaginatedAutomationListToJSONTyped(value?: PaginatedAutomationList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedAutomationListToJSON(value?: PaginatedAutomationList | 
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedAutomationListListRequest, PaginatedPaginatedAutomationListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedAutomationListListRequest = {}): Promise<PaginatedPaginatedAutomationListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedAutomationListList(requestParameters)
-}

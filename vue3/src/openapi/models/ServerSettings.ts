@@ -61,6 +61,12 @@ export interface ServerSettings {
      * @memberof ServerSettings
      */
     hosted: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ServerSettings
+     */
+    debug: boolean;
 }
 
 /**
@@ -74,6 +80,7 @@ export function instanceOfServerSettings(value: object): value is ServerSettings
     if (!('privacyUrl' in value) || value['privacyUrl'] === undefined) return false;
     if (!('imprintUrl' in value) || value['imprintUrl'] === undefined) return false;
     if (!('hosted' in value) || value['hosted'] === undefined) return false;
+    if (!('debug' in value) || value['debug'] === undefined) return false;
     return true;
 }
 
@@ -94,13 +101,19 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         'privacyUrl': json['privacy_url'],
         'imprintUrl': json['imprint_url'],
         'hosted': json['hosted'],
+        'debug': json['debug'],
     };
 }
 
-export function ServerSettingsToJSON(value?: ServerSettings | null): any {
+export function ServerSettingsToJSON(json: any): ServerSettings {
+    return ServerSettingsToJSONTyped(json, false);
+}
+
+export function ServerSettingsToJSONTyped(value?: ServerSettings | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'shopping_min_autosync_interval': value['shoppingMinAutosyncInterval'],
@@ -110,17 +123,7 @@ export function ServerSettingsToJSON(value?: ServerSettings | null): any {
         'privacy_url': value['privacyUrl'],
         'imprint_url': value['imprintUrl'],
         'hosted': value['hosted'],
+        'debug': value['debug'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiServerSettingsListRequest, PaginatedServerSettingsList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiServerSettingsListRequest = {}): Promise<PaginatedServerSettingsList> {
-    const api = new ApiApi()
-    return api.apiServerSettingsList(requestParameters)
-}

@@ -56,24 +56,18 @@ export function KeywordLabelFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function KeywordLabelToJSON(value?: Omit<KeywordLabel, 'label'> | null): any {
+export function KeywordLabelToJSON(json: any): KeywordLabel {
+    return KeywordLabelToJSONTyped(json, false);
+}
+
+export function KeywordLabelToJSONTyped(value?: Omit<KeywordLabel, 'label'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiKeywordLabelListRequest, PaginatedKeywordLabelList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiKeywordLabelListRequest = {}): Promise<PaginatedKeywordLabelList> {
-    const api = new ApiApi()
-    return api.apiKeywordLabelList(requestParameters)
-}

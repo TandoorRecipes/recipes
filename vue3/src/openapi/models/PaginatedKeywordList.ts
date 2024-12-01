@@ -18,6 +18,7 @@ import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedKeywordListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null): any {
+export function PaginatedKeywordListToJSON(json: any): PaginatedKeywordList {
+    return PaginatedKeywordListToJSONTyped(json, false);
+}
+
+export function PaginatedKeywordListToJSONTyped(value?: PaginatedKeywordList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null):
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedKeywordListListRequest, PaginatedPaginatedKeywordListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedKeywordListListRequest = {}): Promise<PaginatedPaginatedKeywordListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedKeywordListList(requestParameters)
-}

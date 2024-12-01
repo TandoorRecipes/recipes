@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
 import {
     SpaceNavTextColorEnumFromJSON,
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
+    SpaceNavTextColorEnumToJSONTyped,
 } from './SpaceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { SpaceThemeEnum } from './SpaceThemeEnum';
 import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
+    SpaceThemeEnumToJSONTyped,
 } from './SpaceThemeEnum';
 
 /**
@@ -274,10 +279,15 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
     };
 }
 
-export function SpaceToJSON(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null): any {
+export function SpaceToJSON(json: any): Space {
+    return SpaceToJSONTyped(json, false);
+}
+
+export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -299,15 +309,4 @@ export function SpaceToJSON(value?: Omit<Space, 'created_by'|'created_at'|'max_r
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiSpaceListRequest, PaginatedSpaceList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiSpaceListRequest = {}): Promise<PaginatedSpaceList> {
-    const api = new ApiApi()
-    return api.apiSpaceList(requestParameters)
-}

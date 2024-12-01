@@ -18,6 +18,7 @@ import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -111,10 +112,15 @@ export function PatchedImportLogFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedImportLogToJSON(value?: Omit<PatchedImportLog, 'keyword'|'created_by'|'created_at'> | null): any {
+export function PatchedImportLogToJSON(json: any): PatchedImportLog {
+    return PatchedImportLogToJSONTyped(json, false);
+}
+
+export function PatchedImportLogToJSONTyped(value?: Omit<PatchedImportLog, 'keyword'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -125,15 +131,4 @@ export function PatchedImportLogToJSON(value?: Omit<PatchedImportLog, 'keyword'|
         'imported_recipes': value['importedRecipes'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedImportLogListRequest, PaginatedPatchedImportLogList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedImportLogListRequest = {}): Promise<PaginatedPatchedImportLogList> {
-    const api = new ApiApi()
-    return api.apiPatchedImportLogList(requestParameters)
-}

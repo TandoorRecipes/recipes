@@ -18,6 +18,7 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
+    CustomFilterToJSONTyped,
 } from './CustomFilter';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedCustomFilterListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedCustomFilterListToJSON(value?: PaginatedCustomFilterList | null): any {
+export function PaginatedCustomFilterListToJSON(json: any): PaginatedCustomFilterList {
+    return PaginatedCustomFilterListToJSONTyped(json, false);
+}
+
+export function PaginatedCustomFilterListToJSONTyped(value?: PaginatedCustomFilterList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedCustomFilterListToJSON(value?: PaginatedCustomFilterLis
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedCustomFilterListListRequest, PaginatedPaginatedCustomFilterListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedCustomFilterListListRequest = {}): Promise<PaginatedPaginatedCustomFilterListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedCustomFilterListList(requestParameters)
-}

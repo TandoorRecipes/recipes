@@ -1436,6 +1436,7 @@ class ServerSettingsSerializer(serializers.Serializer):
     privacy_url = serializers.CharField()
     imprint_url = serializers.CharField()
     hosted = serializers.BooleanField()
+    debug = serializers.BooleanField()
 
     class Meta:
         fields = '__ALL__'

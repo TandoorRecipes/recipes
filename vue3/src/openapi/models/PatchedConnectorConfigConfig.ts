@@ -118,10 +118,15 @@ export function PatchedConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PatchedConnectorConfigConfigToJSON(value?: Omit<PatchedConnectorConfigConfig, 'created_by'> | null): any {
+export function PatchedConnectorConfigConfigToJSON(json: any): PatchedConnectorConfigConfig {
+    return PatchedConnectorConfigConfigToJSONTyped(json, false);
+}
+
+export function PatchedConnectorConfigConfigToJSONTyped(value?: Omit<PatchedConnectorConfigConfig, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -136,15 +141,4 @@ export function PatchedConnectorConfigConfigToJSON(value?: Omit<PatchedConnector
         'supports_description_field': value['supportsDescriptionField'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedConnectorConfigConfigListRequest, PaginatedPatchedConnectorConfigConfigList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedConnectorConfigConfigListRequest = {}): Promise<PaginatedPatchedConnectorConfigConfigList> {
-    const api = new ApiApi()
-    return api.apiPatchedConnectorConfigConfigList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedFoodListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedFoodListToJSON(value?: PaginatedFoodList | null): any {
+export function PaginatedFoodListToJSON(json: any): PaginatedFoodList {
+    return PaginatedFoodListToJSONTyped(json, false);
+}
+
+export function PaginatedFoodListToJSONTyped(value?: PaginatedFoodList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedFoodListToJSON(value?: PaginatedFoodList | null): any {
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedFoodListListRequest, PaginatedPaginatedFoodListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedFoodListListRequest = {}): Promise<PaginatedPaginatedFoodListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedFoodListList(requestParameters)
-}

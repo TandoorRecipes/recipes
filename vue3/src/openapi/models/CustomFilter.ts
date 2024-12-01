@@ -18,6 +18,7 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -86,10 +87,15 @@ export function CustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function CustomFilterToJSON(value?: Omit<CustomFilter, 'created_by'> | null): any {
+export function CustomFilterToJSON(json: any): CustomFilter {
+    return CustomFilterToJSONTyped(json, false);
+}
+
+export function CustomFilterToJSONTyped(value?: Omit<CustomFilter, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -98,15 +104,4 @@ export function CustomFilterToJSON(value?: Omit<CustomFilter, 'created_by'> | nu
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiCustomFilterListRequest, PaginatedCustomFilterList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiCustomFilterListRequest = {}): Promise<PaginatedCustomFilterList> {
-    const api = new ApiApi()
-    return api.apiCustomFilterList(requestParameters)
-}

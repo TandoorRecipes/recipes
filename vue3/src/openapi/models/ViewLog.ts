@@ -72,25 +72,19 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
     };
 }
 
-export function ViewLogToJSON(value?: Omit<ViewLog, 'created_by'|'created_at'> | null): any {
+export function ViewLogToJSON(json: any): ViewLog {
+    return ViewLogToJSONTyped(json, false);
+}
+
+export function ViewLogToJSONTyped(value?: Omit<ViewLog, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'recipe': value['recipe'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiViewLogListRequest, PaginatedViewLogList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiViewLogListRequest = {}): Promise<PaginatedViewLogList> {
-    const api = new ApiApi()
-    return api.apiViewLogList(requestParameters)
-}

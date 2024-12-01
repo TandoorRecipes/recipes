@@ -18,6 +18,7 @@ import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -78,10 +79,15 @@ export function PaginatedRecipeOverviewListFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function PaginatedRecipeOverviewListToJSON(value?: PaginatedRecipeOverviewList | null): any {
+export function PaginatedRecipeOverviewListToJSON(json: any): PaginatedRecipeOverviewList {
+    return PaginatedRecipeOverviewListToJSONTyped(json, false);
+}
+
+export function PaginatedRecipeOverviewListToJSONTyped(value?: PaginatedRecipeOverviewList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -90,15 +96,4 @@ export function PaginatedRecipeOverviewListToJSON(value?: PaginatedRecipeOvervie
         'results': ((value['results'] as Array<any>).map(RecipeOverviewToJSON)),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedRecipeOverviewListListRequest, PaginatedPaginatedRecipeOverviewListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedRecipeOverviewListListRequest = {}): Promise<PaginatedPaginatedRecipeOverviewListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedRecipeOverviewListList(requestParameters)
-}

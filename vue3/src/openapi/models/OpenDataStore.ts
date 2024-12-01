@@ -18,12 +18,14 @@ import {
     OpenDataStoreCategoryFromJSON,
     OpenDataStoreCategoryFromJSONTyped,
     OpenDataStoreCategoryToJSON,
+    OpenDataStoreCategoryToJSONTyped,
 } from './OpenDataStoreCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -108,10 +110,15 @@ export function OpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function OpenDataStoreToJSON(value?: Omit<OpenDataStore, 'created_by'> | null): any {
+export function OpenDataStoreToJSON(json: any): OpenDataStore {
+    return OpenDataStoreToJSONTyped(json, false);
+}
+
+export function OpenDataStoreToJSONTyped(value?: Omit<OpenDataStore, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -122,15 +129,4 @@ export function OpenDataStoreToJSON(value?: Omit<OpenDataStore, 'created_by'> | 
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataStoreListRequest, PaginatedOpenDataStoreList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataStoreListRequest = {}): Promise<PaginatedOpenDataStoreList> {
-    const api = new ApiApi()
-    return api.apiOpenDataStoreList(requestParameters)
-}

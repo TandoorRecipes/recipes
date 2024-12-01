@@ -63,10 +63,15 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
+export function RecipeFlatToJSON(json: any): RecipeFlat {
+    return RecipeFlatToJSONTyped(json, false);
+}
+
+export function RecipeFlatToJSONTyped(value?: RecipeFlat | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -74,15 +79,4 @@ export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
         'image': value['image'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiRecipeFlatListRequest, PaginatedRecipeFlatList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiRecipeFlatListRequest = {}): Promise<PaginatedRecipeFlatList> {
-    const api = new ApiApi()
-    return api.apiRecipeFlatList(requestParameters)
-}

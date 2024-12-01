@@ -18,6 +18,7 @@ import {
     ImportLogFromJSON,
     ImportLogFromJSONTyped,
     ImportLogToJSON,
+    ImportLogToJSONTyped,
 } from './ImportLog';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedImportLogListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedImportLogListToJSON(value?: PaginatedImportLogList | null): any {
+export function PaginatedImportLogListToJSON(json: any): PaginatedImportLogList {
+    return PaginatedImportLogListToJSONTyped(json, false);
+}
+
+export function PaginatedImportLogListToJSONTyped(value?: PaginatedImportLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedImportLogListToJSON(value?: PaginatedImportLogList | nu
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedImportLogListListRequest, PaginatedPaginatedImportLogListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedImportLogListListRequest = {}): Promise<PaginatedPaginatedImportLogListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedImportLogListList(requestParameters)
-}

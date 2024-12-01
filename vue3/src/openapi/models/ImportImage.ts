@@ -49,24 +49,18 @@ export function ImportImageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function ImportImageToJSON(value?: ImportImage | null): any {
+export function ImportImageToJSON(json: any): ImportImage {
+    return ImportImageToJSONTyped(json, false);
+}
+
+export function ImportImageToJSONTyped(value?: ImportImage | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'image': value['image'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiImportImageListRequest, PaginatedImportImageList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiImportImageListRequest = {}): Promise<PaginatedImportImageList> {
-    const api = new ApiApi()
-    return api.apiImportImageList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     MealPlanFromJSON,
     MealPlanFromJSONTyped,
     MealPlanToJSON,
+    MealPlanToJSONTyped,
 } from './MealPlan';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedMealPlanListFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PaginatedMealPlanListToJSON(value?: PaginatedMealPlanList | null): any {
+export function PaginatedMealPlanListToJSON(json: any): PaginatedMealPlanList {
+    return PaginatedMealPlanListToJSONTyped(json, false);
+}
+
+export function PaginatedMealPlanListToJSONTyped(value?: PaginatedMealPlanList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedMealPlanListToJSON(value?: PaginatedMealPlanList | null
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedMealPlanListListRequest, PaginatedPaginatedMealPlanListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedMealPlanListListRequest = {}): Promise<PaginatedPaginatedMealPlanListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedMealPlanListList(requestParameters)
-}

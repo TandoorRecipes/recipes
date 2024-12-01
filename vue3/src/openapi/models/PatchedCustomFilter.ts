@@ -18,6 +18,7 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -83,10 +84,15 @@ export function PatchedCustomFilterFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedCustomFilterToJSON(value?: Omit<PatchedCustomFilter, 'created_by'> | null): any {
+export function PatchedCustomFilterToJSON(json: any): PatchedCustomFilter {
+    return PatchedCustomFilterToJSONTyped(json, false);
+}
+
+export function PatchedCustomFilterToJSONTyped(value?: Omit<PatchedCustomFilter, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -95,15 +101,4 @@ export function PatchedCustomFilterToJSON(value?: Omit<PatchedCustomFilter, 'cre
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedCustomFilterListRequest, PaginatedPatchedCustomFilterList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedCustomFilterListRequest = {}): Promise<PaginatedPatchedCustomFilterList> {
-    const api = new ApiApi()
-    return api.apiPatchedCustomFilterList(requestParameters)
-}

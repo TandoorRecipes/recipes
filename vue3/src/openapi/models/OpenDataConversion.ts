@@ -18,18 +18,21 @@ import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
+    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataFood } from './OpenDataFood';
 import {
     OpenDataFoodFromJSON,
     OpenDataFoodFromJSONTyped,
     OpenDataFoodToJSON,
+    OpenDataFoodToJSONTyped,
 } from './OpenDataFood';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -146,10 +149,15 @@ export function OpenDataConversionFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function OpenDataConversionToJSON(value?: Omit<OpenDataConversion, 'created_by'> | null): any {
+export function OpenDataConversionToJSON(json: any): OpenDataConversion {
+    return OpenDataConversionToJSONTyped(json, false);
+}
+
+export function OpenDataConversionToJSONTyped(value?: Omit<OpenDataConversion, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -164,15 +172,4 @@ export function OpenDataConversionToJSON(value?: Omit<OpenDataConversion, 'creat
         'comment': value['comment'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiOpenDataConversionListRequest, PaginatedOpenDataConversionList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiOpenDataConversionListRequest = {}): Promise<PaginatedOpenDataConversionList> {
-    const api = new ApiApi()
-    return api.apiOpenDataConversionList(requestParameters)
-}

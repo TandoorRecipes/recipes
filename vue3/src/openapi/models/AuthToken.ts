@@ -65,25 +65,19 @@ export function AuthTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function AuthTokenToJSON(value?: Omit<AuthToken, 'token'> | null): any {
+export function AuthTokenToJSON(json: any): AuthToken {
+    return AuthTokenToJSONTyped(json, false);
+}
+
+export function AuthTokenToJSONTyped(value?: Omit<AuthToken, 'token'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'username': value['username'],
         'password': value['password'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiAuthTokenListRequest, PaginatedAuthTokenList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiAuthTokenListRequest = {}): Promise<PaginatedAuthTokenList> {
-    const api = new ApiApi()
-    return api.apiAuthTokenList(requestParameters)
-}

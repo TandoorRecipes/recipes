@@ -18,36 +18,42 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { FoodSimple } from './FoodSimple';
 import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
+    FoodSimpleToJSONTyped,
 } from './FoodSimple';
 import type { RecipeSimple } from './RecipeSimple';
 import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
+    RecipeSimpleToJSONTyped,
 } from './RecipeSimple';
 
 /**
@@ -287,10 +293,15 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
     };
 }
 
-export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'> | null): any {
+export function FoodToJSON(json: any): Food {
+    return FoodToJSONTyped(json, false);
+}
+
+export function FoodToJSONTyped(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -314,15 +325,4 @@ export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'fu
         'open_data_slug': value['openDataSlug'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiFoodListRequest, PaginatedFoodList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiFoodListRequest = {}): Promise<PaginatedFoodList> {
-    const api = new ApiApi()
-    return api.apiFoodList(requestParameters)
-}

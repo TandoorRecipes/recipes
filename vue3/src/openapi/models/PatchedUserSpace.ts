@@ -18,12 +18,14 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -117,10 +119,15 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null): any {
+export function PatchedUserSpaceToJSON(json: any): PatchedUserSpace {
+    return PatchedUserSpaceToJSONTyped(json, false);
+}
+
+export function PatchedUserSpaceToJSONTyped(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -129,15 +136,4 @@ export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'sp
         'internal_note': value['internalNote'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPatchedUserSpaceListRequest, PaginatedPatchedUserSpaceList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPatchedUserSpaceListRequest = {}): Promise<PaginatedPatchedUserSpaceList> {
-    const api = new ApiApi()
-    return api.apiPatchedUserSpaceList(requestParameters)
-}

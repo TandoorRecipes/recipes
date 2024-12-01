@@ -18,6 +18,7 @@ import {
     MethodEnumFromJSON,
     MethodEnumFromJSONTyped,
     MethodEnumToJSON,
+    MethodEnumToJSONTyped,
 } from './MethodEnum';
 
 /**
@@ -101,10 +102,15 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function StorageToJSON(value?: Omit<Storage, 'created_by'> | null): any {
+export function StorageToJSON(json: any): Storage {
+    return StorageToJSONTyped(json, false);
+}
+
+export function StorageToJSONTyped(value?: Omit<Storage, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -115,15 +121,4 @@ export function StorageToJSON(value?: Omit<Storage, 'created_by'> | null): any {
         'token': value['token'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiStorageListRequest, PaginatedStorageList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiStorageListRequest = {}): Promise<PaginatedStorageList> {
-    const api = new ApiApi()
-    return api.apiStorageList(requestParameters)
-}

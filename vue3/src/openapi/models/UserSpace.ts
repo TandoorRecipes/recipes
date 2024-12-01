@@ -18,12 +18,14 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -123,10 +125,15 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null): any {
+export function UserSpaceToJSON(json: any): UserSpace {
+    return UserSpaceToJSONTyped(json, false);
+}
+
+export function UserSpaceToJSONTyped(value?: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -135,15 +142,4 @@ export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'invite_l
         'internal_note': value['internalNote'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiUserSpaceListRequest, PaginatedUserSpaceList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiUserSpaceListRequest = {}): Promise<PaginatedUserSpaceList> {
-    const api = new ApiApi()
-    return api.apiUserSpaceList(requestParameters)
-}

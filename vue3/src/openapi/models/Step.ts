@@ -18,12 +18,14 @@ import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { Ingredient } from './Ingredient';
 import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
+    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -149,10 +151,15 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
     };
 }
 
-export function StepToJSON(value?: Omit<Step, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null): any {
+export function StepToJSON(json: any): Step {
+    return StepToJSONTyped(json, false);
+}
+
+export function StepToJSONTyped(value?: Omit<Step, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -167,15 +174,4 @@ export function StepToJSON(value?: Omit<Step, 'instructions_markdown'|'step_reci
         'show_ingredients_table': value['showIngredientsTable'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiStepListRequest, PaginatedStepList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiStepListRequest = {}): Promise<PaginatedStepList> {
-    const api = new ApiApi()
-    return api.apiStepList(requestParameters)
-}

@@ -18,6 +18,7 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 
 /**
@@ -85,10 +86,15 @@ export function PaginatedSupermarketCategoryListFromJSONTyped(json: any, ignoreD
     };
 }
 
-export function PaginatedSupermarketCategoryListToJSON(value?: PaginatedSupermarketCategoryList | null): any {
+export function PaginatedSupermarketCategoryListToJSON(json: any): PaginatedSupermarketCategoryList {
+    return PaginatedSupermarketCategoryListToJSONTyped(json, false);
+}
+
+export function PaginatedSupermarketCategoryListToJSONTyped(value?: PaginatedSupermarketCategoryList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
@@ -98,15 +104,4 @@ export function PaginatedSupermarketCategoryListToJSON(value?: PaginatedSupermar
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPaginatedSupermarketCategoryListListRequest, PaginatedPaginatedSupermarketCategoryListList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPaginatedSupermarketCategoryListListRequest = {}): Promise<PaginatedPaginatedSupermarketCategoryListList> {
-    const api = new ApiApi()
-    return api.apiPaginatedSupermarketCategoryListList(requestParameters)
-}

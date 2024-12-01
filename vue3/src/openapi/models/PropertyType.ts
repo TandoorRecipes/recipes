@@ -91,10 +91,15 @@ export function PropertyTypeFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PropertyTypeToJSON(value?: PropertyType | null): any {
+export function PropertyTypeToJSON(json: any): PropertyType {
+    return PropertyTypeToJSONTyped(json, false);
+}
+
+export function PropertyTypeToJSONTyped(value?: PropertyType | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -106,15 +111,4 @@ export function PropertyTypeToJSON(value?: PropertyType | null): any {
         'fdc_id': value['fdcId'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiPropertyTypeListRequest, PaginatedPropertyTypeList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiPropertyTypeListRequest = {}): Promise<PaginatedPropertyTypeList> {
-    const api = new ApiApi()
-    return api.apiPropertyTypeList(requestParameters)
-}

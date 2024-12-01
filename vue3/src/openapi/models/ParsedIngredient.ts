@@ -73,10 +73,15 @@ export function ParsedIngredientFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function ParsedIngredientToJSON(value?: ParsedIngredient | null): any {
+export function ParsedIngredientToJSON(json: any): ParsedIngredient {
+    return ParsedIngredientToJSONTyped(json, false);
+}
+
+export function ParsedIngredientToJSONTyped(value?: ParsedIngredient | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'amount': value['amount'],
@@ -85,15 +90,4 @@ export function ParsedIngredientToJSON(value?: ParsedIngredient | null): any {
         'note': value['note'],
     };
 }
-// ----------------------------------------------------------------------
-// Custom model functions added by custom openapi-generator template
-// ----------------------------------------------------------------------
-import {ApiApi, ApiParsedIngredientListRequest, PaginatedParsedIngredientList} from "@/openapi";
 
-/**
- * query list endpoint using the provided request parameters
- */
-export function list(requestParameters: ApiParsedIngredientListRequest = {}): Promise<PaginatedParsedIngredientList> {
-    const api = new ApiApi()
-    return api.apiParsedIngredientList(requestParameters)
-}
