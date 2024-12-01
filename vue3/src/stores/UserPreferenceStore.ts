@@ -14,9 +14,9 @@ class DeviceSettings {
     shopping_show_delayed_entries = false
     shopping_show_selected_supermarket_only = false
     shopping_selected_grouping = ShoppingGroupingOptions.CATEGORY
-    shopping_selected_supermarket: Supermarket = {} as Supermarket
+    shopping_selected_supermarket: Supermarket|null = null
     shopping_item_info_created_by = false
-    shopping_item_info_mealplan = false
+    shopping_item_info_mealplan = true
     shopping_item_info_recipe = true
     shopping_show_debug = false
 

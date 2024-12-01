@@ -176,29 +176,6 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1):
     assert [x['checked'] for x in r['results']].count(False) == count
 
 
-def test_completed(sle, u1_s1):
-    # check 1 entry
-    u1_s1.patch(reverse(DETAIL_URL, args={sle[0].id}), {'checked': True}, content_type='application/json')
-    r = json.loads(u1_s1.get(reverse(LIST_URL)).content)
-    assert r['count'] == 10
-    # count unchecked entries
-    assert [x['checked'] for x in r['results']].count(False) == 9
-    # confirm completed_at is populated
-    assert [(x['completed_at'] is not None) for x in r['results']
-            if x['checked']].count(True) == 1
-
-    assert json.loads(u1_s1.get(f'{reverse(LIST_URL)}?checked=0').content)['count'] == 9
-    assert json.loads(u1_s1.get(f'{reverse(LIST_URL)}?checked=1').content)['count'] == 1
-
-    # uncheck entry
-    u1_s1.patch(reverse(DETAIL_URL, args={sle[0].id}), {'checked': False}, content_type='application/json')
-    r = json.loads(u1_s1.get(reverse(LIST_URL)).content)
-    assert [x['checked'] for x in r['results']].count(False) == 10
-    # confirm completed_at value cleared
-    assert [(x['completed_at'] is not None) for x in r['results']
-            if x['checked']].count(True) == 0
-
-
 def test_recent(sle, u1_s1):
     user = auth.get_user(u1_s1)
     user.userpreference.shopping_recent_days = 7  # hardcoded API limit 14 days

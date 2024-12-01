@@ -6,6 +6,9 @@
         <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{
                 $t('Recipes')
             }} ({{ useShoppingStore().getAssociatedRecipes().length }})</span></v-tab>
+        <v-tab value="selected_supermarket" v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
+            <i class="fa-solid fa-store fa-fw"></i> <span class="d-none d-md-block ms-1">{{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}</span>
+        </v-tab>
 
         <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
@@ -180,6 +183,17 @@
             </v-container>
 
         </v-window-item>
+        <v-window-item value="selected_supermarket">
+            <v-container>
+                <v-row>
+                    <v-col>
+                        <SupermarketEditor :item="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"
+                                           @save="(args: Supermarket) => (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = args)"></SupermarketEditor>
+                    </v-col>
+                </v-row>
+            </v-container>
+
+        </v-window-item>
     </v-window>
 
     <shopping-line-item-dialog v-model="shoppingLineItemDialog" v-model:shopping-list-food="shoppingLineItemDialogFood"></shopping-line-item-dialog>
@@ -190,7 +204,7 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Food, IngredientString, ShoppingListEntry, SupermarketCategory, Unit} from "@/openapi";
+import {ApiApi, Food, IngredientString, ShoppingListEntry, Supermarket, SupermarketCategory, Unit} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -199,6 +213,7 @@ import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.
 import {IShoppingListCategory, IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
+import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
 
 const {t} = useI18n()
 
@@ -231,8 +246,8 @@ onMounted(() => {
     autoSyncLoop()
 
     // refresh selected supermarket since category ordering might have changed
-    if (Object.keys(useUserPreferenceStore().deviceSettings.shopping_selected_supermarket).length > 0) {
-        new ApiApi().apiSupermarketRetrieve({id: useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.id!}).then(r => {
+    if (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null) {
+        new ApiApi().apiSupermarketRetrieve({id: useUserPreferenceStore().deviceSettings.shopping_selected_supermarket!.id!}).then(r => {
             useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = r
         })
     }
@@ -268,10 +283,10 @@ function addIngredient() {
 function isCategoryVisible(category: IShoppingListCategory) {
     let entryCount = category.stats.countUnchecked
 
-    if (useUserPreferenceStore().deviceSettings.shopping_show_checked_entries){
+    if (useUserPreferenceStore().deviceSettings.shopping_show_checked_entries) {
         entryCount += category.stats.countChecked
     }
-    if (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries){
+    if (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries) {
         entryCount += category.stats.countUncheckedDelayed
     }
     return entryCount > 0

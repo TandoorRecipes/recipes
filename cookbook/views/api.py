@@ -1445,7 +1445,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             if checked:
                 bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
             else:
-                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=False)
+                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=None)
             serializer.validated_data['timestamp'] = update_timestamp
 
             # update the onhand for food if shopping_add_onhand is True

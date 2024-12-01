@@ -10,9 +10,12 @@
 
                 <v-row>
                     <v-col class="pr-0">
-                        <v-btn height="80px" color="info" density="compact" size="small" block stacked @click="useShoppingStore().delayEntries(entriesList, !isShoppingLineDelayed, true); ">
+                        <v-btn height="80px" color="info" density="compact" size="small" block stacked
+                               @click="useShoppingStore().delayEntries(entriesList, !isShoppingLineDelayed, true); ">
                             <i class="fa-solid fa-clock-rotate-left fa-2x mb-2"></i>
-                            {{ $t('Postpone') }}
+                            <span v-if="!isShoppingLineDelayed">{{ $t('ShopLater') }}</span>
+                            <span v-if="isShoppingLineDelayed">{{ $t('ShopNow') }}</span>
+
                         </v-btn>
                     </v-col>
                     <v-col>
@@ -32,7 +35,7 @@
                         </v-btn>
                     </v-col>
                     <v-col class="pt-0">
-                        <v-btn height="80px" color="success" density="compact" size="small" block stacked>
+                        <v-btn height="80px" color="success" density="compact" size="small" @click="addEntryForFood()" block stacked>
                             <i class="fa-solid fa-plus fa-2x mb-2"></i>
                             {{ $t('Add') }}
                         </v-btn>
@@ -66,14 +69,15 @@
                                 {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
 
-<!--                            <template #append>-->
-<!--                                <v-btn size="small" color="delete" icon="$delete" v-if="!e.recipeMealplan">-->
-<!--                                    <v-icon icon="$delete"></v-icon>-->
-<!--                                </v-btn>-->
-<!--                            </template>-->
+                            <template #append>
+                                <v-btn size="small" color="edit" icon="$edit" v-if="!e.recipeMealplan">
+                                    <v-icon icon="$edit"></v-icon>
+                                    <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id); shoppingListFood.entries.delete(e.id)"
+                                                       @save="(args: ShoppingListEntry) => (shoppingListFood.entries.set(e.id, args))"></model-edit-dialog>
+                                </v-btn>
+                            </template>
 
-                            <!-- TODO make properly reactive or delete from the food instance in this component as well | ADD functionality once reactive -->
-                            <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id!);" v-if="!e.recipeMealplan"></model-edit-dialog>
+
                         </v-list-item>
                     </template>
 
@@ -137,6 +141,21 @@ function categoryUpdate(category: SupermarketCategory) {
 
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    })
+}
+
+/**
+ * add new entry for currently selected food type
+ */
+function addEntryForFood() {
+    useShoppingStore().createObject({
+        food: shoppingListFood.value?.food,
+        unit: null,
+        amount: 1,
+    } as ShoppingListEntry, false).then((r: ShoppingListEntry|undefined) => {
+        if(r != undefined){
+            shoppingListFood.value?.entries.set(r.id!, r)
+        }
     })
 }
 

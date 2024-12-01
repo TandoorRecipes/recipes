@@ -229,8 +229,10 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             if (undo) {
                 registerChange("CREATE", [r])
             }
+            return r
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            return undefined
         })
     }
 
