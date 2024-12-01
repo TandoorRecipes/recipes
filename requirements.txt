@@ -20,7 +20,7 @@ requests==2.32.3
 six==1.16.0
 webdavclient3==3.14.6
 whitenoise==6.7.0
-icalendar==5.0.11
+icalendar==6.1.0
 pyyaml==6.0.2
 uritemplate==4.1.1
 beautifulsoup4==4.12.3
