@@ -22,7 +22,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^9.1.0",
     "bootstrap-vue": "^2.23.1",
-    "core-js": "^3.29.1",
+    "core-js": "^3.39.0",
     "lodash": "^4.17.21",
     "mavon-editor": "^2.10.4",
     "moment": "^2.30.1",
