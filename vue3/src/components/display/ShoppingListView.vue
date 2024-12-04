@@ -269,8 +269,8 @@ function addIngredient() {
     api.apiIngredientFromStringCreate({ingredientString: {text: ingredientInput.value} as IngredientString}).then(r => {
         useShoppingStore().createObject({
             amount: Math.max(r.amount, 1),
-            unit: (r.unit != null) ? {name: r.unit} as Unit : null,
-            food: {name: r.food} as Food,
+            unit: r.unit,
+            food: r.food,
         } as ShoppingListEntry, true)
         ingredientInput.value = ''
 

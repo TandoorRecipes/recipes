@@ -2098,4 +2098,13 @@ def ingredient_from_string(request):
     ingredient_parser = IngredientParser(request, False)
     amount, unit, food, note = ingredient_parser.parse(text)
 
-    return JsonResponse({'amount': amount, 'unit': unit, 'food': food, 'note': note}, status=200)
+    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note}
+    if food:
+        food, created = Food.objects.get_or_create(space=request.space, name=food)
+        ingredient['food'] = {'name': food.name, 'id': food.id}
+
+    if unit:
+        unit, created = Unit.objects.get_or_create(space=request.space, name=unit)
+        ingredient['unit'] = {'name': unit.name, 'id': unit.id}
+
+    return JsonResponse(ingredient, status=200)

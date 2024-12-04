@@ -110,7 +110,7 @@
                 <v-textarea v-model="ingredientTextInput"></v-textarea>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="parseAndInsertIngredients()" color="save">{{$t('Add')}}</v-btn>
+                <v-btn @click="parseAndInsertIngredients()" color="save">{{ $t('Add') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import {nextTick, ref} from 'vue'
-import {Ingredient, Step} from "@/openapi";
+import {ApiApi, Food, Ingredient, ParsedIngredient, Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
 import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
@@ -156,8 +156,27 @@ function sortIngredients() {
 /**
  *
  */
-function parseAndInsertIngredients(){
-    let ingredientStrings = ingredientTextInput.value.split(/\r?\n/)
+function parseAndInsertIngredients() {
+    let api = new ApiApi()
+    let promises: Promise<ParsedIngredient>[] = []
+    let ingredientList = ingredientTextInput.value.split(/\r?\n/)
+    ingredientList.forEach(ingredientString => {
+        if (ingredientString.trim() != "") {
+            promises.push(api.apiIngredientFromStringCreate({ingredientString: {text: ingredientString}}))
+        }
+    })
+    Promise.allSettled(promises).then(r => {
+        r.forEach(i => {
+            step.value.ingredients.push({
+                amount: i.value.amount,
+                food: i.value.food,
+                unit: i.value.unit,
+                note: i.value.note
+            } as Ingredient)
+        })
+        ingredientTextInput.value = ""
+        dialogIngredientParser.value = false
+    })
 }
 
 /**
