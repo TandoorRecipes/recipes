@@ -22,7 +22,6 @@
                     </v-list>
                 </v-menu>
             </v-btn>
-            <v-icon icon="$dragHandle" class="drag-handle cursor-move"></v-icon>
         </template>
 
         <v-card-text>
@@ -154,7 +153,7 @@ function sortIngredients() {
 }
 
 /**
- *
+ * parse ingredients from text input and add them as ingredients
  */
 function parseAndInsertIngredients() {
     let api = new ApiApi()
