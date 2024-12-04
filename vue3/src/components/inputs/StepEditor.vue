@@ -50,7 +50,8 @@
                     <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients">
                         <v-row v-for="(ingredient, index) in step.ingredients" dense>
                             <v-col cols="2">
-                                <v-number-input  :label="$t('Amount')" v-model="ingredient.amount" inset control-variant="stacked" :min="0"></v-number-input>
+                                <v-number-input :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" inset control-variant="stacked"
+                                                :min="0"></v-number-input>
                             </v-col>
                             <v-col cols="3">
                                 <model-select model="Unit" v-model="ingredient.unit"></model-select>
@@ -58,15 +59,15 @@
                             <v-col cols="3">
                                 <model-select model="Food" v-model="ingredient.food"></model-select>
                             </v-col>
-                            <v-col cols="3" @keydown.tab="insertAndFocusIngredient">
-                                <v-text-field  :label="$t('Note')" v-model="ingredient.note"></v-text-field>
+                            <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
+                                <v-text-field :label="$t('Note')" v-model="ingredient.note"></v-text-field>
                             </v-col>
                             <v-col cols="1">
                                 <v-btn variant="plain" icon>
-                                    <v-icon icon="$settings" ></v-icon>
+                                    <v-icon icon="$settings"></v-icon>
                                     <v-menu activator="parent">
                                         <v-list>
-                                            <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{$t('Delete')}}</v-list-item>
+                                            <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
                                         </v-list>
                                     </v-menu>
                                 </v-btn>
@@ -74,6 +75,8 @@
                             </v-col>
                         </v-row>
                     </vue-draggable>
+                    <v-btn color="primary" @click="insertAndFocusIngredient()">{{ $t('Add') }}</v-btn>
+                    <v-btn color="secondary" @click="dialogIngredientParser = true">{{ $t('AddMany') }}</v-btn>
                 </v-col>
                 <v-col cols="12">
                     <v-label>{{ $t('Instructions') }}</v-label>
@@ -92,18 +95,29 @@
         :max-width="(mobile) ? '100vw': '75vw'"
         :fullscreen="mobile">
         <v-card>
-            <v-toolbar>
-                <v-toolbar-title>Edit Instructions</v-toolbar-title>
-                <v-btn icon="fas fa-close" @click="dialogMarkdownEdit = false"></v-btn>
-            </v-toolbar>
-
+            <v-closable-card-title :title="$t('Instructions')"></v-closable-card-title>
             <step-markdown-editor class="h-100" v-model="step"></step-markdown-editor>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog
+        v-model="dialogIngredientParser"
+        :max-width="(mobile) ? '100vw': '75vw'"
+        :fullscreen="mobile">
+        <v-card>
+            <v-closable-card-title :title="$t('Ingredients')"></v-closable-card-title>
+            <v-card-text>
+                <v-textarea v-model="ingredientTextInput"></v-textarea>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn @click="parseAndInsertIngredients()" color="save">{{$t('Add')}}</v-btn>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {nextTick, ref} from 'vue'
 import {Ingredient, Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
@@ -111,6 +125,7 @@ import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 
 const step = defineModel<Step>({required: true})
 
@@ -124,8 +139,10 @@ const showTime = ref(false)
 const showRecipe = ref(false)
 const showFile = ref(false)
 
-
 const dialogMarkdownEdit = ref(false)
+const dialogIngredientParser = ref(false)
+
+const ingredientTextInput = ref("")
 
 /**
  * sort function called by draggable when ingredient table is sorted
@@ -136,16 +153,33 @@ function sortIngredients() {
     })
 }
 
-function insertAndFocusIngredient(event: KeyboardEvent){
-    console.log('TRIGGER TAB')
-    event.preventDefault()
-    step.value.ingredients.push(
-        {
-            amount: 0,
-            food: null,
-            unit: null
-        } as Ingredient
-    )
+/**
+ *
+ */
+function parseAndInsertIngredients(){
+    let ingredientStrings = ingredientTextInput.value.split(/\r?\n/)
+}
+
+/**
+ * handle tab presses on the note field of the last ingredient to insert a new ingredient
+ * @param event key event
+ * @param index index tab was pressed at
+ */
+function handleIngredientNoteTab(event: KeyboardEvent, index: number) {
+    if (step.value.ingredients.length == (index + 1) && !event.shiftKey && !event.altKey && !event.ctrlKey) {
+        event.preventDefault()
+        insertAndFocusIngredient()
+    }
+}
+
+/**
+ * insert a new ingredient and focus its first input
+ */
+function insertAndFocusIngredient() {
+    step.value.ingredients.push({} as Ingredient)
+    nextTick(() => {
+        document.getElementById(`id_input_amount_${step.value.id}_${step.value.ingredients.length - 1}`).select()
+    })
 }
 </script>
 
