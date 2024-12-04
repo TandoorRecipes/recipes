@@ -16,6 +16,7 @@
     "mavon-editor": "^3.0.1",
     "pinia": "^2.1.7",
     "vue": "^3.5.7",
+    "vue-draggable-plus": "^0.6.0",
     "vue-i18n": "9",
     "vue-router": "4",
     "vue-simple-calendar": "^7.1.0",

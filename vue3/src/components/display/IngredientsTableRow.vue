@@ -12,8 +12,8 @@
                     <v-tooltip v-model="showTooltip" activator="parent" location="start">{{ props.ingredient.note }}</v-tooltip>
                 </v-icon>
             </td>
-            <td v-if="props.draggable">
-                <i class="fas fa-grip-lines drag-handle cursor-move"></i>
+            <td v-if="props.draggable" >
+                <v-icon icon="$dragHandle" class="drag-handle cursor-move"></v-icon>
             </td>
         </template>
 

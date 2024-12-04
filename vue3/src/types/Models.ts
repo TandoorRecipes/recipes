@@ -58,6 +58,9 @@ export type Model = {
     icon: string,
     toStringKeys: Array<string>,
 
+    itemValue: string|undefined,
+    itemLabel: string|undefined,
+
     disableList?: boolean | undefined,
     disableRetrieve?: boolean | undefined,
     disableCreate?: boolean | undefined,
@@ -82,6 +85,7 @@ export type EditorSupportedModels =
     | 'Step'
     | 'Ingredient'
     | 'Food'
+    | 'Unit'
     | 'Supermarket'
     | 'SupermarketCategory'
     | 'PropertyType'
@@ -89,6 +93,7 @@ export type EditorSupportedModels =
     | 'Keyword'
     | 'UserFile'
     | 'ShoppingListEntry'
+    | 'User'
 
 export const TFood = {
     name: 'Food',
@@ -225,6 +230,7 @@ export const TUser = {
 
     isPaginated: false,
     toStringKeys: ['displayName'],
+    itemLabel: 'displayName',
 
     tableHeaders: [
         {title: 'Name', key: 'displayName'},

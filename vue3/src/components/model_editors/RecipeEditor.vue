@@ -15,13 +15,21 @@
             <v-tab value="settings">{{ $t('Settings') }}</v-tab>
 
         </v-tabs>
-
         <v-card-text>
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="recipe">
+
                     <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512"></v-textarea>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512"></v-textarea>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-img style="max-height: 150px" :src="editingObj.image"></v-img>
+                            </v-col>
+                        </v-row>
+
 
                         <v-label>{{ $t('Keywords') }}</v-label>
                         <ModelSelect mode="tags" v-model="editingObj.keywords" model="Keyword"></ModelSelect>
@@ -41,27 +49,27 @@
                         </v-row>
 
                     </v-form>
+
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
                     <v-form :disabled="loading">
-                        <v-timeline side="end" line-inset="10">
+                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
+                            <v-col>
+                                <step-editor v-model="editingObj.steps[i]" :step-index="i"></step-editor>
+                            </v-col>
+                        </v-row>
 
-                            <v-timeline-item v-for="(s,i) in editingObj.steps" dot-color="primary" size="small">
-                                <template #icon>
-                                    {{ i+1 }}
-                                </template>
-                                <v-card>
-                                    <v-card-text >
-                                        <v-text-field style="min-width: 60vw" v-model="s.name"></v-text-field>
-                                    </v-card-text>
-                                </v-card>
-                            </v-timeline-item>
-                        </v-timeline>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
                     <v-form :disabled="loading">
+                        <v-checkbox :label="$t('Ingredient Overview')" :hint="$t('show_ingredient_overview')" persistent-hint
+                                    v-model="editingObj.showIngredientOverview"></v-checkbox>
 
+                        <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
+                        <v-checkbox :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj._private"></v-checkbox>
+                        <ModelSelect mode="tags" model="User" :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj.shared"
+                                     append-to-body></ModelSelect>
 
                     </v-form>
                 </v-tabs-window-item>
@@ -79,6 +87,7 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import StepEditor from "@/components/inputs/StepEditor.vue";
 
 const {t} = useI18n()
 

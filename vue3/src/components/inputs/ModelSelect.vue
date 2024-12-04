@@ -9,15 +9,15 @@
 
             :ref="`ref_${props.id}`"
             class="material-multiselect"
-            :resolve-on-load="searchOnLoad"
+            :resolve-on-load="props.searchOnLoad"
             v-model="model"
             :options="search"
             :on-create="createObject"
             :createOption="props.allowCreate"
             :delay="300"
             :object="true"
-            :valueProp="props.itemValue"
-            :label="props.itemLabel"
+            :valueProp="itemValue"
+            :label="itemLabel"
             :searchable="true"
             :strict="false"
             :disabled="props.disabled"
@@ -30,9 +30,10 @@
             :noResultsText="$t('No_Results')"
             :loading="loading"
             @open="multiselect.refreshOptions()"
-            :append-to-body="appendToBody"
+            :append-to-body="props.appendToBody"
             :classes="{
                 dropdown: 'multiselect-dropdown z-3000',
+                containerActive: '',
             }"
         />
 
@@ -40,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onBeforeMount, onMounted, PropType, ref, useTemplateRef} from "vue"
+import {computed, onBeforeMount, onMounted, PropType, ref, useTemplateRef} from "vue"
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
@@ -55,8 +56,6 @@ const props = defineProps({
 
     id: {type: String, required: false, default: Math.floor(Math.random()*10000).toString()},
 
-    itemLabel: {type: String, default: "name"},
-    itemValue: {type: String, default: "id"},
     limit: {type: Number, default: 25},
 
     disabled: {type: Boolean, default: false},
@@ -75,6 +74,26 @@ const props = defineProps({
     hint: {type: String, default: ''},
 
     searchOnLoad: {type: Boolean, default: false},
+})
+
+/**
+ * check if model has a non-standard value attribute defined, if not use "id" as the value attribute
+ */
+const itemValue = computed(() => {
+    if(modelClass.value.model.itemValue){
+        return modelClass.value.model.itemValue
+    }
+    return 'id'
+})
+
+/**
+ * check if model has a non-standard label attribute defined, if not use "name" as the value attribute
+ */
+const itemLabel = computed(() => {
+    if(modelClass.value.model.itemLabel){
+        return modelClass.value.model.itemLabel
+    }
+    return 'name'
 })
 
 const model = defineModel()
@@ -117,7 +136,7 @@ function search(query: string) {
  * @param select$ reference to multiselect instance
  */
 async function createObject(object: any, select$: Multiselect) {
-    return await modelClass.value.create({name: object[props.itemLabel]}).then((createdObj : any) => {
+    return await modelClass.value.create({name: object[itemLabel.value]}).then((createdObj : any) => {
         useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
         emit('create', object)
         return createdObj
@@ -132,11 +151,11 @@ async function createObject(object: any, select$: Multiselect) {
 <style src="@vueform/multiselect/themes/default.css"></style>
 <style>
 .material-multiselect {
-    --ms-line-height: 2.5;
-    --ms-bg: rgba(235, 235, 235, 0.75);
+    --ms-line-height: 2.3;
+    --ms-bg: rgba(235, 235, 235, 0.3);
     --ms-border-color: 0;
     --ms-border-color-active: 0;
-    border-bottom: 4px #0f0f0f;
+    border-bottom: inset 1px #323232;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }

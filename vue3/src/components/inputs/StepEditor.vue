@@ -1,13 +1,28 @@
 <template>
 
     <!--TODO  name, time, recipe, file(s), ingredients, quick add ingredients -->
-    <v-card>
+
+    <v-card variant="outlined">
         <template #title>
-            <v-card-title v-if="step.name">{{ step.name }}</v-card-title>
-            <v-card-title v-else-if="stepIndex !== undefined">Step {{ stepIndex + 1 }}</v-card-title>
+            <v-card-title>
+                <v-chip color="primary">{{ props.stepIndex + 1 }}</v-chip>
+                {{ step.name }}
+            </v-card-title>
         </template>
         <template v-slot:append>
-            <v-btn size="small" variant="plain" icon="fas fa-sliders-h"></v-btn> <!--TODO implement -->
+            <v-btn size="small" variant="plain" icon>
+                <v-icon icon="fas fa-sliders-h"></v-icon>
+                <v-menu activator="parent">
+                    <v-list>
+                        <v-list-item prepend-icon="fas fa-plus-circle" @click="showTime = true" v-if="!showTime && step.time == 0">{{ $t('Time') }}</v-list-item>
+                        <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile &&  step.file == null">{{ $t('File') }}</v-list-item>
+                        <v-list-item prepend-icon="fas fa-plus-circle" @click="showRecipe = true" v-if="!showRecipe && step.stepRecipe == null">{{ $t('Recipe') }}</v-list-item>
+
+                        <v-list-item prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-btn>
+            <v-icon icon="$dragHandle" class="drag-handle cursor-move"></v-icon>
         </template>
 
         <v-card-text>
@@ -15,126 +30,123 @@
                 v-model="step.name"
                 label="Step Name"
             ></v-text-field>
-            <v-chip-group>
-                <v-chip v-if="step.time == 0"><i class="fas fa-plus-circle fa-fw mr-1"></i> Time</v-chip>
-                <v-chip v-if="step.instruction == ''"><i class="fas fa-plus-circle fa-fw mr-1"></i> Instructions</v-chip>
-                <v-chip v-if="step.file == null"><i class="fas fa-plus-circle fa-fw mr-1"></i> File</v-chip>
-                <v-chip v-if="step.stepRecipe == null"><i class="fas fa-plus-circle fa-fw mr-1"></i> Recipe</v-chip>
-            </v-chip-group>
 
-            <v-table density="compact">
+            <v-row>
+                <v-col cols="12" md="6" v-if="showTime || step.time != 0">
+                    <v-number-input :label="$t('Time')" v-model="step.time" :min="0" :step="5" control-variant="split"></v-number-input>
+                </v-col>
+                <v-col cols="12" md="6" v-if="showRecipe || step.stepRecipe != null">
+                    <model-select model="Recipe" v-model="step.stepRecipe" append-to-body></model-select>
+                </v-col>
+                <v-col cols="12" md="6" v-if="showFile || step.file != null">
+                    <model-select model="UserFile" v-model="step.file" append-to-body></model-select>
+                </v-col>
+            </v-row>
 
-                <draggable tag="tbody" v-model="step.ingredients" handle=".drag-handle" item-key="id" @sort="sortIngredients">
-                    <template #item="{element}">
-                        <v-dialog>
-                            <template v-slot:activator="{ props: activatorProps }">
-                                <IngredientsTableRow v-bind="activatorProps" :ingredient="element" :key="element.id" :show-notes="false" :draggable="true"></IngredientsTableRow>
-                            </template>
-                            <template v-slot:default="{ isActive }">
-                                <v-card  >
-                                    <v-card-title>Ingredient</v-card-title>
-                                   <v-card-text>
-                                       <v-form>
-                                           <v-text-field
-                                               label="Amount"
-                                                v-model.number="element.amount"
-                                           ></v-text-field>
-                                           <model-select model="Unit" v-model="element.unit" :multiple="false"></model-select>
-                                           <model-select model="Food" v-model="element.food" :multiple="false"></model-select>
-                                           <v-text-field
-                                               label="Note"
-                                                v-model="element.note"
-                                           ></v-text-field>
-                                       </v-form>
+            <v-row dense>
+                <v-col cols="12">
+                    <v-label>{{ $t('Ingredients') }}</v-label>
 
-                                   </v-card-text>
-                                </v-card>
-                            </template>
-                        </v-dialog>
+                    <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients">
+                        <v-row v-for="(ingredient, index) in step.ingredients" dense>
+                            <v-col cols="2">
+                                <v-number-input  :label="$t('Amount')" v-model="ingredient.amount" inset control-variant="stacked" :min="0"></v-number-input>
+                            </v-col>
+                            <v-col cols="3">
+                                <model-select model="Unit" v-model="ingredient.unit"></model-select>
+                            </v-col>
+                            <v-col cols="3">
+                                <model-select model="Food" v-model="ingredient.food"></model-select>
+                            </v-col>
+                            <v-col cols="3" @keydown.tab="insertAndFocusIngredient">
+                                <v-text-field  :label="$t('Note')" v-model="ingredient.note"></v-text-field>
+                            </v-col>
+                            <v-col cols="1">
+                                <v-btn variant="plain" icon>
+                                    <v-icon icon="$settings" ></v-icon>
+                                    <v-menu activator="parent">
+                                        <v-list>
+                                            <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{$t('Delete')}}</v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </v-btn>
+                                <v-icon icon="$dragHandle" class="drag-handle"></v-icon>
+                            </v-col>
+                        </v-row>
+                    </vue-draggable>
+                </v-col>
+                <v-col cols="12">
+                    <v-label>{{ $t('Instructions') }}</v-label>
+                    <v-alert @click="dialogMarkdownEdit = true" class="mt-2 cursor-text" min-height="52px">
+                        {{ step.instruction }}
+                    </v-alert>
+                </v-col>
+            </v-row>
 
-                    </template>
-                </draggable>
-
-            </v-table>
-
-            <v-alert @click="dialog_markdown_edit = true" class="mt-2">
-                {{ step.instruction }}
-            </v-alert>
 
         </v-card-text>
     </v-card>
 
     <v-dialog
-        v-model="dialog_markdown_edit"
-        transition="dialog-bottom-transition">
-        <v-card>
-            <v-card-title>Ingredient</v-card-title>
-            <v-form>
-                <v-text-field></v-text-field>
-            </v-form>
-        </v-card>
-    </v-dialog>
-
-    <v-dialog
-        v-model="dialog_markdown_edit"
-        transition="dialog-bottom-transition"
-        fullscreen>
+        v-model="dialogMarkdownEdit"
+        :max-width="(mobile) ? '100vw': '75vw'"
+        :fullscreen="mobile">
         <v-card>
             <v-toolbar>
                 <v-toolbar-title>Edit Instructions</v-toolbar-title>
-                <v-btn icon="fas fa-close" @click="dialog_markdown_edit = false"></v-btn>
+                <v-btn icon="fas fa-close" @click="dialogMarkdownEdit = false"></v-btn>
             </v-toolbar>
-            <step-markdown-editor class="h-100" :step="step" @change="step = $event.step;"></step-markdown-editor>
+
+            <step-markdown-editor class="h-100" v-model="step"></step-markdown-editor>
         </v-card>
     </v-dialog>
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType} from 'vue'
-import {Step} from "@/openapi";
+<script setup lang="ts">
+import {ref} from 'vue'
+import {Ingredient, Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
-import IngredientsTable from "@/components/display/IngredientsTable.vue";
+import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
 import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
-import draggable from "vuedraggable";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import {useDisplay} from "vuetify";
+import {VueDraggable} from "vue-draggable-plus";
 
-export default defineComponent({
-    name: "StepEditor",
-    components: {ModelSelect, draggable, IngredientsTableRow, IngredientsTable, StepMarkdownEditor},
-    emits: ['update:modelValue'],
-    props: {
-        modelValue: {
-            type: Object as PropType<Step>,
-            required: true,
-        },
-        stepIndex: {
-            type: Number,
-            required: false,
-        },
-    },
-    computed: {
-        step: {
-            get() {
-                return this.modelValue
-            },
-            set(value: Step) {
-                this.$emit('update:modelValue', value)
-            }
-        }
-    },
-    data() {
-        return {
-            dialog_markdown_edit: false,
-        }
-    },
-    methods: {
-        sortIngredients() {
-            this.step.ingredients.forEach((value, index) => {
-                value.order = index
-            })
-        }
-    }
+const step = defineModel<Step>({required: true})
+
+const props = defineProps({
+    stepIndex: {type: Number, required: true},
 })
+
+const {mobile} = useDisplay()
+
+const showTime = ref(false)
+const showRecipe = ref(false)
+const showFile = ref(false)
+
+
+const dialogMarkdownEdit = ref(false)
+
+/**
+ * sort function called by draggable when ingredient table is sorted
+ */
+function sortIngredients() {
+    step.value.ingredients.forEach((value, index) => {
+        value.order = index
+    })
+}
+
+function insertAndFocusIngredient(event: KeyboardEvent){
+    console.log('TRIGGER TAB')
+    event.preventDefault()
+    step.value.ingredients.push(
+        {
+            amount: 0,
+            food: null,
+            unit: null
+        } as Ingredient
+    )
+}
 </script>
 
 
