@@ -58,6 +58,16 @@
                                 <step-editor v-model="editingObj.steps[i]" :step-index="i"></step-editor>
                             </v-col>
                         </v-row>
+                        <v-row>
+                            <v-col class="text-center">
+                                <v-btn-group density="compact">
+                                    <v-btn color="success" prepend-icon="fa-solid fa-plus">{{ $t('Add_Step') }}</v-btn>
+                                    <v-btn color="warning" @click="dialogStepManager = true">
+                                        <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
+                                    </v-btn>
+                                </v-btn-group>
+                            </v-col>
+                        </v-row>
 
                     </v-form>
                 </v-tabs-window-item>
@@ -77,6 +87,22 @@
         </v-card-text>
     </model-editor-base>
 
+    <v-dialog max-width="600px" v-model="dialogStepManager">
+        <v-card>
+            <v-card-title>{{ $t('Steps') }}</v-card-title>
+            <v-list>
+                <vue-draggable handle=".drag-handle" v-model="editingObj.steps" :on-sort="sortSteps">
+                    <v-list-item v-for="(s,i) in editingObj.steps" :key="s.id">
+                         <v-chip color="primary">{{ i + 1 }}</v-chip> {{s.name}}
+                        <template #append>
+                            <v-icon class="drag-handle" icon="$dragHandle"></v-icon>
+                        </template>
+                    </v-list-item>
+                </vue-draggable>
+            </v-list>
+        </v-card>
+    </v-dialog>
+
 </template>
 
 <script setup lang="ts">
@@ -88,6 +114,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import StepEditor from "@/components/inputs/StepEditor.vue";
+import {VueDraggable} from "vue-draggable-plus";
 
 const {t} = useI18n()
 
@@ -102,10 +129,20 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 
 // object specific data (for selects/display)
 const tab = ref("recipe")
+const dialogStepManager = ref(false)
 
 onMounted(() => {
     setupState(props.item, props.itemId)
 })
+
+/**
+ * called by draggable in step manager dialog when steps are sorted
+ */
+function sortSteps(){
+    editingObj.value.steps.forEach((value, index) => {
+        value.order = index
+    })
+}
 
 </script>
 

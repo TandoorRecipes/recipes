@@ -67,6 +67,7 @@ export default createVuetify({
             create: 'fa-solid fa-plus',
             search: 'fa-solid fa-magnifying-glass',
             copy: 'fa-solid fa-copy',
+            add: 'fa-solid fa-plus',
             close: 'fa-solid fa-xmark',
             help: 'fa-solid fa-info',
             settings: 'fa-solid fa-sliders',

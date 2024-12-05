@@ -74,8 +74,10 @@
                             </v-col>
                         </v-row>
                     </vue-draggable>
-                    <v-btn color="primary" @click="insertAndFocusIngredient()">{{ $t('Add') }}</v-btn>
-                    <v-btn color="secondary" @click="dialogIngredientParser = true">{{ $t('AddMany') }}</v-btn>
+                    <v-btn-group density="compact">
+                        <v-btn color="success" @click="insertAndFocusIngredient()" prepend-icon="$add">{{ $t('Add') }}</v-btn>
+                        <v-btn color="warning" @click="dialogIngredientParser = true"><v-icon icon="$add"></v-icon> <v-icon icon="$add"></v-icon></v-btn>
+                    </v-btn-group>
                 </v-col>
                 <v-col cols="12">
                     <v-label>{{ $t('Instructions') }}</v-label>
@@ -94,7 +96,7 @@
         :max-width="(mobile) ? '100vw': '75vw'"
         :fullscreen="mobile">
         <v-card>
-            <v-closable-card-title :title="$t('Instructions')"></v-closable-card-title>
+            <v-closable-card-title :title="$t('Instructions')" v-model="dialogMarkdownEdit"></v-closable-card-title>
             <step-markdown-editor class="h-100" v-model="step"></step-markdown-editor>
         </v-card>
     </v-dialog>
@@ -104,7 +106,7 @@
         :max-width="(mobile) ? '100vw': '75vw'"
         :fullscreen="mobile">
         <v-card>
-            <v-closable-card-title :title="$t('Ingredients')"></v-closable-card-title>
+            <v-closable-card-title :title="$t('Ingredients')" v-model="dialogIngredientParser"></v-closable-card-title>
             <v-card-text>
                 <v-textarea v-model="ingredientTextInput"></v-textarea>
             </v-card-text>
