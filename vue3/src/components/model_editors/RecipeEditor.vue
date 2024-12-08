@@ -12,6 +12,7 @@
         <v-tabs v-model="tab" :disabled="loading" grow>
             <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
             <v-tab value="steps">{{ $t('Steps') }}</v-tab>
+            <v-tab value="properties">{{ $t('Properties') }}</v-tab>
             <v-tab value="settings">{{ $t('Settings') }}</v-tab>
 
         </v-tabs>
@@ -71,6 +72,12 @@
 
                     </v-form>
                 </v-tabs-window-item>
+                <v-tabs-window-item value="properties">
+                    <v-form :disabled="loading">
+                        <v-alert class="mb-2" icon="$help">{{ $t('PropertiesFoodHelp') }}</v-alert>
+                        <properties-editor  v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
+                    </v-form>
+                </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
                     <v-form :disabled="loading">
                         <v-checkbox :label="$t('Ingredient Overview')" :hint="$t('show_ingredient_overview')" persistent-hint
@@ -115,6 +122,7 @@ import {useI18n} from "vue-i18n";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import StepEditor from "@/components/inputs/StepEditor.vue";
 import {VueDraggable} from "vue-draggable-plus";
+import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
 
 const {t} = useI18n()
 

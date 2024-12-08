@@ -34,46 +34,7 @@
                         <v-number-input :label="$t('Properties_Food_Amount')" v-model="editingObj.propertiesFoodAmount"></v-number-input>
                         <model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></model-select>
 
-                        <v-btn-group density="compact">
-                            <v-btn color="create" @click="editingObj.properties.push({} as Property)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
-                            <v-btn color="secondary" @click="addAllProperties" prepend-icon="fa-solid fa-list">{{ $t('AddAll') }}</v-btn>
-                        </v-btn-group>
-
-                        <v-row class="d-none d-md-flex mt-2" v-for="p in editingObj.properties" dense>
-                            <v-col cols="0" md="5">
-                                <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked">
-                                    <template #append-inner v-if="p.propertyType">
-                                        <v-chip class="me-4">{{ p.propertyType.unit }} / {{ editingObj.propertiesFoodAmount }} <span v-if="editingObj.propertiesFoodUnit">&nbsp;{{
-                                                editingObj.propertiesFoodUnit.name
-                                            }}</span>
-                                        </v-chip>
-                                    </template>
-                                </v-number-input>
-                            </v-col>
-                            <v-col cols="0" md="6">
-                                <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                                <model-select :label="$t('Property')" v-model="p.propertyType" model="PropertyType"></model-select>
-                            </v-col>
-                            <v-col cols="0" md="1">
-                                <v-btn color="delete" @click="deleteFoodProperty(p)">
-                                    <v-icon icon="$delete"></v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                        <v-list class="d-md-none">
-                            <v-list-item v-for="p in editingObj.properties" border>
-                                <span v-if="p.propertyType">{{ p.propertyAmount }} {{ p.propertyType.unit }} {{ p.propertyType.name }}
-                                    <span v-if="editingObj.propertiesFoodUnit"> / {{ editingObj.propertiesFoodAmount }} {{ editingObj.propertiesFoodUnit.name }}</span>
-                                </span>
-                                <span v-else><i><{{ $t('New') }}></i></span>
-                                <template #append>
-                                    <v-btn color="edit">
-                                        <v-icon icon="$edit"></v-icon>
-                                        <model-edit-dialog model="Property" :item="p"></model-edit-dialog>
-                                    </v-btn>
-                                </template>
-                            </v-list-item>
-                        </v-list>
+                        <properties-editor v-model="editingObj.properties" :amount-for="propertiesAmountFor"></properties-editor>
                     </v-form>
                 </v-tabs-window-item>
 
@@ -153,7 +114,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref, watch} from "vue";
+import {computed, onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Food, Property, Unit, UnitConversion} from "@/openapi";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
@@ -162,6 +123,7 @@ import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
 
 
 const props = defineProps({
@@ -175,6 +137,22 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 
 
 // object specific data (for selects/display)
+
+/**
+ * compute label for the properties amount input to show user for
+ * what amount of food a property is entered
+ */
+const propertiesAmountFor = computed(() => {
+    let amountFor = ''
+    if(editingObj.value.propertiesFoodAmount){
+        amountFor += editingObj.value.propertiesFoodAmount
+    }
+    if(editingObj.value.propertiesFoodUnit){
+        amountFor += " " + editingObj.value.propertiesFoodUnit.name
+    }
+    return amountFor
+})
+
 const tab = ref("food")
 
 const unitConversions = ref([] as UnitConversion[])
@@ -219,30 +197,6 @@ async function saveObjectConversions() {
 // ------------------------------------------------------
 // object specific functions
 // ------------------------------------------------------
-
-/**
- * load list of property types from server and add all types that are not yet linked
- * to the given food to its properties
- */
-function addAllProperties() {
-    const api = new ApiApi()
-    api.apiPropertyTypeList().then(r => {
-        r.results.forEach(pt => {
-            if (editingObj.value.properties.findIndex(x => x.propertyType.name == pt.name) == -1) {
-                editingObj.value.properties.push({propertyAmount: 0, propertyType: pt} as Property)
-            }
-        })
-    })
-}
-
-/**
- * remove property from food
- * //TODO also delete relation in database
- * @param property property to delete
- */
-function deleteFoodProperty(property: Property) {
-    editingObj.value.properties = editingObj.value.properties.filter(p => p !== property)
-}
 
 /**
  * load conversions for currently editing food from API

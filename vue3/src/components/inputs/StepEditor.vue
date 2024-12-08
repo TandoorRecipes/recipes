@@ -108,7 +108,7 @@
         <v-card>
             <v-closable-card-title :title="$t('Ingredients')" v-model="dialogIngredientParser"></v-closable-card-title>
             <v-card-text>
-                <v-textarea v-model="ingredientTextInput"></v-textarea>
+                <v-textarea v-model="ingredientTextInput" :placeholder="$t('paste_ingredients_placeholder')"></v-textarea>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="parseAndInsertIngredients()" color="save">{{ $t('Add') }}</v-btn>
