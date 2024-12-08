@@ -424,9 +424,9 @@ def parse_keywords(keyword_json, request):
         if len(kw) != 0:
             kw = automation_engine.apply_keyword_automation(kw)
             if k := Keyword.objects.filter(name__iexact=kw, space=request.space).first():
-                keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
+                keywords.append({'label': str(k), 'name': k.name, 'id': k.id, 'import_keyword': True})
             else:
-                keywords.append({'label': kw, 'name': kw})
+                keywords.append({'label': kw, 'name': kw, 'import_keyword': False})
 
     return keywords
 

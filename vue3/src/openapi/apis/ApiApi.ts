@@ -122,6 +122,8 @@ import type {
   RecipeBook,
   RecipeBookEntry,
   RecipeFlat,
+  RecipeFromSource,
+  RecipeFromSourceResponse,
   RecipeImage,
   RecipeShoppingUpdate,
   RecipeSimple,
@@ -361,6 +363,10 @@ import {
     RecipeBookEntryToJSON,
     RecipeFlatFromJSON,
     RecipeFlatToJSON,
+    RecipeFromSourceFromJSON,
+    RecipeFromSourceToJSON,
+    RecipeFromSourceResponseFromJSON,
+    RecipeFromSourceResponseToJSON,
     RecipeImageFromJSON,
     RecipeImageToJSON,
     RecipeShoppingUpdateFromJSON,
@@ -1159,6 +1165,10 @@ export interface ApiRecipeCreateRequest {
 
 export interface ApiRecipeDestroyRequest {
     id: number;
+}
+
+export interface ApiRecipeFromSourceCreateRequest {
+    recipeFromSource?: RecipeFromSource;
 }
 
 export interface ApiRecipeImageUpdateRequest {
@@ -8567,10 +8577,12 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
      */
-    async apiRecipeFromSourceCreateRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiRecipeFromSourceCreateRaw(requestParameters: ApiRecipeFromSourceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
@@ -8581,16 +8593,18 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: RecipeFromSourceToJSON(requestParameters['recipeFromSource']),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromSourceResponseFromJSON(jsonValue));
     }
 
     /**
      * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
      */
-    async apiRecipeFromSourceCreate(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiRecipeFromSourceCreateRaw(initOverrides);
+    async apiRecipeFromSourceCreate(requestParameters: ApiRecipeFromSourceCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeFromSourceResponse> {
+        const response = await this.apiRecipeFromSourceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

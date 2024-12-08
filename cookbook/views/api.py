@@ -105,7 +105,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  SupermarketSerializer, SyncLogSerializer, SyncSerializer,
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer,
-                                 LocalizationSerializer, ServerSettingsSerializer
+                                 LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -1655,11 +1655,12 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
-# TODO implement proper schema  https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 class RecipeUrlImportView(APIView):
     throttle_classes = [RecipeImportThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
+    # TODO add response serializer
+    @extend_schema(request=RecipeFromSourceSerializer(many=False), responses=RecipeFromSourceResponseSerializer(many=False))
     def post(self, request, *args, **kwargs):
         """
         function to retrieve a recipe from a given url or source string
@@ -1671,6 +1672,8 @@ class RecipeUrlImportView(APIView):
         """
         scrape = None
         serializer = RecipeFromSourceSerializer(data=request.data)
+        response = {}
+
         if serializer.is_valid():
 
             if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
@@ -1680,21 +1683,17 @@ class RecipeUrlImportView(APIView):
                 bookmarklet.delete()
 
             url = serializer.validated_data.get('url', None)
-            data = unquote(serializer.validated_data.get('data', None))
-
-            duplicate = False
-            if url:
-                # Check for existing recipes with provided url
-                existing_recipe = Recipe.objects.filter(source_url=url).first()
-                if existing_recipe:
-                    duplicate = True
+            data = unquote(serializer.validated_data.get('data', ''))
 
             if not url and not data:
-                return Response({'error': True, 'msg': _('Nothing to do.')}, status=status.HTTP_400_BAD_REQUEST)
+                response['error'] = True
+                response['msg'] = _('Nothing to do.')
+                return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             elif url and not data:
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
                     if validate_import_url(url):
+                        # TODO new serializer
                         return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': [], 'duplicate': duplicate}, status=status.HTTP_200_OK)
                 if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     recipe_json = requests.get(
@@ -1713,6 +1712,7 @@ class RecipeUrlImportView(APIView):
                                                              filetype=pathlib.Path(recipe_json['image']).suffix),
                                                 name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                         recipe.save()
+                        # TODO new serializer
                         return Response({'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk})), 'duplicate': duplicate}, status=status.HTTP_201_CREATED)
                 else:
                     try:
@@ -1724,16 +1724,19 @@ class RecipeUrlImportView(APIView):
                             ).content
                             scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
-                            return Response({'error': True, 'msg': _('Invalid Url')},
-                                            status=status.HTTP_400_BAD_REQUEST)
+                            response['error'] = True
+                            response['msg'] = _('Invalid Url')
+                            return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
                     except NoSchemaFoundInWildMode:
                         pass
                     except requests.exceptions.ConnectionError:
-                        return Response({'error': True, 'msg': _('Connection Refused.')},
-                                        status=status.HTTP_400_BAD_REQUEST)
+                        response['error'] = True
+                        response['msg'] = _('Connection Refused.')
+                        return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
                     except requests.exceptions.MissingSchema:
-                        return Response({'error': True, 'msg': _('Bad URL Schema.')},
-                                        status=status.HTTP_400_BAD_REQUEST)
+                        response['error'] = True
+                        response['msg'] = _('Bad URL Schema.')
+                        return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
             else:
                 try:
                     data_json = json.loads(data)
@@ -1749,18 +1752,19 @@ class RecipeUrlImportView(APIView):
                     scrape = scrape_html(html=data, org_url=found_url, supported_only=False)
 
             if scrape:
-                return Response({
-                    'recipe_json': helper.get_from_scraper(scrape, request),
-                    'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
-                    'duplicate': duplicate
-                },
-                    status=status.HTTP_200_OK)
+                response['recipe'] = helper.get_from_scraper(scrape, request)
+                response['images'] = list(dict.fromkeys(get_images_from_soup(scrape.soup, url)))
+                response['duplicate'] = Recipe.objects.filter(source_url=url).values_list('id', flat=True).all()
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
 
             else:
-                return Response({'error': True, 'msg': _('No usable data could be found.')},
-                                status=status.HTTP_400_BAD_REQUEST)
+                response['error'] = True
+                response['msg'] = _('No usable data could be found.')
+                return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            response['error'] = True
+            response['msg'] = serializer.errors
+            return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
 
 class ImageToRecipeView(APIView):

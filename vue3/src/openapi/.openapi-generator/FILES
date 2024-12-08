@@ -123,6 +123,8 @@ models/Recipe.ts
 models/RecipeBook.ts
 models/RecipeBookEntry.ts
 models/RecipeFlat.ts
+models/RecipeFromSource.ts
+models/RecipeFromSourceResponse.ts
 models/RecipeImage.ts
 models/RecipeOverview.ts
 models/RecipeShoppingUpdate.ts
@@ -132,6 +134,14 @@ models/ShareLink.ts
 models/ShoppingListEntry.ts
 models/ShoppingListEntryBulk.ts
 models/ShoppingListRecipe.ts
+models/SourceImportFood.ts
+models/SourceImportIngredient.ts
+models/SourceImportKeyword.ts
+models/SourceImportProperty.ts
+models/SourceImportPropertyType.ts
+models/SourceImportRecipe.ts
+models/SourceImportStep.ts
+models/SourceImportUnit.ts
 models/Space.ts
 models/SpaceNavTextColorEnum.ts
 models/SpaceThemeEnum.ts

@@ -1559,6 +1559,60 @@ class RecipeFromSourceSerializer(serializers.Serializer):
     data = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     bookmarklet = serializers.IntegerField(required=False, allow_null=True, )
 
+class SourceImportFoodSerializer(serializers.Serializer):
+    name = serializers.CharField()
+
+class SourceImportUnitSerializer(serializers.Serializer):
+    name = serializers.CharField()
+
+class SourceImportIngredientSerializer(serializers.Serializer):
+    amount = serializers.FloatField()
+    food = SourceImportFoodSerializer()
+    unit = SourceImportUnitSerializer()
+    note = serializers.CharField(required=False)
+    original_text = serializers.CharField()
+
+class SourceImportStepSerializer(serializers.Serializer):
+    instruction = serializers.CharField()
+    ingredients = SourceImportIngredientSerializer(many=True)
+    show_ingredients_table = serializers.BooleanField()
+
+class SourceImportKeywordSerializer(serializers.Serializer):
+    id = serializers.IntegerField(allow_null=True)
+    label = serializers.CharField()
+    name = serializers.CharField()
+    import_keyword = serializers.BooleanField()
+
+class SourceImportPropertyTypeSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
+class SourceImportPropertySerializer(serializers.Serializer):
+    property_type = SourceImportPropertyTypeSerializer(many=False)
+    property_amount = serializers.FloatField()
+
+class SourceImportRecipeSerializer(serializers.Serializer):
+    steps = SourceImportStepSerializer(many=True)
+    internal = serializers.BooleanField()
+    source_url = serializers.URLField()
+    name = serializers.CharField()
+    description = serializers.CharField()
+    servings = serializers.IntegerField()
+    servings_text = serializers.CharField()
+    working_time = serializers.IntegerField()
+    waiting_time = serializers.IntegerField()
+    image = serializers.URLField()
+    keywords = SourceImportKeywordSerializer(many=True)
+
+    properties = serializers.ListField(child=SourceImportPropertySerializer())
+
+class RecipeFromSourceResponseSerializer(serializers.Serializer):
+    recipe = SourceImportRecipeSerializer(default=None)
+    images = serializers.ListField( default=[])
+    error = serializers.BooleanField(default=False)
+    msg = serializers.CharField(max_length=1024, default='')
+    duplicate = serializers.ListField(child=serializers.IntegerField(), default=[])
+
 
 class ImportImageSerializer(serializers.Serializer):
     image = serializers.ImageField()
