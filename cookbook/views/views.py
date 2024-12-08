@@ -584,3 +584,22 @@ def get_orphan_files(delete_orphans=False):
         orphans = find_orphans()
 
     return [img[1] for img in orphans]
+
+@group_required('user')
+def wishlist(request):
+    wishlist = request.session.get('wishlist', [])
+    return render(request, 'wishlist.html', {'wishlist': wishlist})
+
+@group_required('user')
+def remove_from_wishlist(request, recipe_id):
+    if request.method == "POST":
+        wishlist = request.session.get('wishlist', [])
+        wishlist = [r for r in wishlist if r['id'] != recipe_id]
+        request.session['wishlist'] = wishlist
+        messages.success(request, _('Recipe removed from wishlist.'))
+    return redirect('wishlist')
+
+@group_required('user')
+def get_wishlist_recipes(request):
+    wishlist = request.session.get('wishlist', [])
+    return JsonResponse({'wishlist': wishlist})
