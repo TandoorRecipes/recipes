@@ -1451,6 +1451,7 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
         return f'{self.name} (#{self.id})'
 
 
+
 class Automation(ExportModelOperationsMixin('automations'), models.Model, PermissionModelMixin):
     FOOD_ALIAS = 'FOOD_ALIAS'
     UNIT_ALIAS = 'UNIT_ALIAS'
@@ -1524,3 +1525,10 @@ class CustomFilter(models.Model, PermissionModelMixin):
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='cf_unique_name_per_space')
         ]
+
+
+class Wishlist(models.Model, PermissionModelMixin):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+

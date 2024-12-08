@@ -64,6 +64,7 @@ router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
+router.register(r'wishlist', api.WishlistViewSet)
 
 for p in PLUGINS:
     if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):

@@ -33,7 +33,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, Wishlist)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -1453,3 +1453,14 @@ class RecipeFromSourceSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=4096, required=False, allow_null=True, allow_blank=True)
     data = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     bookmarklet = serializers.IntegerField(required=False, allow_null=True, )
+
+
+class WishlistSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    class Meta:
+        model = Wishlist
+        fields = ('id', 'recipe', 'created_by', 'created_at')
+        read_only_fields = ('created_by',)
