@@ -12,13 +12,13 @@ DETAIL_URL = 'api:wishlist-detail'
 
 
 @pytest.fixture()
-def obj_1(u1_s1, recipe_1_s1):
-    return Wishlist.objects.create(recipe=recipe_1_s1, created_by=auth.get_user(u1_s1))
+def obj_1(space_1, u1_s1, recipe_1_s1):
+    return Wishlist.objects.create(recipe=recipe_1_s1, created_by=auth.get_user(u1_s1), space=space_1)
 
 
 @pytest.fixture
-def obj_2(u1_s1, recipe_1_s1):
-    return Wishlist.objects.create(recipe=recipe_1_s1, created_by=auth.get_user(u1_s1))
+def obj_2(space_1, u1_s1, recipe_1_s1):
+    return Wishlist.objects.create(recipe=recipe_1_s1, created_by=auth.get_user(u1_s1), space=space_1)
 
 
 @pytest.mark.parametrize("arg", [

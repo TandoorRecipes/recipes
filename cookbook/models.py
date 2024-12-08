@@ -1529,6 +1529,11 @@ class CustomFilter(models.Model, PermissionModelMixin):
 
 class Wishlist(models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    
+    shared = models.ManyToManyField(User, blank=True, related_name='wishlist_shared_with')
+    objects = ScopedManager(space='space')
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 

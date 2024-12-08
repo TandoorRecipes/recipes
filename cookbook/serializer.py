@@ -1456,11 +1456,14 @@ class RecipeFromSourceSerializer(serializers.Serializer):
 
 
 class WishlistSerializer(serializers.ModelSerializer):
+    shared = UserSerializer(many=True, required=False, allow_null=True)
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     class Meta:
         model = Wishlist
-        fields = ('id', 'recipe', 'created_by', 'created_at')
-        read_only_fields = ('created_by',)
+        fields = ('id', 'recipe', 'shared', 'space', 'created_by', 'created_at')
+        read_only_fields = ('created_by','space')

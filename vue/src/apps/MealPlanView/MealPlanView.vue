@@ -1,269 +1,231 @@
 <template>
-    <div id="app" class="mealplan">
-        <div class="d-none d-lg-block">
-            <div class="row ">
-                <div class="col col-2">
-                    <h4>{{ $t('Meal_Types') }}</h4>
+  <div id="app" class="mealplan">
+    <div class="d-none d-lg-block">
+      <div class="row">
+        <div class="col col-2">
+          <h4>{{ $t("Meal_Types") }}</h4>
 
-                    <div class="d-flex flex-row align-items-center border" v-for="mt in meal_types" v-bind:key="mt.id">
-                        <div class="flex-column" style="width: 2.5rem; height: 2.5rem;" :style="{'background-color': mt.color}"></div>
-                        <div class="flex-column flex-grow-1 align-middle justify-content-center">
-                            <div class="card-body p-2 align-middle">
-                                {{ mt.name }}
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <hr/>
-
-                    <div class="form-check">
-                        <input 
-                            type="checkbox" 
-                            class="form-check-input" 
-                            id="wishlistFilter" 
-                            v-model="filterWishlist">
-                        <label class="form-check-label" for="wishlistFilter">
-                            {{ $t("Show only recipes from wishlist") }}
-                        </label>
-                    </div>
-
-                    <!-- Recipe dropdown will be modified to filter based on wishlist -->
-                    <div>
-                        <label>{{ $t("Recipe") }}</label>
-                        <input v-model="recipeSearchQuery" type="text" placeholder="Search recipes..." />
-
-                        <!-- Dropdown showing only recipes in wishlist if checkbox is checked -->
-                        <select v-if="filterWishlist" v-model="selectedRecipe">
-                            <option v-for="recipe in filteredWishlist" :key="recipe.id" :value="recipe.id">
-                                {{ recipe.name }}
-                            </option>
-                        </select>
-
-                        <!-- All recipes dropdown when filter is off -->
-                        <select v-else v-model="selectedRecipe">
-                            <option v-for="recipe in allRecipes" :key="recipe.id" :value="recipe.id">
-                                {{ recipe.name }}
-                            </option>
-                        </select>
-                    </div>
-                    
-                    <button class="btn btn-success shadow-none mt-1 btn-block" @click="createEntryClick(new Date())"><i
-                        class="fas fa-calendar-plus"></i> {{ $t("Create") }}
-                    </button>
-                    <button class="btn btn-warning shadow-none mt-1 btn-block" @click="createAutoPlan(new Date())"><i
-                        class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
-                    </button>
-                    <a class="btn btn-primary shadow-none mt-1 btn-blockmt-1 btn-block" :href="iCalUrl"><i class="fas fa-download"></i>
-                        {{ $t("Export_To_ICal") }}
-                    </a>
-
-                    <a class="btn btn-info shadow-none mt-1 btn-block" :href="resolveDjangoUrl('view_settings')">
-                        <i class="fas fa-cogs"></i> {{ $t("Settings") }}
-                    </a>
-                </div>
-                <div class="col col-10">
-                    <div class="row calender-row ">
-                        <div class="col-12 calender-parent">
-                            <calendar-view
-                                :show-date="showDate"
-                                :enable-date-selection="true"
-                                class="theme-default"
-                                :items="plan_items"
-                                :display-period-uom="settings.displayPeriodUom"
-                                :period-changed-callback="periodChangedCallback"
-                                :enable-drag-drop="true"
-                                :item-content-height="item_height"
-                                @click-date="createEntryClick"
-                                @drop-on-date="moveEntry"
-                                :display-period-count="settings.displayPeriodCount"
-                                :starting-day-of-week="settings.startingDayOfWeek"
-                                :display-week-numbers="settings.displayWeekNumbers"
-                            >
-                                <template #item="{ value, weekStartDate, top }">
-                                    <meal-plan-card
-                                        :value="value"
-                                        :week-start-date="weekStartDate"
-                                        :top="top"
-                                        :detailed="detailed_items"
-                                        :item_height="item_height"
-                                        @dragstart="dragged_item = value"
-                                        @click-item="entryClick"
-                                        @open-context-menu="openContextMenu"
-                                    />
-                                </template>
-                                <template #header="{ headerProps }">
-                                    <meal-plan-calender-header
-                                        ref="header"
-                                        :header-props="headerProps"
-                                        @input="setShowDate"
-                                        @delete-dragged="deleteEntry(dragged_item)"
-                                        @create-new="createEntryClick(new Date())"
-                                        @set-starting-day-back="setStartingDay(-1)"
-                                        @set-starting-day-forward="setStartingDay(1)"
-                                        :i-cal-url="iCalUrl"
-                                        :options="options"
-                                        :settings_prop="settings"
-                                    />
-                                </template>
-                            </calendar-view>
-                        </div>
-                    </div>
-                </div>
+          <div class="d-flex flex-row align-items-center border" v-for="mt in meal_types" v-bind:key="mt.id">
+            <div class="flex-column" style="width: 2.5rem; height: 2.5rem" :style="{ 'background-color': mt.color }"></div>
+            <div class="flex-column flex-grow-1 align-middle justify-content-center">
+              <div class="card-body p-2 align-middle">
+                {{ mt.name }}
+              </div>
             </div>
+          </div>
+
+          <hr />
+
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="wishlistFilter" v-model="filterWishlist" />
+            <label class="form-check-label" for="wishlistFilter">
+              {{ $t("Show only recipes from wishlist") }}
+            </label>
+          </div>
+
+          <!-- Recipe dropdown will be modified to filter based on wishlist -->
+          <div>
+            <label>{{ $t("Recipe") }}</label>
+            <input v-model="recipeSearchQuery" type="text" placeholder="Search recipes..." />
+
+            <!-- Dropdown showing only recipes in wishlist if checkbox is checked -->
+            <select v-if="filterWishlist" v-model="selectedRecipe">
+              <option v-for="recipe in filteredWishlist" :key="recipe.id" :value="recipe.id">
+                {{ recipe.name }}
+              </option>
+            </select>
+
+            <!-- All recipes dropdown when filter is off -->
+            <select v-else v-model="selectedRecipe">
+              <option v-for="recipe in allRecipes" :key="recipe.id" :value="recipe.id">
+                {{ recipe.name }}
+              </option>
+            </select>
+          </div>
+
+          <button class="btn btn-success shadow-none mt-1 btn-block" @click="createEntryClick(new Date())"><i class="fas fa-calendar-plus"></i> {{ $t("Create") }}</button>
+          <button class="btn btn-warning shadow-none mt-1 btn-block" @click="createAutoPlan(new Date())"><i class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}</button>
+          <a class="btn btn-primary shadow-none mt-1 btn-blockmt-1 btn-block" :href="iCalUrl"
+            ><i class="fas fa-download"></i>
+            {{ $t("Export_To_ICal") }}
+          </a>
+
+          <a class="btn btn-info shadow-none mt-1 btn-block" :href="resolveDjangoUrl('view_settings')"> <i class="fas fa-cogs"></i> {{ $t("Settings") }} </a>
         </div>
-        <div class="d-block d-lg-none">
-            <div class="row">
-                <div class="col-12">
-                    <div class="col-12 d-flex justify-content-center mt-2">
-                        <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-                            <b-button-group class="mx-1">
-                                <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
-                                          @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-                            </b-button-group>
-                            <b-button-group class="mx-1">
-                                <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
-                                    class="fas fa-home"></i></b-button>
-                                <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
-                            </b-button-group>
-                            <b-button-group class="mx-1">
-                                <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
-                                          @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-                            </b-button-group>
-                        </b-button-toolbar>
-                    </div>
-                </div>
-                <div class="col-12 mt-2" style="padding-bottom: 60px">
-                    <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
-                        <b-list-group>
-                            <b-list-group-item>
-                                <div class="d-flex flex-row align-middle">
-                                    <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
-
-                                    <div class="flex-grow-1 text-right">
-                                        <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
-                                            class="fa fa-plus"></i></b-button>
-                                    </div>
-                                </div>
-
-                            </b-list-group-item>
-                            <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
-                                <div class="d-flex flex-row align-items-center">
-                                    <div>
-                                        <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                               :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
-                                        <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                               :src="image_placeholder" rounded="circle" v-else></b-img>
-                                    </div>
-                                    <div class="flex-grow-1 ml-2"
-                                         style="text-overflow: ellipsis; overflow-wrap: anywhere;">
-                                                    <span class="two-row-text">
-                                                        <a :href="getRecipeURL(plan.entry.recipe, plan.entry.servings)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
-                                                        <span v-else>{{ plan.entry.title }}</span> <br/>
-                                                    </span>
-                                        <span v-if="plan.entry.note" class="two-row-text">
-                                                    <small>{{ plan.entry.note }}</small> <br/>
-                                                </span>
-                                        <small class="text-muted">
-                                            <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
-                                            {{ plan.entry.meal_type_name }}
-                                            <span v-if="plan.entry.recipe">
-                                                     - <i class="fa fa-clock"></i> {{ plan.entry.recipe.working_time + plan.entry.recipe.waiting_time }} {{ $t('min') }}
-                                                </span>
-                                        </small>
-                                    </div>
-                                    <div class="hover-button">
-                                        <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
-                                    </div>
-                                </div>
-                            </b-list-group-item>
-
-                        </b-list-group>
-                    </div>
-                </div>
+        <div class="col col-10">
+          <div class="row calender-row">
+            <div class="col-12 calender-parent">
+              <calendar-view
+                :show-date="showDate"
+                :enable-date-selection="true"
+                class="theme-default"
+                :items="plan_items"
+                :display-period-uom="settings.displayPeriodUom"
+                :period-changed-callback="periodChangedCallback"
+                :enable-drag-drop="true"
+                :item-content-height="item_height"
+                @click-date="createEntryClick"
+                @drop-on-date="moveEntry"
+                :display-period-count="settings.displayPeriodCount"
+                :starting-day-of-week="settings.startingDayOfWeek"
+                :display-week-numbers="settings.displayWeekNumbers"
+              >
+                <template #item="{ value, weekStartDate, top }">
+                  <meal-plan-card
+                    :value="value"
+                    :week-start-date="weekStartDate"
+                    :top="top"
+                    :detailed="detailed_items"
+                    :item_height="item_height"
+                    @dragstart="dragged_item = value"
+                    @click-item="entryClick"
+                    @open-context-menu="openContextMenu"
+                  />
+                </template>
+                <template #header="{ headerProps }">
+                  <meal-plan-calender-header
+                    ref="header"
+                    :header-props="headerProps"
+                    @input="setShowDate"
+                    @delete-dragged="deleteEntry(dragged_item)"
+                    @create-new="createEntryClick(new Date())"
+                    @set-starting-day-back="setStartingDay(-1)"
+                    @set-starting-day-forward="setStartingDay(1)"
+                    :i-cal-url="iCalUrl"
+                    :options="options"
+                    :settings_prop="settings"
+                  />
+                </template>
+              </calendar-view>
             </div>
+          </div>
         </div>
-
-
-        <ContextMenu ref="menu">
-            <template #menu="{ contextData }">
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        openEntryEdit(contextData.originalItem.entry)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{
-                            $t("Edit")
-                        }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    v-if="contextData && contextData.originalItem && contextData.originalItem.entry.recipe != null"
-                    @click="
-                        $refs.menu.close()
-                        openRecipe(contextData.originalItem.entry.recipe, contextData.originalItem.entry.servings)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i>
-                        {{ $t("Recipe") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        moveEntryLeft(contextData.originalItem)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i>
-                        {{ $t("Move") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        moveEntryRight(contextData.originalItem)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i>
-                        {{ $t("Move") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        createEntry(contextData.originalItem.entry)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        deleteEntry(contextData.originalItem)
-                    "
-                >
-                    <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i>
-                        {{ $t("Delete") }}</a>
-                </ContextMenuItem>
-            </template>
-        </ContextMenu>
-        <meal-plan-edit-modal
-            :entry="entryEditing"
-            :modal_title="modal_title"
-            :create_date="mealplan_default_date"
-            @reload-meal-types="refreshMealTypes"
-        ></meal-plan-edit-modal>
-        <auto-meal-plan-modal
-            :modal_title="'Auto create meal plan'"
-            :current_period="current_period"
-        ></auto-meal-plan-modal>
-
-        <bottom-navigation-bar active-view="view_plan" :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
-            <template #custom_create_functions>
-                <h6 class="dropdown-header">{{ $t('Meal_Plan') }}</h6>
-                <a class="dropdown-item" @click="createEntryClick(new Date())"><i
-                    class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
-            </template>
-
-        </bottom-navigation-bar>
+      </div>
     </div>
+    <div class="d-block d-lg-none">
+      <div class="row">
+        <div class="col-12">
+          <div class="col-12 d-flex justify-content-center mt-2">
+            <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+              <b-button-group class="mx-1">
+                <b-button v-html="'<<'" class="p-2 pr-3 pl-3" @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+              </b-button-group>
+              <b-button-group class="mx-1">
+                <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i class="fas fa-home"></i></b-button>
+                <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
+              </b-button-group>
+              <b-button-group class="mx-1">
+                <b-button v-html="'>>'" class="p-2 pr-3 pl-3" @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+              </b-button-group>
+            </b-button-toolbar>
+          </div>
+        </div>
+        <div class="col-12 mt-2" style="padding-bottom: 60px">
+          <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
+            <b-list-group>
+              <b-list-group-item>
+                <div class="d-flex flex-row align-middle">
+                  <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
+
+                  <div class="flex-grow-1 text-right">
+                    <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i class="fa fa-plus"></i></b-button>
+                  </div>
+                </div>
+              </b-list-group-item>
+              <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
+                <div class="d-flex flex-row align-items-center">
+                  <div>
+                    <b-img style="height: 50px; width: 50px; object-fit: cover" :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
+                    <b-img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder" rounded="circle" v-else></b-img>
+                  </div>
+                  <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere">
+                    <span class="two-row-text">
+                      <a :href="getRecipeURL(plan.entry.recipe, plan.entry.servings)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
+                      <span v-else>{{ plan.entry.title }}</span> <br />
+                    </span>
+                    <span v-if="plan.entry.note" class="two-row-text">
+                      <small>{{ plan.entry.note }}</small> <br />
+                    </span>
+                    <small class="text-muted">
+                      <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs" /></span>
+                      {{ plan.entry.meal_type_name }}
+                      <span v-if="plan.entry.recipe"> - <i class="fa fa-clock"></i> {{ plan.entry.recipe.working_time + plan.entry.recipe.waiting_time }} {{ $t("min") }} </span>
+                    </small>
+                  </div>
+                  <div class="hover-button">
+                    <a class="pr-2" @click.stop="openContextMenu($event, { originalItem: plan })"><i class="fas fa-ellipsis-v"></i></a>
+                  </div>
+                </div>
+              </b-list-group-item>
+            </b-list-group>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ContextMenu ref="menu">
+      <template #menu="{ contextData }">
+        <ContextMenuItem
+          @click="
+            $refs.menu.close()
+            openEntryEdit(contextData.originalItem.entry)
+          "
+        >
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pen"></i> {{ $t("Edit") }}</a>
+        </ContextMenuItem>
+        <ContextMenuItem
+          v-if="contextData && contextData.originalItem && contextData.originalItem.entry.recipe != null"
+          @click="
+            $refs.menu.close()
+            openRecipe(contextData.originalItem.entry.recipe, contextData.originalItem.entry.servings)
+          "
+        >
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i> {{ $t("Recipe") }}</a>
+        </ContextMenuItem>
+        <ContextMenuItem
+          @click="
+            $refs.menu.close()
+            moveEntryLeft(contextData.originalItem)
+          "
+        >
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i> {{ $t("Move") }}</a>
+        </ContextMenuItem>
+        <ContextMenuItem
+          @click="
+            $refs.menu.close()
+            moveEntryRight(contextData.originalItem)
+          "
+        >
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i> {{ $t("Move") }}</a>
+        </ContextMenuItem>
+        <ContextMenuItem
+          @click="
+            $refs.menu.close()
+            createEntry(contextData.originalItem.entry)
+          "
+        >
+          <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-copy"></i> {{ $t("Clone") }}</a>
+        </ContextMenuItem>
+        <ContextMenuItem
+          @click="
+            $refs.menu.close()
+            deleteEntry(contextData.originalItem)
+          "
+        >
+          <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i> {{ $t("Delete") }}</a>
+        </ContextMenuItem>
+      </template>
+    </ContextMenu>
+    <meal-plan-edit-modal :entry="entryEditing" :modal_title="modal_title" :create_date="mealplan_default_date" @reload-meal-types="refreshMealTypes"></meal-plan-edit-modal>
+    <auto-meal-plan-modal :modal_title="'Auto create meal plan'" :current_period="current_period"></auto-meal-plan-modal>
+
+    <bottom-navigation-bar active-view="view_plan" :create_links="[{ label: $t('Export_To_ICal'), url: iCalUrl, icon: 'fas fa-download' }]">
+      <template #custom_create_functions>
+        <h6 class="dropdown-header">{{ $t("Meal_Plan") }}</h6>
+        <a class="dropdown-item" @click="createEntryClick(new Date())"><i class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
+      </template>
+    </bottom-navigation-bar>
+  </div>
 </template>
 
 <script>
@@ -413,7 +375,7 @@ export default {
                 });
             }
             return grid;
-        }
+        },
         filteredWishlist() {
             // New: Filter wishlist based on the search query
             return this.wishlist.filter((recipe) =>
@@ -427,12 +389,13 @@ export default {
         moment.locale(window.CUSTOM_LOCALE)
 
         // New: Fetch recipes and wishlist from API
-        axios.get("/api/recipes").then((response) => {
-            this.allRecipes = response.data;
-        });
-        axios.get("/api/wishlist").then((response) => {
-            this.wishlist = response.data;
-        });
+        let apiClient = new ApiApiFactory()
+        apiClient.listRecipes().then((response) => {
+            this.allRecipes = response.data
+        })
+        apiClient.listWishlist().then((response) => {
+            this.wishlist = response.data
+        })
     },
     watch: {
         settings: {
@@ -679,51 +642,50 @@ export default {
 
 <style>
 #id_base_container {
-    margin-top: 12px
+  margin-top: 12px;
 }
 
 .slide-fade-enter-active {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .slide-fade-leave-active {
-    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter,
 .slide-fade-leave-to {
-    transform: translateY(10px);
-    opacity: 0;
+  transform: translateY(10px);
+  opacity: 0;
 }
 
 .calender-row {
-    height: calc(100vh - 140px);
+  height: calc(100vh - 140px);
 }
 
 .calender-parent {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    height: 100%
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100%;
 }
 
 .cv-item {
-    white-space: inherit !important;
+  white-space: inherit !important;
 }
 
-
 .isHovered {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
 .cv-day.draghover {
-    box-shadow: inset 0 0 0.2em 0.2em rgb(221, 191, 134) !important;
+  box-shadow: inset 0 0 0.2em 0.2em rgb(221, 191, 134) !important;
 }
 
 .modal-backdrop {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 /*
@@ -739,67 +701,67 @@ having to override as much.
 
 .theme-default .cv-header,
 .theme-default .cv-header-day {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .theme-default .cv-header .periodLabel {
-    font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 /* Grid */
 
 .theme-default .cv-weeknumber {
-    background-color: #e0e0e0;
-    border-color: #ccc;
-    color: #808080;
+  background-color: #e0e0e0;
+  border-color: #ccc;
+  color: #808080;
 }
 
 .theme-default .cv-weeknumber span {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .theme-default .cv-day.past {
-    background-color: #fafafa;
+  background-color: #fafafa;
 }
 
 .theme-default .cv-day.outsideOfMonth {
-    background-color: #f7f7f7;
+  background-color: #f7f7f7;
 }
 
 .theme-default .cv-day.today {
-    background-color: #ffe;
+  background-color: #ffe;
 }
 
 .theme-default .cv-day[aria-selected] {
-    background-color: #ffc;
+  background-color: #ffc;
 }
 
 /* Events */
 
 .theme-default .cv-item {
-    border-color: #e0e0f0;
-    border-radius: 0.5em;
-    background-color: #fff;
-    text-overflow: ellipsis;
+  border-color: #e0e0f0;
+  border-radius: 0.5em;
+  background-color: #fff;
+  text-overflow: ellipsis;
 }
 
 .theme-default .cv-item.purple {
-    background-color: #f0e0ff;
-    border-color: #e7d7f7;
+  background-color: #f0e0ff;
+  border-color: #e7d7f7;
 }
 
 .theme-default .cv-item.orange {
-    background-color: #ffe7d0;
-    border-color: #f7e0c7;
+  background-color: #ffe7d0;
+  border-color: #f7e0c7;
 }
 
 .theme-default .cv-item.continued::before,
 .theme-default .cv-item.toBeContinued::after {
-    /*
+  /*
     removed because it breaks a line and would increase item size https://github.com/TandoorRecipes/recipes/issues/2678
 
     content: " \21e2 ";
@@ -808,19 +770,19 @@ having to override as much.
 }
 
 .theme-default .cv-item.toBeContinued {
-    border-right-style: none;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  border-right-style: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .theme-default .cv-item.isHovered.hasUrl {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .theme-default .cv-item.continued {
-    border-left-style: none;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+  border-left-style: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .cv-item.span3,
@@ -828,35 +790,35 @@ having to override as much.
 .cv-item.span5,
 .cv-item.span6,
 .cv-item.span7 {
-    text-align: center;
+  text-align: center;
 }
 
 /* Event Times */
 
 .theme-default .cv-item .startTime,
 .theme-default .cv-item .endTime {
-    font-weight: bold;
-    color: #666;
+  font-weight: bold;
+  color: #666;
 }
 
 /* Drag and drop */
 
 .theme-default .cv-day.draghover {
-    box-shadow: inset 0 0 0.2em 0.2em yellow;
+  box-shadow: inset 0 0 0.2em 0.2em yellow;
 }
 
 .ghost {
-    opacity: 0.5;
-    background: #c8ebfb;
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 
 @media (max-width: 767.9px) {
-    .periodLabel {
-        font-size: 18px !important;
-    }
+  .periodLabel {
+    font-size: 18px !important;
+  }
 }
 
 .b-calendar-grid-help {
-    padding: 0.25rem;
+  padding: 0.25rem;
 }
 </style>

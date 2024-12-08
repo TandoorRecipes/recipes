@@ -85,9 +85,9 @@ urlpatterns = [
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
     path('books/', views.books, name='view_books'),
-    path('wishlist/', views.wishlist, name='view_wishlist'),
     path('plan/', views.meal_plan, name='view_plan'),
     path('shopping/', lists.shopping_list, name='view_shopping'),
+    path('wishlist', lists.wishlist_list, name='view_wishlist'),
     path('settings/', views.user_settings, name='view_settings'),
     path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),  # TODO rename to search settings
     path('history/', views.history, name='view_history'),
@@ -147,7 +147,6 @@ urlpatterns = [
     path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript',
                                                     )), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
-    path('api/get_wishlist_recipes/', views.get_wishlist_recipes, name='get_wishlist_recipes'),
 ]
 
 generic_models = (
