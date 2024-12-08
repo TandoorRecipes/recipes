@@ -27,6 +27,19 @@ function registerModel(model: Model) {
 }
 
 /**
+ * returns a list of models that should be shown in the list/database view
+ */
+export function getListModels() {
+    let modelList: Model[] = []
+    SUPPORTED_MODELS.forEach((model) => {
+        if(!model.disableListView){
+            modelList.push(model)
+        }
+    })
+    return modelList
+}
+
+/**
  * common list parameters shared by all generic models
  */
 type GenericListRequestParameter = {
@@ -66,6 +79,8 @@ export type Model = {
     disableCreate?: boolean | undefined,
     disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
+    // disable showing this model as an option in the ModelListPage
+    disableListView?: boolean | undefined,
 
     isPaginated: boolean | undefined,
 
@@ -151,6 +166,8 @@ export const TRecipe = {
     isPaginated: true,
     toStringKeys: ['name'],
 
+    disableListView: true,
+
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
@@ -166,6 +183,8 @@ export const TStep = {
     isPaginated: true,
     toStringKeys: ['name'],
 
+    disableListView: true,
+
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
@@ -180,6 +199,8 @@ export const TIngredient = {
 
     isPaginated: true,
     toStringKeys: ['id'],
+
+    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'id'},
@@ -211,6 +232,8 @@ export const TMealPlan = {
     isPaginated: true,
     toStringKeys: ['title', 'recipe.name'],
 
+    disableListView: true,
+
     tableHeaders: [
         {title: 'Title', key: 'title'},
         {title: 'StartDate', key: 'startDate'},
@@ -227,6 +250,7 @@ export const TUser = {
     disableCreate: true,
     disableDelete: true,
     disableUpdate: true,
+    disableListView: true,
 
     isPaginated: false,
     toStringKeys: ['displayName'],
@@ -274,6 +298,7 @@ export const TShoppingListEntry = {
     localizationKey: 'ShoppingListEntry',
     icon: 'fa-solid fa-list-check',
 
+    disableListView: true,
     isPaginated: true,
     toStringKeys: ['amount', 'unit.name', 'food.name'],
 
@@ -306,6 +331,7 @@ export const TProperty = {
     localizationKey: 'Property',
     icon: 'fa-solid fa-database',
 
+    disableListView: true,
     isPaginated: true,
     toStringKeys: ['propertyAmount', 'propertyType.name'],
 
@@ -404,6 +430,7 @@ export const TAccessToken = {
     localizationKey: 'Access_Token',
     icon: 'fa-solid fa-key',
 
+    disableListView: true,
     isPaginated: true,
     toStringKeys: ['token'],
 
@@ -420,6 +447,7 @@ export const TUserSpace = {
     localizationKey: 'SpaceMembers',
     icon: 'fa-solid fa-users',
 
+    disableListView: true,
     isPaginated: true,
     toStringKeys: ['user.displayName'],
 
@@ -437,8 +465,8 @@ export const TInviteLink = {
     localizationKey: 'Invite_Link',
     icon: 'fa-solid fa-link',
 
+    disableListView: true,
     isPaginated: true,
-
     toStringKeys: ['email', 'role'],
 
     tableHeaders: [
@@ -455,6 +483,7 @@ export const TFoodInheritField = {
     localizationKey: 'FoodInherit',
     icon: 'fa-solid fa-list',
 
+    disableListView: true,
     toStringKeys: ['name'],
 
     disableCreate: true,

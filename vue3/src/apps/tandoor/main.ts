@@ -26,6 +26,7 @@ import UserSpaceSettings from "@/components/settings/UserSpaceSettings.vue";
 import ApiSettings from "@/components/settings/ApiSettings.vue";
 import ModelListPage from "@/pages/ModelListPage.vue";
 import ModelEditPage from "@/pages/ModelEditPage.vue";
+import RecipeImportPage from "@/pages/RecipeImportPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -46,6 +47,7 @@ const routes = [
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
     {path: '/books', component: ShoppingListPage, name: 'view_books'},
+    {path: '/recipe/import', component: RecipeImportPage, name: 'RecipeImportPage'},
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
     {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
 

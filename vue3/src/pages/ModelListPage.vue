@@ -9,7 +9,7 @@
                             <v-list>
 
                                 <v-list-item
-                                    v-for="m in [TFood, TUnit, TKeyword,TSupermarket, TSupermarketCategory, TPropertyType, TUnitConversion, TAutomation, TUserFile, TCookLog, TViewLog]"
+                                    v-for="m in getListModels()"
                                     @click="changeModel(m)"
                                     :active="m.name == genericModel.model.name"
                                 >
@@ -63,7 +63,7 @@ import {useI18n} from "vue-i18n";
 import {
     EditorSupportedModels,
     GenericModel,
-    getGenericModelFromString,
+    getGenericModelFromString, getListModels,
     Model,
     TAutomation,
     TCookLog,

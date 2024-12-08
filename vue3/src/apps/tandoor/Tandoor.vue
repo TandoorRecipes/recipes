@@ -7,7 +7,7 @@
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
 
-            <v-avatar color="primary" class="me-2">{{useUserPreferenceStore().userSettings.user.displayName.charAt(0)}}
+            <v-avatar color="primary" class="me-2">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
                 <v-menu activator="parent">
 
                     <v-list density="compact">
@@ -83,9 +83,13 @@
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item prepend-icon="fas fa-book" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-calendar-alt" title="Mealplan" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-shopping-cart" title="Shopping" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
+            <v-list-item prepend-icon="fas fa-calendar-alt" :title="$t('Meal_Plan')" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
+            <v-list-item prepend-icon="fas fa-shopping-cart" :title="$t('Shopping_list')" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
+            <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
             <v-list-item prepend-icon="fas fa-bars" title="Test" :to="{ name: 'view_test', params: {} }"></v-list-item>
+
+            <navigation-drawer-context-menu></navigation-drawer-context-menu>
+
             <template #append>
                 <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'view_settings', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="fa-solid fa-heart" href="https://tandoor.dev" target="_blank">
@@ -135,6 +139,8 @@ import {useDisplay} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {TAutomation, TCookLog, TFood, TKeyword, TPropertyType, TSupermarket, TSupermarketCategory, TUnit, TUnitConversion, TUserFile, TViewLog} from "@/types/Models";
+import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
 
 const {lgAndUp} = useDisplay()
 
