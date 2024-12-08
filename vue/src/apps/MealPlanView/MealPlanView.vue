@@ -16,6 +16,38 @@
                     </div>
 
                     <hr/>
+
+                    <div class="form-check">
+                        <input 
+                            type="checkbox" 
+                            class="form-check-input" 
+                            id="wishlistFilter" 
+                            v-model="filterWishlist">
+                        <label class="form-check-label" for="wishlistFilter">
+                            {{ $t("Show only recipes from wishlist") }}
+                        </label>
+                    </div>
+
+                    <!-- Recipe dropdown will be modified to filter based on wishlist -->
+                    <div>
+                        <label>{{ $t("Recipe") }}</label>
+                        <input v-model="recipeSearchQuery" type="text" placeholder="Search recipes..." />
+
+                        <!-- Dropdown showing only recipes in wishlist if checkbox is checked -->
+                        <select v-if="filterWishlist" v-model="selectedRecipe">
+                            <option v-for="recipe in filteredWishlist" :key="recipe.id" :value="recipe.id">
+                                {{ recipe.name }}
+                            </option>
+                        </select>
+
+                        <!-- All recipes dropdown when filter is off -->
+                        <select v-else v-model="selectedRecipe">
+                            <option v-for="recipe in allRecipes" :key="recipe.id" :value="recipe.id">
+                                {{ recipe.name }}
+                            </option>
+                        </select>
+                    </div>
+                    
                     <button class="btn btn-success shadow-none mt-1 btn-block" @click="createEntryClick(new Date())"><i
                         class="fas fa-calendar-plus"></i> {{ $t("Create") }}
                     </button>
@@ -319,6 +351,11 @@ export default {
             mealplan_default_date: null,
             ical_url: window.ICAL_URL,
             image_placeholder: window.IMAGE_PLACEHOLDER,
+            filterWishlist: false,
+            recipeSearchQuery: "",
+            allRecipes: [],
+            wishlist: [],
+            selectedRecipe: null
         }
     },
     computed: {
@@ -377,11 +414,25 @@ export default {
             }
             return grid;
         }
+        filteredWishlist() {
+            // New: Filter wishlist based on the search query
+            return this.wishlist.filter((recipe) =>
+                recipe.name.toLowerCase().includes(this.recipeSearchQuery.toLowerCase())
+            );
+        }
     },
     mounted() {
         this.settings = useMealPlanStore().client_settings
         this.$i18n.locale = window.CUSTOM_LOCALE
         moment.locale(window.CUSTOM_LOCALE)
+
+        // New: Fetch recipes and wishlist from API
+        axios.get("/api/recipes").then((response) => {
+            this.allRecipes = response.data;
+        });
+        axios.get("/api/wishlist").then((response) => {
+            this.wishlist = response.data;
+        });
     },
     watch: {
         settings: {

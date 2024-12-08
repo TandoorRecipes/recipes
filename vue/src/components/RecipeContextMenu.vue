@@ -32,6 +32,10 @@
                     ><i class="fas fa-calendar fa-fw"></i> {{ $t("Add_to_Plan") }}
                 </a>
 
+                <a class="dropdown-item" @click="addToWishlist" href="javascript:void(0);">
+                    <i class="fas fa-heart fa-fw"></i> {{ $t("Add_to_Wishlist") }}
+                </a>
+
                 <a href="javascript:void(0);">
                     <button class="dropdown-item" @click="$bvModal.show(`id_modal_cook_log_${modal_id}`)" v-if="!disabled_options.log">
                         <i class="fas fa-clipboard-list fa-fw"></i> {{ $t("Log_Cooking") }}
@@ -203,6 +207,16 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
                 })
+        },
+        addToWishlist() {
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            if (!wishlist.some((r) => r.id === this.recipe.id)) {
+                wishlist.push({ id: this.recipe.id, name: this.recipe.name });
+                localStorage.setItem("wishlist", JSON.stringify(wishlist));
+                makeToast(this.$t("Add_to_Wishlist"), this.$t("Added_to_Wishlist", { recipe: this.recipe.name }), "success");
+            } else {
+                makeToast(this.$t("Add_to_Wishlist"), this.$t("Already_in_Wishlist", { recipe: this.recipe.name }), "info");
+            }
         },
         createMealPlan(data) {
             this.entryEditing = this.options.entryEditing

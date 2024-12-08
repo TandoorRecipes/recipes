@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {{ request.user.username }}'s Wishlist
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{% trans 'My Wishlist' %}</h1>
+
+    {% if wishlist %}
+        <div class="row">
+            {% for recipe in wishlist %}
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="{{ recipe.image }}" class="card-img-top" alt="{{ recipe.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recipe.name }}</h5>
+                            <p class="card-text">{{ recipe.description }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'view_recipe' recipe.id %}" class="btn btn-sm btn-outline-primary">{% trans 'View' %}</a>
+                                <form method="post" action="{% url 'remove_from_wishlist' recipe.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-danger">{% trans 'Remove' %}</button>
+                                </form>
+                                <button
+                                    class="btn btn-sm btn-outline-success"
+                                    data-toggle="modal"
+                                    data-target="#mealPlanModal"
+                                    onclick="openMealPlanModal({{ recipe.id }})"
+                                >
+                                    {% trans 'Plan' %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>{% trans 'Your wishlist is empty!' %}</p>
+    {% endif %}
+</div>
+{% endblock %}
