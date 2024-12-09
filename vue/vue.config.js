@@ -68,7 +68,11 @@ const pages = {
     test_view: {
         entry: "./src/apps/TestView/main.js",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
-    }
+    },
+    wishlist_view: {
+        entry: "./src/apps/WishListView/main.js",
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
+    },
 }
 
 module.exports = {

@@ -48,6 +48,15 @@ def shopping_list(request):
         }
     )
 
+def wishlist_list(request):
+    return render(
+        request,
+        'wishlist.html',
+        {
+            "title": _("Wishlist"),
+
+        }
+    )
 
 @group_required('admin')
 def storage(request):

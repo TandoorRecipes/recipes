@@ -71,7 +71,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              RecipeBook, RecipeBookEntry, ShareLink, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
                              SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                             ViewLog, ConnectorConfig)
+                             ViewLog, ConnectorConfig, Wishlist)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -97,7 +97,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
                                  UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
-                                 ShoppingListEntryBulkSerializer, ConnectorConfigConfigSerializer)
+                                 ShoppingListEntryBulkSerializer, ConnectorConfigConfigSerializer, WishlistSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
@@ -1395,6 +1395,14 @@ class AccessTokenViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
 
+
+class WishlistViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = Wishlist.objects
+    serializer_class = WishlistSerializer
+    permission_classes = [CustomIsOwner]
+
+    def get_queryset(self):
+        return self.queryset.filter(Q(created_by=self.request.user))
 
 # -------------- DRF custom views --------------------
 
