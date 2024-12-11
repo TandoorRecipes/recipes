@@ -72,9 +72,9 @@
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <v-btn prepend-icon="fa-solid fa-shuffle">Auto Sort</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-maximize">Split All</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-minimize">Merge All</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()">Auto Sort</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')">Split All</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()">Merge All</v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
@@ -88,13 +88,25 @@
                                                         <v-icon icon="$settings"></v-icon>
                                                         <v-menu activator="parent">
                                                             <v-list>
-                                                                <v-list-item prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
-                                                                <v-list-item prepend-icon="fa-solid fa-maximize">{{ $t('Split') }}</v-list-item>
+                                                                <v-list-item prepend-icon="$delete" @click="deleteStep(s)">{{ $t('Delete') }}</v-list-item>
+                                                                <v-list-item prepend-icon="fa-solid fa-maximize" @click="splitStep(s, '\n')">{{ $t('Split') }}</v-list-item>
                                                             </v-list>
                                                         </v-menu>
                                                     </v-btn>
                                                 </v-list-item-title>
-                                                <v-textarea class="mt-2" v-model="s.instruction"></v-textarea>
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-list>
+                                                            <v-list-item v-for="i in s.ingredients">
+                                                                {{ i.amount }} {{ i.unit.name }} {{ i.food.name }}
+                                                            </v-list-item>
+                                                        </v-list>
+                                                    </v-col>
+                                                    <v-col>
+                                                        <v-textarea class="mt-2" v-model="s.instruction"></v-textarea>
+                                                    </v-col>
+                                                </v-row>
+
                                             </v-list-item>
                                         </v-list>
                                     </v-col>
@@ -123,9 +135,10 @@
 <script lang="ts" setup>
 
 import {nextTick, ref} from "vue";
-import {ApiApi, RecipeFromSourceResponse} from "@/openapi";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ApiApi, RecipeFromSourceResponse, SourceImportStep} from "@/openapi";
+import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const router = useRouter()
 
@@ -161,6 +174,141 @@ function createRecipeFromImport() {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })
+}
+
+/**
+ * deletes the given step from the local recipe
+ * @param step step to delete
+ */
+function deleteStep(step: SourceImportStep) {
+    if(importResponse.value.recipe){
+        importResponse.value.recipe.steps.splice(importResponse.value.recipe.steps.findIndex(x => x === step),1)
+    }
+}
+
+/**
+ * utility function used by splitAllSteps and splitStep to split a single step object into multiple step objects
+ * @param step step to split
+ * @param split_character character to use as a delimiter between steps
+ */
+function splitStepObject(step: SourceImportStep, split_character: string) {
+    let steps: SourceImportStep[] = []
+    step.instruction.split(split_character).forEach(part => {
+        if (part.trim() !== '') {
+            steps.push({instruction: part, ingredients: [], showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!})
+        }
+    })
+    steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
+    return steps
+}
+
+/**
+ * Splits all steps of a given recipe_json at the split character (e.g. \n or \n\n)
+ * @param split_character character to split steps at
+ */
+function splitAllSteps(split_character: string) {
+    let steps: SourceImportStep[] = []
+    if (importResponse.value.recipe) {
+        importResponse.value.recipe.steps.forEach(step => {
+            steps = steps.concat(splitStepObject(step, split_character))
+        })
+        importResponse.value.recipe.steps = steps
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
+
+}
+
+/**
+ * Splits the given step at the split character (e.g. \n or \n\n)
+ * @param step step to split
+ * @param split_character character to use as a delimiter between steps
+ */
+function splitStep(step: SourceImportStep, split_character: string) {
+    if (importResponse.value.recipe) {
+        let old_index = importResponse.value.recipe.steps.findIndex(x => x === step)
+        let new_steps = splitStepObject(step, split_character)
+        importResponse.value.recipe.steps.splice(old_index, 1, ...new_steps)
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
+}
+
+/**
+ * Merge all steps of a given recipe_json into one
+ */
+function mergeAllSteps() {
+    let step = {instruction: '', ingredients: [], showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as SourceImportStep
+    if (importResponse.value.recipe) {
+        importResponse.value.recipe.steps.forEach(s => {
+            step.instruction += s.instruction + '\n'
+            step.ingredients = step.ingredients.concat(s.ingredients)
+        })
+        importResponse.value.recipe.steps = [step]
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
+}
+
+/**
+ * Merge two steps (the given and next one)
+ */
+function mergeStep(step: SourceImportStep) {
+    if (importResponse.value.recipe) {
+        let step_index = importResponse.value.recipe.steps.findIndex(x => x === step)
+        let removed_steps = importResponse.value.recipe.steps.splice(step_index, 2)
+
+        importResponse.value.recipe.steps.splice(step_index, 0, {
+            instruction: removed_steps.flatMap(x => x.instruction).join('\n'),
+            ingredients: removed_steps.flatMap(x => x.ingredients),
+            showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!
+        })
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
+
+}
+
+/**
+ * automatically assign ingredients to steps based on text matching
+ */
+function autoSortIngredients() {
+    if (importResponse.value.recipe) {
+        let ingredients = importResponse.value.recipe.steps.flatMap(s => s.ingredients)
+        importResponse.value.recipe.steps.forEach(s => s.ingredients = [])
+
+        ingredients.forEach(i => {
+            let found = false
+            importResponse.value.recipe!.steps.forEach(s => {
+                if (s.instruction.includes(i.food.name.trim()) && !found) {
+                    found = true
+                    s.ingredients.push(i)
+                }
+            })
+            if(!found){
+                importResponse.value.recipe!.steps[0].ingredients.push(i)
+            }
+            // TODO implement a new "second try" algorithm if no exact match was found
+            /*
+
+             if (!found) {
+                let best_match = {rating: 0, step: importResponse.value.recipe.steps[0]}
+                importResponse.value.recipe.steps.forEach(s => {
+
+                    let match = stringSimilarity.findBestMatch(i.food.name.trim(), s.instruction.split(' '))
+
+                    if (match.bestMatch.rating > best_match.rating) {
+                        best_match = {rating: match.bestMatch.rating, step: s}
+                    }
+                })
+                best_match.step.ingredients.push(i)
+                found = true
+            }
+             */
+        })
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
 }
 
 </script>
