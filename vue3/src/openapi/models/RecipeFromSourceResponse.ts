@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { SourceImportDuplicate } from './SourceImportDuplicate';
+import {
+    SourceImportDuplicateFromJSON,
+    SourceImportDuplicateFromJSONTyped,
+    SourceImportDuplicateToJSON,
+    SourceImportDuplicateToJSONTyped,
+} from './SourceImportDuplicate';
 import type { SourceImportRecipe } from './SourceImportRecipe';
 import {
     SourceImportRecipeFromJSON,
@@ -35,10 +42,10 @@ export interface RecipeFromSourceResponse {
     recipe?: SourceImportRecipe;
     /**
      * 
-     * @type {Array<any>}
+     * @type {Array<string>}
      * @memberof RecipeFromSourceResponse
      */
-    images?: Array<any>;
+    images?: Array<string>;
     /**
      * 
      * @type {boolean}
@@ -53,10 +60,10 @@ export interface RecipeFromSourceResponse {
     msg?: string;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<SourceImportDuplicate>}
      * @memberof RecipeFromSourceResponse
      */
-    duplicate?: Array<number>;
+    duplicates?: Array<SourceImportDuplicate>;
 }
 
 /**
@@ -80,7 +87,7 @@ export function RecipeFromSourceResponseFromJSONTyped(json: any, ignoreDiscrimin
         'images': json['images'] == null ? undefined : json['images'],
         'error': json['error'] == null ? undefined : json['error'],
         'msg': json['msg'] == null ? undefined : json['msg'],
-        'duplicate': json['duplicate'] == null ? undefined : json['duplicate'],
+        'duplicates': json['duplicates'] == null ? undefined : ((json['duplicates'] as Array<any>).map(SourceImportDuplicateFromJSON)),
     };
 }
 
@@ -99,7 +106,7 @@ export function RecipeFromSourceResponseToJSONTyped(value?: RecipeFromSourceResp
         'images': value['images'],
         'error': value['error'],
         'msg': value['msg'],
-        'duplicate': value['duplicate'],
+        'duplicates': value['duplicates'] == null ? undefined : ((value['duplicates'] as Array<any>).map(SourceImportDuplicateToJSON)),
     };
 }
 

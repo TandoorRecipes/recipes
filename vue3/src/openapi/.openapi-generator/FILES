@@ -134,6 +134,7 @@ models/ShareLink.ts
 models/ShoppingListEntry.ts
 models/ShoppingListEntryBulk.ts
 models/ShoppingListRecipe.ts
+models/SourceImportDuplicate.ts
 models/SourceImportFood.ts
 models/SourceImportIngredient.ts
 models/SourceImportKeyword.ts

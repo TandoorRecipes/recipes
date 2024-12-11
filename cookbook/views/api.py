@@ -1754,7 +1754,7 @@ class RecipeUrlImportView(APIView):
             if scrape:
                 response['recipe'] = helper.get_from_scraper(scrape, request)
                 response['images'] = list(dict.fromkeys(get_images_from_soup(scrape.soup, url)))
-                response['duplicate'] = Recipe.objects.filter(source_url=url).values_list('id', flat=True).all()
+                response['duplicates'] = Recipe.objects.filter(space=request.space, source_url=url).values('id', 'name').all()
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
 
             else:

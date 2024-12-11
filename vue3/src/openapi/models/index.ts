@@ -131,6 +131,7 @@ export * from './ShareLink';
 export * from './ShoppingListEntry';
 export * from './ShoppingListEntryBulk';
 export * from './ShoppingListRecipe';
+export * from './SourceImportDuplicate';
 export * from './SourceImportFood';
 export * from './SourceImportIngredient';
 export * from './SourceImportKeyword';
