@@ -19,7 +19,7 @@
 
                         <v-stepper-window>
                             <v-stepper-window-item value="1">
-                                <v-card>
+                                <v-card :loading="loading">
                                     <v-card-text>
                                         <v-text-field :label="$t('Website') + ' (https://...)'" @paste="nextTick(loadRecipeFromUrl())" v-model="importUrl">
                                             <template #append>
@@ -44,13 +44,13 @@
                                 <v-row>
                                     <v-col cols="12" md="6">
                                         <h2 class="text-h5">{{ $t('Selected') }}</h2>
-                                        <v-img max-height="30vh" :src="importResponse.recipe.image"></v-img>
+                                        <v-img max-height="30vh" :src="importResponse.recipe.imageUrl"></v-img>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <h2 class="text-h5">{{ $t('Available') }}</h2>
                                         <v-row dense>
                                             <v-col cols="4" v-for="i in importResponse.images">
-                                                <v-img max-height="10vh" cover aspect-ratio="1" :src="i" @click="importResponse.recipe.image = i"></v-img>
+                                                <v-img max-height="10vh" cover aspect-ratio="1" :src="i" @click="importResponse.recipe.imageUrl = i"></v-img>
                                             </v-col>
                                         </v-row>
                                     </v-col>
@@ -72,9 +72,9 @@
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()">Auto Sort</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')">Split All</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()">Merge All</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()">{{ $t('Auto_Sort') }}</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')">{{ $t('Split') }}</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()">{{ $t('Merge') }}</v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
@@ -97,9 +97,12 @@
                                                 <v-row>
                                                     <v-col>
                                                         <v-list>
-                                                            <v-list-item v-for="i in s.ingredients">
-                                                                {{ i.amount }} {{ i.unit.name }} {{ i.food.name }}
-                                                            </v-list-item>
+                                                            <vue-draggable v-model="s.ingredients" group="ingredients" drag-class="drag-handle">
+                                                                <v-list-item v-for="i in s.ingredients">
+                                                                    <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
+                                                                    {{ i.amount }} {{ i.unit.name }} {{ i.food.name }}
+                                                                </v-list-item>
+                                                            </vue-draggable>
                                                         </v-list>
                                                     </v-col>
                                                     <v-col>
@@ -114,7 +117,10 @@
 
                             </v-stepper-window-item>
                             <v-stepper-window-item value="5">
-                                <v-btn @click="createRecipeFromImport()">Import</v-btn>
+                                <v-card :loading="loading">
+                                    <v-card-title></v-card-title>
+                                    <v-btn @click="createRecipeFromImport()">{{ $t('Import') }}</v-btn>
+                                </v-card>
                             </v-stepper-window-item>
                         </v-stepper-window>
 
@@ -139,10 +145,12 @@ import {ApiApi, RecipeFromSourceResponse, SourceImportStep} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {VueDraggable} from "vue-draggable-plus";
 
 const router = useRouter()
 
 const stepper = ref("1")
+const loading = ref(false)
 const importUrl = ref("")
 
 const importResponse = ref({} as RecipeFromSourceResponse)
@@ -152,6 +160,7 @@ const importResponse = ref({} as RecipeFromSourceResponse)
  */
 function loadRecipeFromUrl() {
     let api = new ApiApi()
+    loading.value = true
     api.apiRecipeFromSourceCreate({recipeFromSource: {url: importUrl.value}}).then(r => {
         importResponse.value = r
         if (r.duplicates.length == 0) {
@@ -160,6 +169,8 @@ function loadRecipeFromUrl() {
         }
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        loading.value = false
     })
 }
 
@@ -168,12 +179,21 @@ function loadRecipeFromUrl() {
  */
 function createRecipeFromImport() {
     let api = new ApiApi()
-    console.log(importResponse.value)
-    api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(r => {
-        router.push({name: 'view_recipe', params: {id: r.id}})
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-    })
+
+    if (importResponse.value.recipe) {
+        loading.value = true
+        importResponse.value.recipe.keywords = importResponse.value.recipe.keywords.filter(k => k.importKeyword)
+
+        api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(r => {
+            api.apiRecipeImageUpdate({id: r.id, imageUrl: importResponse.value.recipe?.imageUrl}).then(rI => {
+                router.push({name: 'view_recipe', params: {id: r.id}})
+            }).finally(() => {
+                loading.value = false
+            })
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        })
+    }
 }
 
 /**
@@ -181,8 +201,8 @@ function createRecipeFromImport() {
  * @param step step to delete
  */
 function deleteStep(step: SourceImportStep) {
-    if(importResponse.value.recipe){
-        importResponse.value.recipe.steps.splice(importResponse.value.recipe.steps.findIndex(x => x === step),1)
+    if (importResponse.value.recipe) {
+        importResponse.value.recipe.steps.splice(importResponse.value.recipe.steps.findIndex(x => x === step), 1)
     }
 }
 
@@ -285,7 +305,7 @@ function autoSortIngredients() {
                     s.ingredients.push(i)
                 }
             })
-            if(!found){
+            if (!found) {
                 importResponse.value.recipe!.steps[0].ingredients.push(i)
             }
             // TODO implement a new "second try" algorithm if no exact match was found

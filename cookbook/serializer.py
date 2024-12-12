@@ -1609,7 +1609,7 @@ class SourceImportRecipeSerializer(serializers.Serializer):
     servings_text = serializers.CharField()
     working_time = serializers.IntegerField()
     waiting_time = serializers.IntegerField()
-    image = serializers.URLField()
+    image_url = serializers.URLField()
     keywords = SourceImportKeywordSerializer(many=True)
 
     properties = serializers.ListField(child=SourceImportPropertySerializer())

@@ -1,43 +1,35 @@
 <template>
-    <v-container class="ps-0 pe-0 pt-0">
+    <v-container :class="{'ps-0 pe-0 pt-0': mobile}">
         <RecipeView :recipe="recipe"></RecipeView>
     </v-container>
 
 </template>
 
-<script lang="ts">
-import {defineComponent} from 'vue'
+<script setup lang="ts">
+import {defineComponent, onMounted, ref} from 'vue'
 import {ApiApi, Recipe} from "@/openapi";
 import RecipeView from "@/components/display/RecipeView.vue";
+import {useDisplay} from "vuetify";
 
-export default defineComponent({
-    name: "RecipeSearchPage",
-    components: {RecipeView},
-    watch: {
-        id: function (newValue) {
-            this.refreshData(newValue)
-        },
-    },
-    props: {
-        id: {type: String, required: true}
-    },
-    data() {
-        return {
-            recipe: {} as Recipe
-        }
-    },
-    mounted() {
-        this.refreshData(this.id)
-    },
-    methods: {
-        refreshData(recipeId: string) {
-            const api = new ApiApi()
-            api.apiRecipeRetrieve({id: Number(recipeId)}).then(r => {
-                this.recipe = r
-            })
-        }
-    }
+const props = defineProps({
+    id: {type: String, required: true}
 })
+
+const {mobile} = useDisplay()
+
+const recipe = ref({} as Recipe)
+
+onMounted(() => {
+    refreshData(props.id)
+})
+
+function refreshData(recipeId: string) {
+    const api = new ApiApi()
+    api.apiRecipeRetrieve({id: Number(recipeId)}).then(r => {
+        recipe.value = r
+    })
+}
+
 </script>
 
 <style scoped>

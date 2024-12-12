@@ -106,14 +106,14 @@ def get_from_scraper(scrape, request):
 
     # assign image
     try:
-        recipe_json['image'] = parse_image(scrape.image()) or None
+        recipe_json['image_url'] = parse_image(scrape.image()) or None
     except Exception:
-        recipe_json['image'] = None
-    if not recipe_json['image']:
+        recipe_json['image_url'] = None
+    if not recipe_json['image_url']:
         try:
-            recipe_json['image'] = parse_image(scrape.schema.data.get('image')) or ''
+            recipe_json['image_url'] = parse_image(scrape.schema.data.get('image')) or ''
         except Exception:
-            recipe_json['image'] = ''
+            recipe_json['image_url'] = ''
 
     # assign keywords
     try:

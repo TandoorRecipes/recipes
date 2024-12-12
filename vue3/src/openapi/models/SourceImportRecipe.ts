@@ -100,7 +100,7 @@ export interface SourceImportRecipe {
      * @type {string}
      * @memberof SourceImportRecipe
      */
-    image: string;
+    imageUrl: string;
     /**
      * 
      * @type {Array<SourceImportKeyword>}
@@ -128,7 +128,7 @@ export function instanceOfSourceImportRecipe(value: object): value is SourceImpo
     if (!('servingsText' in value) || value['servingsText'] === undefined) return false;
     if (!('workingTime' in value) || value['workingTime'] === undefined) return false;
     if (!('waitingTime' in value) || value['waitingTime'] === undefined) return false;
-    if (!('image' in value) || value['image'] === undefined) return false;
+    if (!('imageUrl' in value) || value['imageUrl'] === undefined) return false;
     if (!('keywords' in value) || value['keywords'] === undefined) return false;
     if (!('properties' in value) || value['properties'] === undefined) return false;
     return true;
@@ -153,7 +153,7 @@ export function SourceImportRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
         'servingsText': json['servings_text'],
         'workingTime': json['working_time'],
         'waitingTime': json['waiting_time'],
-        'image': json['image'],
+        'imageUrl': json['image_url'],
         'keywords': ((json['keywords'] as Array<any>).map(SourceImportKeywordFromJSON)),
         'properties': ((json['properties'] as Array<any>).map(SourceImportPropertyFromJSON)),
     };
@@ -179,7 +179,7 @@ export function SourceImportRecipeToJSONTyped(value?: SourceImportRecipe | null,
         'servings_text': value['servingsText'],
         'working_time': value['workingTime'],
         'waiting_time': value['waitingTime'],
-        'image': value['image'],
+        'image_url': value['imageUrl'],
         'keywords': ((value['keywords'] as Array<any>).map(SourceImportKeywordToJSON)),
         'properties': ((value['properties'] as Array<any>).map(SourceImportPropertyToJSON)),
     };
