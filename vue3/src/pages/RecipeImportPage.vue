@@ -21,7 +21,7 @@
                             <v-stepper-window-item value="1">
                                 <v-card :loading="loading">
                                     <v-card-text>
-                                        <v-text-field :label="$t('Website') + ' (https://...)'" @paste="nextTick(loadRecipeFromUrl())" v-model="importUrl">
+                                        <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl">
                                             <template #append>
                                                 <v-btn color="primary" icon="fa-solid fa-cloud-arrow-down fa-fw" @click="loadRecipeFromUrl()"></v-btn>
                                             </template>
@@ -98,9 +98,29 @@
                                                     <v-col>
                                                         <v-list>
                                                             <vue-draggable v-model="s.ingredients" group="ingredients" drag-class="drag-handle">
-                                                                <v-list-item v-for="i in s.ingredients">
+                                                                <v-list-item v-for="i in s.ingredients" border>
                                                                     <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                                                     {{ i.amount }} {{ i.unit.name }} {{ i.food.name }}
+                                                                    <template #append>
+                                                                        <v-btn size="small" color="edit">
+                                                                            <v-icon icon="$edit"></v-icon>
+                                                                            <v-dialog max-width="450px" activator="parent" v-model="dialog">
+                                                                                <v-card>
+                                                                                    <v-closable-card-title v-model="dialog" :title="$t('Ingredient Editor')"></v-closable-card-title>
+                                                                                    <v-card-text>
+                                                                                        <v-text-field :label="$t('Original_Text')" v-model="i.originalText" disabled></v-text-field>
+                                                                                        <v-text-field :label="$t('Amount')" v-model="i.amount"></v-text-field>
+                                                                                        <v-text-field :label="$t('Unit')" v-model="i.unit.name"></v-text-field>
+                                                                                        <v-text-field :label="$t('Food')" v-model="i.food.name"></v-text-field>
+                                                                                        <v-text-field :label="$t('Note')" v-model="i.note"></v-text-field>
+                                                                                    </v-card-text>
+                                                                                    <v-card-actions>
+                                                                                        <v-btn class="float-right" color="save" @click="dialog = false">{{$t('Save')}}</v-btn>
+                                                                                    </v-card-actions>
+                                                                                </v-card>
+                                                                            </v-dialog>
+                                                                        </v-btn>
+                                                                    </template>
                                                                 </v-list-item>
                                                             </vue-draggable>
                                                         </v-list>
@@ -146,10 +166,12 @@ import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageSt
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {VueDraggable} from "vue-draggable-plus";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 
 const router = useRouter()
 
 const stepper = ref("1")
+const dialog = ref(false)
 const loading = ref(false)
 const importUrl = ref("")
 
