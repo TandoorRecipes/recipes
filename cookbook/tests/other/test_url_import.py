@@ -65,5 +65,5 @@ def test_recipe_import(arg, u1_s1):
                     'url': url,
                 },
                 content_type='application/json')
-        recipe = json.loads(response.content)['recipe_json']
+        recipe = json.loads(response.content)['recipe']
         validate_recipe(arg, recipe)
