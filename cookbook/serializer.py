@@ -999,6 +999,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     food_properties = serializers.SerializerMethodField('get_food_properties')
+    created_by = UserSerializer(read_only=True)
 
     @extend_schema_field(serializers.JSONField)
     def get_food_properties(self, obj):

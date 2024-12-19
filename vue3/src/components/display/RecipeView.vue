@@ -8,7 +8,7 @@
                 :recipe="props.recipe"
             >
                 <template #overlay>
-                    <v-chip class="ms-2" color="primary" variant="flat" size="x-small">by {{ props.recipe.createdBy }}</v-chip>
+                    <v-chip class="ms-2" color="primary" variant="flat" size="x-small">by {{ props.recipe.createdBy.displayName }}</v-chip>
                     <keywords-component variant="flat" class="ms-1 mb-2" :keywords="props.recipe.keywords"></keywords-component>
                 </template>
             </recipe-image>

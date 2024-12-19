@@ -7,6 +7,8 @@ models/AccessToken.ts
 models/AuthToken.ts
 models/AutoMealPlan.ts
 models/Automation.ts
+models/AutomationTypeEnum.ts
+models/BaseUnitEnum.ts
 models/BookmarkletImport.ts
 models/BookmarkletImportList.ts
 models/ConnectorConfigConfig.ts
@@ -32,6 +34,16 @@ models/MealPlan.ts
 models/MealType.ts
 models/MethodEnum.ts
 models/NutritionInformation.ts
+models/OpenDataCategory.ts
+models/OpenDataConversion.ts
+models/OpenDataFood.ts
+models/OpenDataFoodProperty.ts
+models/OpenDataProperty.ts
+models/OpenDataStore.ts
+models/OpenDataStoreCategory.ts
+models/OpenDataUnit.ts
+models/OpenDataUnitTypeEnum.ts
+models/OpenDataVersion.ts
 models/PaginatedAutomationList.ts
 models/PaginatedBookmarkletImportListList.ts
 models/PaginatedCookLogList.ts
@@ -78,6 +90,13 @@ models/PatchedInviteLink.ts
 models/PatchedKeyword.ts
 models/PatchedMealPlan.ts
 models/PatchedMealType.ts
+models/PatchedOpenDataCategory.ts
+models/PatchedOpenDataConversion.ts
+models/PatchedOpenDataFood.ts
+models/PatchedOpenDataProperty.ts
+models/PatchedOpenDataStore.ts
+models/PatchedOpenDataUnit.ts
+models/PatchedOpenDataVersion.ts
 models/PatchedProperty.ts
 models/PatchedPropertyType.ts
 models/PatchedRecipe.ts
@@ -135,7 +154,6 @@ models/SupermarketCategoryRelation.ts
 models/Sync.ts
 models/SyncLog.ts
 models/ThemeEnum.ts
-models/TypeEnum.ts
 models/Unit.ts
 models/UnitConversion.ts
 models/User.ts

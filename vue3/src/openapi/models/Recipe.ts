@@ -105,10 +105,10 @@ export interface Recipe {
     waitingTime?: number;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof Recipe
      */
-    readonly createdBy: number;
+    readonly createdBy: User;
     /**
      * 
      * @type {Date}
@@ -235,7 +235,7 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         'steps': ((json['steps'] as Array<any>).map(StepFromJSON)),
         'workingTime': json['working_time'] == null ? undefined : json['working_time'],
         'waitingTime': json['waiting_time'] == null ? undefined : json['waiting_time'],
-        'createdBy': json['created_by'],
+        'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
         'sourceUrl': json['source_url'] == null ? undefined : json['source_url'],

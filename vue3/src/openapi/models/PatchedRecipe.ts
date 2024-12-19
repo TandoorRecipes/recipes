@@ -105,10 +105,10 @@ export interface PatchedRecipe {
     waitingTime?: number;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof PatchedRecipe
      */
-    readonly createdBy?: number;
+    readonly createdBy?: User;
     /**
      * 
      * @type {Date}
@@ -226,7 +226,7 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
         'steps': json['steps'] == null ? undefined : ((json['steps'] as Array<any>).map(StepFromJSON)),
         'workingTime': json['working_time'] == null ? undefined : json['working_time'],
         'waitingTime': json['waiting_time'] == null ? undefined : json['waiting_time'],
-        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
         'sourceUrl': json['source_url'] == null ? undefined : json['source_url'],
