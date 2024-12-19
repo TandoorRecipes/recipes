@@ -145,6 +145,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 editingObj.value = r
                 useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
             }).catch((err: any) => {
+                console.error(err)
                 useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
             }).finally(() => {
                 loading.value = false
@@ -155,6 +156,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 editingObj.value = r
                 useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
             }).catch((err: any) => {
+                console.error(err)
                 useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
             }).finally(() => {
                 loading.value = false

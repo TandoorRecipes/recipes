@@ -4,6 +4,7 @@ import {useStorage} from "@vueuse/core";
 import {DateTime} from "luxon";
 import {ResponseError} from "@/openapi";
 import {useI18n} from "vue-i18n";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 /** @enum {string} different message types */
 export enum MessageType {

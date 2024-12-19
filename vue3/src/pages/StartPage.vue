@@ -6,7 +6,7 @@
             <v-card-title><i class="fa-solid fa-eye-slash"></i> {{ $t('search_no_recipes') }}</v-card-title>
             <v-card-text>
                 <v-btn-group divided>
-                    <v-btn size="large" color="success" prepend-icon="$create" :to="{ name: 'ModelEditPage', params: {model: 'Recipe'} }">{{ $t('Create Recipe') }}</v-btn>
+                    <v-btn size="large" color="success" prepend-icon="$create" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-btn>
                     <v-btn size="large" color="primary" prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-btn>
                 </v-btn-group>
             </v-card-text>

@@ -10,7 +10,7 @@
                 <v-icon icon="$add"></v-icon>
                 <v-menu activator="parent">
                     <v-list>
-                        <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'Recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
+                        <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
                         <v-list-item prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-list-item>
                     </v-list>
                 </v-menu>

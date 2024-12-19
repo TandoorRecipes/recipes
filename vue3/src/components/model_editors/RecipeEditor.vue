@@ -75,7 +75,7 @@
                 <v-tabs-window-item value="properties">
                     <v-form :disabled="loading">
                         <v-alert class="mb-2" icon="$help">{{ $t('PropertiesFoodHelp') }}</v-alert>
-                        <properties-editor  v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
+                        <properties-editor v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
@@ -100,7 +100,8 @@
             <v-list>
                 <vue-draggable handle=".drag-handle" v-model="editingObj.steps" :on-sort="sortSteps">
                     <v-list-item v-for="(s,i) in editingObj.steps" :key="s.id">
-                         <v-chip color="primary">{{ i + 1 }}</v-chip> {{s.name}}
+                        <v-chip color="primary">{{ i + 1 }}</v-chip>
+                        {{ s.name }}
                         <template #append>
                             <v-icon class="drag-handle" icon="$dragHandle"></v-icon>
                         </template>
@@ -115,7 +116,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref} from "vue";
-import {Recipe} from "@/openapi";
+import {Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
@@ -140,13 +141,17 @@ const tab = ref("recipe")
 const dialogStepManager = ref(false)
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {
+        newItemFunction: () => {
+            editingObj.value.steps = [] as Step[]
+        }
+    })
 })
 
 /**
  * called by draggable in step manager dialog when steps are sorted
  */
-function sortSteps(){
+function sortSteps() {
     editingObj.value.steps.forEach((value, index) => {
         value.order = index
     })
