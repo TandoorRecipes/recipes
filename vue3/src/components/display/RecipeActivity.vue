@@ -1,24 +1,32 @@
 <template>
 
     <v-card class="mt-1">
-        <v-card-title>Activity</v-card-title>
+        <v-card-title>{{ $t('Activity') }}</v-card-title>
         <v-card-text>
 
-            <v-card v-for="c in cookLogs" :key="c.id" class="mt-1">
-                <v-card-text>
-                    <v-rating density="comfortable" size="x-small" color="tandoor" v-model="c.rating"></v-rating>
-                    <br/>
-                    <span v-if="c.servings != null && c.servings > 0">{{ c.servings }} <span v-if="recipe.servingsText != ''">{{ recipe.servingsText }}</span><span v-else>Servings</span></span> <br/>
+            <v-list>
+                <v-list-item v-for="c in cookLogs" :key="c.id">
+                    <template #prepend>
+                        <v-avatar color="primary">V</v-avatar>
+                    </template>
+                    <v-list-item-title class="font-weight-bold">{{ c.createdBy.displayName }}
+                     <v-rating density="comfortable" size="x-small" color="tandoor" class="float-right" v-model="c.rating"></v-rating>
+                    </v-list-item-title>
 
                     {{ c.comment }}
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-subtitle>
-                    {{ DateTime.fromJSDate(c.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }} by {{ c.createdBy.displayName }}
-                </v-card-subtitle>
-            </v-card>
 
+                    <p v-if="c.servings != null && c.servings > 0">
+                        {{ c.servings }}
+                        <span v-if="recipe.servingsText != ''">{{ recipe.servingsText }}</span>
+                        <span v-else-if="c.servings == 1">{{ $t('Serving') }}</span>
+                        <span v-else>{{ $t('Servings') }}</span>
+                    </p>
 
+                    <p class="text-disabled">
+                        {{ DateTime.fromJSDate(c.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
+                    </p>
+                </v-list-item>
+            </v-list>
 
         </v-card-text>
     </v-card>

@@ -4,16 +4,13 @@
             <td colspan="4"><b>{{ props.ingredient.note }}</b></td>
         </template>
         <template v-else>
-            <td>{{ props.ingredient.amount }}</td>
+            <td>{{ props.ingredient.amount * props.ingredientFactor }}</td>
             <td><span v-if="props.ingredient.unit != null">{{ props.ingredient.unit.name }}</span></td>
             <td><span v-if="props.ingredient.food != null">{{ props.ingredient.food.name }}</span></td>
             <td v-if="props.showNotes">
                 <v-icon class="far fa-comment float-right" v-if="props.ingredient.note != '' && props.ingredient.note != undefined" @click="showTooltip = !showTooltip">
                     <v-tooltip v-model="showTooltip" activator="parent" location="start">{{ props.ingredient.note }}</v-tooltip>
                 </v-icon>
-            </td>
-            <td v-if="props.draggable" >
-                <v-icon icon="$dragHandle" class="drag-handle cursor-move"></v-icon>
             </td>
         </template>
 
@@ -33,8 +30,9 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
-    draggable: {
-        type: Boolean,
+    ingredientFactor: {
+        type: Number,
+        required: true,
     },
 })
 

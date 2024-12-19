@@ -2,7 +2,8 @@
     <v-table density="compact" v-if="props.ingredients.length > 0">
 
         <tbody>
-        <IngredientsTableRow v-for="i in props.ingredients" :ingredient="i" :key="i.id" :show-notes="props.showNotes" :draggable="props.draggable"></IngredientsTableRow>
+        <ingredients-table-row v-for="i in props.ingredients" :ingredient="i" :key="i.id" :show-notes="props.showNotes"
+                               :ingredient-factor="ingredientFactor"></ingredients-table-row>
         </tbody>
 
     </v-table>
@@ -23,8 +24,9 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
-    draggable: {
-        type: Boolean,
+    ingredientFactor: {
+        type: Number,
+        required: true,
     },
 })
 

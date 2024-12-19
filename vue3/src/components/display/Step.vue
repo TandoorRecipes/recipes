@@ -2,23 +2,32 @@
     <v-card>
         <v-card-title>
             <v-row>
-                <v-col><span v-if="props.step.name">{{ props.step.name }}</span><span v-else>Step {{ props.stepNumber }}</span></v-col>
+                <v-col><span v-if="props.step.name">{{ props.step.name }}</span><span v-else>{{ $t('Step') }} {{ props.stepNumber }}</span></v-col>
                 <v-col class="text-right">
                     <v-btn-group density="compact" variant="tonal">
-                        <v-btn size="small" color="info" v-if="props.step.time != undefined && props.step.time > 0" @click="timerRunning = true"><i class="fas fa-stopwatch mr-1 fa-fw"></i> {{ props.step.time }}</v-btn>
-                        <v-btn size="small" color="success" v-if="hasDetails" @click="stepChecked = !stepChecked"><i class="fas fa-fw" :class="{'fa-check': !stepChecked, 'fa-times': stepChecked}"></i></v-btn>
+                        <v-btn size="small" color="info" v-if="props.step.time != undefined && props.step.time > 0" @click="timerRunning = true"><i
+                            class="fas fa-stopwatch mr-1 fa-fw"></i> {{ props.step.time }}
+                        </v-btn>
+                        <v-btn size="small" color="success" v-if="hasDetails" @click="stepChecked = !stepChecked"><i class="fas fa-fw"
+                                                                                                                     :class="{'fa-check': !stepChecked, 'fa-times': stepChecked}"></i>
+                        </v-btn>
                     </v-btn-group>
                 </v-col>
             </v-row>
         </v-card-title>
         <template v-if="!stepChecked">
             <timer :seconds="props.step.time != undefined ? props.step.time*60 : 0" @stop="timerRunning = false" v-if="timerRunning"></timer>
-
-            <IngredientsTable :ingredients="props.step.ingredients"></IngredientsTable>
-
-            <v-card-text v-if="props.step.instructionsMarkdown.length > 0">
-                <instructions :instructions_html="props.step.instructionsMarkdown" :ingredient_factor="ingredient_factor"></instructions>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12" md="6" v-if="props.step?.ingredients.length > 0">
+                        <ingredients-table :ingredients="props.step.ingredients" :ingredient-factor="ingredientFactor"></ingredients-table>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <instructions :instructions_html="props.step.instructionsMarkdown" :ingredient_factor="ingredientFactor"></instructions>
+                    </v-col>
+                </v-row>
             </v-card-text>
+
         </template>
 
     </v-card>
@@ -42,7 +51,7 @@ const props = defineProps({
         required: false,
         default: 1
     },
-    ingredient_factor: {
+    ingredientFactor: {
         type: Number,
         required: true,
     },

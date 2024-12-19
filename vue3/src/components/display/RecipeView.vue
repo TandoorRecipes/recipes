@@ -9,14 +9,16 @@
             >
                 <template #overlay>
                     <v-chip class="ms-2" color="primary" variant="flat" size="x-small">by {{ props.recipe.createdBy }}</v-chip>
-                    <KeywordsComponent variant="flat" class="ms-1 mb-2" :keywords="props.recipe.keywords"></KeywordsComponent>
+                    <keywords-component variant="flat" class="ms-1 mb-2" :keywords="props.recipe.keywords"></keywords-component>
                 </template>
             </recipe-image>
 
 
             <v-card>
                 <v-sheet class="d-flex align-center">
-                    <span class="ps-2 text-h5  flex-grow-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">{{ props.recipe.name }}</span>
+                    <span class="ps-2 text-h5  flex-grow-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
+                        {{ props.recipe.name }}
+                    </span>
                     <recipe-context-menu :recipe="recipe"></recipe-context-menu>
                 </v-sheet>
             </v-card>
@@ -34,25 +36,26 @@
                         <div class="text-grey">Waiting Time</div>
                     </v-col>
                     <v-col class="pt-1 pb-1">
-                        <NumberScalerDialog :number="servings" @change="servings = $event.number" title="Servings">
-                            <template #activator>
-                                <div class="cursor-pointer">
-                                    <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
-                                    <div class="text-grey"><span v-if="props.recipe?.servingsText">{{ props.recipe.servingsText }}</span><span v-else>Servings</span></div>
-                                </div>
-                            </template>
-                        </NumberScalerDialog>
+
+                        <div class="cursor-pointer">
+                            <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
+                            <div class="text-grey"><span v-if="props.recipe?.servingsText">{{ props.recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
+                            <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                            </number-scaler-dialog>
+                        </div>
+
+
                     </v-col>
                 </v-row>
             </v-container>
         </v-card>
 
         <v-card class="mt-1" v-if="props.recipe.steps.length > 1">
-            <StepsOverview :steps="props.recipe.steps"></StepsOverview>
+            <steps-overview :steps="props.recipe.steps"></steps-overview>
         </v-card>
 
         <v-card class="mt-1" v-for="(step, index) in props.recipe.steps" :key="step.id">
-            <Step :step="step" :step-number="index+1" :ingredient_factor="ingredientFactor"></Step>
+            <step :step="step" :step-number="index+1" :ingredientFactor="ingredientFactor"></step>
         </v-card>
 
         <recipe-activity :recipe="recipe"></recipe-activity>
