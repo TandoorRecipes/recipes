@@ -6,6 +6,15 @@
             </router-link>
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
+            <v-btn icon="$add">
+                <v-icon icon="$add"></v-icon>
+                <v-menu activator="parent">
+                    <v-list>
+                        <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'Recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
+                        <v-list-item prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-btn>
 
             <v-avatar color="primary" class="me-2">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
                 <v-menu activator="parent">

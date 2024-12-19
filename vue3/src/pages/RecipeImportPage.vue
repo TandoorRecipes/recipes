@@ -109,7 +109,7 @@
                                                             <vue-draggable v-model="s.ingredients" group="ingredients" drag-class="drag-handle">
                                                                 <v-list-item v-for="i in s.ingredients" border>
                                                                     <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
-                                                                    {{ i.amount }} {{ i.unit.name }} {{ i.food.name }}
+                                                                    {{ i.amount }} <span v-if="i.unit">{{ i.unit.name }}</span> <span v-if="i.food">{{ i.food.name }}</span>
                                                                     <template #append>
                                                                         <v-btn size="small" color="edit" @click="editingIngredient = i; dialog=true">
                                                                             <v-icon icon="$edit"></v-icon>

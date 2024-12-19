@@ -34,25 +34,12 @@ from recipes.settings import PLUGINS
 
 
 def index(request):
-    return HttpResponseRedirect(reverse('vue3'))
-
     with scopes_disabled():
         if not request.user.is_authenticated:
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
-            return HttpResponseRedirect(reverse_lazy('view_search'))
 
-    try:
-        page_map = {
-            UserPreference.SEARCH: reverse_lazy('view_search'),
-            UserPreference.PLAN: reverse_lazy('view_plan'),
-            UserPreference.BOOKS: reverse_lazy('view_books'),
-            UserPreference.SHOPPING: reverse_lazy('view_shopping'),
-        }
-
-        return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
-    except UserPreference.DoesNotExist:
-        return HttpResponseRedirect(reverse('view_search'))
+    return HttpResponseRedirect(reverse('vue3'))
 
 
 def search(request):
