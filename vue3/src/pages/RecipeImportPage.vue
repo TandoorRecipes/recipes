@@ -27,7 +27,7 @@
                                             </template>
                                         </v-text-field>
 
-                                        <v-textarea :placeholder="$t('paste_json')"></v-textarea>
+                                        <!-- <v-textarea :placeholder="$t('paste_json')"></v-textarea> -->
 
                                         <v-alert variant="tonal" v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
                                             <v-alert-title>{{ $t('Duplicate') }}</v-alert-title>
@@ -58,6 +58,15 @@
 
                             </v-stepper-window-item>
                             <v-stepper-window-item value="3">
+                                <v-row>
+                                    <v-col class="text-center">
+                                        <v-btn-group border divided>
+                                            <v-btn prepend-icon="fa-solid fa-square-check" @click="setAllKeywordsImportStatus(true)">{{ $t('SelectAll') }}</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-square-minus" @click="setAllKeywordsImportStatus(false)">{{ $t('SelectNone') }}</v-btn>
+                                        </v-btn-group>
+                                    </v-col>
+                                </v-row>
+
                                 <v-list>
                                     <v-list-item border v-for="k in importResponse.recipe.keywords" :key="k" :class="{'bg-success': k.importKeyword}"
                                                  @click="k.importKeyword = !k.importKeyword">
@@ -102,23 +111,8 @@
                                                                     <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                                                     {{ i.amount }} {{ i.unit.name }} {{ i.food.name }}
                                                                     <template #append>
-                                                                        <v-btn size="small" color="edit">
+                                                                        <v-btn size="small" color="edit" @click="editingIngredient = i; dialog=true">
                                                                             <v-icon icon="$edit"></v-icon>
-                                                                            <v-dialog max-width="450px" activator="parent" v-model="dialog">
-                                                                                <v-card>
-                                                                                    <v-closable-card-title v-model="dialog" :title="$t('Ingredient Editor')"></v-closable-card-title>
-                                                                                    <v-card-text>
-                                                                                        <v-text-field :label="$t('Original_Text')" v-model="i.originalText" disabled></v-text-field>
-                                                                                        <v-text-field :label="$t('Amount')" v-model="i.amount"></v-text-field>
-                                                                                        <v-text-field :label="$t('Unit')" v-model="i.unit.name"></v-text-field>
-                                                                                        <v-text-field :label="$t('Food')" v-model="i.food.name"></v-text-field>
-                                                                                        <v-text-field :label="$t('Note')" v-model="i.note"></v-text-field>
-                                                                                    </v-card-text>
-                                                                                    <v-card-actions>
-                                                                                        <v-btn class="float-right" color="save" @click="dialog = false">{{$t('Save')}}</v-btn>
-                                                                                    </v-card-actions>
-                                                                                </v-card>
-                                                                            </v-dialog>
                                                                         </v-btn>
                                                                     </template>
                                                                 </v-list-item>
@@ -135,18 +129,49 @@
                                     </v-col>
                                 </v-row>
 
+                                <v-dialog max-width="450px" v-model="dialog">
+                                    <v-card>
+                                        <v-closable-card-title v-model="dialog" :title="$t('Ingredient Editor')"></v-closable-card-title>
+                                        <v-card-text>
+                                            <v-text-field :label="$t('Original_Text')" v-model="editingIngredient.originalText" disabled></v-text-field>
+                                            <v-text-field :label="$t('Amount')" v-model="editingIngredient.amount"></v-text-field>
+                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name"></v-text-field>
+                                            <v-text-field :label="$t('Food')" v-model="editingIngredient.food.name"></v-text-field>
+                                            <v-text-field :label="$t('Note')" v-model="editingIngredient.note"></v-text-field>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-btn class="float-right" color="save" @click="dialog = false">{{ $t('Save') }}</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+
                             </v-stepper-window-item>
                             <v-stepper-window-item value="5">
                                 <v-card :loading="loading">
-                                    <v-card-title></v-card-title>
-                                    <v-btn @click="createRecipeFromImport()">{{ $t('Import') }}</v-btn>
+                                    <v-card-title>{{ importResponse.recipe.name }}</v-card-title>
+                                    <v-row>
+                                        <v-col cols="12" md="6">
+                                            <v-img v-if="importResponse.recipe.imageUrl" :src="importResponse.recipe.imageUrl"></v-img>
+                                        </v-col>
+                                        <v-col cols="12" md="6">
+                                            <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name"></v-text-field>
+                                            <v-number-input :label="$t('Servings')" v-model="importResponse.recipe.servings"></v-number-input>
+                                            <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
+                                            <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" clearable></v-textarea>
+
+                                            <v-btn class="mt-5" size="large" @click="createRecipeFromImport()" color="success" :loading="loading">{{ $t('Import') }}</v-btn>
+                                        </v-col>
+                                    </v-row>
+
                                 </v-card>
                             </v-stepper-window-item>
                         </v-stepper-window>
 
                         <v-stepper-actions @click:next="next"
-                                           @click:prev="prev">
-
+                                           @click:prev="prev"
+                                           :next-text="$t('Next')"
+                                           :prev-text="$t('Back')"
+                                           :disabled="Object.keys(importResponse).length == 0">
                         </v-stepper-actions>
                     </template>
 
@@ -161,12 +186,14 @@
 <script lang="ts" setup>
 
 import {nextTick, ref} from "vue";
-import {ApiApi, RecipeFromSourceResponse, SourceImportStep} from "@/openapi";
+import {ApiApi, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportStep} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import KeywordsBar from "@/components/display/KeywordsBar.vue";
+import {VNumberInput} from 'vuetify/labs/VNumberInput'
 
 const router = useRouter()
 
@@ -176,6 +203,7 @@ const loading = ref(false)
 const importUrl = ref("")
 
 const importResponse = ref({} as RecipeFromSourceResponse)
+const editingIngredient = ref({} as SourceImportIngredient)
 
 /**
  * call server to load recipe from a given URl
@@ -351,6 +379,16 @@ function autoSortIngredients() {
     } else {
         useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
     }
+}
+
+/**
+ * set the import status for all keywords to the given status
+ * @param status if keyword should be imported or not
+ */
+function setAllKeywordsImportStatus(status: boolean) {
+    importResponse.value.recipe?.keywords.forEach(keyword => {
+        keyword.importKeyword = status
+    })
 }
 
 </script>
