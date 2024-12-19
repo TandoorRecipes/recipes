@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import {defineComponent, onMounted, ref} from 'vue'
+import {defineComponent, onMounted, ref, watch} from 'vue'
 import {ApiApi, Recipe} from "@/openapi";
 import RecipeView from "@/components/display/RecipeView.vue";
 import {useDisplay} from "vuetify";
@@ -19,12 +19,17 @@ const {mobile} = useDisplay()
 
 const recipe = ref({} as Recipe)
 
+watch(() => props.id, () => {
+    refreshData(props.id)
+})
+
 onMounted(() => {
     refreshData(props.id)
 })
 
 function refreshData(recipeId: string) {
     const api = new ApiApi()
+    recipe.value = {} as Recipe
     api.apiRecipeRetrieve({id: Number(recipeId)}).then(r => {
         recipe.value = r
     })

@@ -1,4 +1,12 @@
 <template>
+    <template v-if="props.recipe.name == undefined">
+        <v-skeleton-loader type="card" class="mt-md-4 rounded-0"></v-skeleton-loader>
+        <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+        <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar-three-line" class="mt-2"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar-two-line"></v-skeleton-loader>
+        <v-skeleton-loader type="list-item-avatar-three-line"></v-skeleton-loader>
+    </template>
 
     <template v-if="props.recipe.name != undefined">
 

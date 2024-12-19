@@ -34,8 +34,7 @@ from recipes.settings import PLUGINS
 
 
 def index(request):
-    if settings.V3_BETA:
-        return HttpResponseRedirect(reverse('vue3'))
+    return HttpResponseRedirect(reverse('vue3'))
 
     with scopes_disabled():
         if not request.user.is_authenticated:

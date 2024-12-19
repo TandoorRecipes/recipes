@@ -31,6 +31,7 @@
   "Create_New_Keyword": "Ավելացնել նոր բանալի բառ",
   "Create_New_Shopping Category": "Ստեղծել գնումների նոր կատեգորիա",
   "CreatedBy": "",
+  "Ctrl+K": "",
   "Database": "",
   "Date": "",
   "Default": "",
@@ -208,5 +209,8 @@
   "success_fetching_resource": "Ռեսուրսը հաջողությամբ կցվել է։",
   "success_updating_resource": "Ռեսուրսը հաջողությամբ թարմացվել է։",
   "theUsernameCannotBeChanged": "",
+  "to_close": "",
+  "to_navigate": "",
+  "to_select": "",
   "warning_feature_beta": "Այս հատկությունը ԲԵՏԱ տարբերակում է։ Ակնկալեք սխալներ և անգամ խափանող թարմացումներ ապագայում։"
 }

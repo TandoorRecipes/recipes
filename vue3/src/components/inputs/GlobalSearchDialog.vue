@@ -2,8 +2,8 @@
     <slot name="activator">
         <v-btn @click="dialog = true" variant="plain" density="default">
             <i class="fas fa-search mr-1"></i>
-            <span class="d-none d-sm-block">Search</span>
-            <v-chip size="x-small" variant="tonal" class="d-none d-md-flex ml-1" label>Ctrl+K</v-chip>
+            <span class="d-none d-sm-block">{{$t('Search')}}</span>
+            <v-chip size="x-small" variant="tonal" class="d-none d-md-flex ml-1" label>{{$t('Ctrl+K')}}</v-chip>
         </v-btn>
     </slot>
 
@@ -42,11 +42,11 @@
             <v-card-text class="d-none d-sm-block pt-2">
                 <v-chip size="x-small" class="mr-1" label><i class="fas fa-arrow-up"></i></v-chip>
                 <v-chip size="x-small" class="mr-1" label><i class="fas fa-arrow-down"></i></v-chip>
-                <small class="mr-2">to navigate</small>
+                <small class="mr-2">{{$t('to_navigate')}}</small>
                 <v-chip size="x-small" class="mr-1" label><i class="fas fa-level-down-alt fa-rotate-90"></i></v-chip>
-                <small class="mr-2">to select</small>
+                <small class="mr-2">{{$t('to_select')}}</small>
                 <v-chip size="x-small" class="mr-1" label> esc</v-chip>
-                <small>to close</small>
+                <small>{{$t('to_close')}}</small>
 
 
             </v-card-text>
@@ -166,6 +166,7 @@ function cardVariant(index: number) {
 function goToSelectedRecipe() {
     dialog.value = false
     let searchResult = searchResults.value[selectedResult.value]
+    console.log('going to', searchResult.recipe_id)
     if (searchResult.recipe_id != null) {
         router.push({name: 'view_recipe', params: {'id': searchResult.recipe_id}})
     }

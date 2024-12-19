@@ -26,6 +26,7 @@
   "Copy_template_reference": "複製參考模板",
   "Create": "",
   "CreatedBy": "",
+  "Ctrl+K": "",
   "Database": "",
   "Date": "",
   "Default": "",
@@ -185,6 +186,9 @@
   "success_moving_resource": "成功移動資源！",
   "success_updating_resource": "成功更新資源！",
   "theUsernameCannotBeChanged": "",
+  "to_close": "",
+  "to_navigate": "",
+  "to_select": "",
   "warning_feature_beta": "此功能目前處於測試階段 (BETA)。使用此功能時，請預期可能會有漏洞和破壞性變更，未來可能會丟失與功能相關的數據。",
   "warning_space_delete": "您可以刪除您的空間，包括所有食譜、購物清單、餐飲計畫以及其他您創建的內容。此操作無法撤銷！您確定要這樣做嗎？"
 }

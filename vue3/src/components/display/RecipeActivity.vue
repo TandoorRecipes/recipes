@@ -27,7 +27,6 @@
                     </p>
                 </v-list-item>
             </v-list>
-
         </v-card-text>
     </v-card>
 

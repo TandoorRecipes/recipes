@@ -43,6 +43,7 @@
   "Create_New_Shopping Category": "Luo Uusi Ostoskategoria",
   "Create_New_Unit": "Lisää Uusi Yksikkö",
   "CreatedBy": "",
+  "Ctrl+K": "",
   "Current_Period": "Nykyinen Jakso",
   "Database": "",
   "Date": "Päivämäärä",
@@ -297,6 +298,9 @@
   "success_moving_resource": "Resurssin siirto onnistui!",
   "success_updating_resource": "Resurssin päivitys onnistui!",
   "theUsernameCannotBeChanged": "",
+  "to_close": "",
+  "to_navigate": "",
+  "to_select": "",
   "tree_root": "Root of Tree",
   "warning_feature_beta": "Tämä ominaisuus on BETA (testaus) vaiheessa. Bugeja ja hajottavia muutoksia saattaa ilmaantua tulevaisuudessa tätä ominaisuutta (mahdollisesti menettää ominaisuuksiin liittyvää tietoa) käytettäessä."
 }
