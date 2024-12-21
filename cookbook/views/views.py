@@ -589,7 +589,7 @@ def test2(request):
         return HttpResponseRedirect(reverse('index'))
 
 
-@group_required('admin')
+@group_required('guest')
 def vue3(request):
     return render(request, 'frontend/tandoor.html', {})
 

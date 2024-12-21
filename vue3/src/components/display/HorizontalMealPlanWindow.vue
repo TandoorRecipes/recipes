@@ -63,11 +63,10 @@ import {DateTime} from "luxon";
 import {homePageCols} from "@/utils/breakpoint_utils";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
-
+const {name} = useDisplay()
 const loading = ref(false)
 
 let numberOfCols = computed(() => {
-    const {name} = useDisplay()
     return homePageCols(name.value)
 })
 
