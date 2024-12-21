@@ -38,6 +38,9 @@
 {% vite_hmr_client %}
 {% vite_asset 'src/apps/tandoor/main.ts' %}
 
+<script type="application/javascript">
+    localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
+</script>
 
 </body>
 </html>

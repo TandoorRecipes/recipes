@@ -27,10 +27,13 @@
                                 <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512"></v-textarea>
                             </v-col>
                             <v-col cols="12" md="6">
+                                <v-label>{{ $t('Image')}}</v-label>
                                 <v-img style="max-height: 150px" :src="editingObj.image"></v-img>
+                                <v-file-input></v-file-input>
+                                <v-btn color="delete" prepend-icon="$delete" v-if="editingObj.image">{{$t('Delete')}}</v-btn>
+                                <v-btn color="success" prepend-icon="$upload">{{$t('Select')}}</v-btn>
                             </v-col>
                         </v-row>
-
 
                         <v-label>{{ $t('Keywords') }}</v-label>
                         <ModelSelect mode="tags" v-model="editingObj.keywords" model="Keyword"></ModelSelect>

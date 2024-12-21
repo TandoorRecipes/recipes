@@ -65,6 +65,7 @@ export default createVuetify({
             delete: 'fa-solid fa-trash-can',
             edit: 'fa-solid fa-pencil',
             create: 'fa-solid fa-plus',
+            upload: 'fa-solid fa-file-arrow-up',
             search: 'fa-solid fa-magnifying-glass',
             copy: 'fa-solid fa-copy',
             add: 'fa-solid fa-plus',

@@ -20,7 +20,7 @@
                     <v-divider></v-divider>
                     <v-list-subheader>Admin</v-list-subheader>
                     <v-list-item :to="{name: 'view_settings_api'}" prepend-icon="fa-solid fa-code">{{ $t('API') }}</v-list-item>
-                    <v-list-item href="/system/" prepend-icon="fa-solid fa-server">{{ $t('System') }}</v-list-item>
+                    <v-list-item :href="getDjangoUrl('system')" target="_blank" prepend-icon="fa-solid fa-server">{{ $t('System') }}</v-list-item>
                 </v-list>
 
             </v-col>
@@ -34,12 +34,10 @@
 
 <script setup lang="ts">
 
+import {useDjangoUrls} from "@/composables/useDjangoUrls";
 
-import AccountSettings from "@/components/settings/AccountSettings.vue";
+const {getDjangoUrl} = useDjangoUrls()
 
-const props = defineProps({
-    page: {type: String, default: 'ACCOUNT'}
-})
 </script>
 
 

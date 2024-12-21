@@ -17,11 +17,11 @@
     "pinia": "^2.1.7",
     "vue": "^3.5.7",
     "vue-draggable-plus": "^0.6.0",
-    "vue-i18n": "9",
+    "vue-i18n": "10.0.5",
     "vue-router": "4",
     "vue-simple-calendar": "^7.1.0",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.7.3"
+    "vuetify": "^3.7.6"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",

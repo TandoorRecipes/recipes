@@ -16,7 +16,7 @@
                 </v-menu>
             </v-btn>
 
-            <v-avatar color="primary" class="me-2">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
+            <v-avatar color="primary" class="me-2 cursor-pointer">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
                 <v-menu activator="parent">
 
                     <v-list density="compact">
@@ -55,7 +55,7 @@
                             {{ $t('Messages') }}
                             <message-list-dialog></message-list-dialog>
                         </v-list-item>
-                        <v-list-item>
+                        <v-list-item :href="getDjangoUrl('accounts/logout')" link>
                             <template #prepend>
                                 <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
                             </template>
@@ -83,7 +83,7 @@
         </v-main>
 
         <v-navigation-drawer v-if="lgAndUp">
-            <v-list-item>
+            <v-list-item :to="{ name: 'view_settings', params: {} }">
                 <template #prepend>
                     <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
                 </template>
@@ -150,8 +150,10 @@ import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {TAutomation, TCookLog, TFood, TKeyword, TPropertyType, TSupermarket, TSupermarketCategory, TUnit, TUnitConversion, TUserFile, TViewLog} from "@/types/Models";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
+import {useDjangoUrls} from "@/composables/useDjangoUrls";
 
 const {lgAndUp} = useDisplay()
+const {getDjangoUrl} = useDjangoUrls()
 
 useUserPreferenceStore()
 

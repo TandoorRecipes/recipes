@@ -65,24 +65,12 @@ import {
     GenericModel,
     getGenericModelFromString, getListModels,
     Model,
-    TAutomation,
-    TCookLog,
-    TFood,
-    TKeyword,
-    TPropertyType,
-    TSupermarket,
-    TSupermarketCategory,
-    TUnit,
-    TUnitConversion,
-    TUserFile,
-    TViewLog
 } from "@/types/Models";
 import {VDataTable} from "vuetify/components";
 import {useUrlSearchParams} from "@vueuse/core";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {ResponseError} from "@/openapi";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 

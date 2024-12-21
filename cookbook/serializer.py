@@ -233,15 +233,15 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerialize
 
 class UserFileSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
-    file = serializers.FileField(write_only=True)
+    file = serializers.FileField(write_only=True, required=False)
     file_download = serializers.SerializerMethodField('get_download_link')
     preview = serializers.SerializerMethodField('get_preview_link')
 
-    @extend_schema_field(str)
+    @extend_schema_field(serializers.CharField(read_only=True))
     def get_download_link(self, obj):
         return self.context['request'].build_absolute_uri(reverse('api_download_file', args={obj.pk}))
 
-    @extend_schema_field(str)
+    @extend_schema_field(serializers.CharField(read_only=True))
     def get_preview_link(self, obj):
         try:
             Image.open(obj.file.file.file)

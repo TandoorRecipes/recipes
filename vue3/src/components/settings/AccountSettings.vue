@@ -13,11 +13,11 @@
 
         <p class="text-h6 mt-3">{{ $t('Account') }}</p>
         <v-divider class="mb-3"></v-divider>
-        <v-btn color="primary" class="mt-1" href="/accounts/email/" target="_blank">{{ $t('Manage_Emails') }}</v-btn>
+        <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/email/')" target="_blank">{{ $t('Manage_Emails') }}</v-btn>
         <br/>
-        <v-btn color="primary" class="mt-1" href="/accounts/password/change/" target="_blank">{{ $t('Change_Password') }}</v-btn>
+        <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/password/change/')" target="_blank">{{ $t('Change_Password') }}</v-btn>
         <br/>
-        <v-btn color="primary" class="mt-1" href="/accounts/social/connections/" target="_blank">{{ $t('Social_Authentication') }}</v-btn>
+        <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/social/connections/')" target="_blank">{{ $t('Social_Authentication') }}</v-btn>
         <br/>
 
         <p class="text-h6 mt-3">{{ $t('DeviceSettings') }}</p>
@@ -35,7 +35,9 @@ import {onMounted, ref} from "vue";
 import {ApiApi, User} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {useDjangoUrls} from "@/composables/useDjangoUrls";
 
+const {getDjangoUrl} = useDjangoUrls()
 
 const user = ref({} as User)
 
