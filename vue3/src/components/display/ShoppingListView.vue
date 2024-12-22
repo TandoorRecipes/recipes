@@ -211,7 +211,7 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Food, IngredientString, ShoppingListEntry, ShoppingListRecipe, Supermarket, Unit} from "@/openapi";
+import {ApiApi, Food, IngredientString, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket, Unit} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -256,6 +256,10 @@ onMounted(() => {
     if (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null) {
         new ApiApi().apiSupermarketRetrieve({id: useUserPreferenceStore().deviceSettings.shopping_selected_supermarket!.id!}).then(r => {
             useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = r
+        }).catch(err => {
+            if (err instanceof ResponseError && err.response.status == 404) {
+                useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = null
+            }
         })
     }
 })

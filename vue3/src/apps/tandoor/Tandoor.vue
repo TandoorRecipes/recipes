@@ -95,7 +95,7 @@
             <v-list-item prepend-icon="fas fa-calendar-alt" :title="$t('Meal_Plan')" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
             <v-list-item prepend-icon="fas fa-shopping-cart" :title="$t('Shopping_list')" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
             <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-bars" title="Test" :to="{ name: 'view_test', params: {} }"></v-list-item>
+            <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'ModelListPage', params: {model: 'food'} }"></v-list-item>
 
             <navigation-drawer-context-menu></navigation-drawer-context-menu>
 

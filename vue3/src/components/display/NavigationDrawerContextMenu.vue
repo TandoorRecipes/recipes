@@ -3,7 +3,7 @@
     <template v-if="route.name == 'ModelListPage'">
         <v-divider></v-divider>
         <v-list-item v-for="m in getListModels()"
-                     :to="{ name: 'ModelListPage', params: {model: m.name} }">
+                     :to="{ name: 'ModelListPage', params: {model: m.name.toLowerCase()} }">
             <template #prepend>
                 <v-icon :icon="m.icon"></v-icon>
             </template>

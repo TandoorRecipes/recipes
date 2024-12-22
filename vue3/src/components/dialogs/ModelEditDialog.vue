@@ -33,6 +33,14 @@ const model = defineModel<Boolean|undefined>({default: undefined})
 const dialogActivator = (model.value !== undefined) ? undefined : props.activator
 
 /**
+ * for some reason editorComponent is not updated automatically when prop is changed
+ * because of this watch prop changes and update manually if prop is changed
+ */
+watch(() => props.model, () => {
+    editorComponent.value = defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`))
+})
+
+/**
  * Allow opening the model edit dialog trough v-model property of the dialog by watching for model changes
  */
 watch(model, (value, oldValue, onCleanup) => {
