@@ -48,10 +48,19 @@ export function useFileApi() {
         })
     }
 
-    function updateRecipeImage(recipeId: number, file: File|null){
+    /**
+     * update a recipes image either by a given file or given url
+     * @param recipeId ID of recipe to update
+     * @param file file object to upload or null to delete image (if no imageUrl is given)
+     * @param imageUrl url of an image to download by server
+     */
+    function updateRecipeImage(recipeId: number, file: File|null, imageUrl?: string){
         let formData = new FormData()
         if (file != null) {
             formData.append('image', file)
+        }
+        if (imageUrl) {
+            formData.append('image_url', imageUrl)
         }
 
         return fetch(getDjangoUrl(`api/recipe/${recipeId}/image/`), {

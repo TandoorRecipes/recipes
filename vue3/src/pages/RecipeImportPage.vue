@@ -147,7 +147,7 @@
 
                             </v-stepper-window-item>
                             <v-stepper-window-item value="5">
-                                <v-card :loading="loading">
+                                <v-card :loading="loading || fileApiLoading">
                                     <v-card-title>{{ importResponse.recipe.name }}</v-card-title>
                                     <v-row>
                                         <v-col cols="12" md="6">
@@ -159,7 +159,7 @@
                                             <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
                                             <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" clearable></v-textarea>
 
-                                            <v-btn class="mt-5" size="large" @click="createRecipeFromImport()" color="success" :loading="loading">{{ $t('Import') }}</v-btn>
+                                            <v-btn class="mt-5" size="large" @click="createRecipeFromImport()" color="success" :loading="loading || fileApiLoading">{{ $t('Import') }}</v-btn>
                                         </v-col>
                                     </v-row>
 
@@ -194,8 +194,10 @@ import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
+import {useFileApi} from "@/composables/useFileApi";
 
 const router = useRouter()
+const {updateRecipeImage, fileApiLoading} = useFileApi()
 
 const stepper = ref("1")
 const dialog = ref(false)
@@ -234,14 +236,14 @@ function createRecipeFromImport() {
         loading.value = true
         importResponse.value.recipe.keywords = importResponse.value.recipe.keywords.filter(k => k.importKeyword)
 
-        api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(r => {
-            api.apiRecipeImageUpdate({id: r.id, imageUrl: importResponse.value.recipe?.imageUrl}).then(rI => {
-                router.push({name: 'view_recipe', params: {id: r.id}})
-            }).finally(() => {
-                loading.value = false
+        api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
+            updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
+                router.push({name: 'view_recipe', params: {id: recipe.id}})
             })
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        }).finally(() => {
+            loading.value = false
         })
     }
 }
