@@ -105,7 +105,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  SupermarketSerializer, SyncLogSerializer, SyncSerializer,
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer,
-                                 LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer
+                                 LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -1289,7 +1289,8 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return Response(content, status=http_status)
 
-    @decorators.action(detail=True, methods=['GET'], serializer_class=RecipeSimpleSerializer)
+    @extend_schema(responses=RecipeSimpleSerializer(many=True))
+    @decorators.action(detail=True, pagination_class=None, methods=['GET'], serializer_class=RecipeSimpleSerializer)
     def related(self, request, pk):
         obj = self.get_object()
         if obj.get_space() != request.space:
@@ -1371,8 +1372,34 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         self.queryset = self.queryset.filter(Q(entries__space=self.request.space) | Q(recipe__space=self.request.space))
         return self.queryset.filter(Q(entries__isnull=True)
                                     | Q(entries__created_by=self.request.user)
-                                    | Q(
-            entries__created_by__in=list(self.request.user.get_shopping_share()))).distinct().all()
+                                    | Q(entries__created_by__in=list(self.request.user.get_shopping_share()))).distinct().all()
+
+    @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
+    def bulk_create_entries(self, request, pk):
+        obj = self.get_object()
+        if obj.get_space() != request.space:
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            entries = []
+            for e in serializer.validated_data['entries']:
+                entries.append(
+                    ShoppingListEntry(
+                        list_recipe_id=obj.pk,
+                        amount=e['amount'],
+                        unit_id=e['unit_id'],
+                        food_id=e['food_id'],
+                        created_by_id=request.user.id,
+                        space_id=request.space.id,
+                    )
+                )
+
+            ShoppingListEntry.objects.bulk_create(entries)
+            return Response(serializer.validated_data)
+        else:
+            return Response(serializer.errors, 400)
 
 
 @extend_schema_view(list=extend_schema(parameters=[

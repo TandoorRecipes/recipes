@@ -10,6 +10,10 @@
                         {{ $t('Add_to_Plan') }}
                         <model-edit-dialog model="MealPlan" :itemDefaults="{recipe: recipe}"></model-edit-dialog>
                     </v-list-item>
+                    <v-list-item prepend-icon="$shopping" link>
+                        {{ $t('Add_to_Shopping') }}
+                        <add-to-shopping-dialog :recipe="props.recipe"></add-to-shopping-dialog>
+                    </v-list-item>
                     <v-list-item prepend-icon="fa-solid fa-share-nodes" link>
                         {{ $t('Share') }}
                         <recipe-share-dialog :recipe="props.recipe"></recipe-share-dialog>
@@ -26,6 +30,7 @@ import {PropType} from 'vue'
 import {Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
+import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 
 
 const props = defineProps({

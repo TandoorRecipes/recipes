@@ -36,7 +36,7 @@ export interface PatchedShoppingListRecipe {
      * @type {string}
      * @memberof PatchedShoppingListRecipe
      */
-    readonly name?: string;
+    name?: string;
     /**
      * 
      * @type {number}
@@ -108,7 +108,7 @@ export function PatchedShoppingListRecipeToJSON(json: any): PatchedShoppingListR
     return PatchedShoppingListRecipeToJSONTyped(json, false);
 }
 
-export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -116,6 +116,7 @@ export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppin
     return {
         
         'id': value['id'],
+        'name': value['name'],
         'recipe': value['recipe'],
         'mealplan': value['mealplan'],
         'servings': value['servings'],

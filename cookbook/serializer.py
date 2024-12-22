@@ -1139,7 +1139,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
             'from_date', 'to_date', 'meal_type', 'created_by', 'shared', 'recipe_name',
-            'meal_type_name', 'shopping','addshopping'
+            'meal_type_name', 'shopping', 'addshopping'
         )
         read_only_fields = ('created_by',)
 
@@ -1155,25 +1155,11 @@ class AutoMealPlanSerializer(serializers.Serializer):
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     mealplan_note = serializers.ReadOnlyField(source='mealplan.note')
     mealplan_from_date = serializers.ReadOnlyField(source='mealplan.from_date')
     mealplan_type = serializers.ReadOnlyField(source='mealplan.meal_type.name')
     servings = CustomDecimalField()
-
-    @extend_schema_field(str)
-    def get_name(self, obj):
-        if not isinstance(value := obj.servings, Decimal):
-            value = Decimal(value)
-        value = value.quantize(
-            Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
-        return (
-                obj.name
-                or getattr(obj.mealplan, 'title', None)
-                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                or obj.recipe.name
-        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -1250,6 +1236,16 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
         )
         read_only_fields = ('id', 'created_by', 'created_at')
+
+
+class ShoppingListEntrySimpleCreateSerializer(serializers.Serializer):
+    amount = CustomDecimalField()
+    unit_id = serializers.IntegerField(allow_null=True)
+    food_id = serializers.IntegerField(allow_null=True)
+
+
+class ShoppingListEntryBulkCreateSerializer(serializers.Serializer):
+    entries = serializers.ListField(child=ShoppingListEntrySimpleCreateSerializer())
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
@@ -1537,8 +1533,8 @@ class RecipeExportSerializer(WritableNestedModelSerializer):
 class RecipeShoppingUpdateSerializer(serializers.ModelSerializer):
     list_recipe = serializers.IntegerField(write_only=True, allow_null=True, required=False,
                                            help_text=_("Existing shopping list to update"))
-    ingredients = serializers.IntegerField(write_only=True, allow_null=True, required=False, help_text=_(
-        "List of ingredient IDs from the recipe to add, if not provided all ingredients will be added."))
+    ingredients = serializers.ListField(child=serializers.IntegerField(write_only=True, allow_null=True, required=False, help_text=_(
+        "List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.")))
     servings = serializers.IntegerField(default=1, write_only=True, allow_null=True, required=False, help_text=_(
         "Providing a list_recipe ID and servings of 0 will delete that shopping list."))
 
@@ -1627,9 +1623,10 @@ class SourceImportDuplicateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     name = serializers.CharField()
 
+
 class RecipeFromSourceResponseSerializer(serializers.Serializer):
     recipe = SourceImportRecipeSerializer(default=None)
-    images = serializers.ListField(child=serializers.CharField(),default=[], allow_null=False)
+    images = serializers.ListField(child=serializers.CharField(), default=[], allow_null=False)
     error = serializers.BooleanField(default=False)
     msg = serializers.CharField(max_length=1024, default='')
     duplicates = serializers.ListField(child=SourceImportDuplicateSerializer(), default=[], allow_null=False)

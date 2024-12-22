@@ -131,6 +131,7 @@ import type {
   ShareLink,
   ShoppingListEntry,
   ShoppingListEntryBulk,
+  ShoppingListEntryBulkCreate,
   ShoppingListRecipe,
   Space,
   Step,
@@ -381,6 +382,8 @@ import {
     ShoppingListEntryToJSON,
     ShoppingListEntryBulkFromJSON,
     ShoppingListEntryBulkToJSON,
+    ShoppingListEntryBulkCreateFromJSON,
+    ShoppingListEntryBulkCreateToJSON,
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeToJSON,
     SpaceFromJSON,
@@ -1214,7 +1217,7 @@ export interface ApiRecipePartialUpdateRequest {
     patchedRecipe?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
 }
 
-export interface ApiRecipeRelatedRetrieveRequest {
+export interface ApiRecipeRelatedListRequest {
     id: number;
 }
 
@@ -1224,7 +1227,7 @@ export interface ApiRecipeRetrieveRequest {
 
 export interface ApiRecipeShoppingUpdateRequest {
     id: number;
-    recipeShoppingUpdate?: RecipeShoppingUpdate;
+    recipeShoppingUpdate: RecipeShoppingUpdate;
 }
 
 export interface ApiRecipeUpdateRequest {
@@ -1268,8 +1271,13 @@ export interface ApiShoppingListEntryUpdateRequest {
     shoppingListEntry: Omit<ShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'>;
 }
 
+export interface ApiShoppingListRecipeBulkCreateEntriesCreateRequest {
+    id: number;
+    shoppingListEntryBulkCreate: ShoppingListEntryBulkCreate;
+}
+
 export interface ApiShoppingListRecipeCreateRequest {
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
 }
 
 export interface ApiShoppingListRecipeDestroyRequest {
@@ -1283,7 +1291,7 @@ export interface ApiShoppingListRecipeListRequest {
 
 export interface ApiShoppingListRecipePartialUpdateRequest {
     id: number;
-    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
+    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
 }
 
 export interface ApiShoppingListRecipeRetrieveRequest {
@@ -1292,7 +1300,7 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
 }
 
 export interface ApiSpaceListRequest {
@@ -8856,11 +8864,11 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiRecipeRelatedRetrieveRaw(requestParameters: ApiRecipeRelatedRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeSimple>> {
+    async apiRecipeRelatedListRaw(requestParameters: ApiRecipeRelatedListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RecipeSimple>>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling apiRecipeRelatedRetrieve().'
+                'Required parameter "id" was null or undefined when calling apiRecipeRelatedList().'
             );
         }
 
@@ -8879,14 +8887,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeSimpleFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(RecipeSimpleFromJSON));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiRecipeRelatedRetrieve(requestParameters: ApiRecipeRelatedRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeSimple> {
-        const response = await this.apiRecipeRelatedRetrieveRaw(requestParameters, initOverrides);
+    async apiRecipeRelatedList(requestParameters: ApiRecipeRelatedListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<RecipeSimple>> {
+        const response = await this.apiRecipeRelatedListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8935,6 +8943,13 @@ export class ApiApi extends runtime.BaseAPI {
             throw new runtime.RequiredError(
                 'id',
                 'Required parameter "id" was null or undefined when calling apiRecipeShoppingUpdate().'
+            );
+        }
+
+        if (requestParameters['recipeShoppingUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'recipeShoppingUpdate',
+                'Required parameter "recipeShoppingUpdate" was null or undefined when calling apiRecipeShoppingUpdate().'
             );
         }
 
@@ -9385,6 +9400,53 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiShoppingListEntryUpdate(requestParameters: ApiShoppingListEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListRecipeBulkCreateEntriesCreateRaw(requestParameters: ApiShoppingListRecipeBulkCreateEntriesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntryBulkCreate>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListRecipeBulkCreateEntriesCreate().'
+            );
+        }
+
+        if (requestParameters['shoppingListEntryBulkCreate'] == null) {
+            throw new runtime.RequiredError(
+                'shoppingListEntryBulkCreate',
+                'Required parameter "shoppingListEntryBulkCreate" was null or undefined when calling apiShoppingListRecipeBulkCreateEntriesCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list-recipe/{id}/bulk_create_entries/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ShoppingListEntryBulkCreateToJSON(requestParameters['shoppingListEntryBulkCreate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListEntryBulkCreateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListRecipeBulkCreateEntriesCreate(requestParameters: ApiShoppingListRecipeBulkCreateEntriesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntryBulkCreate> {
+        const response = await this.apiShoppingListRecipeBulkCreateEntriesCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

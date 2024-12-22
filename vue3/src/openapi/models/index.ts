@@ -130,6 +130,8 @@ export * from './ServerSettings';
 export * from './ShareLink';
 export * from './ShoppingListEntry';
 export * from './ShoppingListEntryBulk';
+export * from './ShoppingListEntryBulkCreate';
+export * from './ShoppingListEntrySimpleCreate';
 export * from './ShoppingListRecipe';
 export * from './SourceImportDuplicate';
 export * from './SourceImportFood';

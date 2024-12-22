@@ -133,6 +133,8 @@ models/ServerSettings.ts
 models/ShareLink.ts
 models/ShoppingListEntry.ts
 models/ShoppingListEntryBulk.ts
+models/ShoppingListEntryBulkCreate.ts
+models/ShoppingListEntrySimpleCreate.ts
 models/ShoppingListRecipe.ts
 models/SourceImportDuplicate.ts
 models/SourceImportFood.ts

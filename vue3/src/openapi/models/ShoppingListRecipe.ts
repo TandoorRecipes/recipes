@@ -36,7 +36,7 @@ export interface ShoppingListRecipe {
      * @type {string}
      * @memberof ShoppingListRecipe
      */
-    readonly name: string;
+    name?: string;
     /**
      * 
      * @type {number}
@@ -80,7 +80,6 @@ export interface ShoppingListRecipe {
  */
 export function instanceOfShoppingListRecipe(value: object): value is ShoppingListRecipe {
     if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
-    if (!('name' in value) || value['name'] === undefined) return false;
     if (!('servings' in value) || value['servings'] === undefined) return false;
     if (!('mealplanNote' in value) || value['mealplanNote'] === undefined) return false;
     if (!('mealplanFromDate' in value) || value['mealplanFromDate'] === undefined) return false;
@@ -100,7 +99,7 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipeName': json['recipe_name'],
-        'name': json['name'],
+        'name': json['name'] == null ? undefined : json['name'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'servings': json['servings'],
@@ -114,7 +113,7 @@ export function ShoppingListRecipeToJSON(json: any): ShoppingListRecipe {
     return ShoppingListRecipeToJSONTyped(json, false);
 }
 
-export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -122,6 +121,7 @@ export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, '
     return {
         
         'id': value['id'],
+        'name': value['name'],
         'recipe': value['recipe'],
         'mealplan': value['mealplan'],
         'servings': value['servings'],

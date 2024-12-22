@@ -32,11 +32,11 @@ export interface RecipeShoppingUpdate {
      */
     listRecipe?: number | null;
     /**
-     * List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.
-     * @type {number}
+     * 
+     * @type {Array<number | null>}
      * @memberof RecipeShoppingUpdate
      */
-    ingredients?: number | null;
+    ingredients: Array<number | null>;
     /**
      * Providing a list_recipe ID and servings of 0 will delete that shopping list.
      * @type {number}
@@ -49,6 +49,7 @@ export interface RecipeShoppingUpdate {
  * Check if a given object implements the RecipeShoppingUpdate interface.
  */
 export function instanceOfRecipeShoppingUpdate(value: object): value is RecipeShoppingUpdate {
+    if (!('ingredients' in value) || value['ingredients'] === undefined) return false;
     return true;
 }
 
@@ -64,7 +65,7 @@ export function RecipeShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator
         
         'id': json['id'] == null ? undefined : json['id'],
         'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
-        'ingredients': json['ingredients'] == null ? undefined : json['ingredients'],
+        'ingredients': json['ingredients'],
         'servings': json['servings'] == null ? undefined : json['servings'],
     };
 }
