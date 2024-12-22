@@ -1566,13 +1566,13 @@ export interface ApiUnitUpdateRequest {
 
 export interface ApiUserFileCreateRequest {
     name: string;
-    file: string;
     fileDownload: string;
     preview: string;
     fileSizeKb: number;
     createdBy: User;
     createdAt: Date;
     id?: number;
+    file?: string;
 }
 
 export interface ApiUserFileDestroyRequest {
@@ -1607,13 +1607,13 @@ export interface ApiUserFileRetrieveRequest {
 export interface ApiUserFileUpdateRequest {
     id: number;
     name: string;
-    file: string;
     fileDownload: string;
     preview: string;
     fileSizeKb: number;
     createdBy: User;
     createdAt: Date;
     id2?: number;
+    file?: string;
 }
 
 export interface ApiUserListRequest {
@@ -11973,13 +11973,6 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['file'] == null) {
-            throw new runtime.RequiredError(
-                'file',
-                'Required parameter "file" was null or undefined when calling apiUserFileCreate().'
-            );
-        }
-
         if (requestParameters['fileDownload'] == null) {
             throw new runtime.RequiredError(
                 'fileDownload',
@@ -12314,13 +12307,6 @@ export class ApiApi extends runtime.BaseAPI {
             throw new runtime.RequiredError(
                 'name',
                 'Required parameter "name" was null or undefined when calling apiUserFileUpdate().'
-            );
-        }
-
-        if (requestParameters['file'] == null) {
-            throw new runtime.RequiredError(
-                'file',
-                'Required parameter "file" was null or undefined when calling apiUserFileUpdate().'
             );
         }
 

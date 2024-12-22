@@ -278,7 +278,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     /**
      * returns a distinct list of recipes associated with unchecked shopping list entries
      */
-    function getAssociatedRecipes() {
+    function getAssociatedRecipes(): ShoppingListRecipe[] {
         let recipes = [] as ShoppingListRecipe[]
 
         entries.value.forEach(e => {

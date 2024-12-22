@@ -1104,6 +1104,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     servings = CustomDecimalField()
     shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
+    addshopping = serializers.BooleanField(write_only=True)
 
     to_date = serializers.DateTimeField(required=False)
 
@@ -1121,8 +1122,14 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         if 'to_date' not in validated_data or validated_data['to_date'] is None:
             validated_data['to_date'] = validated_data['from_date']
 
+        add_to_shopping = False
+        try:
+            add_to_shopping = validated_data.pop('addshopping', False)
+        except KeyError:
+            pass
+
         mealplan = super().create(validated_data)
-        if self.context['request'].data.get('addshopping', False) and self.context['request'].data.get('recipe', None):
+        if add_to_shopping and self.context['request'].data.get('recipe', None):
             SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
             SLR.create(mealplan=mealplan, servings=validated_data['servings'])
         return mealplan
@@ -1132,7 +1139,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
             'from_date', 'to_date', 'meal_type', 'created_by', 'shared', 'recipe_name',
-            'meal_type_name', 'shopping'
+            'meal_type_name', 'shopping','addshopping'
         )
         read_only_fields = ('created_by',)
 

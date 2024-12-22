@@ -178,8 +178,10 @@
                                             {{ r.recipeName }}
                                         </span>
                                         <template #append>
-
-                                            <v-btn icon="$delete" color="delete"></v-btn>
+                                            <v-btn icon color="delete">
+                                                <v-icon icon="$delete"></v-icon>
+                                                <delete-confirm-dialog :object-name="r.recipeName" :model-name="$t('ShoppingListRecipe')" @delete="deleteListRecipe(r)"></delete-confirm-dialog>
+                                            </v-btn>
                                         </template>
                                     </v-list-item>
                                 </v-list>
@@ -211,7 +213,7 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Food, IngredientString, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket, Unit} from "@/openapi";
+import {ApiApi, IngredientString, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -221,6 +223,7 @@ import {IShoppingListCategory, IShoppingListFood, ShoppingGroupingOptions} from 
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
+import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 
 const {t} = useI18n()
 
@@ -338,6 +341,20 @@ function autoSyncLoop() {
         }
         autoSyncLoop()
     }, timeout)
+}
+
+/**
+ * delete shopping list recipe
+ */
+function deleteListRecipe(slr: ShoppingListRecipe){
+    let api = new ApiApi()
+
+    api.apiShoppingListRecipeDestroy({id: slr.id!}).then(r => {
+        useShoppingStore().refreshFromAPI()
+        useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+    })
 }
 
 </script>

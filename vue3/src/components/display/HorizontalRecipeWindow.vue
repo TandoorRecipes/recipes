@@ -130,6 +130,8 @@ function loadRecipes() {
                     keyword.value = r.results[0]
                     requestParameters.keywords = [keyword.value.id!]
                     doRecipeRequest(requestParameters)
+                } else {
+                    loading.value = false
                 }
             })
             return;

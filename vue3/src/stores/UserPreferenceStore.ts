@@ -69,7 +69,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function updateUserSettings() {
         let api = new ApiApi()
 
-        api.apiUserPreferencePartialUpdate({user: userSettings.value.user, patchedUserPreference: userSettings.value}).then(r => {
+        api.apiUserPreferencePartialUpdate({user: userSettings.value.user.id!, patchedUserPreference: userSettings.value}).then(r => {
             userSettings.value = r
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
         }).catch(err => {

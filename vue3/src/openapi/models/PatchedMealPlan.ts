@@ -125,6 +125,12 @@ export interface PatchedMealPlan {
      * @memberof PatchedMealPlan
      */
     readonly shopping?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedMealPlan
+     */
+    addshopping?: boolean;
 }
 
 /**
@@ -158,6 +164,7 @@ export function PatchedMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boo
         'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
         'mealTypeName': json['meal_type_name'] == null ? undefined : json['meal_type_name'],
         'shopping': json['shopping'] == null ? undefined : json['shopping'],
+        'addshopping': json['addshopping'] == null ? undefined : json['addshopping'],
     };
 }
 
@@ -181,6 +188,7 @@ export function PatchedMealPlanToJSONTyped(value?: Omit<PatchedMealPlan, 'note_m
         'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
         'meal_type': MealTypeToJSON(value['mealType']),
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
+        'addshopping': value['addshopping'],
     };
 }
 

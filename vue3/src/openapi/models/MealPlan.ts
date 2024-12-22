@@ -125,6 +125,12 @@ export interface MealPlan {
      * @memberof MealPlan
      */
     readonly shopping: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MealPlan
+     */
+    addshopping: boolean;
 }
 
 /**
@@ -139,6 +145,7 @@ export function instanceOfMealPlan(value: object): value is MealPlan {
     if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
     if (!('mealTypeName' in value) || value['mealTypeName'] === undefined) return false;
     if (!('shopping' in value) || value['shopping'] === undefined) return false;
+    if (!('addshopping' in value) || value['addshopping'] === undefined) return false;
     return true;
 }
 
@@ -166,6 +173,7 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'recipeName': json['recipe_name'],
         'mealTypeName': json['meal_type_name'],
         'shopping': json['shopping'],
+        'addshopping': json['addshopping'],
     };
 }
 
@@ -189,6 +197,7 @@ export function MealPlanToJSONTyped(value?: Omit<MealPlan, 'note_markdown'|'crea
         'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
         'meal_type': MealTypeToJSON(value['mealType']),
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
+        'addshopping': value['addshopping'],
     };
 }
 

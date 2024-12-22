@@ -44,7 +44,7 @@ export interface UserFile {
      * @type {string}
      * @memberof UserFile
      */
-    file: string;
+    file?: string;
     /**
      * 
      * @type {string}
@@ -82,7 +82,6 @@ export interface UserFile {
  */
 export function instanceOfUserFile(value: object): value is UserFile {
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('file' in value) || value['file'] === undefined) return false;
     if (!('fileDownload' in value) || value['fileDownload'] === undefined) return false;
     if (!('preview' in value) || value['preview'] === undefined) return false;
     if (!('fileSizeKb' in value) || value['fileSizeKb'] === undefined) return false;
@@ -103,7 +102,7 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
-        'file': json['file'],
+        'file': json['file'] == null ? undefined : json['file'],
         'fileDownload': json['file_download'],
         'preview': json['preview'],
         'fileSizeKb': json['file_size_kb'],

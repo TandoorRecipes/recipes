@@ -37,17 +37,22 @@
                     </v-col>
                     <v-col cols="12" md="6">
                         <ModelSelect model="Recipe" v-model="editingObj.recipe"
-                                     @update:modelValue="editingObj.servings = editingObj.recipe?.servings ? editingObj.recipe?.servings : 1"></ModelSelect>
+                                     @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></ModelSelect>
                         <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                         <!--TODO create days input with +/- synced to date -->
                         <recipe-card :recipe="editingObj.recipe" v-if="editingObj && editingObj.recipe"></recipe-card>
                     </v-col>
                 </v-row>
-                <v-row>
-                    <v-col>
-                        <v-textarea :label="$t('Note')" v-model="editingObj.note"></v-textarea>
+                <v-row dense>
+                    <v-col cols="12" md="6">
+                        <v-textarea :label="$t('Note')" v-model="editingObj.note" rows="3"></v-textarea>
+                    </v-col>
+                     <v-col cols="12" md="6" v-if="!isUpdate()">
+                        <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details></v-checkbox>
+<!--                        <v-checkbox :label="$t('review_shopping')" v-model="addToShopping" hide-details></v-checkbox>-->
                     </v-col>
                 </v-row>
+
 
 
             </v-form>
@@ -108,6 +113,8 @@ onMounted(() => {
                 editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
                 editingObj.value.servings = 1
                 editingObj.value.mealType = defaultMealType
+
+                editingObj.value.addshopping = !!useUserPreferenceStore().userSettings.mealplanAutoaddShopping
 
                 applyItemDefaults(props.itemDefaults)
 
