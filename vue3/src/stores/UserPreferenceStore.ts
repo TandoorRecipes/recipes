@@ -109,6 +109,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
         api.apiSwitchActiveSpaceRetrieve({spaceId: space.id}).then(r => {
             loadActiveSpace()
+            location.reload()
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })

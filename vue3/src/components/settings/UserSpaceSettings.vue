@@ -2,13 +2,16 @@
 
     <v-row>
         <v-col>
-            <p class="text-h6">{{ $t('YourSpaces') }}</p>
+            <p class="text-h6">
+                {{ $t('YourSpaces') }}
+                <v-btn color="create" prepend-icon="$add" class="float-right" size="small" :href="getDjangoUrl('space-overview')">{{$t('New')}}</v-btn>
+            </p>
             <v-divider></v-divider>
         </v-col>
     </v-row>
 
     <v-row>
-        <v-col cols="6" v-for="s in spaces">
+        <v-col cols="6" v-for="s in spaces" :key="s.id">
             <v-card @click="useUserPreferenceStore().switchSpace(s)">
                 <v-img height="200px" cover :src="(s.image !== undefined) ? s.image?.preview  : recipeDefaultImage" :alt="$t('Image')"></v-img>
                 <v-card-title>{{ s.name }}
@@ -28,6 +31,9 @@ import {ApiApi, Space} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import recipeDefaultImage from '../../assets/recipe_no_image.svg'
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {useDjangoUrls} from "@/composables/useDjangoUrls";
+
+const {getDjangoUrl} = useDjangoUrls()
 
 const spaces = ref([] as Space[])
 

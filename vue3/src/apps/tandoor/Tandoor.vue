@@ -42,11 +42,18 @@
                         </v-list-item>
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
-                        <v-divider></v-divider>
-                        <v-list-subheader>Spaces</v-list-subheader>
-                        <v-list-item>Space 1</v-list-item>
-                        <v-list-item>Space 2</v-list-item>
-                        <v-list-item>Space 3</v-list-item>
+                        <template v-if="spaces.length > 1">
+                            <v-divider></v-divider>
+                            <v-list-subheader>{{ $t('YourSpaces')}}</v-list-subheader>
+                            <v-list-item v-for="s in spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
+                                    <v-icon icon="fa-solid fa-circle" v-else></v-icon>
+                                </template>
+                                {{ s.name}}
+                            </v-list-item>
+                        </template>
+
                         <v-divider></v-divider>
                         <v-list-item link>
                             <template #prepend>
@@ -151,11 +158,26 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {TAutomation, TCookLog, TFood, TKeyword, TPropertyType, TSupermarket, TSupermarketCategory, TUnit, TUnitConversion, TUserFile, TViewLog} from "@/types/Models";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
+import {onMounted, ref} from "vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ApiApi, Space} from "@/openapi";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
 
-useUserPreferenceStore()
+const spaces = ref([] as Space[])
+
+onMounted(() => {
+    let api = new ApiApi()
+
+    useUserPreferenceStore()
+
+    api.apiSpaceList().then(r => {
+        spaces.value = r.results
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+})
 
 </script>
 
