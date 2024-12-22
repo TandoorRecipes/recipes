@@ -35,6 +35,12 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 #Copy project and execute it.
 COPY . ./
 
+HEALTHCHECK --interval=30s \
+            --timeout=5s \
+            --start-period=10s \
+            --retries=3 \
+            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
+
 # collect information from git repositories
 RUN /opt/recipes/venv/bin/python version.py
 # delete git repositories to reduce image size
