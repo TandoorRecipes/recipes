@@ -1000,7 +1000,6 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     servings = models.IntegerField(default=1)
     servings_text = models.CharField(default='', blank=True, max_length=32)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
-    images = models.ManyToManyField("UserFile", blank=True)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="", blank=True)
     file_path = models.CharField(max_length=512, default="", blank=True)
@@ -1429,7 +1428,6 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to='files/')
     file_size_kb = models.IntegerField(default=0, blank=True)
-    is_image = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
