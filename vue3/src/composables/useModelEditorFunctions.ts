@@ -140,10 +140,11 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     function saveObject() {
         loading.value = true
         if (isUpdate()) {
-            modelClass.value.update(editingObj.value.id, editingObj.value).then((r: T) => {
+            return modelClass.value.update(editingObj.value.id, editingObj.value).then((r: T) => {
                 emit('save', r)
                 editingObj.value = r
                 useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+                return r
             }).catch((err: any) => {
                 console.error(err)
                 useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
@@ -151,10 +152,11 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 loading.value = false
             })
         } else {
-            modelClass.value.create(editingObj.value).then((r: T) => {
+            return modelClass.value.create(editingObj.value).then((r: T) => {
                 emit('create', r)
                 editingObj.value = r
                 useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+                return r
             }).catch((err: any) => {
                 console.error(err)
                 useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)

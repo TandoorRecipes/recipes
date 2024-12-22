@@ -1,15 +1,15 @@
 <template>
     <model-editor-base
-        :loading="loading"
+        :loading="loading || fileApiLoading"
         :dialog="dialog"
-        @save="saveObject"
+        @save="saveRecipe"
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
         :model-class="modelClass"
         :object-name="editingObjName()">
 
-        <v-tabs v-model="tab" :disabled="loading" grow>
+        <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
             <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
             <v-tab value="steps">{{ $t('Steps') }}</v-tab>
             <v-tab value="properties">{{ $t('Properties') }}</v-tab>
@@ -20,18 +20,23 @@
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="recipe">
 
-                    <v-form :disabled="loading">
+                    <v-form :disabled="loading || fileApiLoading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
+                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2"></v-textarea>
+
                         <v-row>
                             <v-col cols="12" md="6">
-                                <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512"></v-textarea>
+                                <v-file-upload v-model="file" @update:modelValue="updateUserFileName"
+                                               :title="$t('DragToUpload')"
+                                               :browse-text="$t('Select_File')"
+                                               :divider-text="$t('or')"
+                                ></v-file-upload>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-label>{{ $t('Image')}}</v-label>
-                                <v-img style="max-height: 150px" :src="editingObj.image"></v-img>
-                                <v-file-input></v-file-input>
-                                <v-btn color="delete" prepend-icon="$delete" v-if="editingObj.image">{{$t('Delete')}}</v-btn>
-                                <v-btn color="success" prepend-icon="$upload">{{$t('Select')}}</v-btn>
+                                <v-label>{{ $t('Image') }}</v-label>
+                                <v-img style="max-height: 150px" class="mb-2" :src="editingObj.image">
+                                    <v-btn color="delete" class="float-right" prepend-icon="$delete" v-if="editingObj.image" @click="deleteImage()">{{ $t('Delete') }}</v-btn>
+                                </v-img>
                             </v-col>
                         </v-row>
 
@@ -56,7 +61,7 @@
 
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
-                    <v-form :disabled="loading">
+                    <v-form :disabled="loading || fileApiLoading">
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
                             <v-col>
                                 <step-editor v-model="editingObj.steps[i]" :step-index="i"></step-editor>
@@ -76,13 +81,13 @@
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="properties">
-                    <v-form :disabled="loading">
+                    <v-form :disabled="loading || fileApiLoading">
                         <v-alert class="mb-2" icon="$help">{{ $t('PropertiesFoodHelp') }}</v-alert>
                         <properties-editor v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
-                    <v-form :disabled="loading">
+                    <v-form :disabled="loading || fileApiLoading">
                         <v-checkbox :label="$t('Ingredient Overview')" :hint="$t('show_ingredient_overview')" persistent-hint
                                     v-model="editingObj.showIngredientOverview"></v-checkbox>
 
@@ -118,7 +123,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref, shallowRef} from "vue";
 import {Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -127,8 +132,9 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import StepEditor from "@/components/inputs/StepEditor.vue";
 import {VueDraggable} from "vue-draggable-plus";
 import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
+import {useFileApi} from "@/composables/useFileApi";
+import {VFileUpload} from 'vuetify/labs/VFileUpload'
 
-const {t} = useI18n()
 
 const props = defineProps({
     item: {type: {} as PropType<Recipe>, required: false, default: null},
@@ -143,6 +149,9 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 const tab = ref("recipe")
 const dialogStepManager = ref(false)
 
+const {fileApiLoading, updateRecipeImage} = useFileApi()
+const file = shallowRef<File | null>(null)
+
 onMounted(() => {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
@@ -150,6 +159,29 @@ onMounted(() => {
         }
     })
 })
+
+/**
+ * save recipe via normal saveMethod and update image afterward if it was changed
+ */
+function saveRecipe() {
+    saveObject().then(() => {
+        if (file.value != null && editingObj.value.id) {
+            updateRecipeImage(editingObj.value.id, file.value).then(r => {
+                file.value = null
+                setupState(props.item, props.itemId)
+            })
+        }
+    })
+}
+
+/**
+ * remove image if delete was manually triggered
+ */
+function deleteImage() {
+    updateRecipeImage(editingObj.value.id!, null).then(r => {
+        setupState(props.item, props.itemId)
+    })
+}
 
 /**
  * called by draggable in step manager dialog when steps are sorted

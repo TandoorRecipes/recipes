@@ -16,19 +16,26 @@
 
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-file-upload v-model="file"></v-file-upload>
+                        <v-file-upload v-model="file" @update:modelValue="updateUserFileName"
+                                       :title="$t('DragToUpload')"
+                                       :browse-text="$t('Select_File')"
+                                       :divider-text="$t('or')"
+                        ></v-file-upload>
                     </v-col>
                     <v-col cols="12" md="6">
                         <v-label> {{ $t('Preview') }}</v-label>
                         <v-img max-height="25vh" rounded :src="editingObj.preview"></v-img>
-                        <v-btn :href="editingObj.fileDownload" target="_blank" color="success" class="float-right" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
+                        <v-btn :href="editingObj.fileDownload" target="_blank" color="success" class="float-right" prepend-icon="fa-solid fa-file-arrow-down"
+                               v-if="editingObj.fileDownload != undefined">
+                            {{ $t('Download') }}
+                        </v-btn>
                     </v-col>
                 </v-row>
 
-                <v-alert class="mt-2" v-if="!loading && !fileApiLoading && Object.keys(editingObj).length > 0">
-                    {{ $n(editingObj.fileSizeKb / 1000) }} MB <br/>
-                    {{ editingObj.createdBy.displayName }} <br/>
-                    {{ DateTime.fromJSDate(editingObj.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
+                <v-alert class="mt-2" v-if="!loading && !fileApiLoading && Object.keys(editingObj).length > 0 && Number(editingObj.fileSizeKb)">
+                    <p v-if="Number(editingObj.fileSizeKb)">{{ $n(editingObj.fileSizeKb / 1000) }} MB <br/></p>
+                    <p v-if="editingObj.createdBy"> {{ editingObj.createdBy.displayName }}</p>
+                    <p v-if="editingObj.createdAt"> {{ DateTime.fromJSDate(editingObj.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}</p>
                 </v-alert>
 
             </v-form>
@@ -56,26 +63,35 @@ const props = defineProps({
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<UserFile>('UserFile', emit)
-const {fileApiLoading, createOrUpdateUserFile} = useFileApi()
 
 // object specific data (for selects/display)
 
+const {fileApiLoading, createOrUpdateUserFile} = useFileApi()
 const file = shallowRef<File | null>(null)
 
 onMounted(() => {
     setupState(props.item, props.itemId)
 })
 
-
+/**
+ * save file to database via fileApi composable
+ */
 function saveFile() {
-
     createOrUpdateUserFile(editingObj.value.name, file.value, editingObj.value.id).then(r => {
         editingObj.value = r
         useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     })
+}
 
+/**
+ * set name based on file name if name is empty
+ */
+function updateUserFileName() {
+    if (file.value != null && (editingObj.value.name == '' || editingObj.value.name == undefined)) {
+        editingObj.value.name = file.value.name
+    }
 }
 
 </script>

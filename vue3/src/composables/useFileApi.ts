@@ -1,7 +1,7 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {UserFile, UserFileFromJSON} from "@/openapi";
+import {RecipeImageFromJSON, UserFile, UserFileFromJSON} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
 /**
@@ -12,6 +12,12 @@ export function useFileApi() {
 
     const fileApiLoading = ref(false)
 
+    /**
+     * creates or updates an existing UserFile if an id is given
+     * @param name name to set for user file
+     * @param file file object to upload
+     * @param id optional id to update existing user file
+     */
     function createOrUpdateUserFile(name: string, file: File | null, id?: number): Promise<UserFile> {
         let formData = new FormData()
         formData.append('name', name)
@@ -42,5 +48,24 @@ export function useFileApi() {
         })
     }
 
-    return {fileApiLoading, createOrUpdateUserFile}
+    function updateRecipeImage(recipeId: number, file: File|null){
+        let formData = new FormData()
+        if (file != null) {
+            formData.append('image', file)
+        }
+
+        return fetch(getDjangoUrl(`api/recipe/${recipeId}/image/`), {
+            method: 'PUT',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+            body: formData
+        }).then(r => {
+            return r.json().then(r => {
+                return RecipeImageFromJSON(r)
+            })
+        }).finally(() => {
+            fileApiLoading.value = false
+        })
+    }
+
+    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage}
 }
