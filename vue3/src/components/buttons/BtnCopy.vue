@@ -1,6 +1,6 @@
 <template>
 
-    <v-btn  ref="copyBtn" :color="color" :size="size" :density="density" @click="clickCopy()">
+    <v-btn  ref="copyBtn" :color="color" :size="size" :density="density" @click="clickCopy()" :variant="variant">
         <v-icon icon="$copy"></v-icon>
         <v-tooltip v-model="showToolip" :target="btn" location="top">
             <v-icon icon="$copy"></v-icon>
@@ -22,6 +22,7 @@ const props = defineProps({
     color: {type: String, default: 'success'},
     size: {type: String, default: 'default'},
     density: {type: String, default: 'default'},
+    variant: {type: String, default: 'elevated'},
 
 })
 

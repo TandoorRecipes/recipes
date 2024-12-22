@@ -1,5 +1,5 @@
 <template>
-    <v-img :cover="cover" :style="{'height': height, 'width': width,}" :src="image" alt="Recipe Image">
+    <v-img :cover="cover" :style="{'height': height, 'width': width,}" style="background-color: #ffffff" :src="image" :alt="$t('Recipe_Image')" :rounded="props.rounded">
         <slot name="overlay">
 
         </slot>
@@ -16,7 +16,8 @@ const props = defineProps({
     recipe: {type: {} as PropType<Recipe | RecipeOverview | undefined>, required: false, default: undefined},
     height: {type: String},
     width: {type: String},
-    cover: {type: Boolean, default: true}
+    cover: {type: Boolean, default: true},
+    rounded: {type: Boolean as PropType<Boolean|String>, default: false},
 })
 
 const image = computed(() => {

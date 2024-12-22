@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { User } from './User';
+import {
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+    UserToJSONTyped,
+} from './User';
 import type { KeywordLabel } from './KeywordLabel';
 import {
     KeywordLabelFromJSON,
@@ -71,10 +78,10 @@ export interface RecipeOverview {
     readonly waitingTime: number;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof RecipeOverview
      */
-    readonly createdBy: number;
+    readonly createdBy: User;
     /**
      * 
      * @type {Date}
@@ -170,7 +177,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
         'keywords': ((json['keywords'] as Array<any>).map(KeywordLabelFromJSON)),
         'workingTime': json['working_time'],
         'waitingTime': json['waiting_time'],
-        'createdBy': json['created_by'],
+        'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
         'internal': json['internal'],

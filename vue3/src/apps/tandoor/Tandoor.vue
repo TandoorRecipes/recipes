@@ -44,13 +44,13 @@
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
                         <template v-if="spaces.length > 1">
                             <v-divider></v-divider>
-                            <v-list-subheader>{{ $t('YourSpaces')}}</v-list-subheader>
+                            <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
                             <v-list-item v-for="s in spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
                                 <template #prepend>
                                     <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
                                     <v-icon icon="fa-solid fa-circle" v-else></v-icon>
                                 </template>
-                                {{ s.name}}
+                                {{ s.name }}
                             </v-list-item>
                         </template>
 
@@ -90,29 +90,34 @@
         </v-main>
 
         <v-navigation-drawer v-if="lgAndUp">
-            <v-list-item :to="{ name: 'view_settings', params: {} }">
-                <template #prepend>
-                    <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                </template>
-                <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-divider></v-divider>
-            <v-list-item prepend-icon="fas fa-book" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-calendar-alt" :title="$t('Meal_Plan')" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-shopping-cart" :title="$t('Shopping_list')" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'ModelListPage', params: {model: 'food'} }"></v-list-item>
+            <v-list nav>
+                <v-list-item :to="{ name: 'view_settings', params: {} }">
+                    <template #prepend>
+                        <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
+                    </template>
+                    <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item prepend-icon="fas fa-book" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="fas fa-calendar-alt" :title="$t('Meal_Plan')" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="fas fa-shopping-cart" :title="$t('Shopping_list')" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'ModelListPage', params: {model: 'food'} }"></v-list-item>
 
-            <navigation-drawer-context-menu></navigation-drawer-context-menu>
+                <navigation-drawer-context-menu></navigation-drawer-context-menu>
+            </v-list>
+
 
             <template #append>
-                <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'view_settings', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="fa-solid fa-heart" href="https://tandoor.dev" target="_blank">
-                    Tandoor {{ useUserPreferenceStore().serverSettings.version }}
-                </v-list-item>
+                <v-list nav>
+                    <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'view_settings', params: {} }"></v-list-item>
+                    <v-list-item prepend-icon="fa-solid fa-heart" href="https://tandoor.dev" target="_blank">
+                        Tandoor {{ useUserPreferenceStore().serverSettings.version }}
+                    </v-list-item>
+                </v-list>
             </template>
-            <!-- TODO link -->
+
         </v-navigation-drawer>
 
         <v-bottom-navigation grow v-if="!lgAndUp">
