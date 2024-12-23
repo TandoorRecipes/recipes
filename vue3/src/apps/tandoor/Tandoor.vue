@@ -123,25 +123,34 @@
         <v-bottom-navigation grow v-if="!lgAndUp">
             <v-btn value="recent" :to="{ name: 'view_home', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
-                <span>Recipes</span>
             </v-btn>
 
             <v-btn value="favorites" to="/mealplan">
                 <v-icon icon="fa-fw fas fa-calendar-alt"></v-icon>
-
-                <span>MealPlan</span>
             </v-btn>
 
             <v-btn value="nearby" to="/shopping">
                 <v-icon icon="fa-fw fas fa-shopping-cart"></v-icon>
-
-                <span>Shopping</span>
             </v-btn>
-            <v-btn value="nearby" to="/books">
-                <!-- TODO link -->
-                <v-icon icon="fa-fw fas fa-bars"></v-icon>
 
-                <span>More</span>
+            <v-btn value="nearby" >
+                <v-icon icon="fa-fw fas fa-bars"></v-icon>
+                <v-bottom-sheet activator="parent" close-on-content-click>
+                    <v-list nav>
+                        <v-list-item :to="{ name: 'view_settings', params: {} }">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-sliders"></v-icon>
+                            </template>
+                            {{ $t('Settings') }}
+                        </v-list-item>
+                        <v-list-item :to="{ name: 'ModelListPage', params: {model: 'food'} }">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-folder-tree"></v-icon>
+                            </template>
+                            {{ $t('Database') }}
+                        </v-list-item>
+                    </v-list>
+                </v-bottom-sheet>
             </v-btn>
         </v-bottom-navigation>
 

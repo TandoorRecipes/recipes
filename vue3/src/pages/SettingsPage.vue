@@ -1,6 +1,5 @@
 <template>
     <v-container>
-
         <v-row>
             <v-col cols="12" md="3" offset-md="1" offset-xl="2" xl="2">
                 <v-list class="bg-transparent">
