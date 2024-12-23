@@ -2,7 +2,8 @@
     <v-row class="h-100">
         <v-col>
             <!-- TODO add hint about CTRL key while drag/drop -->
-            <CalendarView
+            <calendar-view
+                :show-date="calendarDate"
                 :items="planItems"
                 class="theme-default"
                 :item-content-height="calendarItemHeight"
@@ -12,9 +13,10 @@
                 :display-period-count="useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount"
                 :starting-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
                 :display-week-numbers="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
+                :current-period-label="$t('Today')"
                 @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
                 <template #header="{ headerProps }">
-                    <CalendarViewHeader :header-props="headerProps"></CalendarViewHeader>
+                    <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>
                 </template>
                 <template #item="{ value, weekStartDate, top }">
                     <meal-plan-calendar-item
@@ -26,7 +28,7 @@
                         :detailed-items="lgAndUp"
                     ></meal-plan-calendar-item>
                 </template>
-            </CalendarView>
+            </calendar-view>
 
             <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem"
                                @create="(arg: any) => useMealPlanStore().plans.set(arg.id, arg)"></model-edit-dialog>
@@ -52,6 +54,8 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const {lgAndUp} = useDisplay()
 
+const calendarDate = ref(new Date())
+
 const currentlyDraggedMealplan = ref({} as IMealPlanNormalizedCalendarItem)
 
 const newPlanDialog = ref(false)
@@ -74,8 +78,11 @@ const planItems = computed(() => {
     return items
 })
 
+/**
+ * determine item height (one or two rows) based on how much space is available and how many days are shown
+ */
 const calendarItemHeight = computed(() => {
-    if (lgAndUp.value) {
+    if (lgAndUp.value && useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'week') {
         return '2.6rem'
     } else {
         return '1.3rem'

@@ -11,12 +11,22 @@
         </v-list-item>
     </template>
 
+    <template v-if="route.name == 'view_mealplan'">
+        <v-divider></v-divider>
+        <v-list-subheader>{{$t('Settings')}}</v-list-subheader>
+        <v-list-item>
+            <meal-plan-device-settings></meal-plan-device-settings>
+        </v-list-item>
+    </template>
+
 </template>
 
 <script setup lang="ts">
 
 import {useRoute} from "vue-router";
 import {getListModels} from "@/types/Models";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import MealPlanDeviceSettings from "@/components/settings/MealPlanDeviceSettings.vue";
 
 const route = useRoute()
 
