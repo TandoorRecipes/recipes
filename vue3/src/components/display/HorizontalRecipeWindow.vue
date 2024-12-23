@@ -10,8 +10,8 @@
             <v-col>
                 <v-window show-arrows>
                     <v-window-item v-for="w in recipeWindows" class="pt-1 pb-1">
-                        <v-row>
-                            <v-col v-for="r in w" :key="r.id">
+                        <v-row dense>
+                            <v-col class="pr-0 pl-0" v-for="r in w" :key="r.id">
                                 <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 20vh"></recipe-card>
                             </v-col>
                         </v-row>

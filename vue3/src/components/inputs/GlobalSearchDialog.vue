@@ -1,7 +1,7 @@
 <template>
     <slot name="activator">
-        <v-btn @click="dialog = true" variant="plain" density="default">
-            <i class="fas fa-search mr-1"></i>
+        <v-btn @click="dialog = true" variant="plain" density="default" :icon="mobile">
+            <v-icon icon="fa-solid fa-search" class="mr-1 fa-fw"></v-icon>
             <span class="d-none d-sm-block">{{$t('Search')}}</span>
             <v-chip size="x-small" variant="tonal" class="d-none d-md-flex ml-1" label>{{$t('Ctrl+K')}}</v-chip>
         </v-btn>
@@ -62,8 +62,10 @@ import {computed, defineComponent, onMounted, ref, watch} from 'vue'
 import {SearchResult} from "@/types/SearchTypes";
 import {ApiApi, Recipe, RecipeFlat} from "@/openapi";
 import {useRouter} from "vue-router";
+import {useDisplay} from "vuetify";
 
 const router = useRouter()
+const {mobile} = useDisplay()
 
 const dialog = ref(false)
 const recipes = ref([] as Recipe[])

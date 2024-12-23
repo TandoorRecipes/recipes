@@ -1,12 +1,14 @@
 <template>
     <template v-if="!props.loading">
 
-        <recipe-image :to="`/recipe/${props.recipe.id}`" :style="{'height': props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
+        <router-link :to="{name: 'view_recipe', params: {id: props.recipe.id}}">
+            <recipe-image :style="{'height': props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
 
-        </recipe-image>
+            </recipe-image>
+        </router-link>
         <div class="ml-3">
             <div class="d-flex ">
-                <div class="flex-grow-1 ">
+                <div class="flex-grow-1 cursor-pointer" @click="router.push({name: 'view_recipe', params: {id: props.recipe.id}})">
                     <p class="font-weight-bold mt-2">{{ props.recipe.name }}</p>
                 </div>
                 <div class="mt-1">
@@ -15,6 +17,14 @@
                 </div>
             </div>
             <!--            <p class="text-disabled">{{ props.recipe.createdBy.displayName}}</p>-->
+            <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="3">
+                <template #prepend>
+                    <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined"
+                            v-if="props.recipe.workingTime != undefined && props.recipe.workingTime > 0">
+                        {{ recipe.workingTime! + recipe.waitingTime! }}
+                    </v-chip>
+                </template>
+            </keywords-component>
         </div>
 
 
@@ -85,6 +95,7 @@ import {Recipe, RecipeOverview} from "@/openapi";
 
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
+import {useRouter} from "vue-router";
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe | RecipeOverview>, required: true,},
@@ -93,6 +104,8 @@ const props = defineProps({
     show_description: {type: Boolean, required: false},
     height: {type: String, required: false, default: '15vh'},
 })
+
+const router = useRouter()
 
 </script>
 

@@ -7,7 +7,7 @@
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
             <v-btn icon="$add">
-                <v-icon icon="$add"></v-icon>
+                <v-icon icon="$add" class="fa-fw"></v-icon>
                 <v-menu activator="parent">
                     <v-list>
                         <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-list-item>

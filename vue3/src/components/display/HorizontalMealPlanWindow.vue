@@ -28,7 +28,7 @@
 
                                 </v-list-item>
                                 <v-divider v-if="mealPlanGridItem.plan_entries.length > 0"></v-divider>
-                                <v-list-item v-for="p in mealPlanGridItem.plan_entries">
+                                <v-list-item v-for="p in mealPlanGridItem.plan_entries" link>
                                     <template #prepend>
                                         <v-avatar :image="p.recipe.image" v-if="p.recipe?.image"></v-avatar>
                                         <v-avatar image="../../assets/recipe_no_image.svg" v-else></v-avatar>
