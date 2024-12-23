@@ -28,7 +28,7 @@
             <!-- search results -->
             <v-card-text>
                 <v-card :variant="cardVariant(index)" v-for="(item, index) in searchResults" hover class="mt-1" @click="selectedResult = index" :key="index">
-                    <v-card-title @click="goToSelectedRecipe()">
+                    <v-card-title @click="goToSelectedRecipe(index)">
                         <v-avatar v-if="item.image" :image="item.image"></v-avatar>
                         <v-avatar v-else-if="item.recipe_id !== undefined" color="tandoor">{{ item.name.charAt(0) }}</v-avatar>
                         <v-icon :icon="item.icon" v-if="item.icon"></v-icon>
@@ -134,7 +134,7 @@ onMounted(() => {
                 selectedResult.value = Math.min(searchResults.value.length, selectedResult.value + 1)
             }
             if (e.key == 'Enter') {
-                goToSelectedRecipe()
+                goToSelectedRecipe(selectedResult.value)
             }
         } else {
             if (e.key == 'k' && e.ctrlKey) {
@@ -165,9 +165,9 @@ function cardVariant(index: number) {
 /**
  * open selected recipe
  */
-function goToSelectedRecipe() {
+function goToSelectedRecipe(index: number) {
     dialog.value = false
-    let searchResult = searchResults.value[selectedResult.value]
+    let searchResult = searchResults.value[index]
     console.log('going to', searchResult.recipe_id)
     if (searchResult.recipe_id != null) {
         router.push({name: 'view_recipe', params: {'id': searchResult.recipe_id}})
