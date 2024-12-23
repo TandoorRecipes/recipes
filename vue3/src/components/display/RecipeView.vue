@@ -59,7 +59,7 @@
         </v-card>
 
         <v-card class="mt-1" v-if="props.recipe.steps.length > 1">
-            <steps-overview :steps="props.recipe.steps"></steps-overview>
+            <steps-overview :steps="props.recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
         </v-card>
 
         <v-card class="mt-1" v-for="(step, index) in props.recipe.steps" :key="step.id">

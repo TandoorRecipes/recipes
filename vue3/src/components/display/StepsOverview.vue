@@ -7,7 +7,7 @@
                     <v-row v-for="(s, i) in props.steps">
                         <v-col class="pa-1">
                             <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
-                            <IngredientsTable :ingredients="s.ingredients"></IngredientsTable>
+                            <ingredients-table :ingredients="s.ingredients" :ingredient-factor="props.ingredientFactor"></ingredients-table>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -27,6 +27,10 @@ const props = defineProps({
     steps: {
         type: Array as PropType<Array<Step>>,
         default: [],
+    },
+    ingredientFactor: {
+        type: Number,
+        required: true,
     },
 })
 
