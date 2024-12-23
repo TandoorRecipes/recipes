@@ -1,4 +1,4 @@
-import {Food, ShoppingListEntry, Unit} from "@/openapi";
+import {Food, Recipe, ShoppingListEntry, Unit} from "@/openapi";
 
 /**
  * enum of different options a shopping list can be grouped by
@@ -87,4 +87,16 @@ export type ShoppingOperationHistoryType = 'CHECKED' | 'UNCHECKED' | 'DELAY' | '
 export type ShoppingOperationHistoryEntry = {
     type: ShoppingOperationHistoryType,
     entries: ShoppingListEntry[]
+}
+
+export type ShoppingDialogRecipe = {
+    recipe: Recipe
+    entries: ShoppingDialogRecipeEntry[]
+}
+
+export type ShoppingDialogRecipeEntry = {
+    amount: number,
+    unit: Unit|null,
+    food: Food|null,
+    checked: boolean,
 }
