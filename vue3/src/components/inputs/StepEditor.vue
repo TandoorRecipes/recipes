@@ -146,30 +146,30 @@
         </v-card>
     </v-dialog>
 
-    <v-dialog
-        v-model="dialogIngredientEditor"
-        :max-width="(mobile) ? '100vw': '75vw'"
-        :fullscreen="mobile">
-        <v-card>
+    <v-bottom-sheet v-model="dialogIngredientEditor">
+        <v-card v-if="editingIngredientIndex >= 0">
             <v-closable-card-title :title="$t('Ingredient Editor')" v-model="dialogIngredientEditor"></v-closable-card-title>
             <v-card-text>
                 <v-form>
-                    <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" :label="$t('Amount')"
+                    <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
                                     :min="0"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')"></model-select>
                     <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')"></model-select>
-                    <v-text-field :label="$t('Note')" v-model="step.ingredients[editingIngredientIndex].note" ></v-text-field>
+                    <v-text-field :label="$t('Note')" v-model="step.ingredients[editingIngredientIndex].note"></v-text-field>
                 </v-form>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="dialogIngredientEditor = false">{{ $t('Close') }}</v-btn>
+                <v-btn @click="dialogIngredientEditor = false; deleteIngredientAtIndex(editingIngredientIndex); editingIngredientIndex = -1" color="delete" prepend-icon="$delete">
+                    {{ $t('Delete') }}
+                </v-btn>
+                <v-btn @click="dialogIngredientEditor = false" color="save" prepend-icon="$save">{{ $t('Save') }}</v-btn>
             </v-card-actions>
         </v-card>
-    </v-dialog>
+    </v-bottom-sheet>
 </template>
 
 <script setup lang="ts">
-import {nextTick, ref} from 'vue'
+import {nextTick, ref, useTemplateRef} from 'vue'
 import {ApiApi, Ingredient, ParsedIngredient, Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
@@ -178,6 +178,7 @@ import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import IngredientString from "@/components/display/IngredientString.vue";
+import numberInput from "../../../../vue/src/components/Modals/NumberInput.vue";
 
 const emit = defineEmits(['delete'])
 
@@ -197,8 +198,9 @@ const dialogMarkdownEditor = ref(false)
 const dialogIngredientEditor = ref(false)
 const dialogIngredientParser = ref(false)
 
-const editingIngredientIndex = ref({} as Ingredient)
+const editingIngredientIndex = ref(Number)
 const ingredientTextInput = ref("")
+const ingredientDialogAmountRef = useTemplateRef('ref_input_amount_dialog')
 
 /**
  * sort function called by draggable when ingredient table is sorted
@@ -253,9 +255,23 @@ function handleIngredientNoteTab(event: KeyboardEvent, index: number) {
 function insertAndFocusIngredient() {
     step.value.ingredients.push({} as Ingredient)
     nextTick(() => {
-        document.getElementById(`id_input_amount_${step.value.id}_${step.value.ingredients.length - 1}`).select()
+        if (mobile.value) {
+            editingIngredientIndex.value = step.value.ingredients.length - 1
+            dialogIngredientEditor.value = true
+        } else {
+            document.getElementById(`id_input_amount_${step.value.id}_${step.value.ingredients.length - 1}`).select()
+        }
     })
 }
+
+/**
+ * delete ingredient from step at given index
+ * @param index
+ */
+function deleteIngredientAtIndex(index: number) {
+    step.value.ingredients.splice(index, 1)
+}
+
 </script>
 
 
