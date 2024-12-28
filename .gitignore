@@ -88,3 +88,4 @@ vetur.config.js
 venv/
 vue3/node_modules
 .idea/easy-i18n.xml
+cookbook/static/vue3
