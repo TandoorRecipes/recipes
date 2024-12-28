@@ -1,5 +1,5 @@
 import {acceptHMRUpdate, defineStore} from "pinia"
-import {ApiApi, Food, Recipe, ShoppingListEntry, ShoppingListEntryBulk, ShoppingListRecipe, Supermarket, SupermarketCategory} from "@/openapi";
+import {ApiApi, ApiShoppingListEntryListRequest, Food, Recipe, ShoppingListEntry, ShoppingListEntryBulk, ShoppingListRecipe, Supermarket, SupermarketCategory} from "@/openapi";
 import {computed, ref} from "vue";
 import {
     IShoppingExportEntry,
@@ -150,6 +150,25 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     }
 
     /**
+     * very simple list of shopping list entries as IShoppingListFood array filtered by a certain mealplan
+     * @param mealPlanId ID of mealplan
+     */
+    function getMealPlanEntries(mealPlanId: number) {
+        let items: IShoppingListFood[] = []
+
+        entries.value.forEach(shoppingListEntry => {
+            if (shoppingListEntry.recipeMealplan && shoppingListEntry.recipeMealplan.mealplan == mealPlanId) {
+                items.push({
+                    food: shoppingListEntry.food,
+                    entries: new Map<number, ShoppingListEntry>().set(shoppingListEntry.id!, shoppingListEntry)
+                } as IShoppingListFood)
+            }
+        })
+
+        return items
+    }
+
+    /**
      * checks if failed items are contained in the sync queue
      */
     function hasFailedItems() {
@@ -163,16 +182,22 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     /**
      * Retrieves all shopping related data (shopping list entries, supermarkets, supermarket categories and shopping list recipes) from API
+     * @param mealPlanId optionally filter by mealplan ID and only load entries associated with that
      */
-    function refreshFromAPI() {
+    function refreshFromAPI(mealPlanId?: number) {
         if (!currentlyUpdating.value) {
             currentlyUpdating.value = true
             autoSyncLastTimestamp.value = new Date();
 
             let api = new ApiApi()
-            api.apiShoppingListEntryList().then((r) => {
+            let requestParameters = {pageSize: 200} as ApiShoppingListEntryListRequest
+            if (mealPlanId) {
+                requestParameters.mealplan = mealPlanId
+            }
+
+            api.apiShoppingListEntryList(requestParameters).then((r) => {
                 entries.value = new Map<number, ShoppingListEntry>
-                // TODO load all pages
+                // TODO properly load pages
                 r.results.forEach((e) => {
                     entries.value.set(e.id!, e)
                 })
@@ -183,7 +208,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             })
 
-            api.apiSupermarketList().then(r => {
+            api.apiSupermarketCategoryList().then(r => {
                 supermarketCategories.value = r.results
             }).catch((err) => {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
@@ -552,7 +577,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         setFoodIgnoredState,
         delayEntries: setEntriesDelayedState,
         getAssociatedRecipes,
-
+        getMealPlanEntries,
     }
 })
 

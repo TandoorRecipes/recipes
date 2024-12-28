@@ -7,14 +7,13 @@
         <!--        </div>-->
 
 
-
         <div class="flex-grow-1 p-2">
             <div class="d-flex">
                 <div class="d-flex flex-column pr-2">
                     <span v-for="[i, a] in amounts" v-bind:key="a.key">
                         <span>
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
-                            <i class="fas fa-clock-rotate-left text-info fa-fw"  v-if="a.delayed"></i> <b>
+                            <i class="fas fa-clock-rotate-left text-info fa-fw" v-if="a.delayed"></i> <b>
                             <span :class="{'text-disabled': a.checked || a.delayed}">
                                 {{ $n(a.amount) }}
                                 <span v-if="a.unit">{{ a.unit.name }}</span>
@@ -25,7 +24,7 @@
                         <br/>
                     </span>
                 </div>
-                <div class="d-flex  flex-column flex-grow-1 align-self-center" >
+                <div class="d-flex  flex-column flex-grow-1 align-self-center">
                     {{ shoppingListFood.food.name }} <br/>
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
@@ -62,8 +61,12 @@ import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
 const emit = defineEmits(['clicked'])
 
 const props = defineProps({
-    entries: {type: Array as PropType<Array<ShoppingListEntry>>, required: true},
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
+    hideInfoRow: {type: Boolean, default: false}
+})
+
+const entries = computed(() => {
+    return Array.from(props.shoppingListFood.entries.values())
 })
 
 /**
@@ -71,7 +74,7 @@ const props = defineProps({
  */
 const itemContainerId = computed(() => {
     let id = 'id_sli_'
-    for (let i in props.entries) {
+    for (let i in entries.value) {
         id += i + '_'
     }
     return id
@@ -82,8 +85,8 @@ const itemContainerId = computed(() => {
  * tests if all entries of the given food are checked
  */
 const isChecked = computed(() => {
-    for (let i in props.entries) {
-        if (!props.entries[i].checked) {
+    for (let i in entries.value) {
+        if (!entries.value[i].checked) {
             return false
         }
     }
@@ -101,7 +104,7 @@ const isShoppingLineDelayed = computed(() => {
  * style action button depending on if all items are checked or not
  */
 const actionButtonIcon = computed(() => {
-    if (isChecked.value){
+    if (isChecked.value) {
         return 'fa-solid fa-plus'
     }
     return 'fa-solid fa-check'
@@ -116,8 +119,8 @@ const actionButtonIcon = computed(() => {
 const amounts = computed((): Map<number, ShoppingLineAmount> => {
     let unitAmounts = new Map<number, ShoppingLineAmount>()
 
-    for (let i in props.entries) {
-        let e = props.entries[i]
+    for (let i in entries.value) {
+        let e = entries.value[i]
 
         if (!e.checked && !isDelayed(e)
             || (e.checked && useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
@@ -147,15 +150,22 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
     return unitAmounts
 })
 
+/**
+ * compute the second (info) row of the line item based on the entries and the device settings
+ */
 const infoRow = computed(() => {
+    if(props.hideInfoRow){
+        return ''
+    }
+
     let info_row = []
 
     let authors = []
     let recipes = []
     let meal_pans = []
 
-    for (let i in props.entries) {
-        let e = props.entries[i]
+    for (let i in entries.value) {
+        let e = entries.value[i]
 
         if (authors.indexOf(e.createdBy.displayName) === -1) {
             authors.push(e.createdBy.displayName)
@@ -203,7 +213,7 @@ function setFoodIgnoredAndChecked(food: Food) {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     })
 
-    useShoppingStore().setEntriesCheckedState(props.entries, true, false)
+    useShoppingStore().setEntriesCheckedState(entries.value, true, false)
 }
 
 /**

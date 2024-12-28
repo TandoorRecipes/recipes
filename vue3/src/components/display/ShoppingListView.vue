@@ -109,7 +109,7 @@
                                     <v-divider></v-divider>
 
                                     <template v-for="[i, value] in category.foods" :key="value.food.id">
-                                        <shopping-line-item :shopping-list-food="value" :entries="Array.from(value.entries.values())"
+                                        <shopping-line-item :shopping-list-food="value"
                                                             @clicked="() => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value;}"></shopping-line-item>
                                     </template>
 

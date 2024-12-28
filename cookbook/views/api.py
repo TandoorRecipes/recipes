@@ -16,6 +16,7 @@ import PIL.Image
 import redis
 import requests
 from PIL import UnidentifiedImageError
+from PIL.ImImagePlugin import number
 from PIL.features import check
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
@@ -1361,6 +1362,9 @@ class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int)
+]))
 class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
@@ -1369,6 +1373,14 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(entries__space=self.request.space) | Q(recipe__space=self.request.space))
+
+        # TODO implement test for this
+        if not self.detail:
+            mealplan = self.request.query_params.get('mealplan', None)
+
+            if mealplan is not None:
+                self.queryset = self.queryset.filter(mealplan_id=mealplan)
+
         return self.queryset.filter(Q(entries__isnull=True)
                                     | Q(entries__created_by=self.request.user)
                                     | Q(entries__created_by__in=list(self.request.user.get_shopping_share()))).distinct().all()
@@ -1405,6 +1417,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     OpenApiParameter(name='updated_after',
                      description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'),
                      type=datetime.datetime),
+    OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int)
 ]))
 class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     """
@@ -1435,6 +1448,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                                                                ).distinct().all()
 
         updated_after = self.request.query_params.get('updated_after', None)
+        mealplan = self.request.query_params.get('mealplan', None)
 
         if not self.detail:
             # to keep the endpoint small, only return entries as old as user preference recent days
@@ -1442,10 +1456,12 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
             self.queryset = self.queryset.filter((Q(checked=False) | Q(completed_at__gte=week_ago)))
 
+            if mealplan is not None:
+                self.queryset = self.queryset.filter(list_recipe__mealplan_id=mealplan)
+
         try:
             if updated_after:
                 updated_after = parse_datetime(updated_after)
-                print('adding filter updated_after', updated_after)
                 self.queryset = self.queryset.filter(updated_at__gte=updated_after)
         except Exception:
             traceback.print_exc()
@@ -1588,9 +1604,8 @@ class AutomationViewSet(LoggingMixin, StandardFilterModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
-# TODO explain what internal_note is for
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='internal_note', description=_('I have no idea what internal_note is for.'), type=str)
+    OpenApiParameter(name='internal_note', description=_('Text field to store data that gets carried over to the UserSpace created from the InviteLink'), type=str)
 ]))
 class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = InviteLink.objects
@@ -1806,7 +1821,7 @@ class ImageToRecipeView(APIView):
         """
         serializer = ImportImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            #generativeai.configure(api_key=GOOGLE_AI_API_KEY)
+            # generativeai.configure(api_key=GOOGLE_AI_API_KEY)
 
             # model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
             # img = PIL.Image.open('')

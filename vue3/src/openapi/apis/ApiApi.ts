@@ -1252,6 +1252,7 @@ export interface ApiShoppingListEntryDestroyRequest {
 }
 
 export interface ApiShoppingListEntryListRequest {
+    mealplan?: number;
     page?: number;
     pageSize?: number;
     updatedAfter?: Date;
@@ -1285,6 +1286,7 @@ export interface ApiShoppingListRecipeDestroyRequest {
 }
 
 export interface ApiShoppingListRecipeListRequest {
+    mealplan?: number;
     page?: number;
     pageSize?: number;
 }
@@ -4023,7 +4025,7 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiGetRecipeFileRetrieveRaw(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction) {
+    async apiGetRecipeFileRetrieveRaw(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['recipeId'] == null) {
             throw new runtime.RequiredError(
                 'recipeId',
@@ -4046,13 +4048,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return response;
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async apiGetRecipeFileRetrieve(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction){
-        return await this.apiGetRecipeFileRetrieveRaw(requestParameters, initOverrides);
+    async apiGetRecipeFileRetrieve(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiGetRecipeFileRetrieveRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -9243,6 +9245,10 @@ export class ApiApi extends runtime.BaseAPI {
     async apiShoppingListEntryListRaw(requestParameters: ApiShoppingListEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListEntryList>> {
         const queryParameters: any = {};
 
+        if (requestParameters['mealplan'] != null) {
+            queryParameters['mealplan'] = requestParameters['mealplan'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -9531,6 +9537,10 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiShoppingListRecipeListRaw(requestParameters: ApiShoppingListRecipeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListRecipeList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['mealplan'] != null) {
+            queryParameters['mealplan'] = requestParameters['mealplan'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
