@@ -38,7 +38,6 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
-from google import generativeai
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
@@ -1807,7 +1806,7 @@ class ImageToRecipeView(APIView):
         """
         serializer = ImportImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            generativeai.configure(api_key=GOOGLE_AI_API_KEY)
+            #generativeai.configure(api_key=GOOGLE_AI_API_KEY)
 
             # model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
             # img = PIL.Image.open('')
