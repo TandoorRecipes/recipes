@@ -81,7 +81,6 @@ python manage.py migrate
 
 echo "Collecting static files, this may take a while..."
 
-python manage.py collectstatic_js_reverse
 python manage.py collectstatic --noinput
 
 echo "Done"
