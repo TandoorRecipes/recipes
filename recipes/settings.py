@@ -180,7 +180,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'django_cleanup.apps.CleanupConfig',
-    'webpack_loader',
     'django_vite',
     'django_js_reverse',
     'hcaptcha',
