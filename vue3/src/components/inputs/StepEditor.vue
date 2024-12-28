@@ -14,11 +14,15 @@
                 <v-icon icon="fas fa-sliders-h"></v-icon>
                 <v-menu activator="parent">
                     <v-list>
+                        <v-list-item prepend-icon="fas fa-plus-circle" @click="showName = true" v-if="!showName && (step.name == null || step.name == '')">{{
+                                $t('Name')
+                            }}
+                        </v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showTime = true" v-if="!showTime && step.time == 0">{{ $t('Time') }}</v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile &&  step.file == null">{{ $t('File') }}</v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showRecipe = true" v-if="!showRecipe && step.stepRecipe == null">{{ $t('Recipe') }}</v-list-item>
 
-                        <v-list-item prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
+                        <v-list-item prepend-icon="$delete" @click="emit('delete')">{{ $t('Delete') }}</v-list-item>
                     </v-list>
                 </v-menu>
             </v-btn>
@@ -27,7 +31,8 @@
         <v-card-text>
             <v-text-field
                 v-model="step.name"
-                label="Step Name"
+                :label="$t('Name')"
+                v-if="showName || (step.name != null && step.name != '')"
             ></v-text-field>
 
             <v-row>
@@ -46,20 +51,21 @@
                 <v-col cols="12">
                     <v-label>{{ $t('Ingredients') }}</v-label>
 
-                    <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients">
+                    <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" v-if="!mobile">
                         <v-row v-for="(ingredient, index) in step.ingredients" dense>
                             <v-col cols="2">
                                 <v-number-input :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" inset control-variant="stacked"
+                                                hide-details
                                                 :min="0"></v-number-input>
                             </v-col>
                             <v-col cols="3">
-                                <model-select model="Unit" v-model="ingredient.unit"></model-select>
+                                <model-select model="Unit" v-model="ingredient.unit" hide-details></model-select>
                             </v-col>
                             <v-col cols="3">
-                                <model-select model="Food" v-model="ingredient.food"></model-select>
+                                <model-select model="Food" v-model="ingredient.food" hide-details></model-select>
                             </v-col>
                             <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
-                                <v-text-field :label="$t('Note')" v-model="ingredient.note"></v-text-field>
+                                <v-text-field :label="$t('Note')" v-model="ingredient.note" hide-details></v-text-field>
                             </v-col>
                             <v-col cols="1">
                                 <v-btn variant="plain" icon>
@@ -74,15 +80,36 @@
                             </v-col>
                         </v-row>
                     </vue-draggable>
-                    <v-btn-group density="compact">
+
+                    <v-list v-if="mobile">
+                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients">
+                            <v-list-item v-for="(ingredient, index) in step.ingredients" border @click="editingIngredientIndex = index; dialogIngredientEditor = true">
+                                <ingredient-string :ingredient="ingredient"></ingredient-string>
+                                <template #append>
+                                    <v-icon icon="$dragHandle" class="drag-handle"></v-icon>
+                                </template>
+                            </v-list-item>
+
+                        </vue-draggable>
+                    </v-list>
+
+                    <v-btn-group density="compact" class="mt-1">
                         <v-btn color="success" @click="insertAndFocusIngredient()" prepend-icon="$add">{{ $t('Add') }}</v-btn>
-                        <v-btn color="warning" @click="dialogIngredientParser = true"><v-icon icon="$add"></v-icon> <v-icon icon="$add"></v-icon></v-btn>
+                        <v-btn color="warning" @click="dialogIngredientParser = true">
+                            <v-icon icon="$add"></v-icon>
+                            <v-icon icon="$add"></v-icon>
+                        </v-btn>
                     </v-btn-group>
                 </v-col>
                 <v-col cols="12">
                     <v-label>{{ $t('Instructions') }}</v-label>
-                    <v-alert @click="dialogMarkdownEdit = true" class="mt-2 cursor-text" min-height="52px">
-                        {{ step.instruction }}
+                    <v-alert @click="dialogMarkdownEditor = true" class="mt-2 cursor-pointer" min-height="52px">
+                        <template v-if="step.instruction != '' && step.instruction != null">
+                            {{ step.instruction }}
+                        </template>
+                        <template v-else>
+                            <i> {{ $t('InstructionsEditHelp') }} </i>
+                        </template>
                     </v-alert>
                 </v-col>
             </v-row>
@@ -92,12 +119,15 @@
     </v-card>
 
     <v-dialog
-        v-model="dialogMarkdownEdit"
+        v-model="dialogMarkdownEditor"
         :max-width="(mobile) ? '100vw': '75vw'"
         :fullscreen="mobile">
         <v-card>
-            <v-closable-card-title :title="$t('Instructions')" v-model="dialogMarkdownEdit"></v-closable-card-title>
+            <v-closable-card-title :title="$t('Instructions')" v-model="dialogMarkdownEditor"></v-closable-card-title>
             <step-markdown-editor class="h-100" v-model="step"></step-markdown-editor>
+            <v-card-actions v-if="!mobile">
+                <v-btn @click="dialogMarkdownEditor = false">{{ $t('Close') }}</v-btn>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 
@@ -115,34 +145,59 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-dialog
+        v-model="dialogIngredientEditor"
+        :max-width="(mobile) ? '100vw': '75vw'"
+        :fullscreen="mobile">
+        <v-card>
+            <v-closable-card-title :title="$t('Ingredient Editor')" v-model="dialogIngredientEditor"></v-closable-card-title>
+            <v-card-text>
+                <v-form>
+                    <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" :label="$t('Amount')"
+                                    :min="0"></v-number-input>
+                    <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')"></model-select>
+                    <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')"></model-select>
+                    <v-text-field :label="$t('Note')" v-model="step.ingredients[editingIngredientIndex].note" ></v-text-field>
+                </v-form>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn @click="dialogIngredientEditor = false">{{ $t('Close') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup lang="ts">
 import {nextTick, ref} from 'vue'
-import {ApiApi, Food, Ingredient, ParsedIngredient, Step} from "@/openapi";
+import {ApiApi, Ingredient, ParsedIngredient, Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
-import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
+import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import IngredientString from "@/components/display/IngredientString.vue";
+
+const emit = defineEmits(['delete'])
 
 const step = defineModel<Step>({required: true})
-
 const props = defineProps({
     stepIndex: {type: Number, required: true},
 })
 
 const {mobile} = useDisplay()
 
+const showName = ref(false)
 const showTime = ref(false)
 const showRecipe = ref(false)
 const showFile = ref(false)
 
-const dialogMarkdownEdit = ref(false)
+const dialogMarkdownEditor = ref(false)
+const dialogIngredientEditor = ref(false)
 const dialogIngredientParser = ref(false)
 
+const editingIngredientIndex = ref({} as Ingredient)
 const ingredientTextInput = ref("")
 
 /**

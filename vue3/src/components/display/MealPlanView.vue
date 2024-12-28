@@ -1,34 +1,38 @@
 <template>
     <v-row class="h-100">
-        <v-col>
-            <!-- TODO add hint about CTRL key while drag/drop -->
-            <calendar-view
-                :show-date="calendarDate"
-                :items="planItems"
-                class="theme-default"
-                :item-content-height="calendarItemHeight"
-                :enable-drag-drop="true"
-                @dropOnDate="dropCalendarItemOnDate"
-                :display-period-uom="useUserPreferenceStore().deviceSettings.mealplan_displayPeriod"
-                :display-period-count="useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount"
-                :starting-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
-                :display-week-numbers="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
-                :current-period-label="$t('Today')"
-                @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
-                <template #header="{ headerProps }">
-                    <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>
-                </template>
-                <template #item="{ value, weekStartDate, top }">
-                    <meal-plan-calendar-item
-                        :item-height="calendarItemHeight"
-                        :value="value"
-                        :item-top="top"
-                        @onDragStart="currentlyDraggedMealplan = value"
-                        @delete="(arg: MealPlan) => {useMealPlanStore().plans.delete(arg.id)}"
-                        :detailed-items="lgAndUp"
-                    ></meal-plan-calendar-item>
-                </template>
-            </calendar-view>
+        <v-col class="pb-0">
+            <v-card class="h-100" :loading="useMealPlanStore().loading">
+                <!-- TODO add hint about CTRL key while drag/drop -->
+                <!-- TODO multi selection? date range selection ? -->
+                <calendar-view
+                    :show-date="calendarDate"
+                    :items="planItems"
+                    class="theme-default"
+                    :item-content-height="calendarItemHeight"
+                    :enable-drag-drop="true"
+                    @dropOnDate="dropCalendarItemOnDate"
+                    :display-period-uom="useUserPreferenceStore().deviceSettings.mealplan_displayPeriod"
+                    :display-period-count="useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount"
+                    :starting-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
+                    :display-week-numbers="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
+                    :current-period-label="$t('Today')"
+                    @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
+                    <template #header="{ headerProps }">
+                        <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>
+                    </template>
+                    <template #item="{ value, weekStartDate, top }">
+                        <meal-plan-calendar-item
+                            :item-height="calendarItemHeight"
+                            :value="value"
+                            :item-top="top"
+                            @onDragStart="currentlyDraggedMealplan = value"
+                            @delete="(arg: MealPlan) => {useMealPlanStore().plans.delete(arg.id)}"
+                            :detailed-items="lgAndUp"
+                        ></meal-plan-calendar-item>
+                    </template>
+                </calendar-view>
+            </v-card>
+
 
             <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem"
                                @create="(arg: any) => useMealPlanStore().plans.set(arg.id, arg)"></model-edit-dialog>
@@ -44,8 +48,8 @@ import "vue-simple-calendar/dist/css/default.css"
 
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";
 import {IMealPlanCalendarItem, IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
-import {computed, onMounted, ref} from "vue";
-import {DateTime} from "luxon";
+import {computed, onMounted, ref, watch} from "vue";
+import {DateTime, Duration} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
@@ -89,22 +93,47 @@ const calendarItemHeight = computed(() => {
     }
 })
 
-onMounted(() => {
-    useMealPlanStore().refreshFromAPI() //TODO filter to visible date
+/**
+ * watch calendar date and load entries accordingly
+ */
+watch(calendarDate, () => {
+    let daysInPeriod = 7
+    if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'month') {
+        daysInPeriod = 31
+    } else if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'year') {
+        daysInPeriod = 365
+    }
+
+    let days = useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount * daysInPeriod
+    useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.now().plus({days: days}).toJSDate())
 })
 
+onMounted(() => {
+    // initial load for next 30 days
+    useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.now().plus({days: 30}).toJSDate())
+})
+
+/**
+ * handle drop event for calendar items on fields
+ * @param undefinedItem
+ * @param targetDate
+ * @param event
+ */
 function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, targetDate: Date, event: DragEvent) {
     //The item argument (first) is undefined because our custom calendar item cannot manipulate the calendar state so the item is unknown to the calendar (probably fixable by somehow binding state to the item)
     if (currentlyDraggedMealplan.value.originalItem.mealPlan.id != undefined) {
         let mealPlan = useMealPlanStore().plans.get(currentlyDraggedMealplan.value.originalItem.mealPlan.id)
         if (mealPlan != undefined) {
-            let fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
+            let fromToDiff = {days: 1}
+            if (mealPlan.toDate) {
+                fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
+            }
+            // create copy of item if control is pressed
             if (event.ctrlKey) {
                 let new_entry = Object.assign({}, mealPlan)
                 new_entry.fromDate = targetDate
                 new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
                 useMealPlanStore().createObject(new_entry)
-
             } else {
                 mealPlan.fromDate = targetDate
                 mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()

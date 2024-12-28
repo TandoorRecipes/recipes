@@ -57,6 +57,7 @@
                             </v-col>
                         </v-row>
 
+                        <closable-help-alert :text="$t('RecipeStepsHelp')" :action-text="$t('Steps')" @click="tab='steps'"></closable-help-alert>
                     </v-form>
 
                 </v-tabs-window-item>
@@ -64,13 +65,13 @@
                     <v-form :disabled="loading || fileApiLoading">
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
                             <v-col>
-                                <step-editor v-model="editingObj.steps[i]" :step-index="i"></step-editor>
+                                <step-editor v-model="editingObj.steps[i]" :step-index="i" @delete="deleteStepAtIndex(i)"></step-editor>
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col class="text-center">
                                 <v-btn-group density="compact">
-                                    <v-btn color="success" prepend-icon="fa-solid fa-plus">{{ $t('Add_Step') }}</v-btn>
+                                    <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
                                     <v-btn color="warning" @click="dialogStepManager = true">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
@@ -124,7 +125,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, shallowRef} from "vue";
-import {Recipe, Step} from "@/openapi";
+import {Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
@@ -134,6 +135,7 @@ import {VueDraggable} from "vue-draggable-plus";
 import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
 import {useFileApi} from "@/composables/useFileApi";
 import {VFileUpload} from 'vuetify/labs/VFileUpload'
+import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 
 
 const props = defineProps({
@@ -184,12 +186,30 @@ function deleteImage() {
 }
 
 /**
+ * add a new step to the recipe
+ */
+function addStep(){
+    editingObj.value.steps.push({
+        ingredients: [] as Ingredient[],
+        time: 0,
+    } as Step)
+}
+
+/**
  * called by draggable in step manager dialog when steps are sorted
  */
 function sortSteps() {
     editingObj.value.steps.forEach((value, index) => {
         value.order = index
     })
+}
+
+/**
+ * delete a step at the given index of the steps array of the editingObject
+ * @param index index to delete at
+ */
+function deleteStepAtIndex(index: number){
+    editingObj.value.steps.splice(index, 1)
 }
 
 </script>

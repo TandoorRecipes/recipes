@@ -4,7 +4,6 @@
     <v-input :hint="props.hint" persistent-hint :label="props.label" class="" >
 
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
-
         <Multiselect
 
             :ref="`ref_${props.id}`"

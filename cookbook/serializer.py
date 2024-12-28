@@ -1104,7 +1104,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     servings = CustomDecimalField()
     shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
-    addshopping = serializers.BooleanField(write_only=True)
+    addshopping = serializers.BooleanField(write_only=True, required=False)
 
     to_date = serializers.DateTimeField(required=False)
 

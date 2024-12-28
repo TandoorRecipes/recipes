@@ -26,6 +26,7 @@ class DeviceSettings {
     mealplan_displayWeekNumbers = true
 
     general_tableItemsPerPage = 10
+    general_closedHelpAlerts: String[] = []
 }
 
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {

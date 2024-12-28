@@ -13,6 +13,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     let plans = ref(new Map<number, MealPlan>)
     let currently_updating = ref([new Date(0), new Date(0)])
+    const loading = ref(false)
     let settings = ref({})
 
     const planList = computed(() => {
@@ -52,15 +53,17 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     function refreshFromAPI(from_date: Date, to_date: Date) {
         if (currently_updating.value[0] !== from_date || currently_updating.value[1] !== to_date) {
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
-
+            loading.value = true
             const api = new ApiApi()
-            return api.apiMealPlanList({fromDate: DateTime.fromJSDate(from_date).toISODate() as string, toDate: DateTime.fromJSDate(to_date).toISODate() as string}).then(r => {
+            return api.apiMealPlanList({fromDate: DateTime.fromJSDate(from_date).toISODate() as string, toDate: DateTime.fromJSDate(to_date).toISODate() as string, pageSize: 100}).then(r => {
                 r.results.forEach((p) => {
                     plans.value.set(p.id, p)
                 })
                 currently_updating.value = [new Date(0), new Date(0)]
             }).catch((err) => {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }).finally(() => {
+                loading.value = false
             })
         }
         return new Promise(() => {
@@ -77,20 +80,23 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     function createObject(object: MealPlan) {
         const api = new ApiApi()
+        loading.value = true
         return api.apiMealPlanCreate({mealPlan: object}).then((r) => {
             useMessageStore().addMessage(MessageType.SUCCESS, 'Created successfully', 7000, object)
-            plans.value.set(r.id, r)
+            plans.value.set(r.id!, r)
             return r
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        }).finally(() => {
+            loading.value = false
         })
     }
 
     function updateObject(object: MealPlan) {
         const api = new ApiApi()
-        return api.apiMealPlanUpdate({id: object.id, mealPlan: object}).then((r) => {
+        return api.apiMealPlanUpdate({id: object.id!, mealPlan: object}).then((r) => {
             useMessageStore().addMessage(MessageType.SUCCESS, 'Updated successfully', 7000, object)
-            plans.value.set(r.id, r)
+            plans.value.set(r.id!, r)
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         })
@@ -98,11 +104,14 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     function deleteObject(object: MealPlan) {
         const api = new ApiApi()
-        return api.apiMealPlanDestroy({id: object.id}).then((r) => {
+        loading.value = true
+        return api.apiMealPlanDestroy({id: object.id!}).then((r) => {
             useMessageStore().addMessage(MessageType.INFO, 'Deleted successfully', 7000, object)
-            plans.value.delete(object.id)
+            plans.value.delete(object.id!)
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            loading.value = false
         })
     }
 
@@ -124,7 +133,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //         return JSON.parse(s)
     //     }
     // }
-    return {plans, currently_updating, planList, refreshFromAPI, createObject, updateObject, deleteObject, createOrUpdate}
+    return {plans, currently_updating, planList, loading, refreshFromAPI, createObject, updateObject, deleteObject, createOrUpdate}
 })
 
 // enable hot reload for store

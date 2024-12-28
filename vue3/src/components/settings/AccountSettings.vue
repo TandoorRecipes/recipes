@@ -21,9 +21,10 @@
         <br/>
 
         <p class="text-h6 mt-3">{{ $t('DeviceSettings') }}</p>
-        <p class="text-disabled">{{$t('DeviceSettingsHelp')}}</p>
+        <p class="text-disabled">{{ $t('DeviceSettingsHelp') }}</p>
 
-        <v-btn @click="useUserPreferenceStore().resetDeviceSettings()">{{$t('Reset')}}</v-btn>
+        <v-btn @click="useUserPreferenceStore().resetDeviceSettings()" color="warning">{{ $t('Reset') }}</v-btn>  <br/>
+        <v-btn @click="useUserPreferenceStore().deviceSettings.general_closedHelpAlerts = []" color="warning" class="mt-1">{{ $t('ResetHelp') }}</v-btn>
 
     </v-form>
 </template>
@@ -51,9 +52,9 @@ onMounted(() => {
     })
 })
 
-function save(){
+function save() {
     let api = new ApiApi()
-    api.apiUserPartialUpdate({id: user.value.id!, patchedUser: user.value}).then(r =>  {
+    api.apiUserPartialUpdate({id: user.value.id!, patchedUser: user.value}).then(r => {
         user.value = r
         useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
