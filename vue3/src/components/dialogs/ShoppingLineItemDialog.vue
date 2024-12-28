@@ -35,20 +35,25 @@
                         </v-btn>
                     </v-col>
                     <v-col class="pt-0">
-                        <v-btn height="80px" color="success" density="compact" size="small" @click="addEntryForFood()" block stacked>
-                            <i class="fa-solid fa-plus fa-2x mb-2"></i>
-                            {{ $t('Add') }}
+                        <v-btn height="80px" color="error" density="compact" size="small" @click="deleteAllEntries()" block stacked>
+                            <i class="fa-solid fa-trash fa-2x mb-2"></i>
+                            {{ $t('Delete_All') }}
                         </v-btn>
                     </v-col>
                 </v-row>
 
-                <v-label class="mt-3">{{ $t('Entries') }}</v-label>
+                <div class="mt-2">
+                    <v-label class="mt-3">{{ $t('Entries') }}</v-label>
+                    <v-btn color="success" class="float-right" @click="addEntryForFood()">
+                        <v-icon icon="$create"></v-icon>
+                    </v-btn>
+                </div>
                 <v-list density="compact">
                     <template v-for="[i, e] in shoppingListFood.entries" :key="e.id">
                         <v-list-item border class="mt-1" :class="{'cursor-pointer': !e.recipeMealplan}">
                             <v-list-item-title>
                                 <b>
-                                    {{ e.amount }}
+                                    {{ $n(e.amount) }}
                                     <span v-if="e.unit">{{ e.unit.name }}</span>
                                 </b>
                                 {{ e.food.name }}
@@ -110,7 +115,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 const {mobile} = useDisplay()
 
 const showDialog = defineModel<Boolean>()
-const shoppingListFood = defineModel<IShoppingListFood>('shoppingListFood')
+const shoppingListFood = defineModel<IShoppingListFood>('shoppingListFood', {required: true})
 
 /**
  * returns a flat list of entries for the given shopping list food
@@ -152,10 +157,19 @@ function addEntryForFood() {
         food: shoppingListFood.value?.food,
         unit: null,
         amount: 1,
-    } as ShoppingListEntry, false).then((r: ShoppingListEntry|undefined) => {
-        if(r != undefined){
+    } as ShoppingListEntry, false).then((r: ShoppingListEntry | undefined) => {
+        if (r != undefined) {
             shoppingListFood.value?.entries.set(r.id!, r)
         }
+    })
+}
+
+/**
+ * delete all shopping list entries for the given shopping list food
+ */
+function deleteAllEntries() {
+    shoppingListFood.value.entries.forEach(e => {
+        useShoppingStore().deleteObject(e, true)
     })
 }
 

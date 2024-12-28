@@ -61,6 +61,11 @@
 
             </v-list>
         </v-menu>
+
+        <v-btn height="100%" rounded="0" variant="plain" @click="useShoppingStore().undoChange()">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+        </v-btn>
+
     </v-tabs>
 
     <v-window v-model="currentTab">
@@ -180,7 +185,8 @@
                                         <template #append>
                                             <v-btn icon color="delete">
                                                 <v-icon icon="$delete"></v-icon>
-                                                <delete-confirm-dialog :object-name="r.recipeName" :model-name="$t('ShoppingListRecipe')" @delete="deleteListRecipe(r)"></delete-confirm-dialog>
+                                                <delete-confirm-dialog :object-name="r.recipeName" :model-name="$t('ShoppingListRecipe')"
+                                                                       @delete="deleteListRecipe(r)"></delete-confirm-dialog>
                                             </v-btn>
                                         </template>
                                     </v-list-item>
@@ -346,7 +352,7 @@ function autoSyncLoop() {
 /**
  * delete shopping list recipe
  */
-function deleteListRecipe(slr: ShoppingListRecipe){
+function deleteListRecipe(slr: ShoppingListRecipe) {
     let api = new ApiApi()
 
     api.apiShoppingListRecipeDestroy({id: slr.id!}).then(r => {
