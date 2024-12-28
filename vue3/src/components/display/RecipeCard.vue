@@ -19,6 +19,10 @@
             <!--            <p class="text-disabled">{{ props.recipe.createdBy.displayName}}</p>-->
             <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="3">
                 <template #prepend>
+                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" color="info"
+                            v-if="!props.recipe.internal">
+                        {{ $t('External') }}
+                    </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined"
                             v-if="props.recipe.workingTime != undefined && props.recipe.workingTime > 0">
                         {{ recipe.workingTime! + recipe.waitingTime! }}

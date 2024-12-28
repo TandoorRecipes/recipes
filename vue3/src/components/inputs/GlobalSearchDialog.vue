@@ -2,17 +2,21 @@
     <slot name="activator">
         <v-btn @click="dialog = true" variant="plain" density="default" :icon="mobile">
             <v-icon icon="fa-solid fa-search" class="mr-1 fa-fw"></v-icon>
-            <span class="d-none d-sm-block">{{$t('Search')}}</span>
-            <v-chip size="x-small" variant="tonal" class="d-none d-md-flex ml-1" label>{{$t('Ctrl+K')}}</v-chip>
+            <span class="d-none d-sm-block">{{ $t('Search') }}</span>
+            <v-chip size="x-small" variant="tonal" class="d-none d-md-flex ml-1" label>{{ $t('Ctrl+K') }}</v-chip>
         </v-btn>
     </slot>
 
-    <v-dialog width="90%" max-width="800px" v-model="dialog" location="id_dialog_anchor"
-              location-strategy="connected">
+    <v-dialog v-model="dialog" location="id_dialog_anchor"
+              location-strategy="connected"
+              :max-width="(mobile) ? '100vw': '800px'"
+              :fullscreen="mobile"
+    >
 
         <v-card>
+            <v-closable-card-title :title="$t('Search')" v-model="dialog"></v-closable-card-title>
             <!-- search input -->
-            <v-card-text class="pb-0">
+            <v-card-text class="pt-0 pt-md-2">
                 <v-text-field
                     id="id_global_search_input"
                     v-model="searchQuery"
@@ -22,11 +26,7 @@
                     prepend-inner-icon="fas fa-search"
                     variant="solo"
                 ></v-text-field>
-            </v-card-text>
 
-            <v-divider></v-divider>
-            <!-- search results -->
-            <v-card-text>
                 <v-card :variant="cardVariant(index)" v-for="(item, index) in searchResults" hover class="mt-1" @click="selectedResult = index" :key="index">
                     <v-card-title @click="goToSelectedRecipe(index)">
                         <v-avatar v-if="item.image" :image="item.image"></v-avatar>
@@ -42,14 +42,16 @@
             <v-card-text class="d-none d-sm-block pt-2">
                 <v-chip size="x-small" class="mr-1" label><i class="fas fa-arrow-up"></i></v-chip>
                 <v-chip size="x-small" class="mr-1" label><i class="fas fa-arrow-down"></i></v-chip>
-                <small class="mr-2">{{$t('to_navigate')}}</small>
+                <small class="mr-2">{{ $t('to_navigate') }}</small>
                 <v-chip size="x-small" class="mr-1" label><i class="fas fa-level-down-alt fa-rotate-90"></i></v-chip>
-                <small class="mr-2">{{$t('to_select')}}</small>
+                <small class="mr-2">{{ $t('to_select') }}</small>
                 <v-chip size="x-small" class="mr-1" label> esc</v-chip>
-                <small>{{$t('to_close')}}</small>
-
+                <small>{{ $t('to_close') }}</small>
 
             </v-card-text>
+            <v-card-actions>
+                <v-btn @click="dialog=false" variant="plain">{{$t('Close')}}</v-btn>
+            </v-card-actions>
         </v-card>
 
 
@@ -63,6 +65,7 @@ import {SearchResult} from "@/types/SearchTypes";
 import {ApiApi, Recipe, RecipeFlat} from "@/openapi";
 import {useRouter} from "vue-router";
 import {useDisplay} from "vuetify";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 
 const router = useRouter()
 const {mobile} = useDisplay()

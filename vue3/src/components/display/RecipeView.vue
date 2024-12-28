@@ -24,7 +24,7 @@
 
             <v-card>
                 <v-sheet class="d-flex align-center">
-                    <span class="ps-2 text-h5  flex-grow-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
+                    <span class="ps-2 text-h5  flex-grow-1 pa-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
                         {{ props.recipe.name }}
                     </span>
                     <recipe-context-menu :recipe="recipe"></recipe-context-menu>
@@ -37,11 +37,11 @@
                 <v-row class="text-center text-body-2">
                     <v-col class="pt-1 pb-1">
                         <i class="fas fa-cogs fa-fw mr-1"></i> {{ props.recipe.workingTime }} min<br/>
-                        <div class="text-grey">Working Time</div>
+                        <div class="text-grey">{{$t('WorkingTime')}}</div>
                     </v-col>
                     <v-col class="pt-1 pb-1">
                         <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ props.recipe.waitingTime }} min</div>
-                        <div class="text-grey">Waiting Time</div>
+                        <div class="text-grey">{{$t('WaitingTime')}}</div>
                     </v-col>
                     <v-col class="pt-1 pb-1">
 

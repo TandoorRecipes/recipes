@@ -158,6 +158,7 @@ onMounted(() => {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
+            editingObj.value.internal = true //TODO make database default after v2
         }
     })
 })
