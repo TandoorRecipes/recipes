@@ -4023,7 +4023,7 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiGetRecipeFileRetrieveRaw(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiGetRecipeFileRetrieveRaw(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction) {
         if (requestParameters['recipeId'] == null) {
             throw new runtime.RequiredError(
                 'recipeId',
@@ -4046,13 +4046,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return response;
     }
 
     /**
      */
-    async apiGetRecipeFileRetrieve(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiGetRecipeFileRetrieveRaw(requestParameters, initOverrides);
+    async apiGetRecipeFileRetrieve(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction){
+        return await this.apiGetRecipeFileRetrieveRaw(requestParameters, initOverrides);
     }
 
     /**

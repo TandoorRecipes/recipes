@@ -2037,7 +2037,7 @@ def get_external_file_link(request, recipe_id):
 def get_recipe_file(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if recipe.storage:
-        return FileResponse(get_recipe_provider(recipe).get_file(recipe))
+        return FileResponse(get_recipe_provider(recipe).get_file(recipe), filename=f'{recipe.name}.pdf')
     else:
         return FileResponse()
 

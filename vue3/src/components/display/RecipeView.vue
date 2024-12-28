@@ -14,6 +14,7 @@
             <recipe-image
                 max-height="25vh"
                 :recipe="props.recipe"
+                v-if="recipe.internal"
             >
                 <template #overlay>
                     <v-chip class="ms-2" color="primary" variant="flat" size="x-small">by {{ props.recipe.createdBy.displayName }}</v-chip>
@@ -32,39 +33,45 @@
             </v-card>
         </v-card>
 
-        <v-card class="mt-1">
-            <v-container>
-                <v-row class="text-center text-body-2">
-                    <v-col class="pt-1 pb-1">
-                        <i class="fas fa-cogs fa-fw mr-1"></i> {{ props.recipe.workingTime }} min<br/>
-                        <div class="text-grey">{{$t('WorkingTime')}}</div>
-                    </v-col>
-                    <v-col class="pt-1 pb-1">
-                        <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ props.recipe.waitingTime }} min</div>
-                        <div class="text-grey">{{$t('WaitingTime')}}</div>
-                    </v-col>
-                    <v-col class="pt-1 pb-1">
+        <template v-if="!recipe.internal">
+            <external-recipe-viewer :recipe="recipe"></external-recipe-viewer>
+        </template>
 
-                        <div class="cursor-pointer">
-                            <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
-                            <div class="text-grey"><span v-if="props.recipe?.servingsText">{{ props.recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                            <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                            </number-scaler-dialog>
-                        </div>
+        <template v-else>
+            <v-card class="mt-1">
+                <v-container>
+                    <v-row class="text-center text-body-2">
+                        <v-col class="pt-1 pb-1">
+                            <i class="fas fa-cogs fa-fw mr-1"></i> {{ props.recipe.workingTime }} min<br/>
+                            <div class="text-grey">{{ $t('WorkingTime') }}</div>
+                        </v-col>
+                        <v-col class="pt-1 pb-1">
+                            <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ props.recipe.waitingTime }} min</div>
+                            <div class="text-grey">{{ $t('WaitingTime') }}</div>
+                        </v-col>
+                        <v-col class="pt-1 pb-1">
+
+                            <div class="cursor-pointer">
+                                <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
+                                <div class="text-grey"><span v-if="props.recipe?.servingsText">{{ props.recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
+                                <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                                </number-scaler-dialog>
+                            </div>
 
 
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card>
 
-        <v-card class="mt-1" v-if="props.recipe.steps.length > 1">
-            <steps-overview :steps="props.recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
-        </v-card>
+            <v-card class="mt-1" v-if="props.recipe.steps.length > 1">
+                <steps-overview :steps="props.recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
+            </v-card>
 
-        <v-card class="mt-1" v-for="(step, index) in props.recipe.steps" :key="step.id">
-            <step :step="step" :step-number="index+1" :ingredientFactor="ingredientFactor"></step>
-        </v-card>
+            <v-card class="mt-1" v-for="(step, index) in props.recipe.steps" :key="step.id">
+                <step :step="step" :step-number="index+1" :ingredientFactor="ingredientFactor"></step>
+            </v-card>
+        </template>
 
         <recipe-activity :recipe="recipe"></recipe-activity>
     </template>
@@ -83,6 +90,9 @@ import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
+import PdfViewer from "../../../../vue/src/components/PdfViewer.vue";
+import ImageViewer from "../../../../vue/src/components/ImageViewer.vue";
+import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 
 const props = defineProps({
     recipe: {
