@@ -29,8 +29,6 @@ beautifulsoup4==4.12.3
 microdata==0.8.0
 mock==5.1.0
 Jinja2==3.1.5
-django-webpack-loader==3.0.1
-git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==0.61.1
 recipe-scrapers==15.2.1
 django-scopes==2.0.0
@@ -48,7 +46,6 @@ aiohttp==3.10.11
 inflection==0.5.1
 redis==5.2.0
 django-vite==3.0.3
-google-generativeai==0.5.3
 
 # Development
 pytest==8.0.0
