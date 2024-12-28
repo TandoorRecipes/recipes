@@ -11,7 +11,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <component :is="editorComponent" :item-id="id" @delete="router.go(-1)"></component>
+                <component :is="editorComponent" :item-id="id" @delete="router.go(-1)" @create="(obj: any) => objectCreated(obj)"></component>
             </v-col>
         </v-row>
     </v-container>
@@ -34,6 +34,16 @@ const props = defineProps({
 const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
 
 const router = useRouter()
+
+/**
+ * after creation open object with correct URL in edit mode
+ * @param obj obj that was created
+ */
+function objectCreated(obj: any) {
+    if (obj.id) {
+        router.push({name: 'ModelEditPage', params: {model: props.model, id: obj.id}})
+    }
+}
 
 </script>
 
