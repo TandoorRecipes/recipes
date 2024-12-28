@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from '../runtime';
+import type { MealPlan } from './MealPlan';
+import {
+    MealPlanFromJSON,
+    MealPlanFromJSONTyped,
+    MealPlanToJSON,
+    MealPlanToJSONTyped,
+} from './MealPlan';
+import type { RecipeOverview } from './RecipeOverview';
+import {
+    RecipeOverviewFromJSON,
+    RecipeOverviewFromJSONTyped,
+    RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
+} from './RecipeOverview';
+
 /**
  * 
  * @export
@@ -30,12 +45,6 @@ export interface PatchedShoppingListRecipe {
      * @type {string}
      * @memberof PatchedShoppingListRecipe
      */
-    readonly recipeName?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
     name?: string;
     /**
      * 
@@ -45,34 +54,28 @@ export interface PatchedShoppingListRecipe {
     recipe?: number | null;
     /**
      * 
+     * @type {RecipeOverview}
+     * @memberof PatchedShoppingListRecipe
+     */
+    readonly recipeData?: RecipeOverview;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
     mealplan?: number | null;
     /**
      * 
+     * @type {MealPlan}
+     * @memberof PatchedShoppingListRecipe
+     */
+    readonly mealPlanData?: MealPlan;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
     servings?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
-    readonly mealplanNote?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof PatchedShoppingListRecipe
-     */
-    readonly mealplanFromDate?: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
-    readonly mealplanType?: string;
 }
 
 /**
@@ -93,14 +96,12 @@ export function PatchedShoppingListRecipeFromJSONTyped(json: any, ignoreDiscrimi
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
         'name': json['name'] == null ? undefined : json['name'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'recipeData': json['recipe_data'] == null ? undefined : RecipeOverviewFromJSON(json['recipe_data']),
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
+        'mealPlanData': json['meal_plan_data'] == null ? undefined : MealPlanFromJSON(json['meal_plan_data']),
         'servings': json['servings'] == null ? undefined : json['servings'],
-        'mealplanNote': json['mealplan_note'] == null ? undefined : json['mealplan_note'],
-        'mealplanFromDate': json['mealplan_from_date'] == null ? undefined : (new Date(json['mealplan_from_date'])),
-        'mealplanType': json['mealplan_type'] == null ? undefined : json['mealplan_type'],
     };
 }
 
@@ -108,7 +109,7 @@ export function PatchedShoppingListRecipeToJSON(json: any): PatchedShoppingListR
     return PatchedShoppingListRecipeToJSONTyped(json, false);
 }
 
-export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

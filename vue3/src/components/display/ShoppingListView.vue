@@ -83,16 +83,7 @@
                             </template>
                         </v-alert>
 
-                        <v-text-field :label="$t('Shopping_input_placeholder')" density="compact" @keyup.enter="addIngredient()" v-model="ingredientInput" hide-details>
-                            <template #append>
-                                <v-btn
-                                    density="comfortable"
-                                    @click="addIngredient()"
-                                    :icon="ingredientInputIcon"
-                                    color="create"
-                                ></v-btn>
-                            </template>
-                        </v-text-field>
+                        <shopping-list-entry-input></shopping-list-entry-input>
 
                         <v-list class="mt-3" density="compact" v-if="!useShoppingStore().initialized">
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
@@ -168,7 +159,7 @@
                 <v-row>
                     <v-col>
                         <v-card>
-                            <v-card-title>{{ $t('Recipes') }}</v-card-title>
+                            <v-card-title>{{ $t('Recipes') }} / {{ $t('Meal_Plan') }}</v-card-title>
                             <v-card-text>
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
@@ -179,9 +170,14 @@
                                                                       @confirm="(servings: number) => {updateRecipeServings(r, servings)}"></number-scaler-dialog>
                                             </v-btn>
                                         </template>
-                                        <span class="ms-2">
-                                            {{ r.recipeName }}
-                                        </span>
+
+                                        <div class="ms-2">
+                                            <p v-if="r.recipe">{{ r.recipeData.name }} <br/></p>
+                                            <p v-if="r.mealplan">
+                                                {{ r.mealPlanData.mealType.name }} - {{ DateTime.fromJSDate(r.mealPlanData.fromDate).toLocaleString(DateTime.DATE_FULL) }}
+                                            </p>
+                                        </div>
+
                                         <template #append>
                                             <v-btn icon color="delete">
                                                 <v-icon icon="$delete"></v-icon>
@@ -230,13 +226,12 @@ import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
+import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.vue";
+import {DateTime} from "luxon";
 
 const {t} = useI18n()
 
 const currentTab = ref("shopping")
-
-const ingredientInput = ref('')
-const ingredientInputIcon = ref('fa-solid fa-plus')
 
 const shoppingLineItemDialog = ref(false)
 const shoppingLineItemDialogFood = ref({} as IShoppingListFood)
@@ -272,29 +267,6 @@ onMounted(() => {
         })
     }
 })
-
-/**
- * add new ingredient from ingredient text input
- */
-function addIngredient() {
-    const api = new ApiApi()
-
-    api.apiIngredientFromStringCreate({ingredientString: {text: ingredientInput.value} as IngredientString}).then(r => {
-        useShoppingStore().createObject({
-            amount: Math.max(r.amount, 1),
-            unit: r.unit,
-            food: r.food,
-        } as ShoppingListEntry, true)
-        ingredientInput.value = ''
-
-        ingredientInputIcon.value = 'fa-solid fa-check'
-        setTimeout(() => {
-            ingredientInputIcon.value = 'fa-solid fa-plus'
-        }, 1000)
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-    })
-}
 
 /**
  * determines if a category as entries that should be visible

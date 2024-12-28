@@ -1244,7 +1244,7 @@ export interface ApiShoppingListEntryBulkCreateRequest {
 }
 
 export interface ApiShoppingListEntryCreateRequest {
-    shoppingListEntry: Omit<ShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'>;
+    shoppingListEntry: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'>;
 }
 
 export interface ApiShoppingListEntryDestroyRequest {
@@ -1260,7 +1260,7 @@ export interface ApiShoppingListEntryListRequest {
 
 export interface ApiShoppingListEntryPartialUpdateRequest {
     id: number;
-    patchedShoppingListEntry?: Omit<PatchedShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'>;
+    patchedShoppingListEntry?: Omit<PatchedShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'>;
 }
 
 export interface ApiShoppingListEntryRetrieveRequest {
@@ -1269,7 +1269,7 @@ export interface ApiShoppingListEntryRetrieveRequest {
 
 export interface ApiShoppingListEntryUpdateRequest {
     id: number;
-    shoppingListEntry: Omit<ShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'>;
+    shoppingListEntry: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'>;
 }
 
 export interface ApiShoppingListRecipeBulkCreateEntriesCreateRequest {
@@ -1278,7 +1278,7 @@ export interface ApiShoppingListRecipeBulkCreateEntriesCreateRequest {
 }
 
 export interface ApiShoppingListRecipeCreateRequest {
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'>;
 }
 
 export interface ApiShoppingListRecipeDestroyRequest {
@@ -1293,7 +1293,7 @@ export interface ApiShoppingListRecipeListRequest {
 
 export interface ApiShoppingListRecipePartialUpdateRequest {
     id: number;
-    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
+    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'>;
 }
 
 export interface ApiShoppingListRecipeRetrieveRequest {
@@ -1302,7 +1302,7 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'>;
 }
 
 export interface ApiSpaceListRequest {

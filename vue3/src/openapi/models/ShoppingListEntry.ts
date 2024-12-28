@@ -95,7 +95,7 @@ export interface ShoppingListEntry {
      * @type {ShoppingListRecipe}
      * @memberof ShoppingListEntry
      */
-    readonly recipeMealplan: ShoppingListRecipe;
+    readonly listRecipeData: ShoppingListRecipe;
     /**
      * 
      * @type {User}
@@ -126,6 +126,12 @@ export interface ShoppingListEntry {
      * @memberof ShoppingListEntry
      */
     delayUntil?: Date | null;
+    /**
+     * If a mealplan id is given try to find existing or create new ShoppingListRecipe with that meal plan and link entry to it
+     * @type {number}
+     * @memberof ShoppingListEntry
+     */
+    mealplanId?: number;
 }
 
 /**
@@ -134,7 +140,7 @@ export interface ShoppingListEntry {
 export function instanceOfShoppingListEntry(value: object): value is ShoppingListEntry {
     if (!('food' in value) || value['food'] === undefined) return false;
     if (!('amount' in value) || value['amount'] === undefined) return false;
-    if (!('recipeMealplan' in value) || value['recipeMealplan'] === undefined) return false;
+    if (!('listRecipeData' in value) || value['listRecipeData'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
@@ -158,12 +164,13 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'amount': json['amount'],
         'order': json['order'] == null ? undefined : json['order'],
         'checked': json['checked'] == null ? undefined : json['checked'],
-        'recipeMealplan': ShoppingListRecipeFromJSON(json['recipe_mealplan']),
+        'listRecipeData': ShoppingListRecipeFromJSON(json['list_recipe_data']),
         'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
         'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
         'delayUntil': json['delay_until'] == null ? undefined : (new Date(json['delay_until'])),
+        'mealplanId': json['mealplan_id'] == null ? undefined : json['mealplan_id'],
     };
 }
 
@@ -171,7 +178,7 @@ export function ShoppingListEntryToJSON(json: any): ShoppingListEntry {
     return ShoppingListEntryToJSONTyped(json, false);
 }
 
-export function ShoppingListEntryToJSONTyped(value?: Omit<ShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListEntryToJSONTyped(value?: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -187,6 +194,7 @@ export function ShoppingListEntryToJSONTyped(value?: Omit<ShoppingListEntry, 're
         'checked': value['checked'],
         'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
+        'mealplan_id': value['mealplanId'],
     };
 }
 

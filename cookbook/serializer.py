@@ -1155,10 +1155,8 @@ class AutoMealPlanSerializer(serializers.Serializer):
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
-    recipe_name = serializers.ReadOnlyField(source='recipe.name')
-    mealplan_note = serializers.ReadOnlyField(source='mealplan.note')
-    mealplan_from_date = serializers.ReadOnlyField(source='mealplan.from_date')
-    mealplan_type = serializers.ReadOnlyField(source='mealplan.meal_type.name')
+    recipe_data = RecipeOverviewSerializer(source='recipe', read_only=True, required=False)
+    meal_plan_data = MealPlanSerializer(source='mealplan', read_only=True, required=False)
     servings = CustomDecimalField()
 
     def update(self, instance, validated_data):
@@ -1170,18 +1168,19 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note', 'mealplan_from_date',
-                  'mealplan_type')
+        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings',)
         read_only_fields = ('id',)
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
-    recipe_mealplan = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
+    list_recipe_data = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
     created_by = UserSerializer(read_only=True)
     completed_at = serializers.DateTimeField(allow_null=True, required=False)
+    mealplan_id = serializers.IntegerField(required=False, write_only=True,
+                                           help_text='If a mealplan id is given try to find existing or create new ShoppingListRecipe with that meal plan and link entry to it')
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -1215,10 +1214,20 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
+
+        if validated_data['mealplan_id']:
+            slr, created = ShoppingListRecipe.objects.get_or_create(mealplan_id=validated_data['mealplan_id'], mealplan__space=self.context['request'].space)
+            validated_data['list_recipe'] = slr
+            del validated_data['mealplan_id']
+
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
+
+        if validated_data['mealplan_id']:
+            del validated_data['mealplan_id']
+
         # update the onhand for food if shopping_add_onhand is True
         if user.userpreference.shopping_add_onhand:
             if checked := validated_data.get('checked', None):
@@ -1232,8 +1241,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         model = ShoppingListEntry
         fields = (
             'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked',
-            'recipe_mealplan',
-            'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
+            'list_recipe_data', 'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until', 'mealplan_id'
         )
         read_only_fields = ('id', 'created_by', 'created_at')
 

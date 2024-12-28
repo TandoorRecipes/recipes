@@ -154,7 +154,7 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
  * compute the second (info) row of the line item based on the entries and the device settings
  */
 const infoRow = computed(() => {
-    if(props.hideInfoRow){
+    if (props.hideInfoRow) {
         return ''
     }
 
@@ -171,14 +171,16 @@ const infoRow = computed(() => {
             authors.push(e.createdBy.displayName)
         }
 
-        if (e.recipeMealplan !== null) {
-            let recipe_name = e.recipeMealplan.recipeName
-            if (recipes.indexOf(recipe_name) === -1) {
-                recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
+        if (e.listRecipe != null) {
+            if (e.listRecipeData.recipe != null) {
+                let recipe_name = e.listRecipeData.recipeData.name
+                if (recipes.indexOf(recipe_name) === -1) {
+                    recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
+                }
             }
 
-            if ('mealplan_from_date' in e.recipeMealplan) {
-                let meal_plan_entry = (e?.recipeMealplan?.mealplanType || '') + ' (' + DateTime.fromJSDate(e.recipeMealplan.mealplanFromDate).toLocaleString(DateTime.DATETIME_SHORT) + ')'
+            if (e.listRecipeData.mealplan != null) {
+                let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
                 if (meal_pans.indexOf(meal_plan_entry) === -1) {
                     meal_pans.push(meal_plan_entry)
                 }

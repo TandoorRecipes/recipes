@@ -5,7 +5,7 @@
         </template>
         <p>
         {{ props.text}}
-            <v-btn color="success" class="float-right" v-if="props.actionText != ''" @click="emit('click')">{{ actionText}}</v-btn>
+            <v-btn color="success" class="float-right" v-if="props.actionText" @click="emit('click')">{{ actionText}}</v-btn>
         </p>
     </v-alert>
 </template>

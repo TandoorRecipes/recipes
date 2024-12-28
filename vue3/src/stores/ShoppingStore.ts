@@ -15,6 +15,7 @@ import {
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {isDelayed} from "@/utils/logic_utils";
+import {DateTime} from "luxon";
 
 const _STORE_ID = "shopping_store"
 const UNDEFINED_CATEGORY = 'shopping_undefined_category'
@@ -157,7 +158,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let items: IShoppingListFood[] = []
 
         entries.value.forEach(shoppingListEntry => {
-            if (shoppingListEntry.recipeMealplan && shoppingListEntry.recipeMealplan.mealplan == mealPlanId) {
+            if (shoppingListEntry.listRecipe && shoppingListEntry.listRecipeData.mealplan == mealPlanId) {
                 items.push({
                     food: shoppingListEntry.food,
                     entries: new Map<number, ShoppingListEntry>().set(shoppingListEntry.id!, shoppingListEntry)
@@ -307,8 +308,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let recipes = [] as ShoppingListRecipe[]
 
         entries.value.forEach(e => {
-            if (e.recipeMealplan != null && recipes.findIndex(x => x.id == e.recipeMealplan.id) == -1) {
-                recipes.push(e.recipeMealplan)
+            if (e.listRecipe != null && recipes.findIndex(x => x.id == e.listRecipe) == -1) {
+                recipes.push(e.listRecipeData)
             }
         })
 
@@ -331,8 +332,14 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             groupingKey = entry.food?.supermarketCategory?.name
         } else if (group == ShoppingGroupingOptions.CREATED_BY) {
             groupingKey = entry.createdBy.displayName
-        } else if (group == ShoppingGroupingOptions.RECIPE && entry.recipeMealplan != null) {
-            groupingKey = entry.recipeMealplan.recipeName
+        } else if (group == ShoppingGroupingOptions.RECIPE && entry.listRecipeData != null) {
+            if (entry.listRecipeData.recipeData != null) {
+                groupingKey = entry.listRecipeData.recipeData.name
+                if (entry.listRecipeData.mealPlanData != null) {
+                    groupingKey += ' - ' + entry.listRecipeData.mealPlanData.mealType.name + ' - ' + DateTime.fromJSDate(entry.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT)
+                }
+            }
+
         }
 
         if (!structure.categories.has(groupingKey) && !(group == ShoppingGroupingOptions.CATEGORY && useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only)) {

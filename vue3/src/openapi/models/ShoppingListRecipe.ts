@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from '../runtime';
+import type { MealPlan } from './MealPlan';
+import {
+    MealPlanFromJSON,
+    MealPlanFromJSONTyped,
+    MealPlanToJSON,
+    MealPlanToJSONTyped,
+} from './MealPlan';
+import type { RecipeOverview } from './RecipeOverview';
+import {
+    RecipeOverviewFromJSON,
+    RecipeOverviewFromJSONTyped,
+    RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
+} from './RecipeOverview';
+
 /**
  * 
  * @export
@@ -30,12 +45,6 @@ export interface ShoppingListRecipe {
      * @type {string}
      * @memberof ShoppingListRecipe
      */
-    readonly recipeName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipe
-     */
     name?: string;
     /**
      * 
@@ -45,45 +54,37 @@ export interface ShoppingListRecipe {
     recipe?: number | null;
     /**
      * 
+     * @type {RecipeOverview}
+     * @memberof ShoppingListRecipe
+     */
+    readonly recipeData: RecipeOverview;
+    /**
+     * 
      * @type {number}
      * @memberof ShoppingListRecipe
      */
     mealplan?: number | null;
     /**
      * 
+     * @type {MealPlan}
+     * @memberof ShoppingListRecipe
+     */
+    readonly mealPlanData: MealPlan;
+    /**
+     * 
      * @type {number}
      * @memberof ShoppingListRecipe
      */
     servings: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipe
-     */
-    readonly mealplanNote: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof ShoppingListRecipe
-     */
-    readonly mealplanFromDate: Date;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListRecipe
-     */
-    readonly mealplanType: string;
 }
 
 /**
  * Check if a given object implements the ShoppingListRecipe interface.
  */
 export function instanceOfShoppingListRecipe(value: object): value is ShoppingListRecipe {
-    if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
+    if (!('recipeData' in value) || value['recipeData'] === undefined) return false;
+    if (!('mealPlanData' in value) || value['mealPlanData'] === undefined) return false;
     if (!('servings' in value) || value['servings'] === undefined) return false;
-    if (!('mealplanNote' in value) || value['mealplanNote'] === undefined) return false;
-    if (!('mealplanFromDate' in value) || value['mealplanFromDate'] === undefined) return false;
-    if (!('mealplanType' in value) || value['mealplanType'] === undefined) return false;
     return true;
 }
 
@@ -98,14 +99,12 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'recipeName': json['recipe_name'],
         'name': json['name'] == null ? undefined : json['name'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'recipeData': RecipeOverviewFromJSON(json['recipe_data']),
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
+        'mealPlanData': MealPlanFromJSON(json['meal_plan_data']),
         'servings': json['servings'],
-        'mealplanNote': json['mealplan_note'],
-        'mealplanFromDate': (new Date(json['mealplan_from_date'])),
-        'mealplanType': json['mealplan_type'],
     };
 }
 
@@ -113,7 +112,7 @@ export function ShoppingListRecipeToJSON(json: any): ShoppingListRecipe {
     return ShoppingListRecipeToJSONTyped(json, false);
 }
 
-export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

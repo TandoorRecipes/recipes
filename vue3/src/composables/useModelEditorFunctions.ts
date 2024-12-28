@@ -4,6 +4,7 @@ import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/
 import {useI18n} from "vue-i18n";
 import {ResponseError} from "@/openapi";
 import {getNestedProperty} from "@/utils/utils";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 // TODO type emit parameter (https://mokkapps.de/vue-tips/emit-event-from-composable)
 // TODO alternatively there seems to be a getContext method to get the calling context (good practice?)
@@ -119,7 +120,13 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         }
 
         let name = ''
+
+
         if (editingObj.value.id) {
+            if (useUserPreferenceStore().serverSettings.debug) {
+                name += '#' + editingObj.value.id
+            }
+
             modelClass.value.model.toStringKeys.forEach(key => {
                 let value = getNestedProperty(editingObj.value, key)
                 name += ' ' + ((value != null) ? value : '')

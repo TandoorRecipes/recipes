@@ -95,7 +95,7 @@ export interface PatchedShoppingListEntry {
      * @type {ShoppingListRecipe}
      * @memberof PatchedShoppingListEntry
      */
-    readonly recipeMealplan?: ShoppingListRecipe;
+    readonly listRecipeData?: ShoppingListRecipe;
     /**
      * 
      * @type {User}
@@ -126,6 +126,12 @@ export interface PatchedShoppingListEntry {
      * @memberof PatchedShoppingListEntry
      */
     delayUntil?: Date | null;
+    /**
+     * If a mealplan id is given try to find existing or create new ShoppingListRecipe with that meal plan and link entry to it
+     * @type {number}
+     * @memberof PatchedShoppingListEntry
+     */
+    mealplanId?: number;
 }
 
 /**
@@ -152,12 +158,13 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
         'amount': json['amount'] == null ? undefined : json['amount'],
         'order': json['order'] == null ? undefined : json['order'],
         'checked': json['checked'] == null ? undefined : json['checked'],
-        'recipeMealplan': json['recipe_mealplan'] == null ? undefined : ShoppingListRecipeFromJSON(json['recipe_mealplan']),
+        'listRecipeData': json['list_recipe_data'] == null ? undefined : ShoppingListRecipeFromJSON(json['list_recipe_data']),
         'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
         'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
         'delayUntil': json['delay_until'] == null ? undefined : (new Date(json['delay_until'])),
+        'mealplanId': json['mealplan_id'] == null ? undefined : json['mealplan_id'],
     };
 }
 
@@ -165,7 +172,7 @@ export function PatchedShoppingListEntryToJSON(json: any): PatchedShoppingListEn
     return PatchedShoppingListEntryToJSONTyped(json, false);
 }
 
-export function PatchedShoppingListEntryToJSONTyped(value?: Omit<PatchedShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedShoppingListEntryToJSONTyped(value?: Omit<PatchedShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -181,6 +188,7 @@ export function PatchedShoppingListEntryToJSONTyped(value?: Omit<PatchedShopping
         'checked': value['checked'],
         'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
+        'mealplan_id': value['mealplanId'],
     };
 }
 

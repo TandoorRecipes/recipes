@@ -11,7 +11,7 @@
 
         <v-tabs v-model="tab" :disabled="loading" grow>
             <v-tab prepend-icon="$mealplan" value="plan">{{ $t('Meal_Plan') }}</v-tab>
-            <v-tab prepend-icon="$shopping" value="shopping">{{ $t('Shopping_list') }}</v-tab>
+            <v-tab prepend-icon="$shopping" value="shopping" :disabled="!isUpdate()">{{ $t('Shopping_list') }}</v-tab>
         </v-tabs>
 
         <v-card-text>
@@ -67,26 +67,23 @@
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="shopping">
-                    <v-text-field :label="$t('Shopping_input_placeholder')" density="compact" @keyup.enter="addIngredient()" v-model="ingredientInput" hide-details>
-                        <template #append>
-                            <v-btn
-                                density="comfortable"
-                                @click="addIngredient()"
-                                :icon="ingredientInputIcon"
-                                color="create"
-                            ></v-btn>
-                        </template>
-                    </v-text-field>
+                    <closable-help-alert class="mb-2" :text="$t('MealPlanShoppingHelp')"></closable-help-alert>
 
-                    <v-progress-linear class="mt-2" indeterminate v-if="useShoppingStore().currentlyUpdating"></v-progress-linear>
+                    <v-row v-if="isUpdate()" dense style="max-height: 75vh" class="overflow-scroll">
+                        <v-col>
+                            <shopping-list-entry-input :loading="useShoppingStore().currentlyUpdating" :meal-plan="editingObj"></shopping-list-entry-input>
 
-                    <v-list v-if="editingObj.id">
-                        <shopping-line-item
-                            v-for="slf in useShoppingStore().getMealPlanEntries(editingObj.id)"
-                            :shopping-list-food="slf"
-                            hide-info-row
-                        ></shopping-line-item>
-                    </v-list>
+                            <v-list v-if="editingObj.id">
+                                <shopping-line-item
+                                    v-for="slf in useShoppingStore().getMealPlanEntries(editingObj.id)"
+                                    :shopping-list-food="slf"
+                                    hide-info-row
+                                ></shopping-line-item>
+                            </v-list>
+                        </v-col>
+                    </v-row>
+
+
                 </v-tabs-window-item>
             </v-tabs-window>
 
@@ -99,7 +96,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref} from "vue";
-import {ApiApi, MealPlan, MealType, ShoppingListEntry} from "@/openapi";
+import {ApiApi, MealPlan, MealType, ShoppingListRecipe} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {DateTime} from "luxon";
@@ -111,8 +108,9 @@ import {VDateInput} from "vuetify/labs/VDateInput";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
-import {IShoppingListFood} from "@/types/Shopping";
 import {useShoppingStore} from "@/stores/ShoppingStore";
+import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.vue";
+import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<MealPlan>, required: false, default: null},
@@ -125,9 +123,10 @@ const emit = defineEmits(['create', 'save', 'delete', 'close'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, applyItemDefaults, loading, editingObj, modelClass} = useModelEditorFunctions<MealPlan>('MealPlan', emit)
 
 // object specific data (for selects/display)
-const tab = ref('shopping')
+const tab = ref('plan')
 
 const dateRangeValue = ref([] as Date[])
+const shoppingListRecipe = ref<ShoppingListRecipe | undefined>(undefined)
 
 onMounted(() => {
     const api = new ApiApi()
@@ -163,6 +162,12 @@ onMounted(() => {
             }, existingItemFunction: () => {
                 initializeDateRange()
                 useShoppingStore().refreshFromAPI(editingObj.value.id!)
+
+                api.apiShoppingListRecipeList({mealplan: editingObj.value.id!}).then(r => {
+                    if (r.results.length > 0) {
+                        shoppingListRecipe.value = r.results[0]
+                    }
+                })
             }
         },)
     })
@@ -196,6 +201,24 @@ function initializeDateRange() {
     } else {
         dateRangeValue.value = [editingObj.value.fromDate, editingObj.value.fromDate]
     }
+}
+
+/**
+ * manually create a shopping list recipe (without a recipe) that links manually created entries to the shopping list
+ */
+function createShoppingListRecipe() {
+    let api = new ApiApi()
+
+    let slr = {
+        mealplan: editingObj.value.id,
+        servings: editingObj.value.servings,
+    } as ShoppingListRecipe
+
+    api.apiShoppingListRecipeCreate({shoppingListRecipe: slr}).then(r => {
+        shoppingListRecipe.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
 }
 
 </script>

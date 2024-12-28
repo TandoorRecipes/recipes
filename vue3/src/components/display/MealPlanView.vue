@@ -34,7 +34,7 @@
             </v-card>
 
 
-            <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem"
+            <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem" :close-after-create="false"
                                @create="(arg: any) => useMealPlanStore().plans.set(arg.id, arg)"></model-edit-dialog>
         </v-col>
     </v-row>
