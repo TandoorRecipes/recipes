@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
+from django_js_reverse import views as reverse_views
 
 urlpatterns = [
     path('', include('cookbook.urls')),
@@ -42,6 +43,7 @@ if settings.ENABLE_METRICS:
 
 if settings.GUNICORN_MEDIA or settings.DEBUG:
     urlpatterns += re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    urlpatterns += re_path(r'^jsreverse.json$', reverse_views.urls_js, name='js_reverse'),
 
 for p in settings.PLUGINS:
     try:

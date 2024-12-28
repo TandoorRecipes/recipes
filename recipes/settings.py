@@ -182,6 +182,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'webpack_loader',
     'django_vite',
+    'django_js_reverse',
     'hcaptcha',
     'allauth',
     'allauth.account',
