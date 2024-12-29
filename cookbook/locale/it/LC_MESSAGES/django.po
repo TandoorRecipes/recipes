@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-01 06:58+0000\n"
+"PO-Revision-Date: 2024-12-09 00:58+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -520,7 +520,7 @@ msgstr "Web"
 
 #: .\cookbook\models.py:1411 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr "Raw"
+msgstr "Crudo"
 
 #: .\cookbook\models.py:1467
 msgid "Food Alias"
@@ -1440,8 +1440,9 @@ msgid ""
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
 "Le tabelle in markdown sono difficili da creare a mano. Si raccomanda "
-"l'utilizzo di un editor di come <a href=\"https://www.tablesgenerator.com/"
-"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">questo.</a>"
+"l'utilizzo di un editor di tabelle come <a href=\"https://www.tablesgenerator"
+".com/markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\""
+">questo.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -2203,8 +2204,8 @@ msgstr ""
 "            Le migrazioni non andate a buon fine probabilmente causeranno il "
 "malfunzionamento di parti importanti dell'applicazione.\n"
 "            Se una migrazione non riesce, assicurati di avere la versione "
-"più recente e, in tal caso, pubblica il registro della migrazione e la "
-"panoramica di seguito in una segnalazione di problema su GitHub.\n"
+"più recente e, in tal caso, pubblica il registro della migrazione e il "
+"riepilogo che segue in una segnalazione di problema su GitHub.\n"
 "        "
 
 #: .\cookbook\templates\system.html:182
@@ -2765,7 +2766,7 @@ msgid ""
 "but not recommended as some features only work with postgres databases."
 msgstr ""
 "Questa applicazione non è in esecuzione con un database Postgres. Va bene, "
-"ma non è consigliato perché alcune funzionalità sono disponibili solo con un "
+"ma non è consigliato perché alcune funzionalità sono disponibili solo con "
 "database Postgres."
 
 #: .\cookbook\views\views.py:360

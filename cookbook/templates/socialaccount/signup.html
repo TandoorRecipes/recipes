@@ -16,7 +16,6 @@
         {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
         {% endif %}
-
         <div class="form-group">
             {{ form.username |as_crispy_field }}
         </div>
@@ -30,7 +29,7 @@
             <div class="form-group">
                 {{ form.terms |as_crispy_field }}
                 <small>
-                    {% trans 'I accept the follwoing' %}
+                    {% trans 'I accept the following' %}
                     {% if TERMS_URL != '' %}
                         <a href="{{ TERMS_URL }}" target="_blank"
                            rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>
