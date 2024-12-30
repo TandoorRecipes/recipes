@@ -44,8 +44,19 @@
                     :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
                 >
                     <template v-slot:item.action="{ item }">
-                        <v-btn color="edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
-                            <v-icon icon="$edit"></v-icon>
+                        <v-btn class="float-right" icon="$menu" variant="plain">
+                            <v-icon icon="$menu"></v-icon>
+                            <v-menu activator="parent">
+                                <v-list>
+                                    <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
+                                        {{ $t('Edit') }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" link>
+                                        {{ $t('Merge') }}
+                                        <model-merge-dialog :model="model" activator="parent"></model-merge-dialog>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
                         </v-btn>
                     </template>
                 </v-data-table-server>
@@ -71,6 +82,7 @@ import {useUrlSearchParams} from "@vueuse/core";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
@@ -156,7 +168,7 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
         tablePage.value = page // TODO remove once page bug is fixed

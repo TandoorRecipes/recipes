@@ -83,6 +83,8 @@ export type Model = {
     disableListView?: boolean | undefined,
 
     isPaginated: boolean | undefined,
+    isMerge?: boolean | undefined,
+    isTree?: boolean | undefined,
 
     tableHeaders: ModelTableHeaders[],
 }
@@ -116,6 +118,7 @@ export const TFood = {
     icon: 'fa-solid fa-carrot',
 
     isPaginated: true,
+    isMerge: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
