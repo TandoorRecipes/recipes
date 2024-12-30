@@ -1215,7 +1215,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
 
-        if validated_data['mealplan_id']:
+        if 'mealplan_id' in validated_data:
             slr, created = ShoppingListRecipe.objects.get_or_create(mealplan_id=validated_data['mealplan_id'], mealplan__space=self.context['request'].space)
             validated_data['list_recipe'] = slr
             del validated_data['mealplan_id']
@@ -1225,7 +1225,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     def update(self, instance, validated_data):
         user = self.context['request'].user
 
-        if validated_data['mealplan_id']:
+        if 'mealplan_id' in validated_data:
             del validated_data['mealplan_id']
 
         # update the onhand for food if shopping_add_onhand is True
