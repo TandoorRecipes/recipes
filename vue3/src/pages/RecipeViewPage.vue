@@ -1,6 +1,6 @@
 <template>
     <v-container :class="{'ps-0 pe-0 pt-0': mobile}">
-        <recipe-view :recipe="recipe"></recipe-view>
+        <recipe-view v-model="recipe"></recipe-view>
     </v-container>
 
 </template>

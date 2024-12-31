@@ -1,15 +1,16 @@
 <template>
     <tr>
-        <template v-if="props.ingredient.isHeader">
-            <td colspan="4"><b>{{ props.ingredient.note }}</b></td>
+        <template v-if="ingredient.isHeader">
+            <td colspan="4"><b>{{ ingredient.note }}</b></td>
         </template>
         <template v-else>
-            <td>{{ props.ingredient.amount * props.ingredientFactor }}</td>
-            <td><span v-if="props.ingredient.unit != null">{{ props.ingredient.unit.name }}</span></td>
-            <td><span v-if="props.ingredient.food != null">{{ props.ingredient.food.name }}</span></td>
+            <td><v-checkbox-btn v-model="ingredient.checked" color="success"></v-checkbox-btn></td>
+            <td>{{ ingredient.amount * props.ingredientFactor }}</td>
+            <td><span v-if="ingredient.unit != null">{{ ingredient.unit.name }}</span></td>
+            <td><span v-if="ingredient.food != null">{{ ingredient.food.name }}</span></td>
             <td v-if="props.showNotes">
-                <v-icon class="far fa-comment float-right" v-if="props.ingredient.note != '' && props.ingredient.note != undefined" @click="showTooltip = !showTooltip">
-                    <v-tooltip v-model="showTooltip" activator="parent" location="start">{{ props.ingredient.note }}</v-tooltip>
+                <v-icon class="far fa-comment float-right" v-if="ingredient.note != '' && ingredient.note != undefined" @click="showTooltip = !showTooltip">
+                    <v-tooltip v-model="showTooltip" activator="parent" location="start">{{ ingredient.note }}</v-tooltip>
                 </v-icon>
             </td>
         </template>
@@ -21,11 +22,9 @@
 import {PropType, ref} from 'vue'
 import {Ingredient} from "@/openapi";
 
+const ingredient = defineModel<Ingredient>({required: true})
+
 const props = defineProps({
-    ingredient: {
-        type: {} as PropType<Ingredient>,
-        required: true
-    },
     showNotes: {
         type: Boolean,
         default: true

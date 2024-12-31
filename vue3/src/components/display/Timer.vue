@@ -2,7 +2,7 @@
     <v-progress-linear :model-value="timerProgress" color="primary" height="5"></v-progress-linear>
     <v-alert :color="timerColor" class="rounded-0" variant="tonal">
         <v-alert-title><i class="fas fa-stopwatch mr-1"></i> {{ Duration.fromMillis(durationSeconds * 1000).toFormat('hh:mm:ss') }}</v-alert-title>
-        Finished at {{ DateTime.now().plus({'seconds': durationSeconds}).toLocaleString(DateTime.TIME_SIMPLE) }}
+        {{$t('FinishedAt')}} {{ DateTime.now().plus({'seconds': durationSeconds}).toLocaleString(DateTime.TIME_SIMPLE) }}
         <template #close>
             <v-btn-group divided>
                 <v-btn width="40" @click="changeTimer(-60)"><i class="fas fa-minus"></i>1</v-btn>

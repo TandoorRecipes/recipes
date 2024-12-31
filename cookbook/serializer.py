@@ -808,6 +808,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
     amount = CustomDecimalField()
     conversions = serializers.SerializerMethodField('get_conversions')
+    checked = serializers.BooleanField(read_only=True, default=False, help_text='Just laziness to have a checked field on the frontend API client')
 
     @extend_schema_field(list)
     def get_used_in_recipes(self, obj):

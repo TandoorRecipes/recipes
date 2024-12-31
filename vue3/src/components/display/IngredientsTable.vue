@@ -1,8 +1,8 @@
 <template>
-    <v-table density="compact" v-if="props.ingredients.length > 0">
+    <v-table density="compact" v-if="ingredients.length > 0">
 
         <tbody>
-        <ingredients-table-row v-for="i in props.ingredients" :ingredient="i" :key="i.id" :show-notes="props.showNotes"
+        <ingredients-table-row v-for="(ing, i) in ingredients" v-model="ingredients[i]" :key="ing.id" :show-notes="props.showNotes"
                                :ingredient-factor="ingredientFactor"></ingredients-table-row>
         </tbody>
 
@@ -15,11 +15,9 @@ import {Ingredient} from "@/openapi";
 import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
 import draggable from 'vuedraggable'
 
+const ingredients = defineModel<Ingredient[]>({required: true})
+
 const props = defineProps({
-    ingredients: {
-        type: Array as PropType<Array<Ingredient>>,
-        default: [],
-    },
     showNotes: {
         type: Boolean,
         default: true
@@ -33,7 +31,7 @@ const props = defineProps({
 const mutable_ingredients = ref([] as Ingredient[])
 
 onMounted(() => {
-    mutable_ingredients.value = props.ingredients
+    mutable_ingredients.value = ingredients.value
 })
 
 </script>

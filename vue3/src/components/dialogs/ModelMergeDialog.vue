@@ -37,7 +37,7 @@ const target = ref({} as Food)
 
 function mergeModel() {
     let api = new ApiApi()
-    if (target != null) {
+    if (target.value != null) {
         loading.value = true
         api.apiFoodMergeUpdate({id: props.sourceId!, food: {} as Food, target: target.value.id!}).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
