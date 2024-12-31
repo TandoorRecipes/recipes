@@ -9,7 +9,6 @@
     </template>
 
     <template v-if="recipe.name != undefined">
-
         <v-card class="mt-md-4 rounded-0">
             <recipe-image
                 max-height="25vh"

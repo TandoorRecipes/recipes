@@ -5,7 +5,7 @@
             <v-expansion-panel-text>
                 <v-container>
                     <v-row v-for="(s, i) in props.steps">
-                        <v-col class="pa-1">
+                        <v-col class="pa-1" cols="12" md="6">
                             <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
                             <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor"></ingredients-table>
                         </v-col>

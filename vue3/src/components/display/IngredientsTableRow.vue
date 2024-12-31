@@ -4,10 +4,12 @@
             <td colspan="4"><b>{{ ingredient.note }}</b></td>
         </template>
         <template v-else>
-            <td><v-checkbox-btn v-model="ingredient.checked" color="success"></v-checkbox-btn></td>
-            <td>{{ ingredient.amount * props.ingredientFactor }}</td>
-            <td><span v-if="ingredient.unit != null">{{ ingredient.unit.name }}</span></td>
-            <td><span v-if="ingredient.food != null">{{ ingredient.food.name }}</span></td>
+            <td>
+                <v-checkbox-btn v-model="ingredient.checked" color="success"></v-checkbox-btn>
+            </td>
+            <td @click="ingredient.checked = !ingredient.checked">{{ ingredient.amount * props.ingredientFactor }}</td>
+            <td @click="ingredient.checked = !ingredient.checked"><span v-if="ingredient.unit != null">{{ ingredient.unit.name }}</span></td>
+            <td @click="ingredient.checked = !ingredient.checked"><span v-if="ingredient.food != null">{{ ingredient.food.name }}</span></td>
             <td v-if="props.showNotes">
                 <v-icon class="far fa-comment float-right" v-if="ingredient.note != '' && ingredient.note != undefined" @click="showTooltip = !showTooltip">
                     <v-tooltip v-model="showTooltip" activator="parent" location="start">{{ ingredient.note }}</v-tooltip>
