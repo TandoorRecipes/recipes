@@ -7,6 +7,7 @@
             :color="visibleMessage.type"
             :vertical="props.vertical"
             :location="props.location"
+            :close-on-back="false"
             multi-line
         >
             <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>
