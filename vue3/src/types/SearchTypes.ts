@@ -1,8 +1,8 @@
 export interface  SearchResult {
     name: string,
-    recipe_id?: number,
+    recipeId?: number,
     suffix?: string,
     description?: string,
     icon?: string,
-    image?: string,
+    image?: string|null,
 }

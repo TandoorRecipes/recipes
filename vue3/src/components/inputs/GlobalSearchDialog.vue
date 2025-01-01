@@ -20,6 +20,7 @@
                 <v-text-field
                     id="id_global_search_input"
                     v-model="searchQuery"
+                    @update:modelValue="debouncedAsyncSearch"
                     autocomplete="off"
                     clearable
                     placeholder="Search"
@@ -30,7 +31,7 @@
                 <v-card :variant="cardVariant(index)" v-for="(item, index) in searchResults" hover class="mt-1" @click="selectedResult = index" :key="index">
                     <v-card-title @click="goToSelectedRecipe(index)">
                         <v-avatar v-if="item.image" :image="item.image"></v-avatar>
-                        <v-avatar v-else-if="item.recipe_id !== undefined" color="tandoor">{{ item.name.charAt(0) }}</v-avatar>
+                        <v-avatar v-else-if="item.recipeId !== undefined" color="tandoor">{{ item.name.charAt(0) }}</v-avatar>
                         <v-icon :icon="item.icon" v-if="item.icon"></v-icon>
                         {{ item.name }}
                     </v-card-title>
@@ -50,7 +51,7 @@
 
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="dialog=false" variant="plain">{{$t('Close')}}</v-btn>
+                <v-btn @click="dialog=false" variant="plain">{{ $t('Close') }}</v-btn>
             </v-card-actions>
         </v-card>
 
@@ -60,12 +61,14 @@
 
 <script setup lang="ts">
 
-import {computed, defineComponent, onMounted, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {SearchResult} from "@/types/SearchTypes";
-import {ApiApi, Recipe, RecipeFlat} from "@/openapi";
+import {ApiApi, Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import {useRouter} from "vue-router";
 import {useDisplay} from "vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import {useDebounceFn} from "@vueuse/core";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 const router = useRouter()
 const {mobile} = useDisplay()
@@ -75,32 +78,48 @@ const recipes = ref([] as Recipe[])
 const flatRecipes = ref([] as RecipeFlat[])
 const searchQuery = ref(null as string | null)
 const selectedResult = ref(0)
+const asyncSearchResults = ref([] as RecipeOverview[])
+
+const flatListLoading = ref(false)
+const asyncLoading = ref(false)
 
 /**
  * build array of search results
  * uses custom type to be able to incorporate recent items, plans, books, ... at a later stage
  */
 const searchResults = computed(() => {
-    let search_results = [] as Array<SearchResult>
+    let searchResults = [] as Array<SearchResult>
 
     if (searchQuery.value != '' && searchQuery.value != null) {
-        search_results.push({name: searchQuery.value, icon: 'fas fa-search', suffix: 'Advanced Search'} as SearchResult)
+        // TODO add link to advanced search once it exists
+        //searchResults.push({name: searchQuery.value, icon: 'fas fa-search', suffix: 'Advanced Search'} as SearchResult)
 
         flatRecipes.value.filter(fr => fr.name.toLowerCase().includes(searchQuery.value.toLowerCase())).slice(0, 10).forEach(r => {
-            search_results.push({name: r.name, image: r.image, recipe_id: r.id} as SearchResult)
+            searchResults.push({name: r.name, image: r.image, recipeId: r.id} as SearchResult)
         })
+
+        if (searchResults.length < 3) {
+            asyncSearchResults.value.slice(0, 5).forEach(r => {
+                if (searchResults.findIndex(x => x.recipeId == r.id) == -1) {
+                    searchResults.push({name: r.name, image: r.image, recipeId: r.id, icon: 'fa-solid fa-globe'})
+                }
+            })
+        }
+
     } else {
-        // search_results.push({name: 'Recent 1', icon: 'fas fa-history',} as SearchResult)
-        // search_results.push({name: 'Recent 2', icon: 'fas fa-history',} as SearchResult)
-        // search_results.push({name: 'Recent 3', icon: 'fas fa-history',} as SearchResult)
+        // show first 5 recipes by default
+
+        // TODO special "quick links" if applicable
+        // searchResults.push({name: 'Recent 1', icon: 'fas fa-history',} as SearchResult)
+        // searchResults.push({name: 'Recent 2', icon: 'fas fa-history',} as SearchResult)
+        // searchResults.push({name: 'Recent 3', icon: 'fas fa-history',} as SearchResult)
 
         flatRecipes.value.slice(0, 5).forEach(r => {
-            search_results.push({name: r.name, image: r.image, recipe_id: r.id} as SearchResult)
+            searchResults.push({name: r.name, image: r.image, recipeId: r.id} as SearchResult)
         })
     }
 
-    return search_results
-
+    return searchResults
 })
 
 watch(dialog, (newValue) => {
@@ -147,11 +166,33 @@ onMounted(() => {
         }
     })
 
+    flatListLoading.value = true
     const api = new ApiApi()
     api.apiRecipeFlatList().then(r => {
         flatRecipes.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        flatListLoading.value = false
     })
 })
+
+/**
+ * search for query on server but debounce search so its not searched on every keypress
+ */
+const debouncedAsyncSearch = useDebounceFn(() => {
+    if (searchQuery.value != null && searchQuery.value != '') {
+        let api = new ApiApi()
+        asyncLoading.value = true
+        api.apiRecipeList({query: searchQuery.value}).then(r => {
+            asyncSearchResults.value = r.results
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }).finally(() => {
+            asyncLoading.value = false
+        })
+    }
+}, 300)
 
 /**
  * determines the style for selected elements
@@ -171,9 +212,9 @@ function cardVariant(index: number) {
 function goToSelectedRecipe(index: number) {
     dialog.value = false
     let searchResult = searchResults.value[index]
-    console.log('going to', searchResult.recipe_id)
-    if (searchResult.recipe_id != null) {
-        router.push({name: 'view_recipe', params: {'id': searchResult.recipe_id}})
+    console.log('going to', searchResult.recipeId)
+    if (searchResult.recipeId != null) {
+        router.push({name: 'view_recipe', params: {'id': searchResult.recipeId}})
     }
 }
 </script>
