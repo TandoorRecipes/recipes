@@ -6,6 +6,7 @@
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
+        :is-changed="editingObjChanged"
         :model-class="modelClass"
         :object-name="editingObjName()">
         <v-card-text>
@@ -47,7 +48,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<ShoppingListEntry>('ShoppingListEntry', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<ShoppingListEntry>('ShoppingListEntry', emit)
 
 // object specific data (for selects/display)
 

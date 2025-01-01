@@ -6,6 +6,7 @@
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
+        :is-changed="editingObjChanged"
         :model-class="modelClass"
         :object-name="editingObjName()">
 
@@ -145,7 +146,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<Recipe>('Recipe', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Recipe>('Recipe', emit)
 
 // object specific data (for selects/display)
 const tab = ref("recipe")

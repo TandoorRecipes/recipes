@@ -6,17 +6,16 @@
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
+        :is-changed="editingObjChanged"
         :model-class="modelClass"
         :object-name="editingObjName()">
         <v-card-text>
             <v-form :disabled="loading">
-
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                 <v-text-field :label="$t('Plural')" v-model="editingObj.pluralName"></v-text-field>
                 <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
                 <v-select :label="$t('BaseUnit')" :hint="$t('BaseUnitHelp')" :items="BASE_UNITS" v-model="editingObj.baseUnit"></v-select>
                 <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
-
             </v-form>
         </v-card-text>
     </model-editor-base>
@@ -40,7 +39,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<Unit>('Unit', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Unit>('Unit', emit)
 
 // object specific data (for selects/display)
 

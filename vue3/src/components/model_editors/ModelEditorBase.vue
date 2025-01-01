@@ -1,13 +1,19 @@
 <template>
     <v-card :loading="loading">
-        <v-closable-card-title :title="$t(modelClass.model.localizationKey)" :sub-title="objectName" :icon="modelClass.model.icon" @close="emit('close');" :hide-close="!dialog"></v-closable-card-title>
+        <v-closable-card-title
+            :title="$t(modelClass.model.localizationKey) + ((isChanged) ? '*' : '')"
+            :sub-title="objectName"
+            :icon="modelClass.model.icon"
+            @close="emit('close');"
+            :hide-close="!dialog"
+        ></v-closable-card-title>
 
         <v-divider></v-divider>
         <slot name="default">
 
         </slot>
         <v-divider></v-divider>
-        <v-card-actions >
+        <v-card-actions>
             <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate && !modelClass.model.disableDelete" :disabled="loading">{{ $t('Delete') }}
                 <delete-confirm-dialog :object-name="objectName" :model-name="$t(modelClass.model.localizationKey)" @delete="emit('delete')"></delete-confirm-dialog>
             </v-btn>
@@ -15,6 +21,20 @@
             <v-btn color="save" prepend-icon="$save" @click="emit('save')" v-if="isUpdate && !modelClass.model.disableUpdate" :disabled="loading">{{ $t('Save') }}</v-btn>
         </v-card-actions>
     </v-card>
+
+    <v-dialog width="600px" v-model="leaveConfirmDialog">
+        <v-card>
+            <v-closable-card-title v-model="leaveConfirmDialog" :title="$t('Confirm')"></v-closable-card-title>
+            <v-card-text>
+                {{$t('WarnPageLeave')}}
+            </v-card-text>
+            <v-card-actions>
+                <v-btn @click="leaveConfirmDialog = false; leaveGoTo = null">{{ $t('Cancel') }}</v-btn>
+                <v-btn :to="leaveGoTo" color="warning">{{ $t('Confirm') }}</v-btn>
+            </v-card-actions>
+        </v-card>
+
+    </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -22,6 +42,8 @@
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {GenericModel} from "@/types/Models";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import {onBeforeRouteLeave, RouteLocationNormalized} from "vue-router";
+import {ref} from "vue";
 
 const emit = defineEmits(['save', 'delete', 'close'])
 
@@ -30,7 +52,20 @@ const props = defineProps({
     dialog: {type: Boolean, default: false},
     objectName: {type: String, default: ''},
     modelClass: {type: GenericModel, default: null},
-    isUpdate: {type: Boolean, default: false}
+    isUpdate: {type: Boolean, default: false},
+    isChanged: {type: Boolean, default: false},
+})
+
+const leaveConfirmDialog = ref(false)
+const leaveGoTo = ref<RouteLocationNormalized | null>(null)
+
+onBeforeRouteLeave((to, from) => {
+    if (props.isChanged && !leaveConfirmDialog.value) {
+        leaveConfirmDialog.value = true
+        leaveGoTo.value = to
+        return false
+    }
+    return true
 })
 
 </script>

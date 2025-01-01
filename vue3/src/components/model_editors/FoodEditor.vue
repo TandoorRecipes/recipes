@@ -6,6 +6,7 @@
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
+        :is-changed="editingObjChanged"
         :model-class="modelClass"
         :object-name="editingObjName()">
 
@@ -133,7 +134,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<Food>('Food', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Food>('Food', emit)
 
 
 // object specific data (for selects/display)

@@ -21,7 +21,7 @@
 
 import {useRouter} from "vue-router";
 import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models";
-import {defineAsyncComponent, PropType, shallowRef} from "vue";
+import {defineAsyncComponent, onMounted, PropType, shallowRef} from "vue";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()

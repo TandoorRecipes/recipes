@@ -1,5 +1,5 @@
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {onBeforeMount, ref} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models";
 import {useI18n} from "vue-i18n";
 import {ResponseError} from "@/openapi";
@@ -15,7 +15,15 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     const editingObj = ref({} as T)
     const modelClass = ref({} as GenericModel)
 
+    const editingObjChanged = ref(false)
+
     const {t} = useI18n()
+
+    watch(() => editingObj.value, (newValue, oldValue) => {
+        if (Object.keys(oldValue).length > 0) {
+            editingObjChanged.value = true
+        }
+    }, {deep: true})
 
     /**
      * before mounting the component UI set the model class based on the given model name
@@ -24,6 +32,26 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         modelClass.value = getGenericModelFromString(modelName, t)
     })
 
+    onMounted(() => {
+        setupPageLeaveWarning()
+    })
+
+    /**
+     * add event listener to page unload event (also triggered by router) to prevent accidentally closing with unsaved changes
+     */
+    function setupPageLeaveWarning() {
+        window.onbeforeunload = (event) => {
+            if (editingObjChanged.value) {
+                event.returnValue = "this_string_cant_be_empty_because_of_firefox"
+                return "this_string_cant_be_empty_because_of_firefox"
+            }
+        }
+    }
+
+    /**
+     * apply the defaults to the item given in the itemsDefaults value of the setupState function
+     * @param itemDefaults
+     */
     function applyItemDefaults(itemDefaults: T) {
         if (Object.keys(itemDefaults).length > 0) {
             Object.keys(itemDefaults).forEach(k => {
@@ -156,6 +184,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 console.error(err)
                 useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
             }).finally(() => {
+                editingObjChanged.value = false
                 loading.value = false
             })
         } else {
@@ -168,6 +197,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 console.error(err)
                 useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
             }).finally(() => {
+                editingObjChanged.value = false
                 loading.value = false
             })
         }
@@ -177,13 +207,18 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
      * deletes the editing object from the database
      */
     function deleteObject() {
+        loading.value = true
+
         modelClass.value.destroy(editingObj.value.id).then((r: any) => {
             emit('delete', editingObj.value)
             editingObj.value = {} as T
         }).catch((err: any) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            editingObjChanged.value = false
+            loading.value = false
         })
     }
 
-    return {setupState, saveObject, deleteObject, isUpdate, editingObjName, applyItemDefaults, loading, editingObj, modelClass}
+    return {setupState, saveObject, deleteObject, isUpdate, editingObjName, applyItemDefaults, loading, editingObj, editingObjChanged, modelClass}
 }
