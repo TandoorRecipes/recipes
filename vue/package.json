@@ -17,7 +17,7 @@
     "@popperjs/core": "^2.11.7",
     "@vue/cli": "^5.0.8",
     "@vue/composition-api": "1.7.2",
-    "axios": "^1.6.7",
+    "axios": "^1.7.9",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^9.1.0",
