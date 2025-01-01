@@ -37,7 +37,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     })
 
     /**
-     * add event listener to page unload event (also triggered by router) to prevent accidentally closing with unsaved changes
+     * add event listener to page unload event to prevent accidentally closing with unsaved changes
      */
     function setupPageLeaveWarning() {
         window.onbeforeunload = (event) => {
