@@ -1,8 +1,8 @@
-Besides the normal django username and password authentication this application supports multiple 
+Besides the normal django username and password authentication this application supports multiple
 methods of central account management and authentication.
 
 ## Allauth
-[Django Allauth](https://django-allauth.readthedocs.io/en/latest/index.html) is an awesome project that 
+[Django Allauth](https://django-allauth.readthedocs.io/en/latest/index.html) is an awesome project that
 allows you to use a [huge number](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) of different
 authentication providers.
 
@@ -11,8 +11,8 @@ They basically explain everything in their documentation, but the following is a
 !!! warning "Public Providers"
     If you choose Google, Github or any other publicly available service as your authentication provider anyone
     with an account on that site can create an account on your installation.
-    A new account does not have any permission but it is still **not recommended** to give public access to 
-    your installation. 
+    A new account does not have any permission but it is still **not recommended** to give public access to
+    your installation.
 
 Choose a provider from the [list](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) and install it using the environment variable `SOCIAL_PROVIDERS` as shown
 in the example below.
@@ -28,15 +28,15 @@ SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect,allauth.socialac
 
 ### Configuration, via environment
 
-Depending on your authentication provider you **might need** to configure it. 
-This needs to be done through the settings system. To make the system flexible (allow multiple providers) and to 
+Depending on your authentication provider you **might need** to configure it.
+This needs to be done through the settings system. To make the system flexible (allow multiple providers) and to
 not require another file to be mounted into the container the configuration ins done through a single
 environment variable. The downside of this approach is that the configuration needs to be put into a single line
 as environment files loaded by docker compose don't support multiple lines for a single variable.
 
 The line data needs to either be in json or as Python dictionary syntax.
 
-Take the example configuration from the allauth docs, fill in your settings and then inline the whole object 
+Take the example configuration from the allauth docs, fill in your settings and then inline the whole object
 (you can use a service like [www.freeformatter.com](https://www.freeformatter.com/json-formatter.html) for formatting).
 Assign it to the additional `SOCIALACCOUNT_PROVIDERS` variable.
 
@@ -44,6 +44,13 @@ Assign it to the additional `SOCIALACCOUNT_PROVIDERS` variable.
 The example below is for a generic OIDC provider with PKCE enabled. Most values need to be customized for your specifics!
 ```ini
 SOCIALACCOUNT_PROVIDERS = "{ 'openid_connect': { 'OAUTH_PKCE_ENABLED': True, 'APPS': [ { 'provider_id': 'oidc', 'name': 'My-IDM', 'client_id': 'my_client_id', 'secret': 'my_client_secret', 'settings': { 'server_url': 'https://idm.example.com/oidc/recipes' } } ] } }"
+```
+
+Because this JSON contains sensitive data (client id and secret), you may instead choose to save the JSON in a file
+and set the environment variable `SOCIALACCOUNT_PROVIDERS_FILE` to the path of the file containing the JSON.
+
+```
+SOCIALACCOUNT_PROVIDERS_FILE=/run/secrets/socialaccount_providers.txt
 ```
 
 !!! success "Improvements ?"
@@ -81,7 +88,7 @@ SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"keycloak","n
 You are now able to sign in using Keycloak after a restart of the service.
 
 ### Linking accounts
-To link an account to an already existing normal user go to the settings page of the user and link it. 
+To link an account to an already existing normal user go to the settings page of the user and link it.
 Here you can also unlink your account if you no longer want to use a social login method.
 
 ## LDAP
@@ -111,7 +118,7 @@ AUTH_LDAP_TLS_CACERTFILE=/etc/ssl/certs/own-ca.pem
     If you just set `REMOTE_USER_AUTH=1` without any additional configuration, _anybody_ can authenticate with _any_ username!
 
 !!! Info "Community Contributed Tutorial"
-    This tutorial was provided by a community member. We are not able to provide any support! Please only use, if you know what you are doing! 
+    This tutorial was provided by a community member. We are not able to provide any support! Please only use, if you know what you are doing!
 
 In order use external authentication (i.e. using a proxy auth like Authelia, Authentik, etc.) you will need to:
 

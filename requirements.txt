@@ -1,9 +1,9 @@
-Django==4.2.16
-cryptography===43.0.1
+Django==4.2.17
+cryptography===44.0.0
 django-annoying==0.10.6
 django-cleanup==8.0.0
 django-crispy-forms==2.3
-crispy-bootstrap4==2024.1
+crispy-bootstrap4==2024.10
 django-tables2==2.7.0
 djangorestframework==3.15.2
 drf-writable-nested==0.7.0
@@ -20,13 +20,13 @@ requests==2.32.3
 six==1.16.0
 webdavclient3==3.14.6
 whitenoise==6.7.0
-icalendar==5.0.11
+icalendar==6.1.0
 pyyaml==6.0.2
 uritemplate==4.1.1
 beautifulsoup4==4.12.3
 microdata==0.8.0
 mock==5.1.0
-Jinja2==3.1.4
+Jinja2==3.1.5
 django-webpack-loader==3.0.1
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==0.61.1
@@ -41,16 +41,16 @@ django-hCaptcha==0.2.0
 python-ldap==3.4.4
 django-auth-ldap==4.6.0
 pyppeteer==2.0.0
-pytube==15.0.0
+pytubefix==8.5.1
 aiohttp==3.10.11
 inflection==0.5.1
 redis==5.2.0
 
 # Development
 pytest==8.0.0
-pytest-django==4.8.0
+pytest-django==4.9.0
 pytest-cov===5.0.0
-pytest-factoryboy==2.6.0
+pytest-factoryboy==2.7.0
 pytest-html==4.1.1
 pytest-asyncio==0.23.5
 pytest-xdist==3.6.1
