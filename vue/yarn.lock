@@ -11247,10 +11247,10 @@ vue-codemod@^0.0.5:
     source-map "^0.6.1"
     yargs "^16.2.0"
 
-vue-cookies@^1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.8.3.tgz#0c7ce26d150f7ac50356ae17cb4ead1122013b82"
-  integrity sha512-VBRsyRMVdahBgFfh389TMHPmDdr4URDJNMk4FKSCfuNITs7+jitBDhwyL4RJd3WUsfOYNNjPAkfbehyH9AFuoA==
+vue-cookies@^1.8.5:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.8.5.tgz#dc8e02919d378e23dd6571fcc5f8c4cfd41175f6"
+  integrity sha512-7BbERTTMntFq+sGIcQYCoANjb3aAEgFx0/9wpyC5EoJo5FAStdJO+/i/zzZwHCix11sQgCQKiCHa/kJ8dt/N3w==
 
 vue-demi@>=0.14.5:
   version "0.14.6"
