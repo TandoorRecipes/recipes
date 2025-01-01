@@ -12,7 +12,7 @@
     "@codemirror/autocomplete": "^6.13.0",
     "@codemirror/commands": "^6.3.3",
     "@codemirror/lang-markdown": "^6.2.4",
-    "@codemirror/state": "^6.3.3",
+    "@codemirror/state": "^6.5.0",
     "@codemirror/view": "^6.24.1",
     "@popperjs/core": "^2.11.7",
     "@vue/cli": "^5.0.8",
