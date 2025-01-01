@@ -191,23 +191,13 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             autoSyncLastTimestamp.value = new Date();
 
             let api = new ApiApi()
-            let requestParameters = {pageSize: 200} as ApiShoppingListEntryListRequest
+            let requestParameters = {pageSize: 50, page: 1} as ApiShoppingListEntryListRequest
             if (mealPlanId) {
                 requestParameters.mealplan = mealPlanId
             }
 
-            api.apiShoppingListEntryList(requestParameters).then((r) => {
-                entries.value = new Map<number, ShoppingListEntry>
-                // TODO properly load pages
-                r.results.forEach((e) => {
-                    entries.value.set(e.id!, e)
-                })
-                currentlyUpdating.value = false
-                initialized.value = true
-            }).catch((err) => {
-                currentlyUpdating.value = false
-                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-            })
+            entries.value = new Map<number, ShoppingListEntry>
+            recLoadShoppingListEntries(requestParameters)
 
             api.apiSupermarketCategoryList().then(r => {
                 supermarketCategories.value = r.results
@@ -221,6 +211,29 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             })
         }
+    }
+
+    /**
+     * recursively load shopping list entries from paginated api
+     * @param requestParameters
+     */
+    function recLoadShoppingListEntries(requestParameters: ApiShoppingListEntryListRequest){
+        let api = new ApiApi()
+        api.apiShoppingListEntryList(requestParameters).then((r) => {
+                r.results.forEach((e) => {
+                    entries.value.set(e.id!, e)
+                })
+                if(r.next){
+                    requestParameters.page = requestParameters.page + 1
+                    recLoadShoppingListEntries(requestParameters)
+                } else {
+                    currentlyUpdating.value = false
+                    initialized.value = true
+                }
+            }).catch((err) => {
+                currentlyUpdating.value = false
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            })
     }
 
     /**
