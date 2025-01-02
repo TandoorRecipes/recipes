@@ -155,14 +155,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
 
 
         if (editingObj.value.id) {
-            if (useUserPreferenceStore().serverSettings.debug) {
-                name += '#' + editingObj.value.id
-            }
-
-            modelClass.value.model.toStringKeys.forEach(key => {
-                let value = getNestedProperty(editingObj.value, key)
-                name += ' ' + ((value != null) ? value : '')
-            })
+            name =  modelClass.value.getLabel(editingObj.value, useUserPreferenceStore().serverSettings.debug)
         }
 
         if (name == '') {

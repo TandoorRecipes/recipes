@@ -27,6 +27,8 @@ export enum PreparedMessage {
     UPDATE_SUCCESS = 'UPDATE_SUCCESS',
     CREATE_SUCCESS = 'CREATE_SUCCESS',
     DELETE_SUCCESS = 'DELETE_SUCCESS',
+    MERGE_SUCCESS = 'MERGE_SUCCESS',
+    MOVE_SUCCESS = 'MOVE_SUCCESS',
     NOT_FOUND = 'NOT_FOUND',
 }
 
@@ -143,6 +145,12 @@ export const useMessageStore = defineStore('message_store', () => {
         }
         if (preparedMessage == PreparedMessage.CREATE_SUCCESS) {
             addMessage(MessageType.SUCCESS, {title: t('Created'), text: ''} as StructuredMessage, 6000, data)
+        }
+        if (preparedMessage == PreparedMessage.MERGE_SUCCESS) {
+            addMessage(MessageType.SUCCESS, {title: t('Merge'), text: ''} as StructuredMessage, 6000, data)
+        }
+        if (preparedMessage == PreparedMessage.MOVE_SUCCESS) {
+            addMessage(MessageType.SUCCESS, {title: t('Move'), text: ''} as StructuredMessage, 6000, data)
         }
         if (preparedMessage == PreparedMessage.NOT_FOUND) {
             addMessage(MessageType.WARNING, {title: t('NotFound'), text: t('NotFoundHelp')} as StructuredMessage, 6000, data)

@@ -46,14 +46,14 @@
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>
-                            <v-menu activator="parent">
-                                <v-list>
+                            <v-menu activator="parent" close-on-content-click>
+                                <v-list density="compact">
                                     <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
                                         {{ $t('Edit') }}
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" link>
                                         {{ $t('Merge') }}
-                                        <model-merge-dialog :model="model" :source-id="item.id" activator="parent"></model-merge-dialog>
+                                        <model-merge-dialog :model="model" :source-id="item.id" :source="item" activator="parent"></model-merge-dialog>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>

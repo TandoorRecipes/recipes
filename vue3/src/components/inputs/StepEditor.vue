@@ -59,10 +59,10 @@
                                                 :min="0"></v-number-input>
                             </v-col>
                             <v-col cols="3">
-                                <model-select model="Unit" v-model="ingredient.unit" hide-details></model-select>
+                                <model-select model="Unit" v-model="ingredient.unit" allow-create hide-details></model-select>
                             </v-col>
                             <v-col cols="3">
-                                <model-select model="Food" v-model="ingredient.food" hide-details></model-select>
+                                <model-select model="Food" v-model="ingredient.food" allow-create hide-details></model-select>
                             </v-col>
                             <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
                                 <v-text-field :label="$t('Note')" v-model="ingredient.note" hide-details></v-text-field>
@@ -153,8 +153,8 @@
                 <v-form>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
                                     :min="0"></v-number-input>
-                    <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')"></model-select>
-                    <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')"></model-select>
+                    <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" allow-create></model-select>
+                    <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" allow-create></model-select>
                     <v-text-field :label="$t('Note')" v-model="step.ingredients[editingIngredientIndex].note"></v-text-field>
                 </v-form>
             </v-card-text>

@@ -1,5 +1,23 @@
-import {ApiApi} from "@/openapi";
+import {
+    AccessToken,
+    ApiApi, Automation,
+    Food,
+    Ingredient,
+    InviteLink, Keyword,
+    MealPlan,
+    MealType,
+    Property, PropertyType,
+    Recipe, ShoppingListEntry,
+    Step,
+    Supermarket,
+    SupermarketCategory,
+    Unit,
+    UnitConversion, User, UserFile,
+    UserSpace
+} from "@/openapi";
 import {VDataTable} from "vuetify/components";
+import {getNestedProperty} from "@/utils/utils";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
@@ -32,7 +50,7 @@ function registerModel(model: Model) {
 export function getListModels() {
     let modelList: Model[] = []
     SUPPORTED_MODELS.forEach((model) => {
-        if(!model.disableListView){
+        if (!model.disableListView) {
             modelList.push(model)
         }
     })
@@ -71,8 +89,8 @@ export type Model = {
     icon: string,
     toStringKeys: Array<string>,
 
-    itemValue: string|undefined,
-    itemLabel: string|undefined,
+    itemValue: string | undefined,
+    itemLabel: string | undefined,
 
     disableList?: boolean | undefined,
     disableRetrieve?: boolean | undefined,
@@ -90,6 +108,7 @@ export type Model = {
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
+// used for (string) name based passing of models (to configure model selects, editor, ...)
 export type EditorSupportedModels =
     'UnitConversion'
     | 'AccessToken'
@@ -111,6 +130,29 @@ export type EditorSupportedModels =
     | 'UserFile'
     | 'ShoppingListEntry'
     | 'User'
+
+// used to type methods/parameters in conjunction with configuration type
+export type EditorSupportedTypes =
+    UnitConversion
+    | AccessToken
+    | InviteLink
+    | UserSpace
+    | MealType
+    | MealPlan
+    | Property
+    | Recipe
+    | Step
+    | Ingredient
+    | Food
+    | Unit
+    | Supermarket
+    | SupermarketCategory
+    | PropertyType
+    | Automation
+    | Keyword
+    | UserFile
+    | ShoppingListEntry
+    | User
 
 export const TFood = {
     name: 'Food',
@@ -136,6 +178,7 @@ export const TUnit = {
     icon: 'fa-solid fa-scale-balanced',
 
     isPaginated: true,
+    isMerge: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -152,6 +195,7 @@ export const TKeyword = {
     icon: 'fa-solid fa-tags',
 
     isPaginated: true,
+    isMerge: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -287,6 +331,7 @@ export const TSupermarketCategory = {
     icon: 'fa-solid fa-boxes-stacked',
 
     isPaginated: true,
+    isMerge: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -551,7 +596,7 @@ export class GenericModel {
      * @param obj object to create
      * @return promise of request
      */
-    create(obj: any) {
+    create(obj: EditorSupportedTypes) {
         if (this.model.disableCreate) {
             throw new Error('Cannot create on this model!')
         } else {
@@ -568,7 +613,7 @@ export class GenericModel {
      * @param obj object to update
      * @return promise of request
      */
-    update(id: number, obj: any) {
+    update(id: number, obj: EditorSupportedTypes) {
         if (this.model.disableUpdate) {
             throw new Error('Cannot update on this model!')
         } else {
@@ -609,6 +654,43 @@ export class GenericModel {
             destroyRequestParams['id'] = id
             return this.api[`api${this.model.name}Destroy`](destroyRequestParams)
         }
+    }
+
+    /**
+     * merge the given source into the target by updating all entries using source to use target instead and deleting source
+     * @param source object to be replaced by target
+     * @param target object replacing source
+     */
+    merge(source: EditorSupportedTypes, target: EditorSupportedTypes) {
+        if (!this.model.isMerge) {
+            throw new Error('Cannot merge on this model!')
+        } else {
+            let mergeRequestParams: any = {id: source.id, target: target.id}
+            mergeRequestParams[this.model.name.toLowerCase()] = {}
+
+            return this.api[`api${this.model.name}MergeUpdate`](mergeRequestParams)
+        }
+    }
+
+    /**
+     * gets a label for a specific object instance using the model toStringKeys property
+     * @param obj obj to get label for
+     * @param includeId debug function to include the ID as part of the object label
+     */
+    getLabel(obj: EditorSupportedTypes, includeId?: boolean) {
+        let name = ''
+
+        if (obj) {
+            if (includeId) {
+                name += '#' + obj.id
+            }
+
+            this.model.toStringKeys.forEach(key => {
+                let value = getNestedProperty(obj, key)
+                name += ' ' + ((value != null) ? value : '')
+            })
+        }
+        return name
     }
 
 }
