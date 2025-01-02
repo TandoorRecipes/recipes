@@ -21,7 +21,7 @@
                                         <div class="align-self-center">
                                             <v-btn variant="flat" icon="">
                                                 <i class="fas fa-plus"></i>
-                                                <model-edit-dialog model="MealPlan"></model-edit-dialog>
+                                                <model-edit-dialog model="MealPlan" :item-defaults="{fromDate: mealPlanGridItem.date.toJSDate()}" :close-after-create="false" :close-after-save="false"></model-edit-dialog>
                                             </v-btn>
                                         </div>
                                     </div>

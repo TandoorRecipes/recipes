@@ -55,10 +55,24 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
             loading.value = true
             const api = new ApiApi()
-            return api.apiMealPlanList({fromDate: DateTime.fromJSDate(from_date).toISODate() as string, toDate: DateTime.fromJSDate(to_date).toISODate() as string, pageSize: 100}).then(r => {
+            return api.apiMealPlanList({
+                fromDate: DateTime.fromJSDate(from_date).toISODate() as string,
+                toDate: DateTime.fromJSDate(to_date).toISODate() as string,
+                pageSize: 100
+            }).then(r => {
+                let foundIds: number[] = []
                 r.results.forEach((p) => {
-                    plans.value.set(p.id, p)
+                    plans.value.set(p.id!, p)
+                    foundIds.push(p.id!)
                 })
+
+                // delete entries that no longer exist
+                plans.value.forEach(p => {
+                    if (!foundIds.includes(p.id!)) {
+                        plans.value.delete(p.id!)
+                    }
+                })
+
                 currently_updating.value = [new Date(0), new Date(0)]
             }).catch((err) => {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

@@ -19,6 +19,10 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
 
     const {t} = useI18n()
 
+    /**
+     * watch editing object to detect changes
+     * set editingObjChanged to true when a change is detected
+     */
     watch(() => editingObj.value, (newValue, oldValue) => {
         if (Object.keys(oldValue).length > 0) {
             editingObjChanged.value = true
@@ -55,7 +59,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     function applyItemDefaults(itemDefaults: T) {
         if (Object.keys(itemDefaults).length > 0) {
             Object.keys(itemDefaults).forEach(k => {
-                console.log('applying default ', k)
+                console.log('applying default ', k, itemDefaults[k])
                 editingObj.value[k] = itemDefaults[k]
             })
         }
@@ -209,8 +213,9 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     function deleteObject() {
         loading.value = true
 
-        modelClass.value.destroy(editingObj.value.id).then((r: any) => {
+        return modelClass.value.destroy(editingObj.value.id).then((r: any) => {
             emit('delete', editingObj.value)
+            console.log('deleted')
             editingObj.value = {} as T
         }).catch((err: any) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)

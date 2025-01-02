@@ -2,8 +2,8 @@
     <model-editor-base
         :loading="loading"
         :dialog="dialog"
-        @save="saveObject"
-        @delete="deleteObject"
+        @save="saveObject().then((obj:MealPlan) => { useMealPlanStore().plans.set(obj.id, obj); loadShoppingListEntries()})"
+        @delete="useMealPlanStore().plans.delete(editingObj.id); deleteObject()"
         @close="emit('close')"
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
@@ -53,15 +53,14 @@
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="editingObj.recipe" v-if="editingObj && editingObj.recipe"></recipe-card>
+
+                                <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details v-if="editingObj.recipe && !isUpdate()"></v-checkbox>
+                                <!-- TODO review shopping before add -->
                             </v-col>
                         </v-row>
                         <v-row dense>
-                            <v-col cols="12" md="6">
+                            <v-col cols="12">
                                 <v-textarea :label="$t('Note')" v-model="editingObj.note" rows="3"></v-textarea>
-                            </v-col>
-                            <v-col cols="12" md="6" v-if="!isUpdate()">
-                                <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details></v-checkbox>
-                                <!--                        <v-checkbox :label="$t('review_shopping')" v-model="addToShopping" hide-details></v-checkbox>-->
                             </v-col>
                         </v-row>
                     </v-form>
@@ -70,25 +69,22 @@
                 <v-tabs-window-item value="shopping">
                     <closable-help-alert class="mb-2" :text="$t('MealPlanShoppingHelp')"></closable-help-alert>
 
-                    <v-row v-if="isUpdate()" dense style="max-height: 75vh" class="overflow-scroll">
+                    <v-row v-if="isUpdate()" dense style="max-height: 75vh" class="overflow-y-scroll">
                         <v-col>
                             <shopping-list-entry-input :loading="useShoppingStore().currentlyUpdating" :meal-plan="editingObj"></shopping-list-entry-input>
-
                             <v-list v-if="editingObj.id">
                                 <shopping-line-item
                                     v-for="slf in useShoppingStore().getMealPlanEntries(editingObj.id)"
                                     :shopping-list-food="slf"
                                     hide-info-row
+                                    :key="slf.food.id"
                                 ></shopping-line-item>
                             </v-list>
                         </v-col>
                     </v-row>
 
-
                 </v-tabs-window-item>
             </v-tabs-window>
-
-
         </v-card-text>
     </model-editor-base>
 
@@ -96,7 +92,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref} from "vue";
+import {nextTick, onMounted, PropType, ref} from "vue";
 import {ApiApi, MealPlan, MealType, ShoppingListRecipe} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -112,6 +108,7 @@ import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.vue";
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 const props = defineProps({
     item: {type: {} as PropType<MealPlan>, required: false, default: null},
@@ -121,13 +118,23 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, applyItemDefaults, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<MealPlan>('MealPlan', emit)
+const {
+    setupState,
+    deleteObject,
+    saveObject,
+    isUpdate,
+    editingObjName,
+    applyItemDefaults,
+    loading,
+    editingObj,
+    editingObjChanged,
+    modelClass
+} = useModelEditorFunctions<MealPlan>('MealPlan', emit)
 
 // object specific data (for selects/display)
 const tab = ref('plan')
 
 const dateRangeValue = ref([] as Date[])
-const shoppingListRecipe = ref<ShoppingListRecipe | undefined>(undefined)
 
 onMounted(() => {
     const api = new ApiApi()
@@ -155,20 +162,22 @@ onMounted(() => {
                 editingObj.value.servings = 1
                 editingObj.value.mealType = defaultMealType
 
-                editingObj.value.addshopping = !!useUserPreferenceStore().userSettings.mealplanAutoaddShopping
+                editingObj.value.addshopping = useUserPreferenceStore().userSettings.mealplanAutoaddShopping
 
                 applyItemDefaults(props.itemDefaults)
 
+                if (editingObj.value.toDate < editingObj.value.fromDate) {
+                    editingObj.value.toDate = editingObj.value.fromDate
+                }
+
                 initializeDateRange()
+
+                nextTick(() => {
+                    editingObjChanged.value = false
+                })
             }, existingItemFunction: () => {
                 initializeDateRange()
-                useShoppingStore().refreshFromAPI(editingObj.value.id!)
-
-                api.apiShoppingListRecipeList({mealplan: editingObj.value.id!}).then(r => {
-                    if (r.results.length > 0) {
-                        shoppingListRecipe.value = r.results[0]
-                    }
-                })
+                loadShoppingListEntries()
             }
         },)
     })
@@ -181,11 +190,22 @@ onMounted(() => {
 function updateDate() {
     if (dateRangeValue.value != null) {
         editingObj.value.fromDate = dateRangeValue.value[0]
-        editingObj.value.toDate = dateRangeValue.value[dateRangeValue.value.length - 1]
+        if (dateRangeValue.value[dateRangeValue.value.length - 1] > editingObj.value.fromDate) {
+            editingObj.value.toDate = dateRangeValue.value[dateRangeValue.value.length - 1]
+        } else {
+            editingObj.value.toDate = editingObj.value.fromDate
+        }
     } else {
         useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
         return
     }
+}
+
+/**
+ * load all shopping list entries associated with meal plan
+ */
+function loadShoppingListEntries() {
+    useShoppingStore().refreshFromAPI(editingObj.value.id!)
 }
 
 /**
@@ -202,24 +222,6 @@ function initializeDateRange() {
     } else {
         dateRangeValue.value = [editingObj.value.fromDate, editingObj.value.fromDate]
     }
-}
-
-/**
- * manually create a shopping list recipe (without a recipe) that links manually created entries to the shopping list
- */
-function createShoppingListRecipe() {
-    let api = new ApiApi()
-
-    let slr = {
-        mealplan: editingObj.value.id,
-        servings: editingObj.value.servings,
-    } as ShoppingListRecipe
-
-    api.apiShoppingListRecipeCreate({shoppingListRecipe: slr}).then(r => {
-        shoppingListRecipe.value = r
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-    })
 }
 
 </script>

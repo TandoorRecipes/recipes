@@ -97,6 +97,18 @@ const calendarItemHeight = computed(() => {
  * watch calendar date and load entries accordingly
  */
 watch(calendarDate, () => {
+    refreshVisiblePeriod(false)
+})
+
+onMounted(() => {
+    refreshVisiblePeriod(true)
+})
+
+/**
+ * refresh data for the currently visible period
+ * @param startDateUnknown when the calendar initially loads the date is set to today but the visible period might be larger. If set loads the period day count for the past as well
+ */
+function refreshVisiblePeriod(startDateUnknown: boolean) {
     let daysInPeriod = 7
     if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'month') {
         daysInPeriod = 31
@@ -105,13 +117,14 @@ watch(calendarDate, () => {
     }
 
     let days = useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount * daysInPeriod
-    useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.now().plus({days: days}).toJSDate())
-})
 
-onMounted(() => {
-    // initial load for next 30 days
-    useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.now().plus({days: 30}).toJSDate())
-})
+    // load backwards to as on initial
+    if (startDateUnknown) {
+        useMealPlanStore().refreshFromAPI(DateTime.fromJSDate(calendarDate.value).minus({days: days}).toJSDate(), DateTime.now().plus({days: days}).toJSDate())
+    } else {
+        useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.now().plus({days: days}).toJSDate())
+    }
+}
 
 /**
  * handle drop event for calendar items on fields
@@ -124,8 +137,8 @@ function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, 
     if (currentlyDraggedMealplan.value.originalItem.mealPlan.id != undefined) {
         let mealPlan = useMealPlanStore().plans.get(currentlyDraggedMealplan.value.originalItem.mealPlan.id)
         if (mealPlan != undefined) {
-            let fromToDiff = {days: 1}
-            if (mealPlan.toDate) {
+            let fromToDiff = {days: 0}
+            if (mealPlan.toDate && mealPlan.toDate > mealPlan.fromDate) {
                 fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
             }
             // create copy of item if control is pressed
