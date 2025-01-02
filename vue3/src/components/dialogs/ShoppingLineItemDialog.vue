@@ -58,6 +58,9 @@
                                 </b>
                                 {{ e.food.name }}
                             </v-list-item-title>
+                            <v-list-item-subtitle v-if="e.completedAt">
+                                <v-icon icon="fa-solid fa-check" size="small" color="success"></v-icon> {{$t('Completed')}} {{DateTime.fromJSDate(e.completedAt).toLocaleString(DateTime.DATETIME_SHORT)}}
+                            </v-list-item-subtitle>
                             <v-list-item-subtitle v-if="e.recipeMealplan && e.recipeMealplan.recipeName !== ''">
                                 {{ e.recipeMealplan.servings }} x
                                 <router-link :to="{name: 'view_recipe', params: {id: e.recipeMealplan.id}}" target="_blank" class="text-decoration-none"><b>

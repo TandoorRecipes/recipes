@@ -167,24 +167,30 @@ const infoRow = computed(() => {
     for (let i in entries.value) {
         let e = entries.value[i]
 
-        if (authors.indexOf(e.createdBy.displayName) === -1) {
-            authors.push(e.createdBy.displayName)
-        }
+        if (!e.checked && !isDelayed(e)
+            || (e.checked && useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
+            || (isDelayed(e) && useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)) {
 
-        if (e.listRecipe != null) {
-            if (e.listRecipeData.recipe != null) {
-                let recipe_name = e.listRecipeData.recipeData.name
-                if (recipes.indexOf(recipe_name) === -1) {
-                    recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
+            if (authors.indexOf(e.createdBy.displayName) === -1) {
+                authors.push(e.createdBy.displayName)
+            }
+
+            if (e.listRecipe != null) {
+                if (e.listRecipeData.recipe != null) {
+                    let recipe_name = e.listRecipeData.recipeData.name
+                    if (recipes.indexOf(recipe_name) === -1) {
+                        recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
+                    }
+                }
+
+                if (e.listRecipeData.mealplan != null) {
+                    let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
+                    if (meal_pans.indexOf(meal_plan_entry) === -1) {
+                        meal_pans.push(meal_plan_entry)
+                    }
                 }
             }
 
-            if (e.listRecipeData.mealplan != null) {
-                let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
-                if (meal_pans.indexOf(meal_plan_entry) === -1) {
-                    meal_pans.push(meal_plan_entry)
-                }
-            }
         }
     }
 
