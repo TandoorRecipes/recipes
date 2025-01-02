@@ -26,11 +26,12 @@
                     </v-col>
                 </v-row>
 
+                <v-checkbox :label="$t('Automate')" v-model="automate" :hint="$t('MergeAutomateHelp')" persistent-hint v-if="genericModel.model.mergeAutomation"></v-checkbox>
 
             </v-card-text>
             <v-card-actions>
                 <v-btn :disabled="loading">{{ $t('Cancel') }}</v-btn>
-                <v-btn color="warning" @click="mergeModel()" :loading="loading">{{ $t('Merge') }}</v-btn>
+                <v-btn color="warning" @click="mergeModel()" :loading="loading" :disabled="!target">{{ $t('Merge') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -41,10 +42,10 @@
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {PropType, ref} from "vue";
 import {EditorSupportedModels, EditorSupportedTypes, getGenericModelFromString} from "@/types/Models";
-import {ApiApi, Food} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import {ApiApi, Automation} from "@/openapi";
 
 const props = defineProps({
     model: {type: String as PropType<EditorSupportedModels>, required: true},
@@ -56,6 +57,7 @@ const {t} = useI18n()
 
 const dialog = defineModel<boolean>({default: false})
 const loading = ref(false)
+const automate = ref(false)
 
 const genericModel = getGenericModelFromString(props.model, t)
 const target = ref<null | EditorSupportedTypes>(null)
@@ -64,16 +66,35 @@ const target = ref<null | EditorSupportedTypes>(null)
  * merge source into selected target
  */
 function mergeModel() {
+    let api = new ApiApi()
+
     if (target.value != null) {
         loading.value = true
 
         genericModel.merge(props.source, target.value).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+
+            if (automate.value && target.value != null && Object.hasOwn(props.source, 'name') && Object.hasOwn(target.value, 'name')) {
+                let automation = {
+                    name: `${t('Merge') } ${props.source.name} -> ${target.value.name}`.substring(0,128),
+                    param1: props.source.name,
+                    param2: target.value.name,
+                    type: genericModel.model.mergeAutomation
+                } as Automation
+                api.apiAutomationCreate({automation: automation}).catch(err => {
+                    useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+                }).finally(() => {
+                    loading.value = false
+                    dialog.value = false
+                })
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
-            loading.value = false
-            dialog.value = false
+            if (!automate.value) {
+                loading.value = false
+                dialog.value = false
+            }
         })
     }
 

@@ -1,6 +1,6 @@
 import {
     AccessToken,
-    ApiApi, Automation,
+    ApiApi, Automation, type AutomationTypeEnum,
     Food,
     Ingredient,
     InviteLink, Keyword,
@@ -102,6 +102,7 @@ export type Model = {
 
     isPaginated: boolean | undefined,
     isMerge?: boolean | undefined,
+    mergeAutomation?: string | AutomationTypeEnum,
     isTree?: boolean | undefined,
 
     tableHeaders: ModelTableHeaders[],
@@ -161,6 +162,7 @@ export const TFood = {
 
     isPaginated: true,
     isMerge: true,
+    mergeAutomation: 'FOOD_ALIAS',
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -179,6 +181,7 @@ export const TUnit = {
 
     isPaginated: true,
     isMerge: true,
+    mergeAutomation: 'UNIT_ALIAS',
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -196,6 +199,7 @@ export const TKeyword = {
 
     isPaginated: true,
     isMerge: true,
+    mergeAutomation: 'KEYWORD_ALIAS',
     toStringKeys: ['name'],
 
     tableHeaders: [
