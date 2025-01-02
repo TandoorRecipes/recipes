@@ -25,7 +25,7 @@
                         <v-text-field :label="$t('Plural')" v-model="editingObj.pluralName"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                        <model-select :label="$t('Category')" v-model="editingObj.supermarketCategory" model="SupermarketCategory"></model-select>
+                        <model-select :label="$t('Category')" v-model="editingObj.supermarketCategory" model="SupermarketCategory" allow-create append-to-body></model-select>
                     </v-form>
                 </v-tabs-window-item>
 
