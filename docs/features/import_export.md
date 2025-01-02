@@ -54,6 +54,320 @@ It is maintained with new fields added and contains all data to transfer your re
 It is also one of the few recipe formats that is actually structured in a way that allows for
 easy machine readability if you want to use the data for any other purpose.
 
+## JSON Import/Export
+
+This application features a very versatile import and export feature in order to offer the best experience possible and allow you to freely choose where your data goes.
+
+### Recipe JSON Format
+
+The `recipe.json` file is a structured representation of your recipes, enabling easy import and export between different platforms and applications. This format ensures that all essential details of a recipe are preserved and can be seamlessly integrated into your recipe management system.
+
+#### Structure Overview
+
+The JSON structure is designed to encapsulate all necessary information about a recipe, including its name, description, keywords, ingredients, preparation steps, and additional metadata. Below is the detailed breakdown of the structure:
+
+```json
+{
+  "name": "Fantasy Recipe Name",
+  "description": "A brief description of the recipe.",
+  "keywords": [
+    {
+      "name": "keyword1",
+      "description": "",
+      "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+      "updated_at": "YYYY-MM-DDTHH:MM:SSZ"
+    }
+    // Additional keywords...
+  ],
+  "steps": [
+    {
+      "name": "Step Name",
+      "instruction": "Detailed instructions for this step.\n\nAdditional details.",
+      "ingredients": [
+        {
+          "food": {
+            "name": "Ingredient Name",
+            "plural_name": null,
+            "ignore_shopping": false,
+            "supermarket_category": null
+          },
+          "unit": {
+            "name": "Unit Name",
+            "plural_name": "Unit Plural",
+            "description": null
+          },
+          "amount": 0.0,
+          "note": "Additional notes",
+          "order": 0,
+          "is_header": false,
+          "no_amount": false,
+          "always_use_plural_unit": false,
+          "always_use_plural_food": false
+        }
+        // Additional ingredients...
+      ],
+      "time": 0,
+      "order": 0,
+      "show_as_header": false,
+      "show_ingredients_table": true
+    }
+    // Additional steps...
+  ],
+  "working_time": 0,
+  "waiting_time": 0,
+  "internal": true,
+  "nutrition": null,
+  "servings": 0,
+  "servings_text": "",
+  "source_url": null
+}
+```
+
+### Components Description
+
+- **name**: The title of the recipe.
+- **description**: A brief overview or background of the recipe.
+- **keywords**: An array of relevant tags or categories associated with the recipe.
+    - **name**: The keyword itself.
+    - **description**: (Optional) Additional details about the keyword.
+    - **created_at** & **updated_at**: Timestamps for metadata management.
+- **steps**: An ordered list of instructions to prepare the recipe.
+    - **name**: The title of the step.
+    - **instruction**: Detailed guidance on performing the step, with `\n` representing line breaks.
+    - **ingredients**: A list of ingredients required for the step.
+        - **food**: Details about the ingredient.
+            - **name**: Ingredient name.
+            - **plural_name**: (Optional) Plural form if different from the name.
+            - **ignore_shopping**: Boolean indicating if the ingredient should be excluded from shopping lists.
+            - **supermarket_category**: (Optional) Category classification for the ingredient.
+        - **unit**: Measurement unit for the ingredient.
+            - **name**: Singular form of the unit.
+            - **plural_name**: Plural form of the unit.
+            - **description**: (Optional) Additional details about the unit.
+        - **amount**: Quantity required.
+        - **note**: (Optional) Additional notes about the ingredient.
+        - **order**: Sequence order in the ingredient list.
+        - **is_header**, **no_amount**, **always_use_plural_unit**, **always_use_plural_food**: Boolean flags for advanced formatting and usage.
+    - **time**: Time required for the step.
+    - **order**: Sequence order of the step.
+    - **show_as_header**: Boolean indicating if the step should be highlighted.
+    - **show_ingredients_table**: Boolean indicating if ingredients should be displayed in a table format.
+- **working_time**: Total active preparation time in minutes.
+- **waiting_time**: Total passive waiting time in minutes.
+- **internal**: Boolean indicating if the recipe is for internal use.
+- **nutrition**: (Optional) Nutritional information.
+- **servings**: Number of servings the recipe yields.
+- **servings_text**: (Optional) Additional servings information.
+- **source_url**: (Optional) URL source of the recipe.
+
+### Fantasy Recipe Example
+
+Below is an example of a fantasy-themed recipe structured in the described JSON format:
+
+```json
+{
+  "name": "Dragonfire Stew",
+  "description": "A fiery stew inspired by the legendary dragons, infused with exotic spices and enchanted ingredients.",
+  "keywords": [
+    {
+      "name": "fantasy",
+      "description": "",
+      "created_at": "2024-04-01T12:00:00Z",
+      "updated_at": "2024-04-01T12:00:00Z"
+    },
+    {
+      "name": "dragon cuisine",
+      "description": "",
+      "created_at": "2024-04-01T12:00:00Z",
+      "updated_at": "2024-04-01T12:00:00Z"
+    }
+  ],
+  "steps": [
+    {
+      "name": "Prepare the Fiery Broth",
+      "instruction": "Combine dragon's breath pepper, phoenix feathers, and volcanic water in a cauldron.\n\nBring to a rolling boil over an open flame.",
+      "ingredients": [
+        {
+          "food": {
+            "name": "Dragon's Breath Pepper",
+            "plural_name": null,
+            "ignore_shopping": false,
+            "supermarket_category": null
+          },
+          "unit": {
+            "name": "tbsp",
+            "plural_name": "tbsp",
+            "description": null
+          },
+          "amount": 3.0,
+          "note": "finely ground",
+          "order": 0,
+          "is_header": false,
+          "no_amount": false,
+          "always_use_plural_unit": false,
+          "always_use_plural_food": false
+        },
+        {
+          "food": {
+            "name": "Phoenix Feathers",
+            "plural_name": null,
+            "ignore_shopping": false,
+            "supermarket_category": null
+          },
+          "unit": {
+            "name": "pieces",
+            "plural_name": "pieces",
+            "description": null
+          },
+          "amount": 5.0,
+          "note": "pure essence",
+          "order": 1,
+          "is_header": false,
+          "no_amount": false,
+          "always_use_plural_unit": false,
+          "always_use_plural_food": false
+        },
+        {
+          "food": {
+            "name": "Volcanic Water",
+            "plural_name": null,
+            "ignore_shopping": false,
+            "supermarket_category": null
+          },
+          "unit": {
+            "name": "liter",
+            "plural_name": "liters",
+            "description": null
+          },
+          "amount": 2.0,
+          "note": "boiled and cooled",
+          "order": 2,
+          "is_header": false,
+          "no_amount": false,
+          "always_use_plural_unit": false,
+          "always_use_plural_food": false
+        }
+      ],
+      "time": 30,
+      "order": 0,
+      "show_as_header": false,
+      "show_ingredients_table": true
+    },
+    {
+      "name": "Add Mystic Vegetables",
+      "instruction": "Introduce enchanted root vegetables and lunar mushrooms into the simmering broth.\n\nStir counterclockwise five times to activate the magic.",
+      "ingredients": [
+        {
+          "food": {
+            "name": "Enchanted Root Vegetables",
+            "plural_name": null,
+            "ignore_shopping": false,
+            "supermarket_category": null
+          },
+          "unit": {
+            "name": "cup",
+            "plural_name": "cups",
+            "description": null
+          },
+          "amount": 4.0,
+          "note": "chopped",
+          "order": 0,
+          "is_header": false,
+          "no_amount": false,
+          "always_use_plural_unit": false,
+          "always_use_plural_food": false
+        },
+        {
+          "food": {
+            "name": "Lunar Mushrooms",
+            "plural_name": null,
+            "ignore_shopping": false,
+            "supermarket_category": null
+          },
+          "unit": {
+            "name": "handful",
+            "plural_name": "handfuls",
+            "description": null
+          },
+          "amount": 2.0,
+          "note": "freshly harvested",
+          "order": 1,
+          "is_header": false,
+          "no_amount": false,
+          "always_use_plural_unit": false,
+          "always_use_plural_food": false
+        }
+      ],
+      "time": 20,
+      "order": 1,
+      "show_as_header": false,
+      "show_ingredients_table": true
+    }
+  ],
+  "working_time": 50,
+  "waiting_time": 60,
+  "internal": false,
+  "nutrition": {
+    "calories": 450,
+    "protein": "15g",
+    "fat": "20g",
+    "carbohydrates": "50g"
+  },
+  "servings": 6,
+  "servings_text": "Serves six adventurers",
+  "source_url": "https://fantasysrecipes.com/dragonfire-stew"
+}
+```
+
+### Zip File Structure
+
+To package the recipe along with its associated image, adhere to the following zip file structure:
+
+- **Root Zip File**: Named in the format `export_YYYY-MM-DD.zip` (e.g., `export_2024-12-09.zip`).
+  - **Inner Folder**: A folder named with any arbitrary number, followed by `.zip` (e.g., `6.zip`).
+    - **Contents of Inner Folder**:
+      - `recipe.json`: The JSON file containing the recipe data.
+      - `image.jpeg`: An image associated with the recipe (e.g., a photo of the prepared dish or a scan of the original handwritten recipe).
+
+`  export_YYYY-MM-DD.zip/
+    └── 6.zip/
+        ├── recipe.json
+        └── image.jpeg
+
+### Converting Recipe Photos to JSON
+
+To digitize recipes from physical copies (such as photos from a recipe book), follow these steps:
+
+1. **Capture the Recipe Image**:
+    - Take a clear photo of the recipe page ensuring all text and details are legible.
+
+2. **Extract Text Using OCR (Optical Character Recognition)**:
+    - Utilize OCR tools or applications (e.g., Adobe Scan, Google Keep, ChatGPT or specialized OCR software) to convert the image text into editable digital text.
+
+3. **Organize Extracted Data**:
+    - Structure the extracted text into the predefined JSON format. Pay attention to correctly mapping recipe components such as ingredients, instructions, and metadata.
+
+4. **Use a Language Model for Structuring**:
+    - Employ a language model (like GPT-4) to assist in formatting the extracted text into the JSON structure. You can prompt the model with the raw text and request it to output the structured JSON.
+
+    **Example Prompt**:
+
+    ```
+    Convert the following recipe into the specified JSON format:
+
+    [Insert extracted recipe text here]
+    ```
+
+5. **Validate the JSON**:
+    - Use online tools like [JSONLint](https://jsonlint.com/) to ensure the JSON syntax is correct and free of errors.
+
+6. **Prepare the Zip File**:
+    - Create the inner zip folder (e.g., `6.zip`) containing the `recipe.json` and `image.jpeg`.
+    - Compress the inner folder into the root zip file named `export_YYYY-MM-DD.zip`.
+
+7. **Store or Share**:
+    - The final zip file can be stored digitally for easy access, sharing, or integration with recipe management applications.
+
 ## RecipeSage
 
 Go to Settings > Export Recipe Data and select `EXPORT AS JSON-LD (BEST)`. Then simply upload the exported file
