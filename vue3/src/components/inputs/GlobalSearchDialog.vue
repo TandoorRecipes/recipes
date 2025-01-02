@@ -101,7 +101,7 @@ const searchResults = computed(() => {
         if (searchResults.length < 3) {
             asyncSearchResults.value.slice(0, 5).forEach(r => {
                 if (searchResults.findIndex(x => x.recipeId == r.id) == -1) {
-                    searchResults.push({name: r.name, image: r.image, recipeId: r.id, icon: 'fa-solid fa-globe'})
+                    searchResults.push({name: r.name, image: r.image, recipeId: r.id})
                 }
             })
         }
