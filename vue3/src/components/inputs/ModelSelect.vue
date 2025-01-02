@@ -1,8 +1,12 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
     <!-- TODO support density prop -->
-    <v-input :hint="props.hint" persistent-hint :label="props.label" >
+    <v-input :hint="props.hint" persistent-hint :label="props.label">
+        <template #prepend>
+            <slot name="prepend">
 
+            </slot>
+        </template>
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <Multiselect
 
@@ -37,6 +41,11 @@
             }"
         />
 
+        <template #append>
+            <slot name="append">
+
+            </slot>
+        </template>
     </v-input>
 </template>
 
@@ -72,7 +81,7 @@ const props = defineProps({
 
     label: {type: String, default: ''},
     hint: {type: String, default: ''},
-    density: {type: String as PropType<''|'compact'|'comfortable'>, default: ''},
+    density: {type: String as PropType<'' | 'compact' | 'comfortable'>, default: ''},
 
     searchOnLoad: {type: Boolean, default: false},
 })

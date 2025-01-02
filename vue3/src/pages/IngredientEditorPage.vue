@@ -8,10 +8,56 @@
                     text="With the ingredient editor you can edit all Ingredients that use a certain Food and/or Unit at once. This can be used to easily correct errors or change multiple recipes at once."></closable-help-alert>
                 <v-row>
                     <v-col>
-                        <model-select model="Food" v-model="selectedFood" @update:modelValue="refreshPage()" append-to-body></model-select>
+                        <model-select model="Food" v-model="selectedFood" @update:modelValue="refreshPage()" append-to-body>
+                            <template #append>
+                                <v-btn icon variant="plain" >
+                                    <v-icon icon="$menu"></v-icon>
+                                    <v-menu activator="parent">
+                                        <v-list density="compact">
+                                            <v-list-item link prepend-icon="$edit" :disabled="!selectedFood">
+                                                {{ $t('Edit') }}
+                                                <model-edit-dialog model="Food" :item="selectedFood" activator="parent" @save="(obj: Food) => {selectedFood = obj}"
+                                                                   @delete="selectedFood = null; refreshPage()"></model-edit-dialog>
+                                            </v-list-item>
+                                            <v-list-item link prepend-icon="fa-solid fa-arrows-to-dot" :disabled="!selectedFood">
+                                                {{ $t('Merge') }}
+                                                <model-merge-dialog :source="selectedFood" model="Food"
+                                                                    @change="(obj: Food) => {selectedFood = obj;refreshPage()} "></model-merge-dialog>
+                                            </v-list-item>
+                                            <v-list-item link prepend-icon="fa-solid fa-carrot" :to="{name: 'ModelListPage', params: {model: 'food'}}">
+                                                {{ $t('Database') }}
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </v-btn>
+                            </template>
+                        </model-select>
                     </v-col>
                     <v-col>
-                        <model-select model="Unit" v-model="selectedUnit" @update:modelValue="refreshPage()" append-to-body></model-select>
+                        <model-select model="Unit" v-model="selectedUnit" @update:modelValue="refreshPage()" append-to-body>
+                            <template #append>
+                                <v-btn icon variant="plain" >
+                                    <v-icon icon="$menu"></v-icon>
+                                    <v-menu activator="parent">
+                                        <v-list density="compact">
+                                            <v-list-item link prepend-icon="$edit" :disabled="!selectedUnit">
+                                                {{ $t('Edit') }}
+                                                <model-edit-dialog model="Unit" :item="selectedUnit" activator="parent" @save="(obj: Food) => {selectedUnit = obj}"
+                                                                   @delete="selectedUnit = null; refreshPage()"></model-edit-dialog>
+                                            </v-list-item>
+                                            <v-list-item link prepend-icon="fa-solid fa-arrows-to-dot" :disabled="!selectedUnit">
+                                                {{ $t('Merge') }}
+                                                <model-merge-dialog :source="selectedUnit" model="Unit"
+                                                                    @change="(obj: Food) => {selectedUnit = obj;refreshPage()} "></model-merge-dialog>
+                                            </v-list-item>
+                                             <v-list-item link prepend-icon="fa-solid fa-scale-balanced" :to="{name: 'ModelListPage', params: {model: 'unit'}}">
+                                                {{ $t('Database') }}
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
+                                </v-btn>
+                            </template>
+                        </model-select>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -27,6 +73,7 @@
                 :expanded="items.flatMap((i:Ingredient) => i.id)"
                 :page="tablePage"
                 :loading="ingredientsLoading"
+                disable-sort
             >
                 <template v-slot:header.action="{ column }">
                     <v-btn size="small" color="save" @click="updateAllIngredients()">
@@ -50,7 +97,8 @@
                 </template>
                 <template v-slot:item.unit="{ item }">
                     <model-select model="Unit" v-model="item.unit" :label="$t('Unit')" density="compact" hide-details allow-create append-to-body
-                                  @update:modelValue="item.changed = true"></model-select>
+                                  @update:modelValue="item.changed = true">
+                    </model-select>
                 </template>
                 <template v-slot:item.food="{ item }">
                     <model-select model="Food" v-model="item.food" :label="$t('Food')" density="compact" hide-details allow-create append-to-body
@@ -63,7 +111,7 @@
                 <template v-slot:item.action="{ item }">
                     <v-btn-group density="comfortable">
                         <v-btn size="small" color="save" :loading="item.loading" @click="updateIngredient(item)" :disabled="!item.changed">
-                            <v-icon icon="$save" ></v-icon>
+                            <v-icon icon="$save"></v-icon>
                         </v-btn>
                         <v-btn size="small" color="delete" :loading="item.loading">
                             <v-icon icon="$delete"></v-icon>
@@ -91,6 +139,8 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUrlSearchParams} from "@vueuse/core";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 
 const {t} = useI18n()
 const params = useUrlSearchParams('history', {})
@@ -214,6 +264,7 @@ function refreshPage() {
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     // never load unfiltered, only load if at least one filter is set
     if (!selectedFood.value && !selectedUnit.value) {
+        items.value = []
         return
     }
 

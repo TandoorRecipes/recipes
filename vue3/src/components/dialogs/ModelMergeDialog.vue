@@ -75,7 +75,7 @@ function mergeModel() {
 
         genericModel.merge(props.source, target.value).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-            emit('change')
+            emit('change', target.value)
 
             if (automate.value && target.value != null && Object.hasOwn(props.source, 'name') && Object.hasOwn(target.value, 'name')) {
                 let automation = {
