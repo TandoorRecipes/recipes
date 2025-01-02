@@ -12,6 +12,40 @@
         <model-edit-dialog model="MealPlan" v-model="dialog" :item="defaultItem" :activator="activator"></model-edit-dialog>
     </v-btn>
 
+    <v-row class="mt-5">
+        <v-col>
+            <v-text-field density="compact"></v-text-field>
+
+        </v-col>
+        <v-col>
+            <model-select model="Food" density="compact"></model-select>
+
+        </v-col>
+    </v-row>
+    <v-row class="mt-5">
+        <v-col>
+
+            <v-text-field density="comfortable"></v-text-field>
+
+        </v-col>
+        <v-col>
+
+            <model-select model="Food" density="comfortable"></model-select>
+
+        </v-col>
+    </v-row>
+    <v-row class="mt-5">
+        <v-col>
+
+            <v-text-field></v-text-field>
+        </v-col>
+        <v-col>
+
+            <model-select model="Food"></model-select>
+        </v-col>
+    </v-row>
+
+
 </template>
 
 <script setup lang="ts">
@@ -21,6 +55,7 @@ import {ApiApi, MealPlan} from "@/openapi";
 import {ref, useTemplateRef} from "vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {DateTime} from "luxon";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const image = ref(File)
 const response = ref('')

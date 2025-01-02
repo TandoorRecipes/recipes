@@ -51,9 +51,15 @@
                                     <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
                                         {{ $t('Edit') }}
                                     </v-list-item>
-                                    <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" link>
+                                    <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
                                         <model-merge-dialog :model="model" :source="item" @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-merge-dialog>
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}" v-if="genericModel.model.name == 'Food'">
+                                        {{ $t('Ingredient Editor') }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {unit_id: item.id}}" v-if="genericModel.model.name == 'Unit'">
+                                        {{ $t('Ingredient Editor') }}
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -103,12 +109,6 @@ const itemsPerPageOptions = [
     {value: 10, title: '10'},
     {value: 25, title: '25'},
     {value: 50, title: '50'},
-]
-
-const tableHeaders: VDataTableProps['headers'] = [
-    {title: t('Name'), key: 'name'},
-    {title: t('Category'), key: 'supermarketCategory.name'},
-    {title: t('Actions'), key: 'action', align: 'end'},
 ]
 
 const tablePage = ref(1)
@@ -175,6 +175,10 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     })
 }
 
+/**
+ * change models and reset page/scroll
+ * @param m
+ */
 function changeModel(m: Model) {
     tablePage.value = 1
     router.push({name: 'ModelListPage', params: {model: m.name.toLowerCase()}})

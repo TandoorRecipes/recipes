@@ -27,11 +27,13 @@ import ApiSettings from "@/components/settings/ApiSettings.vue";
 import ModelListPage from "@/pages/ModelListPage.vue";
 import ModelEditPage from "@/pages/ModelEditPage.vue";
 import RecipeImportPage from "@/pages/RecipeImportPage.vue";
+import IngredientEditorPage from "@/pages/IngredientEditorPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
     {path: '/test', component: TestPage, name: 'view_test'},
-    {path: '/settings', component: SettingsPage, name: 'view_settings', redirect: '/settings/account',
+    {
+        path: '/settings', component: SettingsPage, name: 'view_settings', redirect: '/settings/account',
         children: [
             {path: 'account', component: AccountSettings, name: 'view_settings_account'},
             {path: 'cosmetic', component: CosmeticSettings, name: 'view_settings_cosmetic'},
@@ -41,7 +43,8 @@ const routes = [
             {path: 'space-members', component: SpaceMemberSettings, name: 'view_settings_space_member'},
             {path: 'user-space', component: UserSpaceSettings, name: 'view_settings_user_space'},
             {path: 'api', component: ApiSettings, name: 'view_settings_api'},
-        ]},
+        ]
+    },
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
     {path: '/search', component: SearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
@@ -51,9 +54,10 @@ const routes = [
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
     {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
 
-    {path: '/list/:model?', component: ModelListPage,  props: true, name: 'ModelListPage'},
-    {path: '/edit/:model/:id?', component: ModelEditPage,  props: true, name: 'ModelEditPage'},
+    {path: '/list/:model?', component: ModelListPage, props: true, name: 'ModelListPage'},
+    {path: '/edit/:model/:id?', component: ModelEditPage, props: true, name: 'ModelEditPage'},
 
+    {path: '/ingredient-editor', component: IngredientEditorPage, name: 'IngredientEditorPage'},
 ]
 
 const router = createRouter({

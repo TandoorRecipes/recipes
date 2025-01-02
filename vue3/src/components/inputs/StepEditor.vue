@@ -178,7 +178,6 @@ import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import IngredientString from "@/components/display/IngredientString.vue";
-import numberInput from "../../../../vue/src/components/Modals/NumberInput.vue";
 
 const emit = defineEmits(['delete'])
 

@@ -1,13 +1,14 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
     <!-- TODO support density prop -->
-    <v-input :hint="props.hint" persistent-hint :label="props.label" class="" >
+    <v-input :hint="props.hint" persistent-hint :label="props.label" >
 
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <Multiselect
 
             :ref="`ref_${props.id}`"
-            class="material-multiselect"
+            class="material-multiselect "
+            :class="{'model-select--density-compact': props.density == 'compact', 'model-select--density-comfortable': props.density == 'comfortable', 'model-select--density-default': props.density == ''}"
             :resolve-on-load="props.searchOnLoad"
             v-model="model"
             :options="search"
@@ -53,7 +54,7 @@ const emit = defineEmits(['update:modelValue', 'create'])
 const props = defineProps({
     model: {type: String as PropType<EditorSupportedModels>, required: true},
 
-    id: {type: String, required: false, default: Math.floor(Math.random()*10000).toString()},
+    id: {type: String, required: false, default: Math.floor(Math.random() * 10000).toString()},
 
     limit: {type: Number, default: 25},
 
@@ -71,6 +72,7 @@ const props = defineProps({
 
     label: {type: String, default: ''},
     hint: {type: String, default: ''},
+    density: {type: String as PropType<''|'compact'|'comfortable'>, default: ''},
 
     searchOnLoad: {type: Boolean, default: false},
 })
@@ -79,7 +81,7 @@ const props = defineProps({
  * check if model has a non-standard value attribute defined, if not use "id" as the value attribute
  */
 const itemValue = computed(() => {
-    if(modelClass.value.model.itemValue){
+    if (modelClass.value.model.itemValue) {
         return modelClass.value.model.itemValue
     }
     return 'id'
@@ -89,7 +91,7 @@ const itemValue = computed(() => {
  * check if model has a non-standard label attribute defined, if not use "name" as the value attribute
  */
 const itemLabel = computed(() => {
-    if(modelClass.value.model.itemLabel){
+    if (modelClass.value.model.itemLabel) {
         return modelClass.value.model.itemLabel
     }
     return 'name'
@@ -135,7 +137,7 @@ function search(query: string) {
  * @param select$ reference to multiselect instance
  */
 async function createObject(object: any, select$: Multiselect) {
-    return await modelClass.value.create({name: object[itemLabel.value]}).then((createdObj : any) => {
+    return await modelClass.value.create({name: object[itemLabel.value]}).then((createdObj: any) => {
         useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
         emit('create', object)
         return createdObj
@@ -148,16 +150,28 @@ async function createObject(object: any, select$: Multiselect) {
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style>
+<style scoped>
 .material-multiselect {
-    --ms-line-height: 2.3;
-    --ms-bg: rgba(235, 235, 235, 0.3);
+    --ms-bg: rgba(210, 210, 210, 0.1);
     --ms-border-color: 0;
     --ms-border-color-active: 0;
-    border-bottom: inset 1px #323232;
+    border-bottom: inset 1px rgba(50, 50, 50, 0.8);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
+
+.model-select--density-compact {
+    --ms-line-height: 1.3;
+}
+
+.model-select--density-comfortable {
+    --ms-line-height: 1.8;
+}
+
+.model-select--density-default {
+    --ms-line-height: 2.3;
+}
+
 
 .multiselect-tag {
     background-color: #b98766 !important;
