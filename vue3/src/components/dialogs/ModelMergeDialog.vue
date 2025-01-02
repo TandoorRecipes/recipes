@@ -47,6 +47,8 @@ import {useI18n} from "vue-i18n";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {ApiApi, Automation} from "@/openapi";
 
+const emit = defineEmits(['change'])
+
 const props = defineProps({
     model: {type: String as PropType<EditorSupportedModels>, required: true},
     source: {type: {} as PropType<EditorSupportedTypes>, required: true},
@@ -73,6 +75,7 @@ function mergeModel() {
 
         genericModel.merge(props.source, target.value).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+            emit('change')
 
             if (automate.value && target.value != null && Object.hasOwn(props.source, 'name') && Object.hasOwn(target.value, 'name')) {
                 let automation = {

@@ -53,7 +53,7 @@
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" link>
                                         {{ $t('Merge') }}
-                                        <model-merge-dialog :model="model" :source-id="item.id" :source="item" activator="parent"></model-merge-dialog>
+                                        <model-merge-dialog :model="model" :source="item" @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-merge-dialog>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
