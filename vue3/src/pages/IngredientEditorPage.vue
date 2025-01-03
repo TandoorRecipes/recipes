@@ -3,14 +3,19 @@
         <v-card :loading="filtersLoading">
             <v-card-title>{{ $t('Ingredient Editor') }}</v-card-title>
             <v-card-text>
-                <closable-help-alert
-                    class="mb-2"
-                    text="With the ingredient editor you can edit all Ingredients that use a certain Food and/or Unit at once. This can be used to easily correct errors or change multiple recipes at once."></closable-help-alert>
                 <v-row>
                     <v-col>
+                        <closable-help-alert
+                            class="mb-2"
+                            :text="$t('IngredientEditorHelp')"></closable-help-alert>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="12" md="6">
+
                         <model-select model="Food" v-model="selectedFood" @update:modelValue="refreshPage()" append-to-body>
                             <template #append>
-                                <v-btn icon variant="plain" >
+                                <v-btn icon variant="plain">
                                     <v-icon icon="$menu"></v-icon>
                                     <v-menu activator="parent">
                                         <v-list density="compact">
@@ -24,19 +29,22 @@
                                                 <model-merge-dialog :source="selectedFood" model="Food"
                                                                     @change="(obj: Food) => {selectedFood = obj;refreshPage()} "></model-merge-dialog>
                                             </v-list-item>
-                                            <v-list-item link prepend-icon="fa-solid fa-carrot" :to="{name: 'ModelListPage', params: {model: 'food'}}">
-                                                {{ $t('Database') }}
+                                            <v-list-item link prepend-icon="$delete" :disabled="!selectedFood">
+                                                {{ $t('Delete') }}
+                                                <delete-confirm-dialog :model-name="$t('Food')" :object-name="selectedFood.name" v-if="selectedFood"
+                                                                       @delete="deleteFood()"></delete-confirm-dialog>
                                             </v-list-item>
                                         </v-list>
                                     </v-menu>
                                 </v-btn>
+                                <v-btn icon="fa-solid fa-carrot" :to="{name: 'ModelListPage', params: {model: 'food'}}" variant="plain"></v-btn>
                             </template>
                         </model-select>
                     </v-col>
-                    <v-col>
+                    <v-col cols="12" md="6">
                         <model-select model="Unit" v-model="selectedUnit" @update:modelValue="refreshPage()" append-to-body>
                             <template #append>
-                                <v-btn icon variant="plain" >
+                                <v-btn icon variant="plain">
                                     <v-icon icon="$menu"></v-icon>
                                     <v-menu activator="parent">
                                         <v-list density="compact">
@@ -50,12 +58,15 @@
                                                 <model-merge-dialog :source="selectedUnit" model="Unit"
                                                                     @change="(obj: Food) => {selectedUnit = obj;refreshPage()} "></model-merge-dialog>
                                             </v-list-item>
-                                             <v-list-item link prepend-icon="fa-solid fa-scale-balanced" :to="{name: 'ModelListPage', params: {model: 'unit'}}">
-                                                {{ $t('Database') }}
+                                            <v-list-item link prepend-icon="$delete" :disabled="!selectedUnit">
+                                                {{ $t('Delete') }}
+                                                <delete-confirm-dialog :model-name="$t('Unit')" :object-name="selectedUnit.name" v-if="selectedUnit"
+                                                                       @delete="deleteUnit()"></delete-confirm-dialog>
                                             </v-list-item>
                                         </v-list>
                                     </v-menu>
                                 </v-btn>
+                                <v-btn icon="fa-solid fa-scale-balanced" :to="{name: 'ModelListPage', params: {model: 'unit'}}" variant="plain"></v-btn>
                             </template>
                         </model-select>
                     </v-col>
@@ -85,7 +96,7 @@
                     <tr>
                         <td :colspan="columns.length">
                             <v-btn variant="outlined" color="secondary" target="_blank" :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in item.usedInRecipes">
-                                {{ r.name }}
+                                {{ r.name }} (#{{ r.id }})
                             </v-btn>
                         </td>
                     </tr>
@@ -288,6 +299,42 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     }).finally(() => {
         ingredientsLoading.value = false
     })
+}
+
+/**
+ * delete the selected food
+ */
+function deleteFood() {
+    let api = new ApiApi()
+    if (selectedFood.value) {
+        filtersLoading.value = true
+        api.apiFoodDestroy({id: selectedFood.value.id!}).then(r => {
+            selectedFood.value = null
+            refreshPage()
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            filtersLoading.value = false
+        })
+    }
+}
+
+/**
+ * delete the selected unit
+ */
+function deleteUnit() {
+    let api = new ApiApi()
+    if (selectedUnit.value) {
+        filtersLoading.value = true
+        api.apiUnitDestroy({id: selectedUnit.value.id!}).then(r => {
+            selectedUnit.value = null
+            refreshPage()
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            filtersLoading.value = false
+        })
+    }
 }
 
 </script>

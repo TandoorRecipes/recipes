@@ -24,7 +24,7 @@
                 <v-btn class="float-right" icon="$create" color="create">
                     <i class="fa-solid fa-plus"></i>
                     <model-edit-dialog :close-after-create="false" :model="model"
-                                       @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-edit-dialog>
+                                       @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
                 </v-btn>
             </v-col>
         </v-row>
@@ -128,7 +128,7 @@ const genericModel = ref({} as GenericModel)
 // when navigating to ModelListPage from ModelListPage with a different model lifecycle hooks are not called so watch for change here
 watch(() => props.model, () => {
     genericModel.value = getGenericModelFromString(props.model, t)
-    loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})
+    loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})
 })
 
 /**

@@ -8,7 +8,7 @@
 
     <!--    </v-table>-->
 
-    <v-data-table :items="ingredients" hide-default-footer hide-default-header :headers="tableHeaders" density="compact" v-if="ingredients.length > 0" @click:row="handleRowClick">
+    <v-data-table :items="ingredients" hide-default-footer hide-default-header :headers="tableHeaders" density="compact" v-if="ingredients.length > 0" @click:row="handleRowClick" items-per-page="0">
         <template v-slot:item.checked="{ item }">
             <v-checkbox-btn v-model="item.checked" color="success"></v-checkbox-btn>
         </template>

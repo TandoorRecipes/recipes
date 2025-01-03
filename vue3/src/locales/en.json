@@ -187,6 +187,7 @@
   "Ingredient": "Ingredient",
   "Ingredient Editor": "Ingredient Editor",
   "Ingredient Overview": "Ingredient Overview",
+  "IngredientEditorHelp": "With the ingredient editor you can edit all Ingredients that use a certain Food and/or Unit at once. This can be used to easily correct errors or change multiple recipes at once.",
   "IngredientInShopping": "This ingredient is in your shopping list.",
   "Ingredients": "Ingredients",
   "Inherit": "Inherit",
