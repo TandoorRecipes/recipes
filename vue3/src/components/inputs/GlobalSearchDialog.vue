@@ -91,20 +91,19 @@ const searchResults = computed(() => {
     let searchResults = [] as Array<SearchResult>
 
     if (searchQuery.value != '' && searchQuery.value != null) {
-        // TODO add link to advanced search once it exists
-        //searchResults.push({name: searchQuery.value, icon: 'fas fa-search', suffix: 'Advanced Search'} as SearchResult)
-
         flatRecipes.value.filter(fr => fr.name.toLowerCase().includes(searchQuery.value.toLowerCase())).slice(0, 10).forEach(r => {
-            searchResults.push({name: r.name, image: r.image, recipeId: r.id} as SearchResult)
+            searchResults.push({name: r.name, image: r.image, recipeId: r.id, type: "recipe"} as SearchResult)
         })
 
         if (searchResults.length < 3) {
             asyncSearchResults.value.slice(0, 5).forEach(r => {
                 if (searchResults.findIndex(x => x.recipeId == r.id) == -1) {
-                    searchResults.push({name: r.name, image: r.image, recipeId: r.id})
+                    searchResults.push({name: r.name, image: r.image, recipeId: r.id, type: "recipe"})
                 }
             })
         }
+
+        searchResults.push({name: searchQuery.value, icon: 'fas fa-search', type: "link_advanced_search"} as SearchResult)
 
     } else {
         // show first 5 recipes by default
@@ -212,10 +211,17 @@ function cardVariant(index: number) {
 function goToSelectedRecipe(index: number) {
     dialog.value = false
     let searchResult = searchResults.value[index]
-    console.log('going to', searchResult.recipeId)
-    if (searchResult.recipeId != null) {
-        router.push({name: 'view_recipe', params: {'id': searchResult.recipeId}})
+
+    if (searchResult.type == 'link_advanced_search') {
+        router.push({name: 'view_search', query: {'query': searchQuery.value}})
+    } else {
+        console.log('going to', searchResult.recipeId)
+        if (searchResult.recipeId != null) {
+            router.push({name: 'view_recipe', params: {'id': searchResult.recipeId}})
+        }
     }
+
+
 }
 </script>
 

@@ -179,7 +179,6 @@ const selectedFood = ref<null | Food>(null)
 const selectedUnit = ref<null | Unit>(null)
 
 const deleteConfirmDialog = ref(false)
-const deleteConfirmIngredient = ref({} as EditorIngredient)
 
 onMounted(() => {
     getAndLoadParameters()

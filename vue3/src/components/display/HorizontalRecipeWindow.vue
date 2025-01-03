@@ -45,11 +45,12 @@ import {ApiApi, ApiRecipeListRequest, Keyword, Recipe, RecipeOverview} from "@/o
 import {homePageCols} from "@/utils/breakpoint_utils";
 import {useI18n} from "vue-i18n";
 import {DateTime} from "luxon";
+import {tr} from "vuetify/locale";
 
 //TODO mode ideas "last year/month/cooked long ago"
 const props = defineProps(
     {
-        mode: {type: String as PropType<'recent' | 'new' | 'keyword' | 'rating'>, required: true},
+        mode: {type: String as PropType<'recent' | 'new' | 'keyword' | 'rating' | 'random'>, required: true},
         skeletons: {type: Number, default: 0},
     }
 )
@@ -68,6 +69,8 @@ const title = computed(() => {
     switch (props.mode) {
         case 'recent':
             return t('Recently_Viewed')
+        case 'random':
+            return t('Random Recipes')
         case 'new':
             return t('New')
         case 'rating':
@@ -87,6 +90,8 @@ const icon = computed(() => {
     switch (props.mode) {
         case 'recent':
             return 'fa-solid fa-eye'
+        case 'random':
+            return 'fa-solid fa-dice'
         case 'new':
             return 'fa-solid fa-calendar-alt'
         case 'rating':
@@ -116,8 +121,10 @@ function loadRecipes() {
 
     switch (props.mode) {
         case 'recent':
-            // TODO implement correct parameter
             requestParameters.numRecent = 16
+            break;
+        case 'random':
+            requestParameters.random = 'true'
             break;
         case 'new':
             requestParameters._new = 'true'

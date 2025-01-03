@@ -1,13 +1,13 @@
 import {
     AccessToken,
-    ApiApi, Automation, type AutomationTypeEnum,
+    ApiApi, Automation, type AutomationTypeEnum, CustomFilter,
     Food,
     Ingredient,
     InviteLink, Keyword,
     MealPlan,
     MealType,
     Property, PropertyType,
-    Recipe, ShoppingListEntry,
+    Recipe, RecipeBook, RecipeBookEntry, ShoppingListEntry,
     Step,
     Supermarket,
     SupermarketCategory,
@@ -131,6 +131,9 @@ export type EditorSupportedModels =
     | 'UserFile'
     | 'ShoppingListEntry'
     | 'User'
+    | 'RecipeBook'
+    | 'RecipeBookEntry'
+    | 'CustomFilter'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -154,6 +157,9 @@ export type EditorSupportedTypes =
     | UserFile
     | ShoppingListEntry
     | User
+    | RecipeBook
+    | RecipeBookEntry
+    | CustomFilter
 
 export const TFood = {
     name: 'Food',
@@ -292,6 +298,56 @@ export const TMealPlan = {
     ]
 } as Model
 registerModel(TMealPlan)
+
+export const TRecipeBook = {
+    name: 'RecipeBook',
+    localizationKey: 'Recipe_Book',
+    icon: 'fa-solid fa-book-open',
+
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    disableListView: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TRecipeBook)
+
+export const TRecipeBookEntry = {
+    name: 'RecipeBookEntry',
+    localizationKey: 'Recipe_Book',
+    icon: 'fa-solid fa-book-open',
+
+    isPaginated: true,
+    toStringKeys: ['book.name', 'recipe.name'],
+
+    disableListView: true,
+
+    tableHeaders: [
+        {title: 'Book', key: 'book.name'},
+        {title: 'Recipe', key: 'recipe.name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TRecipeBookEntry)
+
+export const TCustomFilter = {
+    name: 'CustomFilter',
+    localizationKey: 'Custom Filter',
+    icon: 'fa-solid fa-filter',
+
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TCustomFilter)
 
 export const TUser = {
     name: 'User',
