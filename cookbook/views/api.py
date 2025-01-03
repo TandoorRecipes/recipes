@@ -1121,6 +1121,8 @@ class RecipePagination(PageNumberPagination):
                      description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
     OpenApiParameter(name='new',
                      description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(name='num_recent', description=_(
+        'Returns the given number of recently viewed recipes before search results (if given)'), type=int),
     OpenApiParameter(name='timescooked', description=_(
         'Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), type=int),
     OpenApiParameter(

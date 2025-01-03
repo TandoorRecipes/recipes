@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import {defineComponent, onMounted, ref, watch} from 'vue'
-import {ApiApi, Recipe} from "@/openapi";
+import {ApiApi, Recipe, ViewLog} from "@/openapi";
 import RecipeView from "@/components/display/RecipeView.vue";
 import {useDisplay} from "vuetify";
 
@@ -32,6 +32,12 @@ function refreshData(recipeId: string) {
     recipe.value = {} as Recipe
     api.apiRecipeRetrieve({id: Number(recipeId)}).then(r => {
         recipe.value = r
+    })
+
+    api.apiViewLogCreate({
+        viewLog: {
+            recipe: Number(recipeId)
+        } as ViewLog
     })
 }
 

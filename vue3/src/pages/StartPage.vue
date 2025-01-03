@@ -12,8 +12,9 @@
             </v-card-text>
         </v-card>
 
-<!--        <horizontal-recipe-scroller :skeletons="4" mode="recent"></horizontal-recipe-scroller>-->
+        <horizontal-recipe-scroller :skeletons="4" mode="recent"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :skeletons="4" mode="new"></horizontal-recipe-scroller>
+        <horizontal-recipe-scroller :skeletons="4" mode="keyword"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :skeletons="2" mode="rating"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :skeletons="4" mode="keyword"></horizontal-recipe-scroller>
 

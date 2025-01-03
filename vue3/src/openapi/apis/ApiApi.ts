@@ -1201,6 +1201,7 @@ export interface ApiRecipeListRequest {
     keywordsOrNot?: Array<number>;
     makenow?: boolean;
     _new?: string;
+    numRecent?: number;
     page?: number;
     pageSize?: number;
     query?: string;
@@ -8761,6 +8762,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['_new'] != null) {
             queryParameters['new'] = requestParameters['_new'];
+        }
+
+        if (requestParameters['numRecent'] != null) {
+            queryParameters['num_recent'] = requestParameters['numRecent'];
         }
 
         if (requestParameters['page'] != null) {

@@ -44,6 +44,7 @@ import {DisplayBreakpoint, useDisplay} from "vuetify";
 import {ApiApi, ApiRecipeListRequest, Keyword, Recipe, RecipeOverview} from "@/openapi";
 import {homePageCols} from "@/utils/breakpoint_utils";
 import {useI18n} from "vue-i18n";
+import {DateTime} from "luxon";
 
 //TODO mode ideas "last year/month/cooked long ago"
 const props = defineProps(
@@ -116,7 +117,7 @@ function loadRecipes() {
     switch (props.mode) {
         case 'recent':
             // TODO implement correct parameter
-            requestParameters._new = 'true'
+            requestParameters.numRecent = 16
             break;
         case 'new':
             requestParameters._new = 'true'
@@ -147,7 +148,13 @@ function doRecipeRequest(params: ApiRecipeListRequest) {
     let api = new ApiApi()
 
     api.apiRecipeList(params).then((r) => {
-        recipes.value = r.results
+        if (props.mode == 'new') {
+            recipes.value = r.results.filter(r => r._new)
+        } else if (props.mode == 'recent') {
+            recipes.value = r.results.filter(r => r.recent != "0")
+        } else {
+            recipes.value = r.results
+        }
     }).finally(() => {
         loading.value = false
     })

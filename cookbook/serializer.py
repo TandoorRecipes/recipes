@@ -199,7 +199,7 @@ class UserSerializer(WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'display_name')
+        fields = ('id', 'username', 'first_name', 'last_name', 'display_name', 'is_staff', 'is_superuser', 'is_active')
         read_only_fields = ('username',)
 
 
@@ -1294,7 +1294,12 @@ class ViewLogSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
+
+        view_log = ViewLog.objects.filter(recipe=validated_data['recipe'], created_by=self.context['request'].user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)), space=self.context['request'].space).first()
+        if not view_log:
+            view_log = ViewLog.objects.create(recipe=validated_data['recipe'], created_by=self.context['request'].user, space=self.context['request'].space)
+
+        return view_log
 
     class Meta:
         model = ViewLog

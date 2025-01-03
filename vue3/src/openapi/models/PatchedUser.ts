@@ -49,6 +49,24 @@ export interface PatchedUser {
      * @memberof PatchedUser
      */
     readonly displayName?: string;
+    /**
+     * Designates whether the user can log into this admin site.
+     * @type {boolean}
+     * @memberof PatchedUser
+     */
+    isStaff?: boolean;
+    /**
+     * Designates that this user has all permissions without explicitly assigning them.
+     * @type {boolean}
+     * @memberof PatchedUser
+     */
+    isSuperuser?: boolean;
+    /**
+     * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+     * @type {boolean}
+     * @memberof PatchedUser
+     */
+    isActive?: boolean;
 }
 
 /**
@@ -73,6 +91,9 @@ export function PatchedUserFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'firstName': json['first_name'] == null ? undefined : json['first_name'],
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
         'displayName': json['display_name'] == null ? undefined : json['display_name'],
+        'isStaff': json['is_staff'] == null ? undefined : json['is_staff'],
+        'isSuperuser': json['is_superuser'] == null ? undefined : json['is_superuser'],
+        'isActive': json['is_active'] == null ? undefined : json['is_active'],
     };
 }
 
@@ -90,6 +111,9 @@ export function PatchedUserToJSONTyped(value?: Omit<PatchedUser, 'username'|'dis
         'id': value['id'],
         'first_name': value['firstName'],
         'last_name': value['lastName'],
+        'is_staff': value['isStaff'],
+        'is_superuser': value['isSuperuser'],
+        'is_active': value['isActive'],
     };
 }
 

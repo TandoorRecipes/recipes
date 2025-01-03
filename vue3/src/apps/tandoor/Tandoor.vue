@@ -62,6 +62,12 @@
                             {{ $t('Messages') }}
                             <message-list-dialog></message-list-dialog>
                         </v-list-item>
+                        <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-shield"></v-icon>
+                            </template>
+                            {{ $t('Admin') }}
+                        </v-list-item>
                         <v-list-item :href="getDjangoUrl('accounts/logout')" link>
                             <template #prepend>
                                 <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
