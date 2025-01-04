@@ -42,6 +42,7 @@
                     :show-select="tableShowSelect"
                     :page="tablePage"
                     :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
+                    disable-sort
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
@@ -53,12 +54,15 @@
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
-                                        <model-merge-dialog :model="model" :source="item" @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-merge-dialog>
+                                        <model-merge-dialog :model="model" :source="item"
+                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-merge-dialog>
                                     </v-list-item>
-                                    <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}" v-if="genericModel.model.name == 'Food'">
+                                    <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
+                                                 v-if="genericModel.model.name == 'Food'">
                                         {{ $t('Ingredient Editor') }}
                                     </v-list-item>
-                                    <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {unit_id: item.id}}" v-if="genericModel.model.name == 'Unit'">
+                                    <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {unit_id: item.id}}"
+                                                 v-if="genericModel.model.name == 'Unit'">
                                         {{ $t('Ingredient Editor') }}
                                     </v-list-item>
                                 </v-list>
@@ -86,14 +90,13 @@ import {
 import {VDataTable} from "vuetify/components";
 import {useUrlSearchParams} from "@vueuse/core";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 
-type VDataTableProps = InstanceType<typeof VDataTable>['$props']
-
 const {t} = useI18n()
 const router = useRouter()
+const route = useRoute()
 
 const params = useUrlSearchParams('history', {initialValue: {page: "1"}})
 
@@ -124,11 +127,18 @@ const searchQuery = ref('')
 
 const genericModel = ref({} as GenericModel)
 
+watch(() => route.query.page, () => {
+    if (!loading.value) {
+        tablePage.value = Number(route.query.page)
+    }
+})
 
 // when navigating to ModelListPage from ModelListPage with a different model lifecycle hooks are not called so watch for change here
-watch(() => props.model, () => {
-    genericModel.value = getGenericModelFromString(props.model, t)
-    loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})
+watch(() => props.model, (newValue, oldValue) => {
+    if (newValue != oldValue) {
+        genericModel.value = getGenericModelFromString(props.model, t)
+        loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
+    }
 })
 
 /**
@@ -143,35 +153,40 @@ onBeforeMount(() => {
     }
 })
 
+type OptionsUpdateEvent = {
+    page: number;
+    itemsPerPage: number;
+    search: string;
+    sortBy?: string;
+    groupBy?: string;
+}
+
 /**
  * load items from API whenever the table calls for it
  * parameters defined by vuetify
- * @param page
- * @param itemsPerPage
- * @param search
- * @param sortBy
- * @param groupBy
+ * @param options
  */
-// TODO proper typescript signature, this is just taken from vuetify example, must be a better solution
-function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
+function loadItems(options: OptionsUpdateEvent) {
+    console.log('load called ', options)
     loading.value = true
     window.scrollTo({top: 0, behavior: 'smooth'})
     // TODO workaround for initial page bug see https://github.com/vuetifyjs/vuetify/issues/17966
-    if (page == 1 && Number(params.page) > 1 && !tablePageInitialized.value) {
-        page = Number(params.page)
+    if (options.page == 1 && Number(params.page) > 1 && !tablePageInitialized.value) {
+        options.page = Number(params.page)
     }
     tablePageInitialized.value = true
-    params.page = page.toString()
-    useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = itemsPerPage
 
-    genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then((r: any) => {
+    router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
+
+    useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
+
+    genericModel.value.list({page: options.page, pageSize: options.itemsPerPage, query: options.search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
-        tablePage.value = page // TODO remove once page bug is fixed
     })
 }
 
