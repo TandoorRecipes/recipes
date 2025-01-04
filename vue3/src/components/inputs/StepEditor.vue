@@ -5,7 +5,7 @@
     <v-card variant="outlined">
         <template #title>
             <v-card-title>
-                <v-chip color="primary">{{ props.stepIndex + 1 }}</v-chip>
+                <v-chip color="primary">{{$t('Step')}} {{ props.stepIndex + 1 }}</v-chip>
                 {{ step.name }}
             </v-card-title>
         </template>
@@ -54,18 +54,21 @@
                     <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" v-if="!mobile">
                         <v-row v-for="(ingredient, index) in step.ingredients" dense>
                             <v-col cols="2">
-                                <v-number-input :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" inset control-variant="stacked"
-                                                hide-details
-                                                :min="0"></v-number-input>
+                                <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact" hide-details>
+
+                                    <template #prepend>
+                                         <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
+                                    </template>
+                                </v-text-field>
                             </v-col>
                             <v-col cols="3">
-                                <model-select model="Unit" v-model="ingredient.unit" allow-create hide-details></model-select>
+                                <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details></model-select>
                             </v-col>
                             <v-col cols="3">
-                                <model-select model="Food" v-model="ingredient.food" allow-create hide-details></model-select>
+                                <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
                             </v-col>
                             <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
-                                <v-text-field :label="$t('Note')" v-model="ingredient.note" hide-details></v-text-field>
+                                <v-text-field :label="$t('Note')" v-model="ingredient.note" density="compact" hide-details></v-text-field>
                             </v-col>
                             <v-col cols="1">
                                 <v-btn variant="plain" icon>
@@ -76,7 +79,7 @@
                                         </v-list>
                                     </v-menu>
                                 </v-btn>
-                                <v-icon icon="$dragHandle" class="drag-handle"></v-icon>
+
                             </v-col>
                         </v-row>
                     </vue-draggable>
@@ -152,10 +155,21 @@
             <v-card-text>
                 <v-form>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
-                                    :min="0"></v-number-input>
-                    <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" allow-create></model-select>
-                    <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" allow-create></model-select>
-                    <v-text-field :label="$t('Note')" v-model="step.ingredients[editingIngredientIndex].note"></v-text-field>
+                                    :min="0" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
+                    <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                                  allow-create></model-select>
+                    <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                                  allow-create></model-select>
+                    <v-text-field :label="(step.ingredients[editingIngredientIndex].isHeader) ?$t('Headline')  : $t('Note')"
+                                  v-model="step.ingredients[editingIngredientIndex].note"></v-text-field>
+
+                    <v-checkbox
+                        v-model="step.ingredients[editingIngredientIndex].isHeader"
+                        :label="$t('Headline')"
+                        :hint="$t('HeaderWarning')"
+                        persistent-hint
+                        @update:modelValue="step.ingredients[editingIngredientIndex].unit = null; step.ingredients[editingIngredientIndex].food = null; step.ingredients[editingIngredientIndex].amount = 0"
+                    ></v-checkbox>
                 </v-form>
             </v-card-text>
             <v-card-actions>
@@ -169,8 +183,8 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, ref, useTemplateRef} from 'vue'
-import {ApiApi, Ingredient, ParsedIngredient, Step} from "@/openapi";
+import {nextTick, onMounted, ref} from 'vue'
+import {ApiApi, Ingredient, ParsedIngredient, Step, Unit} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -178,6 +192,8 @@ import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import IngredientString from "@/components/display/IngredientString.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 const emit = defineEmits(['delete'])
 
@@ -199,7 +215,24 @@ const dialogIngredientParser = ref(false)
 
 const editingIngredientIndex = ref(Number)
 const ingredientTextInput = ref("")
-const ingredientDialogAmountRef = useTemplateRef('ref_input_amount_dialog')
+
+const defaultUnit = ref<null | Unit>(null)
+
+onMounted(() => {
+    let api = new ApiApi()
+
+    if (useUserPreferenceStore().userSettings.defaultUnit) {
+        api.apiUnitList({query: useUserPreferenceStore().userSettings.defaultUnit}).then(r => {
+            r.results.forEach(u => {
+                if (u.name == useUserPreferenceStore().userSettings.defaultUnit) {
+                    defaultUnit.value = u
+                }
+            })
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
+    }
+})
 
 /**
  * sort function called by draggable when ingredient table is sorted
@@ -252,7 +285,13 @@ function handleIngredientNoteTab(event: KeyboardEvent, index: number) {
  * insert a new ingredient and focus its first input
  */
 function insertAndFocusIngredient() {
-    step.value.ingredients.push({} as Ingredient)
+    let ingredient = {} as Ingredient
+
+    if (defaultUnit.value != null) {
+        ingredient.unit = defaultUnit.value
+    }
+
+    step.value.ingredients.push(ingredient)
     nextTick(() => {
         if (mobile.value) {
             editingIngredientIndex.value = step.value.ingredients.length - 1

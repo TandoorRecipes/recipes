@@ -174,7 +174,7 @@ function loadItems(options: VDataTableUpdateOptions) {
     router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
 
     useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
-    
+
     genericModel.value.list({page: options.page, pageSize: options.itemsPerPage, query: options.search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count

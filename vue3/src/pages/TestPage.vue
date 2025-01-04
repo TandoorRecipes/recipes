@@ -36,7 +36,7 @@
     </v-row>
     <v-row class="mt-5">
         <v-col>
-
+            <model-select model="Food"></model-select>
             <v-text-field></v-text-field>
         </v-col>
         <v-col>

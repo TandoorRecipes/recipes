@@ -1,11 +1,8 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
-    <!-- TODO support density prop -->
     <v-input :hint="props.hint" persistent-hint :label="props.label">
         <template #prepend>
-            <slot name="prepend">
-
-            </slot>
+            <slot name="prepend"></slot>
         </template>
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <Multiselect
@@ -160,7 +157,8 @@ async function createObject(object: any, select$: Multiselect) {
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style scoped>
+<!-- style can't be scoped (for whatever reason) -->
+<style>
 .material-multiselect {
     --ms-bg: rgba(210, 210, 210, 0.1);
     --ms-border-color: 0;

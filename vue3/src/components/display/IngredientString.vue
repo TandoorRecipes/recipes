@@ -1,7 +1,12 @@
 <template>
-    <span v-if="ingredient.amount && !Number.isNaN(ingredient.amount)">{{$n(ingredient.amount)}}</span>
-    <span class="ms-1" v-if="ingredient.unit">{{ ingredient.unit.name}}</span>
-    <span class="ms-1" v-if="ingredient.food">{{ ingredient.food.name}}</span>
+    <template v-if="ingredient.isHeader">
+        <span class="font-weight-bold">{{ ingredient.note}}</span>
+    </template>
+    <template v-else>
+        <span v-if="ingredient.amount && !Number.isNaN(ingredient.amount)">{{$n(ingredient.amount)}}</span>
+        <span class="ms-1" v-if="ingredient.unit">{{ ingredient.unit.name}}</span>
+        <span class="ms-1" v-if="ingredient.food">{{ ingredient.food.name}}</span>
+    </template>
 </template>
 
 

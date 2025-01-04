@@ -28,7 +28,7 @@
 
                                 </v-list-item>
                                 <v-divider v-if="mealPlanGridItem.plan_entries.length > 0"></v-divider>
-                                <v-list-item v-for="p in mealPlanGridItem.plan_entries" link>
+                                <v-list-item v-for="p in mealPlanGridItem.plan_entries" :key="p.id" @click="clickMealPlan(p)" link>
                                     <template #prepend>
                                         <v-avatar :image="p.recipe.image" v-if="p.recipe?.image"></v-avatar>
                                         <v-avatar image="../../assets/recipe_no_image.svg" v-else></v-avatar>
@@ -40,7 +40,20 @@
                                     <v-list-item-subtitle>
                                         {{ p.mealType.name }}
                                     </v-list-item-subtitle>
-                                    <model-edit-dialog model="MealPlan" :item="p"></model-edit-dialog>
+                                    <model-edit-dialog model="MealPlan" :item="p" v-if="!p.recipe"></model-edit-dialog>
+                                    <template #append>
+                                        <v-btn icon variant="plain">
+                                            <v-icon icon="$menu"></v-icon>
+                                            <v-menu activator="parent">
+                                                <v-list>
+                                                    <v-list-item prepend-icon="$edit">
+                                                        {{$t('Edit')}}
+                                                        <model-edit-dialog model="MealPlan" :item="p"></model-edit-dialog>
+                                                    </v-list-item>
+                                                </v-list>
+                                            </v-menu>
+                                        </v-btn>
+                                    </template>
                                 </v-list-item>
 
                             </v-list>
@@ -62,7 +75,9 @@ import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {DateTime} from "luxon";
 import {homePageCols} from "@/utils/breakpoint_utils";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const {name} = useDisplay()
 const loading = ref(false)
 
@@ -118,6 +133,12 @@ onMounted(() => {
         loading.value = false
     })
 })
+
+function clickMealPlan(plan: MealPlan){
+    if(plan.recipe){
+        router.push( {name: 'view_recipe', params: {id: plan.recipe.id}})
+    }
+}
 
 </script>
 

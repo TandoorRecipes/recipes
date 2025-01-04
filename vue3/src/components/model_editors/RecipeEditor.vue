@@ -26,24 +26,25 @@
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2"></v-textarea>
 
                         <v-row>
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="6" >
                                 <v-file-upload v-model="file" @update:modelValue="updateUserFileName"
-                                               :title="$t('DragToUpload')"
+                                               :title="(mobile) ? $t('Select_File') : $t('DragToUpload')"
                                                :browse-text="$t('Select_File')"
                                                :divider-text="$t('or')"
-                                ></v-file-upload>
+                                               :density="(mobile) ? 'compact' : 'comfortable'"
+                                >
+                                </v-file-upload>
                             </v-col>
-                            <v-col cols="12" md="6">
-                                <v-label>{{ $t('Image') }}</v-label>
-                                <v-img style="max-height: 150px" class="mb-2" :src="editingObj.image">
-                                    <v-btn color="delete" class="float-right" prepend-icon="$delete" v-if="editingObj.image" @click="deleteImage()">{{ $t('Delete') }}</v-btn>
+                            <v-col cols="12" md="6" v-if="editingObj.image">
+                                <v-img style="max-height: 180px" cover class="mb-2" :src="editingObj.image">
+                                    <v-btn color="delete" class="float-right mt-2 mr-2" prepend-icon="$delete" v-if="editingObj.image" @click="deleteImage()">{{ $t('Delete') }}</v-btn>
                                 </v-img>
                             </v-col>
                         </v-row>
 
                         <v-label>{{ $t('Keywords') }}</v-label>
-                        <ModelSelect mode="tags" v-model="editingObj.keywords" model="Keyword"></ModelSelect>
-                        <v-row>
+                        <model-select mode="tags" v-model="editingObj.keywords" model="Keyword" allow-create></model-select>
+                        <v-row dense>
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('WaitingTime')" v-model="editingObj.waitingTime"></v-text-field>
                             </v-col>
@@ -95,8 +96,8 @@
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
                         <v-checkbox :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj._private"></v-checkbox>
-                        <ModelSelect mode="tags" model="User" :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj.shared"
-                                     append-to-body></ModelSelect>
+                        <model-select mode="tags" model="User" :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj.shared"
+                                     append-to-body></model-select>
 
                     </v-form>
                 </v-tabs-window-item>
@@ -137,6 +138,7 @@ import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
 import {useFileApi} from "@/composables/useFileApi";
 import {VFileUpload} from 'vuetify/labs/VFileUpload'
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
+import {useDisplay} from "vuetify";
 
 
 const props = defineProps({
@@ -149,6 +151,8 @@ const emit = defineEmits(['create', 'save', 'delete', 'close'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Recipe>('Recipe', emit)
 
 // object specific data (for selects/display)
+const {mobile} = useDisplay()
+
 const tab = ref("recipe")
 const dialogStepManager = ref(false)
 
@@ -190,7 +194,7 @@ function deleteImage() {
 /**
  * add a new step to the recipe
  */
-function addStep(){
+function addStep() {
     editingObj.value.steps.push({
         ingredients: [] as Ingredient[],
         time: 0,
@@ -210,7 +214,7 @@ function sortSteps() {
  * delete a step at the given index of the steps array of the editingObject
  * @param index index to delete at
  */
-function deleteStepAtIndex(index: number){
+function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
 }
 
