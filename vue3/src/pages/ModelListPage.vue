@@ -129,7 +129,6 @@ const genericModel = ref({} as GenericModel)
  */
 watch(() => route.query.page, () => {
     if (!loading.value && typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
-        console.log('wathc route, page change to ', route.query.page)
         tablePage.value = parseInt(route.query.page)
     }
 })
@@ -139,7 +138,6 @@ watch(() => props.model, (newValue, oldValue) => {
     if (newValue != oldValue) {
         genericModel.value = getGenericModelFromString(props.model, t)
         tablePage.value = 1
-        console.log('model change detected ', route.query.page)
         loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
     }
 })
@@ -156,7 +154,6 @@ onBeforeMount(() => {
     }
 
     if (typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
-        console.log('setting table page to ', route.query.page)
         tablePage.value = parseInt(route.query.page)
     }
 })
@@ -177,8 +174,7 @@ function loadItems(options: VDataTableUpdateOptions) {
     router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
 
     useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
-
-    console.log('loading', options, tablePage.value)
+    
     genericModel.value.list({page: options.page, pageSize: options.itemsPerPage, query: options.search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
