@@ -78,7 +78,7 @@
 <script setup lang="ts">
 
 
-import {onBeforeMount, PropType, ref, watch} from "vue";
+import {onBeforeMount, onMounted, PropType, ref, watch} from "vue";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import {
@@ -93,12 +93,11 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
+import {VDataTableUpdateOptions} from "@/vuetify";
 
 const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
-
-const params = useUrlSearchParams('history', {initialValue: {page: "1"}})
 
 const props = defineProps({
     model: {
@@ -115,8 +114,6 @@ const itemsPerPageOptions = [
 ]
 
 const tablePage = ref(1)
-const tablePageInitialized = ref(false) // TODO workaround until vuetify bug is fixed
-
 const tableShowSelect = ref(false) // TODO enable once mass edit functions are implemented
 
 // data
@@ -127,9 +124,13 @@ const searchQuery = ref('')
 
 const genericModel = ref({} as GenericModel)
 
+/**
+ * watch route changes (trough navigation) and set table page accordingly
+ */
 watch(() => route.query.page, () => {
-    if (!loading.value) {
-        tablePage.value = Number(route.query.page)
+    if (!loading.value && typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
+        console.log('wathc route, page change to ', route.query.page)
+        tablePage.value = parseInt(route.query.page)
     }
 })
 
@@ -137,6 +138,8 @@ watch(() => route.query.page, () => {
 watch(() => props.model, (newValue, oldValue) => {
     if (newValue != oldValue) {
         genericModel.value = getGenericModelFromString(props.model, t)
+        tablePage.value = 1
+        console.log('model change detected ', route.query.page)
         loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
     }
 })
@@ -151,35 +154,31 @@ onBeforeMount(() => {
         console.error('Invalid model passed to ModelListPage, loading Food instead')
         genericModel.value = getGenericModelFromString('Food', t)
     }
-})
 
-type OptionsUpdateEvent = {
-    page: number;
-    itemsPerPage: number;
-    search: string;
-    sortBy?: string;
-    groupBy?: string;
-}
+    if (typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
+        console.log('setting table page to ', route.query.page)
+        tablePage.value = parseInt(route.query.page)
+    }
+})
 
 /**
  * load items from API whenever the table calls for it
  * parameters defined by vuetify
  * @param options
  */
-function loadItems(options: OptionsUpdateEvent) {
-    console.log('load called ', options)
+function loadItems(options: VDataTableUpdateOptions) {
+
     loading.value = true
     window.scrollTo({top: 0, behavior: 'smooth'})
-    // TODO workaround for initial page bug see https://github.com/vuetifyjs/vuetify/issues/17966
-    if (options.page == 1 && Number(params.page) > 1 && !tablePageInitialized.value) {
-        options.page = Number(params.page)
-    }
-    tablePageInitialized.value = true
 
+    if (tablePage.value != options.page) {
+        tablePage.value = options.page
+    }
     router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
 
     useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
 
+    console.log('loading', options, tablePage.value)
     genericModel.value.list({page: options.page, pageSize: options.itemsPerPage, query: options.search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
@@ -196,7 +195,7 @@ function loadItems(options: OptionsUpdateEvent) {
  */
 function changeModel(m: Model) {
     tablePage.value = 1
-    router.push({name: 'ModelListPage', params: {model: m.name.toLowerCase()}})
+    router.push({name: 'ModelListPage', params: {model: m.name.toLowerCase()}, query: {page: 1}})
     window.scrollTo({top: 0, behavior: 'smooth'})
 }
 

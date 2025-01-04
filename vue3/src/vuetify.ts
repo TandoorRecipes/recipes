@@ -59,7 +59,7 @@ export default createVuetify({
     },
     icons: {
         defaultSet: 'fa',
-        aliases : {
+        aliases: {
             ...aliases,
             save: 'fa-solid fa-floppy-disk',
             delete: 'fa-solid fa-trash-can',
@@ -86,3 +86,10 @@ export default createVuetify({
     },
 })
 
+export type VDataTableUpdateOptions = {
+    page: number;
+    itemsPerPage: number;
+    search: string;
+    sortBy?: string;
+    groupBy?: string;
+}
