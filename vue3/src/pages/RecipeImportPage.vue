@@ -55,7 +55,6 @@
                                         </v-row>
                                     </v-col>
                                 </v-row>
-
                             </v-stepper-window-item>
                             <v-stepper-window-item value="3">
                                 <v-row>
@@ -64,6 +63,18 @@
                                             <v-btn prepend-icon="fa-solid fa-square-check" @click="setAllKeywordsImportStatus(true)">{{ $t('SelectAll') }}</v-btn>
                                             <v-btn prepend-icon="fa-solid fa-square-minus" @click="setAllKeywordsImportStatus(false)">{{ $t('SelectNone') }}</v-btn>
                                         </v-btn-group>
+                                    </v-col>
+                                </v-row>
+
+                                <v-row>
+                                    <v-col>
+                                        <model-select model="Keyword" v-model="keywordSelect">
+                                            <template #append>
+                                                <v-btn icon="$add" color="success"
+                                                       @click="keywordSelect.importKeyword = true; importResponse.recipe.keywords.push(keywordSelect); keywordSelect= null"
+                                                       :disabled="keywordSelect == null"></v-btn>
+                                            </template>
+                                        </model-select>
                                     </v-col>
                                 </v-row>
 
@@ -76,66 +87,66 @@
                                         </template>
                                     </v-list-item>
                                 </v-list>
+
+
                             </v-stepper-window-item>
                             <v-stepper-window-item value="4">
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()">{{ $t('Auto_Sort') }}</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')">{{ $t('Split') }}</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()">{{ $t('Merge') }}</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()"><span v-if="!mobile">{{ $t('Auto_Sort') }}</span></v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
-                                <v-row>
-                                    <v-col>
+                                <v-row v-for="(s,i) in importResponse.recipe.steps" :key="i">
+                                    <v-col cols="12">
+                                        <v-chip color="primary">#{{ i + 1 }}</v-chip>
+                                        <v-btn variant="plain" size="small" class="float-right">
+                                            <v-icon icon="$settings"></v-icon>
+                                            <v-menu activator="parent">
+                                                <v-list>
+                                                    <v-list-item prepend-icon="$delete" @click="deleteStep(s)">{{ $t('Delete') }}</v-list-item>
+                                                    <v-list-item prepend-icon="fa-solid fa-maximize" @click="splitStep(s, '\n')">{{ $t('Split') }}</v-list-item>
+                                                </v-list>
+                                            </v-menu>
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
                                         <v-list>
-                                            <v-list-item v-for="(s,i) in importResponse.recipe.steps" :key="i">
-                                                <v-list-item-title>
-                                                    <v-chip color="primary">#{{ i + 1 }}</v-chip>
-                                                    <v-btn variant="plain" size="small" class="float-right">
-                                                        <v-icon icon="$settings"></v-icon>
-                                                        <v-menu activator="parent">
-                                                            <v-list>
-                                                                <v-list-item prepend-icon="$delete" @click="deleteStep(s)">{{ $t('Delete') }}</v-list-item>
-                                                                <v-list-item prepend-icon="fa-solid fa-maximize" @click="splitStep(s, '\n')">{{ $t('Split') }}</v-list-item>
-                                                            </v-list>
-                                                        </v-menu>
-                                                    </v-btn>
-                                                </v-list-item-title>
-                                                <v-row>
-                                                    <v-col>
-                                                        <v-list>
-                                                            <vue-draggable v-model="s.ingredients" group="ingredients" drag-class="drag-handle">
-                                                                <v-list-item v-for="i in s.ingredients" border>
-                                                                    <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
-                                                                    {{ i.amount }} <span v-if="i.unit">{{ i.unit.name }}</span> <span v-if="i.food">{{ i.food.name }}</span>
-                                                                    <template #append>
-                                                                        <v-btn size="small" color="edit" @click="editingIngredient = i; dialog=true">
-                                                                            <v-icon icon="$edit"></v-icon>
-                                                                        </v-btn>
-                                                                    </template>
-                                                                </v-list-item>
-                                                            </vue-draggable>
-                                                        </v-list>
-                                                    </v-col>
-                                                    <v-col>
-                                                        <v-textarea class="mt-2" v-model="s.instruction"></v-textarea>
-                                                    </v-col>
-                                                </v-row>
-
-                                            </v-list-item>
+                                            <vue-draggable v-model="s.ingredients" group="ingredients" drag-class="drag-handle">
+                                                <v-list-item v-for="i in s.ingredients" border>
+                                                    <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
+                                                    {{ i.amount }} <span v-if="i.unit">{{ i.unit.name }}</span> <span v-if="i.food">{{ i.food.name }}</span>
+                                                    <template #append>
+                                                        <v-btn size="small" color="edit" @click="editingIngredient = i; dialog=true">
+                                                            <v-icon icon="$edit"></v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                </v-list-item>
+                                            </vue-draggable>
                                         </v-list>
                                     </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-textarea class="mt-2" v-model="s.instruction"></v-textarea>
+                                    </v-col>
                                 </v-row>
-
+                                <v-row>
+                                    <v-col class="text-center">
+                                        <v-btn icon="$add" color="create" @click="addStep()"></v-btn>
+                                    </v-col>
+                                </v-row>
                                 <v-dialog max-width="450px" v-model="dialog">
                                     <v-card>
                                         <v-closable-card-title v-model="dialog" :title="$t('Ingredient Editor')"></v-closable-card-title>
                                         <v-card-text>
                                             <v-text-field :label="$t('Original_Text')" v-model="editingIngredient.originalText" disabled></v-text-field>
                                             <v-text-field :label="$t('Amount')" v-model="editingIngredient.amount"></v-text-field>
-                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name"></v-text-field>
+
+                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" v-if="editingIngredient.unit"></v-text-field>
+                                            <v-btn prepend-icon="$create" color="create" v-else>{{ $t('Unit') }}</v-btn>
+
                                             <v-text-field :label="$t('Food')" v-model="editingIngredient.food.name"></v-text-field>
                                             <v-text-field :label="$t('Note')" v-model="editingIngredient.note"></v-text-field>
                                         </v-card-text>
@@ -159,7 +170,10 @@
                                             <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
                                             <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" clearable></v-textarea>
 
-                                            <v-btn class="mt-5" size="large" @click="createRecipeFromImport()" color="success" :loading="loading || fileApiLoading">{{ $t('Import') }}</v-btn>
+                                            <v-btn class="mt-5" size="large" @click="createRecipeFromImport()" color="success" :loading="loading || fileApiLoading">{{
+                                                    $t('Import')
+                                                }}
+                                            </v-btn>
                                         </v-col>
                                     </v-row>
 
@@ -186,7 +200,7 @@
 <script lang="ts" setup>
 
 import {nextTick, ref} from "vue";
-import {ApiApi, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportStep} from "@/openapi";
+import {ApiApi, Keyword, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -195,7 +209,10 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {useFileApi} from "@/composables/useFileApi";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import {useDisplay} from "vuetify";
 
+const {mobile} = useDisplay()
 const router = useRouter()
 const {updateRecipeImage, fileApiLoading} = useFileApi()
 
@@ -205,6 +222,7 @@ const loading = ref(false)
 const importUrl = ref("")
 
 const importResponse = ref({} as RecipeFromSourceResponse)
+const keywordSelect = ref<null | SourceImportKeyword>(null)
 const editingIngredient = ref({} as SourceImportIngredient)
 
 /**
@@ -391,6 +409,13 @@ function setAllKeywordsImportStatus(status: boolean) {
     importResponse.value.recipe?.keywords.forEach(keyword => {
         keyword.importKeyword = status
     })
+}
+
+/**
+ * add a new (empty) step at the end of the step list
+ */
+function addStep() {
+    importResponse.value.recipe?.steps.push({} as SourceImportStep)
 }
 
 </script>

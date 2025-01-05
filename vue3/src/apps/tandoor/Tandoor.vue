@@ -139,22 +139,13 @@
                 <v-icon icon="fa-fw fas fa-shopping-cart"></v-icon>
             </v-btn>
 
-            <v-btn value="nearby" >
+            <v-btn value="nearby">
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <v-list-item :to="{ name: 'view_settings', params: {} }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-sliders"></v-icon>
-                            </template>
-                            {{ $t('Settings') }}
-                        </v-list-item>
-                        <v-list-item :to="{ name: 'ModelListPage', params: {model: 'food'} }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-folder-tree"></v-icon>
-                            </template>
-                            {{ $t('Database') }}
-                        </v-list-item>
+                        <v-list-item prepend-icon="fa-solid fa-sliders" :to="{ name: 'view_settings', params: {} }" :title="$t('Settings')"></v-list-item>
+                        <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
+                        <v-list-item prepend-icon="fa-solid fa-folder-tree" :to="{ name: 'ModelListPage', params: {model: 'food'} }" :title="$t('Database')"></v-list-item>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>
