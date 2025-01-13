@@ -26,30 +26,38 @@ export function isShoppingListFoodDelayed(slf: IShoppingListFood) {
  * checks if the given space is above any of the configured limits
  * @param space space to check limit for
  */
-export function isSpaceAtLimit(space: Space) {
-    return isSpaceAtUserLimit(space) || isSpaceAtRecipeLimit(space) || isSpaceAtStorageLimit(space)
+export function isSpaceAboveLimit(space: Space) {
+    return isSpaceAboveUserLimit(space) || isSpaceAboveRecipeLimit(space) || isSpaceAboveStorageLimit(space)
 }
 
 /**
  * checks if the given space is above the user limit
  * @param space space to check limit for
  */
-export function isSpaceAtUserLimit(space: Space) {
-    return space.maxUsers > space.userCount && space.maxUsers > 0
+export function isSpaceAboveUserLimit(space: Space) {
+    return space.userCount > space.maxUsers && space.maxUsers > 0
 }
 
 /**
  * checks if the given space is above the recipe limit
  * @param space space to check limit for
  */
+export function isSpaceAboveRecipeLimit(space: Space) {
+    return space.recipeCount > space.maxRecipes && space.maxRecipes > 0
+}
+
+/**
+ * checks if the given space is at the recipe limit
+ * @param space space to check limit for
+ */
 export function isSpaceAtRecipeLimit(space: Space) {
-    return space.maxRecipes > space.recipeCount && space.maxRecipes > 0
+    return space.recipeCount >= space.maxRecipes && space.maxRecipes > 0
 }
 
 /**
  * checks if the given space is above the file storage limit
  * @param space space to check limit for
  */
-export function isSpaceAtStorageLimit(space: Space) {
-    return space.maxFileStorageMb > space.fileSizeMb && space.maxFileStorageMb > 0
+export function isSpaceAboveStorageLimit(space: Space) {
+    return space.fileSizeMb > space.maxFileStorageMb && space.maxFileStorageMb > 0
 }

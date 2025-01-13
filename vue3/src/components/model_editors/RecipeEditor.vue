@@ -17,7 +17,7 @@
             <v-tab value="settings">{{ $t('Settings') }}</v-tab>
 
         </v-tabs>
-        <v-card-text>
+        <v-card-text v-if="!isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="recipe">
 
@@ -26,7 +26,7 @@
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2"></v-textarea>
 
                         <v-row>
-                            <v-col cols="12" md="6" >
+                            <v-col cols="12" md="6">
                                 <v-file-upload v-model="file" @update:modelValue="updateUserFileName"
                                                :title="(mobile) ? $t('Select_File') : $t('DragToUpload')"
                                                :browse-text="$t('Select_File')"
@@ -37,7 +37,10 @@
                             </v-col>
                             <v-col cols="12" md="6" v-if="editingObj.image">
                                 <v-img style="max-height: 180px" cover class="mb-2" :src="editingObj.image">
-                                    <v-btn color="delete" class="float-right mt-2 mr-2" prepend-icon="$delete" v-if="editingObj.image" @click="deleteImage()">{{ $t('Delete') }}</v-btn>
+                                    <v-btn color="delete" class="float-right mt-2 mr-2" prepend-icon="$delete" v-if="editingObj.image" @click="deleteImage()">{{
+                                            $t('Delete')
+                                        }}
+                                    </v-btn>
                                 </v-img>
                             </v-col>
                         </v-row>
@@ -97,11 +100,17 @@
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
                         <v-checkbox :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj._private"></v-checkbox>
                         <model-select mode="tags" model="User" :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj.shared"
-                                     append-to-body></model-select>
+                                      append-to-body></model-select>
 
                     </v-form>
                 </v-tabs-window-item>
             </v-tabs-window>
+        </v-card-text>
+        <v-card-text v-if="isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
+            <v-alert color="warning" icon="fa-solid fa-triangle-exclamation">
+                {{$t('SpaceLimitReached')}}
+                <v-btn color="success" variant="flat" :to="{name: 'view_settings_space'}">{{ $t('SpaceSettings') }}</v-btn>
+            </v-alert>
         </v-card-text>
     </model-editor-base>
 
@@ -139,6 +148,8 @@ import {useFileApi} from "@/composables/useFileApi";
 import {VFileUpload} from 'vuetify/labs/VFileUpload'
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
+import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 
 const props = defineProps({

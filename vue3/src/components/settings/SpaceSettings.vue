@@ -8,7 +8,7 @@
                 <v-card>
                     <v-card-title><i class="fa-solid fa-book"></i> {{ $t('Recipes') }}</v-card-title>
                     <v-card-text>{{ $n(space.recipeCount) }} / {{ space.maxRecipes == 0 ? '∞' : $n(space.maxRecipes) }}</v-card-text>
-                    <v-progress-linear color="success" height="10" :model-value="(space.recipeCount / space.maxRecipes) * 100"></v-progress-linear>
+                    <v-progress-linear :color="isSpaceAboveRecipeLimit(space) ? 'error' : 'success'" height="10" :model-value="(space.recipeCount / space.maxRecipes) * 100"></v-progress-linear>
                 </v-card>
             </v-col>
             <v-col cols="12" md="4">
@@ -16,7 +16,7 @@
 
                     <v-card-title><i class="fa-solid fa-users"></i> {{ $t('Users') }}</v-card-title>
                     <v-card-text>{{ $n(space.userCount) }} / {{ space.maxUsers == 0 ? '∞' : $n(space.maxUsers) }}</v-card-text>
-                    <v-progress-linear color="success" height="10" :model-value="(space.userCount / space.maxUsers) * 100"></v-progress-linear>
+                    <v-progress-linear :color="isSpaceAboveUserLimit(space) ? 'error' : 'success'" height="10" :model-value="(space.userCount / space.maxUsers) * 100"></v-progress-linear>
                 </v-card>
             </v-col>
             <v-col cols="12" md="4">
@@ -26,7 +26,7 @@
                         MB
                     </v-card-text>
                     <v-card-text v-if="space.maxFileStorageMb == -1">{{ $t('file_upload_disabled') }}</v-card-text>
-                    <v-progress-linear v-if="space.maxFileStorageMb > -1" color="success" height="10"
+                    <v-progress-linear v-if="space.maxFileStorageMb > -1" :color="isSpaceAboveStorageLimit(space) ? 'error' : 'success'" height="10"
                                        :model-value="(space.fileSizeMb / space.maxFileStorageMb) * 100"></v-progress-linear>
                 </v-card>
             </v-col>
@@ -108,6 +108,7 @@ import {ApiApi, Space} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import UserFileField from "@/components/inputs/UserFileField.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import {isSpaceAboveRecipeLimit, isSpaceAboveStorageLimit, isSpaceAboveUserLimit} from "@/utils/logic_utils";
 
 const space = ref({} as Space)
 

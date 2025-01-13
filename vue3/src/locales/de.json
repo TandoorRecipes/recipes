@@ -386,6 +386,8 @@
   "Size": "Größe",
   "Social_Authentication": "Login über Drittanbieter",
   "Sort_by_new": "Nach Neueste sortieren",
+  "SpaceLimitExceeded": "Dein Space hat ein Limit überschritten, manche Funktionen wurden eingeschränkt.",
+  "SpaceLimitReached": "Dieser Space hat ein Limit erreicht. Es können keine neuen Objekte von diesem Typ angelegt werden.",
   "SpaceMemberHelp": "Füge Benutzer hinzu indem du Einladungen erstellst und Sie an die gewünschte Person sendest.",
   "SpaceMembers": "Space Mitglieder",
   "SpaceSettings": "Space Einstellungen",

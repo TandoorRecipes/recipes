@@ -78,10 +78,16 @@
                 </v-menu>
             </v-avatar>
         </v-app-bar>
-        <v-app-bar color="warning" density="compact" v-if="useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
                 <v-btn color="success" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
+            </p>
+        </v-app-bar>
+        <v-app-bar color="warning" density="compact" v-if="isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
+            <p class="text-center w-100">
+                {{ $t('SpaceLimitExceeded') }}
+                <v-btn color="success" variant="flat" :to="{name: 'view_settings_space'}">{{ $t('SpaceSettings') }}</v-btn>
             </p>
         </v-app-bar>
 
@@ -172,6 +178,7 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted, ref} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {ApiApi, Space} from "@/openapi";
+import {isSpaceAboveLimit, isSpaceAtLimit} from "@/utils/logic_utils";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
