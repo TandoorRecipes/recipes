@@ -78,26 +78,18 @@
 
 <script setup lang="ts">
 
-import {computed, defineComponent, PropType, ref, watch} from 'vue'
-import {ApiApi, Ingredient, Recipe} from "@/openapi"
-import KeywordsBar from "@/components/display/KeywordsBar.vue"
+import {computed, ref, watch} from 'vue'
+import {Recipe} from "@/openapi"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
-import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import StepsOverview from "@/components/display/StepsOverview.vue";
 import Step from "@/components/display/Step.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
-import PdfViewer from "../../../../vue/src/components/PdfViewer.vue";
-import ImageViewer from "../../../../vue/src/components/ImageViewer.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 
 const recipe = defineModel<Recipe>({required: true})
-
-const props = defineProps({
-    
-})
 
 const servings = ref(1)
 const showFullRecipeName = ref(false)

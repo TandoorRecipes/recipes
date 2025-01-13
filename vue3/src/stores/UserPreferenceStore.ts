@@ -1,20 +1,22 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 import {useStorage} from "@vueuse/core";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {ApiApi, ServerSettings, Space, Supermarket, UserPreference} from "@/openapi";
+import {ApiApi, ServerSettings, Space, Supermarket, UserPreference, UserSpace} from "@/openapi";
 import {ShoppingGroupingOptions} from "@/types/Shopping";
+import {computed, ComputedRef} from "vue";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
 const SERVER_SETTINGS_KEY = 'TANDOOR_SERVER_SETTINGS'
 const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
+const USER_SPACES_KEY = 'TANDOOR_USER_SPACES'
 
 class DeviceSettings {
     shopping_show_checked_entries = false
     shopping_show_delayed_entries = false
     shopping_show_selected_supermarket_only = false
     shopping_selected_grouping = ShoppingGroupingOptions.CATEGORY
-    shopping_selected_supermarket: Supermarket|null = null
+    shopping_selected_supermarket: Supermarket | null = null
     shopping_item_info_created_by = false
     shopping_item_info_mealplan = true
     shopping_item_info_recipe = true
@@ -46,6 +48,24 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * database user settings, cache in local storage in case application is started offline
      */
     let activeSpace = useStorage(ACTIVE_SPACE_KEY, {} as Space)
+    /**
+     * list of spaces the user has access to and the relevant permissions, cache in local storage in case application is started offline
+     */
+    let userSpaces = useStorage(USER_SPACES_KEY, [] as UserSpace[])
+
+
+    /**
+     * holds the active user space if there is one or null if not
+     */
+    let activeUserSpace: ComputedRef<null | UserSpace> = computed(() => {
+        let userSpace: null | UserSpace = null
+        userSpaces.value.forEach(us => {
+            if (us.space == activeSpace.value.id) {
+                userSpace = us
+            }
+        })
+        return userSpace
+    })
 
     /**
      * retrieve user settings from DB
@@ -103,6 +123,18 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     }
 
     /**
+     * load user spaces
+     */
+    function loadUserSpaces() {
+        let api = new ApiApi()
+        api.apiUserSpaceList().then(r => {
+            userSpaces.value = r.results
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
+    }
+
+    /**
      * switch to the given space
      */
     function switchSpace(space: Space) {
@@ -119,18 +151,29 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     /**
      * resets all device settings to their default value
      */
-    function resetDeviceSettings(){
+    function resetDeviceSettings() {
         deviceSettings.value = new DeviceSettings()
     }
 
-    // always load user settings on first initialization of store
+    // always load settings on first initialization of store
     loadUserSettings()
-    // always load server settings on first initialization of store
     loadServerSettings()
-    // always load active space on first initialization of store
     loadActiveSpace()
+    loadUserSpaces()
 
-    return {deviceSettings, userSettings, serverSettings, activeSpace, loadUserSettings, loadServerSettings, updateUserSettings, switchSpace, resetDeviceSettings}
+    return {
+        deviceSettings,
+        userSettings,
+        serverSettings,
+        activeSpace,
+        userSpaces,
+        activeUserSpace,
+        loadUserSettings,
+        loadServerSettings,
+        updateUserSettings,
+        switchSpace,
+        resetDeviceSettings
+    }
 })
 
 // enable hot reload for store

@@ -2,7 +2,7 @@
     <template v-if="!props.loading">
 
         <router-link :to="{name: 'view_recipe', params: {id: props.recipe.id}}">
-            <recipe-image :style="{'height': props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
+            <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
 
             </recipe-image>
         </router-link>
@@ -19,7 +19,7 @@
             <!--            <p class="text-disabled">{{ props.recipe.createdBy.displayName}}</p>-->
             <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="3">
                 <template #prepend>
-                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" color="info"
+                    <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" color="info"
                             v-if="!props.recipe.internal">
                         {{ $t('External') }}
                     </v-chip>

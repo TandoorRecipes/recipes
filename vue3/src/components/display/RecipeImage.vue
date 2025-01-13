@@ -17,7 +17,7 @@ const props = defineProps({
     height: {type: String},
     width: {type: String},
     cover: {type: Boolean, default: true},
-    rounded: {type: Boolean as PropType<Boolean|String>, default: false},
+    rounded: {type: [Boolean, String], default: false},
 })
 
 const image = computed(() => {
