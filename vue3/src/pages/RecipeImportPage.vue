@@ -103,8 +103,8 @@
                                 <v-row v-for="(s,i) in importResponse.recipe.steps" :key="i">
                                     <v-col cols="12">
                                         <v-chip color="primary">#{{ i + 1 }}</v-chip>
-                                        <v-btn variant="plain" size="small" class="float-right">
-                                            <v-icon icon="$settings"></v-icon>
+                                        <v-btn variant="plain" size="small" icon class="float-right">
+                                            <v-icon icon="$menu"></v-icon>
                                             <v-menu activator="parent">
                                                 <v-list>
                                                     <v-list-item prepend-icon="$delete" @click="deleteStep(s)">{{ $t('Delete') }}</v-list-item>
@@ -120,8 +120,14 @@
                                                     <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                                     {{ i.amount }} <span v-if="i.unit">{{ i.unit.name }}</span> <span v-if="i.food">{{ i.food.name }}</span>
                                                     <template #append>
-                                                        <v-btn size="small" color="edit" @click="editingIngredient = i; dialog=true">
-                                                            <v-icon icon="$edit"></v-icon>
+                                                        <v-btn variant="plain" size="small" icon class="float-right">
+                                                            <v-icon icon="$menu"></v-icon>
+                                                            <v-menu activator="parent">
+                                                                <v-list>
+                                                                    <v-list-item prepend-icon="$edit" @click="editingIngredient = i; dialog=true">{{ $t('Edit') }}</v-list-item>
+                                                                    <v-list-item prepend-icon="$delete" @click="deleteIngredient(s,i)">{{ $t('Delete') }}</v-list-item>
+                                                                </v-list>
+                                                            </v-menu>
                                                         </v-btn>
                                                     </template>
                                                 </v-list-item>
@@ -357,6 +363,15 @@ function mergeStep(step: SourceImportStep) {
         useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
     }
 
+}
+
+/**
+ * deletes the given ingredient from the given step
+ * @param step step to delete ingredient from
+ * @param ingredient ingredient to delete
+ */
+function deleteIngredient(step: SourceImportStep, ingredient: SourceImportIngredient) {
+    step.ingredients = step.ingredients.filter(i => i != ingredient)
 }
 
 /**
