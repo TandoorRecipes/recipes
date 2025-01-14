@@ -16,6 +16,7 @@ from django.core.management import call_command
 from django.db import models
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.datetime_safe import date
@@ -529,12 +530,40 @@ def web_manifest(request):
             "name": _("Plan"),
             "short_name": _("Plan"),
             "description": _("View your meal Plan"),
-            "url": "./mealplan"
+            "url": "./mealplan",
+            icons: [
+                {
+                    "src": static('logo_color_plan.svg'),
+                    "sizes": "any"
+                }, {
+                    "src": static('logo_color_plan_144.png'),
+                    "type": "image/png",
+                    "sizes": "144x144"
+                }, {
+                    "src": static('logo_color_plan_512.png'),
+                    "type": "image/png",
+                    "sizes": "512x512"
+                }
+            ]
         }, {
             "name": _("Shopping"),
             "short_name": _("Shopping"),
             "description": _("View your shopping lists"),
-            "url": "./shopping"
+            "url": "./shopping",
+            icons: [
+                {
+                    "src": static('logo_color_shopping.svg'),
+                    "sizes": "any"
+                }, {
+                    "src": static('logo_color_shopping_144.png'),
+                    "type": "image/png",
+                    "sizes": "144x144"
+                }, {
+                    "src": static('logo_color_shopping_512.png'),
+                    "type": "image/png",
+                    "sizes": "512x512"
+                }
+            ]
         }],
         "share_target": {
             "action": "/recipe/import",
