@@ -40,7 +40,7 @@ def index(request):
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
-    if has_group_permission(request.user, ('guest', )):
+    if has_group_permission(request.user, ('guest',)):
         return render(request, 'frontend/tandoor.html', {})
     else:
         if request.user.is_authenticated:
@@ -53,7 +53,7 @@ def search(request):
     if settings.V3_BETA:
         return HttpResponseRedirect(reverse('vue3'))
 
-    if has_group_permission(request.user, ('guest', )):
+    if has_group_permission(request.user, ('guest',)):
         return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
@@ -133,7 +133,7 @@ def recipe_view(request, pk, share=None):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
-        if not (has_group_permission(request.user, ('guest', )) and recipe.space == request.space) and not share_link_valid(recipe, share):
+        if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('index'))
 
@@ -509,29 +509,29 @@ def web_manifest(request):
 
     manifest_info = {
         "name":
-        theme_values['app_name'],
+            theme_values['app_name'],
         "short_name":
-        theme_values['app_name'],
+            theme_values['app_name'],
         "description":
-        _("Manage recipes, shopping list, meal plans and more."),
+            _("Manage recipes, shopping list, meal plans and more."),
         "icons":
-        icons,
+            icons,
         "start_url":
-        "./",
+            "./",
         "background_color":
-        theme_values['nav_bg_color'],
+            theme_values['nav_bg_color'],
         "display":
-        "standalone",
+            "standalone",
         "scope":
-        ".",
+            ".",
         "theme_color":
-        theme_values['nav_bg_color'],
+            theme_values['nav_bg_color'],
         "shortcuts": [{
             "name": _("Plan"),
             "short_name": _("Plan"),
             "description": _("View your meal Plan"),
             "url": "./mealplan",
-            icons: [
+            "icons": [
                 {
                     "src": static('logo_color_plan.svg'),
                     "sizes": "any"
@@ -550,7 +550,7 @@ def web_manifest(request):
             "short_name": _("Shopping"),
             "description": _("View your shopping lists"),
             "url": "./shopping",
-            icons: [
+            "icons": [
                 {
                     "src": static('logo_color_shopping.svg'),
                     "sizes": "any"
@@ -667,3 +667,7 @@ def get_orphan_files(delete_orphans=False):
         orphans = find_orphans()
 
     return [img[1] for img in orphans]
+
+
+def vue3(request):
+    return HttpResponseRedirect(reverse('index'))
