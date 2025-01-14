@@ -75,9 +75,7 @@ for p in PLUGINS:
             pass
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    re_path(r'^v3/.*', views.vue3, name='vue3'),
-    #path('v3/', views.vue3, name='vue3'),
+
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('space-overview', views.space_overview, name='view_space_overview'),
@@ -86,26 +84,15 @@ urlpatterns = [
     path('no-perm', views.no_perm, name='view_no_perm'),
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
-    path('search/', views.search, name='view_search'),
-    path('books/', views.books, name='view_books'),
-    path('plan/', views.meal_plan, name='view_plan'),
-    path('shopping/', lists.shopping_list, name='view_shopping'),
-    path('settings/', views.user_settings, name='view_settings'),
+
     path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),  # TODO rename to search settings
-    path('history/', views.history, name='view_history'),
-    path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
-    path('property-editor/<int:pk>', views.property_editor, name='view_property_editor'),
+
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
     path('api/import/', api.import_files, name='view_import'),
     path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
     path('export/', import_export.export_recipe, name='view_export'),
     path('export-response/<int:pk>/', import_export.export_response, name='view_export_response'),
     path('export-file/<int:pk>/', import_export.export_file, name='view_export_file'),
-    path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
-    path('view/recipe/<int:pk>/<slug:share>', views.recipe_view, name='view_recipe'),
-    path('new/recipe-import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
-    path('new/share-link/<int:pk>/', new.share_link, name='new_share_link'),
-    path('edit/recipe/<int:pk>/', edit.switch_recipe, name='edit_recipe'),
 
     # for internal use only
     path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),
@@ -145,6 +132,10 @@ urlpatterns = [
     path('offline/', views.offline, name='view_offline'),
     path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
+
+
+    path('', views.index, name='index'),
+    path('<path:resource>', views.index, name='index'),
 ]
 
 generic_models = (Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync, Comment, RecipeBookEntry, InviteLink, UserSpace, Space)

@@ -61,8 +61,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    // TODO configure proper history mode
-    history: createWebHistory('v3/'),
+    history: createWebHistory(),
     routes,
 })
 

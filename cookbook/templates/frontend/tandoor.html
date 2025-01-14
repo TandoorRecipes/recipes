@@ -17,6 +17,8 @@
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
+    <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
+
     <link rel="icon" href="{{ theme_values.logo_color_svg }}">
     <link rel="icon" href="{{ theme_values.logo_color_32 }}" sizes="32x32">
     <link rel="icon" href="{{ theme_values.logo_color_128 }}" sizes="128x128">
@@ -40,6 +42,17 @@
 
 <script type="application/javascript">
     localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
+
+    window.addEventListener("load", () => {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {
+            }).catch(function (err) {
+                console.warn('Error whilst registering service worker', err);
+            });
+        } else {
+            console.warn('service worker not in navigator');
+        }
+    });
 </script>
 
 </body>

@@ -48,10 +48,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Get vars from .env files
 SECRET_KEY = os.getenv('SECRET_KEY', 'INSECURE_STANDARD_KEY_SET_IN_ENV')
 
-DEBUG = extract_bool('DEBUG', True)
-DEBUG_TOOLBAR = extract_bool('DEBUG_TOOLBAR', True)
-
-V3_BETA = extract_bool('V3_BETA', False)
+DEBUG = extract_bool('DEBUG', False)
+DEBUG_TOOLBAR = extract_bool('DEBUG_TOOLBAR', False)
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
 

@@ -39,7 +39,13 @@ def index(request):
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
-    return HttpResponseRedirect(reverse('vue3'))
+    if has_group_permission(request.user, ('guest', )):
+        return render(request, 'frontend/tandoor.html', {})
+    else:
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('view_no_group'))
+        else:
+            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
 def search(request):
@@ -523,20 +529,15 @@ def web_manifest(request):
             "name": _("Plan"),
             "short_name": _("Plan"),
             "description": _("View your meal Plan"),
-            "url": "./plan"
-        }, {
-            "name": _("Books"),
-            "short_name": _("Books"),
-            "description": _("View your cookbooks"),
-            "url": "./books"
+            "url": "./mealplan"
         }, {
             "name": _("Shopping"),
             "short_name": _("Shopping"),
             "description": _("View your shopping lists"),
-            "url": "./shopping/"
+            "url": "./shopping"
         }],
         "share_target": {
-            "action": "/data/import/url",
+            "action": "/recipe/import",
             "method": "GET",
             "params": {
                 "title": "title",
@@ -590,7 +591,7 @@ def test2(request):
 
 
 @group_required('guest')
-def vue3(request):
+def tandoor_frontend(request):
     return render(request, 'frontend/tandoor.html', {})
 
 
