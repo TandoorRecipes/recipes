@@ -34,7 +34,7 @@ from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS
 
 
-def index(request):
+def index(request, path=None, resource=None):
     with scopes_disabled():
         if not request.user.is_authenticated:
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
