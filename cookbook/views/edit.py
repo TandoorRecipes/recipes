@@ -80,7 +80,7 @@ class SyncUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
 def edit_storage(request, pk):
     instance: Storage = get_object_or_404(Storage, pk=pk, space=request.space)
 
-    if not (instance.created_by == request.user or request.user.is_superuser):
+    if not request.user.is_superuser:
         messages.add_message(request, messages.ERROR, _('You cannot edit this storage!'))
         return HttpResponseRedirect(reverse('list_storage'))
 

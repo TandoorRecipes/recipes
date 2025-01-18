@@ -24,6 +24,7 @@ from rest_framework.fields import IntegerField
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.image_processing import is_file_type_allowed
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
@@ -267,12 +268,17 @@ class UserFileSerializer(serializers.ModelSerializer):
                 raise ValidationError(_('You have reached your file upload limit.'))
 
     def create(self, validated_data):
+        if not is_file_type_allowed(validated_data['file'].name):
+            return None
+
         self.check_file_limit(validated_data)
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
+        if not is_file_type_allowed(validated_data['file'].name):
+            return None
         self.check_file_limit(validated_data)
         return super().update(instance, validated_data)
 
@@ -1031,6 +1037,16 @@ class RecipeSerializer(RecipeBaseSerializer):
 class RecipeImageSerializer(WritableNestedModelSerializer):
     image = serializers.ImageField(required=False, allow_null=True)
     image_url = serializers.CharField(max_length=4096, required=False, allow_null=True)
+
+    def create(self, validated_data):
+        if not is_file_type_allowed(validated_data['image'].name, image_only=True):
+            return None
+        return super().create( validated_data)
+
+    def update(self, instance, validated_data):
+        if not is_file_type_allowed(validated_data['image'].name, image_only=True):
+            return None
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Recipe
