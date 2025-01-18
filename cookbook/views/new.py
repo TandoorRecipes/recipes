@@ -58,10 +58,16 @@ class StorageCreate(GroupRequiredMixin, CreateView):
         obj = form.save(commit=False)
         obj.created_by = self.request.user
         obj.space = self.request.space
-        obj.save()
+
         if self.request.space.demo or settings.HOSTED:
             messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
             return redirect('index')
+
+        if not self.request.user.is_superuser:
+            messages.add_message(self.request, messages.ERROR, _('This feature is only available for the instance administrator (superuser)'))
+            return redirect('index')
+
+        obj.save()
         return HttpResponseRedirect(reverse('edit_storage', kwargs={'pk': obj.pk}))
 
     def get_context_data(self, **kwargs):
