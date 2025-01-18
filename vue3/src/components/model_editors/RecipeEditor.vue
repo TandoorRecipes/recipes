@@ -70,7 +70,7 @@
                     <v-form :disabled="loading || fileApiLoading">
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
                             <v-col>
-                                <step-editor v-model="editingObj.steps[i]" :step-index="i" @delete="deleteStepAtIndex(i)"></step-editor>
+                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)"></step-editor>
                             </v-col>
                         </v-row>
                         <v-row>

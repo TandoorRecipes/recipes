@@ -53,7 +53,7 @@
                     <div v-if="!mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" empty-insert-threshold="25" group="ingredients">
                             <v-row v-for="(ingredient, index) in step.ingredients" dense>
-                                <v-col cols="2">
+                                <v-col cols="2" v-if="!ingredient.isHeader">
                                     <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
                                                   hide-details>
 
@@ -62,14 +62,18 @@
                                         </template>
                                     </v-text-field>
                                 </v-col>
-                                <v-col cols="3">
+                                <v-col cols="3" v-if="!ingredient.isHeader">
                                     <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details></model-select>
                                 </v-col>
-                                <v-col cols="3">
+                                <v-col cols="3" v-if="!ingredient.isHeader">
                                     <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
                                 </v-col>
-                                <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
-                                    <v-text-field :label="$t('Note')" v-model="ingredient.note" density="compact" hide-details></v-text-field>
+                                <v-col :cols="(ingredient.isHeader) ? 11 : 3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
+                                    <v-text-field :label="(ingredient.isHeader) ? $t('Headline') : $t('Note')" v-model="ingredient.note" density="compact" hide-details>
+                                        <template #prepend v-if="ingredient.isHeader">
+                                            <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
+                                        </template>
+                                    </v-text-field>
                                 </v-col>
                                 <v-col cols="1">
                                     <v-btn variant="plain" icon>
@@ -77,6 +81,14 @@
                                         <v-menu activator="parent">
                                             <v-list>
                                                 <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
+                                                <v-list-item link>
+                                                    <v-switch v-model="step.ingredients[index].isHeader" :label="$t('Headline')" hide-details></v-switch>
+                                                </v-list-item>
+                                                <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{
+                                                        $t('Move')
+                                                    }}
+                                                </v-list-item>
+
                                             </v-list>
                                         </v-menu>
                                     </v-btn>
@@ -87,7 +99,7 @@
                     </div>
 
                     <v-list v-if="mobile">
-                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" group="ingredients">
+                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" group="ingredients" empty-insert-threshold="25">
                             <v-list-item v-for="(ingredient, index) in step.ingredients" border @click="editingIngredientIndex = index; dialogIngredientEditor = true">
                                 <ingredient-string :ingredient="ingredient"></ingredient-string>
                                 <template #append>
@@ -151,6 +163,36 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog
+        v-model="dialogIngredientSorter"
+        :max-width="(mobile) ? '100vw': '25vw'"
+        :fullscreen="mobile">
+        <v-card>
+            <v-closable-card-title :title="$t('Move')" v-model="dialogIngredientSorter"
+                                   :sub-title="ingredientToString(step.ingredients[editingIngredientIndex])"></v-closable-card-title>
+            <v-card-text>
+                <v-btn block :disabled="editingIngredientIndex== 0" @click="moveIngredient(editingIngredientIndex, props.stepIndex, 0)">{{ $t('First') }}</v-btn>
+                <v-btn block :disabled="editingIngredientIndex == 0" class="mt-1" @click="moveIngredient(editingIngredientIndex, props.stepIndex, editingIngredientIndex - 1)">{{
+                        $t('Up')
+                    }}
+                </v-btn>
+                <v-btn block :disabled="editingIngredientIndex + 1 == step.ingredients.length" class="mt-1"
+                       @click="moveIngredient(editingIngredientIndex, props.stepIndex, editingIngredientIndex + 1)"> {{ $t('Down') }}
+                </v-btn>
+                <v-btn block :disabled="editingIngredientIndex + 1 == step.ingredients.length" class="mt-1"
+                       @click="moveIngredient(editingIngredientIndex, props.stepIndex, step.ingredients.length - 1)">{{ $t('Last') }}
+                </v-btn>
+                {{ $t('Step') }}
+                <v-btn block v-for="(s,i) in recipe.steps" :disabled="i == props.stepIndex" class="mt-1"
+                       @click="moveIngredient(editingIngredientIndex, i, recipe.steps[i].ingredients.length)">{{ i + 1 }} {{ s.name }}
+                </v-btn>
+            </v-card-text>
+            <v-card-actions>
+
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
     <v-bottom-sheet v-model="dialogIngredientEditor">
         <v-card v-if="editingIngredientIndex >= 0">
             <v-closable-card-title :title="$t('Ingredient Editor')" v-model="dialogIngredientEditor"></v-closable-card-title>
@@ -186,7 +228,7 @@
 
 <script setup lang="ts">
 import {nextTick, onMounted, ref} from 'vue'
-import {ApiApi, Ingredient, ParsedIngredient, Step, Unit} from "@/openapi";
+import {ApiApi, Ingredient, ParsedIngredient, Recipe, Step, Unit} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -196,16 +238,17 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import IngredientString from "@/components/display/IngredientString.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ingredientToString} from "@/utils/model_utils";
 
 const emit = defineEmits(['delete'])
 
 const step = defineModel<Step>({required: true})
+const recipe = defineModel<Recipe>('recipe', {required: true})
 const props = defineProps({
     stepIndex: {type: Number, required: true},
 })
 
 const {mobile} = useDisplay()
-const test = ref([])
 
 const showName = ref(false)
 const showTime = ref(false)
@@ -215,8 +258,9 @@ const showFile = ref(false)
 const dialogMarkdownEditor = ref(false)
 const dialogIngredientEditor = ref(false)
 const dialogIngredientParser = ref(false)
+const dialogIngredientSorter = ref(false)
 
-const editingIngredientIndex = ref(Number)
+const editingIngredientIndex = ref(0)
 const ingredientTextInput = ref("")
 
 const defaultUnit = ref<null | Unit>(null)
@@ -236,6 +280,25 @@ onMounted(() => {
         })
     }
 })
+
+/**
+ * move the ingredient at the given index of this step to the step and index at that step given in the target
+ * @param sourceIngredientIndex index of the ingredient to move
+ * @param targetStepIndex index of the step to place ingredient into
+ * @param targetIngredientIndex place in the target steps ingredient list to insert into
+ */
+function moveIngredient(sourceIngredientIndex: number, targetStepIndex: number, targetIngredientIndex: number,) {
+    let ingredient = step.value.ingredients[sourceIngredientIndex]
+    step.value.ingredients.splice(sourceIngredientIndex, 1)
+    recipe.value.steps[targetStepIndex].ingredients.splice(targetIngredientIndex, 0, ingredient)
+
+    // close dialog if moved to a new step, update index if its in the same step
+    if (targetStepIndex != props.stepIndex) {
+        dialogIngredientSorter.value = false
+    } else {
+        editingIngredientIndex.value = targetIngredientIndex
+    }
+}
 
 /**
  * sort function called by draggable when ingredient table is sorted
