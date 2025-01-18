@@ -19,7 +19,7 @@
 
                         <v-stepper-window>
                             <v-stepper-window-item value="1">
-                                <v-card :loading="loading">
+                                <v-card :loading="loading" >
                                     <v-card-text>
                                         <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl">
                                             <template #append>
@@ -115,7 +115,7 @@
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-list>
-                                            <vue-draggable v-model="s.ingredients" group="ingredients" drag-class="drag-handle">
+                                            <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" empty-insert-threshold="25">
                                                 <v-list-item v-for="i in s.ingredients" border>
                                                     <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                                     {{ i.amount }} <span v-if="i.unit">{{ i.unit.name }}</span> <span v-if="i.food">{{ i.food.name }}</span>

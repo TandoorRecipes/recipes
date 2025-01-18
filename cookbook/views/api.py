@@ -1737,12 +1737,12 @@ class RecipeUrlImportView(APIView):
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
                     if validate_import_url(url):
                         # TODO new serializer
-                        return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': [], 'duplicate': duplicate}, status=status.HTTP_200_OK)
-                if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
+                        return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': []}, status=status.HTTP_200_OK)
+                if re.match('^(.)*/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     recipe_json = requests.get(
-                        url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
+                        url.replace('/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1],
                                                                              '') + '?share='
-                        + re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
+                        + re.split('/recipe/[0-9]+', url)[1].replace('/', '')).json()
                     recipe_json = clean_dict(recipe_json, 'id')
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                     if serialized_recipe.is_valid():
@@ -1756,7 +1756,7 @@ class RecipeUrlImportView(APIView):
                                                 name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                         recipe.save()
                         # TODO new serializer
-                        return Response({'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk})), 'duplicate': duplicate}, status=status.HTTP_201_CREATED)
+                        return Response({'link': request.build_absolute_uri('recipe/' + recipe.pk)}, status=status.HTTP_201_CREATED)
                 else:
                     try:
                         if validate_import_url(url):
@@ -2105,7 +2105,7 @@ def share_link(request, pk):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,
-                             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+                             'link': request.build_absolute_uri(f'recipe/{pk}/{link.uuid}')})
     else:
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 

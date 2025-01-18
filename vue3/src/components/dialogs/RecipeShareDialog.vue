@@ -11,8 +11,8 @@
 
             </v-card-text>
             <v-card-actions>
-                <v-btn class="float-right" @click="dialog = false">{{$t('Close')}}</v-btn>
-                <v-btn class="float-right" color="success" prepend-icon="fa-solid fa-share-nodes" @click="shareIntend()">{{$t('Share')}}</v-btn>
+                <v-btn class="float-right" @click="dialog = false">{{ $t('Close') }}</v-btn>
+                <v-btn class="float-right" color="success" prepend-icon="fa-solid fa-share-nodes" @click="shareIntend()">{{ $t('Share') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -21,14 +21,14 @@
 <script setup lang="ts">
 
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview, ShareLink} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({
-    recipe: {type:  Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true}
+    recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true}
 })
 
 const {t} = useI18n()
@@ -37,14 +37,17 @@ const dialog = ref(false)
 const loading = ref(false)
 const shareLink = ref({} as ShareLink)
 
-onMounted(() => {
-    generateShareLink()
+// watch change to dialog open and generate share link when dialog is opened
+watch(dialog, (newValue, oldValue) => {
+    if (!oldValue && newValue) {
+        generateShareLink()
+    }
 })
 
 /**
  * request api to generate share link
  */
-function generateShareLink(){
+function generateShareLink() {
     let api = new ApiApi()
     loading.value = true
 

@@ -5,7 +5,7 @@
     <v-card variant="outlined">
         <template #title>
             <v-card-title>
-                <v-chip color="primary">{{$t('Step')}} {{ props.stepIndex + 1 }}</v-chip>
+                <v-chip color="primary">{{ $t('Step') }} {{ props.stepIndex + 1 }}</v-chip>
                 {{ step.name }}
             </v-card-title>
         </template>
@@ -50,42 +50,44 @@
             <v-row dense>
                 <v-col cols="12">
                     <v-label>{{ $t('Ingredients') }}</v-label>
+                    <div v-if="!mobile">
+                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" empty-insert-threshold="25" group="ingredients">
+                            <v-row v-for="(ingredient, index) in step.ingredients" dense>
+                                <v-col cols="2">
+                                    <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
+                                                  hide-details>
 
-                    <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" v-if="!mobile">
-                        <v-row v-for="(ingredient, index) in step.ingredients" dense>
-                            <v-col cols="2">
-                                <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact" hide-details>
+                                        <template #prepend>
+                                            <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
+                                        </template>
+                                    </v-text-field>
+                                </v-col>
+                                <v-col cols="3">
+                                    <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details></model-select>
+                                </v-col>
+                                <v-col cols="3">
+                                    <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
+                                </v-col>
+                                <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
+                                    <v-text-field :label="$t('Note')" v-model="ingredient.note" density="compact" hide-details></v-text-field>
+                                </v-col>
+                                <v-col cols="1">
+                                    <v-btn variant="plain" icon>
+                                        <v-icon icon="$settings"></v-icon>
+                                        <v-menu activator="parent">
+                                            <v-list>
+                                                <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
+                                            </v-list>
+                                        </v-menu>
+                                    </v-btn>
 
-                                    <template #prepend>
-                                         <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
-                                    </template>
-                                </v-text-field>
-                            </v-col>
-                            <v-col cols="3">
-                                <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details></model-select>
-                            </v-col>
-                            <v-col cols="3">
-                                <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
-                            </v-col>
-                            <v-col cols="3" @keydown.tab="event => handleIngredientNoteTab(event, index)">
-                                <v-text-field :label="$t('Note')" v-model="ingredient.note" density="compact" hide-details></v-text-field>
-                            </v-col>
-                            <v-col cols="1">
-                                <v-btn variant="plain" icon>
-                                    <v-icon icon="$settings"></v-icon>
-                                    <v-menu activator="parent">
-                                        <v-list>
-                                            <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
-                                        </v-list>
-                                    </v-menu>
-                                </v-btn>
-
-                            </v-col>
-                        </v-row>
-                    </vue-draggable>
+                                </v-col>
+                            </v-row>
+                        </vue-draggable>
+                    </div>
 
                     <v-list v-if="mobile">
-                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients">
+                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" group="ingredients">
                             <v-list-item v-for="(ingredient, index) in step.ingredients" border @click="editingIngredientIndex = index; dialogIngredientEditor = true">
                                 <ingredient-string :ingredient="ingredient"></ingredient-string>
                                 <template #append>
@@ -203,6 +205,7 @@ const props = defineProps({
 })
 
 const {mobile} = useDisplay()
+const test = ref([])
 
 const showName = ref(false)
 const showTime = ref(false)
