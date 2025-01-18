@@ -31,7 +31,7 @@ def test_edit_storage(storage_obj, a1_s1, a1_s2):
         }
     )
     storage_obj.refresh_from_db()
-    assert r.status_code == 200
+    assert r.status_code == 302
     r_messages = [m for m in get_messages(r.wsgi_request)]
     assert not any(m.level > messages.SUCCESS for m in r_messages)
 
@@ -54,7 +54,7 @@ def test_edit_storage(storage_obj, a1_s1, a1_s2):
     ['a_u', 302],
     ['g1_s1', 302],
     ['u1_s1', 302],
-    ['a1_s1', 200],
+    ['a1_s1', 302],
     ['g1_s2', 302],
     ['u1_s2', 302],
     ['a1_s2', 404],
