@@ -94,7 +94,8 @@ class Paprika(Integration):
                     url = recipe_json.get("image_url", None)
                     if validate_import_url(url):
                         response = requests.get(url)
-                        self.import_recipe_image(recipe, BytesIO(response.content))
+                        if response.status_code == 200 and len(response.content) > 0:
+                            self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception:
                 pass
 
