@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-22 07:58+0000\n"
-"Last-Translator: Oleh Hudyma <oleg.hudymaa@gmail.com>\n"
+"PO-Revision-Date: 2025-01-16 18:58+0000\n"
+"Last-Translator: Anton Shevtsov <ashevtsovs@gmail.com>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -32,7 +32,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
-msgstr ""
+msgstr "Ключові слова"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
@@ -941,13 +941,13 @@ msgstr ""
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
 msgid "Ingredient Editor"
-msgstr ""
+msgstr "Редактор Інгредієнтів"
 
 #: .\cookbook\templates\base.html:275
 #: .\cookbook\templates\export_response.html:7
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr ""
+msgstr "Експорт"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
