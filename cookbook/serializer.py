@@ -649,7 +649,7 @@ class RecipeSimpleSerializer(WritableNestedModelSerializer):
 
     @extend_schema_field(str)
     def get_url(self, obj):
-        return reverse('view_recipe', args=[obj.id])
+        return f'recipe/{obj.pk}'
 
     def create(self, validated_data):
         # don't allow writing to Recipe via this API
