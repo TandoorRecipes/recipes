@@ -133,9 +133,6 @@ urlpatterns = [
     path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
 
-    re_path(r'^v3/.*', views.vue3, name='vue_3'),
-    path('', views.index, name='index'),
-    path('<path:resource>', views.index, name='tandoor_frontend'),
 ]
 
 generic_models = (Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync, Comment, RecipeBookEntry, InviteLink, UserSpace, Space)
@@ -167,3 +164,10 @@ for m in vue_models:
 if DEBUG:
     urlpatterns.append(path('test/', views.test, name='view_test'))
     urlpatterns.append(path('test2/', views.test2, name='view_test2'))
+
+# catchall view for new frontend
+urlpatterns += [
+    re_path(r'^v3/.*', views.vue3, name='vue_3'),
+    path('', views.index, name='index'),
+    path('<path:resource>', views.index, name='tandoor_frontend'),
+]
