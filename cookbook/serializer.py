@@ -965,12 +965,12 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
     image_url = serializers.CharField(max_length=4096, required=False, allow_null=True)
 
     def create(self, validated_data):
-        if not is_file_type_allowed(validated_data['image'].name, image_only=True):
+        if 'image' in validated_data and not is_file_type_allowed(validated_data['image'].name, image_only=True):
             return None
         return super().create( validated_data)
 
     def update(self, instance, validated_data):
-        if not is_file_type_allowed(validated_data['image'].name, image_only=True):
+        if 'image' in validated_data and not is_file_type_allowed(validated_data['image'].name, image_only=True):
             return None
         return super().update(instance, validated_data)
 
