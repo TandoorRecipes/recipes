@@ -1,9 +1,9 @@
 <template>
     <v-container>
-        <v-row>
+        <v-row >
             <v-col>
 
-                <v-stepper v-model="stepper">
+                <v-stepper v-model="stepper" >
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
                             <v-stepper-item :title="$t('Import')" value="1"></v-stepper-item>
@@ -18,8 +18,8 @@
                         </v-stepper-header>
 
                         <v-stepper-window>
-                            <v-stepper-window-item value="1">
-                                <v-card :loading="loading" >
+                            <v-stepper-window-item value="1" >
+                                <v-card :loading="loading">
                                     <v-card-text>
                                         <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl">
                                             <template #append>
@@ -175,11 +175,6 @@
                                             <v-number-input :label="$t('Servings')" v-model="importResponse.recipe.servings"></v-number-input>
                                             <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
                                             <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" clearable></v-textarea>
-
-                                            <v-btn class="mt-5" size="large" @click="createRecipeFromImport()" color="success" :loading="loading || fileApiLoading">{{
-                                                    $t('Import')
-                                                }}
-                                            </v-btn>
                                         </v-col>
                                     </v-row>
 
@@ -187,11 +182,14 @@
                             </v-stepper-window-item>
                         </v-stepper-window>
 
-                        <v-stepper-actions @click:next="next"
-                                           @click:prev="prev"
-                                           :next-text="$t('Next')"
-                                           :prev-text="$t('Back')"
-                                           :disabled="Object.keys(importResponse).length == 0">
+                        <v-stepper-actions >
+                            <template #prev>
+                                <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>
+                            </template>
+                            <template #next>
+                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">{{$t('Next')}}</v-btn>
+                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false"  v-if="stepper == '5'">{{$t('Import')}}</v-btn>
+                            </template>
                         </v-stepper-actions>
                     </template>
 
