@@ -32,10 +32,9 @@
                                         <v-alert variant="tonal" v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
                                             <v-alert-title>{{ $t('Duplicate') }}</v-alert-title>
                                             {{ $t('DuplicateFoundInfo') }}
-                                            <v-chip-group>
-                                                <v-chip :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }}</v-chip>
-                                            </v-chip-group>
-                                            <v-btn color="primary" class="float-right" @click="stepper = '2'">{{ $t('Continue') }}</v-btn>
+                                            <v-list>
+                                                <v-list-item :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }} (#{{r.id}})</v-list-item>
+                                            </v-list>
                                         </v-alert>
                                     </v-card-text>
                                 </v-card>
@@ -187,7 +186,10 @@
                                 <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>
                             </template>
                             <template #next>
-                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">{{$t('Next')}}</v-btn>
+                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false"  v-if="stepper == '1'">{{$t('Import')}}</v-btn>
+                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">
+                                    {{stepper == '1' ? $t('Edit') : $t('Next')}}
+                                </v-btn>
                                 <v-btn @click="createRecipeFromImport()" color="success" :disabled="false"  v-if="stepper == '5'">{{$t('Import')}}</v-btn>
                             </template>
                         </v-stepper-actions>
@@ -237,10 +239,6 @@ function loadRecipeFromUrl() {
     loading.value = true
     api.apiRecipeFromSourceCreate({recipeFromSource: {url: importUrl.value}}).then(r => {
         importResponse.value = r
-        if (r.duplicates.length == 0) {
-            // automatically continue only if no duplicates were found
-            stepper.value = "2"
-        }
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
