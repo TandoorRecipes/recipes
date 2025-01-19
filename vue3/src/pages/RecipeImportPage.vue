@@ -186,7 +186,7 @@
                                 <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>
                             </template>
                             <template #next>
-                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false"  v-if="stepper == '1'">{{$t('Import')}}</v-btn>
+                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="Object.keys(importResponse).length == 0"  v-if="stepper == '1'">{{$t('Import')}}</v-btn>
                                 <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">
                                     {{stepper == '1' ? $t('Edit') : $t('Next')}}
                                 </v-btn>
