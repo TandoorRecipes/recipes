@@ -23,8 +23,8 @@
                         </v-btn>
                     </template>
                 </v-number-input>
-                <model-select model="Unit" v-model="editingObj.unit"></model-select>
-                <model-select model="Food" v-model="editingObj.food"></model-select>
+                <model-select model="Unit" allow-create v-model="editingObj.unit"></model-select>
+                <model-select model="Food" allow-create v-model="editingObj.food"></model-select>
             </v-form>
         </v-card-text>
     </model-editor-base>

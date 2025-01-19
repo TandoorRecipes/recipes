@@ -30,8 +30,8 @@
                     <v-col class="pr-0 pt-0">
                         <v-btn height="80px" color="primary" density="compact" size="small"
                                :to="{name: 'ModelEditPage', params: {model: 'Food', id: shoppingListFood?.food.id!}}" target="_blank" block stacked>
-                            <i class="fa-solid fa-pencil fa-2x mb-2"></i>
-                            {{ $t('Edit_Food') }}
+                            <i class="fa-solid fa-carrot fa-2x mb-2"></i>
+                            {{ $t('Edit') }}
                         </v-btn>
                     </v-col>
                     <v-col class="pt-0">
@@ -59,7 +59,8 @@
                                 {{ e.food.name }}
                             </v-list-item-title>
                             <v-list-item-subtitle v-if="e.completedAt">
-                                <v-icon icon="fa-solid fa-check" size="small" color="success"></v-icon> {{$t('Completed')}} {{DateTime.fromJSDate(e.completedAt).toLocaleString(DateTime.DATETIME_SHORT)}}
+                                <v-icon icon="fa-solid fa-check" size="small" color="success"></v-icon>
+                                {{ $t('Completed') }} {{ DateTime.fromJSDate(e.completedAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
                             <v-list-item-subtitle v-if="e.recipeMealplan && e.recipeMealplan.recipeName !== ''">
                                 {{ e.recipeMealplan.servings }} x
@@ -73,19 +74,41 @@
                             <v-list-item-subtitle>
                                 {{ e.createdBy.displayName }} - {{ DateTime.fromJSDate(e.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
-                            <v-list-item-subtitle v-if="isDelayed(e)">
+                            <v-list-item-subtitle v-if="isDelayed(e)" class="text-info font-weight-bold">
                                 {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
 
-                            <template #append>
-                                <v-btn size="small" color="edit" icon="$edit" v-if="!e.recipeMealplan">
+                            <!--                            <template #append>-->
+                            <!--                                <v-btn size="small" color="edit" icon="$edit" v-if="!e.recipeMealplan">-->
+                            <!--                                    <v-icon icon="$edit"></v-icon>-->
+                            <!--                                    <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id); shoppingListFood.entries.delete(e.id)"-->
+                            <!--                                                       @save="(args: ShoppingListEntry) => (shoppingListFood.entries.set(e.id, args))"></model-edit-dialog>-->
+                            <!--                                </v-btn>-->
+                            <!--                            </template>-->
+
+                            <v-btn-group divided border>
+                                <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)">
+                                    <v-icon icon="fa-solid fa-divide"></v-icon>
+                                </v-btn>
+                                <v-btn icon="" @click="e.amount--; updateEntryAmount(e)">
+                                    <v-icon icon="fa-solid fa-minus"></v-icon>
+                                </v-btn>
+                                <v-btn icon="" @click="e.amount++; updateEntryAmount(e)">
+                                    <v-icon icon="fa-solid fa-plus"></v-icon>
+                                </v-btn>
+
+                                <v-btn icon="" @click="e.amount = e.amount * 2; updateEntryAmount(e)">
+                                    <v-icon icon="fa-solid fa-times"></v-icon>
+                                </v-btn>
+                                <v-btn color="edit" icon="$edit" v-if="!e.recipeMealplan">
                                     <v-icon icon="$edit"></v-icon>
                                     <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id); shoppingListFood.entries.delete(e.id)"
                                                        @save="(args: ShoppingListEntry) => (shoppingListFood.entries.set(e.id, args))"></model-edit-dialog>
                                 </v-btn>
-                            </template>
-
-
+                                <v-btn icon="" @click="useShoppingStore().deleteObject(e, true); shoppingListFood.entries.delete(e.id)" color="delete">
+                                    <v-icon icon="$delete"></v-icon>
+                                </v-btn>
+                            </v-btn-group>
                         </v-list-item>
                     </template>
 
@@ -103,8 +126,8 @@
 
 <script setup lang="ts">
 
-import {computed, PropType} from "vue";
-import {ApiApi, ShoppingListEntry, SupermarketCategory} from "@/openapi";
+import {computed} from "vue";
+import {ApiApi, PatchedShoppingListEntry, ShoppingListEntry, SupermarketCategory} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {IShoppingListFood} from "@/types/Shopping";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
@@ -113,7 +136,7 @@ import {useDisplay} from "vuetify";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
 const {mobile} = useDisplay()
 
@@ -146,7 +169,7 @@ function categoryUpdate(category: SupermarketCategory) {
     const api = new ApiApi()
     shoppingListFood.value.food.supermarketCategory = category
     api.apiFoodUpdate({id: shoppingListFood.value.food.id, food: shoppingListFood.value.food}).then(r => {
-
+        useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     })
@@ -171,8 +194,22 @@ function addEntryForFood() {
  * delete all shopping list entries for the given shopping list food
  */
 function deleteAllEntries() {
+    showDialog.value = false
     shoppingListFood.value.entries.forEach(e => {
         useShoppingStore().deleteObject(e, true)
+    })
+}
+
+/**
+ * update the amount for the given shopping list entry in the database
+ * @param entry
+ */
+function updateEntryAmount(entry: ShoppingListEntry) {
+    let api = new ApiApi()
+    api.apiShoppingListEntryPartialUpdate({id: entry.id!, patchedShoppingListEntry: {amount: entry.amount} as PatchedShoppingListEntry}).then(r => {
+
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     })
 }
 
