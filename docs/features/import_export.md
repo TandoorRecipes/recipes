@@ -75,24 +75,23 @@ structured information most of your recipe is going to be intact.
 Follow these steps to import your recipes
 
 1. Go to your Nextcloud Webinterface
-2. Open the `Recipes` folder where your recipes are stored
-3. Select the recipes you want to export or use the checkbox at the top of the list to select all of them
-4. Click on the three dot **Actions** and press Download
+2. Find the `Recipes` folder (usually located in the root directory of your account)
+3. Download that folder to get your `Recipes.zip` which includes the folder `Recipes` and in that a folder for each recipe
+4. Upload the `Recipes.zip` to Tandoor and import it
 
-You will get a `Recipes.zip` file. Simply upload the file and choose the Nextcloud Cookbook type.
 
 !!! WARNING "Folder Structure"
-Importing only works if the folder structure is correct. If you do not use the standard path or create the
-zip file in any other way make sure the structure is as follows
-`  Recipes.zip/
-    └── Recipes/
-        ├── Recipe1/
-        │   ├── recipe.json
-        │   └── full.jpg
-        └── Recipe2/
-            ├── recipe.json
-            └── full.jpg
- `
+    Importing only works if the folder structure is correct. If you do not use the standard path or create the
+    zip file in any other way make sure the structure is as follows
+    `  Recipes.zip/
+        └── Recipes/
+            ├── Recipe1/
+            │   ├── recipe.json
+            │   └── full.jpg
+            └── Recipe2/
+                ├── recipe.json
+                └── full.jpg
+    `
 
 ## Mealie
 
@@ -113,8 +112,7 @@ In order to import your Chowdown recipes simply create a `.zip` file from those 
 The folder structure should look as follows
 
 !!! info "_recipes"
-For some reason chowdown uses `_`before the`recipes`folder. To avoid confusion the import supports both
-   `\_recipes`and`recipes`
+    For some reason chowdown uses `_`before the`recipes`folder. To avoid confusion the import supports both `\_recipes`and`recipes`
 
 ```
 Recipes.zip/
