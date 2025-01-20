@@ -27,6 +27,12 @@
                                             </template>
                                         </v-text-field>
 
+                                        <v-file-input v-model="image" :label="$t('Image')" @click="uploadAndConvertImage()">
+                                            <template #append>
+                                                <v-btn>AI Import</v-btn>
+                                            </template>
+                                        </v-file-input>
+
                                         <!-- <v-textarea :placeholder="$t('paste_json')"></v-textarea> -->
 
                                         <v-alert variant="tonal" v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
@@ -220,12 +226,16 @@ import {useDisplay} from "vuetify";
 
 const {mobile} = useDisplay()
 const router = useRouter()
-const {updateRecipeImage, fileApiLoading} = useFileApi()
+const {updateRecipeImage, convertImageToRecipe, fileApiLoading} = useFileApi()
 
 const stepper = ref("1")
 const dialog = ref(false)
 const loading = ref(false)
 const importUrl = ref("")
+
+
+
+const image = ref<null|File>(null)
 
 const importResponse = ref({} as RecipeFromSourceResponse)
 const keywordSelect = ref<null | SourceImportKeyword>(null)
@@ -244,6 +254,14 @@ function loadRecipeFromUrl() {
     }).finally(() => {
         loading.value = false
     })
+}
+
+function uploadAndConvertImage(){
+    if(image.value != null){
+        convertImageToRecipe(image.value).then(r => {
+            importResponse.value = r
+        })
+    }
 }
 
 /**

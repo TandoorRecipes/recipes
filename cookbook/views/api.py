@@ -39,6 +39,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
+from google import generativeai
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
@@ -1741,7 +1742,7 @@ class RecipeUrlImportView(APIView):
                 if re.match('^(.)*/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     recipe_json = requests.get(
                         url.replace('/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1],
-                                                                             '') + '?share='
+                                                                        '') + '?share='
                         + re.split('/recipe/[0-9]+', url)[1].replace('/', '')).json()
                     recipe_json = clean_dict(recipe_json, 'id')
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
@@ -1811,28 +1812,63 @@ class RecipeUrlImportView(APIView):
 
 
 class ImageToRecipeView(APIView):
-    serializer_class = ImportImageSerializer
-    http_method_names = ['post', 'options']
-    # parser_classes = [MultiPartParser]
+    # serializer_class = ImportImageSerializer
+    # http_method_names = ['post', 'options']
+    parser_classes = [MultiPartParser]
     throttle_classes = [RecipeImportThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
+    @extend_schema(request=ImportImageSerializer(many=False), responses=RecipeFromSourceResponseSerializer(many=False))
     def post(self, request, *args, **kwargs):
         """
 
         """
+        print('method called')
         serializer = ImportImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            # generativeai.configure(api_key=GOOGLE_AI_API_KEY)
+            generativeai.configure(api_key=GOOGLE_AI_API_KEY)
 
-            # model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
-            # img = PIL.Image.open('')
-            # response = model.generate_content(["The image contains a recipe. Please return all data contained in the recipe formatted according to the schema.org specification for recipes", img], stream=True)
-            # response.resolve()
-            Response({'msg': 'SUCCESS'})
+            model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
+            img = PIL.Image.open(serializer.validated_data['image'])
+           # response = model.generate_content([
+            #                                      "The Image given is a photograph or screenshot taken of a cooking recipe. The data contained in the image should be converted to a structured json format adhering to the specification given in the schema.org/recipes schema. It is not allowed to make any data up, the response must only contain data given in the original image. The response must be a plain json object without any formatting characters or other unnecessary information. If unsure please return an empty json object {}. Do not wrap the response in a markdown codeblock (like ```json ```)",
+             #                                     img], stream=True)
+            #response.resolve()
+
+            #response_text = response.text
+            #response_text.replace('```json', '')
+            #response_text.replace('```', '')
+
+            response_text = '{"@context": "https://schema.org", "@type": "Recipe", "name": "Pennettine mit Nüssen und Zitrone", "prepTime": "PT25M", "recipeYield": "4", "ingredients": [{"@type": "Quantity", "name": "BARILLA Pennettine", "amount": 500, "unitCode": "G"}, {"@type": "Quantity", "name": "Walnußkerne", "amount": 100, "unitCode": "G"}, {"@type": "Quantity", "name": "Sahne", "amount": "1/2-1", "unitCode": "CUP"}, {"@type": "Quantity", "name": "Butter", "amount": 20, "unitCode": "G"}, {"@type": "Quantity", "name": "Zucker", "amount": 10, "unitCode": "G"}, {"@type": "Quantity", "name": "gemahlener Zimt", "amount": 1, "unitCode": "UNIT"}, {"@type": "Quantity", "name": "Zitrone, unbehandelt", "amount": "1/2-1", "unitCode": "UNIT"}, {"@type": "Quantity", "name": "Salz", "amount": null, "unitCode": null}, {"@type": "Quantity", "name": "frisch gemahlener Pfeffer", "amount": null, "unitCode": null}], "recipeInstructions": [{"@type": "HowToStep", "text": "Walnußkerne hacken, in eine große Schüssel geben, Zimt und Zucker mit einer Prise Salz und Pfeffer untermischen."}, {"@type": "HowToStep", "text": "Die Zitrone waschen, Schale einer 1/2 Zitrone abreiben, dann zusammen mit den anderen Zutaten in die Schüssel geben und zuletzt in Stückchen geschnittene Butter untermischen."}, {"@type": "HowToStep", "text": "Die Mischung schmelzen, indem Sie die Schüssel auf den Topf mit dem kochenden Pasta-Wasser stellen und hin und wieder umrühren."}, {"@type": "HowToStep", "text": "Sahne dazugeben und die Zutaten mit einem Schneebesen verrühren."}, {"@type": "HowToStep", "text": "BARILLA Pennettine in reichlich Salzwasser al dente kochen, abgießen und mit der Sauce anrichten."}]}'
+
+            print(response_text)
+
+            try:
+                data_json = json.loads(response_text)
+                # if '@context' not in data_json:
+                #     data_json['@context'] = 'https://schema.org'
+                # if '@type' not in data_json:
+                #     data_json['@type'] = 'Recipe'
+                data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
+                #data = "<script type='application/ld+json'>" + response_text + "</script>"
+
+                scrape = scrape_html(html=data, org_url='https://urlnotfound.none', supported_only=False)
+                print(str(scrape.ingredients()))
+                if scrape:
+                    response = {}
+                    response['recipe'] = helper.get_from_scraper(scrape, request)
+                    response['images'] = []
+                    response['duplicates'] = []
+                    return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
+            except JSONDecodeError:
+                traceback.print_exc()
+                print('Jsond dcode error')
+                pass
+
+            # TODO proper serializer response
+            return Response({'msg': 'PARSE_FAIL', 'response': response_text})
         else:
-            Response({'msg': serializer.errors})
-        return Response({'test': 'test'})
+            return Response({'msg': serializer.errors})
 
 
 @extend_schema(

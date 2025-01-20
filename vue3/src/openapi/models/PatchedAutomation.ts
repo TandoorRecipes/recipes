@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { AutomationTypeEnum } from './AutomationTypeEnum';
+import type { TypeEnum } from './TypeEnum';
 import {
-    AutomationTypeEnumFromJSON,
-    AutomationTypeEnumFromJSONTyped,
-    AutomationTypeEnumToJSON,
-    AutomationTypeEnumToJSONTyped,
-} from './AutomationTypeEnum';
+    TypeEnumFromJSON,
+    TypeEnumFromJSONTyped,
+    TypeEnumToJSON,
+    TypeEnumToJSONTyped,
+} from './TypeEnum';
 
 /**
  * 
@@ -35,10 +35,10 @@ export interface PatchedAutomation {
     id?: number;
     /**
      * 
-     * @type {AutomationTypeEnum}
+     * @type {TypeEnum}
      * @memberof PatchedAutomation
      */
-    type?: AutomationTypeEnum;
+    type?: TypeEnum;
     /**
      * 
      * @type {string}
@@ -109,7 +109,7 @@ export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'type': json['type'] == null ? undefined : AutomationTypeEnumFromJSON(json['type']),
+        'type': json['type'] == null ? undefined : TypeEnumFromJSON(json['type']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'param1': json['param_1'] == null ? undefined : json['param_1'],
@@ -133,7 +133,7 @@ export function PatchedAutomationToJSONTyped(value?: Omit<PatchedAutomation, 'cr
     return {
         
         'id': value['id'],
-        'type': AutomationTypeEnumToJSON(value['type']),
+        'type': TypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],
         'param_1': value['param1'],

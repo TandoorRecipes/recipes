@@ -111,6 +111,7 @@ urlpatterns = [
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
+    path('api/image-to-recipe/', api.ImageToRecipeView.as_view(), name='api_image_to_recipe'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),

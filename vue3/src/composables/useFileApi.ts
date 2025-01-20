@@ -1,7 +1,7 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {RecipeImageFromJSON, UserFile, UserFileFromJSON} from "@/openapi";
+import {RecipeFromJSON, RecipeFromSourceFromJSON, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, UserFile, UserFileFromJSON} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
 /**
@@ -76,5 +76,28 @@ export function useFileApi() {
         })
     }
 
-    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage}
+    /**
+     * uploads the given file to the image recognition endpoint
+     * @param file file object to upload
+     */
+    function convertImageToRecipe(file: File){
+        let formData = new FormData()
+        if (file != null) {
+            formData.append('image', file)
+        }
+
+        return fetch(getDjangoUrl(`api/image-to-recipe/`), {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+            body: formData
+        }).then(r => {
+            return r.json().then(r => {
+                return RecipeFromSourceResponseFromJSON(r)
+            })
+        }).finally(() => {
+            fileApiLoading.value = false
+        })
+    }
+
+    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage, convertImageToRecipe}
 }
