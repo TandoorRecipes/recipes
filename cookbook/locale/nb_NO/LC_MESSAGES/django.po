@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2023-08-19 21:36+0000\n"
-"Last-Translator: NeoID <neoid@animenord.com>\n"
+"PO-Revision-Date: 2025-01-26 05:58+0000\n"
+"Last-Translator: Ole Martin Ruud <nett@barskern.no>\n"
 "Language-Team: Norwegian Bokmål <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -326,10 +326,8 @@ msgid "Imported %s recipes."
 msgstr "Importerte %s oppskrifter."
 
 #: .\cookbook\integration\openeats.py:28
-#, fuzzy
-#| msgid "Recipes"
 msgid "Recipe source:"
-msgstr "Oppskrifter"
+msgstr "Oppskriftskilde:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -555,7 +553,7 @@ msgstr "Oppskrift"
 
 #: .\cookbook\models.py:1504
 msgid "Food"
-msgstr ""
+msgstr "Mat"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -846,10 +844,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\account\password_reset.html:32
-#, fuzzy
-#| msgid "Password reset is not implemented for the time being!"
 msgid "Password reset is disabled on this instance."
-msgstr "Det er foreløpig ikke implementert funksjon for å nullstille passord!"
+msgstr "Nullstilling av passord er skrudd av for denne instansen."
 
 #: .\cookbook\templates\account\password_reset_done.html:25
 msgid ""
@@ -912,7 +908,7 @@ msgstr ""
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "og"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
@@ -946,8 +942,6 @@ msgid "Recipes"
 msgstr "Oppskrifter"
 
 #: .\cookbook\templates\base.html:161 .\cookbook\views\lists.py:120
-#, fuzzy
-#| msgid "New Food"
 msgid "Foods"
 msgstr "Ny matvare"
 
@@ -989,10 +983,8 @@ msgstr "Historikk"
 #: .\cookbook\templates\base.html:263
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Ingredienser"
+msgstr "Ingrediensredigerer"
 
 #: .\cookbook\templates\base.html:275
 #: .\cookbook\templates\export_response.html:7
@@ -1002,7 +994,7 @@ msgstr "Eksporter"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Egenskaper"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 msgid "Unit Conversions"
@@ -1179,7 +1171,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
-msgstr ""
+msgstr "Beskyttet"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
@@ -1938,7 +1930,7 @@ msgstr ""
 #: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
 #: .\cookbook\templates\system.html:102 .\cookbook\templates\system.html:113
 msgid "Warning"
-msgstr ""
+msgstr "Advarsel"
 
 #: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
 #: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
