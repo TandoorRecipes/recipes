@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-01-28 23:17+0000\n"
-"Last-Translator: Vinicius José Fritzen <www.vini84200@hotmail.com>\n"
+"PO-Revision-Date: 2025-01-29 13:44+0000\n"
+"Last-Translator: Ángel <1024mb@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -105,9 +105,8 @@ msgid "Something like http://homeassistant.local:8123/api"
 msgstr "Algo como http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
-#, fuzzy
 msgid "http://homeassistant.local:8123/api for example"
-msgstr "por ejemplo http://homeassistant.local:8123/api for example"
+msgstr "Por ejemplo http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
