@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 
-import {computed, ref, watch} from 'vue'
+import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {Recipe} from "@/openapi"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import StepsOverview from "@/components/display/StepsOverview.vue";
@@ -88,6 +88,9 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
+import {useWakeLock} from "@vueuse/core";
+
+const {request, release} = useWakeLock()
 
 const recipe = defineModel<Recipe>({required: true})
 
@@ -102,6 +105,16 @@ watch(() => recipe.value.servings, () => {
     if (recipe.value.servings) {
         servings.value = recipe.value.servings
     }
+})
+
+onMounted(() => {
+    //keep screen on while viewing a recipe
+    request("screen")
+})
+
+onBeforeUnmount(() => {
+    // allow screen to turn off after leaving the recipe page
+    release()
 })
 
 </script>
