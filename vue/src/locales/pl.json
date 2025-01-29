@@ -418,7 +418,7 @@
     "warning_space_delete": "Możesz usunąć swoją przestrzeń, w tym wszystkie przepisy, listy zakupów, plany posiłków i wszystko, co utworzyłeś. Tego nie da się cofnąć! Czy na pewno chcesz to zrobić?",
     "Copy Link": "Skopiuj link",
     "Users": "Użytkownicy",
-    "Invites": "Zaprasza",
+    "Invites": "Zaproszenia",
     "food_inherit_info": "Pola w pożywieniu, które powinny być domyślnie dziedziczone.",
     "Copy Token": "Kopiuj Token",
     "Message": "Wiadomość",
@@ -569,5 +569,6 @@
     "Unchanged": "Niezmienione",
     "Error": "Błąd",
     "DefaultPage": "Strona domyślna",
-    "Shopping_input_placeholder": "np. Ziemniak/100 ziemniaków/100 g ziemniaków"
+    "Shopping_input_placeholder": "np. Ziemniak/100 ziemniaków/100 g ziemniaków",
+    "us_cup": "filiżanka (USA, objętość)"
 }

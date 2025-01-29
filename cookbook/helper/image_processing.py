@@ -44,7 +44,7 @@ def is_file_type_allowed(filename, image_only=False):
         check_list += allowed_file_types
 
     for file_type in check_list:
-        if filename.endswith(file_type):
+        if filename.lower().endswith(file_type):
             is_file_allowed = True
 
     return is_file_allowed

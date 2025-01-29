@@ -1,5 +1,5 @@
 {
-    "warning_feature_beta": "Bu özellik şu anda BETA (test) durumundadır. Lütfen bu özelliği kullanırken hatalara ve muhtemelen gelecekte değişikliklere (muhtemelen özellikle ilgili verilerin kaybolmasına) hazırlıklı olun.",
+    "warning_feature_beta": "Bu özellik şu anda BETA (test) aşamasındadır. Lütfen bu özelliği kullanırken gelecekte hatalar ve muhtemelen kırıcı değişiklikler (muhtemelen özellikle ilgili verileri kaybetme) bekleyin",
     "err_fetching_resource": "Kaynak alınırken bir hata oluştu!",
     "err_creating_resource": "Kaynak oluşturulurken bir hata oluştu!",
     "err_updating_resource": "Kaynak güncellenirken bir hata oluştu!",
@@ -567,5 +567,6 @@
     "imperial_tbsp": "imperial tablespoon [imp tbsp] (Birleşik Krallık, hacim)",
     "imperial_tsp": "imperial teaspoon [imp tsp] (Birleşik Krallık, hacim)",
     "Back": "Geri",
-    "Use_Plural_Unit_Simple": "Birim için dinamik olarak çoğul biçimi kullanın"
+    "Use_Plural_Unit_Simple": "Birim için dinamik olarak çoğul biçimi kullanın",
+    "us_cup": "bardak (ABD, hacim)"
 }

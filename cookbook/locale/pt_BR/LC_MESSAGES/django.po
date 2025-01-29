@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2023-10-09 01:54+0000\n"
-"Last-Translator: Guilherme Roda <glealroda@gmail.com>\n"
+"PO-Revision-Date: 2025-01-29 13:44+0000\n"
+"Last-Translator: Vinicius José Fritzen <www.vini84200@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -88,14 +88,16 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Token de longa duração</a> para sua instância do HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Algo como http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api por exemplo"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -142,6 +144,9 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Determina o quão 'difusa' uma pesquisa é se esta utilizando uma "
+"correspondência de semelhança de trigrama (valores mais baixos significam "
+"que mais erros são ignorados)."
 
 #: .\cookbook\forms.py:340
 msgid ""
@@ -168,28 +173,38 @@ msgstr ""
 "diminuir a qualidade de pesquisa dependendo do idioma em uso"
 
 #: .\cookbook\forms.py:343
+#, fuzzy
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Campos que devem ser procurados por correspondências parciais (por exemplo, "
+"procurar por \"Pie\" retornará \"pie\", \"piece\" e \"soapie\")"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Campos que devem ser buscados para correspondências de prefixo. (por "
+"exemplo, buscar por 'sa' retornará 'salada' e 'sanduíche')"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Campos que devem usar busca 'difusa' (fuzzy). (por exemplo, procurando por "
+"'recita' vai encontrar 'receita').  Nota: essa opção conflitará com os "
+"métodos de pesquisa 'web' e 'raw'."
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Campos para fazer busca do texto completo.  Nota: 'os métodos de pesquisa "
+"'web', 'frase' e 'raw' funcionam somente com campos de texto completo."
 
 #: .\cookbook\forms.py:350
 msgid "Search Method"
@@ -197,15 +212,15 @@ msgstr "Método de Pesquisa"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Buscas 'Difusas' (fuzzy)"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorar Acentos"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
-msgstr ""
+msgstr "Correspondência parcial"
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
@@ -224,6 +239,8 @@ msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Para prevenir spam, o email requisitado não pode ser enviado. Por favor, "
+"aguarde alguns minutos e tente novamente."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
@@ -249,44 +266,43 @@ msgstr "Sem permissões para acessar esta página!"
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
+"Você não pode interagir com esse objeto, pois ele não é sua propriedade!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Você alcançou o número limite de receitas para o seu Espaço."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Você tem mais usuários que o permitido em seu Espaço."
 
 #: .\cookbook\helper\recipe_url_import.py:310
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Usar frações"
+msgstr "rotação reversa"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "rotação cuidadosa"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
-msgstr ""
+msgstr "amassar"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
-msgstr ""
+msgstr "engrossar"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "warm up"
-msgstr ""
+msgstr "pré aquecer"
 
 #: .\cookbook\helper\recipe_url_import.py:315
 msgid "ferment"
-msgstr ""
+msgstr "fermentar"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
@@ -295,32 +311,36 @@ msgstr "Você precisa informar um tamanho de porção"
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Não foi possível analisar o código do modelo."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favorito"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Eu fiz isso"
 
 #: .\cookbook\integration\integration.py:209
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"O importador esperava um arquivo .zip. Você escolheu o tipo de importador "
+"correto para os seus dados?"
 
 #: .\cookbook\integration\integration.py:212
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Um erro inesperado aconteceu durante a importação. Por favor, verifique se "
+"enviou um arquivo válido."
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "A seguintes receitas foram ignoradas, pois já existem:"
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
@@ -328,10 +348,8 @@ msgid "Imported %s recipes."
 msgstr "%s receitas importadas."
 
 #: .\cookbook\integration\openeats.py:28
-#, fuzzy
-#| msgid "Recipes"
 msgid "Recipe source:"
-msgstr "Receitas"
+msgstr "Fonte da receita:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -347,10 +365,8 @@ msgstr "Fonte"
 
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:70
-#, fuzzy
-#| msgid "Import Log"
 msgid "Imported from"
-msgstr "Importar Log"
+msgstr "Importado de"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
@@ -374,23 +390,26 @@ msgstr "Seção"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Corrige comidas com "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
+#, fuzzy
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Reconstrói o índice de busca de texto completo da Receita"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"Apenas bancos de dados Postgresql utilizam busca por texto completo, não há "
+"índice para reconstruir"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "Reconstrução de índice de receita concluído."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Reconstrução de índice de Receita falhou."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -410,35 +429,37 @@ msgstr "Outro"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "Gordura"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Carboidratos"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "Proteínas"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Calorias"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Limite máximo de armazenamento de arquivos em MB. 0 para ilimitado, −1 para "
+"impedir o envio de arquivos."
 
 #: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
@@ -462,27 +483,23 @@ msgstr "Compras"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " é parte de uma etapa de uma receita, e não pode ser excluído"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Automations"
 msgid "Nutrition"
-msgstr "Automações"
+msgstr "Informações nutricionais"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Mesclar"
+msgstr "Alérgenos"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Preço"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Meta"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -513,42 +530,32 @@ msgid "Keyword Alias"
 msgstr "Apelido da Palavra-chave"
 
 #: .\cookbook\models.py:1470
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Descrição"
+msgstr "Substituir Descrição"
 
 #: .\cookbook\models.py:1471
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Instruções"
+msgstr "Substituir Instruções"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "Select Unit"
 msgid "Never Unit"
-msgstr "Selecionar Unidade"
+msgstr "Nunca usar como unidade"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Transpor palavras"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Apelido do Alimento"
+msgstr "Substituir comida"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Unit Alias"
 msgid "Unit Replace"
-msgstr "Apelido da Unidade"
+msgstr "Substituir unidade"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Substituir nome"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -556,10 +563,8 @@ msgid "Recipe"
 msgstr "Receita"
 
 #: .\cookbook\models.py:1504
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
-msgstr "Alimentos"
+msgstr "Comida"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -567,15 +572,15 @@ msgstr "Palavra-chave"
 
 #: .\cookbook\serializer.py:222
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Envio de arquivos não são permitidos nesse Espaço."
 
 #: .\cookbook\serializer.py:233
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Você alcançou o limite do envio de arquivos."
 
 #: .\cookbook\serializer.py:328
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Não é possível modificar as permissões do dono do Espaço."
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
@@ -587,39 +592,45 @@ msgstr "Você foi convidado por "
 
 #: .\cookbook\serializer.py:1272
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " para se juntar ao Espaço "
 
 #: .\cookbook\serializer.py:1274
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Clique no seguinte link para ativar a sua conta: "
 
 #: .\cookbook\serializer.py:1276
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Se o link não funcionar use o seguinte código para manualmente entrar no "
+"Espaço: "
 
 #: .\cookbook\serializer.py:1278
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "O convite é válido até "
 
 #: .\cookbook\serializer.py:1280
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recipes é um gerenciador de receitas de código aberto. Visite-nos no "
+"GitHub "
 
 #: .\cookbook\serializer.py:1283
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Convite para Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1426
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Lista de compras pré-existente que será atualizada"
 
 #: .\cookbook\serializer.py:1428
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Lista de IDs de ingredientes da receita para adicionar, se não for "
+"preenchido todos os ingredientes serão adicionados."
 
 #: .\cookbook\serializer.py:1430
 msgid ""
@@ -628,11 +639,11 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1439
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Quantidade da comida para adicionar na lista de compras"
 
 #: .\cookbook\serializer.py:1441
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID de uma unidade para usar na lista de compras"
 
 #: .\cookbook\serializer.py:1443
 msgid "When set to true will delete all food from active shopping lists."
