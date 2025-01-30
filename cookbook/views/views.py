@@ -533,14 +533,14 @@ def web_manifest(request):
             "url": "./mealplan",
             "icons": [
                 {
-                    "src": static('logo_color_plan.svg'),
+                    "src": static('assets/logo_color_plan.svg'),
                     "sizes": "any"
                 }, {
-                    "src": static('logo_color_plan_144.png'),
+                    "src": static('assets/logo_color_plan_144.png'),
                     "type": "image/png",
                     "sizes": "144x144"
                 }, {
-                    "src": static('logo_color_plan_512.png'),
+                    "src": static('assets/logo_color_plan_512.png'),
                     "type": "image/png",
                     "sizes": "512x512"
                 }
@@ -552,14 +552,14 @@ def web_manifest(request):
             "url": "./shopping",
             "icons": [
                 {
-                    "src": static('logo_color_shopping.svg'),
+                    "src": static('assets/logo_color_shopping.svg'),
                     "sizes": "any"
                 }, {
-                    "src": static('logo_color_shopping_144.png'),
+                    "src": static('assets/logo_color_shopping_144.png'),
                     "type": "image/png",
                     "sizes": "144x144"
                 }, {
-                    "src": static('logo_color_shopping_512.png'),
+                    "src": static('assets/logo_color_shopping_512.png'),
                     "type": "image/png",
                     "sizes": "512x512"
                 }
@@ -568,6 +568,7 @@ def web_manifest(request):
         "share_target": {
             "action": "/recipe/import",
             "method": "GET",
+            "enctype": "application/x-www-form-urlencoded",
             "params": {
                 "title": "title",
                 "url": "url",

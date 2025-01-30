@@ -215,6 +215,7 @@
                         @update:modelValue="step.ingredients[editingIngredientIndex].unit = null; step.ingredients[editingIngredientIndex].food = null; step.ingredients[editingIngredientIndex].amount = 0"
                     ></v-checkbox>
                 </v-form>
+                <v-btn color="info" class="mt-2" @click="dialogIngredientEditor = false; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{ $t('Move') }}</v-btn>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="dialogIngredientEditor = false; deleteIngredientAtIndex(editingIngredientIndex); editingIngredientIndex = -1" color="delete" prepend-icon="$delete">

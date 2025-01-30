@@ -164,7 +164,7 @@
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
                                         <template #prepend>
-                                            <v-btn color="edit" icon>
+                                            <v-btn color="edit" icon :disabled="r.mealplan">
                                                 {{ r.servings }}
                                                 <number-scaler-dialog :number="r.servings"
                                                                       @confirm="(servings: number) => {updateRecipeServings(r, servings)}"></number-scaler-dialog>

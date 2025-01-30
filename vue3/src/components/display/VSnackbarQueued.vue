@@ -10,16 +10,16 @@
             :close-on-back="false"
             multi-line
         >
-            <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>
+<!--            <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>-->
             <h3 v-if="visibleMessage.msg.title">{{ visibleMessage.msg.title }}</h3>
             <span class="text-pre">{{ visibleMessage.msg.text }}</span>
 
             <template v-slot:actions>
 
-                <v-btn ref="ref_btn_view">View</v-btn>
+                <v-btn ref="ref_btn_view">{{$t('View')}}</v-btn>
                 <v-btn variant="text" @click="removeItem()">
-                    <span v-if="useMessageStore().snackbarQueue.length > 1">Next ({{ useMessageStore().snackbarQueue.length - 1 }})</span>
-                    <span v-else>Close</span>
+                    <span v-if="useMessageStore().snackbarQueue.length > 1">{{$t('Next')}} ({{ useMessageStore().snackbarQueue.length - 1 }})</span>
+                    <span v-else>{{$t('Close')}}</span>
                 </v-btn>
             </template>
         </v-snackbar>

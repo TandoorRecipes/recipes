@@ -6,6 +6,11 @@ import {Ingredient} from "@/openapi";
  */
 export function ingredientToString(ingredient: Ingredient) {
     let content = []
+
+    if(ingredient == undefined){
+        return ''
+    }
+
     if(ingredient.amount != 0){
         content.push(ingredient.amount)
     }

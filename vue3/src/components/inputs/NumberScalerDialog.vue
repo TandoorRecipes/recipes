@@ -6,7 +6,7 @@
 
                 <v-card-text>
 
-                    <v-number-input v-model="mutable_number" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
+                    <v-number-input v-model="mutableNumber" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
                     </v-number-input>
 
                     <v-btn-group divided class="d-flex">
@@ -21,7 +21,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-btn @click=" dialog=false">{{ $t('Close') }}</v-btn>
-                    <v-btn color="save" prepend-icon="$save" @click="emit('confirm', mutable_number); dialog=false">{{ $t('Save') }}</v-btn>
+                    <v-btn color="save" prepend-icon="$save" @click="emit('confirm', mutableNumber); dialog=false">{{ $t('Save') }}</v-btn>
                 </v-card-actions>
             </v-card>
 
@@ -49,14 +49,15 @@ const props = defineProps({
 })
 
 const dialog = ref(false)
-const mutable_number = ref(0)
+const mutableNumber = ref(0)
 
 watch(() => props.number, (newVal) => {
-    mutable_number.value = newVal
+    mutableNumber.value = newVal
+    console.log('prop updated')
 })
 
 onMounted(() => {
-    mutable_number.value = props.number
+    mutableNumber.value = props.number
 })
 
 /**
@@ -65,19 +66,19 @@ onMounted(() => {
  */
 function updateNumber(operation: string) {
     if (operation === 'half') {
-        mutable_number.value = props.number / 2
+        mutableNumber.value = mutableNumber.value / 2
     }
     if (operation === 'double') {
-        mutable_number.value = props.number * 2
+        mutableNumber.value = mutableNumber.value * 2
     }
     if (operation === 'add') {
-        mutable_number.value = props.number + 1
+        mutableNumber.value = mutableNumber.value + 1
     }
     if (operation === 'sub') {
-        mutable_number.value = props.number - 1
+        mutableNumber.value = mutableNumber.value - 1
     }
-
-    emit('change', mutable_number.value)
+    console.log('change emitted')
+    emit('change', mutableNumber.value)
 }
 </script>
 

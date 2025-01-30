@@ -138,19 +138,19 @@ export const useMessageStore = defineStore('message_store', () => {
      */
     function addPreparedMessage(preparedMessage: PreparedMessage, data?: any) {
         if (preparedMessage == PreparedMessage.UPDATE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, {title: t('Updated'), text: ''} as StructuredMessage, 6000, data)
+            addMessage(MessageType.SUCCESS, {title: t('Updated'), text: ''} as StructuredMessage, 1500, data)
         }
         if (preparedMessage == PreparedMessage.DELETE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, {title: t('Deleted'), text: ''} as StructuredMessage, 6000, data)
+            addMessage(MessageType.SUCCESS, {title: t('Deleted'), text: ''} as StructuredMessage, 1500, data)
         }
         if (preparedMessage == PreparedMessage.CREATE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, {title: t('Created'), text: ''} as StructuredMessage, 6000, data)
+            addMessage(MessageType.SUCCESS, {title: t('Created'), text: ''} as StructuredMessage, 1500, data)
         }
         if (preparedMessage == PreparedMessage.MERGE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, {title: t('Merge'), text: ''} as StructuredMessage, 6000, data)
+            addMessage(MessageType.SUCCESS, {title: t('Merge'), text: ''} as StructuredMessage, 1500, data)
         }
         if (preparedMessage == PreparedMessage.MOVE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, {title: t('Move'), text: ''} as StructuredMessage, 6000, data)
+            addMessage(MessageType.SUCCESS, {title: t('Move'), text: ''} as StructuredMessage, 1500, data)
         }
         if (preparedMessage == PreparedMessage.NOT_FOUND) {
             addMessage(MessageType.WARNING, {title: t('NotFound'), text: t('NotFoundHelp')} as StructuredMessage, 6000, data)

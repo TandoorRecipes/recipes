@@ -87,23 +87,26 @@
                             <!--                            </template>-->
 
                             <v-btn-group divided border>
-                                <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)">
+                                <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)" v-if="!e.listRecipeData">
                                     <v-icon icon="fa-solid fa-divide"></v-icon>
                                 </v-btn>
-                                <v-btn icon="" @click="e.amount--; updateEntryAmount(e)">
+                                <v-btn icon="" @click="e.amount--; updateEntryAmount(e)" v-if="!e.listRecipeData">
                                     <v-icon icon="fa-solid fa-minus"></v-icon>
                                 </v-btn>
-                                <v-btn icon="" @click="e.amount++; updateEntryAmount(e)">
+                                <v-btn icon="" @click="e.amount++; updateEntryAmount(e)" v-if="!e.listRecipeData">
                                     <v-icon icon="fa-solid fa-plus"></v-icon>
                                 </v-btn>
 
-                                <v-btn icon="" @click="e.amount = e.amount * 2; updateEntryAmount(e)">
+                                <v-btn icon="" @click="e.amount = e.amount * 2; updateEntryAmount(e)" v-if="!e.listRecipeData">
                                     <v-icon icon="fa-solid fa-times"></v-icon>
                                 </v-btn>
-                                <v-btn color="edit" icon="$edit" v-if="!e.recipeMealplan">
+                                <v-btn color="edit" icon="$edit" v-if="!e.listRecipeData">
                                     <v-icon icon="$edit"></v-icon>
                                     <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id); shoppingListFood.entries.delete(e.id)"
                                                        @save="(args: ShoppingListEntry) => (shoppingListFood.entries.set(e.id, args))"></model-edit-dialog>
+                                </v-btn>
+                                <v-btn color="edit" icon="$recipes" v-if="e.listRecipe && e.listRecipeData.recipe" :to="{name: 'view_recipe', params: {id: e.listRecipeData.recipe}}">
+                                    <v-icon icon="$recipes"></v-icon>
                                 </v-btn>
                                 <v-btn icon="" @click="useShoppingStore().deleteObject(e, true); shoppingListFood.entries.delete(e.id)" color="delete">
                                     <v-icon icon="$delete"></v-icon>
