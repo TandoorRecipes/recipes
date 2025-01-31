@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-19 06:58+0000\n"
-"Last-Translator: Daniel Legin <daniel.legin@gmail.com>\n"
+"PO-Revision-Date: 2025-02-01 08:58+0000\n"
+"Last-Translator: Domagoj Levanić <levanicdomagoj@gmail.com>\n"
 "Language-Team: Croatian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hr/>\n"
 "Language: hr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -757,11 +757,15 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
+"Molimo potvrdite da je\n"
+"            <a href=\"mailto:%(email)s\">%(email)s</a> e-mail adresa "
+"korisnika %(user_display)s\n"
+"            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdi"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -774,7 +778,7 @@ msgstr ""
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr ""
+msgstr "Prijava"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -786,7 +790,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "Prijava"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:41
@@ -794,16 +798,16 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "Registracija"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
-msgstr ""
+msgstr "Zaboravljena lozinka?"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "Resetiraj moju lozinku"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
@@ -836,18 +840,18 @@ msgstr ""
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 msgid "Password"
-msgstr ""
+msgstr "Lozinka"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Zaboravljena lozinka?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:18
 msgid "Password Reset"
-msgstr ""
+msgstr "Ponovno postavljanje lozinke"
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
@@ -1045,7 +1049,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:374
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:376
 msgid "Translate Tandoor"
