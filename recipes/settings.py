@@ -27,8 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Get vars from .env files
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
-DEBUG = bool(int(os.getenv('DEBUG', True)))
-DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', True)))
+DEBUG = bool(int(os.getenv('DEBUG', '0')))
+DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', '0')))
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
 
