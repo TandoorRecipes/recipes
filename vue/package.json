@@ -44,7 +44,7 @@
     "vue-template-compiler": "2.7.14",
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",
-    "workbox-webpack-plugin": "^7.0.0",
+    "workbox-webpack-plugin": "^7.3.0",
     "workbox-window": "^7.0.0"
   },
   "devDependencies": {
