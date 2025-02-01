@@ -411,5 +411,9 @@
     "Copy Link": "Copiar Ligação",
     "Theme": "Tema",
     "one_url_per_line": "Um URL por linha",
-    "Original_Text": "Texto original"
+    "Original_Text": "Texto original",
+    "err_importing_recipe": "Ocorreu um erro ao importar a receita!",
+    "recipe_property_info": "Você também pode adicionar propriedades aos alimentos para calculá-los automaticamente de acordo com sua receita!",
+    "open_data_help_text": "O projeto Tandoor Open Data fornece dados contribuídos pela comunidade. Este campo é preenchido automaticamente ao importá-lo e permite atualizações no futuro.",
+    "per_serving": "por porção"
 }
