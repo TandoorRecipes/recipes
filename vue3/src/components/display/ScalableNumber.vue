@@ -1,25 +1,27 @@
 <template>
-  <span class="step__scalable-num" :class="[this.factor===1 ? 'step__scalable-num_scaled_false' : (this.factor > 1 ? 'step__scalable-num_scaled_up':'step__scalable-num_scaled_down')]" v-html="calculateAmount(number)"></span>
+    <span class="step__scalable-num"
+          :class="[props.factor===1 ? 'step__scalable-num_scaled_false' : (props.factor > 1 ? 'step__scalable-num_scaled_up':'step__scalable-num_scaled_down')]"
+          v-html="calculateAmount(number)"></span>
 </template>
 
-<script>
+<script lang="ts" setup>
 
+const props = defineProps({
+    number: Number,
+    factor: {
+        type: Number,
+        default: 4
+    },
+})
 
 import {calculateFoodAmount} from "@/utils/number_utils.ts";
 
-export default {
-  name: 'ScalableNumber',
-  props: {
-    number: Number,
-    factor: {
-      type: Number,
-      default: 4
-    },
-  },
-  methods: {
-    calculateAmount: function (x) {
-      return calculateFoodAmount(x, this.factor)
-    }
-  }
+/**
+ * call external calculateFoodAmount function
+ * @param x
+ * @return {number | string}
+ */
+function calculateAmount(x) {
+    return calculateFoodAmount(x, props.factor) // TODO reactive bind props
 }
 </script>

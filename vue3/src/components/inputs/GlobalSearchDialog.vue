@@ -51,6 +51,7 @@
 
             </v-card-text>
             <v-card-actions>
+                <v-btn @click="dialog=false"  :to="{name: 'view_search'}" variant="plain" prepend-icon="$search">{{ $t('Advanced') }}</v-btn>
                 <v-btn @click="dialog=false" variant="plain">{{ $t('Close') }}</v-btn>
             </v-card-actions>
         </v-card>

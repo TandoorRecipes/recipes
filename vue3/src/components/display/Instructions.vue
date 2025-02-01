@@ -1,6 +1,6 @@
 <template>
-<!--    <component :is="compiled_instructions" :ingredient_factor="ingredient_factor" :instructions_html="instructions_html"></component>-->
-    <div v-html="instructions_html"></div>
+    <component :is="compiled_instructions" :ingredient_factor="ingredient_factor" :instructions_html="instructions_html"></component>
+<!--    <div v-html="instructions_html"></div>-->
 </template>
 
 <script>
