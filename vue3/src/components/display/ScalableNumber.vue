@@ -6,6 +6,8 @@
 
 <script lang="ts" setup>
 
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+
 const props = defineProps({
     number: Number,
     factor: {
@@ -22,6 +24,6 @@ import {calculateFoodAmount} from "@/utils/number_utils.ts";
  * @return {number | string}
  */
 function calculateAmount(x) {
-    return calculateFoodAmount(x, props.factor) // TODO reactive bind props
+    return calculateFoodAmount(x, props.factor, useUserPreferenceStore().userSettings.useFractions)
 }
 </script>

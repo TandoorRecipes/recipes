@@ -36,7 +36,7 @@
                 <td style="width: 1%; text-wrap: nowrap" class="pa-0">
                     <v-checkbox-btn v-model="i.checked" color="success" v-if="!i.isHeader"></v-checkbox-btn>
                 </td>
-                <td style="width: 1%; text-wrap: nowrap" class="pr-1">{{ i.amount * props.ingredientFactor }}</td>
+                <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)"></td>
                 <td style="width: 1%; text-wrap: nowrap" class="pr-1">
                     <template v-if="i.unit"> {{ i.unit.name }}</template>
                 </td>
@@ -59,6 +59,8 @@
 <script lang="ts" setup>
 import {Ingredient} from "@/openapi";
 import {computed} from "vue";
+import {calculateFoodAmount} from "../../utils/number_utils";
+import {useUserPreferenceStore} from "../../stores/UserPreferenceStore";
 
 const ingredients = defineModel<Ingredient[]>({required: true})
 

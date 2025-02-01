@@ -1,8 +1,3 @@
-function getUserPreference(pref: string) {
-    return false // TODO only placeholder, add real function
-}
-
-
 /**
  * round to the number of decimals specified in user preferences
  * @param num number to round
@@ -16,9 +11,10 @@ export function roundDecimals(num: number) {
  * calculates the amount of food, based on the factor and converts it to a fraction if that is the users preference
  * @param amount food amount to calculate based upon
  * @param factor factor to scale food amount by
+ * @param useFractions if the returned value should be a fraction or not
  */
-export function calculateFoodAmount(amount: number, factor: number) {
-    if (getUserPreference("use_fractions")) {
+export function calculateFoodAmount(amount: number, factor: number, useFractions: boolean = false) {
+    if (useFractions) {
         let return_string = ""
         let fraction = frac(amount * factor, 16, true)
 
