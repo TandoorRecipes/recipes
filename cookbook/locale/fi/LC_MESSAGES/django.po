@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-01 08:58+0000\n"
+"PO-Revision-Date: 2025-02-02 09:58+0000\n"
 "Last-Translator: Juha Antikainen <jussi.antikainen@gmail.com>\n"
 "Language-Team: Finnish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fi/>\n"
@@ -89,7 +89,8 @@ msgid ""
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
-"profile\">Long Lived Access Token</a> for your HomeAssistant instance"
+"profile\">Pitkäikäinen Käyttöoikeustunnus \"Long-Lived Access Token\"</a> "
+"sinun HomeAssistant ohjelmistoon"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
@@ -133,7 +134,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
-msgstr "Nimi on jo käytössä"
+msgstr "Nimi on jo käytössä."
 
 #: .\cookbook\forms.py:298
 msgid "Accept Terms and Privacy"
@@ -144,18 +145,25 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Määrittää, kuinka sumea haku on, jos se käyttää trigrammien "
+"samankaltaisuussovitusta (esim. pienet arvot tarkoittavat, että enemmän "
+"kirjoitusvirheitä jätetään huomiotta)."
 
 #: .\cookbook\forms.py:340
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Valitse haku tavan menetelmä.  Paina <a href=\"/docs/search/\">tästä</a> "
+"saadaksesi täydellisen kuvauksen valinnoista."
 
 #: .\cookbook\forms.py:341
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Käytä sumeaa hakua yksiköissä, avainsanoissa ja ainesosissa , kun muokkaat "
+"ja tuot reseptejä."
 
 #: .\cookbook\forms.py:342
 msgid ""
@@ -174,6 +182,8 @@ msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Kentät, joilla etsitään sana osumien alkua. (esim. haku sanalla \"sa\" "
+"palauttaa sanat \"salaatti\" ja \"savuporopasta\")"
 
 #: .\cookbook\forms.py:345
 msgid ""
@@ -226,7 +236,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Et ole kirjautunut sisään etkä siksi voi tarkastella tätä sivua!"
+msgstr "Et ole kirjautunut sisään ja siksi et voi tarkastella tätä sivua!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:174
@@ -314,15 +324,17 @@ msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Tuonnin aikana tapahtui odottamaton virhe. Varmista, että olet ladannut "
+"kelvollisen tiedoston."
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Seuraavat reseptit jätettiin huomioimatta, koska ne olivat jo olemassa:"
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "Tuotiin %s reseptiä."
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -451,7 +463,7 @@ msgstr "Kirjat"
 #: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
 #: .\cookbook\views\views.py:460
 msgid "Shopping"
-msgstr ""
+msgstr "Ostokset"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
@@ -459,7 +471,7 @@ msgstr ""
 
 #: .\cookbook\models.py:918
 msgid "Nutrition"
-msgstr ""
+msgstr "Ravitsemus"
 
 #: .\cookbook\models.py:918
 msgid "Allergen"
@@ -556,19 +568,19 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
-msgstr ""
+msgstr "Hei"
 
 #: .\cookbook\serializer.py:1270
 msgid "You have been invited by "
-msgstr ""
+msgstr "Sinut on kutsunut "
 
 #: .\cookbook\serializer.py:1272
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " liittymään mukaan Tandoor Resepti Tilaan "
 
 #: .\cookbook\serializer.py:1274
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Napsauta seuraavaa linkkiä aktivoidaksesi tilisi: "
 
 #: .\cookbook\serializer.py:1276
 msgid ""
@@ -926,7 +938,7 @@ msgstr "Yksiköt"
 
 #: .\cookbook\templates\base.html:187
 msgid "Supermarket"
-msgstr "Kaupat"
+msgstr "Kauppa"
 
 #: .\cookbook\templates\base.html:199
 msgid "Supermarket Category"
@@ -1148,20 +1160,20 @@ msgstr "Muokkaa"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr ""
+msgstr "Katso"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr ""
+msgstr "Poista alkuperäinen tiedosto"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #: .\cookbook\templates\generic\list_template.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Suodatin"
 
 #: .\cookbook\templates\generic\list_template.html:41
 msgid "Import all"
@@ -1174,19 +1186,19 @@ msgstr "Uusi"
 
 #: .\cookbook\templates\generic\table_template.html:76
 msgid "previous"
-msgstr ""
+msgstr "edellinen"
 
 #: .\cookbook\templates\generic\table_template.html:98
 msgid "next"
-msgstr ""
+msgstr "seuraava"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Näytä loki"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Keittoloki"
 
 #: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:90
 #: .\cookbook\views\edit.py:174
@@ -1195,7 +1207,7 @@ msgstr "Tuo"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Turvallisuusvaroitus"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1212,27 +1224,27 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr ""
+msgstr "Hae reseptiä ..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Uusi Resepti"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr ""
+msgstr "Tarkennettu Haku"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr ""
+msgstr "Haun Nollaus"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr ""
+msgstr "Viimeksi katsottu"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Kirjaudu sisään nähdäksesi reseptit"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
@@ -1276,21 +1288,22 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Tämä teksti on lihavoitu"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
+#, fuzzy
 msgid "This text is italic"
-msgstr ""
+msgstr "Tämä teksti on kursivoitu"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Myös lohkolainaukset ovat mahdollisia"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Listat"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
@@ -1841,7 +1854,7 @@ msgstr ""
 #: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
 #: .\cookbook\templates\system.html:102 .\cookbook\templates\system.html:113
 msgid "Warning"
-msgstr ""
+msgstr "Varoitus"
 
 #: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
 #: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
