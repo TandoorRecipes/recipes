@@ -1341,17 +1341,19 @@
     "@codemirror/view" "^6.0.0"
     crelt "^1.0.5"
 
-"@codemirror/state@^6.0.0", "@codemirror/state@^6.3.3", "@codemirror/state@^6.4.0":
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.4.0.tgz#8bc3e096c84360b34525a84696a84f86b305363a"
-  integrity sha512-hm8XshYj5Fo30Bb922QX9hXB/bxOAVH+qaqHBzw5TKa72vOeslyGwd4X8M0c1dJ9JqxlaMceOQ8RsL9tC7gU0A==
-
-"@codemirror/view@^6.0.0", "@codemirror/view@^6.17.0", "@codemirror/view@^6.24.1":
-  version "6.24.1"
-  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.24.1.tgz#c151d589dc27f9197c68d395811b93c21c801767"
-  integrity sha512-sBfP4rniPBRQzNakwuQEqjEuiJDWJyF2kqLLqij4WXRoVwPPJfjx966Eq3F7+OPQxDtMt/Q9MWLoZLWjeveBlg==
+"@codemirror/state@^6.0.0", "@codemirror/state@^6.3.3", "@codemirror/state@^6.4.0", "@codemirror/state@^6.5.0":
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/@codemirror/state/-/state-6.5.1.tgz#e5c0599f7b43cf03f19e05861317df5425c07904"
+  integrity sha512-3rA9lcwciEB47ZevqvD8qgbzhM9qMb8vCcQCNmDfVRPQG4JT9mSb0Jg8H7YjKGGQcFnLN323fj9jdnG59Kx6bg==
   dependencies:
-    "@codemirror/state" "^6.4.0"
+    "@marijn/find-cluster-break" "^1.0.0"
+
+"@codemirror/view@^6.0.0", "@codemirror/view@^6.17.0", "@codemirror/view@^6.36.2":
+  version "6.36.2"
+  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-6.36.2.tgz#aeb644e161440734ac5a153bf6e5b4a4355047be"
+  integrity sha512-DZ6ONbs8qdJK0fdN7AB82CgI6tYXf4HWk1wSVa0+9bhVznCuuvhQtX8bFBoy3dv8rZSQqUd8GvhVAcielcidrA==
+  dependencies:
+    "@codemirror/state" "^6.5.0"
     style-mod "^4.1.0"
     w3c-keyname "^2.2.4"
 
@@ -1630,6 +1632,11 @@
   dependencies:
     "@lezer/common" "^1.0.0"
     "@lezer/highlight" "^1.0.0"
+
+"@marijn/find-cluster-break@^1.0.0":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@marijn/find-cluster-break/-/find-cluster-break-1.0.2.tgz#775374306116d51c0c500b8c4face0f9a04752d8"
+  integrity sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"

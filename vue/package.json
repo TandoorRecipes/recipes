@@ -13,7 +13,7 @@
     "@codemirror/commands": "^6.3.3",
     "@codemirror/lang-markdown": "^6.2.4",
     "@codemirror/state": "^6.3.3",
-    "@codemirror/view": "^6.24.1",
+    "@codemirror/view": "^6.36.2",
     "@popperjs/core": "^2.11.7",
     "@vue/cli": "^5.0.8",
     "@vue/composition-api": "1.7.2",
