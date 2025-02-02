@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-02 09:58+0000\n"
+"PO-Revision-Date: 2025-02-03 16:58+0000\n"
 "Last-Translator: Juha Antikainen <jussi.antikainen@gmail.com>\n"
 "Language-Team: Finnish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fi/>\n"
@@ -170,12 +170,16 @@ msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Hakukentät aksenttimerkit huomioimatta.  Tämän vaihtoehdon valitseminen voi "
+"parantaa tai huonontaa haun laatua kielestä riippuen"
 
 #: .\cookbook\forms.py:343
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Kentät osittaisten osumien etsimiseen.  (esim. haku \"pii\" palauttaa sanat "
+"\"piirakka\" ja \"omenapiiras\" ja \"nakkipiilo\")"
 
 #: .\cookbook\forms.py:344
 msgid ""
@@ -190,12 +194,17 @@ msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"\"Sumean\" haun kentät. (esim. hakusanalla \"respti\" löytyy \"resepti \".)  "
+"Huomautus: tämä vaihtoehto on ristiriidassa \"web\"- ja \"raw\"-"
+"hakumenetelmien kanssa."
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Kentät koko tekstihakuun.  Huomautus: \"Web\", \"phrase\" ja \"raw\" "
+"hakumenetelmät toimivat vain koko tekstikentissä."
 
 #: .\cookbook\forms.py:350
 msgid "Search Method"
@@ -203,11 +212,12 @@ msgstr "Hakumenetelmä"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Sumeat Haut"
 
 #: .\cookbook\forms.py:350
+#, fuzzy
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ohita aksentti"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
@@ -293,7 +303,7 @@ msgstr "käydä"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
@@ -314,10 +324,11 @@ msgid "I made this"
 msgstr "Tein tämän"
 
 #: .\cookbook\integration\integration.py:209
+#, fuzzy
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
-msgstr ""
+msgstr "Tuoja odotti .zip-tiedostoa. Valitsitko tiedostolle oikean tyypin?"
 
 #: .\cookbook\integration\integration.py:212
 msgid ""
@@ -355,7 +366,7 @@ msgstr "Lähde"
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr ""
+msgstr "Tuotu osoitteesta"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
@@ -375,7 +386,7 @@ msgstr "Keittokirja"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "Osio"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
