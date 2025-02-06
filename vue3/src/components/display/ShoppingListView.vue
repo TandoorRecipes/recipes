@@ -100,8 +100,7 @@
                                     <v-divider></v-divider>
 
                                     <template v-for="[i, value] in category.foods" :key="value.food.id">
-                                        <shopping-line-item :shopping-list-food="value"
-                                                            @clicked="() => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value;}"></shopping-line-item>
+                                        <shopping-line-item :shopping-list-food="value" ></shopping-line-item>
                                     </template>
 
                                 </template>
@@ -164,15 +163,20 @@
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
                                         <template #prepend>
-                                            <v-btn color="edit" icon :disabled="r.mealplan">
+                                            <v-btn color="edit" icon >
                                                 {{ r.servings }}
-                                                <number-scaler-dialog :number="r.servings"
-                                                                      @confirm="(servings: number) => {updateRecipeServings(r, servings)}"></number-scaler-dialog>
+                                                <number-scaler-dialog
+                                                    v-if="r.mealplan == undefined"
+                                                    :number="r.servings"
+                                                    @confirm="(servings: number) => {updateRecipeServings(r, servings)}"
+                                                ></number-scaler-dialog>
+                                                <model-edit-dialog model="MealPlan" :item-id="r.mealplan" v-if="r.mealplan != undefined" activator="parent"> </model-edit-dialog>
                                             </v-btn>
+
                                         </template>
 
                                         <div class="ms-2">
-                                            <p v-if="r.recipe">{{ r.recipeData.name }} <br/></p>
+                                            <p v-if="r.recipe">{{ r.recipeData.name }}<br/></p>
                                             <p v-if="r.mealplan">
                                                 {{ r.mealPlanData.mealType.name }} - {{ DateTime.fromJSDate(r.mealPlanData.fromDate).toLocaleString(DateTime.DATE_FULL) }}
                                             </p>
@@ -181,7 +185,7 @@
                                         <template #append>
                                             <v-btn icon color="delete">
                                                 <v-icon icon="$delete"></v-icon>
-                                                <delete-confirm-dialog :object-name="r.recipeName" :model-name="$t('ShoppingListRecipe')"
+                                                <delete-confirm-dialog :object-name="r.name" :model-name="$t('ShoppingListRecipe')"
                                                                        @delete="deleteListRecipe(r)"></delete-confirm-dialog>
                                             </v-btn>
                                         </template>
@@ -198,16 +202,14 @@
             <v-container>
                 <v-row>
                     <v-col>
-                        <SupermarketEditor :item="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"
-                                           @save="(args: Supermarket) => (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = args)"></SupermarketEditor>
+                        <supermarket-editor :item="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"
+                                           @save="(args: Supermarket) => (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = args)"></supermarket-editor>
                     </v-col>
                 </v-row>
             </v-container>
 
         </v-window-item>
     </v-window>
-
-    <shopping-line-item-dialog v-model="shoppingLineItemDialog" v-model:shopping-list-food="shoppingLineItemDialogFood"></shopping-line-item-dialog>
 
 </template>
 
@@ -228,13 +230,12 @@ import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue"
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.vue";
 import {DateTime} from "luxon";
+import MealPlanEditor from "@/components/model_editors/MealPlanEditor.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const {t} = useI18n()
 
 const currentTab = ref("shopping")
-
-const shoppingLineItemDialog = ref(false)
-const shoppingLineItemDialogFood = ref({} as IShoppingListFood)
 
 /**
  * VSelect items for shopping list grouping options with localized names

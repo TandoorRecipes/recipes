@@ -4,6 +4,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import {ApiApi, ServerSettings, Space, Supermarket, UserPreference, UserSpace} from "@/openapi";
 import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {computed, ComputedRef} from "vue";
+import {DeviceSettings} from "@/types/settings";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
@@ -11,31 +12,11 @@ const SERVER_SETTINGS_KEY = 'TANDOOR_SERVER_SETTINGS'
 const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 const USER_SPACES_KEY = 'TANDOOR_USER_SPACES'
 
-class DeviceSettings {
-    shopping_show_checked_entries = false
-    shopping_show_delayed_entries = false
-    shopping_show_selected_supermarket_only = false
-    shopping_selected_grouping = ShoppingGroupingOptions.CATEGORY
-    shopping_selected_supermarket: Supermarket | null = null
-    shopping_item_info_created_by = false
-    shopping_item_info_mealplan = true
-    shopping_item_info_recipe = true
-    shopping_show_debug = false
-
-    mealplan_displayPeriod = 'week'
-    mealplan_displayPeriodCount = 3
-    mealplan_startingDayOfWeek = 1
-    mealplan_displayWeekNumbers = true
-
-    general_tableItemsPerPage = 10
-    general_closedHelpAlerts: String[] = []
-}
-
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {
     /**
      * settings only saved on device to allow per device customization
      */
-    let deviceSettings = useStorage(DEVICE_SETTINGS_KEY, new DeviceSettings(), localStorage, {mergeDefaults: true})
+    let deviceSettings = useStorage(DEVICE_SETTINGS_KEY, getDefaultDeviceSettings(), localStorage, {mergeDefaults: true})
     /**
      * database user settings, cache in local storage in case application is started offline
      */
@@ -140,7 +121,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function switchSpace(space: Space) {
         let api = new ApiApi()
 
-        api.apiSwitchActiveSpaceRetrieve({spaceId: space.id}).then(r => {
+        api.apiSwitchActiveSpaceRetrieve({spaceId: space.id!}).then(r => {
             loadActiveSpace()
             location.reload()
         }).catch(err => {
@@ -152,7 +133,32 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * resets all device settings to their default value
      */
     function resetDeviceSettings() {
-        deviceSettings.value = new DeviceSettings()
+        deviceSettings.value = getDefaultDeviceSettings()
+    }
+
+    /**
+     * returns a default device settings object
+     */
+    function getDefaultDeviceSettings(): DeviceSettings {
+        return {
+            shopping_show_checked_entries: false,
+            shopping_show_delayed_entries: false,
+            shopping_show_selected_supermarket_only: false,
+            shopping_selected_grouping: ShoppingGroupingOptions.CATEGORY,
+            shopping_selected_supermarket: null,
+            shopping_item_info_created_by: false,
+            shopping_item_info_mealplan: true,
+            shopping_item_info_recipe: true,
+            shopping_show_debug: false,
+
+            mealplan_displayPeriod: 'week',
+            mealplan_displayPeriodCount: 3,
+            mealplan_startingDayOfWeek: 1,
+            mealplan_displayWeekNumbers: true,
+
+            general_tableItemsPerPage: 10,
+            general_closedHelpAlerts: [],
+        }
     }
 
     // always load settings on first initialization of store

@@ -50,41 +50,32 @@
                 </div>
                 <v-list density="compact">
                     <template v-for="[i, e] in shoppingListFood.entries" :key="e.id">
-                        <v-list-item border class="mt-1" :class="{'cursor-pointer': !e.recipeMealplan}">
+                        <v-list-item border class="mt-1">
                             <v-list-item-title>
                                 <b>
-                                    {{ $n(e.amount) }}
-                                    <span v-if="e.unit">{{ e.unit.name }}</span>
+                                    <span v-if="e.amount != 0">{{ $n(e.amount) }}&nbsp;</span>
+                                    <span v-if="e.unit">{{ e.unit.name }}&nbsp;</span>
                                 </b>
-                                {{ e.food.name }}
+                                <span v-if="e.food">
+                                    {{ e.food.name }}
+                                </span>
                             </v-list-item-title>
                             <v-list-item-subtitle v-if="e.completedAt">
                                 <v-icon icon="fa-solid fa-check" size="small" color="success"></v-icon>
                                 {{ $t('Completed') }} {{ DateTime.fromJSDate(e.completedAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
-                            <v-list-item-subtitle v-if="e.recipeMealplan && e.recipeMealplan.recipeName !== ''">
-                                {{ e.recipeMealplan.servings }} x
-                                <router-link :to="{name: 'view_recipe', params: {id: e.recipeMealplan.id}}" target="_blank" class="text-decoration-none"><b>
-                                    {{ e.recipeMealplan.recipeName }} </b>
-                                </router-link>
+                            <v-list-item-subtitle v-if="e.listRecipe && e.listRecipeData.recipe">
+                                {{ e.listRecipeData.servings }} x {{ e.listRecipeData.recipeData.name }}
                             </v-list-item-subtitle>
-                            <v-list-item-subtitle v-if="e.recipeMealplan && e.recipeMealplan.mealplanType !== undefined">
-                                {{ e.recipeMealplan.mealplanType }} {{ DateTime.fromJSDate(e.recipeMealplan.mealplanFromDate).toLocaleString(DateTime.DATE_SHORT) }}
+                            <v-list-item-subtitle v-if="e.listRecipe && e.listRecipeData.mealplan">
+                                {{ e.listRecipeData.mealPlanData.mealType.name }} {{ DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) }}
                             </v-list-item-subtitle>
                             <v-list-item-subtitle>
                                 {{ e.createdBy.displayName }} - {{ DateTime.fromJSDate(e.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
                             <v-list-item-subtitle v-if="isDelayed(e)" class="text-info font-weight-bold">
-                                {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil).toLocaleString(DateTime.DATETIME_SHORT) }}
+                                {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil!).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
-
-                            <!--                            <template #append>-->
-                            <!--                                <v-btn size="small" color="edit" icon="$edit" v-if="!e.recipeMealplan">-->
-                            <!--                                    <v-icon icon="$edit"></v-icon>-->
-                            <!--                                    <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id); shoppingListFood.entries.delete(e.id)"-->
-                            <!--                                                       @save="(args: ShoppingListEntry) => (shoppingListFood.entries.set(e.id, args))"></model-edit-dialog>-->
-                            <!--                                </v-btn>-->
-                            <!--                            </template>-->
 
                             <v-btn-group divided border>
                                 <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)" v-if="!e.listRecipeData">
@@ -102,13 +93,15 @@
                                 </v-btn>
                                 <v-btn color="edit" icon="$edit" v-if="!e.listRecipeData">
                                     <v-icon icon="$edit"></v-icon>
-                                    <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id); shoppingListFood.entries.delete(e.id)"
-                                                       @save="(args: ShoppingListEntry) => (shoppingListFood.entries.set(e.id, args))"></model-edit-dialog>
+                                    <model-edit-dialog model="ShoppingListEntry" :item="e"
+                                                       @delete="useShoppingStore().entries.delete(e.id!); shoppingListFood.entries.delete(e.id!)"
+                                                       @save="(args: ShoppingListEntry) => { useShoppingStore().entries.set(e.id!, args); shoppingListFood.entries.set(e.id!, args) }"></model-edit-dialog>
                                 </v-btn>
-                                <v-btn color="edit" icon="$recipes" v-if="e.listRecipe && e.listRecipeData.recipe" :to="{name: 'view_recipe', params: {id: e.listRecipeData.recipe}}">
+                                <v-btn color="edit" icon="$recipes" v-if="e.listRecipe && e.listRecipeData.recipe"
+                                       :to="{name: 'view_recipe', params: {id: e.listRecipeData.recipe}}">
                                     <v-icon icon="$recipes"></v-icon>
                                 </v-btn>
-                                <v-btn icon="" @click="useShoppingStore().deleteObject(e, true); shoppingListFood.entries.delete(e.id)" color="delete">
+                                <v-btn icon="" @click="useShoppingStore().deleteObject(e, true); shoppingListFood.entries.delete(e.id!)" color="delete">
                                     <v-icon icon="$delete"></v-icon>
                                 </v-btn>
                             </v-btn-group>

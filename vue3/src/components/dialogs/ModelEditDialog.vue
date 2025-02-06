@@ -1,6 +1,6 @@
 <template>
     <v-dialog max-width="1400" :activator="dialogActivator" v-model="model">
-        <component :is="editorComponent" :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="model = false" :itemDefaults="itemDefaults"></component>
+        <component :is="editorComponent" :item="props.item" :item-id="props.itemId" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="model = false" :itemDefaults="props.itemDefaults"></component>
     </v-dialog>
 </template>
 
@@ -20,6 +20,7 @@ const props = defineProps({
     model: { type: String as PropType<EditorSupportedModels>, required: true, },
     activator: {default: 'parent'},
     item: {default: null},
+    itemId: {type: [Number, String], required: false, default: undefined},
     itemDefaults: {required: false},
     disabledFields: {default: []},
     closeAfterCreate: {default: true},

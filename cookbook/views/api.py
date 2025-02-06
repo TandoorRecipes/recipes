@@ -1375,7 +1375,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(Q(entries__space=self.request.space) | Q(recipe__space=self.request.space))
+        self.queryset = self.queryset.filter(Q(entries__space=self.request.space) | Q(recipe__space=self.request.space) | Q(mealplan__space=self.request.space))
 
         # TODO implement test for this
         if not self.detail:
@@ -1405,6 +1405,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                         amount=e['amount'],
                         unit_id=e['unit_id'],
                         food_id=e['food_id'],
+                        ingredient_id=e['ingredient_id'],
                         created_by_id=request.user.id,
                         space_id=request.space.id,
                     )

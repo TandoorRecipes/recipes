@@ -99,6 +99,7 @@ function loadRecipeData() {
                             amount: ingredient.amount,
                             food: ingredient.food,
                             unit: ingredient.unit,
+                            ingredient: ingredient,
                             checked: (ingredient.food ? !(ingredient.food.ignoreShopping || ingredient.food.foodOnhand) : true),
                         })
                     })
@@ -132,7 +133,8 @@ function createShoppingListRecipe() {
                 shoppingListEntries.entries.push({
                     amount: entry.amount * (servings.value / (recipe.value.servings ? recipe.value.servings : 1)),
                     foodId: entry.food ? entry.food.id! : null,
-                    unitId: entry.unit ? entry.unit.id! : null
+                    unitId: entry.unit ? entry.unit.id! : null,
+                    ingredientId: entry.ingredient ? entry.ingredient.id! : null,
                 })
             }
         })

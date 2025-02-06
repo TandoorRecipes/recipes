@@ -1184,7 +1184,6 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     servings = CustomDecimalField()
 
     def update(self, instance, validated_data):
-        # TODO remove once old shopping list
         if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
             SLR = RecipeShoppingEditor(user=self.context['request'].user, space=self.context['request'].space)
             SLR.edit_servings(servings=validated_data['servings'], id=instance.id)
@@ -1274,6 +1273,7 @@ class ShoppingListEntrySimpleCreateSerializer(serializers.Serializer):
     amount = CustomDecimalField()
     unit_id = serializers.IntegerField(allow_null=True)
     food_id = serializers.IntegerField(allow_null=True)
+    ingredient_id = serializers.IntegerField(allow_null=True)
 
 
 class ShoppingListEntryBulkCreateSerializer(serializers.Serializer):

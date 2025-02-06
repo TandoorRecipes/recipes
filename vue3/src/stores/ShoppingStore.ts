@@ -14,7 +14,7 @@ import {
 } from "@/types/Shopping";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {isDelayed} from "@/utils/logic_utils";
+import {isDelayed, isEntryVisible} from "@/utils/logic_utils";
 import {DateTime} from "luxon";
 
 const _STORE_ID = "shopping_store"
@@ -194,9 +194,11 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             let requestParameters = {pageSize: 50, page: 1} as ApiShoppingListEntryListRequest
             if (mealPlanId) {
                 requestParameters.mealplan = mealPlanId
+            } else {
+                // only clear local entries when not given a meal plan to not accidentally filter the shopping list
+                entries.value = new Map<number, ShoppingListEntry>
             }
 
-            entries.value = new Map<number, ShoppingListEntry>
             recLoadShoppingListEntries(requestParameters)
 
             api.apiSupermarketCategoryList().then(r => {
@@ -217,23 +219,23 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      * recursively load shopping list entries from paginated api
      * @param requestParameters
      */
-    function recLoadShoppingListEntries(requestParameters: ApiShoppingListEntryListRequest){
+    function recLoadShoppingListEntries(requestParameters: ApiShoppingListEntryListRequest) {
         let api = new ApiApi()
         api.apiShoppingListEntryList(requestParameters).then((r) => {
-                r.results.forEach((e) => {
-                    entries.value.set(e.id!, e)
-                })
-                if(r.next){
-                    requestParameters.page = requestParameters.page + 1
-                    recLoadShoppingListEntries(requestParameters)
-                } else {
-                    currentlyUpdating.value = false
-                    initialized.value = true
-                }
-            }).catch((err) => {
-                currentlyUpdating.value = false
-                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            r.results.forEach((e) => {
+                entries.value.set(e.id!, e)
             })
+            if (r.next) {
+                requestParameters.page = requestParameters.page + 1
+                recLoadShoppingListEntries(requestParameters)
+            } else {
+                currentlyUpdating.value = false
+                initialized.value = true
+            }
+        }).catch((err) => {
+            currentlyUpdating.value = false
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
     }
 
     /**
@@ -321,7 +323,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let recipes = [] as ShoppingListRecipe[]
 
         entries.value.forEach(e => {
-            if (e.listRecipe != null && recipes.findIndex(x => x.id == e.listRecipe) == -1) {
+            if (e.listRecipe != null && recipes.findIndex(x => x.id == e.listRecipe) == -1 && isEntryVisible(e, useUserPreferenceStore().deviceSettings)) {
                 recipes.push(e.listRecipeData)
             }
         })

@@ -37,6 +37,12 @@ export interface ShoppingListEntrySimpleCreate {
      * @memberof ShoppingListEntrySimpleCreate
      */
     foodId: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntrySimpleCreate
+     */
+    ingredientId: number | null;
 }
 
 /**
@@ -46,6 +52,7 @@ export function instanceOfShoppingListEntrySimpleCreate(value: object): value is
     if (!('amount' in value) || value['amount'] === undefined) return false;
     if (!('unitId' in value) || value['unitId'] === undefined) return false;
     if (!('foodId' in value) || value['foodId'] === undefined) return false;
+    if (!('ingredientId' in value) || value['ingredientId'] === undefined) return false;
     return true;
 }
 
@@ -62,6 +69,7 @@ export function ShoppingListEntrySimpleCreateFromJSONTyped(json: any, ignoreDisc
         'amount': json['amount'],
         'unitId': json['unit_id'],
         'foodId': json['food_id'],
+        'ingredientId': json['ingredient_id'],
     };
 }
 
@@ -79,6 +87,7 @@ export function ShoppingListEntrySimpleCreateToJSONTyped(value?: ShoppingListEnt
         'amount': value['amount'],
         'unit_id': value['unitId'],
         'food_id': value['foodId'],
+        'ingredient_id': value['ingredientId'],
     };
 }
 

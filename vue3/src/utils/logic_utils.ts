@@ -1,5 +1,37 @@
 import {ShoppingListEntry, Space} from "@/openapi";
 import {IShoppingListFood} from "@/types/Shopping";
+import {DeviceSettings} from "@/types/settings";
+
+// -------------- SHOPPING RELATED ----------------------
+
+/**
+ * determines if an entry should be visible to the user based on its delayed/checked state and the current device settings
+ * @param entry entry for which visibility should be determined
+ * @param deviceSettings user device settings based on which entry visibility is controlled
+ */
+export function isEntryVisible(entry: ShoppingListEntry, deviceSettings: DeviceSettings) {
+    let entryVisible = true
+    if (isDelayed(entry) && !deviceSettings.shopping_show_delayed_entries) {
+        entryVisible = false
+    }
+    if (entry.checked && !deviceSettings.shopping_show_checked_entries) {
+        entryVisible = false
+    }
+    return entryVisible
+}
+
+/**
+ * loops through all entries of a shopping list food and determines if it should be visible based on the isEntryVisible function
+ * @param slf shopping list food holder
+ * @param deviceSettings user device settings based on which entry visibility is controlled
+ */
+export function isShoppingListFoodVisible(slf: IShoppingListFood, deviceSettings: DeviceSettings){
+    let foodVisible = false
+    slf.entries.forEach(entry => {
+        foodVisible = foodVisible || isEntryVisible(entry, deviceSettings)
+    })
+    return foodVisible
+}
 
 /**
  * determine if a shopping list entry is delayed
@@ -21,6 +53,8 @@ export function isShoppingListFoodDelayed(slf: IShoppingListFood) {
     })
     return hasDelayedEntry
 }
+
+// -------------- SPACE RELATED ----------------------
 
 /**
  * checks if the given space is above any of the configured limits

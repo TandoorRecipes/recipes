@@ -1,6 +1,6 @@
 <template>
-    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()" @click="emit('clicked', entries)"
-                 v-if="(useUserPreferenceStore().deviceSettings.shopping_show_checked_entries || !isChecked) && (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries || !isShoppingLineDelayed)"
+    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()" @click="dialog = true;"
+                 v-if="isShoppingListFoodVisible(props.shoppingListFood, useUserPreferenceStore().deviceSettings)"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
@@ -44,6 +44,7 @@
 
     </v-list-item>
 
+    <shopping-line-item-dialog v-model="dialog" v-model:shopping-list-food="props.shoppingListFood"></shopping-line-item-dialog>
 </template>
 
 <script setup lang="ts">
@@ -56,7 +57,8 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.js";
 import {ApiApi, Food, ShoppingListEntry} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
-import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
+import {isDelayed, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
+import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
 
 const emit = defineEmits(['clicked'])
 
@@ -64,6 +66,8 @@ const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
     hideInfoRow: {type: Boolean, default: false}
 })
+
+const dialog = ref(false)
 
 const entries = computed(() => {
     return Array.from(props.shoppingListFood.entries.values())
@@ -91,13 +95,6 @@ const isChecked = computed(() => {
         }
     }
     return true
-})
-
-/**
- * determine if any entry in a given IShoppingListFood is delayed, if so return true
- */
-const isShoppingLineDelayed = computed(() => {
-    return isShoppingListFoodDelayed(props.shoppingListFood)
 })
 
 /**
