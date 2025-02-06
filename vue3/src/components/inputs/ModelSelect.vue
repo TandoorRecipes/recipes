@@ -1,9 +1,10 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
     <v-input :hint="props.hint" persistent-hint :label="props.label">
-        <template #prepend>
+        <template #prepend  v-if="$slots.prepend">
             <slot name="prepend"></slot>
         </template>
+
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <Multiselect
 
@@ -38,7 +39,7 @@
             }"
         />
 
-        <template #append>
+        <template #append v-if="$slots.append">
             <slot name="append">
 
             </slot>
