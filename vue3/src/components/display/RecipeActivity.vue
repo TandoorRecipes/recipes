@@ -4,13 +4,14 @@
         <v-card-title>{{ $t('Activity') }}</v-card-title>
         <v-card-text>
 
+
             <v-list>
-                <v-list-item v-for="c in cookLogs" :key="c.id">
+                <v-list-item v-for="c in cookLogs.sort((a,b) =>  a.createdAt! > b.createdAt! ? 1 : -1)" :key="c.id">
                     <template #prepend>
                         <v-avatar color="primary">V</v-avatar>
                     </template>
                     <v-list-item-title class="font-weight-bold">{{ c.createdBy.displayName }}
-                     <v-rating density="comfortable" size="x-small" color="tandoor" class="float-right" v-model="c.rating"></v-rating>
+                        <v-rating density="comfortable" size="x-small" color="tandoor" class="float-right" v-model="c.rating"></v-rating>
                     </v-list-item-title>
 
                     {{ c.comment }}
@@ -30,6 +31,29 @@
         </v-card-text>
     </v-card>
 
+    <v-card class="mt-1">
+        <v-card-text>
+            <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment"></v-textarea>
+            <v-row de>
+                <v-col cols="12" md="4">
+                    <v-label>{{$t('Rating')}}</v-label><br/>
+                    <v-rating v-model="newCookLog.rating" clearable half-increments hover density="compact"></v-rating>
+                </v-col>
+                <v-col cols="12" md="4">
+
+                    <v-number-input :label="$t('Servings')" v-model="newCookLog.servings"></v-number-input>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-date-input :label="$t('Date')" v-model="newCookLog.createdAt"></v-date-input>
+
+                </v-col>
+            </v-row>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn color="create" prepend-icon="$create" @click="saveCookLog()">{{ $t('Create') }}</v-btn>
+        </v-card-actions>
+    </v-card>
+
 
 </template>
 
@@ -38,6 +62,9 @@
 import {onMounted, PropType, ref} from "vue";
 import {ApiApi, CookLog, Recipe} from "@/openapi";
 import {DateTime} from "luxon";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {VDateInput} from 'vuetify/labs/VDateInput'
+import {VNumberInput} from 'vuetify/labs/VNumberInput'
 
 const props = defineProps({
     recipe: {
@@ -46,8 +73,18 @@ const props = defineProps({
     },
 })
 
+const newCookLog = ref({} as CookLog);
+
 const cookLogs = ref([] as CookLog[])
 
+onMounted(() => {
+    refreshActivity()
+    resetForm()
+})
+
+/**
+ * load cook logs from database for given recipe
+ */
 function refreshActivity() {
     const api = new ApiApi()
     api.apiCookLogList({recipe: props.recipe.id}).then(r => {
@@ -58,24 +95,28 @@ function refreshActivity() {
     })
 }
 
-function createCookLog(form: any) {
-    const api = new ApiApi()
-    let cookLog = {
-        recipe: props.recipe.id,
-        comment: form.data.comment,
-        servings: form.data.servings,
-        rating: form.data.rating,
-    } as CookLog
-    api.apiCookLogCreate({cookLogRequest: cookLog}).then(r => {
-        console.log('success', r)
-    }).catch(err => {
-        console.log('error', err)
-    })
+/**
+ * reset new cook log from with proper defaults
+ */
+function resetForm() {
+    newCookLog.value.servings = props.recipe.servings
+    newCookLog.value.createdAt = new Date()
+    newCookLog.value.recipe = props.recipe.id!
 }
 
-onMounted(() => {
-    refreshActivity()
-})
+/**
+ * create new cook log in database
+ */
+function saveCookLog() {
+    const api = new ApiApi()
+
+    api.apiCookLogCreate({cookLog: newCookLog.value}).then(r => {
+        cookLogs.value.push(r)
+        resetForm()
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+}
 
 </script>
 
