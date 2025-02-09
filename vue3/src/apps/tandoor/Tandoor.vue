@@ -1,6 +1,9 @@
 <template>
     <v-app>
-        <v-app-bar color="tandoor" flat density="comfortable">
+         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated">
+
+         </v-app-bar>
+        <v-app-bar color="tandoor" flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated">
             <router-link :to="{ name: 'view_home', params: {} }">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
             </router-link>
@@ -42,10 +45,10 @@
                         </v-list-item>
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
-                        <template v-if="spaces.length > 1">
+                        <template v-if="useUserPreferenceStore().spaces.length > 1">
                             <v-divider></v-divider>
                             <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
-                            <v-list-item v-for="s in spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
+                            <v-list-item v-for="s in useUserPreferenceStore().spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
                                 <template #prepend>
                                     <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
                                     <v-icon icon="fa-solid fa-circle" v-else></v-icon>
@@ -78,20 +81,20 @@
                 </v-menu>
             </v-avatar>
         </v-app-bar>
-        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
                 <v-btn color="success" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
             </p>
         </v-app-bar>
-        <v-app-bar color="warning" density="compact" v-if="isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
+        <v-app-bar color="warning" density="compact" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
             <p class="text-center w-100">
                 {{ $t('SpaceLimitExceeded') }}
                 <v-btn color="success" variant="flat" :to="{name: 'view_settings_space'}">{{ $t('SpaceSettings') }}</v-btn>
             </p>
         </v-app-bar>
 
-        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().activeSpace.message != ''">
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != ''">
             <p class="text-center w-100">
                 {{ useUserPreferenceStore().activeSpace.message }}
             </p>
@@ -101,7 +104,7 @@
             <router-view></router-view>
         </v-main>
 
-        <v-navigation-drawer v-if="lgAndUp">
+        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated">
             <v-list nav>
                 <v-list-item :to="{ name: 'view_settings', params: {} }">
                     <template #prepend>
@@ -132,7 +135,7 @@
 
         </v-navigation-drawer>
 
-        <v-bottom-navigation grow v-if="!lgAndUp">
+        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp">
             <v-btn value="recent" :to="{ name: 'view_home', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
@@ -183,18 +186,8 @@ import {isSpaceAboveLimit, isSpaceAtLimit} from "@/utils/logic_utils";
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
 
-const spaces = ref([] as Space[])
-
 onMounted(() => {
-    let api = new ApiApi()
-
     useUserPreferenceStore()
-
-    api.apiSpaceList().then(r => {
-        spaces.value = r.results
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-    })
 })
 
 </script>

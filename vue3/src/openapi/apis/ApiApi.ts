@@ -1225,6 +1225,7 @@ export interface ApiRecipeRelatedListRequest {
 
 export interface ApiRecipeRetrieveRequest {
     id: number;
+    share?: string;
 }
 
 export interface ApiRecipeShoppingUpdateRequest {
@@ -8988,6 +8989,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['share'] != null) {
+            queryParameters['share'] = requestParameters['share'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

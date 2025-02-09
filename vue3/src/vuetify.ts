@@ -15,6 +15,10 @@ export default createVuetify({
         // without this action buttons are left aligned in normal cards but right aligned in dialogs (I think)
         VCardActions: {
             class: 'float-right'
+        },
+        // limiting max width of base container so UIs dont become too wide
+        VContainer: {
+            maxWidth: '1400px'
         }
     },
     theme: {

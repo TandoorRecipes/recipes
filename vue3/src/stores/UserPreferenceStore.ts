@@ -3,7 +3,7 @@ import {useStorage} from "@vueuse/core";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {ApiApi, ServerSettings, Space, Supermarket, UserPreference, UserSpace} from "@/openapi";
 import {ShoppingGroupingOptions} from "@/types/Shopping";
-import {computed, ComputedRef} from "vue";
+import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
@@ -11,6 +11,7 @@ const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
 const SERVER_SETTINGS_KEY = 'TANDOOR_SERVER_SETTINGS'
 const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 const USER_SPACES_KEY = 'TANDOOR_USER_SPACES'
+const SPACES_KEY = 'TANDOOR_SPACES'
 
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {
     /**
@@ -30,10 +31,17 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     let activeSpace = useStorage(ACTIVE_SPACE_KEY, {} as Space)
     /**
-     * list of spaces the user has access to and the relevant permissions, cache in local storage in case application is started offline
+     * list of user spaces the user has access to and the relevant permissions, cache in local storage in case application is started offline
      */
     let userSpaces = useStorage(USER_SPACES_KEY, [] as UserSpace[])
-
+    /**
+     * list of spaces the user has access and their space settings/Data, cache in local storage in case application is started offline
+     */
+    let spaces = useStorage(SPACES_KEY, [] as Space[])
+    /**
+     * some views can be viewed without authentication, this variable centrally detects the authentication state by the response (403) of the settings views
+     */
+    let isAuthenticated = ref(false)
 
     /**
      * holds the active user space if there is one or null if not
@@ -57,11 +65,14 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         api.apiUserPreferenceList().then(r => {
             if (r.length == 1) {
                 userSettings.value = r[0]
+                isAuthenticated.value = true
             } else {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, r)
             }
         }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            if (err.response.status != 403) {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
         })
     }
 
@@ -99,19 +110,39 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         api.apiSpaceCurrentRetrieve().then(r => {
             activeSpace.value = r
         }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            if (err.response.status != 403) {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
         })
     }
 
     /**
-     * load user spaces
+     * load user spaces (permission mapping ot space)
      */
     function loadUserSpaces() {
         let api = new ApiApi()
         api.apiUserSpaceList().then(r => {
             userSpaces.value = r.results
         }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            if (err.response.status != 403) {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
+        })
+    }
+
+    /**
+     * list all spaces (with their data) a user has access to
+     */
+    // TODO maybe change userspace api to include space as nested property to make this call redundant
+    function loadSpaces() {
+        let api = new ApiApi()
+
+        api.apiSpaceList().then(r => {
+            spaces.value = r.results
+        }).catch(err => {
+            if (err.response.status != 403) {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
         })
     }
 
@@ -166,6 +197,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     loadServerSettings()
     loadActiveSpace()
     loadUserSpaces()
+    loadSpaces()
 
     return {
         deviceSettings,
@@ -173,7 +205,9 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         serverSettings,
         activeSpace,
         userSpaces,
+        spaces,
         activeUserSpace,
+        isAuthenticated,
         loadUserSettings,
         loadServerSettings,
         updateUserSettings,

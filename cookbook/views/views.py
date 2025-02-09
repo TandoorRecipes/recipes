@@ -5,6 +5,7 @@ from io import StringIO
 from uuid import UUID
 
 import redis
+from allauth.utils import build_absolute_uri
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -46,7 +47,26 @@ def index(request, path=None, resource=None):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('view_no_group'))
         else:
+            print('REQUEST PATH ', request.path)
+            if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
+                print('MATECHED')
+                return render(request, 'frontend/tandoor.html', {})
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+
+
+def redirect_recipe_view(request, pk):
+    if request.GET.get('share'):
+        print('send to index')
+        return index(request)
+    print('redirexct old recipe link')
+    return HttpResponseRedirect(build_absolute_uri(request, reverse('index')) + f'recipe/{pk}')
+
+
+def redirect_recipe_share_view(request, pk, share):
+    print('share redirect')
+    if re.match(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}', share):
+        return HttpResponseRedirect(build_absolute_uri(request, reverse('index')) + f'recipe/{pk}/?share={share}')
+    return HttpResponseRedirect(reverse('index'))
 
 
 def search(request):
@@ -620,7 +640,6 @@ def test2(request):
         return HttpResponseRedirect(reverse('index'))
 
 
-@group_required('guest')
 def tandoor_frontend(request):
     return render(request, 'frontend/tandoor.html', {})
 

@@ -51,7 +51,10 @@ const routes = [
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
     {path: '/books', component: ShoppingListPage, name: 'view_books'},
     {path: '/recipe/import', component: RecipeImportPage, name: 'RecipeImportPage'},
+
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
+    {path: '/view/recipe/:id', redirect: {name: 'view_recipe'}}, // old Tandoor v1 url pattern
+
     {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
 
     {path: '/list/:model?', component: ModelListPage, props: true, name: 'ModelListPage'},

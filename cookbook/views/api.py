@@ -1066,7 +1066,9 @@ class RecipePagination(PageNumberPagination):
                                      ('previous', self.get_previous_link()), ('results', data), ]))
 
 
-@extend_schema_view(list=extend_schema(parameters=[
+@extend_schema_view(retrieve=extend_schema(parameters=[
+    OpenApiParameter(name='share', type=str),
+]), list=extend_schema(parameters=[
     OpenApiParameter(name='query', description=_(
         'Query string matched (fuzzy) against recipe name. In the future also fulltext search.'), type=str),
     OpenApiParameter(name='keywords', description=_(
@@ -1163,7 +1165,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     pagination_class = RecipePagination
 
     def get_queryset(self):
-        share = self.request.query_params.get('share', None)
+        share = self.request.GET.get('share', None)
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
@@ -1831,14 +1833,14 @@ class ImageToRecipeView(APIView):
 
             model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
             img = PIL.Image.open(serializer.validated_data['image'])
-           # response = model.generate_content([
+            # response = model.generate_content([
             #                                      "The Image given is a photograph or screenshot taken of a cooking recipe. The data contained in the image should be converted to a structured json format adhering to the specification given in the schema.org/recipes schema. It is not allowed to make any data up, the response must only contain data given in the original image. The response must be a plain json object without any formatting characters or other unnecessary information. If unsure please return an empty json object {}. Do not wrap the response in a markdown codeblock (like ```json ```)",
-             #                                     img], stream=True)
-            #response.resolve()
+            #                                     img], stream=True)
+            # response.resolve()
 
-            #response_text = response.text
-            #response_text.replace('```json', '')
-            #response_text.replace('```', '')
+            # response_text = response.text
+            # response_text.replace('```json', '')
+            # response_text.replace('```', '')
 
             response_text = '{"@context": "https://schema.org", "@type": "Recipe", "name": "Pennettine mit Nüssen und Zitrone", "prepTime": "PT25M", "recipeYield": "4", "ingredients": [{"@type": "Quantity", "name": "BARILLA Pennettine", "amount": 500, "unitCode": "G"}, {"@type": "Quantity", "name": "Walnußkerne", "amount": 100, "unitCode": "G"}, {"@type": "Quantity", "name": "Sahne", "amount": "1/2-1", "unitCode": "CUP"}, {"@type": "Quantity", "name": "Butter", "amount": 20, "unitCode": "G"}, {"@type": "Quantity", "name": "Zucker", "amount": 10, "unitCode": "G"}, {"@type": "Quantity", "name": "gemahlener Zimt", "amount": 1, "unitCode": "UNIT"}, {"@type": "Quantity", "name": "Zitrone, unbehandelt", "amount": "1/2-1", "unitCode": "UNIT"}, {"@type": "Quantity", "name": "Salz", "amount": null, "unitCode": null}, {"@type": "Quantity", "name": "frisch gemahlener Pfeffer", "amount": null, "unitCode": null}], "recipeInstructions": [{"@type": "HowToStep", "text": "Walnußkerne hacken, in eine große Schüssel geben, Zimt und Zucker mit einer Prise Salz und Pfeffer untermischen."}, {"@type": "HowToStep", "text": "Die Zitrone waschen, Schale einer 1/2 Zitrone abreiben, dann zusammen mit den anderen Zutaten in die Schüssel geben und zuletzt in Stückchen geschnittene Butter untermischen."}, {"@type": "HowToStep", "text": "Die Mischung schmelzen, indem Sie die Schüssel auf den Topf mit dem kochenden Pasta-Wasser stellen und hin und wieder umrühren."}, {"@type": "HowToStep", "text": "Sahne dazugeben und die Zutaten mit einem Schneebesen verrühren."}, {"@type": "HowToStep", "text": "BARILLA Pennettine in reichlich Salzwasser al dente kochen, abgießen und mit der Sauce anrichten."}]}'
 
@@ -1851,7 +1853,7 @@ class ImageToRecipeView(APIView):
                 # if '@type' not in data_json:
                 #     data_json['@type'] = 'Recipe'
                 data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
-                #data = "<script type='application/ld+json'>" + response_text + "</script>"
+                # data = "<script type='application/ld+json'>" + response_text + "</script>"
 
                 scrape = scrape_html(html=data, org_url='https://urlnotfound.none', supported_only=False)
                 print(str(scrape.ingredients()))
@@ -2030,7 +2032,7 @@ class LocalizationViewSet(viewsets.GenericViewSet):
 
 # TODO implement schema
 class ServerSettingsViewSet(viewsets.GenericViewSet):
-    permission_classes = [CustomIsGuest & CustomTokenHasReadWriteScope]
+    permission_classes = []  # public view to use by anonymous request (recipe share page)
     serializer_class = ServerSettingsSerializer
     pagination_disabled = True
 
@@ -2041,6 +2043,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
     @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=ServerSettingsSerializer, )
     def current(self, request, *args, **kwargs):
         s = dict()
+        # Attention: No login required, do not return sensitive data
         s['shopping_min_autosync_interval'] = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
         s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT
         s['disable_external_connectors'] = settings.DISABLE_EXTERNAL_CONNECTORS
@@ -2142,7 +2145,7 @@ def share_link(request, pk):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,
-                             'link': request.build_absolute_uri(f'recipe/{pk}/{link.uuid}')})
+                             'link': request.build_absolute_uri(reverse('index') + f'recipe/{pk}/{link.uuid}')})
     else:
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 

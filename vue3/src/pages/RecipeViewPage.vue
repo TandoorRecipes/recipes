@@ -6,15 +6,19 @@
 </template>
 
 <script setup lang="ts">
-import {defineComponent, onMounted, ref, watch} from 'vue'
-import {ApiApi, Recipe, ViewLog} from "@/openapi";
+import {onMounted, ref, watch} from 'vue'
+import {ApiApi, ApiRecipeRetrieveRequest, Recipe, ViewLog} from "@/openapi";
 import RecipeView from "@/components/display/RecipeView.vue";
 import {useDisplay} from "vuetify";
+import {useUrlSearchParams} from "@vueuse/core";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const props = defineProps({
     id: {type: String, required: true}
 })
 
+const params = useUrlSearchParams('history')
 const {mobile} = useDisplay()
 
 const recipe = ref({} as Recipe)
@@ -30,14 +34,24 @@ onMounted(() => {
 function refreshData(recipeId: string) {
     const api = new ApiApi()
     recipe.value = {} as Recipe
-    api.apiRecipeRetrieve({id: Number(recipeId)}).then(r => {
-        recipe.value = r
-    })
 
-    api.apiViewLogCreate({
-        viewLog: {
-            recipe: Number(recipeId)
-        } as ViewLog
+    let requestParameters: ApiRecipeRetrieveRequest = {id: props.id}
+    if (params.share && typeof params.share == "string") {
+        requestParameters.share = params.share
+    }
+
+    api.apiRecipeRetrieve(requestParameters).then(r => {
+        recipe.value = r
+
+        if (useUserPreferenceStore().isAuthenticated) {
+            api.apiViewLogCreate({viewLog: {recipe: Number(recipeId)} as ViewLog})
+        }
+    }).catch(err => {
+        if (err.response.status == 403) {
+            // TODO maybe redirect to login if fails with 403? or conflict with group/sapce system?
+        } else {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }
     })
 }
 

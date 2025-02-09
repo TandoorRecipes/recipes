@@ -101,6 +101,10 @@ urlpatterns = [
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
+    # Tandoor v1 redirects
+    path('view/recipe/<int:pk>', views.redirect_recipe_view, name='redirect_recipe_view'),
+    path('view/recipe/<int:pk>/<slug:share>', views.redirect_recipe_share_view, name='redirect_recipe_share_view'),
+
     # TODO move to generic "new" view
     path('data/sync', data.sync, name='data_sync'),
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
