@@ -1,9 +1,9 @@
 <template>
     <v-container>
-        <v-row >
+        <v-row>
             <v-col>
 
-                <v-stepper v-model="stepper" >
+                <v-stepper v-model="stepper">
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
                             <v-stepper-item :title="$t('Import')" value="1"></v-stepper-item>
@@ -18,7 +18,7 @@
                         </v-stepper-header>
 
                         <v-stepper-window>
-                            <v-stepper-window-item value="1" >
+                            <v-stepper-window-item value="1">
                                 <v-card :loading="loading">
                                     <v-card-text>
                                         <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl">
@@ -39,7 +39,9 @@
                                             <v-alert-title>{{ $t('Duplicate') }}</v-alert-title>
                                             {{ $t('DuplicateFoundInfo') }}
                                             <v-list>
-                                                <v-list-item :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }} (#{{r.id}})</v-list-item>
+                                                <v-list-item :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }}
+                                                    (#{{ r.id }})
+                                                </v-list-item>
                                             </v-list>
                                         </v-alert>
                                     </v-card-text>
@@ -187,16 +189,18 @@
                             </v-stepper-window-item>
                         </v-stepper-window>
 
-                        <v-stepper-actions >
+                        <v-stepper-actions>
                             <template #prev>
                                 <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>
                             </template>
                             <template #next>
-                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="Object.keys(importResponse).length == 0"  v-if="stepper == '1'">{{$t('Import')}}</v-btn>
-                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">
-                                    {{stepper == '1' ? $t('Edit') : $t('Next')}}
+                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="Object.keys(importResponse).length == 0" v-if="stepper == '1'">
+                                    {{ $t('Import') }}
                                 </v-btn>
-                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false"  v-if="stepper == '5'">{{$t('Import')}}</v-btn>
+                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">
+                                    {{ stepper == '1' ? $t('Edit') : $t('Next') }}
+                                </v-btn>
+                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false" v-if="stepper == '5'">{{ $t('Import') }}</v-btn>
                             </template>
                         </v-stepper-actions>
                     </template>
@@ -211,7 +215,7 @@
 
 <script lang="ts" setup>
 
-import {nextTick, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {ApiApi, Keyword, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
@@ -223,7 +227,9 @@ import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {useFileApi} from "@/composables/useFileApi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";
+import {useUrlSearchParams} from "@vueuse/core";
 
+const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
 const {updateRecipeImage, convertImageToRecipe, fileApiLoading} = useFileApi()
@@ -234,12 +240,24 @@ const loading = ref(false)
 const importUrl = ref("")
 
 
-
-const image = ref<null|File>(null)
+const image = ref<null | File>(null)
 
 const importResponse = ref({} as RecipeFromSourceResponse)
 const keywordSelect = ref<null | SourceImportKeyword>(null)
 const editingIngredient = ref({} as SourceImportIngredient)
+
+onMounted(() => {
+
+    // handle manifest share intend passing url to import page
+    if (params.url && typeof  params.url === "string") {
+        importUrl.value = params.url
+        loadRecipeFromUrl()
+    }
+    if (params.text && typeof  params.text === "string") {
+        importUrl.value = params.text
+        loadRecipeFromUrl()
+    }
+})
 
 /**
  * call server to load recipe from a given URl
@@ -256,8 +274,8 @@ function loadRecipeFromUrl() {
     })
 }
 
-function uploadAndConvertImage(){
-    if(image.value != null){
+function uploadAndConvertImage() {
+    if (image.value != null) {
         convertImageToRecipe(image.value).then(r => {
             importResponse.value = r
         })
