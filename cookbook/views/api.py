@@ -1,3 +1,4 @@
+import base64
 import datetime
 import io
 import json
@@ -13,6 +14,7 @@ from urllib.parse import unquote
 from zipfile import ZipFile
 
 import PIL.Image
+import litellm
 import redis
 import requests
 from PIL import UnidentifiedImageError
@@ -34,13 +36,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.datetime_safe import date
-from django.utils.timezone import make_aware
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
-from google import generativeai
 from icalendar import Calendar, Event
+from litellm import completion
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
@@ -1829,22 +1830,37 @@ class ImageToRecipeView(APIView):
         print('method called')
         serializer = ImportImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            generativeai.configure(api_key=GOOGLE_AI_API_KEY)
-
-            model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
+            # generativeai.configure(api_key=GOOGLE_AI_API_KEY)
+            #
+            # model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
             img = PIL.Image.open(serializer.validated_data['image'])
-            # response = model.generate_content([
-            #                                      "The Image given is a photograph or screenshot taken of a cooking recipe. The data contained in the image should be converted to a structured json format adhering to the specification given in the schema.org/recipes schema. It is not allowed to make any data up, the response must only contain data given in the original image. The response must be a plain json object without any formatting characters or other unnecessary information. If unsure please return an empty json object {}. Do not wrap the response in a markdown codeblock (like ```json ```)",
-            #                                     img], stream=True)
-            # response.resolve()
+            buffer = io.BytesIO()
+            img.save(buffer, format="PNG")  # or PNG if needed
+            image_bytes = buffer.getvalue()
 
-            # response_text = response.text
-            # response_text.replace('```json', '')
-            # response_text.replace('```', '')
+            # TODO cant use ingredient splitting because scraper gets upset "Please separate the ingredients into amount, unit, food and if required a note. "
+            # TODO maybe not use scraper?
+            messages  = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Please look at the file and return the contained recipe as a structured JSON in the same language as given in the file. For the JSON use the format given in the schema.org/recipe schema. Do not make anything up and leave everything blank you do not know. If shown in the file please also return the nutrition in the format specified in the schema.org/recipe schema."
 
-            response_text = '{"@context": "https://schema.org", "@type": "Recipe", "name": "Pennettine mit Nüssen und Zitrone", "prepTime": "PT25M", "recipeYield": "4", "ingredients": [{"@type": "Quantity", "name": "BARILLA Pennettine", "amount": 500, "unitCode": "G"}, {"@type": "Quantity", "name": "Walnußkerne", "amount": 100, "unitCode": "G"}, {"@type": "Quantity", "name": "Sahne", "amount": "1/2-1", "unitCode": "CUP"}, {"@type": "Quantity", "name": "Butter", "amount": 20, "unitCode": "G"}, {"@type": "Quantity", "name": "Zucker", "amount": 10, "unitCode": "G"}, {"@type": "Quantity", "name": "gemahlener Zimt", "amount": 1, "unitCode": "UNIT"}, {"@type": "Quantity", "name": "Zitrone, unbehandelt", "amount": "1/2-1", "unitCode": "UNIT"}, {"@type": "Quantity", "name": "Salz", "amount": null, "unitCode": null}, {"@type": "Quantity", "name": "frisch gemahlener Pfeffer", "amount": null, "unitCode": null}], "recipeInstructions": [{"@type": "HowToStep", "text": "Walnußkerne hacken, in eine große Schüssel geben, Zimt und Zucker mit einer Prise Salz und Pfeffer untermischen."}, {"@type": "HowToStep", "text": "Die Zitrone waschen, Schale einer 1/2 Zitrone abreiben, dann zusammen mit den anderen Zutaten in die Schüssel geben und zuletzt in Stückchen geschnittene Butter untermischen."}, {"@type": "HowToStep", "text": "Die Mischung schmelzen, indem Sie die Schüssel auf den Topf mit dem kochenden Pasta-Wasser stellen und hin und wieder umrühren."}, {"@type": "HowToStep", "text": "Sahne dazugeben und die Zutaten mit einem Schneebesen verrühren."}, {"@type": "HowToStep", "text": "BARILLA Pennettine in reichlich Salzwasser al dente kochen, abgießen und mit der Sauce anrichten."}]}'
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": f'data:image/png;base64,{base64.b64encode(image_bytes).decode("utf-8")}'
+                        },
 
-            print(response_text)
+                    ]
+                },
+            ]
+
+            response = completion(api_key=GOOGLE_AI_API_KEY, model='gemini/gemini-2.0-flash', response_format={"type": "json_object"}, messages=messages, )
+
+            response_text = response.choices[0].message.content
 
             try:
                 data_json = json.loads(response_text)

@@ -205,6 +205,7 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
 
+    recipe_json['properties'] = []
     try:
         recipe_json['properties'] = get_recipe_properties(request.space, scrape.schema.nutrients())
         print(recipe_json['properties'])
@@ -227,6 +228,13 @@ def get_recipe_properties(space, property_data):
         "property-proteins": "proteinContent",
         "property-fats": "fatContent",
     }
+
+    serving_size = 1
+    try:
+        serving_size = parse_servings(property_data['servingSize'])
+    except KeyError:
+        pass
+
     recipe_properties = []
     for pt in PropertyType.objects.filter(space=space, open_data_slug__in=list(properties.keys())).all():
         for p in list(properties.keys()):
@@ -237,7 +245,7 @@ def get_recipe_properties(space, property_data):
                             'id': pt.id,
                             'name': pt.name,
                         },
-                        'property_amount': parse_servings(property_data[properties[p]]) / parse_servings(property_data['servingSize']),
+                        'property_amount': parse_servings(property_data[properties[p]]) / serving_size,
                     })
 
     return recipe_properties
