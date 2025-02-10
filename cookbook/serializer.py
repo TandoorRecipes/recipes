@@ -1073,6 +1073,7 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
 
 class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+    created_by = UserSerializer(read_only=True)
     shared = UserSerializer(many=True)
     filter = CustomFilterSerializer(allow_null=True, required=False)
 

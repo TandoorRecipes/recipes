@@ -302,7 +302,7 @@ registerModel(TMealPlan)
 export const TRecipeBook = {
     name: 'RecipeBook',
     localizationKey: 'Recipe_Book',
-    icon: 'fa-solid fa-book-open',
+    icon: 'fa-solid fa-book-bookmark',
 
     isPaginated: true,
     toStringKeys: ['name'],
@@ -319,7 +319,7 @@ registerModel(TRecipeBook)
 export const TRecipeBookEntry = {
     name: 'RecipeBookEntry',
     localizationKey: 'Recipe_Book',
-    icon: 'fa-solid fa-book-open',
+    icon: 'fa-solid fa-book-bookmark',
 
     isPaginated: true,
     toStringKeys: ['book.name', 'recipe.name'],

@@ -60,10 +60,10 @@ export interface PatchedRecipeBook {
     shared?: Array<User>;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof PatchedRecipeBook
      */
-    readonly createdBy?: number;
+    readonly createdBy?: User;
     /**
      * 
      * @type {CustomFilter}
@@ -99,7 +99,7 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
-        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
         'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
         'order': json['order'] == null ? undefined : json['order'],
     };

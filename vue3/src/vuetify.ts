@@ -81,7 +81,7 @@ export default createVuetify({
             shopping: 'fa-solid fa-cart-shopping',
             mealplan: 'fa-solid fa-calendar-days',
             recipes: 'fa-solid fa-book',
-            books: 'fa-solid fa-book-open',
+            books: 'fa-solid fa-book-bookmark',
             menu: 'fa-solid fa-ellipsis-vertical'
         },
         sets: {

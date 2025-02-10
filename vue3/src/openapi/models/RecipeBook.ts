@@ -60,10 +60,10 @@ export interface RecipeBook {
     shared: Array<User>;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof RecipeBook
      */
-    readonly createdBy: number;
+    readonly createdBy: User;
     /**
      * 
      * @type {CustomFilter}
@@ -102,7 +102,7 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'shared': ((json['shared'] as Array<any>).map(UserFromJSON)),
-        'createdBy': json['created_by'],
+        'createdBy': UserFromJSON(json['created_by']),
         'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
         'order': json['order'] == null ? undefined : json['order'],
     };
