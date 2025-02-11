@@ -30,7 +30,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip debug -v && \
     venv/bin/pip install wheel==0.45.1 && \
     venv/bin/pip install setuptools_rust==1.10.2 && \
-    venv/bin/pip install -r requirements.txt --no-cache-dir &&\
+    venv/bin/pip install -r requirements.txt --no-cache-dir --only-binary tiktoken &&\
     apk --purge del .build-deps
 
 #Copy project and execute it.
