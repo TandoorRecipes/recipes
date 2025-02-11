@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.21
+FROM python:3.13-alpine3.21
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git
@@ -23,10 +23,11 @@ RUN \
     fi
 # remove Development dependencies from requirements.txt
 RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev g++ py3-grpcio && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev g++ && \
     echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
+    venv/bin/pip debug -v && \
     venv/bin/pip install wheel==0.45.1 && \
     venv/bin/pip install setuptools_rust==1.10.2 && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
