@@ -33,7 +33,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip install setuptools_rust==1.10.2 && \
     if [ `apk --print-arch` = "armv7" ]; then \
     printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" > /etc/pip.conf ; \
-    fi \
+    fi &&\
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 
