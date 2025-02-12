@@ -31,8 +31,8 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip debug -v && \
     venv/bin/pip install wheel==0.45.1 && \
     venv/bin/pip install setuptools_rust==1.10.2 && \
-    if [ `apk --print-arch` = "armv7" ]; then \
-    printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" > /etc/pip.conf ; \
+    if [ `apk --print-arch` = "arm64" ]; then \
+    curl https://sh.rustup.rs -sSf | sh -s -- -y; \
     fi &&\
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
