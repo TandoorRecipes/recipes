@@ -1,10 +1,10 @@
-import imghdr
 import json
 import re
 from io import BytesIO
 from zipfile import ZipFile
 
 import requests
+from PIL import Image
 
 from django.utils.translation import gettext as _
 
@@ -128,7 +128,7 @@ class RecetteTek(Integration):
                     url = file['originalPicture']
                     if validate_import_url(url):
                         response = requests.get(url)
-                        if imghdr.what(BytesIO(response.content)) is not None:
+                        if Image.open(BytesIO(response.content)).verify():
                             self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
                         else:
                             raise Exception("Original image failed to download.")
