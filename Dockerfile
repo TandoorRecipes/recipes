@@ -31,8 +31,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip debug -v && \
     venv/bin/pip install wheel==0.45.1 && \
     venv/bin/pip install setuptools_rust==1.10.2 && \
-    apk --print-arch &&\
-    if [ `apk --print-arch` = "arm64" ]; then \
+    if [ `apk --print-arch` = "aarch64" ]; then \
     curl https://sh.rustup.rs -sSf | sh -s -- -y; \
     fi &&\
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
