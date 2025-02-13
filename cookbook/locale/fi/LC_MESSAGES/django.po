@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-03 16:58+0000\n"
+"PO-Revision-Date: 2025-02-14 23:58+0000\n"
 "Last-Translator: Juha Antikainen <jussi.antikainen@gmail.com>\n"
 "Language-Team: Finnish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fi/>\n"
@@ -1154,7 +1154,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
-msgstr ""
+msgstr "Suojattu"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
