@@ -29,6 +29,7 @@ import ModelEditPage from "@/pages/ModelEditPage.vue";
 import RecipeImportPage from "@/pages/RecipeImportPage.vue";
 import IngredientEditorPage from "@/pages/IngredientEditorPage.vue";
 import BooksPage from "@/pages/BooksPage.vue";
+import BookViewPage from "@/pages/BookViewPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -51,6 +52,7 @@ const routes = [
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
     {path: '/books', component: BooksPage, name: 'BooksPage'},
+    {path: '/book/:bookId', component: BookViewPage, name: 'BookViewPage', props: true},
     {path: '/recipe/import', component: RecipeImportPage, name: 'RecipeImportPage'},
 
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},

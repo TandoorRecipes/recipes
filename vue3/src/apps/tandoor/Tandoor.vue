@@ -176,13 +176,10 @@ import {useDisplay} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {TAutomation, TCookLog, TFood, TKeyword, TPropertyType, TSupermarket, TSupermarketCategory, TUnit, TUnitConversion, TUserFile, TViewLog} from "@/types/Models";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted, ref} from "vue";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {ApiApi, Space} from "@/openapi";
-import {isSpaceAboveLimit, isSpaceAtLimit} from "@/utils/logic_utils";
+import {isSpaceAboveLimit} from "@/utils/logic_utils";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
