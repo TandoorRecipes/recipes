@@ -32,7 +32,7 @@
                 <v-tabs-window-item value="recipes">
                     <model-select model="Recipe" v-model="selectedRecipe">
                         <template #append>
-                            <v-btn @click="addRecipeToBook()">
+                            <v-btn icon color="create" @click="addRecipeToBook()">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
                         </template>
@@ -43,12 +43,13 @@
                         :headers="tableHeaders"
                         :items-length="itemCount"
                     >
+                        <template #item.action="{item}">
+                            <v-btn icon="$delete" color="delete" @click="removeRecipeFromBook(item)"></v-btn>
+                        </template>
 
                     </v-data-table-server>
                 </v-tabs-window-item>
             </v-tabs-window>
-
-
         </v-card-text>
     </model-editor-base>
 </template>
@@ -63,13 +64,14 @@ import {VDataTableUpdateOptions} from "@/vuetify";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     item: {type: {} as PropType<RecipeBook>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<RecipeBook>, required: false, default: {} as RecipeBook},
     dialog: {type: Boolean, default: false}
 })
 
@@ -86,7 +88,7 @@ const tablePage = ref(1)
 const itemCount = ref(0)
 
 const tableHeaders = [
-    {title: t('Name'), key: 'recipeContent.name', },
+    {title: t('Name'), key: 'recipeContent.name',},
     {key: 'action', width: '1%', noBreak: true, align: 'end'},
 ]
 
@@ -98,19 +100,39 @@ onMounted(() => {
         },
         existingItemFunction: () => {
             recipeBookEntries.value = []
-        }
+        },
+        itemDefaults: props.itemDefaults
     })
 })
 
+/**
+ * add selected recipe into the book and client list
+ */
 function addRecipeToBook() {
     let api = new ApiApi()
-    // TODO check both for null, handle errors
 
-    api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
-        recipeBookEntries.value.push(r) // TODO or reload ?
-        selectedRecipe.value = {} as Recipe
+    if (Object.keys(selectedRecipe.value).length > 0) {
+        api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
+            recipeBookEntries.value.push(r)
+            selectedRecipe.value = {} as Recipe
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        })
+    }
+}
+
+/**
+ * remove the given entry from the book both in the database and on the frontend
+ * @param recipeBookEntry
+ */
+function removeRecipeFromBook(recipeBookEntry: RecipeBookEntry) {
+    let api = new ApiApi()
+
+    api.apiRecipeBookEntryDestroy({id: recipeBookEntry.id!}).then((r) => {
+        recipeBookEntries.value.splice(recipeBookEntries.value.findIndex(rBE => rBE.id! == recipeBookEntry.id!), 1)
+        useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
     }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
     })
 }
 
@@ -132,7 +154,7 @@ function loadRecipeBookEntries(options: VDataTableUpdateOptions) {
 
     useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
 
-    api.apiRecipeBookEntryList({page: options.page, pageSize: options.itemsPerPage,}).then((r: any) => {
+    api.apiRecipeBookEntryList({page: options.page, pageSize: options.itemsPerPage, book: editingObj.value.id}).then((r: any) => {
         recipeBookEntries.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {

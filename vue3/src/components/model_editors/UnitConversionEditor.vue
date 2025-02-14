@@ -58,6 +58,7 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 const props = defineProps({
     item: {type: {} as PropType<UnitConversion>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<UnitConversion>, required: false, default: {} as UnitConversion},
     dialog: {type: Boolean, default: false}
 })
 
@@ -66,7 +67,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 </script>

@@ -112,6 +112,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 const props = defineProps({
     item: {type: {} as PropType<Supermarket>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Supermarket>, required: false, default: {} as Supermarket},
     dialog: {type: Boolean, default: false}
 })
 
@@ -154,7 +155,8 @@ onMounted(() => {
             existingItemFunction: () => {
                 // initialize list of supermarket category relations
                 editingObjectSupermarketCategoriesRelations.value = editingObj.value.categoryToSupermarket
-            }
+            },
+            itemDefaults: props.itemDefaults,
         })
     })
 })

@@ -52,6 +52,7 @@ import {DateTime} from "luxon";
 const props = defineProps({
     item: {type: {} as PropType<MealType>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<MealType>, required: false, default: {} as MealType},
     dialog: {type: Boolean, default: false}
 })
 
@@ -63,7 +64,7 @@ const timePickerMenu = ref(false)
 
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 </script>

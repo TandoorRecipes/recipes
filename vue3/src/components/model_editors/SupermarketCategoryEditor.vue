@@ -29,11 +29,10 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
 
-const {t} = useI18n()
-
 const props = defineProps({
     item: {type: {} as PropType<SupermarketCategory>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<SupermarketCategory>, required: false, default: {} as SupermarketCategory},
     dialog: {type: Boolean, default: false}
 })
 
@@ -43,7 +42,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 </script>

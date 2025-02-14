@@ -37,13 +37,13 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
 import {VNumberInput} from "vuetify/labs/VNumberInput";
-import {DateTime} from "luxon";
 
 const {t} = useI18n()
 
 const props = defineProps({
     item: {type: {} as PropType<Automation>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Automation>, required: false, default: {} as Automation},
     dialog: {type: Boolean, default: false}
 })
 
@@ -69,7 +69,8 @@ onMounted(() => {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.order = 0
-        }
+        },
+        itemDefaults: props.itemDefaults
     })
 })
 

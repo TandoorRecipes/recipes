@@ -36,6 +36,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 const props = defineProps({
     item: {type: {} as PropType<InviteLink>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<InviteLink>, required: false, default: {} as InviteLink},
     dialog: {type: Boolean, default: false}
 })
 
@@ -55,7 +56,8 @@ onMounted(() => {
             newItemFunction: () => {
                 editingObj.value.validUntil = DateTime.now().plus({month: 1}).toJSDate()
                 editingObj.value.group = groups.value[0]
-            }
+            },
+            itemDefaults: props.itemDefaults
         })
 
     }).catch(err => {

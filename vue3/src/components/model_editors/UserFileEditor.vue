@@ -48,7 +48,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, shallowRef} from "vue";
-import {UserFile} from "@/openapi";
+import {UserFile, UserSpace} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {DateTime} from "luxon";
@@ -59,6 +59,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 const props = defineProps({
     item: {type: {} as PropType<UserFile>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<UserFile>, required: false, default: {} as UserFile},
     dialog: {type: Boolean, default: false}
 })
 
@@ -71,7 +72,7 @@ const {fileApiLoading, createOrUpdateUserFile} = useFileApi()
 const file = shallowRef<File | null>(null)
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 /**

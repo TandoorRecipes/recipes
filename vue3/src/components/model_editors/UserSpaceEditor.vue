@@ -32,6 +32,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 const props = defineProps({
     item: {type: {} as PropType<UserSpace>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<UserSpace>, required: false, default: {} as UserSpace},
     dialog: {type: Boolean, default: false}
 })
 
@@ -49,7 +50,7 @@ onMounted(() => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 

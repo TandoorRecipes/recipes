@@ -37,13 +37,13 @@ import {onMounted, PropType} from "vue";
 import {ShoppingListEntry} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import {useI18n} from "vue-i18n";
 import {VNumberInput} from "vuetify/labs/VNumberInput";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<ShoppingListEntry>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<ShoppingListEntry>, required: false, default: {} as ShoppingListEntry},
     dialog: {type: Boolean, default: false}
 })
 
@@ -53,7 +53,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 </script>

@@ -38,6 +38,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 const props = defineProps({
     item: {type: {} as PropType<Property>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Property>, required: false, default: {} as Property},
     dialog: {type: Boolean, default: false}
 })
 
@@ -46,7 +47,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 

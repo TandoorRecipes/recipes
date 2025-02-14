@@ -116,8 +116,7 @@
 <script setup lang="ts">
 
 import {computed, onMounted, PropType, ref, watch} from "vue";
-import {ApiApi, Food, Property, Unit, UnitConversion} from "@/openapi";
-import {useI18n} from "vue-i18n";
+import {ApiApi, Food,  Unit, UnitConversion} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
@@ -125,11 +124,13 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 
 const props = defineProps({
     item: {type: {} as PropType<Food>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Food>, required: false, default: {} as Food},
     dialog: {type: Boolean, default: false}
 })
 
@@ -171,8 +172,9 @@ onMounted(() => {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.propertiesFoodAmount = 100
-            editingObj.value.propertiesFoodUnit = {name: 'g'} as Unit // TODO properly fetch default unit
-        }
+            editingObj.value.propertiesFoodUnit = {name: (useUserPreferenceStore().userSettings.defaultUnit != undefined ? useUserPreferenceStore().userSettings.defaultUnit : 'g')} as Unit
+        },
+        itemDefaults: props.itemDefaults,
     })
 })
 

@@ -36,6 +36,7 @@ import {VNumberInput} from "vuetify/labs/VNumberInput";
 const props = defineProps({
     item: {type: {} as PropType<PropertyType>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<PropertyType>, required: false, default: {} as PropertyType},
     dialog: {type: Boolean, default: false}
 })
 
@@ -45,7 +46,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 </script>

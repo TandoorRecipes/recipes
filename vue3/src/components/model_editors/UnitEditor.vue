@@ -35,6 +35,7 @@ const {t} = useI18n()
 const props = defineProps({
     item: {type: {} as PropType<Unit>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Unit>, required: false, default: {} as Unit},
     dialog: {type: Boolean, default: false}
 })
 
@@ -66,7 +67,7 @@ const BASE_UNITS = [
 ]
 
 onMounted(() => {
-    setupState(props.item, props.itemId)
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 })
 
 </script>

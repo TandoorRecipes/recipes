@@ -139,7 +139,6 @@ import {onMounted, PropType, ref, shallowRef} from "vue";
 import {Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import {useI18n} from "vue-i18n";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import StepEditor from "@/components/inputs/StepEditor.vue";
 import {VueDraggable} from "vue-draggable-plus";
@@ -155,6 +154,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 const props = defineProps({
     item: {type: {} as PropType<Recipe>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Recipe>, required: false, default: {} as Recipe},
     dialog: {type: Boolean, default: false}
 })
 
@@ -175,7 +175,8 @@ onMounted(() => {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
             editingObj.value.internal = true //TODO make database default after v2
-        }
+        },
+        itemDefaults: props.itemDefaults,
     })
 })
 

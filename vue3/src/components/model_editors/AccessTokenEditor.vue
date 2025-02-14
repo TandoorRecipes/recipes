@@ -42,6 +42,7 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 const props = defineProps({
     item: {type: {} as PropType<AccessToken>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<AccessToken>, required: false, default: {} as AccessToken},
     dialog: {type: Boolean, default: false}
 })
 
@@ -54,7 +55,8 @@ onMounted(() => {
         newItemFunction: () => {
             editingObj.value.expires = DateTime.now().plus({year: 1}).toJSDate()
             editingObj.value.scope = 'read write'
-        }
+        },
+        itemDefaults: props.itemDefaults
     })
 })
 
