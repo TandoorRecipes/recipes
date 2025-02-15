@@ -8,12 +8,12 @@
                     </v-card-title>
                     <v-card-text>
                         <v-form :disabled="loading">
-                            <v-text-field :label="$t('Search')" v-model="searchParameters.query" clearable></v-text-field>
+                            <v-text-field :label="$t('Search')" v-model="urlSearchParams.query" clearable></v-text-field>
 
-                            <model-select model="Keyword" mode="tags" v-model="searchParameters.keywords" :object="false"></model-select>
-                            <model-select model="Food" mode="tags" v-model="searchParameters.foods"></model-select>
-                            <model-select model="Unit" mode="tags" v-model="searchParameters.units"></model-select>
-                            <model-select model="RecipeBook" mode="tags" v-model="searchParameters.books"></model-select>
+                            <model-select model="Keyword" mode="tags" v-model="urlSearchParams.keywords" :object="false"></model-select>
+                            <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" :object="false"></model-select>
+                            <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" :object="false"></model-select>
+                            <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" :object="false"></model-select>
 
                             <!--                            <v-number-input :label="$t('times_cooked')" v-model="searchParameters.timescooked" clearable></v-number-input>-->
                             <!--                            <v-date-input  :label="$t('last_cooked')" v-model="searchParameters.cookedon" clearable></v-date-input>-->
@@ -21,14 +21,14 @@
                             <!--                            <v-date-input :label="$t('created_on')" v-model="searchParameters.createdon" clearable></v-date-input>-->
                             <!--                            <v-date-input :label="$t('updatedon')" v-model="searchParameters.updatedon" clearable></v-date-input>-->
 
-                            <v-checkbox :label="$t('make_now')" v-model="searchParameters.makenow"></v-checkbox>
+                            <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow"></v-checkbox>
                         </v-form>
 
 
                     </v-card-text>
                     <v-card-actions>
                         <v-btn @click="reset()">{{ $t('Reset') }}</v-btn>
-                        <v-btn @click="searchRecipes()">{{ $t('Search') }}</v-btn>
+                        <v-btn @click="searchRecipes({page: 1})">{{ $t('Search') }}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -38,11 +38,12 @@
             <v-col>
                 <v-card>
                     <v-data-table-server
+                        @update:options="searchRecipes"
                         :loading="loading"
                         :items="recipes"
                         :headers="tableHeaders"
-                        :page="searchParameters.page"
-                        :items-per-page="searchParameters.pageSize"
+                        :page="urlSearchParams.page"
+                        :items-per-page="urlSearchParams.pageSize"
                         :items-length="tableItemCount"
                         @click:row="handleRowClick"
                     >
@@ -77,12 +78,12 @@ import {VDateInput} from 'vuetify/labs/VDateInput'
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import {useRouter} from "vue-router";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
+import {VDataTableUpdateOptions} from "@/vuetify";
 
 const {t} = useI18n()
 const router = useRouter()
 const urlSearchParams = useUrlSearchParams('history', {})
 
-const searchParameters = ref({} as ApiRecipeListRequest)
 const loading = ref(false)
 
 const tableHeaders = [
@@ -96,24 +97,25 @@ const tableItemCount = ref(0)
 
 const recipes = ref([] as RecipeOverview[])
 
-watch(() => searchParameters.value.page, () => {
-    searchRecipes()
-})
-
-watch(() => searchParameters.value.pageSize, () => {
-    searchRecipes()
-})
-
 onMounted(() => {
-    if (urlSearchParams.query && typeof urlSearchParams.query === "string") {
-        searchParameters.value.query = urlSearchParams.query
-    }
+    urlSearchParams.page = 1
 })
 
-function searchRecipes() {
+function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
-    api.apiRecipeList(searchParameters.value).then((r) => {
+
+    urlSearchParams.page = options.page
+    if(options.itemsPerPage){
+        urlSearchParams.pageSize = options.itemsPerPage
+    }
+
+    let searchParameters = {} as ApiRecipeListRequest
+    Object.keys(urlSearchParams).forEach(key => {
+        searchParameters[key] = urlSearchParams[key]
+    })
+
+    api.apiRecipeList(searchParameters).then((r) => {
         recipes.value = r.results
         tableItemCount.value = r.count
     }).catch(err => {
@@ -124,7 +126,9 @@ function searchRecipes() {
 }
 
 function reset() {
-    searchParameters.value = {} as ApiRecipeListRequest
+    Object.keys(urlSearchParams).forEach(key => {
+        delete urlSearchParams[key]
+    })
     recipes.value = []
 }
 
