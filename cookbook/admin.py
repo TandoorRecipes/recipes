@@ -10,7 +10,7 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+from .models import (BookmarkletImport, Comment, CookLog, CustomFilter, Food, ImportLog, Ingredient, InviteLink,
                      Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
@@ -101,6 +101,13 @@ class ConnectorConfigAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ConnectorConfig, ConnectorConfigAdmin)
+
+
+class CustomFilterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'type', 'name')
+
+
+admin.site.register(CustomFilter, CustomFilterAdmin)
 
 
 class SyncAdmin(admin.ModelAdmin):

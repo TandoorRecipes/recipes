@@ -33,7 +33,7 @@
                 <td colspan="5" class="font-weight-bold">{{ i.note }}</td>
             </template>
             <template v-else>
-                <td style="width: 1%; text-wrap: nowrap" class="pa-0">
+                <td style="width: 1%; text-wrap: nowrap" class="pa-0" v-if="showCheckbox">
                     <v-checkbox-btn v-model="i.checked" color="success" v-if="!i.isHeader"></v-checkbox-btn>
                 </td>
                 <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)"></td>
@@ -72,6 +72,10 @@ const props = defineProps({
     ingredientFactor: {
         type: Number,
         required: true,
+    },
+    showCheckbox: {
+        type: Boolean,
+        default: true
     },
 })
 
