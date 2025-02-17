@@ -336,7 +336,7 @@ registerModel(TRecipeBookEntry)
 
 export const TCustomFilter = {
     name: 'CustomFilter',
-    localizationKey: 'Custom Filter',
+    localizationKey: 'SavedSearch',
     icon: 'fa-solid fa-filter',
 
     isPaginated: true,
