@@ -26,7 +26,7 @@
 
                             <model-select model="CustomFilter" v-model="selectedCustomFilter">
                                 <template #append>
-                                    <v-btn icon="fa-solid fa-upload" color="warning" :disabled="Object.keys(selectedCustomFilter).length == 0"></v-btn>
+                                    <v-btn icon="fa-solid fa-upload" color="warning" :disabled="Object.keys(selectedCustomFilter).length == 0" @click="loadCustomFilter()"></v-btn>
                                     <v-btn icon="$save" class="ms-1" color="save" @click="saveCustomFilter()"></v-btn>
                                 </template>
                             </model-select>
@@ -196,6 +196,274 @@ function createCustomFilter() {
     }).finally(() => {
         loading.value = false
     })
+}
+
+function loadCustomFilter() {
+    let obj = customFilterToApiRecipeListRequest(selectedCustomFilter.value.search)
+    console.log(obj, selectedCustomFilter.value.search)
+    Object.keys(obj).forEach((key) => {
+        urlSearchParams[key] = obj[key]
+    })
+}
+
+// TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
+
+/**
+ * turn data in the format of a CustomFilter into the format needed for api request
+ * @param customFilterParams
+ */
+function customFilterToApiRecipeListRequest(customFilterParams: any) {
+    let recipeListRequestParams: any = {};
+    customFilterParams = JSON.parse(customFilterParams)
+
+    if (customFilterParams['books'] != null) {
+        recipeListRequestParams['books'] = customFilterParams['books'];
+    }
+
+    if (customFilterParams['books_and'] != null) {
+        recipeListRequestParams['booksAnd'] = customFilterParams['books_and'];
+    }
+
+    if (customFilterParams['books_and_not'] != null) {
+        recipeListRequestParams['booksAndNot'] = customFilterParams['books_and_not'];
+    }
+
+    if (customFilterParams['books_or'] != null) {
+        recipeListRequestParams['booksOr'] = customFilterParams['books_or'];
+    }
+
+    if (customFilterParams['books_or_not'] != null) {
+        recipeListRequestParams['booksOrNot'] = customFilterParams['books_or_not'];
+    }
+
+    if (customFilterParams['cookedon'] != null) {
+        recipeListRequestParams['cookedon'] = customFilterParams['cookedon'];
+    }
+
+    if (customFilterParams['createdon'] != null) {
+        recipeListRequestParams['createdon'] = customFilterParams['createdon'];
+    }
+
+    if (customFilterParams['foods'] != null) {
+        recipeListRequestParams['foods'] = customFilterParams['foods'];
+    }
+
+    if (customFilterParams['foods_and'] != null) {
+        recipeListRequestParams['foodsAnd'] = customFilterParams['foods_and'];
+    }
+
+    if (customFilterParams['foods_and_not'] != null) {
+        recipeListRequestParams['foodsAndNot'] = customFilterParams['foods_and_not'];
+    }
+
+    if (customFilterParams['foods_or'] != null) {
+        recipeListRequestParams['foodsOr'] = customFilterParams['foods_or'];
+    }
+
+    if (customFilterParams['foods_or_not'] != null) {
+        recipeListRequestParams['foodsOrNot'] = customFilterParams['foods_or_not'];
+    }
+
+    if (customFilterParams['internal'] != null) {
+        recipeListRequestParams['internal'] = customFilterParams['internal'];
+    }
+
+    if (customFilterParams['keywords'] != null) {
+        recipeListRequestParams['keywords'] = customFilterParams['keywords'];
+    }
+
+    if (customFilterParams['keywords_and'] != null) {
+        recipeListRequestParams['keywordsAnd'] = customFilterParams['keywords_and'];
+    }
+
+    if (customFilterParams['keywords_and_not'] != null) {
+        recipeListRequestParams['keywordsAndNot'] = customFilterParams['keywords_and_not'];
+    }
+
+    if (customFilterParams['keywords_or'] != null) {
+        recipeListRequestParams['keywordsOr'] = customFilterParams['keywords_or'];
+    }
+
+    if (customFilterParams['keywords_or_not'] != null) {
+        recipeListRequestParams['keywordsOrNot'] = customFilterParams['keywords_or_not'];
+    }
+
+    if (customFilterParams['makenow'] != null) {
+        recipeListRequestParams['makenow'] = customFilterParams['makenow'];
+    }
+
+    if (customFilterParams['new'] != null) {
+        recipeListRequestParams['_new'] = customFilterParams['new'];
+    }
+
+    if (customFilterParams['num_recent'] != null) {
+        recipeListRequestParams['numRecent'] = customFilterParams['num_recent'];
+    }
+
+    if (customFilterParams['page'] != null) {
+        recipeListRequestParams['page'] = customFilterParams['page'];
+    }
+
+    if (customFilterParams['page_size'] != null) {
+        recipeListRequestParams['pageSize'] = customFilterParams['page_size'];
+    }
+
+    if (customFilterParams['query'] != null) {
+        recipeListRequestParams['query'] = customFilterParams['query'];
+    }
+
+    if (customFilterParams['random'] != null) {
+        recipeListRequestParams['random'] = customFilterParams['random'];
+    }
+
+    if (customFilterParams['rating'] != null) {
+        recipeListRequestParams['rating'] = customFilterParams['rating'];
+    }
+
+    if (customFilterParams['timescooked'] != null) {
+        recipeListRequestParams['timescooked'] = customFilterParams['timescooked'];
+    }
+
+    if (customFilterParams['units'] != null) {
+        recipeListRequestParams['units'] = customFilterParams['units'];
+    }
+
+    if (customFilterParams['updatedon'] != null) {
+        recipeListRequestParams['updatedon'] = customFilterParams['updatedon'];
+    }
+
+    if (customFilterParams['viewedon'] != null) {
+        recipeListRequestParams['viewedon'] = customFilterParams['viewedon'];
+    }
+
+    return recipeListRequestParams
+
+}
+
+function apiRecipeListRequestToCustomFilter() {
+    let customFilterParams: any = {};
+
+    if (urlSearchParams['books'] != null) {
+        customFilterParams['books'] = urlSearchParams['books'];
+    }
+
+    if (urlSearchParams['booksAnd'] != null) {
+        customFilterParams['books_and'] = urlSearchParams['booksAnd'];
+    }
+
+    if (urlSearchParams['booksAndNot'] != null) {
+        customFilterParams['books_and_not'] = urlSearchParams['booksAndNot'];
+    }
+
+    if (urlSearchParams['booksOr'] != null) {
+        customFilterParams['books_or'] = urlSearchParams['booksOr'];
+    }
+
+    if (urlSearchParams['booksOrNot'] != null) {
+        customFilterParams['books_or_not'] = urlSearchParams['booksOrNot'];
+    }
+
+    if (urlSearchParams['cookedon'] != null) {
+        customFilterParams['cookedon'] = urlSearchParams['cookedon'];
+    }
+
+    if (urlSearchParams['createdon'] != null) {
+        customFilterParams['createdon'] = urlSearchParams['createdon'];
+    }
+
+    if (urlSearchParams['foods'] != null) {
+        customFilterParams['foods'] = urlSearchParams['foods'];
+    }
+
+    if (urlSearchParams['foodsAnd'] != null) {
+        customFilterParams['foods_and'] = urlSearchParams['foodsAnd'];
+    }
+
+    if (urlSearchParams['foodsAndNot'] != null) {
+        customFilterParams['foods_and_not'] = urlSearchParams['foodsAndNot'];
+    }
+
+    if (urlSearchParams['foodsOr'] != null) {
+        customFilterParams['foods_or'] = urlSearchParams['foodsOr'];
+    }
+
+    if (urlSearchParams['foodsOrNot'] != null) {
+        customFilterParams['foods_or_not'] = urlSearchParams['foodsOrNot'];
+    }
+
+    if (urlSearchParams['internal'] != null) {
+        customFilterParams['internal'] = urlSearchParams['internal'];
+    }
+
+    if (urlSearchParams['keywords'] != null) {
+        customFilterParams['keywords'] = urlSearchParams['keywords'];
+    }
+
+    if (urlSearchParams['keywordsAnd'] != null) {
+        customFilterParams['keywords_and'] = urlSearchParams['keywordsAnd'];
+    }
+
+    if (urlSearchParams['keywordsAndNot'] != null) {
+        customFilterParams['keywords_and_not'] = urlSearchParams['keywordsAndNot'];
+    }
+
+    if (urlSearchParams['keywordsOr'] != null) {
+        customFilterParams['keywords_or'] = urlSearchParams['keywordsOr'];
+    }
+
+    if (urlSearchParams['keywordsOrNot'] != null) {
+        customFilterParams['keywords_or_not'] = urlSearchParams['keywordsOrNot'];
+    }
+
+    if (urlSearchParams['makenow'] != null) {
+        customFilterParams['makenow'] = urlSearchParams['makenow'];
+    }
+
+    if (urlSearchParams['_new'] != null) {
+        customFilterParams['new'] = urlSearchParams['_new'];
+    }
+
+    if (urlSearchParams['numRecent'] != null) {
+        customFilterParams['num_recent'] = urlSearchParams['numRecent'];
+    }
+
+    if (urlSearchParams['page'] != null) {
+        customFilterParams['page'] = urlSearchParams['page'];
+    }
+
+    if (urlSearchParams['pageSize'] != null) {
+        customFilterParams['page_size'] = urlSearchParams['pageSize'];
+    }
+
+    if (urlSearchParams['query'] != null) {
+        customFilterParams['query'] = urlSearchParams['query'];
+    }
+
+    if (urlSearchParams['random'] != null) {
+        customFilterParams['random'] = urlSearchParams['random'];
+    }
+
+    if (urlSearchParams['rating'] != null) {
+        customFilterParams['rating'] = urlSearchParams['rating'];
+    }
+
+    if (urlSearchParams['timescooked'] != null) {
+        customFilterParams['timescooked'] = urlSearchParams['timescooked'];
+    }
+
+    if (urlSearchParams['units'] != null) {
+        customFilterParams['units'] = urlSearchParams['units'];
+    }
+
+    if (urlSearchParams['updatedon'] != null) {
+        customFilterParams['updatedon'] = urlSearchParams['updatedon'];
+    }
+
+    if (urlSearchParams['viewedon'] != null) {
+        customFilterParams['viewedon'] = urlSearchParams['viewedon'];
+    }
+
+    return customFilterParams
 }
 
 </script>
