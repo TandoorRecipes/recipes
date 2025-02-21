@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2023-10-07 18:02+0000\n"
-"Last-Translator: Guilherme Roda <glealroda@gmail.com>\n"
+"PO-Revision-Date: 2025-02-21 10:58+0000\n"
+"Last-Translator: Filipe Neves <homemdasneves@gmail.com>\n"
 "Language-Team: Portuguese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/pt/>\n"
 "Language: pt\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -94,14 +94,16 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Token de longa duração</a>para a sua instância HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Algo como http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api por exemplo"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -181,18 +183,25 @@ msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Campos a pesquisar por correspondência. (Ex: pesquisar por 'mor' retorna "
+"'morango' e 'amora')"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Campos a pesquisar para correspondências no início da palavra. (por exemplo, "
+"pesquisar por \"sa\" retornará \"salada\" e \"sanduíche\")"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Campos para pesquisa aproximada. (por exemplo, pesquisar por \"recita\" "
+"encontrará \"receita\"). Nota: esta opção entra em conflito com os métodos "
+"de pesquisa \"web\" e \"raw\"."
 
 #: .\cookbook\forms.py:346
 msgid ""
@@ -206,19 +215,19 @@ msgstr "Método de Pesquisa"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Pesquisas Aproximadas"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorar pronúncia"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
-msgstr ""
+msgstr "Correspondência parcial"
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
-msgstr ""
+msgstr "Começa com"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
@@ -233,6 +242,8 @@ msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Para evitar spam, o email solicitado não foi enviado. Por favor, aguarde "
+"alguns minutos e tente novamente."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
@@ -257,11 +268,11 @@ msgstr "Sem permissões para aceder a esta página!"
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "Não pode interagir com este objeto, pois não é seu!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Atingiu o número máximo de receitas para o seu espaço."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
