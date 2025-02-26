@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-20 08:58+0000\n"
+"PO-Revision-Date: 2025-02-27 10:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -95,6 +95,9 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Token d'accés de llarga durada</a> per a la teva instància de "
+"HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
@@ -288,11 +291,11 @@ msgstr "Utilitza fraccions"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "Rotació amb cura"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
-msgstr ""
+msgstr "amassar"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
@@ -308,7 +311,7 @@ msgstr "fermentar"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
@@ -396,7 +399,7 @@ msgstr "Secció"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Arregla els aliments amb "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -566,7 +569,7 @@ msgstr "Descripció"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Substitueix Nom"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -593,7 +596,7 @@ msgstr "Límit de càrrega de fitxers Assolit."
 
 #: .\cookbook\serializer.py:328
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "No pots modificar els permisos del propietari de la instància."
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
@@ -1023,7 +1026,7 @@ msgstr "Exporta"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Propietats"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 #, fuzzy
@@ -1072,7 +1075,7 @@ msgstr "Sense Espai"
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Vista general"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
@@ -1096,11 +1099,11 @@ msgstr "Tanca sessió"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Estàs fent servir una versió gratuïta de Tandor"
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Actualitzar ara"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1197,7 +1200,7 @@ msgstr "Segur que vols esborrar el %(title)s:<b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Aquesta operació no pot desfer-se!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1513,7 +1516,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Enrere"
 
 #: .\cookbook\templates\property_editor.html:7
 #, fuzzy
@@ -1555,6 +1558,15 @@ msgid ""
 "only available if you are using Postgres for your database.\n"
 "    "
 msgstr ""
+"\n"
+"        Aconseguir la millor experiència de cerca és complicada i recau en "
+"gran mesura en la teva configuració personal.  \n"
+"        Canviar qualsevol configuració de cerca pot tenir un gran impacte en "
+"la velocitat i els resultats obtinguts.\n"
+"        Els mètodes de cerca, els Trigrames i les configuracions de cerca de "
+"text complet només estan disponibles si feu servir Postgres per a la vostra "
+"base de dades.\n"
+"    "
 
 #: .\cookbook\templates\search_info.html:19
 msgid "Search Methods"
@@ -1574,6 +1586,17 @@ msgid ""
 "html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
 "            "
 msgstr ""
+" \n"
+"            Les cerques de text complet intenten normalitzar les paraules "
+"proporcionades perquè coincideixin amb les variants habituals. Per exemple: "
+"'forquilla', 'forquilles', es normalitzaran tots a 'forquilla'.\n"
+"            Hi ha diversos mètodes disponibles, que es descriuen a "
+"continuació, que controlaran com ha de reaccionar el comportament de cerca "
+"quan es cerquen diverses paraules.\n"
+"            Els detalls tècnics complets sobre com funcionen es poden "
+"consultar a <a href=https://www.postgresql.org/docs/current/textsearch-"
+"controls.html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:29
 msgid ""
@@ -1585,6 +1608,14 @@ msgid ""
 "selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Les cerques simples ignoren la puntuació i les paraules "
+"habituals com ara \"el\", \"a\", \"i\". I tractarà paraules separades segons "
+"sigui necessari.\n"
+"            Si cerqueu \"poma o farina\", es tornarà qualsevol recepta que "
+"inclogui \"poma\" i \"farina\" a qualsevol part dels camps que s'han "
+"seleccionat per a una cerca de text complet.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:34
 msgid ""
@@ -1596,6 +1627,13 @@ msgid ""
 "been selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Les cerques de frases ignoren la puntuació, però cercaran totes "
+"les paraules en l'ordre exacte que s'indiquen.\n"
+"            La cerca de \"poma o farina\" només retornarà una recepta que "
+"inclogui la frase exacta \"poma o farina\" en qualsevol dels camps que s'han "
+"seleccionat per a una cerca de text complet.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:39
 msgid ""
@@ -1615,6 +1653,22 @@ msgid ""
 "recipe that has the word 'butter' in any field included.\n"
 "            "
 msgstr ""
+" \n"
+"            Les cerques web simulen la funcionalitat que es troba a molts "
+"llocs de cerca web que admeten una sintaxi especial.\n"
+"            Col·locar cometes al voltant de diverses paraules convertirà "
+"aquestes paraules en una frase.\n"
+"            \"or\" es reconeix com a cercar la paraula (o frase) "
+"immediatament abans de \"or\" O la paraula (o frase) directament després.\n"
+"            '-' es reconeix com la recerca de receptes que no inclouen la "
+"paraula (o frase) que ve immediatament després. \n"
+"            Per exemple, si cerqueu \"pastís de poma\" o mantega de cireres, "
+"es retornarà qualsevol recepta que inclogui la frase \"pastís de poma\" o la "
+"paraula \"cirera\". \n"
+"            En qualsevol camp inclòs a la cerca de text complet, però exclou "
+"qualsevol recepta que tingui la paraula \"mantega\" en qualsevol camp inclòs."
+"\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:48
 msgid ""
@@ -1623,6 +1677,10 @@ msgid ""
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
+" \n"
+"            La cerca en brut és similar a la web, excepte que prendrà "
+"operadors de puntuació com ara '|', '&' i '()'\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:59
 msgid ""
@@ -1638,6 +1696,17 @@ msgid ""
 "methods.\n"
 "            "
 msgstr ""
+" \n"
+"            Un altre enfocament de cerca que també requereix Postgresql és "
+"la cerca difusa o la semblança de trigrames. Un trigrama és un grup de tres "
+"caràcters consecutius.\n"
+"            Per exemple, cercar \"pastís\" crearà x trigrames \"pas\", \"ast"
+"\", \"tís\" i crearà una puntuació de la proximitat de les paraules amb els "
+"trigrames generats.\n"
+"            Un dels avantatges de la cerca de trigrames és que una cerca d "
+"\"entrepà\" trobarà paraules mal escrites com \"entepà\" que es perdrien per "
+"altres mètodes.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:69
 msgid "Search Fields"
@@ -1677,6 +1746,38 @@ msgid ""
 "full text results, it does match the trigram results.\n"
 "            "
 msgstr ""
+" \n"
+"            Unaccent és un cas especial perquè permet cercar un camp \"sense "
+"accent\" per a cada estil de cerca intentant ignorar els valors accentuats. "
+"\n"
+"            Per exemple, quan activeu sense accent per a \"poma\", qualsevol "
+"cerca (comença per, conté, trigrama) intentarà la cerca ignorant els "
+"caràcters accentuats.\n"
+"            \n"
+"            Per a la resta d'opcions, podeu habilitar la cerca en qualsevol "
+"o tots els camps i es combinaran juntament amb un assumpte 'OR'.\n"
+"            Per exemple, activar \"Nom\" per a Comença per, \"Nom\" i "
+"\"Descripció\" per a la concordança parcial i \"Ingredients\" i \"Paraules "
+"clau\" per a la cerca completa\n"
+"            i cercant \"poma\" generarà una cerca que retornarà les receptes "
+"que tenen:\n"
+"            - El nom de la recepta comença amb \"poma\"\n"
+"            - O bé una recepta que conté \"poma\"\n"
+"            - O bé una descripció de la recepta que conté \"poma\"\n"
+"            - O bé una recepta que contingui una recepta que tindrà una "
+"coincidència de cerca de text complet ('poma' o 'pomes') als ingredients.\n"
+"            - O bé una recepta que coincideix amb el text complet a les "
+"paraules clau\n"
+"\n"
+"            Combinar massa camps en massa tipus de cerca pot tenir un "
+"impacte negatiu en el rendiment, crear resultats duplicats o retornar "
+"resultats inesperats.\n"
+"            Per exemple, activar la cerca difusa o les coincidències "
+"parcials interferirà amb els mètodes de cerca web.  \n"
+"            Si cerqueu \"tarta de poma\" amb la cerca difusa i la cerca de "
+"text complet, es tornarà la recepta Tarta de poma. Tot i que no s'inclou als "
+"resultats del text complet, coincideix amb els resultats del trigrama.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:95
 msgid "Search Index"
