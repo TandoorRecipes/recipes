@@ -1,4 +1,4 @@
-import imghdr
+import filetype
 import json
 import re
 from io import BytesIO
@@ -128,7 +128,7 @@ class RecetteTek(Integration):
                     url = file['originalPicture']
                     if validate_import_url(url):
                         response = requests.get(url)
-                        if imghdr.what(BytesIO(response.content)) is not None:
+                        if filetype.is_image(BytesIO(response.content)):
                             self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
                         else:
                             raise Exception("Original image failed to download.")
