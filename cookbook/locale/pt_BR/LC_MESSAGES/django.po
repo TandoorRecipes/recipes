@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-26 08:58+0000\n"
-"Last-Translator: Andre Bovendorp <boveloco@gmail.com>\n"
+"PO-Revision-Date: 2025-03-02 16:58+0000\n"
+"Last-Translator: fabio souza jr <fabiosouzajr@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -24,8 +24,8 @@ msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Ambos os campos são opcionais. Se nenhum for preenchido o nome do usuário "
-"será mostrado"
+"Ambos os campos são opcionais. Se nenhum for preenchido, o login será "
+"mostrado"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
@@ -771,6 +771,8 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
+"Link de confirmação de e-mail expirado ou inválido. Por favor\n"
+"<a href=\"%(email_url)s\">enviar um novo pedido de confirmação de e-mail</a>"
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
@@ -1327,7 +1329,7 @@ msgstr "Este texto está em itálico"
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Citação em bloco também é permitido"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
