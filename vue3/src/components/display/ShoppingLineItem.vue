@@ -10,7 +10,7 @@
         <div class="flex-grow-1 p-2">
             <div class="d-flex">
                 <div class="d-flex flex-column pr-2">
-                    <span v-for="[i, a] in amounts" v-bind:key="a.key">
+                    <span v-for="a in amounts" v-bind:key="a.key">
                         <span>
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
                             <i class="fas fa-clock-rotate-left text-info fa-fw" v-if="a.delayed"></i> <b>
@@ -57,7 +57,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.js";
 import {ApiApi, Food, ShoppingListEntry} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
-import {isDelayed, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
+import {isDelayed, isEntryVisible, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
 
 const emit = defineEmits(['clicked'])
@@ -113,16 +113,13 @@ const actionButtonIcon = computed(() => {
  * can combine 1 to n entries with the same unit
  * can contain more 0 to n different entries for different units
  */
-const amounts = computed((): Map<number, ShoppingLineAmount> => {
-    let unitAmounts = new Map<number, ShoppingLineAmount>()
+const amounts = computed((): ShoppingLineAmount[] => {
+    let unitAmounts: ShoppingLineAmount[] = []
 
     for (let i in entries.value) {
         let e = entries.value[i]
 
-        if (!e.checked && !isDelayed(e)
-            || (e.checked && useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
-            || (isDelayed(e) && useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)) {
-
+        if (isEntryVisible(e, useUserPreferenceStore().deviceSettings)) {
             let unit = -1
             if (e.unit !== undefined && e.unit !== null) {
                 unit = e.unit.id!
@@ -130,11 +127,17 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
 
             if (e.amount > 0) {
 
-                if (unitAmounts.get(unit) != undefined) {
-                    unitAmounts.get(unit)!.amount += e.amount
-                } else {
-                    unitAmounts.set(unit, {
-                        key: e.food?.id!,
+                let uaMerged = false
+                unitAmounts.forEach(ua => {
+                    if (((ua.unit == null && e.unit == null) || ua.unit.id! == unit) && ua.checked == e.checked && ua.delayed == isDelayed(e)) {
+                        ua.amount += e.amount
+                        uaMerged = true
+                    }
+                })
+
+                if (!uaMerged) {
+                    unitAmounts.push({
+                        key: `${unit}_${e.checked}_${isDelayed(e)}`,
                         amount: e.amount,
                         unit: e.unit,
                         checked: e.checked,
@@ -164,9 +167,7 @@ const infoRow = computed(() => {
     for (let i in entries.value) {
         let e = entries.value[i]
 
-        if (!e.checked && !isDelayed(e)
-            || (e.checked && useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
-            || (isDelayed(e) && useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)) {
+        if (isEntryVisible(e, useUserPreferenceStore().deviceSettings)) {
 
             if (authors.indexOf(e.createdBy.displayName) === -1) {
                 authors.push(e.createdBy.displayName)

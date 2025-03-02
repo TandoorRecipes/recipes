@@ -12,7 +12,7 @@
 
         <v-tabs v-model="tab" :disabled="loading" grow>
             <v-tab value="supermarket">{{ $t('Supermarket') }}</v-tab>
-            <v-tab value="categories">{{ $t('Categories') }}</v-tab>
+            <v-tab value="categories" :disabled="!isUpdate()">{{ $t('Categories') }}</v-tab>
         </v-tabs>
 
         <v-card-text>
