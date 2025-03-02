@@ -10,10 +10,12 @@
         :model-class="modelClass"
         :object-name="editingObjName()">
 
-        <v-tabs v-model="tab" :disabled="loading" grow>
-            <v-tab value="book">{{ $t('Book') }}</v-tab>
-            <v-tab value="recipes" :disabled="!isUpdate()">{{ $t('Recipes') }}</v-tab>
-        </v-tabs>
+        <v-card-text class="pa-0">
+            <v-tabs v-model="tab" :disabled="loading" grow>
+                <v-tab value="book">{{ $t('Book') }}</v-tab>
+                <v-tab value="recipes" :disabled="!isUpdate()">{{ $t('Recipes') }}</v-tab>
+            </v-tabs>
+        </v-card-text>
 
         <v-card-text>
             <v-tabs-window v-model="tab">

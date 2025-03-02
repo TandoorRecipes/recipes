@@ -10,12 +10,14 @@
         :model-class="modelClass"
         :object-name="editingObjName()">
 
-        <v-tabs v-model="tab" :disabled="loading" grow>
-            <v-tab value="food">{{ $t('Food') }}</v-tab>
-            <v-tab value="properties">{{ $t('Properties') }}</v-tab>
-            <v-tab value="conversions">{{ $t('Conversion') }}</v-tab>
-            <v-tab value="misc">{{ $t('Miscellaneous') }}</v-tab>
-        </v-tabs>
+        <v-card-text class="pa-0">
+            <v-tabs v-model="tab" :disabled="loading" grow>
+                <v-tab value="food">{{ $t('Food') }}</v-tab>
+                <v-tab value="properties">{{ $t('Properties') }}</v-tab>
+                <v-tab value="conversions">{{ $t('Conversion') }}</v-tab>
+                <v-tab value="misc">{{ $t('Miscellaneous') }}</v-tab>
+            </v-tabs>
+        </v-card-text>
 
         <v-card-text>
             <v-tabs-window v-model="tab">

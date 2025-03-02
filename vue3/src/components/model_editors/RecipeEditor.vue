@@ -10,13 +10,14 @@
         :model-class="modelClass"
         :object-name="editingObjName()">
 
-        <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
-            <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
-            <v-tab value="steps">{{ $t('Steps') }}</v-tab>
-            <v-tab value="properties">{{ $t('Properties') }}</v-tab>
-            <v-tab value="settings">{{ $t('Settings') }}</v-tab>
-
-        </v-tabs>
+        <v-card-text class="pa-0">
+            <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
+                <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
+                <v-tab value="steps">{{ $t('Steps') }}</v-tab>
+                <v-tab value="properties">{{ $t('Properties') }}</v-tab>
+                <v-tab value="settings">{{ $t('Settings') }}</v-tab>
+            </v-tabs>
+        </v-card-text>
         <v-card-text v-if="!isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="recipe">

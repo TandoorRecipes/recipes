@@ -10,13 +10,14 @@
         :model-class="modelClass"
         :object-name="editingObjName()">
 
-        <v-tabs v-model="tab" :disabled="loading" grow>
-            <v-tab prepend-icon="$mealplan" value="plan">{{ $t('Meal_Plan') }}</v-tab>
-            <v-tab prepend-icon="$shopping" value="shopping" :disabled="!isUpdate()">{{ $t('Shopping_list') }}</v-tab>
-        </v-tabs>
+        <v-card-text class="pa-0">
+            <v-tabs v-model="tab" :disabled="loading" grow>
+                <v-tab prepend-icon="$mealplan" value="plan">{{ $t('Meal_Plan') }}</v-tab>
+                <v-tab prepend-icon="$shopping" value="shopping" :disabled="!isUpdate()">{{ $t('Shopping_list') }}</v-tab>
+            </v-tabs>
+        </v-card-text>
 
         <v-card-text>
-
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="plan">
                     <v-form :disabled="loading">
