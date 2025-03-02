@@ -180,6 +180,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             shopping_item_info_created_by: false,
             shopping_item_info_mealplan: true,
             shopping_item_info_recipe: true,
+            shopping_input_autocomplete: true,
             shopping_show_debug: false,
 
             mealplan_displayPeriod: 'week',

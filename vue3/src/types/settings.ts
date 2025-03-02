@@ -9,6 +9,7 @@ export type DeviceSettings = {
     shopping_item_info_created_by: boolean
     shopping_item_info_mealplan: boolean
     shopping_item_info_recipe: boolean
+    shopping_input_autocomplete: boolean
     shopping_show_debug: boolean
 
     mealplan_displayPeriod: string

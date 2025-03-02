@@ -55,6 +55,9 @@
                 <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('CreatedBy')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_created_by"></v-switch>
                 </v-list-item>
+                <v-list-item >
+                    <v-switch color="primary" hide-details label="New Input" v-model="useUserPreferenceStore().deviceSettings.shopping_input_autocomplete"></v-switch>
+                </v-list-item>
                 <v-list-item v-if="useUserPreferenceStore().serverSettings.debug">
                     <v-switch color="primary" hide-details label="Show Debug Info" v-model="useUserPreferenceStore().deviceSettings.shopping_show_debug"></v-switch>
                 </v-list-item>
