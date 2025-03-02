@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
-import type { TypeEnum } from './TypeEnum';
+import type { AutomationTypeEnum } from './AutomationTypeEnum';
 import {
-    TypeEnumFromJSON,
-    TypeEnumFromJSONTyped,
-    TypeEnumToJSON,
-    TypeEnumToJSONTyped,
-} from './TypeEnum';
+    AutomationTypeEnumFromJSON,
+    AutomationTypeEnumFromJSONTyped,
+    AutomationTypeEnumToJSON,
+    AutomationTypeEnumToJSONTyped,
+} from './AutomationTypeEnum';
 
 /**
  * 
@@ -35,10 +35,10 @@ export interface Automation {
     id?: number;
     /**
      * 
-     * @type {TypeEnum}
+     * @type {AutomationTypeEnum}
      * @memberof Automation
      */
-    type: TypeEnum;
+    type: AutomationTypeEnum;
     /**
      * 
      * @type {string}
@@ -111,7 +111,7 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'type': TypeEnumFromJSON(json['type']),
+        'type': AutomationTypeEnumFromJSON(json['type']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'param1': json['param_1'] == null ? undefined : json['param_1'],
@@ -135,7 +135,7 @@ export function AutomationToJSONTyped(value?: Omit<Automation, 'created_by'> | n
     return {
         
         'id': value['id'],
-        'type': TypeEnumToJSON(value['type']),
+        'type': AutomationTypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],
         'param_1': value['param1'],

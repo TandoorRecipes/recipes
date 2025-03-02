@@ -70,7 +70,6 @@ class RecipeSearch():
         }
         self._steps = self._params.get('steps', None)
         self._units = self._params.get('units', None)
-        # TODO add created by
         # TODO image exists
         self._sort_order = self._params.get('sort_order', None)
         self._internal = str2bool(self._params.get('internal', None))
@@ -82,6 +81,7 @@ class RecipeSearch():
         self._timescooked = self._params.get('timescooked', None)
         self._cookedon = self._params.get('cookedon', None)
         self._createdon = self._params.get('createdon', None)
+        self._createdby = self._params.get('createdby', None)
         self._updatedon = self._params.get('updatedon', None)
         self._viewedon = self._params.get('viewedon', None)
         self._makenow = self._params.get('makenow', None)
@@ -132,6 +132,7 @@ class RecipeSearch():
         self._recently_viewed(num_recent=self._num_recent)
         self._cooked_on_filter(cooked_date=self._cookedon)
         self._created_on_filter(created_date=self._createdon)
+        self._created_by_filter(created_by_user_id=self._createdby)
         self._updated_on_filter(updated_date=self._updatedon)
         self._viewed_on_filter(viewed_date=self._viewedon)
         self._favorite_recipes(times_cooked=self._timescooked)
@@ -256,6 +257,11 @@ class RecipeSearch():
             self._queryset = self._queryset.filter(created_at__date__lte=created_date)
         else:
             self._queryset = self._queryset.filter(created_at__date__gte=created_date)
+
+    def _created_by_filter(self, created_by_user_id=None):
+        if created_by_user_id is None:
+            return
+        self._queryset = self._queryset.filter(created_by__id=created_by_user_id)
 
     def _updated_on_filter(self, updated_date=None):
         if updated_date is None:

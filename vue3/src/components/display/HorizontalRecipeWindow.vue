@@ -12,7 +12,7 @@
                     <v-window-item v-for="w in recipeWindows" class="pt-1 pb-1">
                         <v-row dense>
                             <v-col class="pr-0 pl-0" v-for="r in w" :key="r.id">
-                                <recipe-card :recipe="r" :show_description="true" :show_keywords="true" ></recipe-card>
+                                <recipe-card :recipe="r" :show_description="true" :show_keywords="true"></recipe-card>
                             </v-col>
                         </v-row>
                     </v-window-item>
@@ -41,7 +41,7 @@
 import {computed, onMounted, PropType, ref, toRefs} from 'vue'
 import RecipeCard from "@/components/display/RecipeCard.vue";
 import {DisplayBreakpoint, useDisplay} from "vuetify";
-import {ApiApi, ApiRecipeListRequest, Keyword, Recipe, RecipeOverview} from "@/openapi";
+import {ApiApi, ApiRecipeListRequest, Keyword, Recipe, RecipeOverview, User} from "@/openapi";
 import {homePageCols} from "@/utils/breakpoint_utils";
 import {useI18n} from "vue-i18n";
 import {DateTime} from "luxon";
@@ -50,7 +50,7 @@ import {tr} from "vuetify/locale";
 //TODO mode ideas "last year/month/cooked long ago"
 const props = defineProps(
     {
-        mode: {type: String as PropType<'recent' | 'new' | 'keyword' | 'rating' | 'random'>, required: true},
+        mode: {type: String as PropType<'recent' | 'new' | 'keyword' | 'rating' | 'random' | 'created_by'>, required: true},
         skeletons: {type: Number, default: 0},
     }
 )
@@ -61,6 +61,7 @@ const {name} = useDisplay()
 const loading = ref(true)
 const recipes = ref([] as Recipe[] | RecipeOverview[])
 const keyword = ref({} as Keyword)
+const createdByUser = ref({} as User)
 
 /**
  * determine title based on type
@@ -80,6 +81,11 @@ const title = computed(() => {
                 return keyword.value.label
             }
             return t('Keyword')
+        case 'created_by':
+            if (Object.keys(createdByUser.value).length > 0) {
+                return t('CreatedBy') + ' ' + createdByUser.value.displayName
+            }
+            return t('CreatedBy')
     }
 })
 
@@ -98,6 +104,8 @@ const icon = computed(() => {
             return 'fa-solid fa-star'
         case 'keyword':
             return 'fa-solid fa-tags'
+        case 'created_by':
+            return 'fa-solid fa-user'
     }
 })
 
@@ -137,6 +145,18 @@ function loadRecipes() {
                 if (r.count > 0) {
                     keyword.value = r.results[0]
                     requestParameters.keywords = [keyword.value.id!]
+                    doRecipeRequest(requestParameters)
+                } else {
+                    loading.value = false
+                }
+            })
+            return;
+        case 'created_by':
+            api.apiUserList({}).then((r) => {
+                if (r.length > 0) {
+                    createdByUser.value = r[Math.floor(Math.random() * r.length)]
+                    requestParameters.createdby = createdByUser.value.id
+                    requestParameters.random = "true"
                     doRecipeRequest(requestParameters)
                 } else {
                     loading.value = false

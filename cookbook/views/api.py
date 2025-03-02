@@ -1142,6 +1142,11 @@ class RecipePagination(PageNumberPagination):
         examples=[DateExample, BeforeDateExample]
     ),
     OpenApiParameter(
+        name='createdby',
+        description=_('Filter recipes for ones created by the given user ID'),
+        type=int,
+    ),
+    OpenApiParameter(
         name='updatedon',
         description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
         type=str,
@@ -1840,7 +1845,7 @@ class ImageToRecipeView(APIView):
 
             # TODO cant use ingredient splitting because scraper gets upset "Please separate the ingredients into amount, unit, food and if required a note. "
             # TODO maybe not use scraper?
-            messages  = [
+            messages = [
                 {
                     "role": "user",
                     "content": [
