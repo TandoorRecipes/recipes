@@ -33,7 +33,7 @@ import BookViewPage from "@/pages/BookViewPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
-    {path: '/search', redirect: 'view_home'},
+    {path: '/search', redirect: {name: 'view_home'}},
     {path: '/test', component: TestPage, name: 'view_test'},
     {
         path: '/settings', component: SettingsPage, name: 'view_settings', redirect: '/settings/account',

@@ -18,6 +18,7 @@
         <horizontal-recipe-scroller :skeletons="4" mode="random"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :skeletons="2" mode="rating"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :skeletons="4" mode="keyword"></horizontal-recipe-scroller>
+        <horizontal-recipe-scroller :skeletons="4" mode="random"></horizontal-recipe-scroller>
 
     </v-container>
 </template>
