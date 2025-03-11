@@ -14,7 +14,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - uses: awalsh128/cache-apt-pkgs-action@v1.4.2
+            - uses: awalsh128/cache-apt-pkgs-action@v1.4.3
               with:
                   packages: libsasl2-dev python3-dev libldap2-dev libssl-dev
                   version: 1.0

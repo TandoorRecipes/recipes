@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-01-29 13:44+0000\n"
-"Last-Translator: Vinicius José Fritzen <www.vini84200@hotmail.com>\n"
+"PO-Revision-Date: 2025-03-02 16:58+0000\n"
+"Last-Translator: fabio souza jr <fabiosouzajr@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -24,8 +24,8 @@ msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Ambos os campos são opcionais. Se nenhum for preenchido o nome do usuário "
-"será mostrado"
+"Ambos os campos são opcionais. Se nenhum for preenchido, o login será "
+"mostrado"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
@@ -393,9 +393,8 @@ msgid "Fixes foods with "
 msgstr "Corrige comidas com "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
-#, fuzzy
 msgid "Rebuilds full text search index on Recipe"
-msgstr "Reconstrói o índice de busca de texto completo da Receita"
+msgstr "Reconstrói o índice de busca de texto por completo da Receita"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
@@ -636,6 +635,7 @@ msgstr ""
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Preenchendo o list_recipe ID e porções com 0, deletará essa lista de compra."
 
 #: .\cookbook\serializer.py:1439
 msgid "Amount of food to add to the shopping list"
@@ -647,7 +647,7 @@ msgstr "ID de uma unidade para usar na lista de compras"
 
 #: .\cookbook\serializer.py:1443
 msgid "When set to true will delete all food from active shopping lists."
-msgstr ""
+msgstr "Quando ativo, deletará todas as comidas da lista de compra."
 
 #: .\cookbook\tables.py:69 .\cookbook\tables.py:83
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -662,11 +662,11 @@ msgstr "Erro 404"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr ""
+msgstr "Página não encontrada."
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "Leve-me pra Home Page"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
@@ -693,7 +693,7 @@ msgstr "Email"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "os e-mails seguintes estão associados com sua conta:"
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
@@ -730,6 +730,8 @@ msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Você atualmente não possui nenhum e-mail cadastrado. Você deveria adicionar "
+"um e-mail para poder receber notificações, ressetar seu password, etc."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
@@ -741,7 +743,7 @@ msgstr "Incluir E-mail"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Você tem certeza que deseja remover o e-mail selecionado?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
@@ -769,6 +771,8 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
+"Link de confirmação de e-mail expirado ou inválido. Por favor\n"
+"<a href=\"%(email_url)s\">enviar um novo pedido de confirmação de e-mail</a>"
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
@@ -785,7 +789,7 @@ msgstr "Login"
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "Entrar"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:41
@@ -793,7 +797,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "Cadastrar"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
@@ -806,21 +810,21 @@ msgstr "Resetar Minha Senha"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
-msgstr ""
+msgstr "Entre com Rede Social"
 
 #: .\cookbook\templates\account\login.html:51
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "Você pode utilizar qualquer dos seguintes providers para logar-se."
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "Sair (Log Out)"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Você tem certeza que deseja sair?"
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
@@ -853,20 +857,24 @@ msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Perdeu sua senha? Entre com seu e-mail abaixo e enviaremos instruções de "
+"como reseta-la."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr ""
+msgstr "Recuperação de senha está desabilitada nessa instância."
 
 #: .\cookbook\templates\account\password_reset_done.html:25
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Nós enviamos um e-mail. Por favor, entre em contato se não o receber dentro "
+"de alguns minutos."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
-msgstr ""
+msgstr "Token Inválido"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -931,11 +939,11 @@ msgstr "Já possui uma conta?"
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "O cadastro está desabilitado"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "Desculpe, login não está disponível no momento."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:378
 #: .\cookbook\templates\rest_framework\api.html:11
@@ -995,13 +1003,11 @@ msgstr "Exportar"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Propriedades"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "Conexões de Conta"
+msgstr "Conversões de Medidas"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1021,10 +1027,8 @@ msgid "Space Settings"
 msgstr "Configurar Espaço"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "Receitas Externas"
+msgstr "Conexões externas"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1036,19 +1040,17 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Sem Espaço"
+msgstr "Seu Espaço"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Resumo"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Guia de linguágem Markdown"
 
 #: .\cookbook\templates\base.html:374
 msgid "GitHub"
@@ -1068,11 +1070,11 @@ msgstr "Logout"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Você está utilizando a versão gratúita de Tandor"
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Compre Já"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1099,6 +1101,8 @@ msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"Nessa página, você pode configurar todo os lugares de armazenamento que "
+"devem ser monitorados e sincronizados."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
@@ -1165,7 +1169,7 @@ msgstr "Tem certeza que deseja apagar %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Essa ação não pode ser desfeita!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1173,7 +1177,7 @@ msgstr "Protegido"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
-msgstr ""
+msgstr "Cascata"
 
 #: .\cookbook\templates\generic\delete_template.html:73
 msgid "Cancel"
@@ -1224,7 +1228,7 @@ msgstr "Mostrar Log"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Histórico de cocção"
 
 #: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:90
 #: .\cookbook\views\edit.py:174
@@ -1270,7 +1274,7 @@ msgstr "Último visualizado"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Faça Login para ver as receitas"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
@@ -1325,7 +1329,7 @@ msgstr "Este texto está em itálico"
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Citação em bloco também é permitido"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
@@ -1376,11 +1380,13 @@ msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
+"Os links podem ser formatadso com a linguaem Markdown. Essa aplicação também "
+"aceita links direto em Markdown, sem formatação."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr ""
+msgstr "Isso se tornará uma imagem"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
@@ -1450,15 +1456,17 @@ msgid ""
 "The recipes listed below are available for offline viewing because you have "
 "recently viewed them. Keep in mind that data might be outdated."
 msgstr ""
+"As receitas abaixo estão disponíveis de forma offline pois você recentemente "
+"as visualizou. Tenha em mente que os dados podem estar ultrapassados."
 
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Voltar"
 
 #: .\cookbook\templates\property_editor.html:7
 msgid "Property Editor"
-msgstr ""
+msgstr "Editor"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1475,7 +1483,7 @@ msgstr "Comentário"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr ""
+msgstr "Início - Receitas"
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
@@ -1638,7 +1646,7 @@ msgstr ""
 msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
-msgstr ""
+msgstr "Existem mutas opções de configurações para a busca."
 
 #: .\cookbook\templates\settings.html:26
 msgid ""
