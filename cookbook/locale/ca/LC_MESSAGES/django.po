@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-27 10:58+0000\n"
+"PO-Revision-Date: 2025-03-12 09:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -1795,6 +1795,15 @@ msgid ""
 "the management command 'python manage.py rebuildindex'\n"
 "            "
 msgstr ""
+" \n"
+"            La cerca amb trigram i la cerca de text complet es basen en l’"
+"índex de bases de dades per operar de manera eficaç.  \n"
+"            Podeu reconstruir els índexs de tots els camps de la pàgina d’"
+"administració de receptes, seleccionant totes les receptes i realitzant l’"
+"acció “Reconstruir l’índex per a la recepta seleccionada”.\n"
+"            També podeu reconstruir els índexs de la línia de comandaments "
+"executant el la comanda 'Python Manage.py RebuildIndex'\n"
+"            "
 
 #: .\cookbook\templates\settings.html:25
 msgid ""
@@ -1904,6 +1913,8 @@ msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
+"Pots accedir al teu compte mitjançant qualsevol dels  \n"
+"               comptes de tercers següents:"
 
 #: .\cookbook\templates\socialaccount\connections.html:52
 msgid ""
@@ -1922,26 +1933,27 @@ msgstr "Registre"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "Connectar %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
-msgstr ""
+msgstr "Estàs a punt de connectar un nou compte de tercers per a %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Connectar via %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
+"Estàs a punt de connectar fent servir un compte de tercers de %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -1950,6 +1962,10 @@ msgid ""
 "        %(provider_name)s account to login to\n"
 "        %(site_name)s. As a final step, please complete the following form:"
 msgstr ""
+"Estàs a punt d'utilitzar el teu \n"
+"        %(provider_name)s compte per connectar a \n"
+"        %(site_name)s. Per a finalitzar, si us plau completa el següent "
+"formulari:"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -2003,7 +2019,7 @@ msgstr "Pots ser convidat a un espai existent o crear el teu propi."
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr ""
+msgstr "Propietari"
 
 #: .\cookbook\templates\space_overview.html:57
 #, fuzzy
@@ -2070,6 +2086,11 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            Necessites executar <code>version.py</code> al teu script "
+"d'actualització per generar informació de la versió (feta automàticament a "
+"Docker).\n"
+"        "
 
 #: .\cookbook\templates\system.html:46
 msgid "Media Serving"
@@ -2155,7 +2176,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Allotjaments permesos"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
