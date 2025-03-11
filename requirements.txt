@@ -11,7 +11,7 @@ django-oauth-toolkit==2.4.0
 django-debug-toolbar==4.3.0
 bleach==6.0.0
 gunicorn==22.0.0
-lxml==5.3.0
+lxml==5.3.1
 Markdown==3.5.1
 Pillow==11.1.0
 psycopg2-binary==2.9.9
