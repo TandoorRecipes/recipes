@@ -46,7 +46,7 @@
                                             <v-icon icon="$menu"></v-icon>
                                             <v-menu activator="parent">
                                                 <v-list>
-                                                    <v-list-item prepend-icon="$edit">
+                                                    <v-list-item prepend-icon="$edit" link>
                                                         {{$t('Edit')}}
                                                         <model-edit-dialog model="MealPlan" :item="p"></model-edit-dialog>
                                                     </v-list-item>

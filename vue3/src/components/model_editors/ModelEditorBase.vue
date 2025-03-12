@@ -4,7 +4,7 @@
             :title="$t(modelClass.model.localizationKey) + ((isChanged) ? '*' : '')"
             :sub-title="objectName"
             :icon="modelClass.model.icon"
-            @close="emit('close');"
+            @close="closeDialog()"
             :hide-close="!dialog"
         ></v-closable-card-title>
 
@@ -26,11 +26,12 @@
         <v-card>
             <v-closable-card-title v-model="leaveConfirmDialog" :title="$t('Confirm')"></v-closable-card-title>
             <v-card-text>
-                {{$t('WarnPageLeave')}}
+                {{ $t('WarnPageLeave') }}
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="leaveConfirmDialog = false; leaveGoTo = null">{{ $t('Cancel') }}</v-btn>
-                <v-btn :to="leaveGoTo" color="warning">{{ $t('Confirm') }}</v-btn>
+                <v-btn :to="leaveGoTo" color="warning" v-if="!dialog">{{ $t('Confirm') }}</v-btn>
+                <v-btn @click="emit('close')" color="warning" v-if="dialog">{{ $t('Confirm') }}</v-btn>
             </v-card-actions>
         </v-card>
 
@@ -59,6 +60,9 @@ const props = defineProps({
 const leaveConfirmDialog = ref(false)
 const leaveGoTo = ref<RouteLocationNormalized | null>(null)
 
+/**
+ * before navigating to another page check for unsaved changes, if so display confirmation dialog
+ */
 onBeforeRouteLeave((to, from) => {
     if (props.isChanged && !leaveConfirmDialog.value) {
         leaveConfirmDialog.value = true
@@ -67,6 +71,18 @@ onBeforeRouteLeave((to, from) => {
     }
     return true
 })
+
+/**
+ * if object was changed open leave confirm dialog, if not emit close for parent to close dialog
+ * does not trigger when user clicks outside of dialog
+ */
+function closeDialog() {
+    if (props.isChanged && !leaveConfirmDialog.value) {
+        leaveConfirmDialog.value = true
+    } else {
+        emit('close');
+    }
+}
 
 </script>
 

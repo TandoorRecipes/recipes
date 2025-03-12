@@ -68,7 +68,7 @@
             </v-card>
 
             <v-card class="mt-1" v-for="(step, index) in recipe.steps" :key="step.id">
-                <step v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step>
+                <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
             </v-card>
         </template>
 
@@ -82,13 +82,13 @@ import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {Recipe} from "@/openapi"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import StepsOverview from "@/components/display/StepsOverview.vue";
-import Step from "@/components/display/Step.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 import {useWakeLock} from "@vueuse/core";
+import StepView from "@/components/display/StepView.vue";
 
 const {request, release} = useWakeLock()
 
