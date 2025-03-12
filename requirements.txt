@@ -14,7 +14,7 @@ gunicorn==22.0.0
 lxml==5.3.1
 Markdown==3.5.1
 Pillow==11.1.0
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.10
 python-dotenv==1.0.0
 requests==2.32.3
 six==1.16.0
@@ -45,6 +45,7 @@ pytubefix==8.12.2
 aiohttp==3.10.11
 inflection==0.5.1
 redis==5.2.1
+filetype==1.2.0
 
 # Development
 pytest==8.0.0
