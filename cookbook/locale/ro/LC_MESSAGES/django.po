@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2023-04-27 08:55+0000\n"
-"Last-Translator: noxonad <noxonad@proton.me>\n"
+"PO-Revision-Date: 2025-02-16 14:58+0000\n"
+"Last-Translator: Cots Partier <cots.pastier.34@icloud.com>\n"
 "Language-Team: Romanian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ro/>\n"
 "Language: ro\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -91,14 +91,16 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Token the acces</a> pentru instanța ta de HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Asemănător cu http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api de exemplu"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -150,10 +152,6 @@ msgstr ""
 "multe greșeli de scriere sunt ignorate)."
 
 #: .\cookbook\forms.py:340
-#, fuzzy
-#| msgid ""
-#| "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
-#| "for full desciption of choices."
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
@@ -227,8 +225,6 @@ msgid "Partial Match"
 msgstr "Potrivire parțială"
 
 #: .\cookbook\forms.py:350
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
 msgstr "Începe cu"
 
@@ -284,38 +280,36 @@ msgid "You have more users than allowed in your space."
 msgstr "Aveți mai mulți utilizatori decât este permis în spațiul dvs."
 
 #: .\cookbook\helper\recipe_url_import.py:310
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Utilizare fracții"
+msgstr "rotație inversă"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "rotire atentă"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
-msgstr ""
+msgstr "frământă"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
-msgstr ""
+msgstr "se îngroașă"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "warm up"
-msgstr ""
+msgstr "încălzire"
 
 #: .\cookbook\helper\recipe_url_import.py:315
 msgid "ferment"
-msgstr ""
+msgstr "ferment"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "Trebuie să specificați dimensiunea porției"
 
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
@@ -325,11 +319,11 @@ msgstr "Nu s-a putut analiza codul șablonului."
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Am făcut acest lucru"
 
 #: .\cookbook\integration\integration.py:209
 msgid ""
@@ -357,10 +351,8 @@ msgid "Imported %s recipes."
 msgstr "%s rețete importate."
 
 #: .\cookbook\integration\openeats.py:28
-#, fuzzy
-#| msgid "Recipe Home"
 msgid "Recipe source:"
-msgstr "Rețetă acasă"
+msgstr "Sursa rețetei:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -376,10 +368,8 @@ msgstr "Sursă"
 
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:70
-#, fuzzy
-#| msgid "Import Log"
 msgid "Imported from"
-msgstr "Jurnal de import"
+msgstr "Importat din"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
@@ -403,19 +393,17 @@ msgstr "Secțiune"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Corectează alimentele cu "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
 msgstr "Reconstruiește indexul de căutare text complet pe rețetă"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-#, fuzzy
-#| msgid "Only Postgress databases use full text search, no index to rebuild"
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Numai bazele de date Postgress utilizează căutare text complet, nici un "
-"index de reconstruit"
+"Numai bazele de date Postgress utilizează ccăutarea textului integral, nici "
+"un index de reconstruit"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
@@ -443,29 +431,29 @@ msgstr "Altele"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "Grăsime"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Carbohidrați"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "Proteine"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Calorii"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -500,24 +488,20 @@ msgid " is part of a recipe step and cannot be deleted"
 msgstr " face parte dintr-un pas de rețetă și nu poate fi șters"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Automations"
 msgid "Nutrition"
-msgstr "Automatizări"
+msgstr "Nutriție"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Unire"
+msgstr "Alergen"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Preț"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Obiectiv"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -548,42 +532,32 @@ msgid "Keyword Alias"
 msgstr "Pseudonim cuvânt cheie"
 
 #: .\cookbook\models.py:1470
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Descriere"
+msgstr "Înlocuire Descriere"
 
 #: .\cookbook\models.py:1471
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Instrucțiuni"
+msgstr "Înlocuire Instrucțiuni"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "Select Unit"
 msgid "Never Unit"
-msgstr "Selectare unitate"
+msgstr "Unitate nulă"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Schimbă Ordinea Cuvintelor"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Pseudonim produse alimentare"
+msgstr "Aliment echivalent"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Unit Alias"
 msgid "Unit Replace"
-msgstr "Pseudonim unități"
+msgstr "Unitate echivalentă"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Înlocuire Nume"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -591,10 +565,8 @@ msgid "Recipe"
 msgstr "Rețetă"
 
 #: .\cookbook\models.py:1504
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
-msgstr "Alimente"
+msgstr "Mâncare"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -610,7 +582,7 @@ msgstr "Ați atins limita de încărcare a fișierelor."
 
 #: .\cookbook\serializer.py:328
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Nu se poate modifica permisiunea proprietarului spațiului."
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
@@ -651,30 +623,35 @@ msgstr "Invitație Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1426
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Lista de cumpărături existentă de actualizat"
 
 #: .\cookbook\serializer.py:1428
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"ID-urile ingredientelor din rețetă pentru a fi adăugate, dacă nu sunt "
+"specificate toate ingrediente vor fi adăugate."
 
 #: .\cookbook\serializer.py:1430
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Furnizarea unui ID de rețetă și un număr de porții egal cu 0 va șterge lista "
+"cumpărături."
 
 #: .\cookbook\serializer.py:1439
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Cantitatea de mâncare pentru a fi adăugată în lista cumpărături"
 
 #: .\cookbook\serializer.py:1441
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID-ul unității pentru a fi utilizat în lista de cumpărături"
 
 #: .\cookbook\serializer.py:1443
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Când este activ se șterge toată mâncarea din listele de cumpărături active."
 
 #: .\cookbook\tables.py:69 .\cookbook\tables.py:83
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -1027,10 +1004,8 @@ msgstr "Istoric"
 #: .\cookbook\templates\base.html:263
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Ingrediente"
+msgstr "Editor de Ingrediente"
 
 #: .\cookbook\templates\base.html:275
 #: .\cookbook\templates\export_response.html:7
@@ -1040,13 +1015,11 @@ msgstr "Exportă"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Atribute"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "Conexiuni de cont"
+msgstr "Conversii de unități"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1066,10 +1039,8 @@ msgid "Space Settings"
 msgstr "Setări spațiu"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "Rețete externe"
+msgstr "Conectori externi"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1081,15 +1052,13 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Fără spațiu"
+msgstr "Spațiul tău"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Sumar"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
@@ -1113,11 +1082,11 @@ msgstr "Deconectare"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Utilizați o versiune gratuită de Tandor"
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Actualizează acum"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1213,7 +1182,7 @@ msgstr "Sunteți sigur că doriți să ștergeți %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Este ireversibil!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1230,7 +1199,7 @@ msgstr "Anulare"
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr "Editare"
+msgstr "Editează"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
@@ -1379,8 +1348,6 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr "sau lăsând o linie goală între ele."
 
@@ -1404,10 +1371,6 @@ msgid "Lists"
 msgstr "Liste"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1539,11 +1502,11 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Înapoi"
 
 #: .\cookbook\templates\property_editor.html:7
 msgid "Property Editor"
-msgstr ""
+msgstr "Editor atribute"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1620,15 +1583,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:29
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Simple searches ignore punctuation and common words such as "
-#| "'the', 'a', 'and'. And will treat seperate words as required.\n"
-#| "            Searching for 'apple or flour' will return any recipe that "
-#| "includes both 'apple' and 'flour' anywhere in the fields that have been "
-#| "selected for a full text search.\n"
-#| "            "
 msgid ""
 " \n"
 "            Simple searches ignore punctuation and common words such as "
@@ -1666,23 +1620,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:39
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Web searches simulate functionality found on many web search "
-#| "sites supporting special syntax.\n"
-#| "            Placing quotes around several words will convert those words "
-#| "into a phrase.\n"
-#| "            'or' is recongized as searching for the word (or phrase) "
-#| "immediately before 'or' OR the word (or phrase) directly after.\n"
-#| "            '-' is recognized as searching for recipes that do not "
-#| "include the word (or phrase) that comes immediately after. \n"
-#| "            For example searching for 'apple pie' or cherry -butter will "
-#| "return any recipe that includes the phrase 'apple pie' or the word "
-#| "'cherry' \n"
-#| "            in any field included in the full text search but exclude any "
-#| "recipe that has the word 'butter' in any field included.\n"
-#| "            "
 msgid ""
 " \n"
 "            Web searches simulate functionality found on many web search "
@@ -1705,8 +1642,8 @@ msgstr ""
 "uri de căutare web care acceptă sintaxa specială.\n"
 "            Plasarea ghilimelelor în jurul mai multor cuvinte va converti "
 "aceste cuvinte într-o frază.\n"
-"            'sau' este recunoscut pentru căutarea pentru cuvântul (sau "
-"fraza) imediat înainte de 'sau' SAU cuvântul (sau fraza) direct după.\n"
+"            'sau' este recunoscut pentru căutarea pentru cuvântul (sau fraza)"
+" imediat înainte de 'sau' SAU cuvântul (sau fraza) direct după.\n"
 "            '-' este recunoscut pentru căutarea rețetelor care nu includ "
 "cuvântul (sau fraza) care vine imediat după. \n"
 "            De exemplu, căutarea 'plăcintei cu mere' sau a untului de cireșe "
@@ -1729,19 +1666,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:59
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Another approach to searching that also requires Postgresql "
-#| "is fuzzy search or trigram similarity. A trigram is a group of three "
-#| "consecutive characters.\n"
-#| "            For example searching for 'apple' will create x trigrams "
-#| "'app', 'ppl', 'ple' and will create a score of how closely words match "
-#| "the generated trigrams.\n"
-#| "            One benefit of searching trigams is that a search for "
-#| "'sandwich' will find mispelled words such as 'sandwhich' that would be "
-#| "missed by other methods.\n"
-#| "            "
 msgid ""
 " \n"
 "            Another approach to searching that also requires Postgresql is "
@@ -1948,17 +1872,15 @@ msgstr "Creează cont superuser"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Autentificare utilizând rețeaua socială"
+msgstr "Eșec la conectarea la rețeaua socială"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "A apărut o eroare la încercarea de a muta "
+msgstr ""
+"S-a produs o eroare în timp ce se încearca autentificarea prin contul tău de "
+"rețea socială."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -1994,17 +1916,18 @@ msgstr "Înregistrare"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "Conectează %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
 msgstr ""
+"Sunteți pe cale să conectați un nou cont de terță parte din %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Intră în cont prin %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
@@ -2013,7 +1936,7 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Continuă"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2046,7 +1969,7 @@ msgstr "Conectați-vă utilizând"
 
 #: .\cookbook\templates\space_manage.html:7
 msgid "Space Management"
-msgstr ""
+msgstr "Managementul spațiului"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -2057,10 +1980,8 @@ msgid "Manage Subscription"
 msgstr "Gestionarea abonamentului"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:184
-#, fuzzy
-#| msgid "Space:"
 msgid "Space"
-msgstr "Spațiu:"
+msgstr "Spațiu"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -2078,13 +1999,11 @@ msgstr ""
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr ""
+msgstr "Proprietar"
 
 #: .\cookbook\templates\space_overview.html:57
-#, fuzzy
-#| msgid "Create Space"
 msgid "Leave Space"
-msgstr "Creare spațiu"
+msgstr "Părăsire spațiu"
 
 #: .\cookbook\templates\space_overview.html:78
 #: .\cookbook\templates\space_overview.html:88
@@ -2147,6 +2066,11 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            Trebuie să executați <code>version.py</code> în scripturile de "
+"actualizare pentru a genera informații despre versiune (realizate automat în "
+"docker).\n"
+"        "
 
 #: .\cookbook\templates\system.html:46
 msgid "Media Serving"
@@ -2237,7 +2161,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Domenii Permise"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
@@ -2257,10 +2181,8 @@ msgid "Info"
 msgstr "Informație"
 
 #: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Utilizare fracții"
+msgstr "Migrări"
 
 #: .\cookbook\templates\system.html:116
 msgid ""
@@ -2276,19 +2198,17 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
-msgstr ""
+msgstr "Fals"
 
 #: .\cookbook\templates\system.html:182
 msgid "True"
-msgstr ""
+msgstr "Adevărat"
 
 #: .\cookbook\templates\system.html:207
 msgid "Hide"
-msgstr ""
+msgstr "Ascunde"
 
 #: .\cookbook\templates\system.html:210
-#, fuzzy
-#| msgid "Show Log"
 msgid "Show"
 msgstr "Afișare jurnal"
 
@@ -2355,29 +2275,34 @@ msgstr "{child.name} a fost mutat cu succes la părintele {parent.name}"
 #: .\cookbook\views\api.py:589
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} a fost șters din lista de cumpărături."
 
 #: .\cookbook\views\api.py:594 .\cookbook\views\api.py:1037
 #: .\cookbook\views\api.py:1050
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "{obj.name} a fost adăugat la lista de cumpărături."
 
 #: .\cookbook\views\api.py:742
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
-msgstr ""
+msgstr "Filtrează planurile de masă din data (inclusiv) în formatul AAAA-LL-ZZ."
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filtrează planurile de masă până la data (inclusiv) în formatul AAAA-LL-ZZ."
 
 #: .\cookbook\views\api.py:744
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
+"Filtrează planurile de masă cu ID-ul tipului de rețetă. Pentru mai multe "
+"repetă parametrul."
 
 #: .\cookbook\views\api.py:872
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
+"ID-ul rețetei din care face pasul face parte. Pentru mai multe repetă "
+"parametrul."
 
 #: .\cookbook\views\api.py:873
 msgid "Query string matched (fuzzy) against object name."
@@ -2555,8 +2480,6 @@ msgid "Bad URL Schema."
 msgstr ""
 
 #: .\cookbook\views\api.py:1474
-#, fuzzy
-#| msgid "No useable data could be found."
 msgid "No usable data could be found."
 msgstr "Nu au putut fi găsite date utilizabile."
 
@@ -2611,20 +2534,16 @@ msgstr ""
 "puțin un supervizor."
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "Backend de stocare"
+msgstr "Configurare Backend Conectori"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
 msgstr "Link de invitare"
 
 #: .\cookbook\views\delete.py:168
-#, fuzzy
-#| msgid "Members"
 msgid "Space Membership"
-msgstr "Membri"
+msgstr "Membri spațiu"
 
 #: .\cookbook\views\edit.py:84
 msgid "You cannot edit this storage!"
@@ -2639,10 +2558,8 @@ msgid "There was an error updating this storage backend!"
 msgstr "A existat o eroare la actualizarea acestui backend de stocare!"
 
 #: .\cookbook\views\edit.py:134
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Config saved!"
-msgstr "Modificări salvate!"
+msgstr "Configurare salvată!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
@@ -2675,10 +2592,8 @@ msgid "Shopping List"
 msgstr "Listă de cumpărături"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "Backend de stocare"
+msgstr "Configurare Backend pentru Conector"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2693,10 +2608,8 @@ msgid "Shopping Categories"
 msgstr "Categorii de cumpărături"
 
 #: .\cookbook\views\lists.py:202
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "Filtru"
+msgstr "Filtre Personalizate"
 
 #: .\cookbook\views\lists.py:239
 msgid "Steps"
@@ -2707,10 +2620,8 @@ msgid "Property Types"
 msgstr ""
 
 #: .\cookbook\views\new.py:86
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not enabled by the server admin!"
-msgstr "Această funcție nu este disponibilă în versiunea demo!"
+msgstr "Această funcție nu a fost activată de către administrator!"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2726,11 +2637,9 @@ msgid "This feature is not available in the demo version!"
 msgstr "Această funcție nu este disponibilă în versiunea demo!"
 
 #: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Ai ajuns la numărul maxim de rețete pentru spațiul dvs."
+msgstr "Ai ajuns la numărul maxim de spații pe care le poți deține."
 
 #: .\cookbook\views\views.py:89
 msgid ""
@@ -2779,29 +2688,15 @@ msgid "Unable to determine PostgreSQL version."
 msgstr ""
 
 #: .\cookbook\views\views.py:317
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"            Această aplicație nu se execută cu un backend de bază de date "
-"Postgres. Acest lucru este ok, dar nu este recomandat deoarece unele\n"
-"            caracteristicile funcționează numai cu baze de date Postgres.\n"
-"        "
+"Această aplicație nu se execută cu un backend de bază de date Postgres. "
+"Acest lucru este ok, dar nu este recomandat deoarece unele caracteristicile "
+"funcționează numai cu baze de date Postgres."
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
@@ -2852,10 +2747,8 @@ msgid "Manage recipes, shopping list, meal plans and more."
 msgstr ""
 
 #: .\cookbook\views\views.py:458
-#, fuzzy
-#| msgid "Meal-Plan"
 msgid "Plan"
-msgstr "Plan de alimentare"
+msgstr "Plan"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
@@ -2863,13 +2756,11 @@ msgstr ""
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "Vizualizează cărțile de bucate"
 
 #: .\cookbook\views\views.py:460
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "View your shopping lists"
-msgstr "Listă de cumpărături nouă"
+msgstr "Vezi listele de cumpărături"
 
 #~ msgid "Default unit"
 #~ msgstr "Unitate implicită"

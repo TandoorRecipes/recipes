@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-09-03 19:58+0000\n"
-"Last-Translator: \"S. v.d. Gevel\" <stefan18_gw@hotmail.com>\n"
+"PO-Revision-Date: 2025-02-16 14:58+0000\n"
+"Last-Translator: Cots Partier <cots.pastier.34@icloud.com>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
 "Language: nl\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -286,7 +286,7 @@ msgstr "omgekeerde rotatie"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr "voorzichtige rotatie"
+msgstr "rotire atentă"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
