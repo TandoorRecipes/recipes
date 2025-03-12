@@ -1,44 +1,58 @@
 <template>
     <v-container>
         <v-row>
+            <v-col cols="12" md="6" offset-md="3">
+                <v-text-field :label="$t('Search')"
+                              v-model="urlSearchParams.query"
+                              :loading="loading"
+                              @submit="searchRecipes({page: 1})"
+                              @keydown.enter="searchRecipes({page: 1})"
+                              clearable hide-details>
+                    <template v-slot:append>
+                        <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon><i class="fa-solid fa-caret-down"></i></v-btn>
+                        <v-btn @click="panel ='' " v-if="panel == 'search'" color="primary" icon><i class="fa-solid fa-caret-up"></i></v-btn>
+                    </template>
+                </v-text-field>
+            </v-col>
+        </v-row>
+        <v-row>
             <v-col>
-                <v-card :loading="loading">
-                    <v-card-title>
-                        {{ $t('Search') }}
+                <v-expansion-panels v-model="panel">
+                    <v-expansion-panel value="search">
+                        <v-expansion-panel-text>
+                            <v-form :disabled="loading">
 
-                    </v-card-title>
-                    <v-card-text>
-                        <v-form :disabled="loading">
-                            <v-text-field :label="$t('Search')" v-model="urlSearchParams.query" clearable></v-text-field>
+                                <model-select model="Keyword" mode="tags" v-model="urlSearchParams.keywords" :object="false"></model-select>
+                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" :object="false"></model-select>
+                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" :object="false"></model-select>
+                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" :object="false"></model-select>
 
-                            <model-select model="Keyword" mode="tags" v-model="urlSearchParams.keywords" :object="false"></model-select>
-                            <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" :object="false"></model-select>
-                            <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" :object="false"></model-select>
-                            <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" :object="false"></model-select>
+                                <!--                            <v-number-input :label="$t('times_cooked')" v-model="searchParameters.timescooked" clearable></v-number-input>-->
+                                <!--                            <v-date-input  :label="$t('last_cooked')" v-model="searchParameters.cookedon" clearable></v-date-input>-->
+                                <!--                            <v-date-input :label="$t('last_viewed')" v-model="searchParameters.viewedon" clearable></v-date-input>-->
+                                <!--                            <v-date-input :label="$t('created_on')" v-model="searchParameters.createdon" clearable></v-date-input>-->
+                                <!--                            <v-date-input :label="$t('updatedon')" v-model="searchParameters.updatedon" clearable></v-date-input>-->
 
-                            <!--                            <v-number-input :label="$t('times_cooked')" v-model="searchParameters.timescooked" clearable></v-number-input>-->
-                            <!--                            <v-date-input  :label="$t('last_cooked')" v-model="searchParameters.cookedon" clearable></v-date-input>-->
-                            <!--                            <v-date-input :label="$t('last_viewed')" v-model="searchParameters.viewedon" clearable></v-date-input>-->
-                            <!--                            <v-date-input :label="$t('created_on')" v-model="searchParameters.createdon" clearable></v-date-input>-->
-                            <!--                            <v-date-input :label="$t('updatedon')" v-model="searchParameters.updatedon" clearable></v-date-input>-->
+                                <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow"></v-checkbox>
 
-                            <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow"></v-checkbox>
+                                <model-select model="CustomFilter" v-model="selectedCustomFilter">
+                                    <template #append>
+                                        <v-btn icon="fa-solid fa-upload" color="warning" :disabled="Object.keys(selectedCustomFilter).length == 0"
+                                               @click="loadCustomFilter()"></v-btn>
+                                        <v-btn icon="$save" class="ms-1" color="save" @click="saveCustomFilter()"></v-btn>
+                                    </template>
+                                </model-select>
+                            </v-form>
 
-                            <model-select model="CustomFilter" v-model="selectedCustomFilter">
-                                <template #append>
-                                    <v-btn icon="fa-solid fa-upload" color="warning" :disabled="Object.keys(selectedCustomFilter).length == 0" @click="loadCustomFilter()"></v-btn>
-                                    <v-btn icon="$save" class="ms-1" color="save" @click="saveCustomFilter()"></v-btn>
-                                </template>
-                            </model-select>
-                        </v-form>
+                        </v-expansion-panel-text>
 
+                        <v-card-actions v-if="panel == 'search'">
+                            <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark" :disabled="Object.keys(urlSearchParams).length == 0">{{ $t('Reset') }}</v-btn>
+                            <v-btn @click="searchRecipes({page: 1})" prepend-icon="$search">{{ $t('Search') }}</v-btn>
+                        </v-card-actions>
+                    </v-expansion-panel>
+                </v-expansion-panels>
 
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark" :disabled="Object.keys(urlSearchParams).length == 0">{{ $t('Reset') }}</v-btn>
-                        <v-btn @click="searchRecipes({page: 1})" prepend-icon="$search">{{ $t('Search') }}</v-btn>
-                    </v-card-actions>
-                </v-card>
             </v-col>
         </v-row>
 
@@ -108,6 +122,7 @@ const urlSearchParams = useUrlSearchParams('history', {})
 
 const loading = ref(false)
 const dialog = ref(false)
+const panel = ref('')
 
 const tableHeaders = [
     {title: t('Image'), width: '1%', noBreak: true, key: 'image',},
@@ -124,6 +139,7 @@ const newFilterName = ref('')
 
 onMounted(() => {
     urlSearchParams.page = 1
+    searchRecipes({page: 1})
 })
 
 function searchRecipes(options: VDataTableUpdateOptions) {

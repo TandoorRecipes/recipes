@@ -21,6 +21,13 @@
         <horizontal-recipe-scroller :skeletons="4" mode="keyword"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :skeletons="4" mode="random"></horizontal-recipe-scroller>
 
+        <v-row>
+            <v-col class="text-center">
+                <v-btn size="x-large" rounded="xl" prepend-icon="$search" variant="tonal" :to="{name: 'view_search', params: {query: ''}}">{{ $t('View_Recipes') }}</v-btn>
+            </v-col>
+        </v-row>
+
+
     </v-container>
 </template>
 

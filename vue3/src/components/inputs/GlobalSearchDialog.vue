@@ -70,9 +70,11 @@ import {useDisplay} from "vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useDebounceFn} from "@vueuse/core";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {useI18n} from "vue-i18n";
 
 const router = useRouter()
 const {mobile} = useDisplay()
+const {t} = useI18n()
 
 const dialog = ref(false)
 const recipes = ref([] as Recipe[])
@@ -113,6 +115,8 @@ const searchResults = computed(() => {
         // searchResults.push({name: 'Recent 1', icon: 'fas fa-history',} as SearchResult)
         // searchResults.push({name: 'Recent 2', icon: 'fas fa-history',} as SearchResult)
         // searchResults.push({name: 'Recent 3', icon: 'fas fa-history',} as SearchResult)
+
+        searchResults.push({name: t('AllRecipes'), icon: 'fas fa-search', type: "link_advanced_search"} as SearchResult)
 
         flatRecipes.value.slice(0, 5).forEach(r => {
             searchResults.push({name: r.name, image: r.image, recipeId: r.id} as SearchResult)
