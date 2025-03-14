@@ -182,6 +182,7 @@
                                             <p v-if="r.recipe">{{ r.recipeData.name }}<br/></p>
                                             <p v-if="r.mealplan">
                                                 {{ r.mealPlanData.mealType.name }} - {{ DateTime.fromJSDate(r.mealPlanData.fromDate).toLocaleString(DateTime.DATE_FULL) }}
+                                                #{{ r.id }}
                                             </p>
                                         </div>
 

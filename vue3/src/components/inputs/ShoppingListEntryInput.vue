@@ -22,6 +22,7 @@
         valueProp="id"
         label="name"
         :delay="300"
+        append-to-body
         :searchable="true"
         :strict="false"
         :classes="{
