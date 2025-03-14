@@ -12,7 +12,7 @@ DETAIL_URL = 'api:shoppinglistrecipe-detail'
 
 @pytest.fixture()
 def obj_1(space_1, u1_s1, recipe_1_s1):
-    r = ShoppingListRecipe.objects.create(recipe=recipe_1_s1, servings=1)
+    r = ShoppingListRecipe.objects.create(recipe=recipe_1_s1, servings=1, space=space_1, created_by=auth.get_user(u1_s1))
     for ing in r.recipe.steps.first().ingredients.all():
         ShoppingListEntry.objects.create(list_recipe=r, ingredient=ing, food=ing.food, unit=ing.unit, amount=ing.amount, created_by=auth.get_user(u1_s1), space=space_1)
     return r
