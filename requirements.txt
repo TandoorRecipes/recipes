@@ -47,6 +47,10 @@ pytubefix==8.12.2
 aiohttp==3.10.11
 inflection==0.5.1
 redis==5.2.1
+requests-oauthlib==2.0.0
+pyjwt==2.10.1
+python3-openid==3.2.0
+python3-saml==1.16.0
 django-vite==3.0.3
 litellm==1.60.8
 

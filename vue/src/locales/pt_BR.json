@@ -264,7 +264,7 @@
     "CategoryName": "Nome da Categoria",
     "SupermarketName": "Nome do Supermercado",
     "CategoryInstruction": "Arraste as categorias para alterar a ordem em que as categorias de pedidos aparecem na lista de compras.",
-    "shopping_recent_days_desc": "",
+    "shopping_recent_days_desc": "Dias de exibição das entradas recentes da lista de compras.",
     "shopping_recent_days": "Dias Recentes",
     "create_shopping_new": "",
     "download_pdf": "Download PDF",
@@ -317,7 +317,7 @@
     "desc": "Descendente",
     "date_viewed": "Último Visualizado",
     "last_cooked": "Último Cozido",
-    "times_cooked": "",
+    "times_cooked": "Quantidade de vezes feita",
     "date_created": "Data Criada",
     "show_sortby": "Mostrar Ordena Por",
     "search_rank": "Rank de Pesquisa",
@@ -528,7 +528,7 @@
     "Properties_Food_Unit": "Unidade de Alimento das Propriedades",
     "Shopping_input_placeholder": "ex. Batata/100 Batatas/100 g Batatas",
     "FDC_Search": "Busca FDC",
-    "Unpin": "Unpin",
+    "Unpin": "Desfixar",
     "us_cup": "xícara (EUA, volume)",
     "Error": "Erro",
     "Bookmarklet": "Marcador",
@@ -567,5 +567,7 @@
     "pint": "pint [pt] (EUA, volume)",
     "quart": "quarto de galão [qt] (EUA, volume)",
     "tbsp": "colher de sopa [colher de sopa] (EUA, volume)",
-    "imperial_gallon": "Galão imperial [imp gal] (Reino Unido, volume)"
+    "imperial_gallon": "Galão imperial [imp gal] (Reino Unido, volume)",
+    "Nav_Text_Mode": "Modo de Navegação em Texto",
+    "make_now_count": "Máximo de ingredientes em falta"
 }
