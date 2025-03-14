@@ -1245,8 +1245,10 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         validated_data['created_by'] = self.context['request'].user
 
         if 'mealplan_id' in validated_data:
-            slr, created = ShoppingListRecipe.objects.get_or_create(mealplan_id=validated_data['mealplan_id'], mealplan__space=self.context['request'].space)
-            validated_data['list_recipe'] = slr
+            if existing_slr := ShoppingListRecipe.objects.filter(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space).get():
+                validated_data['list_recipe'] = existing_slr
+            else:
+                validated_data['list_recipe'] = ShoppingListRecipe.objects.create(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space, created_by=self.context['request'].user)
             del validated_data['mealplan_id']
 
         return super().create(validated_data)
