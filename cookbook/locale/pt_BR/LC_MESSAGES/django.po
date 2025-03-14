@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-03-02 16:58+0000\n"
-"Last-Translator: fabio souza jr <fabiosouzajr@gmail.com>\n"
+"PO-Revision-Date: 2025-03-13 22:58+0000\n"
+"Last-Translator: Jader Moraes <jader-ms@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -173,13 +173,12 @@ msgstr ""
 "diminuir a qualidade de pesquisa dependendo do idioma em uso"
 
 #: .\cookbook\forms.py:343
-#, fuzzy
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
-"Campos que devem ser procurados por correspondências parciais (por exemplo, "
-"procurar por \"Pie\" retornará \"pie\", \"piece\" e \"soapie\")"
+"Campos a serem usados para pesquisa parcial (ex: pesquisar 'Pão' pode "
+"retornar 'pão', 'pãozinho' e 'pão de queijo')"
 
 #: .\cookbook\forms.py:344
 msgid ""
@@ -758,6 +757,10 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
+"Por favor, confirme que\n"
+"            <a href=\"mailto:%(email)s\">%(email)s</a> é um endereço de e-"
+"mail do usuário %(user_display)s\n"
+"            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
