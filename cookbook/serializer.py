@@ -1183,6 +1183,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     recipe_data = RecipeOverviewSerializer(source='recipe', read_only=True, required=False)
     meal_plan_data = MealPlanSerializer(source='mealplan', read_only=True, required=False)
     servings = CustomDecimalField()
+    created_by = UserSerializer(read_only=True)
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
@@ -1192,8 +1197,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings',)
-        read_only_fields = ('id',)
+        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings','created_by',)
+        read_only_fields = ('id','created_by',)
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):

@@ -1186,30 +1186,17 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
 
 class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=32, blank=True, default='')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)  # TODO make required after old shoppinglist deprecated
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)
     mealplan = models.ForeignKey(MealPlan, on_delete=models.CASCADE, null=True, blank=True)
 
-    objects = ScopedManager(space='recipe__space')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
-    @staticmethod
-    def get_space_key():
-        return 'recipe', 'space'
-
-    def get_space(self):
-        return self.recipe.space
+    objects = ScopedManager(space='space')
 
     def __str__(self):
         return f'Shopping list recipe {self.id} - {self.recipe}'
-
-    def get_owner(self):
-        try:
-            if not self.entries.exists():
-                return 'orphan'
-            else:
-                return getattr(self.entries.first(), 'created_by', None)
-        except AttributeError:
-            return None
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
