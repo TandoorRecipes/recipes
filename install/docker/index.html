@@ -1,0 +1,2185 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Tandoor Recipe Documentation">
+      
+      
+        <meta name="author" content="vabene1111">
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../unraid/">
+      
+      
+      <link rel="icon" href="../../logo_color.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.8">
+    
+    
+      
+        <title>Docker - Tandoor Recipes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dockstarter" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tandoor Recipes" class="md-header__button md-logo" aria-label="Tandoor Recipes" data-md-component="logo">
+      
+  <img src="../../logo_color.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tandoor Recipes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Docker
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vabene1111/recipes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tandoor Recipes" class="md-nav__button md-logo" aria-label="Tandoor Recipes" data-md-component="logo">
+      
+  <img src="../../logo_color.svg" alt="logo">
+
+    </a>
+    Tandoor Recipes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vabene1111/recipes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Installation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Docker
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Docker
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dockstarter" class="md-nav__link">
+    <span class="md-ellipsis">
+      DockSTARTer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Versions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Compose
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker Compose">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reverse Proxy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reverse Proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      Traefik
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jwilders-nginx-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      jwilder's Nginx-proxy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-swag-by-linuxserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Swag by LinuxServer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pure-nginx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pure Nginx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Apache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#others" class="md-nav__link">
+    <span class="md-ellipsis">
+      Others
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Information
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nginx-vs-gunicorn" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx vs Gunicorn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-vs-bind-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes vs Bind Mounts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Headers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-issues-on-raspberry-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup issues on Raspberry Pi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sub-path-nginx-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sub Path nginx config
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unraid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unraid
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synology/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Synology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubesail/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    KubeSail or PiBox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../truenas_portainer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TrueNAS Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wsl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../archlinux/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ArchLinux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../homeassistant/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HomeAssistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manual/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Manual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../other/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Other setups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Features
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/templating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Templating
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/shopping/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Shopping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/authentication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Authentication
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/automation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/connectors/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Connectors
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/external_recipes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storages and Sync
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/import_export/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Import/Export
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/telegram_bot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Telegram bot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    System
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            System
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/updating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Updating
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/migration_sqlite-postgres/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Migrate sqlite to postgres
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/permissions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Permission System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../system/backup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Backup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/contribute/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/translations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Translations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/documentation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/guidelines/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    IDE Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            IDE Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/vscode/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VSCode
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/pycharm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    PyCharm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/related/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Related Projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dockstarter" class="md-nav__link">
+    <span class="md-ellipsis">
+      DockSTARTer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Versions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker Compose
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker Compose">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plain
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reverse Proxy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reverse Proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      Traefik
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jwilders-nginx-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      jwilder's Nginx-proxy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-swag-by-linuxserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Swag by LinuxServer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pure-nginx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pure Nginx
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apache" class="md-nav__link">
+    <span class="md-ellipsis">
+      Apache
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#others" class="md-nav__link">
+    <span class="md-ellipsis">
+      Others
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Information
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Information">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nginx-vs-gunicorn" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx vs Gunicorn
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nginx-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nginx Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes-vs-bind-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Volumes vs Bind Mounts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#required-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Headers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-issues-on-raspberry-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup issues on Raspberry Pi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sub-path-nginx-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sub Path nginx config
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Docker</h1>
+
+<div class="admonition success">
+<p class="admonition-title">Recommended Installation</p>
+<p>Setting up this application using Docker is recommended. This does not mean that other options are bad, just that
+support is much easier for this setup.</p>
+</div>
+<p>It is possible to install this application using many different Docker configurations.</p>
+<p>Please read the instructions on each example carefully and decide if this is the way for you.</p>
+<h2 id="dockstarter"><strong>DockSTARTer</strong></h2>
+<p>The main goal of <a href="https://dockstarter.com/">DockSTARTer</a> is to make it quick and easy to get up and running with Docker.
+You may choose to rely on DockSTARTer for various changes to your Docker system or use DockSTARTer as a stepping stone and learn to do more advanced configurations.
+Follow the guide for installing DockSTARTer and then run <code>ds</code> then select 'Configuration' and 'Select Apps' to get Tandoor up and running quickly and easily.</p>
+<h2 id="docker"><strong>Docker</strong></h2>
+<p>The docker image (<code>vabene1111/recipes</code>) simply exposes the application on the container's port <code>8080</code>.</p>
+<p>It can be run and accessed on port 80 using:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>/staticfiles:/opt/recipes/staticfiles<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>/mediafiles:/opt/recipes/mediafiles<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-p<span class="w"> </span><span class="m">80</span>:8080<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">SECRET_KEY</span><span class="o">=</span>YOUR_SECRET_KEY<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">DB_ENGINE</span><span class="o">=</span>django.db.backends.postgresql<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">POSTGRES_HOST</span><span class="o">=</span>db_recipes<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">POSTGRES_PORT</span><span class="o">=</span><span class="m">5432</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">POSTGRES_USER</span><span class="o">=</span>djangodb<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">POSTGRES_PASSWORD</span><span class="o">=</span>YOUR_POSTGRES_SECRET_KEY<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-e<span class="w"> </span><span class="nv">POSTGRES_DB</span><span class="o">=</span>djangodb<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span>recipes_1<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>vabene1111/recipes
+</code></pre></div>
+<p>Please make sure, if you run your image this way, to consult
+the <a href="https://raw.githubusercontent.com/vabene1111/recipes/master/.env.template">.env.template</a>
+file in the GitHub repository to verify if additional environment variables are required for your setup.</p>
+<p>Also, don't forget to replace the placeholders for <code>SECRET_KEY</code> and <code>POSTGRES_PASSWORD</code>!</p>
+<h2 id="versions"><strong>Versions</strong></h2>
+<p>There are different versions (tags) released on <a href="https://hub.docker.com/r/vabene1111/recipes/tags">Docker Hub</a>.</p>
+<ul>
+<li><strong>latest</strong> Default image. The one you should use if you don't know that you need anything else.</li>
+<li><strong>beta</strong> Partially stable version that gets updated every now and then. Expect to have some problems.</li>
+<li><strong>develop</strong> If you want the most bleeding edge version with potentially many breaking changes feel free to use this version (not recommended!).</li>
+<li><strong>X.Y.Z</strong> each released version has its own image. If you need to revert to an old version or want to make sure you stay on one specific use these tags.</li>
+</ul>
+<div class="admonition danger">
+<p class="admonition-title">No Downgrading</p>
+<p>There is currently no way to migrate back to an older version as there is no mechanism to downgrade the database.
+You could probably do it but I cannot help you with that. Choose wisely if you want to use the unstable images.
+That said <strong>beta</strong> should usually be working if you like frequent updates and new stuff.</p>
+</div>
+<h2 id="docker-compose"><strong>Docker Compose</strong></h2>
+<p>The main, and also recommended, installation option for this application is Docker Compose.</p>
+<ol>
+<li>Choose your <code>docker-compose.yml</code> from the examples below.</li>
+<li>Download the <code>.env</code> configuration file with <code>wget</code>
+    <div class="highlight"><pre><span></span><code>wget<span class="w"> </span>https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template<span class="w"> </span>-O<span class="w"> </span>.env
+</code></pre></div></li>
+<li><strong>Edit it accordingly</strong> (you NEED to set <code>SECRET_KEY</code> and <code>POSTGRES_PASSWORD</code>).</li>
+<li>Start your container using <code>docker-compose up -d</code>.</li>
+</ol>
+<h3 id="plain"><strong>Plain</strong></h3>
+<p>This configuration exposes the application through a containerized nginx web server on port 80 of your machine.
+Be aware that having some other web server or container running on your host machine on port 80 will block this from working.</p>
+<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./postgresql:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+
+<span class="w">  </span><span class="nt">web_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vabene1111/recipes</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staticfiles:/opt/recipes/staticfiles</span>
+<span class="w">      </span><span class="c1"># Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_config:/opt/recipes/nginx/conf.d</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mediafiles:/opt/recipes/mediafiles</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_recipes</span>
+
+<span class="w">  </span><span class="nt">nginx_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:mainline-alpine</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80:80</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web_recipes</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_config:/etc/nginx/conf.d:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staticfiles:/static:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mediafiles:/media:ro</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">staticfiles</span><span class="p">:</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don't forget to <a href="#docker-compose">download and configure</a> your <code>.env</code> file!</p>
+</div>
+<h3 id="reverse-proxy"><strong>Reverse Proxy</strong></h3>
+<p>Most deployments will likely use a reverse proxy.</p>
+<p>If your reverse proxy is not listed below, please refer to chapter <a href="#others">Others</a>.</p>
+<h4 id="traefik"><strong>Traefik</strong></h4>
+<p>If you use Traefik, this configuration is the one for you.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Traefik can be a little confusing to setup.
+Please refer to <a href="https://doc.traefik.io/traefik/">their excellent documentation</a>. If that does not help,
+<a href="../traefik/">this little example</a> might be for you.</p>
+</div>
+<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./postgresql:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+
+<span class="w">  </span><span class="nt">web_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vabene1111/recipes</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staticfiles:/opt/recipes/staticfiles</span>
+<span class="w">      </span><span class="c1"># Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_config:/opt/recipes/nginx/conf.d</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mediafiles:/opt/recipes/mediafiles</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_recipes</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+
+<span class="w">  </span><span class="nt">nginx_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:mainline-alpine</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_config:/etc/nginx/conf.d:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staticfiles:/static:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mediafiles:/media:ro</span>
+<span class="w">    </span><span class="nt">labels</span><span class="p">:</span><span class="w"> </span><span class="c1"># traefik example labels</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.enable=true&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.recipes.rule=Host(`recipes.mydomain.com`,</span><span class="nv"> </span><span class="s">`recipes.myotherdomain.com`)&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.recipes.entrypoints=web_secure&quot;</span><span class="w"> </span><span class="c1"># your https endpoint</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;traefik.http.routers.recipes.tls.certresolver=le_resolver&quot;</span><span class="w"> </span><span class="c1"># your cert resolver</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web_recipes</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">traefik</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">traefik</span><span class="p">:</span><span class="w"> </span><span class="c1"># This is your external traefik network</span>
+<span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">staticfiles</span><span class="p">:</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don't forget to <a href="#docker-compose">download and configure</a> your <code>.env</code> file!</p>
+</div>
+<h4 id="jwilders-nginx-proxy"><strong>jwilder's Nginx-proxy</strong></h4>
+<p>This is a docker compose example using <a href="https://github.com/jwilder/docker-gen">jwilder's nginx reverse proxy</a>
+in combination with <a href="https://hub.docker.com/r/jrcs/letsencrypt-nginx-proxy-companion/">jrcs's letsencrypt companion</a>.</p>
+<p>Please refer to the appropriate documentation on how to setup the reverse proxy and networks.</p>
+<div class="admonition warning">
+<p class="admonition-title">Adjust client_max_body_size</p>
+<p>By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the <code>client_max_body_size</code> variable in the jwilder nginx configuration.</p>
+</div>
+<p>Remember to add the appropriate environment variables to the <code>.env</code> file:</p>
+<div class="highlight"><pre><span></span><code>VIRTUAL_HOST=
+LETSENCRYPT_HOST=
+LETSENCRYPT_EMAIL=
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>wget<span class="w"> </span>https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">db_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16-alpine</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./postgresql:/var/lib/postgresql/data</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+
+<span class="w">  </span><span class="nt">web_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vabene1111/recipes</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staticfiles:/opt/recipes/staticfiles</span>
+<span class="w">      </span><span class="c1"># Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_config:/opt/recipes/nginx/conf.d</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mediafiles:/opt/recipes/mediafiles</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db_recipes</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+
+<span class="w">  </span><span class="nt">nginx_recipes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx:mainline-alpine</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./.env</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web_recipes</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx_config:/etc/nginx/conf.d:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">staticfiles:/static:ro</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./mediafiles:/media:ro</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx-proxy</span>
+
+<span class="nt">networks</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx-proxy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">external</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx-proxy</span>
+
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nginx_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">staticfiles</span><span class="p">:</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don't forget to <a href="#docker-compose">download and configure</a> your <code>.env</code> file!</p>
+</div>
+<h4 id="nginx-swag-by-linuxserver"><strong>Nginx Swag by LinuxServer</strong></h4>
+<p><a href="https://github.com/linuxserver/docker-swag">This container</a> is an all in one solution created by LinuxServer.io.</p>
+<p>It contains templates for popular apps, including Tandoor Recipes, so you don't have to manually configure nginx and discard the template provided in Tandoor repo. Tandoor config is called <code>recipes.subdomain.conf.sample</code> which you can adapt for your instance.</p>
+<p>If you're running Swag on the default port, you'll just need to change the container name to yours.</p>
+<p>If your running Swag on a custom port, some headers must be changed:</p>
+<ul>
+<li>Create a copy of <code>proxy.conf</code></li>
+<li>Replace <code>proxy_set_header X-Forwarded-Host $host;</code> and <code>proxy_set_header Host $host;</code> to<ul>
+<li><code>proxy_set_header X-Forwarded-Host $http_host;</code> and <code>proxy_set_header Host $http_host;</code></li>
+</ul>
+</li>
+<li>Update <code>recipes.subdomain.conf</code> to use the new file</li>
+<li>Restart the linuxserver/swag container and Recipes will work correctly</li>
+</ul>
+<p>More information <a href="https://github.com/TandoorRecipes/recipes/issues/959#issuecomment-962648627">here</a>.</p>
+<p>In both cases, also make sure to mount <code>/media/</code> in your swag container to point to your Tandoor Recipes Media directory.</p>
+<p>Please refer to the <a href="https://github.com/linuxserver/docker-swag#usage">appropriate documentation</a> for the container setup.</p>
+<p>For step-by-step instructions to set this up from scratch, see <a href="../swag/">this example</a>.</p>
+<h4 id="pure-nginx"><strong>Pure Nginx</strong></h4>
+<p>If you have Nginx installed locally on your host system without using any third party integration like Swag or similar, this is for you.</p>
+<p>You can use the Docker-Compose file from <a href="#plain">Plain</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Adjust Docker-Compose file</p>
+<p>Replace <code>80:80</code> with <code>PORT:80</code> with PORT being your desired outward-facing port.
+In the nginx config example below, 8080 is used.</p>
+</div>
+<p>An example configuration with LetsEncrypt to get you started can be seen below.
+Please note, that since every setup is different, you might need to adjust some things.</p>
+<div class="admonition warning">
+<p class="admonition-title">Placeholders</p>
+<p>Don't forget to replace the domain and port.</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">if</span><span class="w"> </span><span class="s">(</span><span class="nv">$host</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">recipes.mydomain.tld)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1"># replace domain</span>
+<span class="w">        </span><span class="kn">return</span><span class="w"> </span><span class="mi">301</span><span class="w"> </span><span class="s">https://</span><span class="nv">$host$request_uri</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">recipes.mydomain.tld</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace domain</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">return</span><span class="w"> </span><span class="mi">404</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">recipes.mydomain.tld</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace domain</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">ssl_certificate</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/recipes.mydomain.tld/fullchain.pem</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace domain</span>
+<span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/letsencrypt/live/recipes.mydomain.tld/privkey.pem</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace domain</span>
+<span class="w">    </span><span class="kn">include</span><span class="w"> </span><span class="s">/etc/letsencrypt/options-ssl-nginx.conf</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">ssl_dhparam</span><span class="w"> </span><span class="s">/etc/letsencrypt/ssl-dhparams.pem</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$http_host</span><span class="p">;</span><span class="w"> </span><span class="c1"># try $host instead if this doesn&#39;t work</span>
+<span class="w">            </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">            </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8080</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace port</span>
+<span class="w">            </span><span class="kn">proxy_redirect</span><span class="w"> </span><span class="s">http://127.0.0.1:8080</span><span class="w"> </span><span class="s">https://recipes.domain.tld</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace port and domain</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Tandoor does not support directly serving of images, as explained in the <a href="#nginx-vs-gunicorn">Nginx vs Gunicorn"</a> section.  If you are already using nginx to serve as a reverse proxy, you can configure it to serve images as well.</p>
+<p>Add the following directly after the <code>location /</code> context:</p>
+<div class="highlight"><pre><span></span><code>        location /media/ {
+            root   /media/;
+            index  index.html index.htm;
+        }
+</code></pre></div>
+<p>Make sure you also update your <code>docker-compose.yml</code> file to mount the <code>mediafiles</code> directory.  If you are using the <a href="#plain">Plain</a> deployment, you do not need to make any changes.  If you are using nginx to act as a reverse proxy for other apps, it may not be optimal to have <code>mediafiles</code> mounted to <code>/media</code>.  In that case, adjust the directory declarations as needed, utilizing nginx's <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#alias"><code>alias</code></a> if needed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use <code>alias</code> if your mount point directory is not the same as the URL request path.  Tandoor media files are requested from <code>$http_host/media/recipes/xxx.jpg</code>.  This means if you are mounting to a directory that does <strong>NOT</strong> end in <code>./media</code>, you will need to use <code>alias</code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don't forget to <a href="#docker-compose">download and configure</a> your <code>.env</code> file!</p>
+</div>
+<h4 id="apache"><strong>Apache</strong></h4>
+<p>You can use the Docker-Compose file from <a href="#plain">Plain</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Adjust Docker-Compose file</p>
+<p>Replace <code>80:80</code> with <code>PORT:80</code> with PORT being your desired outward-facing port.
+In the Apache config example below, 8080 is used.</p>
+</div>
+<p>If you use e.g. LetsEncrypt for SSL encryption, you can use the example configuration from <a href="https://github.com/TandoorRecipes/recipes/issues/1312#issuecomment-1020034375">solaris7590</a> below.</p>
+<div class="admonition warning">
+<p class="admonition-title">Placeholders</p>
+<p>Don't forget to replace the domain and port.</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;IfModule</span><span class="w"> </span><span class="s">mod_ssl.c</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;VirtualHost</span><span class="w"> </span><span class="s">*:80</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nb">ServerAdmin</span><span class="w"> </span>webmaster@mydomain.de<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain
+<span class="w">        </span><span class="nb">ServerName</span><span class="w"> </span>mydomain.de<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain
+
+<span class="w">        </span><span class="nb">Redirect</span><span class="w"> </span>permanent<span class="w"> </span>/<span class="w"> </span>https://mydomain.de/<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain
+<span class="w">    </span><span class="nt">&lt;/VirtualHost&gt;</span>
+
+<span class="w">    </span><span class="nt">&lt;VirtualHost</span><span class="w"> </span><span class="s">*:443</span><span class="nt">&gt;</span>
+<span class="w">        </span><span class="nb">ServerAdmin</span><span class="w"> </span>webmaster@mydomain.de<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain
+<span class="w">        </span><span class="nb">ServerName</span><span class="w"> </span>mydomain.de<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain
+
+<span class="w">        </span><span class="nb">SSLEngine</span><span class="w"> </span><span class="k">on</span>
+
+<span class="w">        </span><span class="nb">RequestHeader</span><span class="w"> </span>set<span class="w"> </span>X-Forwarded-Proto<span class="w"> </span><span class="s2">&quot;https&quot;</span>
+<span class="w">        </span><span class="nb">Header</span><span class="w"> </span>always<span class="w"> </span>set<span class="w"> </span>Access-Control-Allow-Origin<span class="w"> </span><span class="s2">&quot;*&quot;</span>
+
+<span class="w">        </span><span class="nb">ProxyPreserveHost</span><span class="w">  </span><span class="k">On</span>
+<span class="w">        </span><span class="nb">ProxyRequests</span><span class="w"> </span><span class="k">Off</span>
+<span class="w">        </span><span class="nb">ProxyPass</span><span class="w"> </span>/<span class="w"> </span>http://localhost:8080/<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>port
+<span class="w">        </span><span class="nb">ProxyPassReverse</span><span class="w"> </span>/<span class="w"> </span>http://localhost:8080/<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>port
+
+<span class="w">        </span><span class="nb">SSLCertificateFile</span><span class="w"> </span><span class="sx">/etc/letsencrypt/live/mydomain.de/fullchain.pem</span><span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain/path
+<span class="w">        </span><span class="nb">SSLCertificateKeyFile</span><span class="w"> </span><span class="sx">/etc/letsencrypt/live/mydomain.de/privkey.pem</span><span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>domain/path
+<span class="w">        </span><span class="nb">Include</span><span class="w"> </span><span class="sx">/etc/letsencrypt/options-ssl-apache.conf</span>
+
+<span class="w">        </span><span class="nb">ErrorLog</span><span class="w"> </span>${APACHE_LOG_DIR}/recipes_error.log
+<span class="w">        </span><span class="nb">CustomLog</span><span class="w"> </span>${APACHE_LOG_DIR}/recipes_access.log<span class="w"> </span>combined
+<span class="w">    </span><span class="nt">&lt;/VirtualHost&gt;</span>
+<span class="nt">&lt;/IfModule&gt;</span>
+</code></pre></div>
+<p>If you're having issues with the example configuration above, you can try <a href="https://github.com/TandoorRecipes/recipes/issues/1312#issuecomment-1015252663">beedaddy</a>'s example config.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don't forget to <a href="#docker-compose">download and configure</a> your <code>.env</code> file!</p>
+</div>
+<h4 id="others"><strong>Others</strong></h4>
+<p>If you use none of the above mentioned reverse proxies or want to use an existing one on your host machine (like a local nginx or Caddy), simply use the <a href="#plain">Plain</a> setup above and change the outbound port to one of your liking.</p>
+<p>An example port config (inside the respective docker-compose.yml) would be: <code>8123:80</code> instead of the <code>80:80</code> or if you want to be sure, that Tandoor is <strong>just</strong> accessible via your proxy and don't wanna bother with your firewall, then <code>127.0.0.1:8123:80</code> is a viable option too.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don't forget to <a href="#docker-compose">download and configure</a> your <code>.env</code> file!</p>
+</div>
+<h2 id="additional-information"><strong>Additional Information</strong></h2>
+<h3 id="nginx-vs-gunicorn"><strong>Nginx vs Gunicorn</strong></h3>
+<p>All examples use an additional <code>nginx</code> container to serve mediafiles and act as the forward facing webserver.
+This is <strong>technically not required</strong> but <strong>very much recommended</strong>.</p>
+<p>I do not 100% understand the deep technical details but the <a href="https://serverfault.com/questions/331256/why-do-i-need-nginx-and-something-like-gunicorn/331263#331263">developers of gunicorn</a>,
+the WSGi server that handles the Python execution, explicitly state that it is not recommended to deploy without nginx.
+You will also likely not see any decrease in performance or a lot of space used as nginx is a very light container.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Even if you run behind a reverse proxy as described above, using an additional nginx container is the recommended option.</p>
+</div>
+<p>If you run a small private deployment and don't care about performance, security and whatever else feel free to run
+without a nginx container.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When running without nginx make sure to enable <code>GUNICORN_MEDIA</code> in the <code>.env</code>. Without it, media files will be uploaded
+but not shown on the page.</p>
+</div>
+<p>For additional information please refer to the <a href="https://github.com/vabene1111/recipes/releases?after=0.9.0">0.9.0 Release</a>
+and <a href="https://github.com/vabene1111/recipes/issues/201">Issue 201</a> where these topics have been discussed.
+See also refer to the <a href="https://docs.gunicorn.org/en/stable/deploy.html">official gunicorn docs</a>.</p>
+<h3 id="nginx-config"><strong>Nginx Config</strong></h3>
+<p>In order to give the user (you) the greatest amount of freedom when choosing how to deploy this application the
+webserver is not directly bundled with the Docker image.</p>
+<p>This has the downside that it is difficult to supply the configuration to the webserver (e.g. nginx). Up until
+version <code>0.13.0</code>, this had to be done manually by downloading the nginx config file and placing it in a directory that
+was then mounted into the nginx container.</p>
+<p>From version <code>0.13.0</code>, the config file is supplied using the application image (<code>vabene1111/recipes</code>). It is then mounted
+to the host system and from there into the nginx container.</p>
+<p>This is not really a clean solution, but I could not find any better alternative that provided the same amount of
+usability. If you know of any better way, feel free to open an issue.</p>
+<h3 id="volumes-vs-bind-mounts"><strong>Volumes vs Bind Mounts</strong></h3>
+<p>Since I personally prefer to have my data where my <code>docker-compose.yml</code> resides, bind mounts are used in the example
+configuration files for all user generated data (e.g. Postgresql and media files).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please note that <a href="https://docs.docker.com/storage/volumes/">there is a difference in functionality</a>
+between the two and you cannot always simply interchange them.</p>
+</div>
+<p>You can move everything to volumes if you prefer it this way, <strong>but you cannot convert the nginx config file to a bind
+mount.</strong>
+If you do so you will have to manually create the nginx config file and restart the container once after creating it.</p>
+<h3 id="required-headers"><strong>Required Headers</strong></h3>
+<p>Please be sure to supply all required headers in your nginx/Apache/Caddy/... configuration!</p>
+<p>nginx:
+<div class="highlight"><pre><span></span><code><span class="k">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$http_host</span><span class="p">;</span><span class="w"> </span><span class="c1"># try $host instead if this doesn&#39;t work</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8080</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace port</span>
+<span class="w">    </span><span class="kn">proxy_redirect</span><span class="w"> </span><span class="s">http://127.0.0.1:8080</span><span class="w"> </span><span class="s">https://recipes.domain.tld</span><span class="p">;</span><span class="w"> </span><span class="c1"># replace port and domain</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p>Apache:
+<div class="highlight"><pre><span></span><code><span class="nb">RequestHeader</span><span class="w"> </span>set<span class="w"> </span>X-Forwarded-Proto<span class="w"> </span><span class="s2">&quot;https&quot;</span>
+<span class="nb">Header</span><span class="w"> </span>always<span class="w"> </span>set<span class="w"> </span>Access-Control-Allow-Origin<span class="w"> </span><span class="s2">&quot;*&quot;</span>
+
+<span class="nb">ProxyPreserveHost</span><span class="w">  </span><span class="k">On</span>
+<span class="nb">ProxyRequests</span><span class="w"> </span><span class="k">Off</span>
+<span class="nb">ProxyPass</span><span class="w"> </span>/<span class="w"> </span>http://localhost:8080/<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>port
+<span class="nb">ProxyPassReverse</span><span class="w"> </span>/<span class="w"> </span>http://localhost:8080/<span class="w"> </span>#<span class="w"> </span>replace<span class="w"> </span>port
+</code></pre></div></p>
+<h3 id="setup-issues-on-raspberry-pi"><strong>Setup issues on Raspberry Pi</strong></h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Always wait at least 2-3 minutes after the very first start, since migrations will take some time!</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>In the past there was a special <code>*-raspi</code> version of the image. This no longer exists. The normal Tags all support Arm/v7 architectures which should work on all Raspberry Pi's above Version 1 and the first generation Zero. 
+See <a href="https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications">Wikipedia Raspberry Pi specifications</a>.</p>
+</div>
+<p>If you're having issues with installing Tandoor on your Raspberry Pi or similar device,
+follow these instructions:</p>
+<ul>
+<li>Stop all Tandoor containers (<code>docker-compose down</code>)</li>
+<li>Delete local database folder (usually 'postgresql' in the same folder as your 'docker-compose.yml' file)</li>
+<li>Start Tandoor containers again (<code>docker-compose up -d</code>)</li>
+<li>Wait for at least 2-3 minutes and then check if everything is working now (migrations can take quite some time!)</li>
+<li>If not, check logs of the web_recipes container with <code>docker logs &lt;container_name&gt;</code> and make sure that all migrations are indeed already done</li>
+</ul>
+<h3 id="sub-path-nginx-config">Sub Path nginx config</h3>
+<p>If hosting under a sub-path you might want to change the default nginx config (which gets mounted through the named volume from the application container into the nginx container)
+with the following config.</p>
+<div class="highlight"><pre><span></span><code><span class="k">location</span><span class="w"> </span><span class="s">/my_app</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1"># change to subfolder name</span>
+<span class="w">    </span><span class="kn">include</span><span class="w"> </span><span class="s">/config/nginx/proxy.conf</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">https://mywebapp.com/</span><span class="p">;</span><span class="w"> </span><span class="c1"># change to your host name:port</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w"> </span><span class="nv">$host</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w"> </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">proxy_set_header</span><span class="w"> </span><span class="s">X-Script-Name</span><span class="w"> </span><span class="s">/my_app</span><span class="p">;</span><span class="w"> </span><span class="c1"># change to subfolder name</span>
+<span class="w">    </span><span class="kn">proxy_cookie_path</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="s">/my_app</span><span class="p">;</span><span class="w"> </span><span class="c1"># change to subfolder name</span>
+<span class="p">}</span>
+
+<span class="k">location</span><span class="w"> </span><span class="s">/media/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">include</span><span class="w"> </span><span class="s">/config/nginx/proxy.conf</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">alias</span><span class="w"> </span><span class="s">/mediafiles/</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">client_max_body_size</span><span class="w"> </span><span class="s">16M</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">location</span><span class="w"> </span><span class="s">/static/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">include</span><span class="w"> </span><span class="s">/config/nginx/proxy.conf</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">alias</span><span class="w"> </span><span class="s">/staticfiles/</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">client_max_body_size</span><span class="w"> </span><span class="s">16M</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
