@@ -56,7 +56,16 @@
             </v-col>
         </v-row>
 
-        <v-row v-if="recipes.length > 0">
+        <v-row>
+            <v-col>
+                <v-btn-toggle class="float-right" v-model="viewMode">
+                    <v-btn value="table" density="compact"><i class="fa-solid fa-list"></i></v-btn>
+                    <v-btn value="grid" density="compact"><i class="fa-solid fa-border-all"></i></v-btn>
+                </v-btn-toggle>
+            </v-col>
+        </v-row>
+
+        <v-row v-if="recipes.length > 0 && viewMode == 'table'">
             <v-col>
                 <v-card>
                     <v-data-table-server
@@ -85,6 +94,20 @@
                 </v-card>
             </v-col>
         </v-row>
+
+        <template v-if="recipes.length > 0 && viewMode == 'grid'">
+            <v-row>
+                <v-col md="4" v-for="r in recipes" :key="r.id">
+                    <recipe-card :recipe="r"></recipe-card>
+                </v-col>
+
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-pagination v-model="urlSearchParams.page" :length="tableItemCount" @update:modelValue="searchRecipes({page: urlSearchParams.page})"></v-pagination>
+                </v-col>
+            </v-row>
+        </template>
 
         <v-dialog v-model="dialog">
             <v-card>
@@ -115,6 +138,7 @@ import {useRouter} from "vue-router";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import RecipeCard from "@/components/display/RecipeCard.vue";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -123,6 +147,7 @@ const urlSearchParams = useUrlSearchParams('history', {})
 const loading = ref(false)
 const dialog = ref(false)
 const panel = ref('')
+const viewMode = ref('table')
 
 const tableHeaders = [
     {title: t('Image'), width: '1%', noBreak: true, key: 'image',},
