@@ -236,6 +236,7 @@ import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.v
 import {DateTime} from "luxon";
 import MealPlanEditor from "@/components/model_editors/MealPlanEditor.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {onBeforeRouteLeave} from "vue-router";
 
 const {t} = useI18n()
 
@@ -325,6 +326,13 @@ function autoSyncLoop() {
         autoSyncLoop()
     }, timeout)
 }
+
+/**
+ * cancel auto sync loop before leaving to another page
+ */
+onBeforeRouteLeave(() => {
+    clearTimeout(useShoppingStore().autoSyncTimeoutId)
+})
 
 /**
  * delete shopping list recipe
