@@ -92,6 +92,12 @@ export interface PatchedShoppingListEntry {
     checked?: boolean;
     /**
      * 
+     * @type {number}
+     * @memberof PatchedShoppingListEntry
+     */
+    ingredient?: number | null;
+    /**
+     * 
      * @type {ShoppingListRecipe}
      * @memberof PatchedShoppingListEntry
      */
@@ -158,6 +164,7 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
         'amount': json['amount'] == null ? undefined : json['amount'],
         'order': json['order'] == null ? undefined : json['order'],
         'checked': json['checked'] == null ? undefined : json['checked'],
+        'ingredient': json['ingredient'] == null ? undefined : json['ingredient'],
         'listRecipeData': json['list_recipe_data'] == null ? undefined : ShoppingListRecipeFromJSON(json['list_recipe_data']),
         'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
@@ -186,6 +193,7 @@ export function PatchedShoppingListEntryToJSONTyped(value?: Omit<PatchedShopping
         'amount': value['amount'],
         'order': value['order'],
         'checked': value['checked'],
+        'ingredient': value['ingredient'],
         'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
         'mealplan_id': value['mealplanId'],

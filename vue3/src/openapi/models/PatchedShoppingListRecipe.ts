@@ -20,6 +20,13 @@ import {
     MealPlanToJSON,
     MealPlanToJSONTyped,
 } from './MealPlan';
+import type { User } from './User';
+import {
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+    UserToJSONTyped,
+} from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
@@ -76,6 +83,12 @@ export interface PatchedShoppingListRecipe {
      * @memberof PatchedShoppingListRecipe
      */
     servings?: number;
+    /**
+     * 
+     * @type {User}
+     * @memberof PatchedShoppingListRecipe
+     */
+    readonly createdBy?: User;
 }
 
 /**
@@ -102,6 +115,7 @@ export function PatchedShoppingListRecipeFromJSONTyped(json: any, ignoreDiscrimi
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'mealPlanData': json['meal_plan_data'] == null ? undefined : MealPlanFromJSON(json['meal_plan_data']),
         'servings': json['servings'] == null ? undefined : json['servings'],
+        'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
     };
 }
 
@@ -109,7 +123,7 @@ export function PatchedShoppingListRecipeToJSON(json: any): PatchedShoppingListR
     return PatchedShoppingListRecipeToJSONTyped(json, false);
 }
 
-export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedShoppingListRecipeToJSONTyped(value?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

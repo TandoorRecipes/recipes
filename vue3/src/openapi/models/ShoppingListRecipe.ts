@@ -20,6 +20,13 @@ import {
     MealPlanToJSON,
     MealPlanToJSONTyped,
 } from './MealPlan';
+import type { User } from './User';
+import {
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+    UserToJSONTyped,
+} from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
@@ -76,6 +83,12 @@ export interface ShoppingListRecipe {
      * @memberof ShoppingListRecipe
      */
     servings: number;
+    /**
+     * 
+     * @type {User}
+     * @memberof ShoppingListRecipe
+     */
+    readonly createdBy: User;
 }
 
 /**
@@ -85,6 +98,7 @@ export function instanceOfShoppingListRecipe(value: object): value is ShoppingLi
     if (!('recipeData' in value) || value['recipeData'] === undefined) return false;
     if (!('mealPlanData' in value) || value['mealPlanData'] === undefined) return false;
     if (!('servings' in value) || value['servings'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -105,6 +119,7 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'mealPlanData': MealPlanFromJSON(json['meal_plan_data']),
         'servings': json['servings'],
+        'createdBy': UserFromJSON(json['created_by']),
     };
 }
 
@@ -112,7 +127,7 @@ export function ShoppingListRecipeToJSON(json: any): ShoppingListRecipe {
     return ShoppingListRecipeToJSONTyped(json, false);
 }
 
-export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'> | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

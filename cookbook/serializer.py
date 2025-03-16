@@ -1245,7 +1245,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         validated_data['created_by'] = self.context['request'].user
 
         if 'mealplan_id' in validated_data:
-            if existing_slr := ShoppingListRecipe.objects.filter(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space).get():
+            if existing_slr := ShoppingListRecipe.objects.filter(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space).first():
                 validated_data['list_recipe'] = existing_slr
             else:
                 validated_data['list_recipe'] = ShoppingListRecipe.objects.create(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space, created_by=self.context['request'].user)
@@ -1271,7 +1271,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     class Meta:
         model = ShoppingListEntry
         fields = (
-            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked',
+            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked', 'ingredient',
             'list_recipe_data', 'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until', 'mealplan_id'
         )
         read_only_fields = ('id', 'created_by', 'created_at')

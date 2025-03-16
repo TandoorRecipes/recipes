@@ -92,6 +92,12 @@ export interface ShoppingListEntry {
     checked?: boolean;
     /**
      * 
+     * @type {number}
+     * @memberof ShoppingListEntry
+     */
+    ingredient?: number | null;
+    /**
+     * 
      * @type {ShoppingListRecipe}
      * @memberof ShoppingListEntry
      */
@@ -164,6 +170,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'amount': json['amount'],
         'order': json['order'] == null ? undefined : json['order'],
         'checked': json['checked'] == null ? undefined : json['checked'],
+        'ingredient': json['ingredient'] == null ? undefined : json['ingredient'],
         'listRecipeData': ShoppingListRecipeFromJSON(json['list_recipe_data']),
         'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
@@ -192,6 +199,7 @@ export function ShoppingListEntryToJSONTyped(value?: Omit<ShoppingListEntry, 'li
         'amount': value['amount'],
         'order': value['order'],
         'checked': value['checked'],
+        'ingredient': value['ingredient'],
         'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
         'mealplan_id': value['mealplanId'],

@@ -1282,7 +1282,7 @@ export interface ApiShoppingListRecipeBulkCreateEntriesCreateRequest {
 }
 
 export interface ApiShoppingListRecipeCreateRequest {
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'>;
 }
 
 export interface ApiShoppingListRecipeDestroyRequest {
@@ -1297,7 +1297,7 @@ export interface ApiShoppingListRecipeListRequest {
 
 export interface ApiShoppingListRecipePartialUpdateRequest {
     id: number;
-    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'>;
+    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'>;
 }
 
 export interface ApiShoppingListRecipeRetrieveRequest {
@@ -1306,7 +1306,7 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'>;
 }
 
 export interface ApiSpaceListRequest {

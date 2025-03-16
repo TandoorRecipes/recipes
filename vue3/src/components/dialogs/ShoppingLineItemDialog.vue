@@ -11,7 +11,7 @@
                 <v-row>
                     <v-col class="pr-0">
                         <v-btn height="80px" color="info" density="compact" size="small" block stacked
-                               @click="useShoppingStore().delayEntries(entriesList, !isShoppingLineDelayed, true); ">
+                               @click="useShoppingStore().delayEntries(entriesList, !isShoppingLineDelayed, true); showDialog=false">
                             <i class="fa-solid fa-clock-rotate-left fa-2x mb-2"></i>
                             <span v-if="!isShoppingLineDelayed">{{ $t('ShopLater') }}</span>
                             <span v-if="isShoppingLineDelayed">{{ $t('ShopNow') }}</span>
@@ -78,26 +78,26 @@
                             </v-list-item-subtitle>
 
                             <v-btn-group divided border>
-                                <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)" v-if="!e.listRecipeData">
+                                <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)" v-if="!e.ingredient">
                                     <v-icon icon="fa-solid fa-divide"></v-icon>
                                 </v-btn>
-                                <v-btn icon="" @click="e.amount--; updateEntryAmount(e)" v-if="!e.listRecipeData">
+                                <v-btn icon="" @click="e.amount--; updateEntryAmount(e)" v-if="!e.ingredient">
                                     <v-icon icon="fa-solid fa-minus"></v-icon>
                                 </v-btn>
-                                <v-btn icon="" @click="e.amount++; updateEntryAmount(e)" v-if="!e.listRecipeData">
+                                <v-btn icon="" @click="e.amount++; updateEntryAmount(e)" v-if="!e.ingredient">
                                     <v-icon icon="fa-solid fa-plus"></v-icon>
                                 </v-btn>
 
-                                <v-btn icon="" @click="e.amount = e.amount * 2; updateEntryAmount(e)" v-if="!e.listRecipeData">
+                                <v-btn icon="" @click="e.amount = e.amount * 2; updateEntryAmount(e)" v-if="!e.ingredient">
                                     <v-icon icon="fa-solid fa-times"></v-icon>
                                 </v-btn>
-                                <v-btn color="edit" icon="$edit" v-if="!e.listRecipeData">
+                                <v-btn color="edit" icon="$edit" v-if="!e.ingredient">
                                     <v-icon icon="$edit"></v-icon>
                                     <model-edit-dialog model="ShoppingListEntry" :item="e"
                                                        @delete="useShoppingStore().entries.delete(e.id!); shoppingListFood.entries.delete(e.id!)"
                                                        @save="(args: ShoppingListEntry) => { useShoppingStore().entries.set(e.id!, args); shoppingListFood.entries.set(e.id!, args) }"></model-edit-dialog>
                                 </v-btn>
-                                <v-btn color="edit" icon="$recipes" v-if="e.listRecipe && e.listRecipeData.recipe"
+                                <v-btn color="edit" icon="$recipes" v-if="e.listRecipe && e.listRecipeData.recipe && e.ingredient"
                                        :to="{name: 'view_recipe', params: {id: e.listRecipeData.recipe}}">
                                     <v-icon icon="$recipes"></v-icon>
                                 </v-btn>
