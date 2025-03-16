@@ -72,6 +72,52 @@
             </v-card>
         </template>
 
+
+        <v-expansion-panels class="mt-2">
+            <v-expansion-panel>
+                <v-expansion-panel-title><i class="fa-solid fa-circle-info me-2"></i> {{ $t('Information') }}</v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <v-row>
+                        <v-col cols="12" md="3">
+                            <v-card
+                                variant="outlined"
+                                :title="$t('CreatedBy')"
+                                :subtitle="recipe.createdBy.displayName"
+                                prepend-icon="fa-solid fa-user">
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12" md="3">
+                            <v-card
+                                variant="outlined"
+                                :title="$t('Created')"
+                                :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
+                                prepend-icon="$create">
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12" md="3">
+                            <v-card
+                                variant="outlined"
+                                :title="$t('Updated')"
+                                :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
+                                prepend-icon="$edit">
+                            </v-card>
+                        </v-col>
+                        <v-col cols="12" md="3" v-if="recipe.sourceUrl">
+                            <v-card
+                                variant="outlined"
+                                :title="$t('Imported_From')"
+                                prepend-icon="$import">
+                                <template #subtitle>
+                                    <a :href="recipe.sourceUrl" target="_blank">{{ recipe.sourceUrl }}</a>
+                                </template>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+
+        </v-expansion-panels>
+
         <recipe-activity :recipe="recipe"></recipe-activity>
     </template>
 </template>
@@ -89,6 +135,8 @@ import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 import {useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
+import IngredientsTable from "@/components/display/IngredientsTable.vue";
+import {DateTime} from "luxon";
 
 const {request, release} = useWakeLock()
 

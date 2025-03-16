@@ -82,7 +82,8 @@ export default createVuetify({
             mealplan: 'fa-solid fa-calendar-days',
             recipes: 'fa-solid fa-book',
             books: 'fa-solid fa-book-bookmark',
-            menu: 'fa-solid fa-ellipsis-vertical'
+            menu: 'fa-solid fa-ellipsis-vertical',
+            import: 'fa-solid fa-globe'
         },
         sets: {
             fa,
