@@ -31,7 +31,7 @@
                             <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                         </v-list-item>
                         <v-divider></v-divider>
-                        <v-list-item :to="{ name: 'view_settings', params: {} }">
+                        <v-list-item :to="{ name: 'SettingsPage', params: {} }">
                             <template #prepend>
                                 <v-icon icon="fa-solid fa-sliders"></v-icon>
                             </template>
@@ -90,7 +90,7 @@
         <v-app-bar color="warning" density="compact" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
             <p class="text-center w-100">
                 {{ $t('SpaceLimitExceeded') }}
-                <v-btn color="success" variant="flat" :to="{name: 'view_settings_space'}">{{ $t('SpaceSettings') }}</v-btn>
+                <v-btn color="success" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
             </p>
         </v-app-bar>
 
@@ -106,7 +106,7 @@
 
         <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated">
             <v-list nav>
-                <v-list-item :to="{ name: 'view_settings', params: {} }">
+                <v-list-item :to="{ name: 'SettingsPage', params: {} }">
                     <template #prepend>
                         <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
                     </template>
@@ -115,8 +115,8 @@
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item prepend-icon="$recipes" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="$mealplan" :title="$t('Meal_Plan')" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="$shopping" :title="$t('Shopping_list')" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="$mealplan" :title="$t('Meal_Plan')" :to="{ name: 'MealPlanPage', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="$shopping" :title="$t('Shopping_list')" :to="{ name: 'ShoppingListPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="$books" :title="$t('Books')" :to="{ name: 'BooksPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'ModelListPage', params: {model: 'food'} }"></v-list-item>
@@ -127,7 +127,7 @@
 
             <template #append>
                 <v-list nav>
-                    <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'view_settings', params: {} }"></v-list-item>
+                    <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'SettingsPage', params: {} }"></v-list-item>
                     <v-list-item prepend-icon="fa-solid fa-heart" href="https://tandoor.dev" target="_blank">
                         Tandoor {{ useUserPreferenceStore().serverSettings.version }}
                     </v-list-item>
@@ -153,7 +153,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <v-list-item prepend-icon="fa-solid fa-sliders" :to="{ name: 'view_settings', params: {} }" :title="$t('Settings')"></v-list-item>
+                        <v-list-item prepend-icon="fa-solid fa-sliders" :to="{ name: 'SettingsPage', params: {} }" :title="$t('Settings')"></v-list-item>
                         <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
                         <v-list-item prepend-icon="fa-solid fa-folder-tree" :to="{ name: 'ModelListPage', params: {model: 'food'} }" :title="$t('Database')"></v-list-item>
                     </v-list>
@@ -180,6 +180,9 @@ import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerCo
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted, ref} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
+import SpaceSettings from "@/components/settings/SpaceSettings.vue";
+import SettingsPage from "@/pages/SettingsPage.vue";
+import MealPlanPage from "@/pages/MealPlanPage.vue";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()

@@ -199,7 +199,7 @@ function reset() {
 }
 
 function handleRowClick(event: PointerEvent, data: any) {
-    router.push({name: 'view_recipe', params: {id: recipes.value[data.index].id}})
+    router.push({name: 'RecipeViewPage', params: {id: recipes.value[data.index].id}})
 }
 
 /**

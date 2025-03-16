@@ -51,7 +51,7 @@
 
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="dialog=false"  :to="{name: 'view_search'}" variant="plain" prepend-icon="$search">{{ $t('Advanced') }}</v-btn>
+                <v-btn @click="dialog=false"  :to="{name: 'SearchPage'}" variant="plain" prepend-icon="$search">{{ $t('Advanced') }}</v-btn>
                 <v-btn @click="dialog=false" variant="plain">{{ $t('Close') }}</v-btn>
             </v-card-actions>
         </v-card>
@@ -71,6 +71,7 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useDebounceFn} from "@vueuse/core";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
+import SearchPage from "@/pages/SearchPage.vue";
 
 const router = useRouter()
 const {mobile} = useDisplay()
@@ -218,11 +219,11 @@ function goToSelectedRecipe(index: number) {
     let searchResult = searchResults.value[index]
 
     if (searchResult.type == 'link_advanced_search') {
-        router.push({name: 'view_search', query: {'query': searchQuery.value}})
+        router.push({name: 'SearchPage', query: {'query': searchQuery.value}})
     } else {
         console.log('going to', searchResult.recipeId)
         if (searchResult.recipeId != null) {
-            router.push({name: 'view_recipe', params: {'id': searchResult.recipeId}})
+            router.push({name: 'RecipeViewPage', params: {'id': searchResult.recipeId}})
         }
     }
 

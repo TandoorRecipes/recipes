@@ -136,7 +136,7 @@ onMounted(() => {
 
 function clickMealPlan(plan: MealPlan){
     if(plan.recipe){
-        router.push( {name: 'view_recipe', params: {id: plan.recipe.id}})
+        router.push( {name: 'RecipeViewPage', params: {id: plan.recipe.id}})
     }
 }
 

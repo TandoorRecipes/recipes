@@ -1,14 +1,14 @@
 <template>
     <template v-if="!props.loading">
 
-        <router-link :to="{name: 'view_recipe', params: {id: props.recipe.id}}">
+        <router-link :to="{name: 'RecipeViewPage', params: {id: props.recipe.id}}">
             <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
 
             </recipe-image>
         </router-link>
         <div class="ml-3">
             <div class="d-flex ">
-                <div class="flex-grow-1 cursor-pointer" @click="router.push({name: 'view_recipe', params: {id: props.recipe.id}})">
+                <div class="flex-grow-1 cursor-pointer" @click="router.push({name: 'RecipeViewPage', params: {id: props.recipe.id}})">
                     <p class="font-weight-bold mt-2">{{ props.recipe.name }}</p>
                 </div>
                 <div class="mt-1">

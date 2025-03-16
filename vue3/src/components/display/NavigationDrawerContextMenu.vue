@@ -11,7 +11,7 @@
         </v-list-item>
     </template>
 
-    <template v-if="route.name == 'view_mealplan'">
+    <template v-if="route.name == 'MealPlanPage'">
         <v-divider></v-divider>
         <v-list-subheader>{{$t('Settings')}}</v-list-subheader>
         <v-list-item>

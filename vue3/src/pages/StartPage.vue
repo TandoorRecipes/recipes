@@ -23,7 +23,7 @@
 
         <v-row>
             <v-col class="text-center">
-                <v-btn size="x-large" rounded="xl" prepend-icon="$search" variant="tonal" :to="{name: 'view_search', params: {query: ''}}">{{ $t('View_Recipes') }}</v-btn>
+                <v-btn size="x-large" rounded="xl" prepend-icon="$search" variant="tonal" :to="{name: 'SearchPage', params: {query: ''}}">{{ $t('View_Recipes') }}</v-btn>
             </v-col>
         </v-row>
 
@@ -36,6 +36,7 @@ import {onMounted, ref} from "vue"
 import {ApiApi} from "@/openapi"
 import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeWindow.vue"
 import HorizontalMealPlanWindow from "@/components/display/HorizontalMealPlanWindow.vue"
+import SearchPage from "@/pages/SearchPage.vue";
 
 const totalRecipes = ref(-1)
 

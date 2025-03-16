@@ -98,7 +98,7 @@
                                                        @save="(args: ShoppingListEntry) => { useShoppingStore().entries.set(e.id!, args); shoppingListFood.entries.set(e.id!, args) }"></model-edit-dialog>
                                 </v-btn>
                                 <v-btn color="edit" icon="$recipes" v-if="e.listRecipe && e.listRecipeData.recipe && e.ingredient"
-                                       :to="{name: 'view_recipe', params: {id: e.listRecipeData.recipe}}">
+                                       :to="{name: 'RecipeViewPage', params: {id: e.listRecipeData.recipe}}">
                                     <v-icon icon="$recipes"></v-icon>
                                 </v-btn>
                                 <v-btn icon="" @click="useShoppingStore().deleteObject(e, true); shoppingListFood.entries.delete(e.id!)" color="delete">

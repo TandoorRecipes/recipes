@@ -39,7 +39,7 @@
                                             <v-alert-title>{{ $t('Duplicate') }}</v-alert-title>
                                             {{ $t('DuplicateFoundInfo') }}
                                             <v-list>
-                                                <v-list-item :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }}
+                                                <v-list-item :to="{name: 'RecipeViewPage', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }}
                                                     (#{{ r.id }})
                                                 </v-list-item>
                                             </v-list>
@@ -294,7 +294,7 @@ function createRecipeFromImport() {
 
         api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
             updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
-                router.push({name: 'view_recipe', params: {id: recipe.id}})
+                router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
             })
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)

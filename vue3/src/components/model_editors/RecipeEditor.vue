@@ -110,7 +110,7 @@
         <v-card-text v-if="isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
             <v-alert color="warning" icon="fa-solid fa-triangle-exclamation">
                 {{$t('SpaceLimitReached')}}
-                <v-btn color="success" variant="flat" :to="{name: 'view_settings_space'}">{{ $t('SpaceSettings') }}</v-btn>
+                <v-btn color="success" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
             </v-alert>
         </v-card-text>
     </model-editor-base>
@@ -150,6 +150,7 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import SpaceSettings from "@/components/settings/SpaceSettings.vue";
 
 
 const props = defineProps({

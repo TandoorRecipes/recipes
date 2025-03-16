@@ -95,7 +95,7 @@
                 <template v-slot:expanded-row="{ columns, item }">
                     <tr>
                         <td :colspan="columns.length">
-                            <v-btn variant="outlined" color="secondary" target="_blank" :to="{name: 'view_recipe', params: {id: r.id}}" v-for="r in item.usedInRecipes">
+                            <v-btn variant="outlined" color="secondary" target="_blank" :to="{name: 'RecipeViewPage', params: {id: r.id}}" v-for="r in item.usedInRecipes">
                                 {{ r.name }} (#{{ r.id }})
                             </v-btn>
                         </td>

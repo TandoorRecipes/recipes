@@ -7,64 +7,41 @@ import App from './Tandoor.vue'
 import mavonEditor from 'mavon-editor'
 import 'vite/modulepreload-polyfill';
 import vuetify from "@/vuetify";
-import ShoppingListPage from "@/pages/ShoppingListPage.vue";
-import StartPage from "@/pages/StartPage.vue";
-import RecipeViewPage from "@/pages/RecipeViewPage.vue";
-import RecipeEditPage from "@/pages/RecipeEditPage.vue";
-import MealPlanPage from "@/pages/MealPlanPage.vue";
-import SearchPage from "@/pages/SearchPage.vue";
-import TestPage from "@/pages/TestPage.vue";
+
 import {setupI18n} from "@/i18n";
-import SettingsPage from "@/pages/SettingsPage.vue";
-import AccountSettings from "@/components/settings/AccountSettings.vue";
-import CosmeticSettings from "@/components/settings/CosmeticSettings.vue";
-import ShoppingSettings from "@/components/settings/ShoppingSettings.vue";
-import MealPlanSettings from "@/components/settings/MealPlanSettings.vue";
-import SpaceSettings from "@/components/settings/SpaceSettings.vue";
-import SpaceMemberSettings from "@/components/settings/SpaceMemberSettings.vue";
-import UserSpaceSettings from "@/components/settings/UserSpaceSettings.vue";
-import ApiSettings from "@/components/settings/ApiSettings.vue";
-import ModelListPage from "@/pages/ModelListPage.vue";
-import ModelEditPage from "@/pages/ModelEditPage.vue";
-import RecipeImportPage from "@/pages/RecipeImportPage.vue";
-import IngredientEditorPage from "@/pages/IngredientEditorPage.vue";
-import BooksPage from "@/pages/BooksPage.vue";
-import BookViewPage from "@/pages/BookViewPage.vue";
 
 const routes = [
-    {path: '/', component: StartPage, name: 'view_home'},
+    {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'view_home'},
     {path: '/search', redirect: {name: 'view_home'}},
-    {path: '/test', component: TestPage, name: 'view_test'},
+    {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {
-        path: '/settings', component: SettingsPage, name: 'view_settings', redirect: '/settings/account',
+        path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',
         children: [
-            {path: 'account', component: AccountSettings, name: 'view_settings_account'},
-            {path: 'cosmetic', component: CosmeticSettings, name: 'view_settings_cosmetic'},
-            {path: 'shopping', component: ShoppingSettings, name: 'view_settings_shopping'},
-            {path: 'meal-plan', component: MealPlanSettings, name: 'view_settings_mealplan'},
-            {path: 'space', component: SpaceSettings, name: 'view_settings_space'},
-            {path: 'space-members', component: SpaceMemberSettings, name: 'view_settings_space_member'},
-            {path: 'user-space', component: UserSpaceSettings, name: 'view_settings_user_space'},
-            {path: 'api', component: ApiSettings, name: 'view_settings_api'},
+            {path: 'account', component: () => import("@/components/settings/AccountSettings.vue"), name: 'AccountSettings'},
+            {path: 'cosmetic', component: () => import("@/components/settings/CosmeticSettings.vue"), name: 'CosmeticSettings'},
+            {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings'},
+            {path: 'meal-plan', component: () => import("@/components/settings/MealPlanSettings.vue"), name: 'MealPlanSettings'},
+            {path: 'space', component: () => import("@/components/settings/SpaceSettings.vue"), name: 'SpaceSettings'},
+            {path: 'space-members', component: () => import("@/components/settings/SpaceMemberSettings.vue"), name: 'SpaceMemberSettings'},
+            {path: 'user-space', component: () => import("@/components/settings/UserSpaceSettings.vue"), name: 'UserSpaceSettings'},
+            {path: 'api', component: () => import("@/components/settings/ApiSettings.vue"), name: 'ApiSettings'},
         ]
     },
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
-    {path: '/advanced-search', component: SearchPage, name: 'view_search'},
-    {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
-    {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
-    {path: '/books', component: BooksPage, name: 'BooksPage'},
-    {path: '/book/:bookId', component: BookViewPage, name: 'BookViewPage', props: true},
-    {path: '/recipe/import', component: RecipeImportPage, name: 'RecipeImportPage'},
+    {path: '/advanced-search', component: () => import("@/pages/SearchPage.vue"), name: 'SearchPage'},
+    {path: '/shopping', component: () => import("@/pages/ShoppingListPage.vue"), name: 'ShoppingListPage'},
+    {path: '/mealplan', component: () => import("@/pages/MealPlanPage.vue"), name: 'MealPlanPage'},
+    {path: '/books', component: () => import("@/pages/BooksPage.vue"), name: 'BooksPage'},
+    {path: '/book/:bookId', component: () => import("@/pages/BookViewPage.vue"), name: 'BookViewPage', props: true},
+    {path: '/recipe/import', component: () => import("@/pages/RecipeImportPage.vue"), name: 'RecipeImportPage'},
 
-    {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
-    {path: '/view/recipe/:id', redirect: {name: 'view_recipe'}}, // old Tandoor v1 url pattern
+    {path: '/recipe/:id', component: () => import("@/pages/RecipeViewPage.vue"), name: 'RecipeViewPage', props: true},
+    {path: '/view/recipe/:id', redirect: {name: 'RecipeViewPage'}}, // old Tandoor v1 url pattern
 
-    {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
+    {path: '/list/:model?', component: () => import("@/pages/ModelListPage.vue"), props: true, name: 'ModelListPage'},
+    {path: '/edit/:model/:id?', component: () => import("@/pages/ModelListPage.vue"), props: true, name: 'ModelEditPage'},
 
-    {path: '/list/:model?', component: ModelListPage, props: true, name: 'ModelListPage'},
-    {path: '/edit/:model/:id?', component: ModelEditPage, props: true, name: 'ModelEditPage'},
-
-    {path: '/ingredient-editor', component: IngredientEditorPage, name: 'IngredientEditorPage'},
+    {path: '/ingredient-editor', component: () => import("@/pages/IngredientEditorPage.vue"), name: 'IngredientEditorPage'},
 ]
 
 const router = createRouter({
