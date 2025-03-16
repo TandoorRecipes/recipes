@@ -18,42 +18,36 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { UserPreferenceNavTextColorEnum } from './UserPreferenceNavTextColorEnum';
 import {
     UserPreferenceNavTextColorEnumFromJSON,
     UserPreferenceNavTextColorEnumFromJSONTyped,
     UserPreferenceNavTextColorEnumToJSON,
-    UserPreferenceNavTextColorEnumToJSONTyped,
 } from './UserPreferenceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { ThemeEnum } from './ThemeEnum';
 import {
     ThemeEnumFromJSON,
     ThemeEnumFromJSONTyped,
     ThemeEnumToJSON,
-    ThemeEnumToJSONTyped,
 } from './ThemeEnum';
 import type { DefaultPageEnum } from './DefaultPageEnum';
 import {
     DefaultPageEnumFromJSON,
     DefaultPageEnumFromJSONTyped,
     DefaultPageEnumToJSON,
-    DefaultPageEnumToJSONTyped,
 } from './DefaultPageEnum';
 
 /**
@@ -73,7 +67,7 @@ export interface UserPreference {
      * @type {UserFileView}
      * @memberof UserPreference
      */
-    image?: UserFileView | null;
+    image?: UserFileView;
     /**
      * 
      * @type {ThemeEnum}
@@ -127,7 +121,7 @@ export interface UserPreference {
      * @type {Array<User>}
      * @memberof UserPreference
      */
-    planShare?: Array<User> | null;
+    planShare?: Array<User>;
     /**
      * 
      * @type {boolean}
@@ -187,7 +181,7 @@ export interface UserPreference {
      * @type {Array<User>}
      * @memberof UserPreference
      */
-    shoppingShare?: Array<User> | null;
+    shoppingShare?: Array<User>;
     /**
      * 
      * @type {number}
@@ -237,8 +231,6 @@ export interface UserPreference {
      */
     readonly foodChildrenExist: boolean;
 }
-
-
 
 /**
  * Check if a given object implements the UserPreference interface.
@@ -292,15 +284,10 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UserPreferenceToJSON(json: any): UserPreference {
-    return UserPreferenceToJSONTyped(json, false);
-}
-
-export function UserPreferenceToJSONTyped(value?: Omit<UserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
+export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'foodInheritDefault'|'foodChildrenExist'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'image': UserFileViewToJSON(value['image']),

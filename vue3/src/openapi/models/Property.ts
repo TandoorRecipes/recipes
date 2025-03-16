@@ -18,7 +18,6 @@ import {
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
-    PropertyTypeToJSONTyped,
 } from './PropertyType';
 
 /**
@@ -106,15 +105,10 @@ export function PropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function PropertyToJSON(json: any): Property {
-    return PropertyToJSONTyped(json, false);
-}
-
-export function PropertyToJSONTyped(value?: Property | null, ignoreDiscriminator: boolean = false): any {
+export function PropertyToJSON(value?: Property | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

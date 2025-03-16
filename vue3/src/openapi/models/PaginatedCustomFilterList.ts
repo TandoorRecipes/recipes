@@ -18,7 +18,6 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
-    CustomFilterToJSONTyped,
 } from './CustomFilter';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedCustomFilterList {
      * @type {string}
      * @memberof PaginatedCustomFilterList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedCustomFilterList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<CustomFilter>}
@@ -86,15 +85,10 @@ export function PaginatedCustomFilterListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedCustomFilterListToJSON(json: any): PaginatedCustomFilterList {
-    return PaginatedCustomFilterListToJSONTyped(json, false);
-}
-
-export function PaginatedCustomFilterListToJSONTyped(value?: PaginatedCustomFilterList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedCustomFilterListToJSON(value?: PaginatedCustomFilterList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

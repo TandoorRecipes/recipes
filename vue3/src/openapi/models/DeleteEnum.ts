@@ -26,7 +26,7 @@ export type DeleteEnum = typeof DeleteEnum[keyof typeof DeleteEnum];
 export function instanceOfDeleteEnum(value: any): boolean {
     for (const key in DeleteEnum) {
         if (Object.prototype.hasOwnProperty.call(DeleteEnum, key)) {
-            if (DeleteEnum[key as keyof typeof DeleteEnum] === value) {
+            if (DeleteEnum[key] === value) {
                 return true;
             }
         }
@@ -44,9 +44,5 @@ export function DeleteEnumFromJSONTyped(json: any, ignoreDiscriminator: boolean)
 
 export function DeleteEnumToJSON(value?: DeleteEnum | null): any {
     return value as any;
-}
-
-export function DeleteEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): DeleteEnum {
-    return value as DeleteEnum;
 }
 

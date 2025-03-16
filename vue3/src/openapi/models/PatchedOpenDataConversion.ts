@@ -18,21 +18,18 @@ import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
-    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataFood } from './OpenDataFood';
 import {
     OpenDataFoodFromJSON,
     OpenDataFoodFromJSONTyped,
     OpenDataFoodToJSON,
-    OpenDataFoodToJSONTyped,
 } from './OpenDataFood';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -140,15 +137,10 @@ export function PatchedOpenDataConversionFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PatchedOpenDataConversionToJSON(json: any): PatchedOpenDataConversion {
-    return PatchedOpenDataConversionToJSONTyped(json, false);
-}
-
-export function PatchedOpenDataConversionToJSONTyped(value?: Omit<PatchedOpenDataConversion, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedOpenDataConversionToJSON(value?: Omit<PatchedOpenDataConversion, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

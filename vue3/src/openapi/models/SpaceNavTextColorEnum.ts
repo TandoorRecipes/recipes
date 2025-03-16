@@ -30,7 +30,7 @@ export type SpaceNavTextColorEnum = typeof SpaceNavTextColorEnum[keyof typeof Sp
 export function instanceOfSpaceNavTextColorEnum(value: any): boolean {
     for (const key in SpaceNavTextColorEnum) {
         if (Object.prototype.hasOwnProperty.call(SpaceNavTextColorEnum, key)) {
-            if (SpaceNavTextColorEnum[key as keyof typeof SpaceNavTextColorEnum] === value) {
+            if (SpaceNavTextColorEnum[key] === value) {
                 return true;
             }
         }
@@ -48,9 +48,5 @@ export function SpaceNavTextColorEnumFromJSONTyped(json: any, ignoreDiscriminato
 
 export function SpaceNavTextColorEnumToJSON(value?: SpaceNavTextColorEnum | null): any {
     return value as any;
-}
-
-export function SpaceNavTextColorEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): SpaceNavTextColorEnum {
-    return value as SpaceNavTextColorEnum;
 }
 

@@ -24,7 +24,7 @@ export interface SourceImportKeyword {
      * @type {number}
      * @memberof SourceImportKeyword
      */
-    id?: number | null;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -72,15 +72,10 @@ export function SourceImportKeywordFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function SourceImportKeywordToJSON(json: any): SourceImportKeyword {
-    return SourceImportKeywordToJSONTyped(json, false);
-}
-
-export function SourceImportKeywordToJSONTyped(value?: SourceImportKeyword | null, ignoreDiscriminator: boolean = false): any {
+export function SourceImportKeywordToJSON(value?: SourceImportKeyword | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

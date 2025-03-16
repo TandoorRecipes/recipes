@@ -79,15 +79,10 @@ export function SyncLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function SyncLogToJSON(json: any): SyncLog {
-    return SyncLogToJSONTyped(json, false);
-}
-
-export function SyncLogToJSONTyped(value?: Omit<SyncLog, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function SyncLogToJSON(value?: Omit<SyncLog, 'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

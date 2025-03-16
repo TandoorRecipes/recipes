@@ -18,14 +18,12 @@ import {
     SourceImportDuplicateFromJSON,
     SourceImportDuplicateFromJSONTyped,
     SourceImportDuplicateToJSON,
-    SourceImportDuplicateToJSONTyped,
 } from './SourceImportDuplicate';
 import type { SourceImportRecipe } from './SourceImportRecipe';
 import {
     SourceImportRecipeFromJSON,
     SourceImportRecipeFromJSONTyped,
     SourceImportRecipeToJSON,
-    SourceImportRecipeToJSONTyped,
 } from './SourceImportRecipe';
 
 /**
@@ -91,15 +89,10 @@ export function RecipeFromSourceResponseFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function RecipeFromSourceResponseToJSON(json: any): RecipeFromSourceResponse {
-    return RecipeFromSourceResponseToJSONTyped(json, false);
-}
-
-export function RecipeFromSourceResponseToJSONTyped(value?: RecipeFromSourceResponse | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeFromSourceResponseToJSON(value?: RecipeFromSourceResponse | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'recipe': SourceImportRecipeToJSON(value['recipe']),

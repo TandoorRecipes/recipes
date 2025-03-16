@@ -90,15 +90,10 @@ export function GroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Gro
     };
 }
 
-export function GroupToJSON(json: any): Group {
-    return GroupToJSONTyped(json, false);
-}
-
-export function GroupToJSONTyped(value?: Group | null, ignoreDiscriminator: boolean = false): any {
+export function GroupToJSON(value?: Group | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

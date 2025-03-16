@@ -18,7 +18,6 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -62,7 +61,7 @@ export interface AutoMealPlan {
      * @type {Array<User>}
      * @memberof AutoMealPlan
      */
-    shared?: Array<User> | null;
+    shared?: Array<User>;
     /**
      * 
      * @type {boolean}
@@ -104,15 +103,10 @@ export function AutoMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function AutoMealPlanToJSON(json: any): AutoMealPlan {
-    return AutoMealPlanToJSONTyped(json, false);
-}
-
-export function AutoMealPlanToJSONTyped(value?: AutoMealPlan | null, ignoreDiscriminator: boolean = false): any {
+export function AutoMealPlanToJSON(value?: AutoMealPlan | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'start_date': ((value['startDate']).toISOString().substring(0,10)),

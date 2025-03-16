@@ -111,15 +111,10 @@ export function PatchedExportLogFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedExportLogToJSON(json: any): PatchedExportLog {
-    return PatchedExportLogToJSONTyped(json, false);
-}
-
-export function PatchedExportLogToJSONTyped(value?: Omit<PatchedExportLog, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedExportLogToJSON(value?: Omit<PatchedExportLog, 'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

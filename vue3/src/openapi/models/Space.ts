@@ -18,35 +18,30 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
 import {
     SpaceNavTextColorEnumFromJSON,
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
-    SpaceNavTextColorEnumToJSONTyped,
 } from './SpaceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { SpaceThemeEnum } from './SpaceThemeEnum';
 import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
-    SpaceThemeEnumToJSONTyped,
 } from './SpaceThemeEnum';
 
 /**
@@ -144,13 +139,13 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    image?: UserFileView | null;
+    image?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    navLogo?: UserFileView | null;
+    navLogo?: UserFileView;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -162,7 +157,7 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    customSpaceTheme?: UserFileView | null;
+    customSpaceTheme?: UserFileView;
     /**
      * 
      * @type {string}
@@ -180,46 +175,44 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor32?: UserFileView | null;
+    logoColor32?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor128?: UserFileView | null;
+    logoColor128?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor144?: UserFileView | null;
+    logoColor144?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor180?: UserFileView | null;
+    logoColor180?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor192?: UserFileView | null;
+    logoColor192?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor512?: UserFileView | null;
+    logoColor512?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColorSvg?: UserFileView | null;
+    logoColorSvg?: UserFileView;
 }
-
-
 
 /**
  * Check if a given object implements the Space interface.
@@ -279,15 +272,10 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
     };
 }
 
-export function SpaceToJSON(json: any): Space {
-    return SpaceToJSONTyped(json, false);
-}
-
-export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null, ignoreDiscriminator: boolean = false): any {
+export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

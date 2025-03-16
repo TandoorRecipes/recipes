@@ -18,7 +18,6 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    UnitToJSONTyped,
 } from './Unit';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedUnitList {
      * @type {string}
      * @memberof PaginatedUnitList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUnitList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Unit>}
@@ -86,15 +85,10 @@ export function PaginatedUnitListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedUnitListToJSON(json: any): PaginatedUnitList {
-    return PaginatedUnitListToJSONTyped(json, false);
-}
-
-export function PaginatedUnitListToJSONTyped(value?: PaginatedUnitList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedUnitListToJSON(value?: PaginatedUnitList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

@@ -18,42 +18,36 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    UnitToJSONTyped,
 } from './Unit';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
-    PropertyToJSONTyped,
 } from './Property';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { FoodSimple } from './FoodSimple';
 import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
-    FoodSimpleToJSONTyped,
 } from './FoodSimple';
 import type { RecipeSimple } from './RecipeSimple';
 import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
-    RecipeSimpleToJSONTyped,
 } from './RecipeSimple';
 
 /**
@@ -113,7 +107,7 @@ export interface PatchedFood {
      * @type {string}
      * @memberof PatchedFood
      */
-    pluralName?: string | null;
+    pluralName?: string;
     /**
      * 
      * @type {string}
@@ -131,19 +125,19 @@ export interface PatchedFood {
      * @type {RecipeSimple}
      * @memberof PatchedFood
      */
-    recipe?: RecipeSimple | null;
+    recipe?: RecipeSimple;
     /**
      * 
      * @type {string}
      * @memberof PatchedFood
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {Array<Property>}
      * @memberof PatchedFood
      */
-    properties?: Array<Property> | null;
+    properties?: Array<Property>;
     /**
      * 
      * @type {number}
@@ -155,25 +149,25 @@ export interface PatchedFood {
      * @type {Unit}
      * @memberof PatchedFood
      */
-    propertiesFoodUnit?: Unit | null;
+    propertiesFoodUnit?: Unit;
     /**
      * 
      * @type {number}
      * @memberof PatchedFood
      */
-    fdcId?: number | null;
+    fdcId?: number;
     /**
      * 
      * @type {boolean}
      * @memberof PatchedFood
      */
-    foodOnhand?: boolean | null;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategory}
      * @memberof PatchedFood
      */
-    supermarketCategory?: SupermarketCategory | null;
+    supermarketCategory?: SupermarketCategory;
     /**
      * 
      * @type {number}
@@ -191,7 +185,7 @@ export interface PatchedFood {
      * @type {Array<FoodInheritField>}
      * @memberof PatchedFood
      */
-    inheritFields?: Array<FoodInheritField> | null;
+    inheritFields?: Array<FoodInheritField>;
     /**
      * Returns a string representation of a tree node and it's ancestors,
      * e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -210,7 +204,7 @@ export interface PatchedFood {
      * @type {Array<FoodSimple>}
      * @memberof PatchedFood
      */
-    substitute?: Array<FoodSimple> | null;
+    substitute?: Array<FoodSimple>;
     /**
      * 
      * @type {boolean}
@@ -234,13 +228,13 @@ export interface PatchedFood {
      * @type {Array<FoodInheritField>}
      * @memberof PatchedFood
      */
-    childInheritFields?: Array<FoodInheritField> | null;
+    childInheritFields?: Array<FoodInheritField>;
     /**
      * 
      * @type {string}
      * @memberof PatchedFood
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
 }
 
 /**
@@ -287,15 +281,10 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedFoodToJSON(json: any): PatchedFood {
-    return PatchedFoodToJSONTyped(json, false);
-}
-
-export function PatchedFoodToJSONTyped(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

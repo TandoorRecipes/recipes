@@ -18,14 +18,12 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -69,13 +67,13 @@ export interface PatchedUserSpace {
      * @type {string}
      * @memberof PatchedUserSpace
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
      * @memberof PatchedUserSpace
      */
-    readonly inviteLink?: number | null;
+    readonly inviteLink?: number;
     /**
      * 
      * @type {Date}
@@ -119,15 +117,10 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedUserSpaceToJSON(json: any): PatchedUserSpace {
-    return PatchedUserSpaceToJSONTyped(json, false);
-}
-
-export function PatchedUserSpaceToJSONTyped(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

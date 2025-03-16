@@ -87,15 +87,10 @@ export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function AccessTokenToJSON(json: any): AccessToken {
-    return AccessTokenToJSONTyped(json, false);
-}
-
-export function AccessTokenToJSONTyped(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null, ignoreDiscriminator: boolean = false): any {
+export function AccessTokenToJSON(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

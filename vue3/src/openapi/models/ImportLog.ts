@@ -18,7 +18,6 @@ import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
-    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -116,15 +115,10 @@ export function ImportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ImportLogToJSON(json: any): ImportLog {
-    return ImportLogToJSONTyped(json, false);
-}
-
-export function ImportLogToJSONTyped(value?: Omit<ImportLog, 'keyword'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function ImportLogToJSON(value?: Omit<ImportLog, 'keyword'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

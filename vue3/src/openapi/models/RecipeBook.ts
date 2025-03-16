@@ -18,14 +18,12 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
-    CustomFilterToJSONTyped,
 } from './CustomFilter';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -69,7 +67,7 @@ export interface RecipeBook {
      * @type {CustomFilter}
      * @memberof RecipeBook
      */
-    filter?: CustomFilter | null;
+    filter?: CustomFilter;
     /**
      * 
      * @type {number}
@@ -108,15 +106,10 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeBookToJSON(json: any): RecipeBook {
-    return RecipeBookToJSONTyped(json, false);
-}
-
-export function RecipeBookToJSONTyped(value?: Omit<RecipeBook, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeBookToJSON(value?: Omit<RecipeBook, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

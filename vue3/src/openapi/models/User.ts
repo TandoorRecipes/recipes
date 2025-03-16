@@ -99,15 +99,10 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
     };
 }
 
-export function UserToJSON(json: any): User {
-    return UserToJSONTyped(json, false);
-}
-
-export function UserToJSONTyped(value?: Omit<User, 'username'|'display_name'> | null, ignoreDiscriminator: boolean = false): any {
+export function UserToJSON(value?: Omit<User, 'username'|'displayName'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

@@ -58,7 +58,7 @@ export type BaseUnitEnum = typeof BaseUnitEnum[keyof typeof BaseUnitEnum];
 export function instanceOfBaseUnitEnum(value: any): boolean {
     for (const key in BaseUnitEnum) {
         if (Object.prototype.hasOwnProperty.call(BaseUnitEnum, key)) {
-            if (BaseUnitEnum[key as keyof typeof BaseUnitEnum] === value) {
+            if (BaseUnitEnum[key] === value) {
                 return true;
             }
         }
@@ -76,9 +76,5 @@ export function BaseUnitEnumFromJSONTyped(json: any, ignoreDiscriminator: boolea
 
 export function BaseUnitEnumToJSON(value?: BaseUnitEnum | null): any {
     return value as any;
-}
-
-export function BaseUnitEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): BaseUnitEnum {
-    return value as BaseUnitEnum;
 }
 

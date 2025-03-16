@@ -18,14 +18,12 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
-    CustomFilterToJSONTyped,
 } from './CustomFilter';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -69,7 +67,7 @@ export interface PatchedRecipeBook {
      * @type {CustomFilter}
      * @memberof PatchedRecipeBook
      */
-    filter?: CustomFilter | null;
+    filter?: CustomFilter;
     /**
      * 
      * @type {number}
@@ -105,15 +103,10 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedRecipeBookToJSON(json: any): PatchedRecipeBook {
-    return PatchedRecipeBookToJSONTyped(json, false);
-}
-
-export function PatchedRecipeBookToJSONTyped(value?: Omit<PatchedRecipeBook, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

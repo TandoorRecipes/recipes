@@ -73,15 +73,10 @@ export function ParsedIngredientFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function ParsedIngredientToJSON(json: any): ParsedIngredient {
-    return ParsedIngredientToJSONTyped(json, false);
-}
-
-export function ParsedIngredientToJSONTyped(value?: ParsedIngredient | null, ignoreDiscriminator: boolean = false): any {
+export function ParsedIngredientToJSON(value?: ParsedIngredient | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'amount': value['amount'],

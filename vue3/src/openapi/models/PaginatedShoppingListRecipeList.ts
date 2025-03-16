@@ -18,7 +18,6 @@ import {
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeFromJSONTyped,
     ShoppingListRecipeToJSON,
-    ShoppingListRecipeToJSONTyped,
 } from './ShoppingListRecipe';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedShoppingListRecipeList {
      * @type {string}
      * @memberof PaginatedShoppingListRecipeList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedShoppingListRecipeList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<ShoppingListRecipe>}
@@ -86,15 +85,10 @@ export function PaginatedShoppingListRecipeListFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function PaginatedShoppingListRecipeListToJSON(json: any): PaginatedShoppingListRecipeList {
-    return PaginatedShoppingListRecipeListToJSONTyped(json, false);
-}
-
-export function PaginatedShoppingListRecipeListToJSONTyped(value?: PaginatedShoppingListRecipeList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedShoppingListRecipeListToJSON(value?: PaginatedShoppingListRecipeList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

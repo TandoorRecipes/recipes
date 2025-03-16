@@ -18,7 +18,6 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedSupermarketCategoryList {
      * @type {string}
      * @memberof PaginatedSupermarketCategoryList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketCategoryList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<SupermarketCategory>}
@@ -86,15 +85,10 @@ export function PaginatedSupermarketCategoryListFromJSONTyped(json: any, ignoreD
     };
 }
 
-export function PaginatedSupermarketCategoryListToJSON(json: any): PaginatedSupermarketCategoryList {
-    return PaginatedSupermarketCategoryListToJSONTyped(json, false);
-}
-
-export function PaginatedSupermarketCategoryListToJSONTyped(value?: PaginatedSupermarketCategoryList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedSupermarketCategoryListToJSON(value?: PaginatedSupermarketCategoryList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

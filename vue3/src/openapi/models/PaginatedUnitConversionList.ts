@@ -18,7 +18,6 @@ import {
     UnitConversionFromJSON,
     UnitConversionFromJSONTyped,
     UnitConversionToJSON,
-    UnitConversionToJSONTyped,
 } from './UnitConversion';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedUnitConversionList {
      * @type {string}
      * @memberof PaginatedUnitConversionList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUnitConversionList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<UnitConversion>}
@@ -86,15 +85,10 @@ export function PaginatedUnitConversionListFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function PaginatedUnitConversionListToJSON(json: any): PaginatedUnitConversionList {
-    return PaginatedUnitConversionListToJSONTyped(json, false);
-}
-
-export function PaginatedUnitConversionListToJSONTyped(value?: PaginatedUnitConversionList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedUnitConversionListToJSON(value?: PaginatedUnitConversionList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

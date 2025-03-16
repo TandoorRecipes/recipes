@@ -36,13 +36,13 @@ export interface PatchedPropertyType {
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    unit?: string | null;
+    unit?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {number}
@@ -54,13 +54,13 @@ export interface PatchedPropertyType {
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
     /**
      * 
      * @type {number}
      * @memberof PatchedPropertyType
      */
-    fdcId?: number | null;
+    fdcId?: number;
 }
 
 /**
@@ -90,15 +90,10 @@ export function PatchedPropertyTypeFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedPropertyTypeToJSON(json: any): PatchedPropertyType {
-    return PatchedPropertyTypeToJSONTyped(json, false);
-}
-
-export function PatchedPropertyTypeToJSONTyped(value?: PatchedPropertyType | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedPropertyTypeToJSON(value?: PatchedPropertyType | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

@@ -18,7 +18,6 @@ import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
-    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedKeywordList {
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Keyword>}
@@ -86,15 +85,10 @@ export function PaginatedKeywordListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedKeywordListToJSON(json: any): PaginatedKeywordList {
-    return PaginatedKeywordListToJSONTyped(json, false);
-}
-
-export function PaginatedKeywordListToJSONTyped(value?: PaginatedKeywordList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

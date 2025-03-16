@@ -18,7 +18,6 @@ import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedFoodList {
      * @type {string}
      * @memberof PaginatedFoodList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedFoodList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Food>}
@@ -86,15 +85,10 @@ export function PaginatedFoodListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedFoodListToJSON(json: any): PaginatedFoodList {
-    return PaginatedFoodListToJSONTyped(json, false);
-}
-
-export function PaginatedFoodListToJSONTyped(value?: PaginatedFoodList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedFoodListToJSON(value?: PaginatedFoodList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

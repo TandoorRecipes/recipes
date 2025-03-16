@@ -105,15 +105,10 @@ export function OpenDataVersionFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function OpenDataVersionToJSON(json: any): OpenDataVersion {
-    return OpenDataVersionToJSONTyped(json, false);
-}
-
-export function OpenDataVersionToJSONTyped(value?: OpenDataVersion | null, ignoreDiscriminator: boolean = false): any {
+export function OpenDataVersionToJSON(value?: OpenDataVersion | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

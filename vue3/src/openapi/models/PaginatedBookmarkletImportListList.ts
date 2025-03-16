@@ -18,7 +18,6 @@ import {
     BookmarkletImportListFromJSON,
     BookmarkletImportListFromJSONTyped,
     BookmarkletImportListToJSON,
-    BookmarkletImportListToJSONTyped,
 } from './BookmarkletImportList';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedBookmarkletImportListList {
      * @type {string}
      * @memberof PaginatedBookmarkletImportListList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedBookmarkletImportListList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<BookmarkletImportList>}
@@ -86,15 +85,10 @@ export function PaginatedBookmarkletImportListListFromJSONTyped(json: any, ignor
     };
 }
 
-export function PaginatedBookmarkletImportListListToJSON(json: any): PaginatedBookmarkletImportListList {
-    return PaginatedBookmarkletImportListListToJSONTyped(json, false);
-}
-
-export function PaginatedBookmarkletImportListListToJSONTyped(value?: PaginatedBookmarkletImportListList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedBookmarkletImportListListToJSON(value?: PaginatedBookmarkletImportListList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

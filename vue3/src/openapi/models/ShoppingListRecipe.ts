@@ -18,21 +18,18 @@ import {
     MealPlanFromJSON,
     MealPlanFromJSONTyped,
     MealPlanToJSON,
-    MealPlanToJSONTyped,
 } from './MealPlan';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
-    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -58,7 +55,7 @@ export interface ShoppingListRecipe {
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    recipe?: number | null;
+    recipe?: number;
     /**
      * 
      * @type {RecipeOverview}
@@ -70,7 +67,7 @@ export interface ShoppingListRecipe {
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    mealplan?: number | null;
+    mealplan?: number;
     /**
      * 
      * @type {MealPlan}
@@ -123,15 +120,10 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function ShoppingListRecipeToJSON(json: any): ShoppingListRecipe {
-    return ShoppingListRecipeToJSONTyped(json, false);
-}
-
-export function ShoppingListRecipeToJSONTyped(value?: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListRecipeToJSON(value?: Omit<ShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

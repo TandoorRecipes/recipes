@@ -18,7 +18,6 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-    GroupToJSONTyped,
 } from './Group';
 
 /**
@@ -62,7 +61,7 @@ export interface InviteLink {
      * @type {number}
      * @memberof InviteLink
      */
-    usedBy?: number | null;
+    usedBy?: number;
     /**
      * 
      * @type {boolean}
@@ -74,7 +73,7 @@ export interface InviteLink {
      * @type {string}
      * @memberof InviteLink
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
@@ -123,15 +122,10 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InviteLinkToJSON(json: any): InviteLink {
-    return InviteLinkToJSONTyped(json, false);
-}
-
-export function InviteLinkToJSONTyped(value?: Omit<InviteLink, 'uuid'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

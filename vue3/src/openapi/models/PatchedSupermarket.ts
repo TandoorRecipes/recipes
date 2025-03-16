@@ -18,7 +18,6 @@ import {
     SupermarketCategoryRelationFromJSON,
     SupermarketCategoryRelationFromJSONTyped,
     SupermarketCategoryRelationToJSON,
-    SupermarketCategoryRelationToJSONTyped,
 } from './SupermarketCategoryRelation';
 
 /**
@@ -78,7 +77,7 @@ export interface PatchedSupermarket {
      * @type {string}
      * @memberof PatchedSupermarket
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -90,7 +89,7 @@ export interface PatchedSupermarket {
      * @type {string}
      * @memberof PatchedSupermarket
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
 }
 
 /**
@@ -118,15 +117,10 @@ export function PatchedSupermarketFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedSupermarketToJSON(json: any): PatchedSupermarket {
-    return PatchedSupermarketToJSONTyped(json, false);
-}
-
-export function PatchedSupermarketToJSONTyped(value?: Omit<PatchedSupermarket, 'category_to_supermarket'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedSupermarketToJSON(value?: Omit<PatchedSupermarket, 'categoryToSupermarket'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

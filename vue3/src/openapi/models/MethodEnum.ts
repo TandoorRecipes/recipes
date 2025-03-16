@@ -30,7 +30,7 @@ export type MethodEnum = typeof MethodEnum[keyof typeof MethodEnum];
 export function instanceOfMethodEnum(value: any): boolean {
     for (const key in MethodEnum) {
         if (Object.prototype.hasOwnProperty.call(MethodEnum, key)) {
-            if (MethodEnum[key as keyof typeof MethodEnum] === value) {
+            if (MethodEnum[key] === value) {
                 return true;
             }
         }
@@ -48,9 +48,5 @@ export function MethodEnumFromJSONTyped(json: any, ignoreDiscriminator: boolean)
 
 export function MethodEnumToJSON(value?: MethodEnum | null): any {
     return value as any;
-}
-
-export function MethodEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): MethodEnum {
-    return value as MethodEnum;
 }
 

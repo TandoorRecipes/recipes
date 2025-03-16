@@ -18,7 +18,6 @@ import {
     AutomationTypeEnumFromJSON,
     AutomationTypeEnumFromJSONTyped,
     AutomationTypeEnumToJSON,
-    AutomationTypeEnumToJSONTyped,
 } from './AutomationTypeEnum';
 
 /**
@@ -50,25 +49,25 @@ export interface PatchedAutomation {
      * @type {string}
      * @memberof PatchedAutomation
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param1?: string | null;
+    param1?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param2?: string | null;
+    param2?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param3?: string | null;
+    param3?: string;
     /**
      * 
      * @type {number}
@@ -88,8 +87,6 @@ export interface PatchedAutomation {
      */
     readonly createdBy?: number;
 }
-
-
 
 /**
  * Check if a given object implements the PatchedAutomation interface.
@@ -121,15 +118,10 @@ export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedAutomationToJSON(json: any): PatchedAutomation {
-    return PatchedAutomationToJSONTyped(json, false);
-}
-
-export function PatchedAutomationToJSONTyped(value?: Omit<PatchedAutomation, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

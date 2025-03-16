@@ -30,7 +30,7 @@ export interface PatchedBookmarkletImport {
      * @type {string}
      * @memberof PatchedBookmarkletImport
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {string}
@@ -76,15 +76,10 @@ export function PatchedBookmarkletImportFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedBookmarkletImportToJSON(json: any): PatchedBookmarkletImport {
-    return PatchedBookmarkletImportToJSONTyped(json, false);
-}
-
-export function PatchedBookmarkletImportToJSONTyped(value?: Omit<PatchedBookmarkletImport, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletImport, 'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

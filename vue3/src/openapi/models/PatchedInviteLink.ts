@@ -18,7 +18,6 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-    GroupToJSONTyped,
 } from './Group';
 
 /**
@@ -62,7 +61,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    usedBy?: number | null;
+    usedBy?: number;
     /**
      * 
      * @type {boolean}
@@ -74,7 +73,7 @@ export interface PatchedInviteLink {
      * @type {string}
      * @memberof PatchedInviteLink
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
@@ -119,15 +118,10 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInviteLinkToJSON(json: any): PatchedInviteLink {
-    return PatchedInviteLinkToJSONTyped(json, false);
-}
-
-export function PatchedInviteLinkToJSONTyped(value?: Omit<PatchedInviteLink, 'uuid'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

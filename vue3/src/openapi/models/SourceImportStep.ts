@@ -18,7 +18,6 @@ import {
     SourceImportIngredientFromJSON,
     SourceImportIngredientFromJSONTyped,
     SourceImportIngredientToJSON,
-    SourceImportIngredientToJSONTyped,
 } from './SourceImportIngredient';
 
 /**
@@ -73,15 +72,10 @@ export function SourceImportStepFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function SourceImportStepToJSON(json: any): SourceImportStep {
-    return SourceImportStepToJSONTyped(json, false);
-}
-
-export function SourceImportStepToJSONTyped(value?: SourceImportStep | null, ignoreDiscriminator: boolean = false): any {
+export function SourceImportStepToJSON(value?: SourceImportStep | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'instruction': value['instruction'],

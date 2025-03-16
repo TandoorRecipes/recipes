@@ -49,15 +49,10 @@ export function SourceImportUnitFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function SourceImportUnitToJSON(json: any): SourceImportUnit {
-    return SourceImportUnitToJSONTyped(json, false);
-}
-
-export function SourceImportUnitToJSONTyped(value?: SourceImportUnit | null, ignoreDiscriminator: boolean = false): any {
+export function SourceImportUnitToJSON(value?: SourceImportUnit | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'name': value['name'],

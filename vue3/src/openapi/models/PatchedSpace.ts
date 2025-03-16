@@ -18,35 +18,30 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
 import {
     SpaceNavTextColorEnumFromJSON,
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
-    SpaceNavTextColorEnumToJSONTyped,
 } from './SpaceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { SpaceThemeEnum } from './SpaceThemeEnum';
 import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
-    SpaceThemeEnumToJSONTyped,
 } from './SpaceThemeEnum';
 
 /**
@@ -144,13 +139,13 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    image?: UserFileView | null;
+    image?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    navLogo?: UserFileView | null;
+    navLogo?: UserFileView;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -162,7 +157,7 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    customSpaceTheme?: UserFileView | null;
+    customSpaceTheme?: UserFileView;
     /**
      * 
      * @type {string}
@@ -180,46 +175,44 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor32?: UserFileView | null;
+    logoColor32?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor128?: UserFileView | null;
+    logoColor128?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor144?: UserFileView | null;
+    logoColor144?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor180?: UserFileView | null;
+    logoColor180?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor192?: UserFileView | null;
+    logoColor192?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor512?: UserFileView | null;
+    logoColor512?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColorSvg?: UserFileView | null;
+    logoColorSvg?: UserFileView;
 }
-
-
 
 /**
  * Check if a given object implements the PatchedSpace interface.
@@ -268,15 +261,10 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PatchedSpaceToJSON(json: any): PatchedSpace {
-    return PatchedSpaceToJSONTyped(json, false);
-}
-
-export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

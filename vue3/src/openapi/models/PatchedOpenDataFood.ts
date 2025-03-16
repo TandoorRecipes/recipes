@@ -18,28 +18,24 @@ import {
     OpenDataFoodPropertyFromJSON,
     OpenDataFoodPropertyFromJSONTyped,
     OpenDataFoodPropertyToJSON,
-    OpenDataFoodPropertyToJSONTyped,
 } from './OpenDataFoodProperty';
 import type { OpenDataUnit } from './OpenDataUnit';
 import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
-    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataCategory } from './OpenDataCategory';
 import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
-    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -123,31 +119,31 @@ export interface PatchedOpenDataFood {
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredUnitMetric?: OpenDataUnit | null;
+    preferredUnitMetric?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredShoppingUnitMetric?: OpenDataUnit | null;
+    preferredShoppingUnitMetric?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredUnitImperial?: OpenDataUnit | null;
+    preferredUnitImperial?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredShoppingUnitImperial?: OpenDataUnit | null;
+    preferredShoppingUnitImperial?: OpenDataUnit;
     /**
      * 
      * @type {Array<OpenDataFoodProperty>}
      * @memberof PatchedOpenDataFood
      */
-    properties?: Array<OpenDataFoodProperty> | null;
+    properties?: Array<OpenDataFoodProperty>;
     /**
      * 
      * @type {number}
@@ -223,15 +219,10 @@ export function PatchedOpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedOpenDataFoodToJSON(json: any): PatchedOpenDataFood {
-    return PatchedOpenDataFoodToJSONTyped(json, false);
-}
-
-export function PatchedOpenDataFoodToJSONTyped(value?: Omit<PatchedOpenDataFood, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedOpenDataFoodToJSON(value?: Omit<PatchedOpenDataFood, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

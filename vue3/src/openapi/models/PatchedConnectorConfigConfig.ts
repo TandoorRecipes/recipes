@@ -36,19 +36,19 @@ export interface PatchedConnectorConfigConfig {
      * @type {string}
      * @memberof PatchedConnectorConfigConfig
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfigConfig
      */
-    token?: string | null;
+    token?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfigConfig
      */
-    todoEntity?: string | null;
+    todoEntity?: string;
     /**
      * Is Connector Enabled
      * @type {boolean}
@@ -118,15 +118,10 @@ export function PatchedConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PatchedConnectorConfigConfigToJSON(json: any): PatchedConnectorConfigConfig {
-    return PatchedConnectorConfigConfigToJSONTyped(json, false);
-}
-
-export function PatchedConnectorConfigConfigToJSONTyped(value?: Omit<PatchedConnectorConfigConfig, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedConnectorConfigConfigToJSON(value?: Omit<PatchedConnectorConfigConfig, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

@@ -32,7 +32,7 @@ export type DefaultPageEnum = typeof DefaultPageEnum[keyof typeof DefaultPageEnu
 export function instanceOfDefaultPageEnum(value: any): boolean {
     for (const key in DefaultPageEnum) {
         if (Object.prototype.hasOwnProperty.call(DefaultPageEnum, key)) {
-            if (DefaultPageEnum[key as keyof typeof DefaultPageEnum] === value) {
+            if (DefaultPageEnum[key] === value) {
                 return true;
             }
         }
@@ -50,9 +50,5 @@ export function DefaultPageEnumFromJSONTyped(json: any, ignoreDiscriminator: boo
 
 export function DefaultPageEnumToJSON(value?: DefaultPageEnum | null): any {
     return value as any;
-}
-
-export function DefaultPageEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): DefaultPageEnum {
-    return value as DefaultPageEnum;
 }
 

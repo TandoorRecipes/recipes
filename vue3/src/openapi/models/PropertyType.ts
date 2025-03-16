@@ -36,13 +36,13 @@ export interface PropertyType {
      * @type {string}
      * @memberof PropertyType
      */
-    unit?: string | null;
+    unit?: string;
     /**
      * 
      * @type {string}
      * @memberof PropertyType
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {number}
@@ -54,13 +54,13 @@ export interface PropertyType {
      * @type {string}
      * @memberof PropertyType
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
     /**
      * 
      * @type {number}
      * @memberof PropertyType
      */
-    fdcId?: number | null;
+    fdcId?: number;
 }
 
 /**
@@ -91,15 +91,10 @@ export function PropertyTypeFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PropertyTypeToJSON(json: any): PropertyType {
-    return PropertyTypeToJSONTyped(json, false);
-}
-
-export function PropertyTypeToJSONTyped(value?: PropertyType | null, ignoreDiscriminator: boolean = false): any {
+export function PropertyTypeToJSON(value?: PropertyType | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

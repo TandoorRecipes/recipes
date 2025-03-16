@@ -18,7 +18,6 @@ import {
     SupermarketCategoryRelationFromJSON,
     SupermarketCategoryRelationFromJSONTyped,
     SupermarketCategoryRelationToJSON,
-    SupermarketCategoryRelationToJSONTyped,
 } from './SupermarketCategoryRelation';
 
 /**
@@ -78,7 +77,7 @@ export interface Supermarket {
      * @type {string}
      * @memberof Supermarket
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -90,7 +89,7 @@ export interface Supermarket {
      * @type {string}
      * @memberof Supermarket
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
 }
 
 /**
@@ -120,15 +119,10 @@ export function SupermarketFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function SupermarketToJSON(json: any): Supermarket {
-    return SupermarketToJSONTyped(json, false);
-}
-
-export function SupermarketToJSONTyped(value?: Omit<Supermarket, 'category_to_supermarket'> | null, ignoreDiscriminator: boolean = false): any {
+export function SupermarketToJSON(value?: Omit<Supermarket, 'categoryToSupermarket'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

@@ -97,15 +97,10 @@ export function PatchedUserFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedUserToJSON(json: any): PatchedUser {
-    return PatchedUserToJSONTyped(json, false);
-}
-
-export function PatchedUserToJSONTyped(value?: Omit<PatchedUser, 'username'|'display_name'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedUserToJSON(value?: Omit<PatchedUser, 'username'|'displayName'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

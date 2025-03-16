@@ -70,7 +70,7 @@ export interface PatchedSupermarketCategory {
      * @type {string}
      * @memberof PatchedSupermarketCategory
      */
-    description?: string | null;
+    description?: string;
 }
 
 /**
@@ -96,15 +96,10 @@ export function PatchedSupermarketCategoryFromJSONTyped(json: any, ignoreDiscrim
     };
 }
 
-export function PatchedSupermarketCategoryToJSON(json: any): PatchedSupermarketCategory {
-    return PatchedSupermarketCategoryToJSONTyped(json, false);
-}
-
-export function PatchedSupermarketCategoryToJSONTyped(value?: PatchedSupermarketCategory | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedSupermarketCategoryToJSON(value?: PatchedSupermarketCategory | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

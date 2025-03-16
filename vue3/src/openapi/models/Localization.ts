@@ -57,15 +57,10 @@ export function LocalizationFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function LocalizationToJSON(json: any): Localization {
-    return LocalizationToJSONTyped(json, false);
-}
-
-export function LocalizationToJSONTyped(value?: Omit<Localization, 'code'|'language'> | null, ignoreDiscriminator: boolean = false): any {
+export function LocalizationToJSON(value?: Omit<Localization, 'code'|'language'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
     };

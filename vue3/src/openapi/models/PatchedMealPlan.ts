@@ -18,21 +18,18 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
-    MealTypeToJSONTyped,
 } from './MealType';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
-    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -58,7 +55,7 @@ export interface PatchedMealPlan {
      * @type {RecipeOverview}
      * @memberof PatchedMealPlan
      */
-    recipe?: RecipeOverview | null;
+    recipe?: RecipeOverview;
     /**
      * 
      * @type {number}
@@ -106,7 +103,7 @@ export interface PatchedMealPlan {
      * @type {Array<User>}
      * @memberof PatchedMealPlan
      */
-    shared?: Array<User> | null;
+    shared?: Array<User>;
     /**
      * 
      * @type {string}
@@ -168,15 +165,10 @@ export function PatchedMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedMealPlanToJSON(json: any): PatchedMealPlan {
-    return PatchedMealPlanToJSONTyped(json, false);
-}
-
-export function PatchedMealPlanToJSONTyped(value?: Omit<PatchedMealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedMealPlanToJSON(value?: Omit<PatchedMealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

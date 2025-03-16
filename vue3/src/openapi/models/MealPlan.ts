@@ -18,21 +18,18 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
-    MealTypeToJSONTyped,
 } from './MealType';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
-    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -58,7 +55,7 @@ export interface MealPlan {
      * @type {RecipeOverview}
      * @memberof MealPlan
      */
-    recipe?: RecipeOverview | null;
+    recipe?: RecipeOverview;
     /**
      * 
      * @type {number}
@@ -106,7 +103,7 @@ export interface MealPlan {
      * @type {Array<User>}
      * @memberof MealPlan
      */
-    shared?: Array<User> | null;
+    shared?: Array<User>;
     /**
      * 
      * @type {string}
@@ -176,15 +173,10 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealPlanToJSON(json: any): MealPlan {
-    return MealPlanToJSONTyped(json, false);
-}
-
-export function MealPlanToJSONTyped(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null, ignoreDiscriminator: boolean = false): any {
+export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

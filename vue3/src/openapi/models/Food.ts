@@ -18,42 +18,36 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    UnitToJSONTyped,
 } from './Unit';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
-    PropertyToJSONTyped,
 } from './Property';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { FoodSimple } from './FoodSimple';
 import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
-    FoodSimpleToJSONTyped,
 } from './FoodSimple';
 import type { RecipeSimple } from './RecipeSimple';
 import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
-    RecipeSimpleToJSONTyped,
 } from './RecipeSimple';
 
 /**
@@ -113,7 +107,7 @@ export interface Food {
      * @type {string}
      * @memberof Food
      */
-    pluralName?: string | null;
+    pluralName?: string;
     /**
      * 
      * @type {string}
@@ -131,19 +125,19 @@ export interface Food {
      * @type {RecipeSimple}
      * @memberof Food
      */
-    recipe?: RecipeSimple | null;
+    recipe?: RecipeSimple;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {Array<Property>}
      * @memberof Food
      */
-    properties?: Array<Property> | null;
+    properties?: Array<Property>;
     /**
      * 
      * @type {number}
@@ -155,25 +149,25 @@ export interface Food {
      * @type {Unit}
      * @memberof Food
      */
-    propertiesFoodUnit?: Unit | null;
+    propertiesFoodUnit?: Unit;
     /**
      * 
      * @type {number}
      * @memberof Food
      */
-    fdcId?: number | null;
+    fdcId?: number;
     /**
      * 
      * @type {boolean}
      * @memberof Food
      */
-    foodOnhand?: boolean | null;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategory}
      * @memberof Food
      */
-    supermarketCategory?: SupermarketCategory | null;
+    supermarketCategory?: SupermarketCategory;
     /**
      * 
      * @type {number}
@@ -191,7 +185,7 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    inheritFields?: Array<FoodInheritField> | null;
+    inheritFields?: Array<FoodInheritField>;
     /**
      * Returns a string representation of a tree node and it's ancestors,
      * e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -210,7 +204,7 @@ export interface Food {
      * @type {Array<FoodSimple>}
      * @memberof Food
      */
-    substitute?: Array<FoodSimple> | null;
+    substitute?: Array<FoodSimple>;
     /**
      * 
      * @type {boolean}
@@ -234,13 +228,13 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    childInheritFields?: Array<FoodInheritField> | null;
+    childInheritFields?: Array<FoodInheritField>;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
 }
 
 /**
@@ -293,15 +287,10 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
     };
 }
 
-export function FoodToJSON(json: any): Food {
-    return FoodToJSONTyped(json, false);
-}
-
-export function FoodToJSONTyped(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'> | null, ignoreDiscriminator: boolean = false): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

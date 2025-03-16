@@ -18,7 +18,6 @@ import {
     UserFileFromJSON,
     UserFileFromJSONTyped,
     UserFileToJSON,
-    UserFileToJSONTyped,
 } from './UserFile';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedUserFileList {
      * @type {string}
      * @memberof PaginatedUserFileList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUserFileList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<UserFile>}
@@ -86,15 +85,10 @@ export function PaginatedUserFileListFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PaginatedUserFileListToJSON(json: any): PaginatedUserFileList {
-    return PaginatedUserFileListToJSONTyped(json, false);
-}
-
-export function PaginatedUserFileListToJSONTyped(value?: PaginatedUserFileList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedUserFileListToJSON(value?: PaginatedUserFileList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

@@ -18,14 +18,12 @@ import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { Ingredient } from './Ingredient';
 import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
-    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -87,13 +85,13 @@ export interface Step {
      * @type {UserFileView}
      * @memberof Step
      */
-    file?: UserFileView | null;
+    file?: UserFileView;
     /**
      * 
      * @type {number}
      * @memberof Step
      */
-    stepRecipe?: number | null;
+    stepRecipe?: number;
     /**
      * 
      * @type {any}
@@ -151,15 +149,10 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
     };
 }
 
-export function StepToJSON(json: any): Step {
-    return StepToJSONTyped(json, false);
-}
-
-export function StepToJSONTyped(value?: Omit<Step, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
+export function StepToJSON(value?: Omit<Step, 'instructionsMarkdown'|'stepRecipeData'|'numrecipe'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

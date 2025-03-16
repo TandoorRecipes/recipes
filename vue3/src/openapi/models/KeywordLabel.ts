@@ -56,15 +56,10 @@ export function KeywordLabelFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function KeywordLabelToJSON(json: any): KeywordLabel {
-    return KeywordLabelToJSONTyped(json, false);
-}
-
-export function KeywordLabelToJSONTyped(value?: Omit<KeywordLabel, 'label'> | null, ignoreDiscriminator: boolean = false): any {
+export function KeywordLabelToJSON(value?: Omit<KeywordLabel, 'label'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

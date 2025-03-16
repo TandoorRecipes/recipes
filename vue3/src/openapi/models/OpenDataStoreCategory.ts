@@ -18,7 +18,6 @@ import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
-    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 
 /**
@@ -79,15 +78,10 @@ export function OpenDataStoreCategoryFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function OpenDataStoreCategoryToJSON(json: any): OpenDataStoreCategory {
-    return OpenDataStoreCategoryToJSONTyped(json, false);
-}
-
-export function OpenDataStoreCategoryToJSONTyped(value?: OpenDataStoreCategory | null, ignoreDiscriminator: boolean = false): any {
+export function OpenDataStoreCategoryToJSON(value?: OpenDataStoreCategory | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

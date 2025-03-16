@@ -18,28 +18,24 @@ import {
     OpenDataFoodPropertyFromJSON,
     OpenDataFoodPropertyFromJSONTyped,
     OpenDataFoodPropertyToJSON,
-    OpenDataFoodPropertyToJSONTyped,
 } from './OpenDataFoodProperty';
 import type { OpenDataUnit } from './OpenDataUnit';
 import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
-    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataCategory } from './OpenDataCategory';
 import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
-    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -123,25 +119,25 @@ export interface OpenDataFood {
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitMetric?: OpenDataUnit | null;
+    preferredUnitMetric?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitMetric?: OpenDataUnit | null;
+    preferredShoppingUnitMetric?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitImperial?: OpenDataUnit | null;
+    preferredUnitImperial?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitImperial?: OpenDataUnit | null;
+    preferredShoppingUnitImperial?: OpenDataUnit;
     /**
      * 
      * @type {Array<OpenDataFoodProperty>}
@@ -232,15 +228,10 @@ export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OpenDataFoodToJSON(json: any): OpenDataFood {
-    return OpenDataFoodToJSONTyped(json, false);
-}
-
-export function OpenDataFoodToJSONTyped(value?: Omit<OpenDataFood, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function OpenDataFoodToJSON(value?: Omit<OpenDataFood, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

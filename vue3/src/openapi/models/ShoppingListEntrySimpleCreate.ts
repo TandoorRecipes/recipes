@@ -73,15 +73,10 @@ export function ShoppingListEntrySimpleCreateFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function ShoppingListEntrySimpleCreateToJSON(json: any): ShoppingListEntrySimpleCreate {
-    return ShoppingListEntrySimpleCreateToJSONTyped(json, false);
-}
-
-export function ShoppingListEntrySimpleCreateToJSONTyped(value?: ShoppingListEntrySimpleCreate | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListEntrySimpleCreateToJSON(value?: ShoppingListEntrySimpleCreate | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'amount': value['amount'],

@@ -18,7 +18,6 @@ import {
     RecipeBookEntryFromJSON,
     RecipeBookEntryFromJSONTyped,
     RecipeBookEntryToJSON,
-    RecipeBookEntryToJSONTyped,
 } from './RecipeBookEntry';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedRecipeBookEntryList {
      * @type {string}
      * @memberof PaginatedRecipeBookEntryList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedRecipeBookEntryList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<RecipeBookEntry>}
@@ -86,15 +85,10 @@ export function PaginatedRecipeBookEntryListFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PaginatedRecipeBookEntryListToJSON(json: any): PaginatedRecipeBookEntryList {
-    return PaginatedRecipeBookEntryListToJSONTyped(json, false);
-}
-
-export function PaginatedRecipeBookEntryListToJSONTyped(value?: PaginatedRecipeBookEntryList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedRecipeBookEntryListToJSON(value?: PaginatedRecipeBookEntryList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

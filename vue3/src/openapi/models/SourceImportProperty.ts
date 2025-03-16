@@ -18,7 +18,6 @@ import {
     SourceImportPropertyTypeFromJSON,
     SourceImportPropertyTypeFromJSONTyped,
     SourceImportPropertyTypeToJSON,
-    SourceImportPropertyTypeToJSONTyped,
 } from './SourceImportPropertyType';
 
 /**
@@ -65,15 +64,10 @@ export function SourceImportPropertyFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function SourceImportPropertyToJSON(json: any): SourceImportProperty {
-    return SourceImportPropertyToJSONTyped(json, false);
-}
-
-export function SourceImportPropertyToJSONTyped(value?: SourceImportProperty | null, ignoreDiscriminator: boolean = false): any {
+export function SourceImportPropertyToJSON(value?: SourceImportProperty | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'property_type': SourceImportPropertyTypeToJSON(value['propertyType']),

@@ -64,15 +64,10 @@ export function RecipeSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function RecipeSimpleToJSON(json: any): RecipeSimple {
-    return RecipeSimpleToJSONTyped(json, false);
-}
-
-export function RecipeSimpleToJSONTyped(value?: Omit<RecipeSimple, 'url'> | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeSimpleToJSON(value?: Omit<RecipeSimple, 'url'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

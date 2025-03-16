@@ -30,7 +30,7 @@ export type OpenDataUnitTypeEnum = typeof OpenDataUnitTypeEnum[keyof typeof Open
 export function instanceOfOpenDataUnitTypeEnum(value: any): boolean {
     for (const key in OpenDataUnitTypeEnum) {
         if (Object.prototype.hasOwnProperty.call(OpenDataUnitTypeEnum, key)) {
-            if (OpenDataUnitTypeEnum[key as keyof typeof OpenDataUnitTypeEnum] === value) {
+            if (OpenDataUnitTypeEnum[key] === value) {
                 return true;
             }
         }
@@ -48,9 +48,5 @@ export function OpenDataUnitTypeEnumFromJSONTyped(json: any, ignoreDiscriminator
 
 export function OpenDataUnitTypeEnumToJSON(value?: OpenDataUnitTypeEnum | null): any {
     return value as any;
-}
-
-export function OpenDataUnitTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): OpenDataUnitTypeEnum {
-    return value as OpenDataUnitTypeEnum;
 }
 

@@ -18,7 +18,6 @@ import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
-    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedRecipeOverviewList {
      * @type {string}
      * @memberof PaginatedRecipeOverviewList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedRecipeOverviewList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<RecipeOverview>}
@@ -79,15 +78,10 @@ export function PaginatedRecipeOverviewListFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function PaginatedRecipeOverviewListToJSON(json: any): PaginatedRecipeOverviewList {
-    return PaginatedRecipeOverviewListToJSONTyped(json, false);
-}
-
-export function PaginatedRecipeOverviewListToJSONTyped(value?: PaginatedRecipeOverviewList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedRecipeOverviewListToJSON(value?: PaginatedRecipeOverviewList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

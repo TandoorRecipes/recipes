@@ -18,28 +18,24 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeFromJSONTyped,
     ShoppingListRecipeToJSON,
-    ShoppingListRecipeToJSONTyped,
 } from './ShoppingListRecipe';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -59,7 +55,7 @@ export interface ShoppingListEntry {
      * @type {number}
      * @memberof ShoppingListEntry
      */
-    listRecipe?: number | null;
+    listRecipe?: number;
     /**
      * 
      * @type {Food}
@@ -71,7 +67,7 @@ export interface ShoppingListEntry {
      * @type {Unit}
      * @memberof ShoppingListEntry
      */
-    unit?: Unit | null;
+    unit?: Unit;
     /**
      * 
      * @type {number}
@@ -95,7 +91,7 @@ export interface ShoppingListEntry {
      * @type {number}
      * @memberof ShoppingListEntry
      */
-    ingredient?: number | null;
+    ingredient?: number;
     /**
      * 
      * @type {ShoppingListRecipe}
@@ -125,13 +121,13 @@ export interface ShoppingListEntry {
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    completedAt?: Date | null;
+    completedAt?: Date;
     /**
      * 
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    delayUntil?: Date | null;
+    delayUntil?: Date;
     /**
      * If a mealplan id is given try to find existing or create new ShoppingListRecipe with that meal plan and link entry to it
      * @type {number}
@@ -181,15 +177,10 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function ShoppingListEntryToJSON(json: any): ShoppingListEntry {
-    return ShoppingListEntryToJSONTyped(json, false);
-}
-
-export function ShoppingListEntryToJSONTyped(value?: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

@@ -18,7 +18,6 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -104,15 +103,10 @@ export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function UserFileViewToJSON(json: any): UserFileView {
-    return UserFileViewToJSONTyped(json, false);
-}
-
-export function UserFileViewToJSONTyped(value?: Omit<UserFileView, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function UserFileViewToJSON(value?: Omit<UserFileView, 'fileDownload'|'preview'|'fileSizeKb'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

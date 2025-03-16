@@ -18,7 +18,6 @@ import {
     ExportLogFromJSON,
     ExportLogFromJSONTyped,
     ExportLogToJSON,
-    ExportLogToJSONTyped,
 } from './ExportLog';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedExportLogList {
      * @type {string}
      * @memberof PaginatedExportLogList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedExportLogList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<ExportLog>}
@@ -86,15 +85,10 @@ export function PaginatedExportLogListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedExportLogListToJSON(json: any): PaginatedExportLogList {
-    return PaginatedExportLogListToJSONTyped(json, false);
-}
-
-export function PaginatedExportLogListToJSONTyped(value?: PaginatedExportLogList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedExportLogListToJSON(value?: PaginatedExportLogList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

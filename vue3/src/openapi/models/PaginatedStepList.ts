@@ -18,7 +18,6 @@ import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
-    StepToJSONTyped,
 } from './Step';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedStepList {
      * @type {string}
      * @memberof PaginatedStepList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedStepList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Step>}
@@ -86,15 +85,10 @@ export function PaginatedStepListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedStepListToJSON(json: any): PaginatedStepList {
-    return PaginatedStepListToJSONTyped(json, false);
-}
-
-export function PaginatedStepListToJSONTyped(value?: PaginatedStepList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedStepListToJSON(value?: PaginatedStepList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

@@ -18,14 +18,12 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -69,7 +67,7 @@ export interface UserSpace {
      * @type {string}
      * @memberof UserSpace
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
@@ -125,15 +123,10 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function UserSpaceToJSON(json: any): UserSpace {
-    return UserSpaceToJSONTyped(json, false);
-}
-
-export function UserSpaceToJSONTyped(value?: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

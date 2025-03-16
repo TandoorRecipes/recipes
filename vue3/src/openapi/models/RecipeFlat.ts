@@ -36,7 +36,7 @@ export interface RecipeFlat {
      * @type {string}
      * @memberof RecipeFlat
      */
-    image?: string | null;
+    image?: string;
 }
 
 /**
@@ -63,15 +63,10 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeFlatToJSON(json: any): RecipeFlat {
-    return RecipeFlatToJSONTyped(json, false);
-}
-
-export function RecipeFlatToJSONTyped(value?: RecipeFlat | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

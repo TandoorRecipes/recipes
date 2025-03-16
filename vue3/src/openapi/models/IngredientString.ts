@@ -49,15 +49,10 @@ export function IngredientStringFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function IngredientStringToJSON(json: any): IngredientString {
-    return IngredientStringToJSONTyped(json, false);
-}
-
-export function IngredientStringToJSONTyped(value?: IngredientString | null, ignoreDiscriminator: boolean = false): any {
+export function IngredientStringToJSON(value?: IngredientString | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'text': value['text'],

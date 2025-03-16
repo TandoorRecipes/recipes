@@ -72,15 +72,10 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
     };
 }
 
-export function ViewLogToJSON(json: any): ViewLog {
-    return ViewLogToJSONTyped(json, false);
-}
-
-export function ViewLogToJSONTyped(value?: Omit<ViewLog, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function ViewLogToJSON(value?: Omit<ViewLog, 'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

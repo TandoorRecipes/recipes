@@ -18,7 +18,6 @@ import {
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
-    PropertyTypeToJSONTyped,
 } from './PropertyType';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedPropertyTypeList {
      * @type {string}
      * @memberof PaginatedPropertyTypeList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedPropertyTypeList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<PropertyType>}
@@ -86,15 +85,10 @@ export function PaginatedPropertyTypeListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedPropertyTypeListToJSON(json: any): PaginatedPropertyTypeList {
-    return PaginatedPropertyTypeListToJSONTyped(json, false);
-}
-
-export function PaginatedPropertyTypeListToJSONTyped(value?: PaginatedPropertyTypeList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedPropertyTypeListToJSON(value?: PaginatedPropertyTypeList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

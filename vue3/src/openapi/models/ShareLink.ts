@@ -65,15 +65,10 @@ export function ShareLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ShareLinkToJSON(json: any): ShareLink {
-    return ShareLinkToJSONTyped(json, false);
-}
-
-export function ShareLinkToJSONTyped(value?: ShareLink | null, ignoreDiscriminator: boolean = false): any {
+export function ShareLinkToJSON(value?: ShareLink | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'pk': value['pk'],

@@ -18,7 +18,6 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -44,19 +43,19 @@ export interface PatchedCookLog {
      * @type {number}
      * @memberof PatchedCookLog
      */
-    servings?: number | null;
+    servings?: number;
     /**
      * 
      * @type {number}
      * @memberof PatchedCookLog
      */
-    rating?: number | null;
+    rating?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedCookLog
      */
-    comment?: string | null;
+    comment?: string;
     /**
      * 
      * @type {User}
@@ -105,15 +104,10 @@ export function PatchedCookLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedCookLogToJSON(json: any): PatchedCookLog {
-    return PatchedCookLogToJSONTyped(json, false);
-}
-
-export function PatchedCookLogToJSONTyped(value?: Omit<PatchedCookLog, 'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedCookLogToJSON(value?: Omit<PatchedCookLog, 'createdBy'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

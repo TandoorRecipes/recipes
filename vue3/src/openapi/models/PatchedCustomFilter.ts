@@ -18,7 +18,6 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -84,15 +83,10 @@ export function PatchedCustomFilterFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedCustomFilterToJSON(json: any): PatchedCustomFilter {
-    return PatchedCustomFilterToJSONTyped(json, false);
-}
-
-export function PatchedCustomFilterToJSONTyped(value?: Omit<PatchedCustomFilter, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedCustomFilterToJSON(value?: Omit<PatchedCustomFilter, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

@@ -30,19 +30,19 @@ export interface RecipeShoppingUpdate {
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    listRecipe?: number | null;
+    listRecipe?: number;
     /**
      * 
-     * @type {Array<number | null>}
+     * @type {Array<number>}
      * @memberof RecipeShoppingUpdate
      */
-    ingredients: Array<number | null>;
+    ingredients: Array<number>;
     /**
      * Providing a list_recipe ID and servings of 0 will delete that shopping list.
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    servings?: number | null;
+    servings?: number;
 }
 
 /**
@@ -70,15 +70,10 @@ export function RecipeShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function RecipeShoppingUpdateToJSON(json: any): RecipeShoppingUpdate {
-    return RecipeShoppingUpdateToJSONTyped(json, false);
-}
-
-export function RecipeShoppingUpdateToJSONTyped(value?: RecipeShoppingUpdate | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeShoppingUpdateToJSON(value?: RecipeShoppingUpdate | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

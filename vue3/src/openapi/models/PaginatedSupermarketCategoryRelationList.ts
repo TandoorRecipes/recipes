@@ -18,7 +18,6 @@ import {
     SupermarketCategoryRelationFromJSON,
     SupermarketCategoryRelationFromJSONTyped,
     SupermarketCategoryRelationToJSON,
-    SupermarketCategoryRelationToJSONTyped,
 } from './SupermarketCategoryRelation';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedSupermarketCategoryRelationList {
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -86,15 +85,10 @@ export function PaginatedSupermarketCategoryRelationListFromJSONTyped(json: any,
     };
 }
 
-export function PaginatedSupermarketCategoryRelationListToJSON(json: any): PaginatedSupermarketCategoryRelationList {
-    return PaginatedSupermarketCategoryRelationListToJSONTyped(json, false);
-}
-
-export function PaginatedSupermarketCategoryRelationListToJSONTyped(value?: PaginatedSupermarketCategoryRelationList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedSupermarketCategoryRelationListToJSON(value?: PaginatedSupermarketCategoryRelationList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

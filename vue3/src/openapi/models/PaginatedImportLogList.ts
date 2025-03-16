@@ -18,7 +18,6 @@ import {
     ImportLogFromJSON,
     ImportLogFromJSONTyped,
     ImportLogToJSON,
-    ImportLogToJSONTyped,
 } from './ImportLog';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedImportLogList {
      * @type {string}
      * @memberof PaginatedImportLogList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedImportLogList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<ImportLog>}
@@ -86,15 +85,10 @@ export function PaginatedImportLogListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedImportLogListToJSON(json: any): PaginatedImportLogList {
-    return PaginatedImportLogListToJSONTyped(json, false);
-}
-
-export function PaginatedImportLogListToJSONTyped(value?: PaginatedImportLogList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedImportLogListToJSON(value?: PaginatedImportLogList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],

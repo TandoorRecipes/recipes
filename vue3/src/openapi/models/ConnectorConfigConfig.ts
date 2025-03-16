@@ -36,19 +36,19 @@ export interface ConnectorConfigConfig {
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    token?: string | null;
+    token?: string;
     /**
      * 
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    todoEntity?: string | null;
+    todoEntity?: string;
     /**
      * Is Connector Enabled
      * @type {boolean}
@@ -120,15 +120,10 @@ export function ConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function ConnectorConfigConfigToJSON(json: any): ConnectorConfigConfig {
-    return ConnectorConfigConfigToJSONTyped(json, false);
-}
-
-export function ConnectorConfigConfigToJSONTyped(value?: Omit<ConnectorConfigConfig, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function ConnectorConfigConfigToJSON(value?: Omit<ConnectorConfigConfig, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

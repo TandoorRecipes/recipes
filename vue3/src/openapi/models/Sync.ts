@@ -48,7 +48,7 @@ export interface Sync {
      * @type {Date}
      * @memberof Sync
      */
-    lastChecked?: Date | null;
+    lastChecked?: Date;
     /**
      * 
      * @type {Date}
@@ -93,15 +93,10 @@ export function SyncFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sync
     };
 }
 
-export function SyncToJSON(json: any): Sync {
-    return SyncToJSONTyped(json, false);
-}
-
-export function SyncToJSONTyped(value?: Omit<Sync, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function SyncToJSON(value?: Omit<Sync, 'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

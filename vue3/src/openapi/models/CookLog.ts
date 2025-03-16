@@ -18,7 +18,6 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserToJSONTyped,
 } from './User';
 
 /**
@@ -44,19 +43,19 @@ export interface CookLog {
      * @type {number}
      * @memberof CookLog
      */
-    servings?: number | null;
+    servings?: number;
     /**
      * 
      * @type {number}
      * @memberof CookLog
      */
-    rating?: number | null;
+    rating?: number;
     /**
      * 
      * @type {string}
      * @memberof CookLog
      */
-    comment?: string | null;
+    comment?: string;
     /**
      * 
      * @type {User}
@@ -108,15 +107,10 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     };
 }
 
-export function CookLogToJSON(json: any): CookLog {
-    return CookLogToJSONTyped(json, false);
-}
-
-export function CookLogToJSONTyped(value?: Omit<CookLog, 'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function CookLogToJSON(value?: Omit<CookLog, 'createdBy'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

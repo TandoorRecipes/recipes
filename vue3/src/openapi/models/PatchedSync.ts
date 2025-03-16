@@ -48,7 +48,7 @@ export interface PatchedSync {
      * @type {Date}
      * @memberof PatchedSync
      */
-    lastChecked?: Date | null;
+    lastChecked?: Date;
     /**
      * 
      * @type {Date}
@@ -90,15 +90,10 @@ export function PatchedSyncFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedSyncToJSON(json: any): PatchedSync {
-    return PatchedSyncToJSONTyped(json, false);
-}
-
-export function PatchedSyncToJSONTyped(value?: Omit<PatchedSync, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

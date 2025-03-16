@@ -56,15 +56,10 @@ export function SourceImportPropertyTypeFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function SourceImportPropertyTypeToJSON(json: any): SourceImportPropertyType {
-    return SourceImportPropertyTypeToJSONTyped(json, false);
-}
-
-export function SourceImportPropertyTypeToJSONTyped(value?: SourceImportPropertyType | null, ignoreDiscriminator: boolean = false): any {
+export function SourceImportPropertyTypeToJSON(value?: SourceImportPropertyType | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

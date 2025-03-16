@@ -65,15 +65,10 @@ export function AuthTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function AuthTokenToJSON(json: any): AuthToken {
-    return AuthTokenToJSONTyped(json, false);
-}
-
-export function AuthTokenToJSONTyped(value?: Omit<AuthToken, 'token'> | null, ignoreDiscriminator: boolean = false): any {
+export function AuthTokenToJSON(value?: Omit<AuthToken, 'token'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'username': value['username'],

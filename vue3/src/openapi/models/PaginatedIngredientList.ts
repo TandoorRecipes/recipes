@@ -18,7 +18,6 @@ import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
-    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -38,13 +37,13 @@ export interface PaginatedIngredientList {
      * @type {string}
      * @memberof PaginatedIngredientList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedIngredientList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Ingredient>}
@@ -86,15 +85,10 @@ export function PaginatedIngredientListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedIngredientListToJSON(json: any): PaginatedIngredientList {
-    return PaginatedIngredientListToJSONTyped(json, false);
-}
-
-export function PaginatedIngredientListToJSONTyped(value?: PaginatedIngredientList | null, ignoreDiscriminator: boolean = false): any {
+export function PaginatedIngredientListToJSON(value?: PaginatedIngredientList | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'count': value['count'],
