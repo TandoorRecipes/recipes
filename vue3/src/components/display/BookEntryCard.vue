@@ -7,6 +7,9 @@
             <keywords-bar :keywords="props.recipeOverview.keywords"></keywords-bar>
         </v-card-text>
         <ingredients-table :ingredient-factor="1" v-model="ingredients" :show-checkbox="false"></ingredients-table>
+        <v-card-actions>
+            <v-btn :to="{name: 'RecipeViewPage', params: {id: props.recipeOverview.id}}">{{$t('Open')}}</v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
