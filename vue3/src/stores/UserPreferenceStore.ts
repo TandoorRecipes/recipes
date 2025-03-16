@@ -189,7 +189,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             mealplan_displayWeekNumbers: true,
 
             search_itemsPerPage: 50,
-            search_viewMode: 'table',
+            search_viewMode: 'grid',
 
             general_tableItemsPerPage: 10,
             general_closedHelpAlerts: [],
