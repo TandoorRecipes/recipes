@@ -36,34 +36,34 @@ from recipes.settings import PLUGINS
 
 
 def index(request, path=None, resource=None):
+    # show setup page when no users exist
     with scopes_disabled():
         if not request.user.is_authenticated:
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
+    # show frontend if at least group permissions
     if has_group_permission(request.user, ('guest',)):
         return render(request, 'frontend/tandoor.html', {})
     else:
+        # show no_group if logged in but no permission
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('view_no_group'))
         else:
-            print('REQUEST PATH ', request.path)
+            # show recipe if not logged in but share link is given
             if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
-                print('MATECHED')
                 return render(request, 'frontend/tandoor.html', {})
+            # redirect to login if none of the above matched
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
 def redirect_recipe_view(request, pk):
     if request.GET.get('share'):
-        print('send to index')
         return index(request)
-    print('redirexct old recipe link')
     return HttpResponseRedirect(build_absolute_uri(request, reverse('index')) + f'recipe/{pk}')
 
 
 def redirect_recipe_share_view(request, pk, share):
-    print('share redirect')
     if re.match(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}', share):
         return HttpResponseRedirect(build_absolute_uri(request, reverse('index')) + f'recipe/{pk}/?share={share}')
     return HttpResponseRedirect(reverse('index'))

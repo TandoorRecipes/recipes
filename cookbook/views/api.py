@@ -2153,6 +2153,7 @@ def sync_all(request):
         return redirect('list_recipe_import')
 
 
+# TODO migrate to normal standard view
 @extend_schema(
     request=inline_serializer(name="ShareLinkSerializer", fields={'pk': IntegerField()}),
     responses=inline_serializer(name="ShareLinkSerializer",
@@ -2166,7 +2167,7 @@ def share_link(request, pk):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,
-                             'link': request.build_absolute_uri(reverse('index') + f'recipe/{pk}/{link.uuid}')})
+                             'link': request.build_absolute_uri(reverse('index') + f'recipe/{pk}/?share={link.uuid}')})
     else:
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
