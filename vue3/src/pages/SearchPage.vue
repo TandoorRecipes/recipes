@@ -15,17 +15,17 @@
                 </v-text-field>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row dense>
             <v-col>
                 <v-expansion-panels v-model="panel">
                     <v-expansion-panel value="search">
                         <v-expansion-panel-text>
-                            <v-form :disabled="loading">
+                            <v-form :disabled="loading" class="mt-4">
 
-                                <model-select model="Keyword" mode="tags" v-model="urlSearchParams.keywords" :object="false"></model-select>
-                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" :object="false"></model-select>
-                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" :object="false"></model-select>
-                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" :object="false"></model-select>
+                                <model-select model="Keyword" mode="tags" v-model="urlSearchParams.keywords" density="compact" :object="false"></model-select>
+                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" density="compact" :object="false"></model-select>
+                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" density="compact" :object="false"></model-select>
+                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" density="compact" :object="false"></model-select>
 
                                 <!--                            <v-number-input :label="$t('times_cooked')" v-model="searchParameters.timescooked" clearable></v-number-input>-->
                                 <!--                            <v-date-input  :label="$t('last_cooked')" v-model="searchParameters.cookedon" clearable></v-date-input>-->
@@ -33,9 +33,9 @@
                                 <!--                            <v-date-input :label="$t('created_on')" v-model="searchParameters.createdon" clearable></v-date-input>-->
                                 <!--                            <v-date-input :label="$t('updatedon')" v-model="searchParameters.updatedon" clearable></v-date-input>-->
 
-                                <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow"></v-checkbox>
+                                <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow" density="compact"></v-checkbox>
 
-                                <model-select model="CustomFilter" v-model="selectedCustomFilter">
+                                <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
                                     <template #append>
                                         <v-btn icon="fa-solid fa-upload" color="warning" :disabled="Object.keys(selectedCustomFilter).length == 0"
                                                @click="loadCustomFilter()"></v-btn>
@@ -43,6 +43,16 @@
                                     </template>
                                 </model-select>
                             </v-form>
+                            <v-row>
+                                <v-col cols="6">
+                                    <v-select :label="$t('View')" v-model="useUserPreferenceStore().deviceSettings.search_viewMode"
+                                              :items="[{title: $t('Table'), value: 'table'}, {title: $t('Cards'), value: 'grid'},]" density="compact"></v-select>
+                                </v-col>
+                                <v-col cols="6">
+                                    <v-select class="float-right" :label="$t('PerPage')" v-model="urlSearchParams.pageSize" :items="[10,25,50,100]" density="compact"
+                                              width="100%"></v-select>
+                                </v-col>
+                            </v-row>
 
                         </v-expansion-panel-text>
 
@@ -56,16 +66,7 @@
             </v-col>
         </v-row>
 
-        <v-row>
-            <v-col>
-                <v-btn-toggle class="float-right" v-model="viewMode">
-                    <v-btn value="table" density="compact"><i class="fa-solid fa-list"></i></v-btn>
-                    <v-btn value="grid" density="compact"><i class="fa-solid fa-border-all"></i></v-btn>
-                </v-btn-toggle>
-            </v-col>
-        </v-row>
-
-        <v-row v-if="recipes.length > 0 && viewMode == 'table'">
+        <v-row v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'table'">
             <v-col>
                 <v-card>
                     <v-data-table-server
@@ -78,9 +79,11 @@
                         :items-length="tableItemCount"
                         @click:row="handleRowClick"
                         disable-sort
+                        hide-default-header
+                        hide-default-footer
                     >
                         <template #item.image="{item}">
-                            <v-avatar :image="item.image"></v-avatar>
+                            <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1"></v-avatar>
                         </template>
 
                         <template #item.keywords="{item}">
@@ -95,19 +98,23 @@
             </v-col>
         </v-row>
 
-        <template v-if="recipes.length > 0 && viewMode == 'grid'">
+        <template v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'grid'">
             <v-row>
-                <v-col md="4" v-for="r in recipes" :key="r.id">
+                <v-col cols="6" md="4" v-for="r in recipes" :key="r.id" class="pa-0">
                     <recipe-card :recipe="r"></recipe-card>
                 </v-col>
 
             </v-row>
-            <v-row>
-                <v-col>
-                    <v-pagination v-model="urlSearchParams.page" :length="tableItemCount" @update:modelValue="searchRecipes({page: urlSearchParams.page})"></v-pagination>
-                </v-col>
-            </v-row>
+
         </template>
+    <v-row>
+        <v-col cols="12" md="6" offset-md="3">
+            <v-pagination v-model="urlSearchParams.page" :length="Math.ceil(tableItemCount/urlSearchParams.pageSize)"
+                          @update:modelValue="searchRecipes({page: urlSearchParams.page})" class="ms-2 me-2" size="small"
+            ></v-pagination>
+        </v-col>
+    </v-row>
+
 
         <v-dialog v-model="dialog">
             <v-card>
@@ -125,7 +132,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/openapi";
 import {useUrlSearchParams} from "@vueuse/core";
 import {useI18n} from "vue-i18n";
@@ -139,9 +146,13 @@ import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import RecipeCard from "@/components/display/RecipeCard.vue";
+import {useDisplay} from "vuetify";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import * as url from "node:url";
 
 const {t} = useI18n()
 const router = useRouter()
+const {mdAndUp} = useDisplay()
 const urlSearchParams = useUrlSearchParams('history', {})
 
 const loading = ref(false)
@@ -149,12 +160,20 @@ const dialog = ref(false)
 const panel = ref('')
 const viewMode = ref('table')
 
-const tableHeaders = [
-    {title: t('Image'), width: '1%', noBreak: true, key: 'image',},
-    {title: t('Name'), key: 'name',},
-    {title: t('Keywords'), key: 'keywords',},
-    {title: t('Actions'), key: 'action', width: '1%', noBreak: true, align: 'end'},
-]
+
+const tableHeaders = computed(() => {
+    let headers = [
+        {title: t('Image'), width: '1%', noBreak: true, key: 'image',},
+        {title: t('Name'), key: 'name',},
+    ]
+    if (mdAndUp.value) {
+        headers.push({title: t('Keywords'), key: 'keywords',},)
+    }
+
+    headers.push({title: t('Actions'), key: 'action', width: '1%', noBreak: true, align: 'end'},)
+
+    return headers
+})
 
 const tableItemCount = ref(0)
 
@@ -163,8 +182,13 @@ const selectedCustomFilter = ref({} as CustomFilter)
 const newFilterName = ref('')
 
 onMounted(() => {
-    urlSearchParams.page = 1
-    searchRecipes({page: 1})
+    if(urlSearchParams.page == undefined){
+        urlSearchParams.page = 1
+    }
+    if(urlSearchParams.pageSize == undefined){
+        urlSearchParams.pageSize = useUserPreferenceStore().deviceSettings.search_itemsPerPage
+    }
+    searchRecipes({page: urlSearchParams.page})
 })
 
 function searchRecipes(options: VDataTableUpdateOptions) {
@@ -188,6 +212,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
+        window.scrollTo({top: 0, behavior: 'smooth'})
     })
 }
 

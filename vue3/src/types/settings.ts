@@ -17,6 +17,9 @@ export type DeviceSettings = {
     mealplan_startingDayOfWeek: number
     mealplan_displayWeekNumbers: boolean
 
+    search_itemsPerPage: number,
+    search_viewMode: 'table'|'grid',
+
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
 }
