@@ -19,7 +19,7 @@
     "vue-draggable-plus": "^0.6.0",
     "vue-i18n": "10.0.5",
     "vue-router": "4",
-    "vue-simple-calendar": "^7.1.0",
+    "vue-simple-calendar": "^7.2.0",
     "vuedraggable": "^4.1.0",
     "vuetify": "^3.7.6"
   },

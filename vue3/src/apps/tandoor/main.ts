@@ -9,6 +9,7 @@ import 'vite/modulepreload-polyfill';
 import vuetify from "@/vuetify";
 
 import {setupI18n} from "@/i18n";
+import MealPlanPage from "@/pages/MealPlanPage.vue";
 
 const routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'view_home'},
@@ -30,7 +31,7 @@ const routes = [
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
     {path: '/advanced-search', component: () => import("@/pages/SearchPage.vue"), name: 'SearchPage'},
     {path: '/shopping', component: () => import("@/pages/ShoppingListPage.vue"), name: 'ShoppingListPage'},
-    {path: '/mealplan', component: () => import("@/pages/MealPlanPage.vue"), name: 'MealPlanPage'},
+    {path: '/mealplan', component: MealPlanPage, name: 'MealPlanPage'},
     {path: '/books', component: () => import("@/pages/BooksPage.vue"), name: 'BooksPage'},
     {path: '/book/:bookId', component: () => import("@/pages/BookViewPage.vue"), name: 'BookViewPage', props: true},
     {path: '/recipe/import', component: () => import("@/pages/RecipeImportPage.vue"), name: 'RecipeImportPage'},
