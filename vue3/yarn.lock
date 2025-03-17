@@ -1125,7 +1125,7 @@ vue-router@4:
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
-vue-simple-calendar@^7.2.0:
+vue-simple-calendar@^7.1.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/vue-simple-calendar/-/vue-simple-calendar-7.2.0.tgz#8f1fb138cec37e0e06e5d96d7baf961ce172c933"
   integrity sha512-N55vQKndEb0OoL4wds/LgJODamG4tIx166y0nY7ZsuDK2dpTeKw4DJPR2Pm+U7+kfC2YDAQb2EfYG2WjCX+O4A==
