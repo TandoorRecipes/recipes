@@ -54,7 +54,7 @@ export function useFileApi() {
      * @param file file object to upload or null to delete image (if no imageUrl is given)
      * @param imageUrl url of an image to download by server
      */
-    function updateRecipeImage(recipeId: number, file: File|null, imageUrl?: string){
+    function updateRecipeImage(recipeId: number, file: File | null, imageUrl?: string) {
         let formData = new FormData()
         if (file != null) {
             formData.append('image', file)
@@ -80,7 +80,7 @@ export function useFileApi() {
      * uploads the given file to the image recognition endpoint
      * @param file file object to upload
      */
-    function convertImageToRecipe(file: File){
+    function convertImageToRecipe(file: File) {
         let formData = new FormData()
         if (file != null) {
             formData.append('image', file)
@@ -99,5 +99,31 @@ export function useFileApi() {
         })
     }
 
-    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage, convertImageToRecipe}
+    /**
+     * uploads the given files to the app import endpoint
+     * @param file array to import
+     * @param app app to import
+     * @param includeDuplicates if recipes that were found as duplicates should be imported as well
+     */
+    function doAppImport(file: File, app: string, includeDuplicates: boolean) {
+        let formData = new FormData()
+        formData.append('type', app);
+        formData.append('duplicates', includeDuplicates ? 'true' : 'false')
+        // files.forEach(file => {
+        //     formData.append('files', file)
+        // })
+formData.append('files', file)
+
+        return fetch(getDjangoUrl(`api/import/`), {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+            body: formData
+        }).then(r => {
+            console.log(r)
+        }).finally(() => {
+            fileApiLoading.value = false
+        })
+    }
+
+    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage, convertImageToRecipe, doAppImport}
 }

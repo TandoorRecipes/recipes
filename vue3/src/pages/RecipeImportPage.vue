@@ -25,6 +25,13 @@
                                 <v-divider></v-divider>
                                 <v-stepper-item :title="$t('Save')" value="confirm" icon=" "></v-stepper-item>
                             </template>
+                            <template v-if="importType == 'app'">
+                                <v-stepper-item :title="$t('App')" value="app" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <v-stepper-item :title="$t('File')" value="file" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <v-stepper-item :title="$t('Import')" value="import_log" icon=" "></v-stepper-item>
+                            </template>
 
                         </v-stepper-header>
 
@@ -82,11 +89,15 @@
                                     </template>
                                     <template #next>
                                         <v-btn @click="stepper = 'url'" v-if="['url','ai'].includes(importType)">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'app'" v-if="importType == 'app'">{{ $t('Next') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
-                            <v-stepper-window-item value="url">
 
+                            <!-- ------------ -->
+                            <!-- ULR/AI Items -->
+                            <!-- ------------ -->
+                            <v-stepper-window-item value="url">
                                 <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading"></v-text-field>
 
                                 <v-file-input v-model="image" :label="$t('Image')" v-if="importType == 'ai'" :loading="loading"></v-file-input>
@@ -120,7 +131,6 @@
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
-
                             <v-stepper-window-item value="image_chooser">
                                 <v-row>
                                     <v-col cols="12" md="6">
@@ -292,22 +302,60 @@
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
+                            <!-- ------------ -->
+                            <!-- App Import Items -->
+                            <!-- ------------ -->
+                            <v-stepper-window-item value="app">
+
+                                <v-row>
+                                    <v-col cols="12" md="3" v-for="i in INTEGRATIONS">
+                                        <v-card prepend-icon="fa-solid fa-carrot" :title="i.name" @click="importApp = i.id" variant="outlined" elevation="1"
+                                                :color="(importApp == i.id) ? 'primary' : ''">
+                                            <template #append>
+                                                <v-btn icon="$help" variant="plain" :href="i.helpUrl" target="_blank"></v-btn>
+                                            </template>
+                                        </v-card>
+                                    </v-col>
+                                </v-row>
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'file'">{{ $t('Next') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+                            <v-stepper-window-item value="file">
+                                <v-file-upload v-model="appImportFile"></v-file-upload>
+
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'app'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="appImport()" :disabled="appImportFile == null" :loading="fileApiLoading">{{ $t('Import') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+                            <v-stepper-window-item value="import_log">
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'app'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+
+
                         </v-stepper-window>
 
-                        <!--                        <v-stepper-actions>-->
-                        <!--                            <template #prev>-->
-                        <!--                                <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>-->
-                        <!--                            </template>-->
-                        <!--                            <template #next>-->
-                        <!--                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="Object.keys(importResponse).length == 0" v-if="stepper == '1'">-->
-                        <!--                                    {{ $t('Import') }}-->
-                        <!--                                </v-btn>-->
-                        <!--                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">-->
-                        <!--                                    {{ stepper == '1' ? $t('Edit') : $t('Next') }}-->
-                        <!--                                </v-btn>-->
-                        <!--                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false" v-if="stepper == '5'">{{ $t('Import') }}</v-btn>-->
-                        <!--                            </template>-->
-                        <!--                        </v-stepper-actions>-->
+
                     </template>
 
                 </v-stepper>
@@ -333,19 +381,22 @@ import {useFileApi} from "@/composables/useFileApi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";
 import {useUrlSearchParams} from "@vueuse/core";
+import {INTEGRATIONS} from "@/utils/integration_utils";
+import {VFileUpload} from 'vuetify/labs/VFileUpload'
 
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
-const {updateRecipeImage, convertImageToRecipe, fileApiLoading} = useFileApi()
+const {updateRecipeImage, convertImageToRecipe, doAppImport, fileApiLoading} = useFileApi()
 
 const importType = ref<'url' | 'ai' | 'app' | 'bookmarklet' | 'source'>("url")
+const importApp = ref('DEFAULT')
 const stepper = ref("type")
 const dialog = ref(false)
 const loading = ref(false)
 const importUrl = ref("")
 
-
+const appImportFile = ref<null | File>(null)
 const image = ref<null | File>(null)
 
 const importResponse = ref({} as RecipeFromSourceResponse)
@@ -397,6 +448,12 @@ function uploadAndConvertImage() {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
+}
+
+function appImport() {
+    doAppImport(appImportFile.value, importApp.value, true).then(r => {
+        stepper.value = 'import_log'
+    })
 }
 
 /**
