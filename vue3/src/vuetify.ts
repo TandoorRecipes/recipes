@@ -83,7 +83,8 @@ export default createVuetify({
             recipes: 'fa-solid fa-book',
             books: 'fa-solid fa-book-bookmark',
             menu: 'fa-solid fa-ellipsis-vertical',
-            import: 'fa-solid fa-globe'
+            import: 'fa-solid fa-globe',
+            ai: 'fa-solid fa-wand-magic-sparkles'
         },
         sets: {
             fa,

@@ -3,51 +3,125 @@
         <v-row>
             <v-col>
 
+
                 <v-stepper v-model="stepper">
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
-                            <v-stepper-item :title="$t('Import')" value="1"></v-stepper-item>
+                            <v-stepper-item :title="$t('Type')" value="type" icon=" "></v-stepper-item>
                             <v-divider></v-divider>
-                            <v-stepper-item :title="$t('Image')" value="2"></v-stepper-item>
-                            <v-divider></v-divider>
-                            <v-stepper-item :title="$t('Keywords')" value="3"></v-stepper-item>
-                            <v-divider></v-divider>
-                            <v-stepper-item :title="$t('Steps')" value="4"></v-stepper-item>
-                            <v-divider></v-divider>
-                            <v-stepper-item :title="$t('Save')" value="5"></v-stepper-item>
+
+                            <template v-if="['url','ai'].includes(importType)">
+                                <v-stepper-item :title="$t('Import')" value="url" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <template v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
+                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates" icon=" "></v-stepper-item>
+                                    <v-divider></v-divider>
+                                </template>
+                                <v-stepper-item :title="$t('Image')" value="image_chooser" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <v-stepper-item :title="$t('Steps')" value="step_editor" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <v-stepper-item :title="$t('Save')" value="confirm" icon=" "></v-stepper-item>
+                            </template>
+
                         </v-stepper-header>
 
                         <v-stepper-window>
-                            <v-stepper-window-item value="1">
-                                <v-card :loading="loading">
-                                    <v-card-text>
-                                        <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl">
-                                            <template #append>
-                                                <v-btn color="primary" icon="fa-solid fa-cloud-arrow-down fa-fw" @click="loadRecipeFromUrl()"></v-btn>
-                                            </template>
-                                        </v-text-field>
-
-                                        <v-file-input v-model="image" :label="$t('Image')" @click="uploadAndConvertImage()">
-                                            <template #append>
-                                                <v-btn>AI Import</v-btn>
-                                            </template>
-                                        </v-file-input>
-
-                                        <!-- <v-textarea :placeholder="$t('paste_json')"></v-textarea> -->
-
-                                        <v-alert variant="tonal" v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
-                                            <v-alert-title>{{ $t('Duplicate') }}</v-alert-title>
-                                            {{ $t('DuplicateFoundInfo') }}
-                                            <v-list>
-                                                <v-list-item :to="{name: 'RecipeViewPage', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }}
-                                                    (#{{ r.id }})
-                                                </v-list-item>
-                                            </v-list>
-                                        </v-alert>
-                                    </v-card-text>
-                                </v-card>
+                            <v-stepper-window-item value="type">
+                                <v-row>
+                                    <v-col cols="12" md="6">
+                                        <v-card
+                                            :title="$t('Url_Import')"
+                                            :subtitle="$t('UrlImportSubtitle')"
+                                            prepend-icon="$import"
+                                            variant="outlined"
+                                            :color="(importType == 'url') ? 'primary' : ''"
+                                            elevation="1"
+                                            @click="importType = 'url'">
+                                        </v-card>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-card
+                                            :title="$t('AI')"
+                                            :subtitle="$t('AIImportSubtitle')"
+                                            prepend-icon="$ai"
+                                            variant="outlined"
+                                            :color="(importType == 'ai') ? 'primary' : ''"
+                                            elevation="1"
+                                            @click="importType = 'ai'">
+                                        </v-card>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-card
+                                            :title="$t('App')"
+                                            :subtitle="$t('AppImportSubtitle')"
+                                            prepend-icon="fa-solid fa-folder-open"
+                                            variant="outlined"
+                                            :color="(importType == 'app') ? 'primary' : ''"
+                                            elevation="1"
+                                            @click="importType = 'app'">
+                                        </v-card>
+                                    </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-card
+                                            :title="$t('Bookmarklet')"
+                                            :subtitle="$t('BookmarkletImportSubtitle')"
+                                            prepend-icon="fa-solid fa-bookmark"
+                                            variant="outlined"
+                                            :color="(importType == 'bookmarklet') ? 'primary' : ''"
+                                            elevation="1"
+                                            @click="importType = 'bookmarklet'">
+                                        </v-card>
+                                    </v-col>
+                                </v-row>
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-spacer></v-spacer>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'url'" v-if="['url','ai'].includes(importType)">{{ $t('Next') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
                             </v-stepper-window-item>
-                            <v-stepper-window-item value="2">
+                            <v-stepper-window-item value="url">
+
+                                <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading"></v-text-field>
+
+                                <v-file-input v-model="image" :label="$t('Image')" v-if="importType == 'ai'" :loading="loading"></v-file-input>
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="loadRecipeFromUrl()" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{ $t('Load') }}</v-btn>
+                                        <v-btn @click="uploadAndConvertImage()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+                            <v-stepper-window-item value="duplicates">
+                                <v-alert variant="tonal" v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
+                                    <v-alert-title>{{ $t('Duplicate') }}</v-alert-title>
+                                    {{ $t('DuplicateFoundInfo') }}
+                                    <v-list>
+                                        <v-list-item :to="{name: 'RecipeViewPage', params: {id: r.id}}" v-for="r in importResponse.duplicates" :key="r.id"> {{ r.name }}
+                                            (#{{ r.id }})
+                                        </v-list-item>
+                                    </v-list>
+                                </v-alert>
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'url'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'image_chooser'">{{ $t('Next') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+
+                            <v-stepper-window-item value="image_chooser">
                                 <v-row>
                                     <v-col cols="12" md="6">
                                         <h2 class="text-h5">{{ $t('Selected') }}</h2>
@@ -62,8 +136,17 @@
                                         </v-row>
                                     </v-col>
                                 </v-row>
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'duplicates'" v-if="importResponse.duplicates && importResponse.duplicates.length > 0">{{ $t('Back') }}</v-btn>
+                                        <v-btn @click="stepper = 'url'" v-else>{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'keywords_chooser'">{{ $t('Next') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
                             </v-stepper-window-item>
-                            <v-stepper-window-item value="3">
+                            <v-stepper-window-item value="keywords_chooser">
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
@@ -95,9 +178,16 @@
                                     </v-list-item>
                                 </v-list>
 
-
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'image_chooser'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'step_editor'">{{ $t('Next') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
                             </v-stepper-window-item>
-                            <v-stepper-window-item value="4">
+                            <v-stepper-window-item value="step_editor">
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
@@ -120,7 +210,7 @@
                                             </v-menu>
                                         </v-btn>
                                     </v-col>
-                                    <v-col cols="12" md="6">
+                                    <v-col cols="12" md="confirm">
                                         <v-list>
                                             <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" empty-insert-threshold="25">
                                                 <v-list-item v-for="i in s.ingredients" border>
@@ -168,9 +258,16 @@
                                         </v-card-actions>
                                     </v-card>
                                 </v-dialog>
-
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'keywords_chooser'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'confirm'">{{ $t('Next') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
                             </v-stepper-window-item>
-                            <v-stepper-window-item value="5">
+                            <v-stepper-window-item value="confirm">
                                 <v-card :loading="loading || fileApiLoading">
                                     <v-card-title>{{ importResponse.recipe.name }}</v-card-title>
                                     <v-row>
@@ -186,23 +283,31 @@
                                     </v-row>
 
                                 </v-card>
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'step_editor'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="createRecipeFromImport()" :disabled="false" color="success">{{ $t('Import') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
                             </v-stepper-window-item>
                         </v-stepper-window>
 
-                        <v-stepper-actions>
-                            <template #prev>
-                                <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>
-                            </template>
-                            <template #next>
-                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="Object.keys(importResponse).length == 0" v-if="stepper == '1'">
-                                    {{ $t('Import') }}
-                                </v-btn>
-                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">
-                                    {{ stepper == '1' ? $t('Edit') : $t('Next') }}
-                                </v-btn>
-                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false" v-if="stepper == '5'">{{ $t('Import') }}</v-btn>
-                            </template>
-                        </v-stepper-actions>
+                        <!--                        <v-stepper-actions>-->
+                        <!--                            <template #prev>-->
+                        <!--                                <v-btn @click="stepper = (parseInt(stepper) - 1).toString()">Zurück</v-btn>-->
+                        <!--                            </template>-->
+                        <!--                            <template #next>-->
+                        <!--                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="Object.keys(importResponse).length == 0" v-if="stepper == '1'">-->
+                        <!--                                    {{ $t('Import') }}-->
+                        <!--                                </v-btn>-->
+                        <!--                                <v-btn @click="stepper = (parseInt(stepper) + 1).toString()" :disabled="Object.keys(importResponse).length == 0" v-if="stepper != '5'">-->
+                        <!--                                    {{ stepper == '1' ? $t('Edit') : $t('Next') }}-->
+                        <!--                                </v-btn>-->
+                        <!--                                <v-btn @click="createRecipeFromImport()" color="success" :disabled="false" v-if="stepper == '5'">{{ $t('Import') }}</v-btn>-->
+                        <!--                            </template>-->
+                        <!--                        </v-stepper-actions>-->
                     </template>
 
                 </v-stepper>
@@ -234,7 +339,8 @@ const {mobile} = useDisplay()
 const router = useRouter()
 const {updateRecipeImage, convertImageToRecipe, fileApiLoading} = useFileApi()
 
-const stepper = ref("1")
+const importType = ref<'url' | 'ai' | 'app' | 'bookmarklet' | 'source'>("url")
+const stepper = ref("type")
 const dialog = ref(false)
 const loading = ref(false)
 const importUrl = ref("")
@@ -249,11 +355,11 @@ const editingIngredient = ref({} as SourceImportIngredient)
 onMounted(() => {
 
     // handle manifest share intend passing url to import page
-    if (params.url && typeof  params.url === "string") {
+    if (params.url && typeof params.url === "string") {
         importUrl.value = params.url
         loadRecipeFromUrl()
     }
-    if (params.text && typeof  params.text === "string") {
+    if (params.text && typeof params.text === "string") {
         importUrl.value = params.text
         loadRecipeFromUrl()
     }
@@ -267,6 +373,12 @@ function loadRecipeFromUrl() {
     loading.value = true
     api.apiRecipeFromSourceCreate({recipeFromSource: {url: importUrl.value}}).then(r => {
         importResponse.value = r
+
+        if (importResponse.value.duplicates && importResponse.value.duplicates.length > 0) {
+            stepper.value = 'duplicates'
+        } else {
+            stepper.value = 'image_chooser'
+        }
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
@@ -276,8 +388,13 @@ function loadRecipeFromUrl() {
 
 function uploadAndConvertImage() {
     if (image.value != null) {
+        loading.value = true
         convertImageToRecipe(image.value).then(r => {
+            loading.value = false
             importResponse.value = r
+            stepper.value = 'image_chooser'
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
 }
