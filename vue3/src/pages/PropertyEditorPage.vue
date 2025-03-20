@@ -64,7 +64,7 @@
                         </td>
                         <td v-for="p in food.properties" v-bind:key="`${food.id}_${p.propertyType.id}`">
                             <v-text-field type="number" v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(food)"
-                                          :loading="food.loading"></v-text-field>
+                                          :loading="food.loading" @click:clear="deleteFoodProperty(p, food)" clearable></v-text-field>
                             <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
@@ -261,6 +261,28 @@ function buildFoodProperties(food: Food) {
     })
 
     return food
+}
+
+/**
+ * deletes the given property either on client or also on server if it has an id
+ * @param p
+ * @param food
+ */
+function deleteFoodProperty(p: Property, food: Food & { loading?: boolean } ){
+    let api = new ApiApi()
+
+    if(p.id){
+        food.loading = true
+        api.apiPropertyDestroy({id: p.id}).then(r => {
+            p.propertyAmount = null
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            food.loading = false
+        })
+    } else {
+        p.propertyAmount = null
+    }
 }
 
 /**
