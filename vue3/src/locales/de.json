@@ -405,6 +405,8 @@
   "Size": "Größe",
   "Social_Authentication": "Login über Drittanbieter",
   "Sort_by_new": "Nach Neueste sortieren",
+  "SourceImportHelp": "Importiere JSON im schema.org/recipe format oder eine HTML Seite mit json+ld Rezept bzw. microdata.",
+  "SourceImportSubtitle": "Importiere JSON oder HTML manuell.",
   "SpaceLimitExceeded": "Dein Space hat ein Limit überschritten, manche Funktionen wurden eingeschränkt.",
   "SpaceLimitReached": "Dieser Space hat ein Limit erreicht. Es können keine neuen Objekte von diesem Typ angelegt werden.",
   "SpaceMemberHelp": "Füge Benutzer hinzu indem du Einladungen erstellst und Sie an die gewünschte Person sendest.",

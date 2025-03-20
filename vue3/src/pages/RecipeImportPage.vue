@@ -10,7 +10,7 @@
                             <v-stepper-item :title="$t('Type')" value="type" icon=" "></v-stepper-item>
                             <v-divider></v-divider>
 
-                            <template v-if="['url','ai'].includes(importType)">
+                            <template v-if="['url','ai', 'source'].includes(importType)">
                                 <v-stepper-item :title="$t('Import')" value="url" icon=" "></v-stepper-item>
                                 <v-divider></v-divider>
                                 <template v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
@@ -86,13 +86,24 @@
                                             @click="importType = 'bookmarklet'">
                                         </v-card>
                                     </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-card
+                                            title="JSON/HTML"
+                                            :subtitle="$t('SourceImportSubtitle')"
+                                            prepend-icon="fa-solid fa-code"
+                                            variant="outlined"
+                                            :color="(importType == 'source') ? 'primary' : ''"
+                                            elevation="1"
+                                            @click="importType = 'source'">
+                                        </v-card>
+                                    </v-col>
                                 </v-row>
                                 <v-stepper-actions>
                                     <template #prev>
                                         <v-spacer></v-spacer>
                                     </template>
                                     <template #next>
-                                        <v-btn @click="stepper = 'url'" v-if="['url','ai'].includes(importType)">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'url'" v-if="['url','ai', 'source'].includes(importType)">{{ $t('Next') }}</v-btn>
                                         <v-btn @click="stepper = 'app'" v-if="importType == 'app'">{{ $t('Next') }}</v-btn>
                                         <v-btn @click="stepper = 'bookmarklet'" v-if="importType == 'bookmarklet'">{{ $t('Next') }}</v-btn>
                                     </template>
@@ -108,12 +119,15 @@
 
                                 <v-file-input v-model="image" :label="$t('Image')" v-if="importType == 'ai'" :loading="loading"></v-file-input>
 
+                                <v-textarea v-model="sourceImportText" label="JSON/HTML" :loading="loading" v-if="importType == 'source'" :hint="$t('SourceImportHelp')" persistent-hint></v-textarea>
+
                                 <v-stepper-actions>
                                     <template #prev>
                                         <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
                                     </template>
                                     <template #next>
                                         <v-btn @click="loadRecipeFromUrl({url: importUrl})" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{ $t('Load') }}</v-btn>
+                                        <v-btn @click="loadRecipeFromUrl({data: sourceImportText})" v-if="importType == 'source'" :disabled="sourceImportText == ''" :loading="loading">{{ $t('Load') }}</v-btn>
                                         <v-btn @click="uploadAndConvertImage()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
@@ -445,8 +459,10 @@ const importApp = ref('DEFAULT')
 const stepper = ref("type")
 const dialog = ref(false)
 const loading = ref(false)
+
 const importUrl = ref("")
 
+const sourceImportText = ref("")
 const appImportFiles = ref<File[]>([])
 const appImportDuplicates = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
