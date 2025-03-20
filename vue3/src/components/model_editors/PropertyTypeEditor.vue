@@ -15,7 +15,7 @@
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                 <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
                 <v-text-field :label="$t('Unit')" v-model="editingObj.unit"></v-text-field>
-                <v-text-field :label="$t('FDC_ID')" :hint="$t('property_type_fdc_hint')" v-model="editingObj.fdcId"></v-text-field>
+                <v-autocomplete :label="$t('FDC_ID')" :hint="$t('property_type_fdc_hint')" v-model="editingObj.fdcId" :items="FDC_PROPERTY_TYPES" item-title="text"></v-autocomplete>
                 <v-number-input :label="$t('Order')" :step="10" v-model="editingObj.order" :hint="$t('OrderInformation')" control-variant="stacked"></v-number-input>
                 <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
 
@@ -27,11 +27,12 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {PropertyType} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {VNumberInput} from "vuetify/labs/VNumberInput";
+import {FDC_PROPERTY_TYPES} from "@/utils/fdc";
 
 const props = defineProps({
     item: {type: {} as PropType<PropertyType>, required: false, default: null},
@@ -41,7 +42,17 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<PropertyType>('PropertyType', emit)
+const {
+    setupState,
+    deleteObject,
+    saveObject,
+    isUpdate,
+    editingObjName,
+    loading,
+    editingObj,
+    editingObjChanged,
+    modelClass
+} = useModelEditorFunctions<PropertyType>('PropertyType', emit)
 
 // object specific data (for selects/display)
 

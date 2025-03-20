@@ -747,6 +747,10 @@ class FoodViewSet(LoggingMixin, TreeMixin):
         if properties with a fdc_id already exist they will be overridden, if existing properties don't have a fdc_id they won't be changed
         """
         food = self.get_object()
+
+        if request.data['fdc_id']:
+            food.fdc_id = request.data['fdc_id']
+
         if not food.fdc_id:
             return JsonResponse({'msg': 'Food has no FDC ID associated.'}, status=400, json_dumps_params={'indent': 4})
 
@@ -767,12 +771,17 @@ class FoodViewSet(LoggingMixin, TreeMixin):
                 json_dumps_params={'indent': 4})
 
         food.properties_food_amount = 100
-        food.properties_food_unit = Unit.objects.get_or_create(
-            base_unit__iexact='g',
-            space=self.request.space,
-            defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space}
-        )[0]
 
+        standard_unit = Unit.objects.filter(base_unit__iexact='g', space=self.request.space).first()
+        if not standard_unit:
+            standard_unit = Unit.objects.filter(name__iexact='g', space=self.request.space).first()
+            if not standard_unit:
+                standard_unit = Unit.objects.create(name='g', base_unit='g', space=self.request.space)
+            else:
+                standard_unit.base_unit = 'g'
+                standard_unit.save()
+
+        food.properties_food_unit = standard_unit
         food.save()
 
         try:

@@ -1,6 +1,6 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
-    <v-input :hint="props.hint" persistent-hint :label="props.label">
+    <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails">
         <template #prepend  v-if="$slots.prepend">
             <slot name="prepend"></slot>
         </template>
@@ -73,13 +73,14 @@ const props = defineProps({
     object: {type: Boolean, default: true},
 
     allowCreate: {type: Boolean, default: false},
-
     placeholder: {type: String, default: undefined},
+
     noOptionsText: {type: String, default: undefined},
     noResultsText: {type: String, default: undefined},
-
     label: {type: String, default: ''},
+
     hint: {type: String, default: ''},
+    hideDetails: {type: Boolean, default: false},
     density: {type: String as PropType<'' | 'compact' | 'comfortable'>, default: ''},
 
     searchOnLoad: {type: Boolean, default: false},

@@ -84,6 +84,7 @@ export default createVuetify({
             books: 'fa-solid fa-book-bookmark',
             menu: 'fa-solid fa-ellipsis-vertical',
             import: 'fa-solid fa-globe',
+            properties: 'fa-solid fa-database',
             ai: 'fa-solid fa-wand-magic-sparkles'
         },
         sets: {

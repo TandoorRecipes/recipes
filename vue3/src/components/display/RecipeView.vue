@@ -72,10 +72,16 @@
             </v-card>
         </template>
 
-
         <v-expansion-panels class="mt-2">
+             <v-expansion-panel>
+                <v-expansion-panel-title><v-icon icon="$properties" class="me-2"></v-icon> {{ $t('Properties') }}</v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <property-view :recipe="recipe"></property-view>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+
             <v-expansion-panel>
-                <v-expansion-panel-title><i class="fa-solid fa-circle-info me-2"></i> {{ $t('Information') }}</v-expansion-panel-title>
+                <v-expansion-panel-title><v-icon icon="fa-solid fa-circle-info" class="me-2"></v-icon> {{ $t('Information') }}</v-expansion-panel-title>
                 <v-expansion-panel-text>
                     <v-row>
                         <v-col cols="12" md="3">
@@ -116,7 +122,10 @@
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
+
         </v-expansion-panels>
+
+
 
         <recipe-activity :recipe="recipe"></recipe-activity>
     </template>
@@ -137,6 +146,7 @@ import {useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import {DateTime} from "luxon";
+import PropertyView from "@/components/display/PropertyView.vue";
 
 const {request, release} = useWakeLock()
 

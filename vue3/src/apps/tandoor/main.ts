@@ -43,6 +43,7 @@ const routes = [
     {path: '/edit/:model/:id?', component: () => import("@/pages/ModelListPage.vue"), props: true, name: 'ModelEditPage'},
 
     {path: '/ingredient-editor', component: () => import("@/pages/IngredientEditorPage.vue"), name: 'IngredientEditorPage'},
+    {path: '/property-editor', component: () => import("@/pages/PropertyEditorPage.vue"), name: 'PropertyEditorPage'},
 ]
 
 const router = createRouter({
