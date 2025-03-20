@@ -6,72 +6,117 @@
                 <model-select append-to-body model="Recipe" v-model="recipe" @update:model-value="loadRecipe(recipe.id!)"></model-select>
             </v-card-text>
         </v-card>
-
-        <v-table class="mt-2">
-            <thead>
-            <tr>
-                <th>{{ $t('Food') }}</th>
-                <th>
-                    <v-btn variant="outlined" block href="https://fdc.nal.usda.gov/food-search" target="_blank" prepend-icon="$search" stacked>{{ $t('FDC_ID') }}</v-btn>
-                </th>
-                <th>
-                    <v-btn variant="outlined" @click="dialog = true" block stacked>{{ $t('Amount') }}</v-btn>
-                </th>
-                <th>
-                    <v-btn variant="outlined" @click="dialog = true" block stacked>{{ $t('Properties_Food_Unit') }}</v-btn>
-                </th>
-                <th v-for="pt in propertyTypes" :key="pt.id!">
-                    <v-btn stacked block variant="outlined" class="mt-2 mb-2">
-                        <span>{{ pt.name }}</span>
-                        <span>
+        <v-row>
+            <v-col>
+                <v-table class="mt-2">
+                    <thead>
+                    <tr>
+                        <th>{{ $t('Food') }}</th>
+                        <th>
+                            <v-btn variant="outlined" block href="https://fdc.nal.usda.gov/food-search" target="_blank" prepend-icon="$search" stacked>{{ $t('FDC_ID') }}</v-btn>
+                        </th>
+                        <th>
+                            <v-btn variant="outlined" @click="dialog = true" block stacked>{{ $t('Amount') }}</v-btn>
+                        </th>
+                        <th>
+                            <v-btn variant="outlined" @click="dialog = true" block stacked>{{ $t('Properties_Food_Unit') }}</v-btn>
+                        </th>
+                        <th v-for="pt in propertyTypes" :key="pt.id!">
+                            <v-btn stacked block variant="outlined" class="mt-2 mb-2">
+                                <span>{{ pt.name }}</span>
+                                <span>
                         <v-chip color="info" size="x-small"><v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>{{ pt.order }}</v-chip>
                         <v-chip color="success" size="x-small" v-if="pt.fdcId"><v-icon icon="fa-solid fa-check"></v-icon>FDC</v-chip>
                         <v-chip color="error" size="x-small" v-if="!pt.fdcId"><v-icon icon="fa-solid fa-times"></v-icon>FDC</v-chip>
                         </span>
-                        <model-edit-dialog model="PropertyType" :item="pt"></model-edit-dialog>
-                    </v-btn>
-                </th>
-                <th>
-                    <v-btn color="create" class="mt-1 float-right">
-                        <v-icon icon="$create"></v-icon>
-                        <model-edit-dialog model="PropertyType" @create="(pt:PropertyType) => propertyTypes.push(pt)"></model-edit-dialog>
-                    </v-btn>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="[i, food] in foods.entries()">
-                <td>{{ food.name }}</td>
-                <td>
-                    <v-text-field type="number" v-model="food.fdcId" density="compact" hide-details @change="updateFood(food)" style="min-width: 180px" :loading="food.loading">
-                        <template #append-inner>
-                            <v-btn @click="updateFoodFdcData(food)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain" v-if="food.fdcId"></v-btn>
-                            <v-btn :href="`https://fdc.nal.usda.gov/food-details/${food.fdcId}/nutrients`" target="_blank" icon="fa-solid fa-arrow-up-right-from-square"
-                                   size="small" variant="plain" v-if="food.fdcId"></v-btn>
-                        </template>
-                    </v-text-field>
-                </td>
-                <td>
-                    <v-text-field type="number" v-model="food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(food)"
-                                  :loading="food.loading"></v-text-field>
-                </td>
-                <td>
-                    <model-select model="Unit" density="compact" v-model="food.propertiesFoodUnit" hide-details @update:model-value="updateFood(food)"
-                                  :loading="food.loading"></model-select>
-                </td>
-                <td v-for="p in food.properties" v-bind:key="`${food.id}_${p.propertyType.id}`">
-                    <v-text-field type="number" v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(food)"
-                                  :loading="food.loading"></v-text-field>
-                    <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0">
-                        <v-icon icon="$create"></v-icon>
-                    </v-btn>
-                </td>
-                <td>
+                                <model-edit-dialog model="PropertyType" :item="pt"></model-edit-dialog>
+                            </v-btn>
+                        </th>
+                        <th>
+                            <v-btn color="create" class="mt-1 float-right">
+                                <v-icon icon="$create"></v-icon>
+                                <model-edit-dialog model="PropertyType" @create="(pt:PropertyType) => propertyTypes.push(pt)"></model-edit-dialog>
+                            </v-btn>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="[i, food] in foods.entries()">
+                        <td>{{ food.name }}</td>
+                        <td>
+                            <v-text-field type="number" v-model="food.fdcId" density="compact" hide-details @change="updateFood(food)" style="min-width: 180px"
+                                          :loading="food.loading">
+                                <template #append-inner>
+                                    <v-btn @click="updateFoodFdcData(food)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain"
+                                           v-if="food.fdcId"></v-btn>
+                                    <v-btn :href="`https://fdc.nal.usda.gov/food-details/${food.fdcId}/nutrients`" target="_blank" icon="fa-solid fa-arrow-up-right-from-square"
+                                           size="small" variant="plain" v-if="food.fdcId"></v-btn>
+                                </template>
+                            </v-text-field>
+                        </td>
+                        <td>
+                            <v-text-field type="number" v-model="food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(food)"
+                                          :loading="food.loading"></v-text-field>
+                        </td>
+                        <td>
+                            <model-select model="Unit" density="compact" v-model="food.propertiesFoodUnit" hide-details @update:model-value="updateFood(food)"
+                                          :loading="food.loading"></model-select>
+                        </td>
+                        <td v-for="p in food.properties" v-bind:key="`${food.id}_${p.propertyType.id}`">
+                            <v-text-field type="number" v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(food)"
+                                          :loading="food.loading"></v-text-field>
+                            <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0">
+                                <v-icon icon="$create"></v-icon>
+                            </v-btn>
+                        </td>
+                        <td>
 
-                </td>
-            </tr>
-            </tbody>
-        </v-table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </v-table>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <v-card prepend-icon="fa-solid fa-calculator" :title="$t('Calculator')">
+                    <v-card-text>
+                        <v-row dense>
+                            <v-col cols="3">
+                                <v-text-field type="number" v-model="calculatorFromNumerator">
+                                    <template #append>
+                                        <i class="fa-solid fa-divide"></i>
+                                    </template>
+                                </v-text-field>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field type="number" v-model="calculatorFromDenominator">
+                                    <template #append>
+                                        <i class="fa-solid fa-equals"></i>
+                                    </template>
+                                </v-text-field>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field type="number" v-model="calculatorToNumerator">
+                                    <template #append>
+                                        <i class="fa-solid fa-divide"></i>
+                                    </template>
+                                    <template #append-inner>
+                                        <btn-copy variant="plain" :copy-value="calculatorToNumerator"></btn-copy>
+                                    </template>
+                                </v-text-field>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-text-field type="number" v-model="calculatorToDenominator"></v-text-field>
+                            </v-col>
+                        </v-row>
+
+
+                    </v-card-text>
+                </v-card>
+
+            </v-col>
+        </v-row>
     </v-container>
 
     <v-dialog v-model="dialog" max-width="600">
@@ -100,19 +145,28 @@
 
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {ApiApi, Food, Property, PropertyType, Recipe, Unit} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useUrlSearchParams} from "@vueuse/core";
+import BtnCopy from "@/components/buttons/BtnCopy.vue";
 
 const params = useUrlSearchParams('history', {})
+
+const calculatorToNumerator = computed(() => {
+    return (calculatorFromNumerator.value / calculatorFromDenominator.value * calculatorToDenominator.value).toFixed(2)
+})
 
 const dialog = ref(false)
 const dialogAmount = ref(100)
 const dialogUnit = ref<undefined | Unit>(undefined)
+
+const calculatorFromNumerator = ref(250)
+const calculatorFromDenominator = ref(500)
+const calculatorToDenominator = ref(100)
 
 const recipe = ref<undefined | Recipe>()
 const propertyTypes = ref([] as PropertyType[])
