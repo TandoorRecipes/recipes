@@ -1895,6 +1895,37 @@ class ImageToRecipeView(APIView):
             return Response({'msg': serializer.errors})
 
 
+class AppImportView(APIView):
+    parser_classes = [MultiPartParser]
+    throttle_classes = [RecipeImportThrottle]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    @extend_schema(request=ImportImageSerializer(many=False), responses=RecipeFromSourceResponseSerializer(many=False))
+    def post(self, request, *args, **kwargs):
+        limit, msg = above_space_limit(request.space)
+        if limit:
+            return Response({'error': True, 'msg': _('File is above space limit')}, status=status.HTTP_400_BAD_REQUEST)
+
+        form = ImportForm(request.POST, request.FILES)
+        if form.is_valid() and request.FILES != {}:
+            try:
+                integration = get_integration(request, form.cleaned_data['type'])
+
+                il = ImportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
+                files = []
+                for f in request.FILES.getlist('files'):
+                    files.append({'file': io.BytesIO(f.read()), 'name': f.name})
+                t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
+                t.setDaemon(True)
+                t.start()
+
+                return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
+            except NotImplementedError:
+                return Response({'error': True, 'msg': _('Importing is not implemented for this provider')},
+                                status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 @extend_schema(
     request=None,
     responses=None,

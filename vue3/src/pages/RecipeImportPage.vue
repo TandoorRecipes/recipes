@@ -33,6 +33,10 @@
                                 <v-stepper-item :title="$t('Import')" value="import_log" icon=" "></v-stepper-item>
                             </template>
 
+                            <template v-if="importType == 'bookmarklet'">
+                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet" icon=" "></v-stepper-item>
+                            </template>
+
                         </v-stepper-header>
 
                         <v-stepper-window>
@@ -90,6 +94,7 @@
                                     <template #next>
                                         <v-btn @click="stepper = 'url'" v-if="['url','ai'].includes(importType)">{{ $t('Next') }}</v-btn>
                                         <v-btn @click="stepper = 'app'" v-if="importType == 'app'">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'bookmarklet'" v-if="importType == 'bookmarklet'">{{ $t('Next') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
@@ -97,6 +102,7 @@
                             <!-- ------------ -->
                             <!-- ULR/AI Items -->
                             <!-- ------------ -->
+
                             <v-stepper-window-item value="url">
                                 <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading"></v-text-field>
 
@@ -107,7 +113,7 @@
                                         <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
                                     </template>
                                     <template #next>
-                                        <v-btn @click="loadRecipeFromUrl()" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{ $t('Load') }}</v-btn>
+                                        <v-btn @click="loadRecipeFromUrl({url: importUrl})" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{ $t('Load') }}</v-btn>
                                         <v-btn @click="uploadAndConvertImage()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
@@ -302,9 +308,11 @@
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
-                            <!-- ------------ -->
+
+                            <!-- ---------------- -->
                             <!-- App Import Items -->
-                            <!-- ------------ -->
+                            <!-- ---------------- -->
+
                             <v-stepper-window-item value="app">
 
                                 <v-row>
@@ -328,23 +336,55 @@
                                 </v-stepper-actions>
                             </v-stepper-window-item>
                             <v-stepper-window-item value="file">
-                                <v-file-upload v-model="appImportFile"></v-file-upload>
+                                <v-file-upload v-model="appImportFiles" multiple></v-file-upload>
 
+                                <v-card variant="outlined" elevation="1" density="compact" :title="$t('Duplicate')" :subtitle="$t('import_duplicates')" class="mt-2">
+                                    <template #prepend>
+                                        <v-checkbox v-model="appImportDuplicates"></v-checkbox>
+                                    </template>
+                                </v-card>
 
                                 <v-stepper-actions>
                                     <template #prev>
                                         <v-btn @click="stepper = 'app'">{{ $t('Back') }}</v-btn>
                                     </template>
                                     <template #next>
-                                        <v-btn @click="appImport()" :disabled="appImportFile == null" :loading="fileApiLoading">{{ $t('Import') }}</v-btn>
+                                        <v-btn @click="appImport()" :disabled="appImportFiles.length == 0" :loading="fileApiLoading">{{ $t('Import') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
                             <v-stepper-window-item value="import_log">
 
+                                <import-log-viewer :import-log="appImportLog" v-if="appImportLog"></import-log-viewer>
+
                                 <v-stepper-actions>
                                     <template #prev>
-                                        <v-btn @click="stepper = 'app'">{{ $t('Back') }}</v-btn>
+                                        <v-btn @click="stepper = 'file'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn :to="{name: 'SearchPage', query: {keywords: appImportLog.keyword.id}}" v-if="appImportLog && !appImportLog.running"
+                                               :disabled="false">{{ $t('View_Recipes') }}
+                                        </v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+
+                            <!-- ------------ -->
+                            <!-- Bookmarklet  -->
+                            <!-- ------------ -->
+                            <v-stepper-window-item value="bookmarklet">
+                                {{$t('BookmarkletImportSubtitle')}}
+
+                                <ol>
+                                    <li>1. {{$t('BookmarkletHelp1')}}</li>
+                                    <li> <v-btn :href="bookmarkletContent" color="primary">{{$t('ImportIntoTandoor')}}</v-btn></li>
+                                    <li>2. {{$t('BookmarkletHelp2')}}</li>
+                                    <li>3. {{$t('BookmarkletHelp3')}}</li>
+                                </ol>
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
                                     </template>
                                     <template #next>
 
@@ -354,13 +394,8 @@
 
 
                         </v-stepper-window>
-
-
                     </template>
-
                 </v-stepper>
-
-
             </v-col>
         </v-row>
     </v-container>
@@ -368,14 +403,13 @@
 
 <script lang="ts" setup>
 
-import {nextTick, onMounted, ref} from "vue";
-import {ApiApi, Keyword, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep} from "@/openapi";
+import {computed, onMounted, ref} from "vue";
+import {AccessToken, ApiApi, ImportLog, type RecipeFromSource, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {useFileApi} from "@/composables/useFileApi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -383,11 +417,28 @@ import {useDisplay} from "vuetify";
 import {useUrlSearchParams} from "@vueuse/core";
 import {INTEGRATIONS} from "@/utils/integration_utils";
 import {VFileUpload} from 'vuetify/labs/VFileUpload'
+import ImportLogViewer from "@/components/display/ImportLogViewer.vue";
+import {DateTime} from "luxon";
+import {useDjangoUrls} from "@/composables/useDjangoUrls";
+import bookmarkletJs from '@/assets/bookmarklet_v3?url'
 
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
 const {updateRecipeImage, convertImageToRecipe, doAppImport, fileApiLoading} = useFileApi()
+const {getDjangoUrl} = useDjangoUrls()
+
+const bookmarkletContent = computed(() => {
+    return 'javascript:(function(){' +
+        'if(window.bookmarkletTandoor!==undefined){' +
+        'bookmarkletTandoor();' +
+        '} else {' +
+        `localStorage.setItem("importURL", "${getDjangoUrl('/api/bookmarklet-import/')}");` +
+        `localStorage.setItem("redirectURL", "${getDjangoUrl('/recipe/import/')}");` +
+        `localStorage.setItem("token", "${bookmarkletToken.value}");` +
+        `document.body.appendChild(document.createElement("script")).src="${bookmarkletJs}?r="+Math.floor(Math.random()*999999999)}` +
+        `})()`
+})
 
 const importType = ref<'url' | 'ai' | 'app' | 'bookmarklet' | 'source'>("url")
 const importApp = ref('DEFAULT')
@@ -396,33 +447,43 @@ const dialog = ref(false)
 const loading = ref(false)
 const importUrl = ref("")
 
-const appImportFile = ref<null | File>(null)
+const appImportFiles = ref<File[]>([])
+const appImportDuplicates = ref(false)
+const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
+
+const bookmarkletToken = ref("")
 
 const importResponse = ref({} as RecipeFromSourceResponse)
 const keywordSelect = ref<null | SourceImportKeyword>(null)
 const editingIngredient = ref({} as SourceImportIngredient)
 
 onMounted(() => {
+    loadOrCreateBookmarkletToken()
 
     // handle manifest share intend passing url to import page
     if (params.url && typeof params.url === "string") {
         importUrl.value = params.url
-        loadRecipeFromUrl()
+        loadRecipeFromUrl({url: importUrl.value})
     }
     if (params.text && typeof params.text === "string") {
         importUrl.value = params.text
-        loadRecipeFromUrl()
+        loadRecipeFromUrl({url: importUrl.value})
+    }
+
+    if (params.bookmarklet_import && typeof params.bookmarklet_import === "string" && !isNaN(parseInt(params.bookmarklet_import))) {
+        importType.value = 'url'
+        loadRecipeFromUrl({bookmarklet: parseInt(params.bookmarklet_import)})
     }
 })
 
 /**
  * call server to load recipe from a given URl
  */
-function loadRecipeFromUrl() {
+function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
     let api = new ApiApi()
     loading.value = true
-    api.apiRecipeFromSourceCreate({recipeFromSource: {url: importUrl.value}}).then(r => {
+    api.apiRecipeFromSourceCreate({recipeFromSource: recipeFromSourceRequest}).then(r => {
         importResponse.value = r
 
         if (importResponse.value.duplicates && importResponse.value.duplicates.length > 0) {
@@ -451,8 +512,24 @@ function uploadAndConvertImage() {
 }
 
 function appImport() {
-    doAppImport(appImportFile.value, importApp.value, true).then(r => {
+    doAppImport(appImportFiles.value, importApp.value, appImportDuplicates.value).then(r => {
         stepper.value = 'import_log'
+        recLoadImportLog(r)
+    })
+}
+
+function recLoadImportLog(importLogId: number) {
+    let api = new ApiApi()
+
+    api.apiImportLogRetrieve({id: importLogId}).then(r => {
+        appImportLog.value = r
+        if (r.running) {
+            setTimeout(() => {
+                recLoadImportLog(importLogId)
+            }, 1000)
+        }
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 }
 
@@ -637,6 +714,27 @@ function setAllKeywordsImportStatus(status: boolean) {
  */
 function addStep() {
     importResponse.value.recipe?.steps.push({} as SourceImportStep)
+}
+
+
+/**
+ * load or create an AccessToken with the bookmarklet scope for use in the bookmarklet code
+ */
+function loadOrCreateBookmarkletToken() {
+    let api = new ApiApi()
+    api.apiAccessTokenList().then(r => {
+        r.forEach(token => {
+            if (token.scope == 'bookmarklet') {
+                bookmarkletToken.value = token.token
+            }
+        })
+
+        if (bookmarkletToken.value == '') {
+            api.apiAccessTokenCreate({accessToken: {scope: 'bookmarklet', expires: DateTime.now().plus({year: 100}).toJSDate()} as AccessToken}).then(r => {
+                bookmarkletToken.value = r.token
+            })
+        }
+    })
 }
 
 </script>

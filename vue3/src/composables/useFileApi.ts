@@ -1,8 +1,8 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {RecipeFromJSON, RecipeFromSourceFromJSON, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, UserFile, UserFileFromJSON} from "@/openapi";
-import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, UserFile, UserFileFromJSON} from "@/openapi";
+
 
 /**
  * function to upload files to the multipart endpoints accepting file uploads
@@ -101,25 +101,27 @@ export function useFileApi() {
 
     /**
      * uploads the given files to the app import endpoint
-     * @param file array to import
+     * @param files array to import
      * @param app app to import
      * @param includeDuplicates if recipes that were found as duplicates should be imported as well
+     * @returns Promise resolving to the import ID of the app import
      */
-    function doAppImport(file: File, app: string, includeDuplicates: boolean) {
+    function doAppImport(files: File[], app: string, includeDuplicates: boolean) {
         let formData = new FormData()
         formData.append('type', app);
         formData.append('duplicates', includeDuplicates ? 'true' : 'false')
-        // files.forEach(file => {
-        //     formData.append('files', file)
-        // })
-formData.append('files', file)
+        files.forEach(file => {
+            formData.append('files', file)
+        })
 
         return fetch(getDjangoUrl(`api/import/`), {
             method: 'POST',
             headers: {'X-CSRFToken': getCookie('csrftoken')},
             body: formData
         }).then(r => {
-            console.log(r)
+            return r.json().then(r => {
+                return r.import_id
+            })
         }).finally(() => {
             fileApiLoading.value = false
         })

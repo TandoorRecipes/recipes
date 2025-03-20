@@ -88,7 +88,7 @@ urlpatterns = [
     path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),  # TODO rename to search settings
 
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
-    path('api/import/', api.import_files, name='view_import'),
+
     path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
     path('export/', import_export.export_recipe, name='view_export'),
     path('export-response/<int:pk>/', import_export.export_response, name='view_export_response'),
@@ -110,6 +110,7 @@ urlpatterns = [
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
     path('data/batch/import', data.batch_import, name='data_batch_import'),
     path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
+    path('api/import/', api.AppImportView.as_view(), name='view_import'),
     path('data/import/url', data.import_url, name='data_import_url'),
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
@@ -121,7 +122,6 @@ urlpatterns = [
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
-    path('api/image-to-recipe', api.ImageToRecipeView.as_view(), name='api_image_to_recipe'),
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),

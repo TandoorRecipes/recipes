@@ -1184,6 +1184,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     meal_plan_data = MealPlanSerializer(source='mealplan', read_only=True, required=False)
     servings = CustomDecimalField()
     created_by = UserSerializer(read_only=True)
+
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
@@ -1197,8 +1198,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings','created_by',)
-        read_only_fields = ('id','created_by',)
+        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings', 'created_by',)
+        read_only_fields = ('id', 'created_by',)
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
@@ -1248,7 +1249,8 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             if existing_slr := ShoppingListRecipe.objects.filter(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space).first():
                 validated_data['list_recipe'] = existing_slr
             else:
-                validated_data['list_recipe'] = ShoppingListRecipe.objects.create(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space, created_by=self.context['request'].user)
+                validated_data['list_recipe'] = ShoppingListRecipe.objects.create(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space,
+                                                                                  created_by=self.context['request'].user)
             del validated_data['mealplan_id']
 
         return super().create(validated_data)
@@ -1463,6 +1465,9 @@ class AccessTokenSerializer(serializers.ModelSerializer):
     @extend_schema_field(str)
     def get_token(self, obj):
         if (timezone.now() - obj.created).seconds < 15:
+            return obj.token
+        if obj.scope == 'bookmarklet':
+            # bookmarklet only tokens are always returned because they have very limited access and are needed for the bookmarklet function to work
             return obj.token
         return f'tda_************_******_***********{obj.token[len(obj.token) - 4:]}'
 
