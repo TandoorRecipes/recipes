@@ -23,6 +23,7 @@ import type {
   CookLog,
   CustomFilter,
   ExportLog,
+  FdcQuery,
   Food,
   FoodInheritField,
   FoodShoppingUpdate,
@@ -165,6 +166,8 @@ import {
     CustomFilterToJSON,
     ExportLogFromJSON,
     ExportLogToJSON,
+    FdcQueryFromJSON,
+    FdcQueryToJSON,
     FoodFromJSON,
     FoodToJSON,
     FoodInheritFieldFromJSON,
@@ -609,6 +612,11 @@ export interface ApiExportLogUpdateRequest {
     exportLog: Omit<ExportLog, 'createdBy'|'createdAt'>;
 }
 
+export interface ApiFdcSearchRetrieveRequest {
+    dataType?: Array<string>;
+    query?: string;
+}
+
 export interface ApiFoodCreateRequest {
     food: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'>;
 }
@@ -684,7 +692,7 @@ export interface ApiImageToRecipeCreateRequest {
     image: string;
 }
 
-export interface ApiImageToRecipeCreate2Request {
+export interface ApiImportCreateRequest {
     image: string;
 }
 
@@ -3463,6 +3471,42 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     */
+    async apiFdcSearchRetrieveRaw(requestParameters: ApiFdcSearchRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FdcQuery>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['dataType'] != null) {
+            queryParameters['dataType'] = requestParameters['dataType'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/fdc-search/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FdcQueryFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiFdcSearchRetrieve(requestParameters: ApiFdcSearchRetrieveRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FdcQuery> {
+        const response = await this.apiFdcSearchRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiFoodCreateRaw(requestParameters: ApiFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
@@ -4165,7 +4209,7 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/image-to-recipe`,
+            path: `/api/image-to-recipe/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -4184,11 +4228,11 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiImageToRecipeCreate2Raw(requestParameters: ApiImageToRecipeCreate2Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
+    async apiImportCreateRaw(requestParameters: ApiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
         if (requestParameters['image'] == null) {
             throw new runtime.RequiredError(
                 'image',
-                'Required parameter "image" was null or undefined when calling apiImageToRecipeCreate2().'
+                'Required parameter "image" was null or undefined when calling apiImportCreate().'
             );
         }
 
@@ -4219,7 +4263,7 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/image-to-recipe/`,
+            path: `/api/import/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -4231,38 +4275,9 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiImageToRecipeCreate2(requestParameters: ApiImageToRecipeCreate2Request, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeFromSourceResponse> {
-        const response = await this.apiImageToRecipeCreate2Raw(requestParameters, initOverrides);
+    async apiImportCreate(requestParameters: ApiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeFromSourceResponse> {
+        const response = await this.apiImportCreateRaw(requestParameters, initOverrides);
         return await response.value();
-    }
-
-    /**
-     * function to handle files passed by application importer
-     */
-    async apiImportCreateRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/import/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * function to handle files passed by application importer
-     */
-    async apiImportCreate(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiImportCreateRaw(initOverrides);
     }
 
     /**

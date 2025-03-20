@@ -333,7 +333,7 @@
   "Properties": "Eigenschaften",
   "PropertiesFoodHelp": "Eigenschaften können für Rezepte und Lebensmittel erfasst werden. Eigenschaften von Lebensmitteln werden entsprechend der Menge für das Rezept ausgerechnet und überschreiben  die Rezepteigenschaften. ",
   "Properties_Food_Amount": "Eigenschaften: Lebensmittelmenge",
-  "Properties_Food_Unit": "Nährwert Einheit",
+  "Properties_Food_Unit": "Eigenschaft Einheit",
   "Property": "Eigenschaft",
   "PropertyType": "Eigenschafts Typ",
   "Property_Editor": "Eigenschaften bearbeiten",

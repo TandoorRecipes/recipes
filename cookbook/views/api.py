@@ -107,7 +107,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  SupermarketSerializer, SyncLogSerializer, SyncSerializer,
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer,
-                                 LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer
+                                 LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -1935,6 +1935,38 @@ class AppImportView(APIView):
                                 status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FdcSearchView(APIView):
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    @extend_schema(responses=FdcQuerySerializer(many=False),
+                   parameters=[OpenApiParameter(name='query', type=str), OpenApiParameter(name='dataType', description='options: Branded,Foundation,Survey (FNDDS),SR Legacy', type=str, many=True)])
+    def get(self, request, format=None):
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            data_types = self.request.query_params.getlist('dataType', ['Foundation'])
+
+            response = requests.get(f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}')
+
+
+            if response.status_code == 429:
+                return JsonResponse(
+                    {
+                        'msg':
+                            'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
+                                    Configure your key in Tandoor using environment FDC_API_KEY variable.'
+                    },
+                    status=429,
+                    json_dumps_params={'indent': 4})
+            if response.status_code != 200:
+                return JsonResponse({
+                    'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/foods/search?api_key=*****&query={query}'},
+                    status=response.status_code,
+                    json_dumps_params={'indent': 4})
+
+            return Response(FdcQuerySerializer(context={'request': request}).to_representation(json.loads(response.content)), status=status.HTTP_200_OK)
+
 
 @extend_schema(
     request=None,

@@ -14,6 +14,8 @@ export * from './CustomFilter';
 export * from './DefaultPageEnum';
 export * from './DeleteEnum';
 export * from './ExportLog';
+export * from './FdcQuery';
+export * from './FdcQueryFoods';
 export * from './Food';
 export * from './FoodInheritField';
 export * from './FoodShoppingUpdate';

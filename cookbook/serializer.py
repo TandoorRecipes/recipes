@@ -1502,6 +1502,18 @@ class ServerSettingsSerializer(serializers.Serializer):
         read_only_fields = '__ALL__'
 
 
+class FdcQueryFoodsSerializer(serializers.Serializer):
+    fdcId = serializers.IntegerField()
+    description = serializers.CharField()
+    dataType = serializers.CharField()
+
+
+class FdcQuerySerializer(serializers.Serializer):
+    totalHits = serializers.IntegerField()
+    currentPage = serializers.IntegerField()
+    totalPages = serializers.IntegerField()
+    foods = FdcQueryFoodsSerializer(many=True)
+
 # Export/Import Serializers
 
 class KeywordExportSerializer(KeywordSerializer):

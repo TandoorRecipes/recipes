@@ -118,6 +118,7 @@ urlpatterns = [
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/image-to-recipe/', api.ImageToRecipeView.as_view(), name='api_image_to_recipe'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
+    path('api/fdc-search/', api.FdcSearchView.as_view(), name='api_fdc_search'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),

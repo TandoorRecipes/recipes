@@ -117,6 +117,9 @@
 
             </v-col>
         </v-row>
+
+        <v-btn @click="fdcDialog = true">OpenSearch</v-btn>
+        <fdc-search-dialog v-model="fdcDialog"></fdc-search-dialog>
     </v-container>
 
     <v-dialog v-model="dialog" max-width="600">
@@ -153,6 +156,7 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
+import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 
 const params = useUrlSearchParams('history', {})
 
@@ -167,6 +171,8 @@ const dialogUnit = ref<undefined | Unit>(undefined)
 const calculatorFromNumerator = ref(250)
 const calculatorFromDenominator = ref(500)
 const calculatorToDenominator = ref(100)
+
+const fdcDialog = ref(false)
 
 const recipe = ref<undefined | Recipe>()
 const propertyTypes = ref([] as PropertyType[])
