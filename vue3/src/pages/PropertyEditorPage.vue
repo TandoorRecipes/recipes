@@ -80,16 +80,21 @@
                             </v-text-field>
                         </td>
                         <td>
-                            <v-text-field type="number" v-model="ingredient.food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(ingredient)"
-                                          :loading="ingredient.loading"></v-text-field>
+                            <v-number-input v-model="ingredient.food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(ingredient)"
+                                          :loading="ingredient.loading" style="min-width: 100px" control-variant="hidden">
+
+                            </v-number-input>
                         </td>
                         <td>
                             <model-select model="Unit" density="compact" v-model="ingredient.food.propertiesFoodUnit" hide-details @update:model-value="updateFood(ingredient)"
                                           :loading="ingredient.loading"></model-select>
                         </td>
                         <td v-for="p in ingredient.food.properties" v-bind:key="`${ingredient.food.id}_${p.propertyType.id}`">
-                            <v-text-field type="number" v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)"
-                                          :loading="ingredient.loading" @click:clear="deleteFoodProperty(p, ingredient)" clearable></v-text-field>
+                            <v-number-input v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)"
+                                          :loading="ingredient.loading" @click:clear="deleteFoodProperty(p, ingredient)" style="min-width: 120px" control-variant="hidden" clearable>
+
+                            </v-number-input>
+
                             <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
@@ -182,6 +187,7 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
+import {VNumberInput} from 'vuetify/labs/VNumberInput'
 
 type IngredientLoading = Ingredient & { loading?: boolean }
 
