@@ -22,7 +22,7 @@ EXPOSE 80 8080
 RUN mkdir /opt/recipes
 WORKDIR /opt/recipes
 
-COPY requirements.txt ./
+COPY --link requirements.txt ./
 
 RUN <<EOF
     # remove Development dependencies from requirements.txt
@@ -41,7 +41,7 @@ EOF
 COPY --link ./recipes/ /opt/recipes/recipes
 COPY --link ./cookbook/ /opt/recipes/cookbook
 COPY --link ./http.d/ /opt/recipes/http.d
-COPY --link \
+COPY --link --chmod=755 \
     ./boot.sh \
     ./manage.py \
     /opt/recipes
@@ -65,5 +65,4 @@ RUN rm -rf /etc/nginx/http.d && \
 #            --retries=3 \
 #            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
 
-RUN chmod +x boot.sh
 ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]
