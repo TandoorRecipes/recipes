@@ -9,7 +9,23 @@ RUN yarn install --frozen-lockfile && \
 FROM python:3.13-alpine3.22
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap libgcc libstdc++ nginx tini envsubst nodejs npm
+RUN apk add --no-cache \
+    envsubst \
+    gettext \
+    libgcc \
+    libjpeg \
+    libstdc++ \
+    libwebp \
+    libxml2-dev \
+    libxslt-dev \
+    nginx \
+    nodejs \
+    npm \
+    openldap \
+    postgresql-client \
+    postgresql-libs \
+    tini \
+    zlib
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED=1 \
@@ -26,7 +42,24 @@ COPY --link requirements.txt ./
 RUN <<EOF
     # remove Development dependencies from requirements.txt
     sed -i '/# Development/,$d' requirements.txt
-    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust
+    apk add --no-cache --virtual .build-deps \
+        build-base \
+        cargo \
+        curl \
+        g++ \
+        gcc \
+        jpeg-dev \
+        libffi-dev \
+        libwebp-dev \
+        musl-dev \
+        postgresql-dev \
+        python3-dev \
+        openldap-dev \
+        openssl-dev \
+        xmlsec \
+        xmlsec-dev \
+        rust \
+        zlib-dev
     python -m venv venv
     venv/bin/python -m pip install --upgrade pip
     venv/bin/pip debug -v
