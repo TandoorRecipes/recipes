@@ -1,7 +1,9 @@
-FROM python:3.13-alpine3.21
+FROM python:3.13-alpine3.21 AS base
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++
+
+FROM base AS deps
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED=1
@@ -44,6 +46,7 @@ RUN <<EOF
   apk --purge del .build-deps
 EOF
 
+FROM deps AS runner
 #Copy project and execute it.
 COPY . ./
 
