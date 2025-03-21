@@ -24,16 +24,18 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-# remove Development dependencies from requirements.txt
-RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
-    python -m venv venv && \
-    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip debug -v && \
-    venv/bin/pip install wheel==0.45.1 && \
-    venv/bin/pip install setuptools_rust==1.10.2 && \
-    venv/bin/pip install -r requirements.txt --no-cache-dir &&\
+RUN <<EOF
+    # remove Development dependencies from requirements.txt
+    sed -i '/# Development/,$d' requirements.txt
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust
+    python -m venv venv
+    venv/bin/python -m pip install --upgrade pip
+    venv/bin/pip debug -v
+    venv/bin/pip install wheel==0.45.1
+    venv/bin/pip install setuptools_rust==1.10.2
+    venv/bin/pip install -r requirements.txt --no-cache-dir
     apk --purge del .build-deps
+EOF
 
 # Copy minimal parts of project to run
 COPY --link ./recipes/ /opt/recipes/recipes
