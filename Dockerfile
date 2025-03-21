@@ -49,7 +49,7 @@ EOF
 FROM deps AS runner
 #Copy project and execute it.
 COPY --link . ./
-COPY --link boot.sh ./
+COPY --link --chmod=755 boot.sh ./
 
 # delete default nginx config and link it to tandoors config
 RUN rm -rf /etc/nginx/http.d
