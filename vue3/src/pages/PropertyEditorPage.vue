@@ -47,6 +47,7 @@
                             <v-text-field type="number" v-model="food.fdcId" density="compact" hide-details @change="updateFood(food)" style="min-width: 180px"
                                           :loading="food.loading">
                                 <template #append-inner>
+                                    <v-btn icon="$search" size="small" density="compact" variant="plain" v-if="food.fdcId == undefined" @click="fdcSelectedFood = food; fdcDialog = true"></v-btn>
                                     <v-btn @click="updateFoodFdcData(food)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain"
                                            v-if="food.fdcId"></v-btn>
                                     <v-btn :href="`https://fdc.nal.usda.gov/food-details/${food.fdcId}/nutrients`" target="_blank" icon="fa-solid fa-arrow-up-right-from-square"
@@ -118,8 +119,7 @@
             </v-col>
         </v-row>
 
-        <v-btn @click="fdcDialog = true">OpenSearch</v-btn>
-        <fdc-search-dialog v-model="fdcDialog"></fdc-search-dialog>
+        <fdc-search-dialog v-model="fdcDialog" @selected="(fdcId:number) => {fdcSelectedFood.fdcId = fdcId; updateFoodFdcData(fdcSelectedFood)}"></fdc-search-dialog>
     </v-container>
 
     <v-dialog v-model="dialog" max-width="600">
@@ -158,6 +158,8 @@ import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 
+type FoodLoading = Food & { loading?: boolean }
+
 const params = useUrlSearchParams('history', {})
 
 const calculatorToNumerator = computed(() => {
@@ -173,10 +175,11 @@ const calculatorFromDenominator = ref(500)
 const calculatorToDenominator = ref(100)
 
 const fdcDialog = ref(false)
+const fdcSelectedFood = ref<FoodLoading| undefined>(undefined)
 
 const recipe = ref<undefined | Recipe>()
 const propertyTypes = ref([] as PropertyType[])
-const foods = ref(new Map<number, Food & { loading?: boolean }>())
+const foods = ref(new Map<number, FoodLoading>())
 
 const recipeLoading = ref(false)
 const propertyTypesLoading = ref(false)
@@ -230,13 +233,13 @@ function loadPropertyTypes() {
  * set null to indicate missing property, 0 for properties with the actual value 0
  */
 function buildFoodMap() {
-    foods.value = new Map<number, Food & { loading?: boolean }>()
+    foods.value = new Map<number, FoodLoading>()
 
     if (recipe.value != undefined) {
         recipe.value.steps.forEach(step => {
             step.ingredients.forEach(ingredient => {
                 if (ingredient.food && !foods.value.has(ingredient.food.id!)) {
-                    let food: Food & { loading?: boolean } = buildFoodProperties(ingredient.food)
+                    let food: FoodLoading = buildFoodProperties(ingredient.food)
                     food.loading = false
                     foods.value.set(food.id!, food)
                 }
@@ -274,10 +277,10 @@ function buildFoodProperties(food: Food) {
  * @param p
  * @param food
  */
-function deleteFoodProperty(p: Property, food: Food & { loading?: boolean } ){
+function deleteFoodProperty(p: Property, food: FoodLoading) {
     let api = new ApiApi()
 
-    if(p.id){
+    if (p.id) {
         food.loading = true
         api.apiPropertyDestroy({id: p.id}).then(r => {
             p.propertyAmount = null
@@ -295,7 +298,7 @@ function deleteFoodProperty(p: Property, food: Food & { loading?: boolean } ){
  * update food
  * @param food
  */
-function updateFood(food: Food & { loading?: boolean }) {
+function updateFood(food: FoodLoading) {
     let api = new ApiApi()
     food.loading = true
     api.apiFoodPartialUpdate({id: food.id!, patchedFood: food}).then(r => {
@@ -311,7 +314,7 @@ function updateFood(food: Food & { loading?: boolean }) {
  * Update the food FDC data on the server and put the updated food into the food map
  * @param food
  */
-function updateFoodFdcData(food: Food & { loading?: boolean }) {
+function updateFoodFdcData(food: FoodLoading) {
     let api = new ApiApi()
     food.loading = true
     if (food.fdcId) {
