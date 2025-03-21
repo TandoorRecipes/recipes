@@ -1,6 +1,9 @@
 FROM python:3.13-alpine3.21 AS base
 WORKDIR /opt/recipes
 
+#Print all logs without buffering: https://stackoverflow.com/a/59812588
+ENV PYTHONUNBUFFERED=1
+
 #Install all dependencies.
 RUN apk add --no-cache \
   gettext \
@@ -18,9 +21,6 @@ RUN apk add --no-cache \
   zlib
 
 FROM base AS deps
-
-#Print all logs without buffering it.
-ENV PYTHONUNBUFFERED=1
 
 ENV DOCKER=true
 
