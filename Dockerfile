@@ -17,7 +17,7 @@ EXPOSE 8080
 RUN mkdir /opt/recipes
 WORKDIR /opt/recipes
 
-COPY requirements.txt ./
+COPY --link requirements.txt ./
 
 RUN <<EOF
   if [ $(apk --print-arch) = "armv7" ]; then
@@ -48,7 +48,8 @@ EOF
 
 FROM deps AS runner
 #Copy project and execute it.
-COPY . ./
+COPY --link . ./
+COPY --link boot.sh ./
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
@@ -62,5 +63,4 @@ RUN /opt/recipes/venv/bin/python version.py
 # delete git repositories to reduce image size
 RUN find . -type d -name ".git" | xargs rm -rf
 
-RUN chmod +x boot.sh
 ENTRYPOINT ["/opt/recipes/boot.sh"]
