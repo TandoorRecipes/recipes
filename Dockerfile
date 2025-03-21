@@ -59,8 +59,10 @@ COPY --link --chmod=755 boot.sh ./
 #            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
 
 # collect information from git repositories
-RUN /opt/recipes/venv/bin/python version.py
-# delete git repositories to reduce image size
-RUN find . -type d -name ".git" | xargs rm -rf
+RUN <<EOF
+  /opt/recipes/venv/bin/python version.py
+  # delete git repositories to reduce image size
+  find . -type d -name ".git" | xargs rm -rf
+EOF
 
 ENTRYPOINT ["/opt/recipes/boot.sh"]
