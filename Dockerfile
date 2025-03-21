@@ -49,7 +49,7 @@ EOF
 FROM deps AS runner
 #Copy project and execute it.
 COPY --link . ./
-COPY --link boot.sh ./
+COPY --link --chmod=755 boot.sh ./
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
