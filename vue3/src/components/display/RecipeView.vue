@@ -72,15 +72,9 @@
             </v-card>
         </template>
 
-        <property-view :recipe="recipe" :servings="servings"></property-view>
+        <property-view v-model="recipe" :servings="servings"></property-view>
 
         <v-expansion-panels class="mt-2">
-             <v-expansion-panel>
-                <v-expansion-panel-title><v-icon icon="$properties" class="me-2"></v-icon> {{ $t('Properties') }}</v-expansion-panel-title>
-                <v-expansion-panel-text>
-                    <property-view :recipe="recipe" :ingredient-factor="ingredientFactor"></property-view>
-                </v-expansion-panel-text>
-            </v-expansion-panel>
 
             <v-expansion-panel>
                 <v-expansion-panel-title><v-icon icon="fa-solid fa-circle-info" class="me-2"></v-icon> {{ $t('Information') }}</v-expansion-panel-title>

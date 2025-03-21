@@ -21,12 +21,13 @@
                 </thead>
                 <tbody>
                 <tr v-for="p in propertyList" :key="p.id">
-                    <td>{{p.name}}</td>
-                    <td>{{$n(p.propertyAmountPerServing)}} {{p.unit}}</td>
-                    <td>{{$n(p.propertyAmountTotal)}} {{p.unit}}</td>
+                    <td>{{ p.name }}</td>
+                    <td>{{ $n(p.propertyAmountPerServing) }} {{ p.unit }}</td>
+                    <td>{{ $n(p.propertyAmountTotal) }} {{ p.unit }}</td>
                     <td v-if="sourceSelectedToShow == 'food'">
-                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small" v-if="p.missingValue"></v-btn>
-                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain"  icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue"></v-btn>
+                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small"
+                               v-if="p.missingValue"></v-btn>
+                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue"></v-btn>
                     </td>
                 </tr>
                 </tbody>
@@ -36,25 +37,39 @@
 
     <v-dialog max-width="900px" v-model="dialog">
         <v-card v-if="dialogProperty">
-            <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${dialogProperty.unit} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties" v-model="dialog"></v-closable-card-title>
+            <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${dialogProperty.unit} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
+                                   v-model="dialog"></v-closable-card-title>
             <v-card-text>
                 <v-list>
-                    <v-list-item border v-for="fv in dialogProperty.foodValues">
+                    <v-list-item border v-for="fv in dialogProperty.foodValues" :key="`${dialogProperty.id}_${fv.id}`">
                         <template #prepend>
-                            <v-progress-circular size="55" width="5" :model-value="(fv.value/dialogProperty.propertyAmountTotal)*100" :color="colorScale((fv.value/dialogProperty.propertyAmountTotal)*100)" v-if="fv.value != null">{{Math.round((fv.value/dialogProperty.propertyAmountTotal)*100)}}%</v-progress-circular>
+                            <v-progress-circular size="55" width="5" :model-value="(fv.value/dialogProperty.propertyAmountTotal)*100"
+                                                 :color="colorScale((fv.value/dialogProperty.propertyAmountTotal)*100)" v-if="fv.value != null">
+                                {{ Math.round((fv.value / dialogProperty.propertyAmountTotal) * 100) }}%
+                            </v-progress-circular>
                             <v-progress-circular size="55" width="5" v-if="fv.value == null">?</v-progress-circular>
                         </template>
                         <span class="ms-2">
-                            {{ fv.food }}
+                            {{ fv.food.name }}
                         </span>
                         <template #append>
-                            <v-chip v-if="fv.value">{{$n(fv.value)}} {{dialogProperty.unit}}</v-chip>
+                            <v-chip v-if="fv.value != undefined">{{ $n(fv.value) }} {{ dialogProperty.unit }}</v-chip>
+                            <v-chip color="create" v-else-if="fv.missing_conversion" class="cursor-pointer" prepend-icon="$create">
+                                {{ $t('Conversion') }}: {{ fv.missing_conversion.base_unit.name }} <i class="fa-solid fa-arrow-right me-1 ms-1"></i>
+                                {{ fv.missing_conversion.converted_unit.name }}
+                                <model-edit-dialog model="UnitConversion" @create="refreshRecipe()"
+                                                   :item-defaults="{baseAmount: 1, baseUnit: fv.missing_conversion.base_unit,  convertedUnit: fv.missing_conversion.converted_unit, food: fv.food}"></model-edit-dialog>
+                            </v-chip>
+                            <v-chip color="error" prepend-icon="$edit" class="cursor-pointer" v-else>
+                                {{ $t('Edit') }}
+                                <model-edit-dialog model="Food" :item-id="fv.food.id" @update:model-value="refreshRecipe()"></model-edit-dialog>
+                            </v-chip>
                         </template>
                     </v-list-item>
                 </v-list>
             </v-card-text>
             <v-card-actions>
-                <v-btn :to="{ name: 'PropertyEditorPage', query: {recipe: recipe.id} }">{{$t('Property_Editor')}}</v-btn>
+                <v-btn :to="{ name: 'PropertyEditorPage', query: {recipe: recipe.id} }">{{ $t('Property_Editor') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -63,9 +78,11 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, PropType, ref} from "vue";
-import {PropertyType, Recipe} from "@/openapi";
+import {computed, nextTick, onMounted, ref} from "vue";
+import {ApiApi, PropertyType, Recipe} from "@/openapi";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 type PropertyWrapper = {
     id: number,
@@ -80,15 +97,16 @@ type PropertyWrapper = {
 }
 
 const props = defineProps({
-    recipe: {type: {} as PropType<Recipe>, required: true},
-    servings: { type: Number,  required: true, },
+    servings: {type: Number, required: true,},
 })
+
+const recipe = defineModel<Recipe>({required: true})
 
 /**
  * determines if the recipe has properties on the recipe directly
  */
 const hasRecipeProperties = computed(() => {
-    return props.recipe.properties != undefined && props.recipe.properties.length > 0
+    return recipe.value.properties != undefined && recipe.value.properties.length > 0
 })
 
 /**
@@ -96,7 +114,7 @@ const hasRecipeProperties = computed(() => {
  */
 const hasFoodProperties = computed(() => {
     let propertiesFound = false
-    for (const [key, fp] of Object.entries(props.recipe.foodProperties)) {
+    for (const [key, fp] of Object.entries(recipe.value.foodProperties)) {
         if (fp.total_value !== 0) {
             propertiesFound = true
         }
@@ -111,7 +129,8 @@ const propertyList = computed(() => {
     let ptList = [] as PropertyWrapper[]
     if (sourceSelectedToShow.value == 'recipe') {
         if (hasRecipeProperties.value) {
-            props.recipe.properties.forEach(rp => {
+            recipe.value.properties.forEach(rp => {
+
                 ptList.push(
                     {
                         id: rp.propertyType.id!,
@@ -119,7 +138,7 @@ const propertyList = computed(() => {
                         description: rp.propertyType.description,
                         foodValues: [],
                         propertyAmountPerServing: rp.propertyAmount,
-                        propertyAmountTotal: rp.propertyAmount * props.recipe.servings * (props.servings / props.recipe.servings),
+                        propertyAmountTotal: rp.propertyAmount * recipe.value.servings * (props.servings / recipe.value.servings),
                         missingValue: false,
                         unit: rp.propertyType.unit,
                         type: rp.propertyType,
@@ -128,7 +147,7 @@ const propertyList = computed(() => {
             })
         }
     } else {
-        for (const [key, fp] of Object.entries(props.recipe.foodProperties)) {
+        for (const [key, fp] of Object.entries(recipe.value.foodProperties)) {
             ptList.push(
                 {
                     id: fp.id,
@@ -136,8 +155,8 @@ const propertyList = computed(() => {
                     description: fp.description,
                     icon: fp.icon,
                     foodValues: fp.food_values,
-                    propertyAmountPerServing: fp.total_value / props.recipe.servings,
-                    propertyAmountTotal: fp.total_value * (props.servings / props.recipe.servings),
+                    propertyAmountPerServing: fp.total_value / recipe.value.servings,
+                    propertyAmountTotal: fp.total_value * (props.servings / recipe.value.servings),
                     missingValue: fp.missing_value,
                     unit: fp.unit,
                     type: fp,
@@ -161,7 +180,7 @@ const propertyList = computed(() => {
 
 const sourceSelectedToShow = ref<'recipe' | 'food'>("food")
 const dialog = ref(false)
-const dialogProperty = ref<undefined|PropertyWrapper>(undefined)
+const dialogProperty = ref<undefined | PropertyWrapper>(undefined)
 
 onMounted(() => {
     if (!hasFoodProperties) {
@@ -170,18 +189,41 @@ onMounted(() => {
 })
 
 /**
+ * refresh recipe data to pull updated conversions/properties
+ */
+function refreshRecipe() {
+    let api = new ApiApi()
+
+    api.apiRecipeRetrieve({id: recipe.value.id!}).then(r => {
+        recipe.value = r
+
+        nextTick(() => {
+            if(dialogProperty.value != undefined && dialog.value){
+                propertyList.value.forEach(pLE => {
+                    if (dialogProperty.value.id == pLE.id) {
+                        dialogProperty.value = pLE
+                    }
+                })
+            }
+        })
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+/**
  * return a color based on the given number
  * used to color the percentage of each food contributing to the total value of a property
  * @param percentage
  */
-function colorScale(percentage: number){
-    if(percentage > 80){
+function colorScale(percentage: number) {
+    if (percentage > 80) {
         return 'error'
     }
-    if(percentage > 50){
+    if (percentage > 50) {
         return 'warning'
     }
-    if(percentage > 30){
+    if (percentage > 30) {
         return 'info'
     }
     return 'success'
