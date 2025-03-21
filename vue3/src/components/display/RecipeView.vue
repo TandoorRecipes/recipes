@@ -72,11 +72,13 @@
             </v-card>
         </template>
 
+        <property-view :recipe="recipe" :servings="servings"></property-view>
+
         <v-expansion-panels class="mt-2">
              <v-expansion-panel>
                 <v-expansion-panel-title><v-icon icon="$properties" class="me-2"></v-icon> {{ $t('Properties') }}</v-expansion-panel-title>
                 <v-expansion-panel-text>
-                    <property-view :recipe="recipe"></property-view>
+                    <property-view :recipe="recipe" :ingredient-factor="ingredientFactor"></property-view>
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -144,7 +146,6 @@ import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 import {useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
-import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import {DateTime} from "luxon";
 import PropertyView from "@/components/display/PropertyView.vue";
 

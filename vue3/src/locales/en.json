@@ -329,7 +329,7 @@
   "Private_Recipe_Help": "Recipe is only shown to you and people its shared with.",
   "Profile": "Profile",
   "Properties": "Properties",
-  "PropertiesFoodHelp": "Properties can be added to Recipes and Foods. Properties on Foods are calculated according based on their amount in the recipe and override the recipe properties.",
+  "PropertiesFoodHelp": "Properties can be added to Recipes and Foods. Properties on Foods are automatically calculated based on their amount in the recipe.",
   "Properties_Food_Amount": "Properties Food Amount",
   "Properties_Food_Unit": "Properties Food Unit",
   "Property": "Property",

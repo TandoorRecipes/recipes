@@ -89,7 +89,7 @@
                 </v-tabs-window-item>
                 <v-tabs-window-item value="properties">
                     <v-form :disabled="loading || fileApiLoading">
-                        <v-alert class="mb-2" icon="$help">{{ $t('PropertiesFoodHelp') }}</v-alert>
+                        <closable-help-alert :text="$t('PropertiesFoodHelp')"></closable-help-alert>
                         <properties-editor v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
                     </v-form>
                 </v-tabs-window-item>

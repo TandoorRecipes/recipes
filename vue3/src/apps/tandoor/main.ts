@@ -40,7 +40,7 @@ const routes = [
     {path: '/view/recipe/:id', redirect: {name: 'RecipeViewPage'}}, // old Tandoor v1 url pattern
 
     {path: '/list/:model?', component: () => import("@/pages/ModelListPage.vue"), props: true, name: 'ModelListPage'},
-    {path: '/edit/:model/:id?', component: () => import("@/pages/ModelListPage.vue"), props: true, name: 'ModelEditPage'},
+    {path: '/edit/:model/:id?', component: () => import("@/pages/ModelEditPage.vue"), props: true, name: 'ModelEditPage'},
 
     {path: '/ingredient-editor', component: () => import("@/pages/IngredientEditorPage.vue"), name: 'IngredientEditorPage'},
     {path: '/property-editor', component: () => import("@/pages/PropertyEditorPage.vue"), name: 'PropertyEditorPage'},
