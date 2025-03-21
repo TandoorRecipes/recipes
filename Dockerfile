@@ -1,10 +1,10 @@
 FROM python:3.13-alpine3.21 AS base
 WORKDIR /opt/recipes
 
-#Print all logs without buffering: https://stackoverflow.com/a/59812588
+# Print all logs without buffering: https://stackoverflow.com/a/59812588
 ENV PYTHONUNBUFFERED=1
 
-#Install all dependencies.
+# Install all dependencies.
 RUN apk add --no-cache \
   gettext \
   git \
@@ -70,7 +70,7 @@ RUN <<EOF
 EOF
 
 FROM deps AS builder
-#Copy project and execute it.
+# Copy project and execute it.
 COPY --link . ./
 COPY --link --chmod=755 boot.sh ./
 
@@ -95,7 +95,7 @@ EOF
 FROM base AS runner
 COPY --link --from=builder /opt/recipes/ ./
 
-#This port will be used by gunicorn.
+# This port will be used by gunicorn.
 EXPOSE 80 8080
 
 ENTRYPOINT ["/opt/recipes/boot.sh"]
