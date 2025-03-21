@@ -8,7 +8,7 @@ RUN yarn install --frozen-lockfile && \
 # Main app image
 FROM python:3.13-alpine3.22
 
-#Install all dependencies.
+# Install all dependencies.
 RUN apk add --no-cache \
     envsubst \
     gettext \
@@ -31,10 +31,10 @@ RUN apk add --no-cache \
 ENV PYTHONUNBUFFERED=1 \
     DOCKER=true
 
-#This port will be used by gunicorn.
+# This port will be used by gunicorn.
 EXPOSE 80 8080
 
-#Create app dir and install requirements.
+# Create app dir and install requirements.
 WORKDIR /opt/recipes
 
 COPY --link requirements.txt ./
