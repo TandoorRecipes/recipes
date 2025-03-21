@@ -1,7 +1,20 @@
 FROM python:3.13-alpine3.21 AS base
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
+RUN apk add --no-cache \
+  gettext \
+  git \
+  libgcc \
+  libjpeg \
+  libstdc++ \
+  libwebp \
+  libxml2-dev \
+  libxslt-dev \
+  nginx \
+  openldap \
+  postgresql-client \
+  postgresql-libs \
+  zlib
 
 FROM base AS deps
 
@@ -26,7 +39,23 @@ RUN <<EOF
   # remove Development dependencies from requirements.txt
   sed -i '/# Development/,$d' requirements.txt
 
-  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
+  apk add --no-cache --virtual .build-deps \
+    build-base \
+    cargo \
+    curl \
+    g++ \
+    gcc \
+    jpeg-dev \
+    libffi-dev \
+    libwebp-dev \
+    musl-dev \
+    openldap-dev \
+    openssl-dev \
+    postgresql-dev \
+    python3-dev \
+    xmlsec \
+    xmlsec-dev \
+    zlib-dev
 
   echo -n "INPUT ( libldap.so )" >/usr/lib/libldap_r.so
 
