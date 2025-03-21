@@ -14,7 +14,6 @@ ENV DOCKER=true
 EXPOSE 80 8080
 
 #Create app dir and install requirements.
-RUN mkdir /opt/recipes
 WORKDIR /opt/recipes
 
 COPY --link requirements.txt ./
