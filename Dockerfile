@@ -1,4 +1,5 @@
 FROM python:3.13-alpine3.21 AS base
+WORKDIR /opt/recipes
 
 #Install all dependencies.
 RUN apk add --no-cache \
@@ -22,11 +23,6 @@ ENV PYTHONUNBUFFERED=1
 
 ENV DOCKER=true
 
-#This port will be used by gunicorn.
-EXPOSE 8080
-
-#Create app dir and install requirements.
-WORKDIR /opt/recipes
 
 COPY --link requirements.txt ./
 
@@ -73,7 +69,7 @@ RUN <<EOF
   apk --purge del .build-deps
 EOF
 
-FROM deps AS runner
+FROM deps AS builder
 #Copy project and execute it.
 COPY --link . ./
 COPY --link --chmod=755 boot.sh ./
@@ -91,5 +87,11 @@ RUN <<EOF
   # delete git repositories to reduce image size
   find . -type d -name ".git" | xargs rm -rf
 EOF
+
+FROM base AS runner
+COPY --link --from=builder /opt/recipes/ ./
+
+#This port will be used by gunicorn.
+EXPOSE 8080
 
 ENTRYPOINT ["/opt/recipes/boot.sh"]
