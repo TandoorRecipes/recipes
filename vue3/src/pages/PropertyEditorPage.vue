@@ -45,31 +45,51 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="[i, food] in foods.entries()">
-                        <td>{{ food.name }}</td>
+                    <tr v-for="[i, ingredient] in ingredients.entries()">
                         <td>
-                            <v-text-field type="number" v-model="food.fdcId" density="compact" hide-details @change="updateFood(food)" style="min-width: 180px"
-                                          :loading="food.loading">
+                            {{ ingredient.food.name }}
+                            <!-- TODO weird mixture of using ingredients but not in the correct relation to the recipe not good, properly sort out and add easy unitconversion/food edit features -->
+<!--                            <v-btn variant="outlined" block>-->
+<!--                                {{ ingredient.food.name }}-->
+<!--                                <model-edit-dialog model="Food" :item="ingredient.food!" @save="args => ingredient.food = args"></model-edit-dialog>-->
+<!--                            </v-btn>-->
+                            <!--                            <v-chip v-if="ingredient.unit && ingredient.food.propertiesFoodUnit && ingredient.unit.id == ingredient.food.propertiesFoodUnit.id" color="success"-->
+                            <!--                                    size="small">{{ ingredient.unit.name }}-->
+                            <!--                            </v-chip>-->
+                            <!--                            <v-chip v-if="ingredient.unit && ingredient.food.propertiesFoodUnit && ingredient.unit.id != ingredient.food.propertiesFoodUnit.id" color="error"-->
+                            <!--                                    size="small" class="cursor-pointer" prepend-icon="$create">-->
+                            <!--                                {{ $t('Conversion') }}: {{ ingredient.unit.name }} <i class="fa-solid fa-arrow-right me-1 ms-1"></i>-->
+                            <!--                                {{ ingredient.food.propertiesFoodUnit.name }}-->
+                            <!--                                <model-edit-dialog model="UnitConversion"-->
+                            <!--                                                   :item-defaults="{baseAmount: 1, baseUnit: ingredient.unit,  convertedUnit:  ingredient.food.propertiesFoodUnit, food: ingredient.food}"></model-edit-dialog>-->
+                            <!--                            </v-chip>-->
+                            <!--                            <v-chip v-if="ingredient.unit && !ingredient.food.propertiesFoodUnit" size="small">{{ ingredient.unit.name }}</v-chip>-->
+                        </td>
+                        <td>
+                            <v-text-field type="number" v-model="ingredient.food.fdcId" density="compact" hide-details @change="updateFood(ingredient)" style="min-width: 180px"
+                                          :loading="ingredient.loading">
                                 <template #append-inner>
-                                    <v-btn icon="$search" size="small" density="compact" variant="plain" v-if="food.fdcId == undefined" @click="fdcSelectedFood = food; fdcDialog = true"></v-btn>
-                                    <v-btn @click="updateFoodFdcData(food)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain"
-                                           v-if="food.fdcId"></v-btn>
-                                    <v-btn :href="`https://fdc.nal.usda.gov/food-details/${food.fdcId}/nutrients`" target="_blank" icon="fa-solid fa-arrow-up-right-from-square"
-                                           size="small" variant="plain" v-if="food.fdcId"></v-btn>
+                                    <v-btn icon="$search" size="small" density="compact" variant="plain" v-if="ingredient.food.fdcId == undefined"
+                                           @click="fdcSelectedIngredient = ingredient; fdcDialog = true"></v-btn>
+                                    <v-btn @click="updateFoodFdcData(ingredient)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain"
+                                           v-if="ingredient.food.fdcId"></v-btn>
+                                    <v-btn :href="`https://fdc.nal.usda.gov/food-details/${ingredient.food.fdcId}/nutrients`" target="_blank"
+                                           icon="fa-solid fa-arrow-up-right-from-square"
+                                           size="small" variant="plain" v-if="ingredient.food.fdcId"></v-btn>
                                 </template>
                             </v-text-field>
                         </td>
                         <td>
-                            <v-text-field type="number" v-model="food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(food)"
-                                          :loading="food.loading"></v-text-field>
+                            <v-text-field type="number" v-model="ingredient.food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(ingredient)"
+                                          :loading="ingredient.loading"></v-text-field>
                         </td>
                         <td>
-                            <model-select model="Unit" density="compact" v-model="food.propertiesFoodUnit" hide-details @update:model-value="updateFood(food)"
-                                          :loading="food.loading"></model-select>
+                            <model-select model="Unit" density="compact" v-model="ingredient.food.propertiesFoodUnit" hide-details @update:model-value="updateFood(ingredient)"
+                                          :loading="ingredient.loading"></model-select>
                         </td>
-                        <td v-for="p in food.properties" v-bind:key="`${food.id}_${p.propertyType.id}`">
-                            <v-text-field type="number" v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(food)"
-                                          :loading="food.loading" @click:clear="deleteFoodProperty(p, food)" clearable></v-text-field>
+                        <td v-for="p in ingredient.food.properties" v-bind:key="`${ingredient.food.id}_${p.propertyType.id}`">
+                            <v-text-field type="number" v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)"
+                                          :loading="ingredient.loading" @click:clear="deleteFoodProperty(p, ingredient)" clearable></v-text-field>
                             <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
@@ -123,7 +143,8 @@
             </v-col>
         </v-row>
 
-        <fdc-search-dialog v-model="fdcDialog" @selected="(fdcId:number) => {fdcSelectedFood.fdcId = fdcId; updateFoodFdcData(fdcSelectedFood)}"></fdc-search-dialog>
+        <fdc-search-dialog v-model="fdcDialog"
+                           @selected="(fdcId:number) => {fdcSelectedIngredient.food.fdcId = fdcId; updateFoodFdcData(fdcSelectedIngredient)}"></fdc-search-dialog>
     </v-container>
 
     <v-dialog v-model="dialog" max-width="600">
@@ -153,7 +174,7 @@
 <script setup lang="ts">
 
 import {computed, onMounted, ref} from "vue";
-import {ApiApi, Food, Property, PropertyType, Recipe, Unit} from "@/openapi";
+import {ApiApi, Food, Ingredient, Property, PropertyType, Recipe, Unit} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
@@ -162,7 +183,7 @@ import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 
-type FoodLoading = Food & { loading?: boolean }
+type IngredientLoading = Ingredient & { loading?: boolean }
 
 const params = useUrlSearchParams('history', {})
 
@@ -179,11 +200,11 @@ const calculatorFromDenominator = ref(500)
 const calculatorToDenominator = ref(100)
 
 const fdcDialog = ref(false)
-const fdcSelectedFood = ref<FoodLoading| undefined>(undefined)
+const fdcSelectedIngredient = ref<IngredientLoading | undefined>(undefined)
 
 const recipe = ref<undefined | Recipe>()
 const propertyTypes = ref([] as PropertyType[])
-const foods = ref(new Map<number, FoodLoading>())
+const ingredients = ref(new Map<number, IngredientLoading>())
 
 const recipeLoading = ref(false)
 const propertyTypesLoading = ref(false)
@@ -207,7 +228,7 @@ function loadRecipe(id: number) {
     recipeLoading.value = true
     api.apiRecipeRetrieve({id: id}).then(r => {
         recipe.value = r
-        buildFoodMap()
+        buildIngredientMap()
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
@@ -223,7 +244,7 @@ function loadPropertyTypes() {
     propertyTypesLoading.value = true
     api.apiPropertyTypeList().then(r => {
         propertyTypes.value = r.results
-        buildFoodMap()
+        buildIngredientMap()
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
@@ -236,16 +257,16 @@ function loadPropertyTypes() {
  * add properties if a food is missing any
  * set null to indicate missing property, 0 for properties with the actual value 0
  */
-function buildFoodMap() {
-    foods.value = new Map<number, FoodLoading>()
+function buildIngredientMap() {
+    ingredients.value = new Map<number, IngredientLoading>()
 
     if (recipe.value != undefined) {
         recipe.value.steps.forEach(step => {
             step.ingredients.forEach(ingredient => {
-                if (ingredient.food && !foods.value.has(ingredient.food.id!)) {
-                    let food: FoodLoading = buildFoodProperties(ingredient.food)
-                    food.loading = false
-                    foods.value.set(food.id!, food)
+                if (ingredient.food && !ingredients.value.has(ingredient.food.id!)) {
+                    let i: IngredientLoading = buildIngredientFoodProperties(ingredient)
+                    i.loading = false
+                    ingredients.value.set(i.food.id!, i)
                 }
             })
         })
@@ -255,43 +276,43 @@ function buildFoodMap() {
 /**
  * add all property types to food in the correct order
  * add null if no data exists for a property type to indicate a missing property
- * @param food
+ * @param ingredient
  */
-function buildFoodProperties(food: Food) {
+function buildIngredientFoodProperties(ingredient: Ingredient) {
     let existingProperties = new Map<number, Property>()
-    food.properties!.forEach(fp => {
+    ingredient.food.properties!.forEach(fp => {
         existingProperties.set(fp.propertyType.id!, fp)
     })
 
-    food.properties = [] as Property[]
+    ingredient.food.properties = [] as Property[]
 
     propertyTypes.value.forEach(pt => {
         if (existingProperties.has(pt.id!)) {
-            food.properties!.push(existingProperties.get(pt.id!))
+            ingredient.food.properties!.push(existingProperties.get(pt.id!))
         } else {
-            food.properties!.push({propertyType: pt, propertyAmount: null} as Property)
+            ingredient.food.properties!.push({propertyType: pt, propertyAmount: null} as Property)
         }
     })
 
-    return food
+    return ingredient
 }
 
 /**
  * deletes the given property either on client or also on server if it has an id
  * @param p
- * @param food
+ * @param ingredient
  */
-function deleteFoodProperty(p: Property, food: FoodLoading) {
+function deleteFoodProperty(p: Property, ingredient: IngredientLoading) {
     let api = new ApiApi()
 
     if (p.id) {
-        food.loading = true
+        ingredient.loading = true
         api.apiPropertyDestroy({id: p.id}).then(r => {
             p.propertyAmount = null
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
         }).finally(() => {
-            food.loading = false
+            ingredient.loading = false
         })
     } else {
         p.propertyAmount = null
@@ -300,34 +321,35 @@ function deleteFoodProperty(p: Property, food: FoodLoading) {
 
 /**
  * update food
- * @param food
+ * @param ingredient
  */
-function updateFood(food: FoodLoading) {
+function updateFood(ingredient: IngredientLoading) {
     let api = new ApiApi()
-    food.loading = true
-    api.apiFoodPartialUpdate({id: food.id!, patchedFood: food}).then(r => {
+    ingredient.loading = true
+    api.apiFoodPartialUpdate({id: ingredient.food.id!, patchedFood: ingredient.food}).then(r => {
 
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     }).finally(() => {
-        food.loading = false
+        ingredient.loading = false
     })
 }
 
 /**
  * Update the food FDC data on the server and put the updated food into the food map
- * @param food
+ * @param ingredient
  */
-function updateFoodFdcData(food: FoodLoading) {
+function updateFoodFdcData(ingredient: IngredientLoading) {
     let api = new ApiApi()
-    food.loading = true
-    if (food.fdcId) {
-        api.apiFoodFdcCreate({id: food.id!, food: food}).then(r => {
-            foods.value.set(r.id!, buildFoodProperties(r))
+    ingredient.loading = true
+    if (ingredient.food.fdcId) {
+        api.apiFoodFdcCreate({id: ingredient.food.id!, food: ingredient.food}).then(r => {
+            ingredient.food = r
+            ingredients.value.set(r.id!, buildIngredientFoodProperties(ingredient))
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
-            food.loading = false
+            ingredient.loading = false
         })
     }
 }
@@ -337,9 +359,9 @@ function updateFoodFdcData(food: FoodLoading) {
  * @param unit
  */
 function changeAllUnits(unit: Unit) {
-    foods.value.forEach(food => {
-        food.propertiesFoodUnit = unit
-        updateFood(food)
+    ingredients.value.forEach(ingredient => {
+        ingredient.food.propertiesFoodUnit = unit
+        updateFood(ingredient)
     })
 }
 
@@ -348,9 +370,9 @@ function changeAllUnits(unit: Unit) {
  * @param amount
  */
 function changeAllPropertyFoodAmounts(amount: number) {
-    foods.value.forEach(food => {
-        food.propertiesFoodAmount = amount
-        updateFood(food)
+    ingredients.value.forEach(ingredient => {
+        ingredient.food.propertiesFoodAmount = amount
+        updateFood(ingredient)
     })
 }
 
