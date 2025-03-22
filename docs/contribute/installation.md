@@ -1,39 +1,101 @@
-!!! info
-The dev setup is a little messy as this application combines the best (at least in my opinion) of both Django and Vue.js.
+## Installation and Development Setup
+
+> **Note**: The development setup integrates Django for the backend and Vue.js for the frontend, combining the best of both worlds to create a modern web application.
 
 ### Devcontainer Setup
 
-There is a [devcontainer](https://containers.dev) set up to ease development. It is optimized for VSCode, but should be able to
-be used by other editors as well. Once the container is running, you can do things like start a Django dev server, start a Vue.js
-dev server, run python tests, etc. by either using the VSCode tasks below, or manually running commands described in the individual
-technology sections below.
+A [devcontainer](https://containers.dev) is configured to streamline development. It is optimized for VSCode but can be used with other editors. Once the container is running, you can:
 
-In VSCode, simply check out the git repository, and then via the command palette, choose `Dev Containers: Reopen in container`.
+- Start the Django development server
+- Start the Vue.js development server
+- Run Python tests
 
-If you need to change python dependencies (requierments.txt) or OS packages, you will need to rebuild the container. If you are
-changing OS package requirements, you will need to update both the main `Dockerfile` and the `.devcontainer/Dockerfile`.
+#### VSCode Setup
 
-### Django
+1. Clone the repository.
+2. Open VSCode and, via the command palette, select `Dev Containers: Reopen in Container`.
 
-This application is developed using the Django framework for Python. They have excellent
-[documentation](https://www.djangoproject.com/start/) on how to get started, so I will only give you the basics here.
+#### Modifying Dependencies
 
-1. Clone this repository wherever you like and install the Python language for your OS (I recommend using version 3.10 or above).
-2. Open it in your favorite editor/IDE (e.g. PyCharm).
-   a. If you want, create a virtual environment for all your packages.
-3. Install all required packages: `pip install -r requirements.txt`.
-4. Run the migrations: `python manage.py migrate`.
-5. Start the development server: `python manage.py runserver`.
+- If you need to update Python dependencies (`requirements.txt`) or OS packages, rebuild the container.
+- If modifying OS package requirements, update both the main `Dockerfile` and `.devcontainer/Dockerfile`.
 
-There is **no** need to set any environment variables. By default, a simple SQLite database is used and all settings are
-populated from default values.
+### Django Setup
 
-### Vue.js
+> **Note**: Alternatively, you can use the pre-configured VSCode task **Run Dev Server** to start the Django development server.
 
-Most new frontend pages are build using [Vue.js](https://vuejs.org/).
+This application is developed using the Django framework for Python. The official [Django documentation](https://www.djangoproject.com/start/) provides a comprehensive guide, but here’s a quick setup:
 
-In order to work on these pages, you will have to install a Javascript package manager of your choice. The following examples use yarn.
+1. Clone the repository and install Python 3.10 or above.
+2. Open the project in your preferred IDE (e.g., PyCharm).
+   - Optionally, create a virtual environment for dependencies.
+3. Install required packages:
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. Apply migrations:
+   ```sh
+   python manage.py migrate
+   ```
+5. Start the Django development server:
+   ```sh
+   python manage.py runserver
+   ```
 
-In the `vue` folder run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server,
-and proceed to test your changes. If you do not wish to work on those pages, but instead want the application to work properly during
-development, run `yarn build` to build the frontend pages once.
+#### Frontend Integration with Django (Django-Vite)
+
+For frontend development, Django uses the `django_vite` extension. To enable development mode, update `settings.py`:
+
+```python
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": True,
+        "static_url_prefix": 'vue3',
+        "dev_server_port": 5173,
+        "dev_server_host": os.getenv('DJANGO_VITE_DEV_SERVER_HOST', 'localhost'),
+    },
+}
+```
+
+This allows Django to communicate with the Vite development server running on port 5173.
+
+### Vue.js Setup
+
+The frontend is built using [Vue.js](https://vuejs.org/).
+
+#### Steps to setup Vue.js
+
+> **Note**: Vue 3 is the primary frontend framework for this application, and work is ongoing on **Tandoor 2.0**, which will fully adopt Vue 3.
+
+1. Install a JavaScript package manager (e.g., `yarn` or `npm`).
+2. Navigate to the `vue` folder and install dependencies:
+   ```sh
+   yarn install
+   ```
+3. Start the development server:
+   ```sh
+   yarn serve
+   ```
+4. Install Vite:
+   ```sh
+   yarn add vite
+   ```
+5. To build the frontend for production, run:
+   ```sh
+   yarn build
+   ```
+
+#### Vue 3 Integration
+
+To enable hot reload for better development experience, add the following configuration to `vite.config.ts`:
+
+```ts
+watch: {
+    usePolling: true, // set to true to use polling instead of native watchers
+}
+```
+
+- Vue 3 is used for the frontend, and it utilizes **TypeScript**.
+- The Vite configuration (`vite.config.ts`) is set up to create a development server for `django-vite`, ensuring seamless integration with Django.
+
+By following these steps, you can efficiently develop and test both the Django backend and Vue 3 frontend in an integrated environment.
