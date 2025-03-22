@@ -1,8 +1,10 @@
-FROM node:20-alpine AS node-deps
+FROM node:20.19-alpine AS node-deps
 WORKDIR /src/vue3
 
 COPY --link ./vue3/package.json ./vue3/yarn.lock ./
 
+# TODO: use --frozen-lockfile
+# RUN yarn install --frozen-lockfile
 RUN yarn install
 
 COPY --link ./vue3 ../vue3
