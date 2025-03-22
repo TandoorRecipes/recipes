@@ -1,3 +1,16 @@
+FROM node:20-alpine AS node-deps
+WORKDIR /src/vue3
+
+COPY --link ./vue3/package.json ./vue3/yarn.lock ./
+
+RUN yarn install
+
+COPY --link ./vue3 ../vue3
+
+FROM node-deps AS node-builder
+
+RUN yarn build
+
 FROM python:3.13-alpine3.21 AS base
 WORKDIR /opt/recipes
 
@@ -94,6 +107,7 @@ EOF
 
 FROM base AS runner
 COPY --link --from=builder /opt/recipes/ ./
+COPY --link --from=node-builder /src/vue3/build ./cookbook/static/vue3/
 
 # This port will be used by gunicorn.
 EXPOSE 80 8080
