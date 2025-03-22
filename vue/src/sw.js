@@ -36,12 +36,7 @@ setCatchHandler(({event}) => {
 registerRoute(
     ({request}) => request.destination === 'image',
     new CacheFirst({
-        cacheName: 'images',
-        plugins: [
-            new ExpirationPlugin({
-                maxEntries: 20,
-            }),
-        ],
+        cacheName: 'images'
     }),
 );
 
