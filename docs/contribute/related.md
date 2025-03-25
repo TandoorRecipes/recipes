@@ -5,7 +5,20 @@ package by hhursev.
 
 If you have the skills to add new sites or help resolve issues you are indirectly helping Tandoor.
 
-## Unofficial mobile app
+## Unofficial mobile apps
+
+### kitshn
+
+Unofficial Tandoor recipes client
+
+Maintained by [Aimo](https://github.com/aimok04/kitshn)
+
+- Website: [https://kitshn.app/](https://kitshn.app/)
+- Appstores: [Apple](https://apps.apple.com/us/app/kitshn-for-tandoor/id6740168361), [Android](https://play.google.com/store/apps/details?id=de.kitshn.android)
+
+
+
+### Untare (discontinued)
 
 Maintained by [phantomate](https://github.com/phantomate/Untare)
 
