@@ -416,6 +416,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                     entry.ids.forEach(id => {
                         let e = entries.value.get(id)
                         e.updatedAt = r.timestamp
+                        e.checked = r.checked
                         entries.value.set(id, e)
                     })
                     itemCheckSyncQueue.value.splice(index, 1)
