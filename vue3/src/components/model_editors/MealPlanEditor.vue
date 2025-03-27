@@ -4,7 +4,7 @@
         :dialog="dialog"
         @save="saveObject().then((obj:MealPlan) => { useMealPlanStore().plans.set(obj.id, obj); loadShoppingListEntries()})"
         @delete="useMealPlanStore().plans.delete(editingObj.id); deleteObject()"
-        @close="emit('close')"
+        @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"

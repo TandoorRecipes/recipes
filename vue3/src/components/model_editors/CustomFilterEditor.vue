@@ -4,7 +4,7 @@
         :dialog="dialog"
         @save="saveObject"
         @delete="deleteObject"
-        @close="emit('close')"
+        @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
