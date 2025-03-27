@@ -1,0 +1,190 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recipes
+  labels:
+    app: recipes
+    environment: production
+    tier: frontend
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: recipes
+      environment: production
+  template:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: media,static
+      labels:
+        app: recipes
+        tier: frontend
+        environment: production
+    spec:
+      restartPolicy: Always
+      serviceAccount: recipes
+      serviceAccountName: recipes
+      initContainers:
+      - name: init-chmod-data
+        env:
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: recipes
+                key: secret-key
+          - name: DB_ENGINE
+            value: django.db.backends.postgresql
+          - name: POSTGRES_HOST
+            value: recipes-postgresql
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_DB
+            value: recipes
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: recipes
+                key: postgresql-postgres-password
+        image: vabene1111/recipes
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 250m
+            memory: 64Mi
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          source venv/bin/activate
+          echo "Updating database"
+          python manage.py migrate
+          python manage.py collectstatic_js_reverse
+          python manage.py collectstatic --noinput
+          echo "Setting media file attributes"
+          chown -R 65534:65534 /opt/recipes/mediafiles
+          find /opt/recipes/mediafiles -type d | xargs -r chmod 755
+          find /opt/recipes/mediafiles -type f | xargs -r chmod 644
+          echo "Done"
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /opt/recipes/mediafiles
+          name: media
+          # mount as subPath due to lost+found on ext4 pvc
+          subPath: files
+        - mountPath: /opt/recipes/staticfiles
+          name: static
+          # mount as subPath due to lost+found on ext4 pvc
+          subPath: files
+      containers:
+      - name: recipes-nginx
+        image: nginx:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+            protocol: TCP
+            name: http
+          - containerPort: 8080
+            protocol: TCP
+            name: gunicorn
+        resources:
+          requests:
+            cpu: 250m
+            memory: 64Mi
+        volumeMounts:
+          - mountPath: /media
+            name: media
+            # mount as subPath due to lost+found on ext4 pvc
+            subPath: files
+          - mountPath: /static
+            name: static
+            # mount as subPath due to lost+found on ext4 pvc
+            subPath: files
+          - name: nginx-config
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx-config
+            readOnly: true
+      - name: recipes
+        image: vabene1111/recipes
+        imagePullPolicy: IfNotPresent
+        command:
+          - /opt/recipes/venv/bin/gunicorn
+          - -b
+          - :8080
+          - --access-logfile
+          - "-"
+          - --error-logfile
+          - "-"
+          - --log-level
+          - INFO
+          - recipes.wsgi
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 30
+        resources:
+          requests:
+            cpu: 250m
+            memory: 64Mi
+        volumeMounts:
+          - mountPath: /opt/recipes/mediafiles
+            name: media
+            # mount as subPath due to lost+found on ext4 pvc
+            subPath: files
+          - mountPath: /opt/recipes/staticfiles
+            name: static
+            # mount as subPath due to lost+found on ext4 pvc
+            subPath: files
+        env:
+          - name: DEBUG
+            value: "0"
+          - name: ALLOWED_HOSTS
+            value: '*'
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: recipes
+                key: secret-key
+          - name: GUNICORN_MEDIA
+            value: "0"
+          - name: DB_ENGINE
+            value: django.db.backends.postgresql
+          - name: POSTGRES_HOST
+            value: recipes-postgresql
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_DB
+            value: recipes
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: recipes
+                key: postgresql-postgres-password
+        securityContext:
+          runAsUser: 65534
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: recipes-media
+        - name: static
+          persistentVolumeClaim:
+            claimName: recipes-static
+        - name: nginx-config
+          configMap:
+            name: recipes-nginx-config
