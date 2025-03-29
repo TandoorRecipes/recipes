@@ -3,11 +3,11 @@
         <v-row>
             <v-col cols="12" md="6" offset-md="3">
                 <v-text-field :label="$t('Search')"
-                              v-model="search_query"
+                              v-model="query"
                               :loading="loading"
                               @submit="searchRecipes({page: 1})"
                               @keydown.enter="searchRecipes({page: 1})"
-                              @click:clear="search_query = ''"
+                              @click:clear="query = ''"
                               clearable hide-details>
                     <template v-slot:append>
                         <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon><i class="fa-solid fa-caret-down"></i></v-btn>
@@ -23,47 +23,20 @@
                         <v-expansion-panel-text>
                             <v-form :disabled="loading" class="mt-4">
 
-                                <model-select model="Keyword" mode="tags" v-model="search_keywords" density="compact" :object="false" search-on-load
-                                              v-if="filters.keywords.enabled" :hint="filters.keywords.help">
-                                    <template #append>
-                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords = []; filters.keywords.enabled = false"></v-btn>
-                                    </template>
-                                </model-select>
-
-                                <model-select model="Keyword" mode="tags" v-model="search_keywords_and" density="compact" :object="false" search-on-load
-                                              v-if="filters.keywords_and.enabled">
-                                    <template #append>
-                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords_and = []; filters.keywords_and.enabled = false"></v-btn>
-                                    </template>
-                                </model-select>
-                                <model-select model="Keyword" mode="tags" v-model="search_keywords_or_not" density="compact" :object="false" search-on-load
-                                              v-if="filters.keywords_or_not.enabled">
-                                    <template #append>
-                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords_or_not = []; filters.keywords_or_not.enabled = false"></v-btn>
-                                    </template>
-                                </model-select>
-                                <model-select model="Keyword" mode="tags" v-model="search_keywords_and_not" density="compact" :object="false" search-on-load
-                                              v-if="filters.keywords_and_not.enabled">
-                                    <template #append>
-                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords_and_not = []; filters.keywords_and_not.enabled = false"></v-btn>
-                                    </template>
-                                </model-select>
+                                <template v-for="filter in Object.values(filters)">
+                                    <component :="filter" :is="filter.is" density="compact" v-model="filter.modelValue" v-if="isFilterVisible(filter)">
+                                        <template #append>
+                                            <v-btn icon="fa-solid fa-times" size="small" variant="plain"
+                                                   @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>
+                                        </template>
+                                    </component>
+                                </template>
 
                                 <v-divider class="mt-2 mb-2"></v-divider>
 
-                                <v-autocomplete :items="availableFilters" @update:model-value="(item:string) =>{ filters[item].enabled = true; nextTick(() => {addFilterSelect = ''})}" density="compact" :label="$t('AddFilter')" v-model="addFilterSelect"></v-autocomplete>
-
-                                <!--                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" density="compact" :object="false"></model-select>-->
-                                <!--                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" density="compact" :object="false"></model-select>-->
-                                <!--                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" density="compact" :object="false"></model-select>-->
-
-                                <!--                            <v-number-input :label="$t('times_cooked')" v-model="searchParameters.timescooked" clearable></v-number-input>-->
-                                <!--                            <v-date-input  :label="$t('last_cooked')" v-model="searchParameters.cookedon" clearable></v-date-input>-->
-                                <!--                            <v-date-input :label="$t('last_viewed')" v-model="searchParameters.viewedon" clearable></v-date-input>-->
-                                <!--                            <v-date-input :label="$t('created_on')" v-model="searchParameters.createdon" clearable></v-date-input>-->
-                                <!--                            <v-date-input :label="$t('updatedon')" v-model="searchParameters.updatedon" clearable></v-date-input>-->
-
-                                <!--                                <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow" density="compact"></v-checkbox>-->
+                                <v-autocomplete :items="availableFilters"
+                                                @update:model-value="(item:string) =>{ filters[item].enabled = true; nextTick(() => {addFilterSelect = null})}" density="compact"
+                                                :label="$t('AddFilter')" v-model="addFilterSelect"></v-autocomplete>
 
                                 <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
                                     <template #append>
@@ -79,7 +52,7 @@
                                               :items="[{title: $t('Table'), value: 'table'}, {title: $t('Cards'), value: 'grid'},]" density="compact"></v-select>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-select class="float-right" :label="$t('PerPage')" v-model="search_pageSize" :items="[10,25,50,100]" density="compact"
+                                    <v-select class="float-right" :label="$t('PerPage')" v-model="pageSize" :items="[10,25,50,100]" density="compact"
                                               width="100%"></v-select>
                                 </v-col>
                             </v-row>
@@ -87,7 +60,7 @@
                         </v-expansion-panel-text>
 
                         <v-card-actions v-if="panel == 'search'">
-                            <!--                            <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark" :disabled="Object.keys(urlSearchParams).length == 0">{{ $t('Reset') }}</v-btn>-->
+                            <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark">{{ $t('Reset') }}</v-btn>
                             <v-btn @click="searchRecipes({page: 1})" prepend-icon="$search">{{ $t('Search') }}</v-btn>
                         </v-card-actions>
                     </v-expansion-panel>
@@ -104,8 +77,8 @@
                         :loading="loading"
                         :items="recipes"
                         :headers="tableHeaders"
-                        :page="search_page"
-                        :items-per-page="search_pageSize"
+                        :page="page"
+                        :items-per-page="pageSize"
                         :items-length="tableItemCount"
                         @click:row="handleRowClick"
                         disable-sort
@@ -113,7 +86,8 @@
                         hide-default-footer
                     >
                         <template #item.image="{item}">
-                            <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1"></v-avatar>
+                            <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1" v-if="item.image"></v-avatar>
+                            <v-avatar color="primary" variant="tonal" size="x-large" class="mt-1 mb-1" v-else><random-icon></random-icon></v-avatar>
                         </template>
 
                         <template #item.keywords="{item}">
@@ -139,8 +113,8 @@
         </template>
         <v-row>
             <v-col cols="12" md="6" offset-md="3">
-                <v-pagination v-model="search_page" :length="Math.ceil(tableItemCount/search_pageSize)"
-                              @update:modelValue="searchRecipes({page: search_page})" class="ms-2 me-2" size="small"
+                <v-pagination v-model="page" :length="Math.ceil(tableItemCount/pageSize)"
+                              @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
                 ></v-pagination>
             </v-col>
         </v-row>
@@ -179,39 +153,187 @@ import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
 import {toNumberArray} from "@/utils/utils";
+import RandomIcon from "@/components/display/RandomIcon.vue";
 
 const {t} = useI18n()
 const router = useRouter()
 const {mdAndUp} = useDisplay()
 
-const search_query = useRouteQuery('query', "",)
-const search_page = useRouteQuery('page', 1, {transform: Number})
-const search_pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
-
-const search_keywords = useRouteQuery('keywords', [], {transform: toNumberArray})
-const search_keywords_or_not = useRouteQuery('keywords_or_not', [], {transform: toNumberArray})
-const search_keywords_and = useRouteQuery('keywords_and', [], {transform: toNumberArray})
-const search_keywords_and_not = useRouteQuery('keywords_and_not', [], {transform: toNumberArray})
+const query = useRouteQuery('query', "",)
+const page = useRouteQuery('page', 1, {transform: Number})
+const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
 
 /**
  * all filters available to enable
  */
 const filters = ref({
-    keywords: {value: 'keywords', title: 'Keywords', help: 'Any of the keywords', enabled: false, default: []},
-    keywords_and: {value: 'keywords_and', title: 'Keywords And', help: 'All of the keywords', enabled: false, default: []},
-    keywords_or_not: {value: 'keywords_or_not', title: 'Keywords Or Not', help: 'None of the given keywords', enabled: false, default: []},
-    keywords_and_not: {value: 'keywords_and_not', title: 'Keywords And Not', help: 'Not all of the given keywords', enabled: false, default: []},
+    keywords: {
+        value: 'keywords',
+        label: 'Keyword (any)',
+        hint: 'Any of the given keywords',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Keyword',
+        modelValue: useRouteQuery('keywords', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    keywordsAnd: {
+        value: 'keywordsAnd',
+        label: 'Keyword (all)',
+        hint: 'All of the given keywords',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Keyword',
+        modelValue: useRouteQuery('keywordsAnd', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    keywordsOrNot: {
+        value: 'keywordsOrNot',
+        label: 'Keyword exclude (any)',
+        hint: 'Exclude recipes with any of the given keywords',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Keyword',
+        modelValue: useRouteQuery('keywordsOrNot ', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    keywordsAndNot: {
+        value: 'keywordsAndNot',
+        label: 'Keyword exclude (all)',
+        hint: 'Exclude recipes with all of the given keywords',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Keyword',
+        modelValue: useRouteQuery('keywordsAndNot ', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    foods: {
+        value: 'foods',
+        label: 'Foods (any)',
+        hint: 'Any of the given foods',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Food',
+        modelValue: useRouteQuery('foods', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    foodsAnd: {
+        value: 'foodsAnd',
+        label: 'Food (all)',
+        hint: 'All of the given foods',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Food',
+        modelValue: useRouteQuery('foodsAnd', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    foodsOrNot: {
+        value: 'foodsOrNot',
+        label: 'Food exclude (any)',
+        hint: 'Exclude recipes with any of the given foods',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Food',
+        modelValue: useRouteQuery('foodsOrNot ', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    foodsAndNot: {
+        value: 'foodsAndNot',
+        label: 'Food exclude (all)',
+        hint: 'Exclude recipes with all of the given foods',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Food',
+        modelValue: useRouteQuery('foodsAndNot ', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    books: {
+        value: 'books',
+        label: 'Book (any)',
+        hint: 'Recipes that are in any of the given books',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'RecipeBook',
+        modelValue: useRouteQuery('books', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    booksAnd: {
+        value: 'booksAnd',
+        label: 'Book (all)',
+        hint: 'Recipes that are in all of the given books',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'RecipeBook',
+        modelValue: useRouteQuery('booksAnd', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    booksOrNot: {
+        value: 'booksOrNot',
+        label: 'Book exclude (any)',
+        hint: 'Exclude recipes with any of the given books',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'RecipeBook',
+        modelValue: useRouteQuery('booksOrNot ', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    booksAndNot: {
+        value: 'booksAndNot',
+        label: 'Book exclude (all)',
+        hint: 'Exclude recipes with all of the given books',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'RecipeBook',
+        modelValue: useRouteQuery('booksAndNot ', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
 })
 
 /**
  * filters that are not yet enabled
  */
 const availableFilters = computed(() => {
-    let f = []
+    let f: Array<{value: string, title: string}> = []
     Object.entries(filters.value).forEach((entry) => {
-        let [key, value] = entry
-        if (!value.enabled) {
-            f.push({value: value.value, title: value.title})
+        let [key, filter] = entry
+        if (!isFilterVisible(filter)) {
+            f.push({value: filter.value, title: filter.label})
         }
     })
     return f
@@ -220,7 +342,7 @@ const availableFilters = computed(() => {
 const loading = ref(false)
 const dialog = ref(false)
 const panel = ref('')
-const addFilterSelect = ref('')
+const addFilterSelect = ref<string | null>(null)
 
 const tableHeaders = computed(() => {
     let headers = [
@@ -246,7 +368,7 @@ const newFilterName = ref('')
  * handle query updates when using the GlobalSearchDialog on the search page directly
  */
 // TODO this also makes the search update on every stroke, do we want this?
-watch(() => search_query.value, () => {
+watch(() => query.value, () => {
     searchRecipes({page: 1})
 })
 
@@ -254,7 +376,7 @@ watch(() => search_query.value, () => {
  * perform initial search on mounted
  */
 onMounted(() => {
-    searchRecipes({page: search_page.value})
+    searchRecipes({page: page.value})
 })
 
 /**
@@ -265,19 +387,15 @@ function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
 
-    search_page.value = options.page
-    if (options.itemsPerPage) {
-        search_pageSize.value = options.itemsPerPage
-    }
-
     let searchParameters = {
-        query: search_query.value,
-        page: search_page.value,
-        pageSize: search_pageSize.value,
-        keywords: search_keywords.value,
-        foods: search_keywords.value,
-        books: search_keywords.value,
+        query: query.value,
+        page: page.value,
+        pageSize: pageSize.value,
     } as ApiRecipeListRequest
+
+    Object.values(filters.value).forEach((filter) => {
+        searchParameters[filter.value] = filter.modelValue
+    })
 
     api.apiRecipeList(searchParameters).then((r) => {
         recipes.value = r.results
@@ -290,13 +408,25 @@ function searchRecipes(options: VDataTableUpdateOptions) {
     })
 }
 
+/**
+ * reset all search parameters and perform emtpy searchj
+ */
 function reset() {
-    Object.keys(urlSearchParams).forEach(key => {
-        delete urlSearchParams[key]
+    page.value = 1
+    query.value = ''
+    Object.values(filters.value).forEach((filter) => {
+        filter.enabled = false
+        filter.modelValue = filter.default
     })
     recipes.value = []
+    searchRecipes({page: 1})
 }
 
+/**
+ * handle clicking a table row by opening the selected recipe
+ * @param event
+ * @param data
+ */
 function handleRowClick(event: PointerEvent, data: any) {
     router.push({name: 'RecipeViewPage', params: {id: recipes.value[data.index].id}})
 }
@@ -323,6 +453,19 @@ function saveCustomFilter() {
 }
 
 /**
+ * determines if the filter should be visible because its either enabled or not the default value
+ * @param filter
+ */
+function isFilterVisible(filter: any) {
+    if (!filter.enabled && filter.modelValue.length > 0) {
+        filter.enabled = true
+    }
+    return filter.enabled
+}
+
+// TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
+
+/**
  * create new filter
  */
 function createCustomFilter() {
@@ -346,8 +489,6 @@ function loadCustomFilter() {
         urlSearchParams[key] = obj[key]
     })
 }
-
-// TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
 
 /**
  * turn data in the format of a CustomFilter into the format needed for api request

@@ -124,7 +124,6 @@ onBeforeMount(() => {
  * @param query input to search for on the API
  */
 function search(query: string) {
-    console.log('search called')
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: 25}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
