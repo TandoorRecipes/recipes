@@ -49,7 +49,11 @@ class RecipeSearch():
             self._search_prefs = SearchPreference()
         self._string = self._params.get('query').strip(
         ) if self._params.get('query', None) else None
+
         self._rating = self._params.get('rating', None)
+        self._rating_gte = self._params.get('rating_gte', None)
+        self._rating_lte = self._params.get('rating_lte', None)
+
         self._keywords = {
             'or': self._params.get('keywords_or', None) or self._params.get('keywords', None),
             'and': self._params.get('keywords_and', None),
@@ -140,7 +144,7 @@ class RecipeSearch():
         self.keyword_filters(**self._keywords)
         self.food_filters(**self._foods)
         self.book_filters(**self._books)
-        self.rating_filter(rating=self._rating)
+        self.rating_filter()
         self.internal_filter(internal=self._internal)
         self.step_filters(steps=self._steps)
         self.unit_filters(units=self._units)
@@ -413,25 +417,16 @@ class RecipeSearch():
             units = [units]
         self._queryset = self._queryset.filter(steps__ingredients__unit__in=units)
 
-    def rating_filter(self, rating=None):
-        if rating or self._sort_includes('rating'):
-            lessthan = '-' in (rating or [])
-            reverse = 'rating' in (self._sort_order or []) and '-rating' not in (self._sort_order or [])
-            if lessthan or reverse:
-                default = 100
-            else:
-                default = 0
-            # TODO make ratings a settings user-only vs all-users
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
-        if rating is None:
-            return
+    def rating_filter(self):
+        if self._rating or self._rating_lte or self._rating_gte or self._sort_includes('rating'):
+            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=0))))
 
-        if rating == '0':
-            self._queryset = self._queryset.filter(rating=0)
-        elif lessthan:
-            self._queryset = self._queryset.filter(rating__lte=int(rating[1:])).exclude(rating=0)
-        else:
-            self._queryset = self._queryset.filter(rating__gte=int(rating))
+        if self._rating:
+            self._queryset = self._queryset.filter(rating=round(int(self._rating)))
+        elif self._rating_gte:
+            self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
+        elif self._rating_lte:
+            self._queryset = self._queryset.filter(rating__gte=int(self._rating_lte)).exclude(rating=0)
 
     def internal_filter(self, internal=None):
         if not internal:

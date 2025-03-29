@@ -1110,9 +1110,6 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='foods_and_not',
                      description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int,
                      many=True),
-    OpenApiParameter(name='units', description=_('ID of unit a recipe should have.'), type=int),
-    OpenApiParameter(name='rating', description=_(
-        'Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), type=int),
     OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.'),
                      type=int, many=True),
     OpenApiParameter(name='books_or',
@@ -1127,9 +1124,15 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='books_and_not',
                      description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int,
                      many=True),
+    OpenApiParameter(name='units', description=_('ID of unit a recipe should have.'), type=int),
     OpenApiParameter(name='internal',
                      description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'),
                      type=bool),
+
+    OpenApiParameter(name='rating', description=_( 'Exact rating of recipe'), type=int),
+    OpenApiParameter(name='rating_gte', description=_( 'Rating a recipe should have or greater. '), type=int),
+    OpenApiParameter(name='rating_lte', description=_( 'Rating a recipe should have or smaller.'), type=int),
+
     OpenApiParameter(name='random',
                      description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
     OpenApiParameter(name='new',

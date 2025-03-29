@@ -154,12 +154,14 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
 import {toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
+import {VRating, VSelect} from "vuetify/components";
+import RatingField from "@/components/inputs/RatingField.vue";
 
 const {t} = useI18n()
 const router = useRouter()
 const {mdAndUp} = useDisplay()
 
-const query = useRouteQuery('query', "",)
+const query = useRouteQuery('query', "")
 const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
 
@@ -322,6 +324,56 @@ const filters = ref({
         mode: 'tags',
         object: false,
         searchOnLoad: true
+    },
+    units: {
+        value: 'units',
+        label: 'Unit (any)',
+        hint: 'Recipes that contain any of the given units',
+        enabled: false,
+        default: [],
+        is: ModelSelect,
+        model: 'Unit',
+        modelValue: useRouteQuery('units', [], {transform: toNumberArray}),
+        mode: 'tags',
+        object: false,
+        searchOnLoad: true
+    },
+    internal: {
+        value: 'internal',
+        label: 'Hide External',
+        hint: 'Hide external recipes',
+        enabled: false,
+        default: [],
+        is: VSelect,
+        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
+        modelValue: useRouteQuery('internal ', "false"),
+    },
+    rating: {
+        value: 'rating',
+        label: 'Rating (exact)',
+        hint: 'Recipes with the exact rating',
+        enabled: false,
+        default: 0,
+        is: RatingField,
+        modelValue: useRouteQuery('rating ', 0),
+    },
+    rating_gte: {
+        value: 'rating_gte',
+        label: 'Rating (>=)',
+        hint: 'Recipes with the given or a greater rating',
+        enabled: false,
+        default: 0,
+        is: RatingField,
+        modelValue: useRouteQuery('rating_gte ', 0),
+    },
+    rating_lte: {
+        value: 'rating_lte',
+        label: 'Rating (<=)',
+        hint: 'Recipes with the given or a smaller rating',
+        enabled: false,
+        default: 0,
+        is: RatingField,
+        modelValue: useRouteQuery('rating_lte ', 0),
     },
 })
 

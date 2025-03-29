@@ -1217,6 +1217,8 @@ export interface ApiRecipeListRequest {
     query?: string;
     random?: string;
     rating?: number;
+    ratingGte?: number;
+    ratingLte?: number;
     timescooked?: number;
     units?: number;
     updatedon?: string;
@@ -8878,6 +8880,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['rating'] != null) {
             queryParameters['rating'] = requestParameters['rating'];
+        }
+
+        if (requestParameters['ratingGte'] != null) {
+            queryParameters['rating_gte'] = requestParameters['ratingGte'];
+        }
+
+        if (requestParameters['ratingLte'] != null) {
+            queryParameters['rating_lte'] = requestParameters['ratingLte'];
         }
 
         if (requestParameters['timescooked'] != null) {
