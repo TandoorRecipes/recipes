@@ -47,5 +47,13 @@ export function uploadRecipeImage(recipeId: number, file: File) {
     }).finally(() => {
 
     })
+}
 
+/**
+ * convert a string or an array of strings into an array of numbers
+ * useful for query parameter transformation
+ * @param param
+ */
+export function toNumberArray(param: string | string[]): number[]{
+    return Array.isArray(param) ? param.map(Number) : [parseInt(param)];
 }

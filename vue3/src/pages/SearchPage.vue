@@ -7,6 +7,7 @@
                               :loading="loading"
                               @submit="searchRecipes({page: 1})"
                               @keydown.enter="searchRecipes({page: 1})"
+                              @click:clear="search_query = ''"
                               clearable hide-details>
                     <template v-slot:append>
                         <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon><i class="fa-solid fa-caret-down"></i></v-btn>
@@ -22,7 +23,36 @@
                         <v-expansion-panel-text>
                             <v-form :disabled="loading" class="mt-4">
 
-                                <model-select model="Keyword" mode="tags" v-model="search_keywords" density="compact" :object="false" search-on-load></model-select>
+                                <model-select model="Keyword" mode="tags" v-model="search_keywords" density="compact" :object="false" search-on-load
+                                              v-if="filters.keywords.enabled" :hint="filters.keywords.help">
+                                    <template #append>
+                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords = []; filters.keywords.enabled = false"></v-btn>
+                                    </template>
+                                </model-select>
+
+                                <model-select model="Keyword" mode="tags" v-model="search_keywords_and" density="compact" :object="false" search-on-load
+                                              v-if="filters.keywords_and.enabled">
+                                    <template #append>
+                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords_and = []; filters.keywords_and.enabled = false"></v-btn>
+                                    </template>
+                                </model-select>
+                                <model-select model="Keyword" mode="tags" v-model="search_keywords_or_not" density="compact" :object="false" search-on-load
+                                              v-if="filters.keywords_or_not.enabled">
+                                    <template #append>
+                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords_or_not = []; filters.keywords_or_not.enabled = false"></v-btn>
+                                    </template>
+                                </model-select>
+                                <model-select model="Keyword" mode="tags" v-model="search_keywords_and_not" density="compact" :object="false" search-on-load
+                                              v-if="filters.keywords_and_not.enabled">
+                                    <template #append>
+                                        <v-btn icon="fa-solid fa-times" size="small" variant="plain" @click="search_keywords_and_not = []; filters.keywords_and_not.enabled = false"></v-btn>
+                                    </template>
+                                </model-select>
+
+                                <v-divider class="mt-2 mb-2"></v-divider>
+
+                                <v-autocomplete :items="availableFilters" @update:model-value="(item:string) =>{ filters[item].enabled = true; nextTick(() => {addFilterSelect = ''})}" density="compact" :label="$t('AddFilter')" v-model="addFilterSelect"></v-autocomplete>
+
                                 <!--                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" density="compact" :object="false"></model-select>-->
                                 <!--                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" density="compact" :object="false"></model-select>-->
                                 <!--                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" density="compact" :object="false"></model-select>-->
@@ -134,42 +164,63 @@
 
 import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/openapi";
-import {useUrlSearchParams} from "@vueuse/core";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {VDateInput} from 'vuetify/labs/VDateInput'
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
-import {LocationQueryValue, useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import * as url from "node:url";
 import {useRouteQuery} from "@vueuse/router";
+import {toNumberArray} from "@/utils/utils";
 
 const {t} = useI18n()
 const router = useRouter()
-const route = useRoute()
 const {mdAndUp} = useDisplay()
-//const urlSearchParams = useUrlSearchParams('history', {})
-
-const toArray = (param: String | String[]) =>
-    Array.isArray(param) ? param : [param];
 
 const search_query = useRouteQuery('query', "",)
 const search_page = useRouteQuery('page', 1, {transform: Number})
 const search_pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
-const search_keywords = useRouteQuery('keywords', [], {transform: toArray})
+
+const search_keywords = useRouteQuery('keywords', [], {transform: toNumberArray})
+const search_keywords_or_not = useRouteQuery('keywords_or_not', [], {transform: toNumberArray})
+const search_keywords_and = useRouteQuery('keywords_and', [], {transform: toNumberArray})
+const search_keywords_and_not = useRouteQuery('keywords_and_not', [], {transform: toNumberArray})
+
+/**
+ * all filters available to enable
+ */
+const filters = ref({
+    keywords: {value: 'keywords', title: 'Keywords', help: 'Any of the keywords', enabled: false, default: []},
+    keywords_and: {value: 'keywords_and', title: 'Keywords And', help: 'All of the keywords', enabled: false, default: []},
+    keywords_or_not: {value: 'keywords_or_not', title: 'Keywords Or Not', help: 'None of the given keywords', enabled: false, default: []},
+    keywords_and_not: {value: 'keywords_and_not', title: 'Keywords And Not', help: 'Not all of the given keywords', enabled: false, default: []},
+})
+
+/**
+ * filters that are not yet enabled
+ */
+const availableFilters = computed(() => {
+    let f = []
+    Object.entries(filters.value).forEach((entry) => {
+        let [key, value] = entry
+        if (!value.enabled) {
+            f.push({value: value.value, title: value.title})
+        }
+    })
+    return f
+})
 
 const loading = ref(false)
 const dialog = ref(false)
 const panel = ref('')
-const viewMode = ref('table')
-
+const addFilterSelect = ref('')
 
 const tableHeaders = computed(() => {
     let headers = [
@@ -191,16 +242,25 @@ const recipes = ref([] as RecipeOverview[])
 const selectedCustomFilter = ref({} as CustomFilter)
 const newFilterName = ref('')
 
-// handle query updates when using the GlobalSearchDialog on the search page directly
+/**
+ * handle query updates when using the GlobalSearchDialog on the search page directly
+ */
+// TODO this also makes the search update on every stroke, do we want this?
 watch(() => search_query.value, () => {
     searchRecipes({page: 1})
 })
 
+/**
+ * perform initial search on mounted
+ */
 onMounted(() => {
-    console.log(search_keywords.value)
     searchRecipes({page: search_page.value})
 })
 
+/**
+ * perform the recipe search with the given options
+ * @param options
+ */
 function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
@@ -215,6 +275,8 @@ function searchRecipes(options: VDataTableUpdateOptions) {
         page: search_page.value,
         pageSize: search_pageSize.value,
         keywords: search_keywords.value,
+        foods: search_keywords.value,
+        books: search_keywords.value,
     } as ApiRecipeListRequest
 
     api.apiRecipeList(searchParameters).then((r) => {
