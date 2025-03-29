@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12" md="6" offset-md="3">
                 <v-text-field :label="$t('Search')"
-                              v-model="urlSearchParams.query"
+                              v-model="search_query"
                               :loading="loading"
                               @submit="searchRecipes({page: 1})"
                               @keydown.enter="searchRecipes({page: 1})"
@@ -22,10 +22,10 @@
                         <v-expansion-panel-text>
                             <v-form :disabled="loading" class="mt-4">
 
-                                <model-select model="Keyword" mode="tags" v-model="urlSearchParams.keywords" density="compact" :object="false"></model-select>
-                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" density="compact" :object="false"></model-select>
-                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" density="compact" :object="false"></model-select>
-                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" density="compact" :object="false"></model-select>
+                                <model-select model="Keyword" mode="tags" v-model="search_keywords" density="compact" :object="false" search-on-load></model-select>
+                                <!--                                <model-select model="Food" mode="tags" v-model="urlSearchParams.foods" density="compact" :object="false"></model-select>-->
+                                <!--                                <model-select model="Unit" mode="tags" v-model="urlSearchParams.units" density="compact" :object="false"></model-select>-->
+                                <!--                                <model-select model="RecipeBook" mode="tags" v-model="urlSearchParams.books" density="compact" :object="false"></model-select>-->
 
                                 <!--                            <v-number-input :label="$t('times_cooked')" v-model="searchParameters.timescooked" clearable></v-number-input>-->
                                 <!--                            <v-date-input  :label="$t('last_cooked')" v-model="searchParameters.cookedon" clearable></v-date-input>-->
@@ -33,7 +33,7 @@
                                 <!--                            <v-date-input :label="$t('created_on')" v-model="searchParameters.createdon" clearable></v-date-input>-->
                                 <!--                            <v-date-input :label="$t('updatedon')" v-model="searchParameters.updatedon" clearable></v-date-input>-->
 
-                                <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow" density="compact"></v-checkbox>
+                                <!--                                <v-checkbox :label="$t('make_now')" v-model="urlSearchParams.makenow" density="compact"></v-checkbox>-->
 
                                 <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
                                     <template #append>
@@ -49,7 +49,7 @@
                                               :items="[{title: $t('Table'), value: 'table'}, {title: $t('Cards'), value: 'grid'},]" density="compact"></v-select>
                                 </v-col>
                                 <v-col cols="6">
-                                    <v-select class="float-right" :label="$t('PerPage')" v-model="urlSearchParams.pageSize" :items="[10,25,50,100]" density="compact"
+                                    <v-select class="float-right" :label="$t('PerPage')" v-model="search_pageSize" :items="[10,25,50,100]" density="compact"
                                               width="100%"></v-select>
                                 </v-col>
                             </v-row>
@@ -57,7 +57,7 @@
                         </v-expansion-panel-text>
 
                         <v-card-actions v-if="panel == 'search'">
-                            <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark" :disabled="Object.keys(urlSearchParams).length == 0">{{ $t('Reset') }}</v-btn>
+                            <!--                            <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark" :disabled="Object.keys(urlSearchParams).length == 0">{{ $t('Reset') }}</v-btn>-->
                             <v-btn @click="searchRecipes({page: 1})" prepend-icon="$search">{{ $t('Search') }}</v-btn>
                         </v-card-actions>
                     </v-expansion-panel>
@@ -74,8 +74,8 @@
                         :loading="loading"
                         :items="recipes"
                         :headers="tableHeaders"
-                        :page="urlSearchParams.page"
-                        :items-per-page="urlSearchParams.pageSize"
+                        :page="search_page"
+                        :items-per-page="search_pageSize"
                         :items-length="tableItemCount"
                         @click:row="handleRowClick"
                         disable-sort
@@ -107,13 +107,13 @@
             </v-row>
 
         </template>
-    <v-row>
-        <v-col cols="12" md="6" offset-md="3">
-            <v-pagination v-model="urlSearchParams.page" :length="Math.ceil(tableItemCount/urlSearchParams.pageSize)"
-                          @update:modelValue="searchRecipes({page: urlSearchParams.page})" class="ms-2 me-2" size="small"
-            ></v-pagination>
-        </v-col>
-    </v-row>
+        <v-row>
+            <v-col cols="12" md="6" offset-md="3">
+                <v-pagination v-model="search_page" :length="Math.ceil(tableItemCount/search_pageSize)"
+                              @update:modelValue="searchRecipes({page: search_page})" class="ms-2 me-2" size="small"
+                ></v-pagination>
+            </v-col>
+        </v-row>
 
 
         <v-dialog v-model="dialog">
@@ -132,7 +132,7 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/openapi";
 import {useUrlSearchParams} from "@vueuse/core";
 import {useI18n} from "vue-i18n";
@@ -141,7 +141,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {VDateInput} from 'vuetify/labs/VDateInput'
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
-import {useRouter} from "vue-router";
+import {LocationQueryValue, useRoute, useRouter} from "vue-router";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
@@ -149,11 +149,21 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import * as url from "node:url";
+import {useRouteQuery} from "@vueuse/router";
 
 const {t} = useI18n()
 const router = useRouter()
+const route = useRoute()
 const {mdAndUp} = useDisplay()
-const urlSearchParams = useUrlSearchParams('history', {})
+//const urlSearchParams = useUrlSearchParams('history', {})
+
+const toArray = (param: String | String[]) =>
+    Array.isArray(param) ? param : [param];
+
+const search_query = useRouteQuery('query', "",)
+const search_page = useRouteQuery('page', 1, {transform: Number})
+const search_pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
+const search_keywords = useRouteQuery('keywords', [], {transform: toArray})
 
 const loading = ref(false)
 const dialog = ref(false)
@@ -182,33 +192,30 @@ const selectedCustomFilter = ref({} as CustomFilter)
 const newFilterName = ref('')
 
 // handle query updates when using the GlobalSearchDialog on the search page directly
-watch(() => route.query, () => {
-    urlSearchParams.query = route.query.query
-    searchRecipes({page: urlSearchParams.page})
-}, {deep: true})
+watch(() => search_query.value, () => {
+    searchRecipes({page: 1})
+})
+
 onMounted(() => {
-    if(urlSearchParams.page == undefined){
-        urlSearchParams.page = 1
-    }
-    if(urlSearchParams.pageSize == undefined){
-        urlSearchParams.pageSize = useUserPreferenceStore().deviceSettings.search_itemsPerPage
-    }
-    searchRecipes({page: urlSearchParams.page})
+    console.log(search_keywords.value)
+    searchRecipes({page: search_page.value})
 })
 
 function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
 
-    urlSearchParams.page = options.page
+    search_page.value = options.page
     if (options.itemsPerPage) {
-        urlSearchParams.pageSize = options.itemsPerPage
+        search_pageSize.value = options.itemsPerPage
     }
 
-    let searchParameters = {} as ApiRecipeListRequest
-    Object.keys(urlSearchParams).forEach(key => {
-        searchParameters[key] = urlSearchParams[key]
-    })
+    let searchParameters = {
+        query: search_query.value,
+        page: search_page.value,
+        pageSize: search_pageSize.value,
+        keywords: search_keywords.value,
+    } as ApiRecipeListRequest
 
     api.apiRecipeList(searchParameters).then((r) => {
         recipes.value = r.results
