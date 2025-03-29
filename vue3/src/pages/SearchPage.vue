@@ -181,6 +181,11 @@ const recipes = ref([] as RecipeOverview[])
 const selectedCustomFilter = ref({} as CustomFilter)
 const newFilterName = ref('')
 
+// handle query updates when using the GlobalSearchDialog on the search page directly
+watch(() => route.query, () => {
+    urlSearchParams.query = route.query.query
+    searchRecipes({page: urlSearchParams.page})
+}, {deep: true})
 onMounted(() => {
     if(urlSearchParams.page == undefined){
         urlSearchParams.page = 1
