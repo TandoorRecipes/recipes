@@ -39,7 +39,7 @@ export function uploadRecipeImage(recipeId: number, file: File) {
         body: formData
     }).then(r => {
         r.json().then(r => {
-            return  RecipeImageFromJSON(r)
+            return RecipeImageFromJSON(r)
         })
 
     }).catch(err => {
@@ -54,6 +54,20 @@ export function uploadRecipeImage(recipeId: number, file: File) {
  * useful for query parameter transformation
  * @param param
  */
-export function toNumberArray(param: string | string[]): number[]{
+export function toNumberArray(param: string | string[]): number[] {
     return Array.isArray(param) ? param.map(Number) : [parseInt(param)];
+}
+
+/**
+ * convert a string to a bool if its either "true" or "false", return undefined otherwise
+ * @param param
+ */
+export function stringToBool(param: string): boolean | undefined {
+    if (param == "true") {
+        return true
+    } else if (param == "false") {
+        return false
+    } else {
+        return undefined
+    }
 }

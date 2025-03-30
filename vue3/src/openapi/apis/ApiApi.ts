@@ -1195,9 +1195,12 @@ export interface ApiRecipeListRequest {
     booksAndNot?: Array<number>;
     booksOr?: Array<number>;
     booksOrNot?: Array<number>;
-    cookedon?: string;
+    cookedonGte?: Date;
+    cookedonLte?: Date;
     createdby?: number;
-    createdon?: string;
+    createdon?: Date;
+    createdonGte?: Date;
+    createdonLte?: Date;
     foods?: Array<number>;
     foodsAnd?: Array<number>;
     foodsAndNot?: Array<number>;
@@ -1219,10 +1222,14 @@ export interface ApiRecipeListRequest {
     rating?: number;
     ratingGte?: number;
     ratingLte?: number;
-    timescooked?: number;
+    timescookedGte?: number;
+    timescookedLte?: number;
     units?: number;
-    updatedon?: string;
-    viewedon?: string;
+    updatedon?: Date;
+    updatedonGte?: Date;
+    updatedonLte?: Date;
+    viewedonGte?: Date;
+    viewedonLte?: Date;
 }
 
 export interface ApiRecipePartialUpdateRequest {
@@ -8794,8 +8801,12 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['books_or_not'] = requestParameters['booksOrNot'];
         }
 
-        if (requestParameters['cookedon'] != null) {
-            queryParameters['cookedon'] = requestParameters['cookedon'];
+        if (requestParameters['cookedonGte'] != null) {
+            queryParameters['cookedon_gte'] = (requestParameters['cookedonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['cookedonLte'] != null) {
+            queryParameters['cookedon_lte'] = (requestParameters['cookedonLte'] as any).toISOString().substring(0,10);
         }
 
         if (requestParameters['createdby'] != null) {
@@ -8803,7 +8814,15 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         if (requestParameters['createdon'] != null) {
-            queryParameters['createdon'] = requestParameters['createdon'];
+            queryParameters['createdon'] = (requestParameters['createdon'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['createdonGte'] != null) {
+            queryParameters['createdon_gte'] = (requestParameters['createdonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['createdonLte'] != null) {
+            queryParameters['createdon_lte'] = (requestParameters['createdonLte'] as any).toISOString().substring(0,10);
         }
 
         if (requestParameters['foods'] != null) {
@@ -8890,8 +8909,12 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['rating_lte'] = requestParameters['ratingLte'];
         }
 
-        if (requestParameters['timescooked'] != null) {
-            queryParameters['timescooked'] = requestParameters['timescooked'];
+        if (requestParameters['timescookedGte'] != null) {
+            queryParameters['timescooked_gte'] = requestParameters['timescookedGte'];
+        }
+
+        if (requestParameters['timescookedLte'] != null) {
+            queryParameters['timescooked_lte'] = requestParameters['timescookedLte'];
         }
 
         if (requestParameters['units'] != null) {
@@ -8899,11 +8922,23 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         if (requestParameters['updatedon'] != null) {
-            queryParameters['updatedon'] = requestParameters['updatedon'];
+            queryParameters['updatedon'] = (requestParameters['updatedon'] as any).toISOString().substring(0,10);
         }
 
-        if (requestParameters['viewedon'] != null) {
-            queryParameters['viewedon'] = requestParameters['viewedon'];
+        if (requestParameters['updatedonGte'] != null) {
+            queryParameters['updatedon_gte'] = (requestParameters['updatedonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['updatedonLte'] != null) {
+            queryParameters['updatedon_lte'] = (requestParameters['updatedonLte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['viewedonGte'] != null) {
+            queryParameters['viewedon_gte'] = (requestParameters['viewedonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['viewedonLte'] != null) {
+            queryParameters['viewedon_lte'] = (requestParameters['viewedonLte'] as any).toISOString().substring(0,10);
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

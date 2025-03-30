@@ -23,14 +23,16 @@
                         <v-expansion-panel-text>
                             <v-form :disabled="loading" class="mt-4">
 
-                                <template v-for="filter in Object.values(filters)">
-                                    <component :="filter" :is="filter.is" density="compact" v-model="filter.modelValue" v-if="isFilterVisible(filter)">
-                                        <template #append>
-                                            <v-btn icon="fa-solid fa-times" size="small" variant="plain"
-                                                   @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>
-                                        </template>
-                                    </component>
-                                </template>
+                                <div v-for="filter in Object.values(filters)" :key="filter.id">
+                                    <template v-if="filter.enabled">
+                                        <component :="filter" :is="filter.is" density="compact" v-model="filter.modelValue">
+                                            <template #append>
+                                                <v-btn icon="fa-solid fa-times" size="small" variant="plain"
+                                                       @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>
+                                            </template>
+                                        </component>
+                                    </template>
+                                </div>
 
                                 <v-divider class="mt-2 mb-2"></v-divider>
 
@@ -87,7 +89,9 @@
                     >
                         <template #item.image="{item}">
                             <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1" v-if="item.image"></v-avatar>
-                            <v-avatar color="primary" variant="tonal" size="x-large" class="mt-1 mb-1" v-else><random-icon></random-icon></v-avatar>
+                            <v-avatar color="primary" variant="tonal" size="x-large" class="mt-1 mb-1" v-else>
+                                <random-icon></random-icon>
+                            </v-avatar>
                         </template>
 
                         <template #item.keywords="{item}">
@@ -136,7 +140,7 @@
 
 <script setup lang="ts">
 
-import {computed, nextTick, onMounted, ref, watch} from "vue";
+import {computed, nextTick, onMounted, ref, toRaw, watch} from "vue";
 import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/openapi";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
@@ -152,9 +156,9 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
-import {toNumberArray} from "@/utils/utils";
+import {stringToBool, toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
-import {VRating, VSelect} from "vuetify/components";
+import {VRating, VSelect, VTextField} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
 
 const {t} = useI18n()
@@ -170,7 +174,7 @@ const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettin
  */
 const filters = ref({
     keywords: {
-        value: 'keywords',
+        id: 'keywords',
         label: 'Keyword (any)',
         hint: 'Any of the given keywords',
         enabled: false,
@@ -183,7 +187,7 @@ const filters = ref({
         searchOnLoad: true
     },
     keywordsAnd: {
-        value: 'keywordsAnd',
+        id: 'keywordsAnd',
         label: 'Keyword (all)',
         hint: 'All of the given keywords',
         enabled: false,
@@ -196,33 +200,33 @@ const filters = ref({
         searchOnLoad: true
     },
     keywordsOrNot: {
-        value: 'keywordsOrNot',
+        id: 'keywordsOrNot',
         label: 'Keyword exclude (any)',
         hint: 'Exclude recipes with any of the given keywords',
         enabled: false,
         default: [],
         is: ModelSelect,
         model: 'Keyword',
-        modelValue: useRouteQuery('keywordsOrNot ', [], {transform: toNumberArray}),
+        modelValue: useRouteQuery('keywordsOrNot', [], {transform: toNumberArray}),
         mode: 'tags',
         object: false,
         searchOnLoad: true
     },
     keywordsAndNot: {
-        value: 'keywordsAndNot',
+        id: 'keywordsAndNot',
         label: 'Keyword exclude (all)',
         hint: 'Exclude recipes with all of the given keywords',
         enabled: false,
         default: [],
         is: ModelSelect,
         model: 'Keyword',
-        modelValue: useRouteQuery('keywordsAndNot ', [], {transform: toNumberArray}),
+        modelValue: useRouteQuery('keywordsAndNot', [], {transform: toNumberArray}),
         mode: 'tags',
         object: false,
         searchOnLoad: true
     },
     foods: {
-        value: 'foods',
+        id: 'foods',
         label: 'Foods (any)',
         hint: 'Any of the given foods',
         enabled: false,
@@ -235,7 +239,7 @@ const filters = ref({
         searchOnLoad: true
     },
     foodsAnd: {
-        value: 'foodsAnd',
+        id: 'foodsAnd',
         label: 'Food (all)',
         hint: 'All of the given foods',
         enabled: false,
@@ -248,33 +252,33 @@ const filters = ref({
         searchOnLoad: true
     },
     foodsOrNot: {
-        value: 'foodsOrNot',
+        id: 'foodsOrNot',
         label: 'Food exclude (any)',
         hint: 'Exclude recipes with any of the given foods',
         enabled: false,
         default: [],
         is: ModelSelect,
         model: 'Food',
-        modelValue: useRouteQuery('foodsOrNot ', [], {transform: toNumberArray}),
+        modelValue: useRouteQuery('foodsOrNot', [], {transform: toNumberArray}),
         mode: 'tags',
         object: false,
         searchOnLoad: true
     },
     foodsAndNot: {
-        value: 'foodsAndNot',
+        id: 'foodsAndNot',
         label: 'Food exclude (all)',
         hint: 'Exclude recipes with all of the given foods',
         enabled: false,
         default: [],
         is: ModelSelect,
         model: 'Food',
-        modelValue: useRouteQuery('foodsAndNot ', [], {transform: toNumberArray}),
+        modelValue: useRouteQuery('foodsAndNot', [], {transform: toNumberArray}),
         mode: 'tags',
         object: false,
         searchOnLoad: true
     },
     books: {
-        value: 'books',
+        id: 'books',
         label: 'Book (any)',
         hint: 'Recipes that are in any of the given books',
         enabled: false,
@@ -287,7 +291,7 @@ const filters = ref({
         searchOnLoad: true
     },
     booksAnd: {
-        value: 'booksAnd',
+        id: 'booksAnd',
         label: 'Book (all)',
         hint: 'Recipes that are in all of the given books',
         enabled: false,
@@ -300,33 +304,46 @@ const filters = ref({
         searchOnLoad: true
     },
     booksOrNot: {
-        value: 'booksOrNot',
+        id: 'booksOrNot',
         label: 'Book exclude (any)',
         hint: 'Exclude recipes with any of the given books',
         enabled: false,
         default: [],
         is: ModelSelect,
         model: 'RecipeBook',
-        modelValue: useRouteQuery('booksOrNot ', [], {transform: toNumberArray}),
+        modelValue: useRouteQuery('booksOrNot', [], {transform: toNumberArray}),
         mode: 'tags',
         object: false,
         searchOnLoad: true
     },
     booksAndNot: {
-        value: 'booksAndNot',
+        id: 'booksAndNot',
         label: 'Book exclude (all)',
         hint: 'Exclude recipes with all of the given books',
         enabled: false,
         default: [],
         is: ModelSelect,
         model: 'RecipeBook',
-        modelValue: useRouteQuery('booksAndNot ', [], {transform: toNumberArray}),
+        modelValue: useRouteQuery('booksAndNot', [], {transform: toNumberArray}),
         mode: 'tags',
         object: false,
         searchOnLoad: true
     },
+    createdby: {
+        id: 'createdby',
+        label: 'Created By',
+        hint: 'Recipes created by the selected user',
+        enabled: false,
+        default: undefined,
+        is: ModelSelect,
+        model: 'User',
+        modelValue: useRouteQuery('createdby', undefined, {transform: Number}),
+        mode: 'single',
+        object: false,
+        searchOnLoad: true
+    },
     units: {
-        value: 'units',
+        id: 'units',
         label: 'Unit (any)',
         hint: 'Recipes that contain any of the given units',
         enabled: false,
@@ -339,53 +356,101 @@ const filters = ref({
         searchOnLoad: true
     },
     internal: {
-        value: 'internal',
+        id: 'internal',
         label: 'Hide External',
         hint: 'Hide external recipes',
         enabled: false,
-        default: [],
+        default: "false",
         is: VSelect,
-        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
-        modelValue: useRouteQuery('internal ', "false"),
+        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
+        modelValue: useRouteQuery('internal', "false"),
     },
     rating: {
-        value: 'rating',
+        id: 'rating',
         label: 'Rating (exact)',
         hint: 'Recipes with the exact rating',
         enabled: false,
-        default: 0,
+        default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('rating ', 0),
+        modelValue: useRouteQuery('rating', undefined, {transform: Number}),
     },
-    rating_gte: {
-        value: 'rating_gte',
+    ratingGte: {
+        id: 'ratingGte',
         label: 'Rating (>=)',
         hint: 'Recipes with the given or a greater rating',
         enabled: false,
-        default: 0,
+        default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('rating_gte ', 0),
+        modelValue: useRouteQuery('ratingGte', undefined, {transform: Number}),
     },
-    rating_lte: {
-        value: 'rating_lte',
+    ratingLte: {
+        id: 'ratingLte',
         label: 'Rating (<=)',
         hint: 'Recipes with the given or a smaller rating',
         enabled: false,
-        default: 0,
+        default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('rating_lte ', 0),
+        modelValue: useRouteQuery('ratingLte', undefined, {transform: Number}),
     },
+    timescookedGte: {
+        id: 'timescookedGte',
+        label: 'Times Cooked (>=)',
+        hint: 'Recipes that were cooked at least X times',
+        enabled: false,
+        default: undefined,
+        is: VNumberInput,
+        modelValue: useRouteQuery('timescookedGte', undefined, {transform: Number}),
+    },
+    timescookedLte: {
+        id: 'timescookedLte',
+        label: 'Times Cooked (<=)',
+        hint: 'Recipes that were cooked at most X times',
+        enabled: false,
+        default: undefined,
+        is: VNumberInput,
+        modelValue: useRouteQuery('timescookedLte', undefined, {transform: Number}),
+    },
+    makenow: {
+        id: 'makenow',
+        label: 'Foods on Hand',
+        hint: 'Only recipes were all foods (or its substitutes) are marked as on hand',
+        enabled: false,
+        default: "false",
+        is: VSelect,
+        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
+        modelValue: useRouteQuery('makenow', "false"),
+    },
+
+    // cookedonGte: {
+    //     id: 'cookedonGte',
+    //     label: 'Cooked after',
+    //     hint: 'Only recipes that were cooked on or after the given date.',
+    //     enabled: false,
+    //     default: null,
+    //     is: VTextField,
+    //     type: "date",
+    //     modelValue: useRouteQuery('cookedonGte', null, {transform: Date}),
+    // },
+    // cookedonLte: {
+    //     id: 'cookedonLte',
+    //     label: 'Cooked before',
+    //     hint: 'Only recipes that were cooked on or before the given date.',
+    //     enabled: false,
+    //     default: null,
+    //     is: VDateInput,
+    //     modelValue: useRouteQuery('cookedonLte', null, {transform: Date}),
+    // },
 })
 
 /**
  * filters that are not yet enabled
  */
 const availableFilters = computed(() => {
-    let f: Array<{value: string, title: string}> = []
+    let f: Array<{ value: string, title: string }> = []
     Object.entries(filters.value).forEach((entry) => {
         let [key, filter] = entry
-        if (!isFilterVisible(filter)) {
-            f.push({value: filter.value, title: filter.label})
+        if (!filter.enabled) {
+            f.push({value: filter.id, title: filter.label})
         }
     })
     return f
@@ -404,7 +469,6 @@ const tableHeaders = computed(() => {
     if (mdAndUp.value) {
         headers.push({title: t('Keywords'), key: 'keywords',},)
     }
-
     headers.push({title: t('Actions'), key: 'action', width: '1%', noBreak: true, align: 'end'},)
 
     return headers
@@ -428,6 +492,7 @@ watch(() => query.value, () => {
  * perform initial search on mounted
  */
 onMounted(() => {
+    enableFiltersWithValues()
     searchRecipes({page: page.value})
 })
 
@@ -446,7 +511,9 @@ function searchRecipes(options: VDataTableUpdateOptions) {
     } as ApiRecipeListRequest
 
     Object.values(filters.value).forEach((filter) => {
-        searchParameters[filter.value] = filter.modelValue
+        if (!isFilterDefaultValue(filter)) {
+            searchParameters[filter.id] = filter.modelValue
+        }
     })
 
     api.apiRecipeList(searchParameters).then((r) => {
@@ -484,6 +551,35 @@ function handleRowClick(event: PointerEvent, data: any) {
 }
 
 /**
+ * enable UI of filters that have a value that is not the default for the given filter
+ */
+function enableFiltersWithValues() {
+    Object.values(filters.value).forEach((filter) => {
+        if (!isFilterDefaultValue(filter)) {
+            filter.enabled = true
+        }
+    })
+}
+
+/**
+ * determines if the current value of a filter is its default value
+ * @param filter
+ */
+function isFilterDefaultValue(filter: any) {
+    if (Array.isArray(filter.default) && Array.isArray(filter.modelValue)) {
+        return filter.default.length == filter.modelValue.length
+    } else if (isNaN(filter.default) && isNaN(filter.modelValue)) {
+        return true
+    } else {
+        return toRaw(filter.default) === filter.modelValue
+    }
+}
+
+// -------------------------------------------
+// --------- Logic for saved filters ---------
+// -------------------------------------------
+
+/**
  * triggered by save button, if filter exists update it, if not open dialog to create a new filter
  */
 function saveCustomFilter() {
@@ -503,19 +599,6 @@ function saveCustomFilter() {
         dialog.value = true
     }
 }
-
-/**
- * determines if the filter should be visible because its either enabled or not the default value
- * @param filter
- */
-function isFilterVisible(filter: any) {
-    if (!filter.enabled && filter.modelValue.length > 0) {
-        filter.enabled = true
-    }
-    return filter.enabled
-}
-
-// TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
 
 /**
  * create new filter
@@ -542,6 +625,8 @@ function loadCustomFilter() {
     })
 }
 
+
+// TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
 /**
  * turn data in the format of a CustomFilter into the format needed for api request
  * @param customFilterParams

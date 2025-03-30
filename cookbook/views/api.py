@@ -1079,101 +1079,55 @@ class RecipePagination(PageNumberPagination):
 @extend_schema_view(retrieve=extend_schema(parameters=[
     OpenApiParameter(name='share', type=str),
 ]), list=extend_schema(parameters=[
-    OpenApiParameter(name='query', description=_(
-        'Query string matched (fuzzy) against recipe name. In the future also fulltext search.'), type=str),
-    OpenApiParameter(name='keywords', description=_(
-        'ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), type=int,
-                     many=True),
-    OpenApiParameter(name='keywords_or',
-                     description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'),
-                     type=int, many=True),
-    OpenApiParameter(name='keywords_and',
-                     description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'),
-                     type=int, many=True),
-    OpenApiParameter(name='keywords_or_not',
-                     description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'),
-                     type=int, many=True),
-    OpenApiParameter(name='keywords_and_not',
-                     description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'),
-                     type=int, many=True),
-    OpenApiParameter(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'),
-                     type=int, many=True),
-    OpenApiParameter(name='foods_or',
-                     description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), type=int,
-                     many=True),
-    OpenApiParameter(name='foods_and',
-                     description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), type=int,
-                     many=True),
-    OpenApiParameter(name='foods_or_not',
-                     description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), type=int,
-                     many=True),
-    OpenApiParameter(name='foods_and_not',
-                     description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int,
-                     many=True),
-    OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.'),
-                     type=int, many=True),
-    OpenApiParameter(name='books_or',
-                     description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), type=int,
-                     many=True),
-    OpenApiParameter(name='books_and',
-                     description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int,
-                     many=True),
-    OpenApiParameter(name='books_or_not',
-                     description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int,
-                     many=True),
-    OpenApiParameter(name='books_and_not',
-                     description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int,
-                     many=True),
+    OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.'), type=str),
+
+    OpenApiParameter(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), type=int, many=True),
+    OpenApiParameter(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), type=int, many=True),
+    OpenApiParameter(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), type=int, many=True),
+
+    OpenApiParameter(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), type=int, many=True),
+    OpenApiParameter(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), type=int, many=True),
+    OpenApiParameter(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), type=int, many=True),
+    OpenApiParameter(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), type=int, many=True),
+    OpenApiParameter(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int, many=True),
+
+    OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.'), type=int, many=True),
+    OpenApiParameter(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), type=int, many=True),
+    OpenApiParameter(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int, many=True),
+    OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int, many=True),
+    OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int, many=True),
+
     OpenApiParameter(name='units', description=_('ID of unit a recipe should have.'), type=int),
-    OpenApiParameter(name='internal',
-                     description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'),
-                     type=bool),
 
-    OpenApiParameter(name='rating', description=_( 'Exact rating of recipe'), type=int),
-    OpenApiParameter(name='rating_gte', description=_( 'Rating a recipe should have or greater. '), type=int),
-    OpenApiParameter(name='rating_lte', description=_( 'Rating a recipe should have or smaller.'), type=int),
+    OpenApiParameter(name='rating', description=_('Exact rating of recipe'), type=int),
+    OpenApiParameter(name='rating_gte', description=_('Rating a recipe should have or greater.'), type=int),
+    OpenApiParameter(name='rating_lte', description=_('Rating a recipe should have or smaller.'), type=int),
 
-    OpenApiParameter(name='random',
-                     description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
-    OpenApiParameter(name='new',
-                     description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
-    OpenApiParameter(name='num_recent', description=_(
-        'Returns the given number of recently viewed recipes before search results (if given)'), type=int),
-    OpenApiParameter(name='timescooked', description=_(
-        'Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), type=int),
-    OpenApiParameter(
-        name='cookedon',
-        description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
-        type=str,
-        examples=[DateExample, BeforeDateExample]
-    ),
-    OpenApiParameter(
-        name='createdon',
-        description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
-        type=str,
-        examples=[DateExample, BeforeDateExample]
-    ),
-    OpenApiParameter(
-        name='createdby',
-        description=_('Filter recipes for ones created by the given user ID'),
-        type=int,
-    ),
-    OpenApiParameter(
-        name='updatedon',
-        description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
-        type=str,
-        examples=[DateExample, BeforeDateExample]
-    ),
-    OpenApiParameter(
-        name='viewedon',
-        description=_(
-            'Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
-        type=str,
-        examples=[DateExample, BeforeDateExample]
-    ),
-    OpenApiParameter(name='makenow',
-                     description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'),
-                     type=bool),
+    OpenApiParameter(name='timescooked_gte', description=_('Filter recipes cooked X times or more.'), type=int),
+    OpenApiParameter(name='timescooked_lte', description=_('Filter recipes cooked X times or less.'), type=int),
+
+    OpenApiParameter(name='createdon', description=_('Filter recipes created on the given date.'), type=OpenApiTypes.DATE, ),
+    OpenApiParameter(name='createdon_gte', description=_('Filter recipes created on the given date or after.'), type=OpenApiTypes.DATE, ),
+    OpenApiParameter(name='createdon_lte', description=_('Filter recipes created on the given date or before.'), type=OpenApiTypes.DATE, ),
+
+    OpenApiParameter(name='updatedon', description=_('Filter recipes updated on the given date.'), type=OpenApiTypes.DATE, ),
+    OpenApiParameter(name='updatedon_gte', description=_('Filter recipes updated on the given date.'), type=OpenApiTypes.DATE, ),
+    OpenApiParameter(name='updatedon_lte', description=_('Filter recipes updated on the given date.'), type=OpenApiTypes.DATE, ),
+
+    OpenApiParameter(name='cookedon_gte', description=_('Filter recipes last cooked on the given date or after.'), type=OpenApiTypes.DATE),
+    OpenApiParameter(name='cookedon_lte', description=_('Filter recipes last cooked on the given date or before.'), type=OpenApiTypes.DATE),
+
+    OpenApiParameter(name='viewedon_gte', description=_('Filter recipes lasts viewed on the given date.'), type=OpenApiTypes.DATE, ),
+    OpenApiParameter(name='viewedon_lte', description=_('Filter recipes lasts viewed on the given date.'), type=OpenApiTypes.DATE, ),
+
+    OpenApiParameter(name='createdby', description=_('Filter recipes for ones created by the given user ID'), type=int),
+    OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'), type=bool),
+    OpenApiParameter(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(name='num_recent', description=_('Returns the given number of recently viewed recipes before search results (if given)'), type=int),
+    OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
 ]))
 class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Recipe.objects
@@ -1944,14 +1898,14 @@ class FdcSearchView(APIView):
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     @extend_schema(responses=FdcQuerySerializer(many=False),
-                   parameters=[OpenApiParameter(name='query', type=str), OpenApiParameter(name='dataType', description='options: Branded,Foundation,Survey (FNDDS),SR Legacy', type=str, many=True)])
+                   parameters=[OpenApiParameter(name='query', type=str),
+                               OpenApiParameter(name='dataType', description='options: Branded,Foundation,Survey (FNDDS),SR Legacy', type=str, many=True)])
     def get(self, request, format=None):
         query = self.request.query_params.get('query', None)
         if query is not None:
             data_types = self.request.query_params.getlist('dataType', ['Foundation'])
 
             response = requests.get(f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}')
-
 
             if response.status_code == 429:
                 return JsonResponse(
