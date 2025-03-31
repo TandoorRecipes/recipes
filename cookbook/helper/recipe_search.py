@@ -206,9 +206,9 @@ class RecipeSearch():
             else:
                 order += default_order
             order[:] = [Lower('name').asc() if x ==
-                        'name' else x for x in order]
+                                               'name' else x for x in order]
             order[:] = [Lower('name').desc() if x ==
-                        '-name' else x for x in order]
+                                                '-name' else x for x in order]
             self.orderby = order
 
     def string_filters(self, string=None):
@@ -261,48 +261,40 @@ class RecipeSearch():
         if self._cookedon_lte:
             self._queryset = self._queryset.filter(lastcooked__date__lte=self._cookedon_lte).exclude(lastcooked=default)
         elif self._cookedon_gte:
-            self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte ).exclude(lastcooked=default)
+            self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte).exclude(lastcooked=default)
 
-    def _created_on_filter(self, created_date=None):
-        if created_date is None:
-            return
-        lessthan = '-' in created_date[:1]
-        created_date = date(*[int(x) for x in created_date.split('-') if x != ''])
-        if lessthan:
-            self._queryset = self._queryset.filter(created_at__date__lte=created_date)
-        else:
-            self._queryset = self._queryset.filter(created_at__date__gte=created_date)
+    def _viewed_on_filter(self, viewed_date=None):
+        if self._sort_includes('lastviewed') or self._viewedon_gte or self._viewedon_lte:
+            longTimeAgo = timezone.now() - timedelta(days=100000)
+            self._queryset = self._queryset.annotate(
+                lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__created_at'))), Value(longTimeAgo))
+            )
+
+        if self._viewedon_lte:
+            self._queryset = self._queryset.filter(lastviewed__date__lte=self._viewedon_lte).exclude(lastviewed=longTimeAgo)
+        elif self._viewedon_gte:
+            self._queryset = self._queryset.filter(lastviewed__date__gte=self._viewedon_gte).exclude(lastviewed=longTimeAgo)
+
+    def _created_on_filter(self):
+        if self._createdon:
+            self._queryset = self._queryset.filter(created_at__date=self._createdon)
+        elif self._createdon_lte:
+            self._queryset = self._queryset.filter(created_at__date__lte=self._createdon_lte)
+        elif self._createdon_gte:
+            self._queryset = self._queryset.filter(created_at__date__gte=self._createdon_gte)
+
+    def _updated_on_filter(self):
+        if self._updatedon:
+            self._queryset = self._queryset.filter(updated_at__date__date=self._updatedon)
+        elif self._updatedon_lte:
+            self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
+        elif self._updatedon_gte:
+            self._queryset = self._queryset.filter(updated_at__date__gte=self._updatedon_gte)
 
     def _created_by_filter(self, created_by_user_id=None):
         if created_by_user_id is None:
             return
         self._queryset = self._queryset.filter(created_by__id=created_by_user_id)
-
-    def _updated_on_filter(self, updated_date=None):
-        if updated_date is None:
-            return
-        lessthan = '-' in updated_date[:1]
-        updated_date = date(*[int(x)for x in updated_date.split('-') if x != ''])
-        if lessthan:
-            self._queryset = self._queryset.filter(updated_at__date__lte=updated_date)
-        else:
-            self._queryset = self._queryset.filter(updated_at__date__gte=updated_date)
-
-    def _viewed_on_filter(self, viewed_date=None):
-        if self._sort_includes('lastviewed') or viewed_date:
-            longTimeAgo = timezone.now() - timedelta(days=100000)
-            self._queryset = self._queryset.annotate(
-                lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__created_at'))), Value(longTimeAgo))
-            )
-        if viewed_date is None:
-            return
-        lessthan = '-' in viewed_date[:1]
-        viewed_date = date(*[int(x)for x in viewed_date.split('-') if x != ''])
-
-        if lessthan:
-            self._queryset = self._queryset.filter(lastviewed__date__lte=viewed_date).exclude(lastviewed=longTimeAgo)
-        else:
-            self._queryset = self._queryset.filter(lastviewed__date__gte=viewed_date).exclude(lastviewed=longTimeAgo)
 
     def _new_recipes(self, new_days=7):
         # TODO make new days a user-setting
@@ -545,11 +537,11 @@ class RecipeSearch():
         shopping_users = [*self._request.user.get_shopping_share(), self._request.user]
 
         onhand_filter = (
-            Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
-            # or substitute food onhand
-            | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
-            | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
-            | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
+                Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
+                # or substitute food onhand
+                | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
+                | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
+                | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
         )
         makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__isnull=False), distinct=True),
