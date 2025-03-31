@@ -353,6 +353,141 @@ function loadCustomFilter() {
 }
 
 
+function transformTandoor1Filter(customFilterParams: any){
+    if (customFilterParams['query'] != null) {
+        query.value = customFilterParams['query']
+    }
+
+    if (customFilterParams['books'] != null) {
+        filters.value.books.modelValue = customFilterParams['books']
+    }
+
+    if (customFilterParams['books_and'] != null) {
+        filters.value.booksAnd.modelValue = customFilterParams['books_and']
+    }
+
+    if (customFilterParams['books_and_not'] != null) {
+        filters.value.booksAndNot.modelValue = customFilterParams['books_and_not']
+    }
+
+    if (customFilterParams['books_or'] != null) {
+        filters.value.books.modelValue.concat(customFilterParams['books_or'])
+    }
+
+    if (customFilterParams['books_or_not'] != null) {
+        filters.value.booksOrNot.modelValue = customFilterParams['books_or_not']
+    }
+
+    if (customFilterParams['foods'] != null) {
+        filters.value.foods.modelValue = customFilterParams['foods']
+    }
+
+    if (customFilterParams['foods_and'] != null) {
+        filters.value.foodsAnd.modelValue = customFilterParams['foods_and']
+    }
+
+    if (customFilterParams['foods_and_not'] != null) {
+        filters.value.foodsAndNot.modelValue = customFilterParams['foods_and_not']
+    }
+
+    if (customFilterParams['foods_or'] != null) {
+        filters.value.foods.modelValue.concat(customFilterParams['foods_or'])
+    }
+
+    if (customFilterParams['foods_or_not'] != null) {
+        filters.value.foodsOrNot.modelValue = customFilterParams['foods_or_not']
+    }
+
+
+    if (customFilterParams['keywords'] != null) {
+        filters.value.keywords.modelValue = customFilterParams['keywords'];
+    }
+
+    if (customFilterParams['keywords_and'] != null) {
+        filters.value.keywordsAnd.modelValue = customFilterParams['keywords_and'];
+    }
+
+    if (customFilterParams['keywords_and_not'] != null) {
+        filters.value.keywordsAndNot.modelValue = customFilterParams['keywords_and_not'];
+    }
+
+    if (customFilterParams['keywords_or'] != null) {
+        filters.value.foodsOrNot.modelValue.concat(customFilterParams['keywords_or']);
+    }
+
+    if (customFilterParams['keywords_or_not'] != null) {
+        filters.value.keywordsOrNot.modelValue = customFilterParams['keywords_or_not'];
+    }
+
+
+    if (customFilterParams['internal'] != null) {
+        filters.value.internal.modelValue = customFilterParams['internal'];
+    }
+
+    if (customFilterParams['makenow'] != null) {
+        filters.value.makenow.modelValue = customFilterParams['makenow'];
+    }
+
+    if (customFilterParams['random'] != null) {
+        filters.value.random.modelValue = customFilterParams['random'];
+    }
+
+    if (customFilterParams['units'] != null) {
+        filters.value.units.modelValue = customFilterParams['units'];
+    }
+
+    // logic to load filters for parameters that changed since tandoor 1
+    if (customFilterParams['version'] == null) {
+        if (customFilterParams['cookedon'] != null) {
+            if (customFilterParams['cookedon'].startsWith('-')) {
+                filters.value.cookedonLte.modelValue = customFilterParams['cookedon'].substring(1)
+            } else {
+                filters.value.cookedonGte.modelValue = customFilterParams['cookedon']
+            }
+        }
+        if (customFilterParams['viewedon'] != null) {
+            if (customFilterParams['viewedon'].startsWith('-')) {
+                filters.value.viewedonLte.modelValue = customFilterParams['viewedon'].substring(1)
+            } else {
+                filters.value.viewedonGte.modelValue = customFilterParams['viewedon']
+            }
+        }
+        if (customFilterParams['updatedon'] != null) {
+            if (customFilterParams['updatedon'].startsWith('-')) {
+                filters.value.updatedonLte.modelValue = customFilterParams['updatedon'].substring(1)
+            } else {
+                filters.value.updatedonGte.modelValue = customFilterParams['updatedon']
+            }
+        }
+        if (customFilterParams['createdon'] != null) {
+            if (customFilterParams['createdon'].startsWith('-')) {
+                filters.value.createdonLte.modelValue = customFilterParams['createdon'].substring(1)
+            } else {
+                filters.value.createdonGte.modelValue = customFilterParams['createdon']
+            }
+        }
+
+        if (customFilterParams['rating'] != null) {
+            if (customFilterParams['rating'].startsWith('-')) {
+                filters.value.ratingLte.modelValue = customFilterParams['rating'].substring(1)
+            } else {
+                filters.value.ratingGte.modelValue = customFilterParams['rating']
+            }
+        }
+
+        if (customFilterParams['timescooked'] != null) {
+            if (customFilterParams['timescooked'].startsWith('-')) {
+                customFilterParams['timescooked_lte'] = customFilterParams['timescooked'].substring(1)
+            } else {
+                customFilterParams['timescooked_gte'] = customFilterParams['timescooked']
+            }
+        }
+    }
+
+
+    return customFilterParams
+}
+
 // TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
 /**
  * turn data in the format of a CustomFilter into the format needed for api request
@@ -635,13 +770,28 @@ function filtersToCustomFilterFormat() {
     if (!isFilterDefaultValue(filters.value.updatedon)) {
         customFilterParams['updatedon'] = filters.value.updatedon.modelValue;
     }
+    if (!isFilterDefaultValue(filters.value.updatedonLte)) {
+        customFilterParams['updatedon_lte'] = filters.value.updatedonLte.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.updatedonGte)) {
+        customFilterParams['updatedon_gte'] = filters.value.updatedonGte.modelValue;
+    }
 
     if (!isFilterDefaultValue(filters.value.rating)) {
         customFilterParams['rating'] = filters.value.rating.modelValue;
     }
+    if (!isFilterDefaultValue(filters.value.ratingLte)) {
+        customFilterParams['rating_lte'] = filters.value.ratingLte.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.ratingGte)) {
+        customFilterParams['rating_gte'] = filters.value.ratingGte.modelValue;
+    }
 
-    if (!isFilterDefaultValue(filters.value.timescooked)) {
-        customFilterParams['timescooked'] = filters.value.timescooked.modelValue;
+    if (!isFilterDefaultValue(filters.value.timescookedLte)) {
+        customFilterParams['timescooked_lte'] = filters.value.timescookedLte.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.timescookedGte)) {
+        customFilterParams['timescooked_gte'] = filters.value.timescookedGte.modelValue;
     }
 
     customFilterParams['version'] = 'tandoor_2'
