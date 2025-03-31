@@ -1,88 +1,84 @@
 <template>
-    <v-file-input label="File input" v-model="image"></v-file-input>
-    <v-btn @click="imageToRecipe()">Upload</v-btn>
-    <v-textarea v-model="response"></v-textarea>
+    <v-container>
 
-    <hr class="mt-4">
-    <v-btn ref="dialogOpenerRef">REF</v-btn>
-    <v-btn @click="dialog = !dialog">model</v-btn>
-
-    <v-btn>
-        direct
-        <model-edit-dialog model="MealPlan" v-model="dialog" :item="defaultItem" :activator="activator"></model-edit-dialog>
-    </v-btn>
-
-    <template v-if="false">
-        <v-divider></v-divider>
-
-        <v-row class="mt-5">
+        <v-row>
             <v-col>
-                <v-text-field density="compact"></v-text-field>
-
+                <v-text-field v-model="dateTest1" label="Test 1 - text field type date" type="date"></v-text-field>
             </v-col>
             <v-col>
-                <model-select model="Food" density="compact"></model-select>
-
-            </v-col>
-        </v-row>
-        <v-row class="mt-5">
-            <v-col>
-
-                <v-text-field density="comfortable"></v-text-field>
-
-            </v-col>
-            <v-col>
-
-                <model-select model="Food" density="comfortable"></model-select>
-
-            </v-col>
-        </v-row>
-        <v-row class="mt-5">
-            <v-col>
-                <model-select model="Food"></model-select>
-                <v-text-field></v-text-field>
-            </v-col>
-            <v-col>
-
-                <model-select model="Food"></model-select>
+                {{ dateTest1 }}
             </v-col>
         </v-row>
 
-    </template>
+        <v-row>
+            <v-col>
+                <v-date-input v-model="dateTest2" label="Test 2 - date input"></v-date-input>
+            </v-col>
+            <v-col> {{ dateTest2 }}</v-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <v-date-input v-model="dateTest3" label="Test 3 - date input with routeQueryModel"></v-date-input>
+            </v-col>
+            <v-col> {{ dateTest3 }}</v-col>
+        </v-row>
 
 
+    </v-container>
 </template>
 
 <script setup lang="ts">
 
-
-import {ApiApi, MealPlan} from "@/openapi";
-import {ref, useTemplateRef} from "vue";
-import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {computed, ref, toRaw, watch,} from "vue";
+import {VDateInput} from 'vuetify/labs/VDateInput'
+import {useRouteQuery} from "@vueuse/router";
 import {DateTime} from "luxon";
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {VueDraggable} from "vue-draggable-plus";
-import {useFileApi} from "@/composables/useFileApi";
-
-const {convertImageToRecipe, fileApiLoading} = useFileApi()
-
-const image = ref<null|File>(null)
-const response = ref('')
-
-const dialog = ref(false)
-const activator = useTemplateRef<Element>('dialogOpenerRef')
-
-const defaultItem = ref({
-    fromDate: DateTime.now().plus({day: 2}).toJSDate()
-} as MealPlan)
 
 
-function imageToRecipe() {
-    if(image.value != null){
-        convertImageToRecipe(image.value)
+const dateTest1 = ref(null)
+const dateTest2 = ref(null)
+
+const dateTest3 = useRouteQuery('cookedonGte', null, {
+    transform: {
+        get: (value: string | null | Date) => {
+
+            if (value == null) {
+                console.log('get null')
+                return null
+            } else {
+                console.log('get', new Date(value), (new Date(value)).getMonth())
+                return new Date(value)
+            }
+        },
+        set: value => {
+
+            if (value == null) {
+                console.log('-- set null')
+                return null
+            } else {
+                console.log('-- set', DateTime.fromJSDate(new Date(value)).toISODate())
+                return DateTime.fromJSDate(new Date(value)).toISODate()
+            }
+        }
     }
-}
+})
 
+const typeOfDateTest1 = computed(() => {
+    return dateTest1 instanceof Date
+})
+
+const typeOfDateTest2 = computed(() => {
+    return dateTest2 instanceof Date
+})
+
+watch(dateTest1, () => {
+    console.log(dateTest1.value, dateTest1.value.getMonth())
+})
+
+watch(dateTest2, () => {
+    console.log(dateTest2.value, dateTest2.value.getMonth())
+})
 
 </script>
 

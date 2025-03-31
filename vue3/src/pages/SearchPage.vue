@@ -156,10 +156,11 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
-import {stringToBool, toNumberArray} from "@/utils/utils";
+import {routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VRating, VSelect, VTextField} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
+import {DateTime} from "luxon";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -421,25 +422,24 @@ const filters = ref({
         modelValue: useRouteQuery('makenow', "false"),
     },
 
-    // cookedonGte: {
-    //     id: 'cookedonGte',
-    //     label: 'Cooked after',
-    //     hint: 'Only recipes that were cooked on or after the given date.',
-    //     enabled: false,
-    //     default: null,
-    //     is: VTextField,
-    //     type: "date",
-    //     modelValue: useRouteQuery('cookedonGte', null, {transform: Date}),
-    // },
-    // cookedonLte: {
-    //     id: 'cookedonLte',
-    //     label: 'Cooked before',
-    //     hint: 'Only recipes that were cooked on or before the given date.',
-    //     enabled: false,
-    //     default: null,
-    //     is: VDateInput,
-    //     modelValue: useRouteQuery('cookedonLte', null, {transform: Date}),
-    // },
+    cookedonGte: {
+        id: 'cookedonGte',
+        label: 'Cooked after',
+        hint: 'Only recipes that were cooked on or after the given date.',
+        enabled: false,
+        default: null,
+        is: VDateInput,
+        modelValue: useRouteQuery('cookedonGte', null, {transform: routeQueryDateTransformer}),
+    },
+    cookedonLte: {
+        id: 'cookedonLte',
+        label: 'Cooked before',
+        hint: 'Only recipes that were cooked on or before the given date.',
+        enabled: false,
+        default: null,
+        is: VDateInput,
+        modelValue: useRouteQuery('cookedonLte', null, {transform: routeQueryDateTransformer}),
+    },
 })
 
 /**

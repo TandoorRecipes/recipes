@@ -1,6 +1,7 @@
 import {getCookie} from "@/utils/cookie";
 import {Recipe, RecipeFromJSON, RecipeImageFromJSON, UserFileFromJSON} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {DateTime} from "luxon";
 
 /**
  * Gets a nested property of an object given a dot-notation path.
@@ -70,4 +71,12 @@ export function stringToBool(param: string): boolean | undefined {
     } else {
         return undefined
     }
+}
+
+/**
+ * allows binding and transforming of dates to route query parameters
+ */
+export const routeQueryDateTransformer = {
+    get: (value: string | null | Date) => ((value == null) ? null : (new Date(value))),
+    set: (value: string | null | Date) => ((value == null) ? null : (DateTime.fromJSDate(new Date(value)).toISODate()))
 }
