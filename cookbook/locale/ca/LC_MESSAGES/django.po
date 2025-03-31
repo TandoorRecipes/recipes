@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-03-12 09:58+0000\n"
+"PO-Revision-Date: 2025-04-01 12:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -2370,14 +2370,20 @@ msgstr ""
 #: .\cookbook\views\api.py:916
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
+"ID dels aliments, repeteix-lo per a múltiples. Retorna les receptes que "
+"continguin més d'un aliment"
 
 #: .\cookbook\views\api.py:917
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
+"ID d'aliments, repetiu-ho per a múltiples. Retorna receptes amb tots els "
+"aliments."
 
 #: .\cookbook\views\api.py:918
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
+"ID d'aliments, repetiu-ho per a múltiples. Exclou receptes que contingui "
+"algun dels aliments."
 
 #: .\cookbook\views\api.py:919
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
