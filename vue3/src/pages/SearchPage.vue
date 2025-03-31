@@ -314,7 +314,7 @@ function saveCustomFilter() {
 
     if (Object.keys(selectedCustomFilter.value).length > 0) {
         loading.value = true
-        selectedCustomFilter.value.search = JSON.stringify(apiRecipeListRequestToCustomFilter())
+        selectedCustomFilter.value.search = JSON.stringify(filtersToCustomFilterFormat())
         api.apiCustomFilterUpdate({id: selectedCustomFilter.value.id!, customFilter: selectedCustomFilter.value}).then((r) => {
             selectedCustomFilter.value = r
         }).catch(err => {
@@ -335,7 +335,7 @@ function createCustomFilter() {
 
     dialog.value = false
     loading.value = true
-    api.apiCustomFilterCreate({customFilter: {name: newFilterName.value, search: JSON.stringify(apiRecipeListRequestToCustomFilter())} as CustomFilter}).then((r) => {
+    api.apiCustomFilterCreate({customFilter: {name: newFilterName.value, search: JSON.stringify(filtersToCustomFilterFormat())} as CustomFilter}).then((r) => {
         selectedCustomFilter.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
@@ -811,6 +811,7 @@ const filters = ref({
         is: VSelect,
         items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
         modelValue: useRouteQuery('internal', "false")
+    },
     rating: {
         id: 'rating',
         label: 'Rating (exact)',

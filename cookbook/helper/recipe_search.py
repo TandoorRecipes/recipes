@@ -82,7 +82,7 @@ class RecipeSearch():
         self._num_recent = int(self._params.get('num_recent', 0))
         self._include_children = str2bool(
             self._params.get('include_children', None))
-        self._timescooked = self._params.get('timescooked_gte', None)
+        self._timescooked = self._params.get('timescooked', None)
         self._timescooked_gte = self._params.get('timescooked_gte', None)
         self._timescooked_lte = self._params.get('timescooked_lte', None)
 
@@ -321,7 +321,7 @@ class RecipeSearch():
         self._queryset = self._queryset.annotate(recent=Coalesce(Max(Case(When(pk__in=num_recent_recipes.values('recipe'), then='viewlog__pk'))), Value(0)))
 
     def _favorite_recipes(self):
-        if self._sort_includes('favorite') or self._timescooked_gte or self._timescooked_lte:
+        if self._sort_includes('favorite') or self._timescooked or self._timescooked_gte or self._timescooked_lte:
             less_than = self._timescooked_lte and not self._sort_includes('-favorite')
             if less_than:
                 default = 1000
@@ -335,7 +335,7 @@ class RecipeSearch():
             )
             self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), default))
 
-        if (self._timescooked_lte == 0 and self._timescooked_gte is None) or (self._timescooked_gte == 0 and self._timescooked_lte is None):
+        if self._timescooked:
             self._queryset = self._queryset.filter(favorite=0)
         elif self._timescooked_lte:
             self._queryset = self._queryset.filter(favorite__lte=int(self._timescooked_lte)).exclude(favorite=0)
