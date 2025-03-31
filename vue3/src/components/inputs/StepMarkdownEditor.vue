@@ -2,23 +2,23 @@
     <mavon-editor v-model="step.instruction" :autofocus="false"
                   style="z-index: auto" :id="'id_instruction_' + step.id"
                   :language="'en'"
-                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'">
+                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'" ref="markdownEditor">
         <template #left-toolbar-after>
             <span class="op-icon-divider"></span>
             <button
                 type="button"
-                @click="step.instruction+= ' {{ scale(100) }}'"
+                @click="insertTextAtPosition('{{ scale(100) }} ')"
                 class="op-icon fas fa-calculator"
                 aria-hidden="true"
                 :title="$t('ScalableNumber')"
             ></button>
-            <button class="op-icon fa-solid fa-code">
+            <button class="op-icon fa-solid fa-code" v-if="templates.length > 0" type="button">
                 <v-menu activator="parent">
                     <v-list density="compact">
-
+                        <v-list-subheader>{{$t('Ingredients')}}</v-list-subheader>
                         <v-list-item
                             v-for="template in templates"
-                            @click="step.instruction+= template.template"
+                            @click="insertTextAtPosition(template.template + ' ')"
                         >
                             <ingredient-string :ingredient="template.ingredient"></ingredient-string>
                         </v-list-item>
@@ -34,9 +34,11 @@
 import {Ingredient, Step} from "@/openapi";
 import 'mavon-editor/dist/css/index.css'
 import IngredientString from "@/components/display/IngredientString.vue";
-import {computed} from "vue";
+import {computed, nextTick, useTemplateRef} from "vue";
+import editor from "mavon-editor";
 
 const step = defineModel<Step>({required: true})
+const markdownEditor = useTemplateRef('markdownEditor')
 
 type IngredientTemplate = {
     name: string,
@@ -57,6 +59,24 @@ const templates = computed(() => {
 
     return templateList
 })
+
+/**
+ * insert the given text at the caret position into the text
+ * @param text
+ */
+function insertTextAtPosition(text: string){
+    let textarea = markdownEditor.value.getTextareaDom()
+    let position = textarea.selectionStart
+    if (step.value.instruction){
+        step.value.instruction = step.value.instruction.slice(0, position) + text + step.value.instruction.slice(position)
+
+        nextTick(() => {
+            textarea.focus()
+            textarea.selectionStart = position + text.length
+            textarea.selectionEnd = position + text.length
+        })
+    }
+}
 
 const md_editor_toolbars = {
     bold: true,

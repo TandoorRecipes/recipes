@@ -55,15 +55,15 @@
                             <v-row v-for="(ingredient, index) in step.ingredients" dense>
                                 <v-col cols="2" v-if="!ingredient.isHeader">
                                     <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
-                                                  hide-details>
+                                                  hide-details v-if="!ingredient.noAmount">
 
                                         <template #prepend>
                                             <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
                                         </template>
                                     </v-text-field>
                                 </v-col>
-                                <v-col cols="3" v-if="!ingredient.isHeader">
-                                    <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details></model-select>
+                                <v-col cols="3" v-if="!ingredient.isHeader ">
+                                    <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details v-if="!ingredient.noAmount"></model-select>
                                 </v-col>
                                 <v-col cols="3" v-if="!ingredient.isHeader">
                                     <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
@@ -83,6 +83,9 @@
                                                 <v-list-item @click="step.ingredients.splice(index, 1)" prepend-icon="$delete">{{ $t('Delete') }}</v-list-item>
                                                 <v-list-item link>
                                                     <v-switch v-model="step.ingredients[index].isHeader" :label="$t('Headline')" hide-details></v-switch>
+                                                </v-list-item>
+                                                <v-list-item link>
+                                                    <v-switch v-model="step.ingredients[index].noAmount" :label="$t('Disable_Amount')" hide-details></v-switch>
                                                 </v-list-item>
                                                 <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{
                                                         $t('Move')
@@ -120,7 +123,7 @@
                 </v-col>
                 <v-col cols="12">
                     <v-label>{{ $t('Instructions') }}</v-label>
-                    <v-alert @click="dialogMarkdownEditor = true" class="mt-2 cursor-pointer" min-height="52px">
+                    <v-alert @click="dialogMarkdownEditor = true" class="mt-2 cursor-pointer" min-height="52px" v-if="mobile">
                         <template v-if="step.instruction != '' && step.instruction != null">
                             {{ step.instruction }}
                         </template>
@@ -128,6 +131,11 @@
                             <i> {{ $t('InstructionsEditHelp') }} </i>
                         </template>
                     </v-alert>
+                    <template v-else>
+                        <p>
+                            <step-markdown-editor class="h-100" v-model="step"></step-markdown-editor>
+                        </p>
+                    </template>
                 </v-col>
             </v-row>
 
@@ -352,7 +360,11 @@ function handleIngredientNoteTab(event: KeyboardEvent, index: number) {
  * insert a new ingredient and focus its first input
  */
 function insertAndFocusIngredient() {
-    let ingredient = {} as Ingredient
+    let ingredient = {
+        amount: 0,
+        unit: null,
+        food: null,
+    } as Ingredient
 
     if (defaultUnit.value != null) {
         ingredient.unit = defaultUnit.value

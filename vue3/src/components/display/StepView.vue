@@ -26,7 +26,7 @@
                     <v-col cols="12" md="6" v-if="step.ingredients.length > 0">
                         <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"></ingredients-table>
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="6" class="markdown-body">
                         <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="ingredientFactor" v-if="step.instructionsMarkdown != undefined"></instructions>
                         <!-- sub recipes dont have a correct schema, thus they use different variable naming -->
                         <instructions :instructions_html="step.instructions_markdown" :ingredient_factor="ingredientFactor" v-else></instructions>

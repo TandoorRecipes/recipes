@@ -5,6 +5,7 @@
                 <v-card>
                     <v-card-text class="pt-2 pb-2">
                         <v-btn variant="flat" @click="router.go(-1)" prepend-icon="fa-solid fa-arrow-left">{{ $t('Back') }}</v-btn>
+                        <v-btn variant="flat" @click="router.push({name : 'RecipeViewPage', params: {id: props.id}})" class="float-right" prepend-icon="fa-solid fa-eye" v-if="props.id && model.toLowerCase() == 'recipe'">{{$t('View')}}</v-btn>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -21,7 +22,7 @@
 
 import {useRouter} from "vue-router";
 import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models";
-import {defineAsyncComponent, onMounted, PropType, shallowRef} from "vue";
+import {defineAsyncComponent, onMounted, PropType, shallowRef, watch} from "vue";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
@@ -34,6 +35,13 @@ const props = defineProps({
 const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
 
 const router = useRouter()
+
+//TODO quick hack for some edge cases, move to proper reinitialization of all model editors should this case occur (currently only recipe editor create new via navigation btn)
+watch(() => props.id, (newValue, oldValue) => {
+    if(newValue != oldValue){
+        location.reload()
+    }
+})
 
 /**
  * after creation open object with correct URL in edit mode

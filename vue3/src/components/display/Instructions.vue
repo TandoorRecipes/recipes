@@ -1,6 +1,6 @@
 <template>
     <component :is="compiled_instructions" :ingredient_factor="ingredient_factor" :instructions_html="instructions_html"></component>
-<!--    <div v-html="instructions_html"></div>-->
+    <!--    <div v-html="instructions_html"></div>-->
 </template>
 
 <script>
@@ -31,7 +31,8 @@ export default defineComponent({
                     ingredient_factor: {type: Number, required: true},
                 },
                 components: {ScalableNumber,},
-                template: `<div>${this.instructions_html}</div>`
+                template: `
+                    <div>${this.instructions_html}</div>`
             }))
         }
     },
@@ -41,3 +42,14 @@ export default defineComponent({
 })
 </script>
 
+<style>
+
+/**
+ vuetify removes all margins and paddings which break layout, re-add them by reverting vuetify change
+ */
+p, ol, ul, li {
+    padding: revert;
+    margin: revert;
+}
+
+</style>

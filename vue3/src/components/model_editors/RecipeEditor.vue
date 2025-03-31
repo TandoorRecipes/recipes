@@ -28,7 +28,7 @@
 
                         <v-row>
                             <v-col cols="12" md="6">
-                                <v-file-upload v-model="file" @update:modelValue="updateUserFileName"
+                                <v-file-upload v-model="file"
                                                :title="(mobile) ? $t('Select_File') : $t('DragToUpload')"
                                                :browse-text="$t('Select_File')"
                                                :divider-text="$t('or')"
