@@ -358,129 +358,175 @@ function loadCustomFilter() {
  * turn data in the format of a CustomFilter into the format needed for api request
  * @param customFilterParams
  */
-function customFilterToApiRecipeListRequest(customFilterParams: any) {
+function customFilterFormatToFilters(customFilterParams: any) {
     let recipeListRequestParams: any = {};
     customFilterParams = JSON.parse(customFilterParams)
 
+    if (customFilterParams['query'] != null) {
+        query.value = customFilterParams['query']
+    }
+
     if (customFilterParams['books'] != null) {
-        recipeListRequestParams['books'] = customFilterParams['books'];
+        filters.value.books.modelValue = customFilterParams['books']
     }
 
     if (customFilterParams['books_and'] != null) {
-        recipeListRequestParams['booksAnd'] = customFilterParams['books_and'];
+        filters.value.booksAnd.modelValue = customFilterParams['books_and']
     }
 
     if (customFilterParams['books_and_not'] != null) {
-        recipeListRequestParams['booksAndNot'] = customFilterParams['books_and_not'];
+        filters.value.booksAndNot.modelValue = customFilterParams['books_and_not']
     }
 
     if (customFilterParams['books_or'] != null) {
-        recipeListRequestParams['booksOr'] = customFilterParams['books_or'];
+        filters.value.books.modelValue.concat(customFilterParams['books_or'])
     }
 
     if (customFilterParams['books_or_not'] != null) {
-        recipeListRequestParams['booksOrNot'] = customFilterParams['books_or_not'];
-    }
-
-    if (customFilterParams['cookedon'] != null) {
-        recipeListRequestParams['cookedon'] = customFilterParams['cookedon'];
-    }
-
-    if (customFilterParams['createdon'] != null) {
-        recipeListRequestParams['createdon'] = customFilterParams['createdon'];
+        filters.value.booksOrNot.modelValue = customFilterParams['books_or_not']
     }
 
     if (customFilterParams['foods'] != null) {
-        recipeListRequestParams['foods'] = customFilterParams['foods'];
+        filters.value.foods.modelValue = customFilterParams['foods']
     }
 
     if (customFilterParams['foods_and'] != null) {
-        recipeListRequestParams['foodsAnd'] = customFilterParams['foods_and'];
+        filters.value.foodsAnd.modelValue = customFilterParams['foods_and']
     }
 
     if (customFilterParams['foods_and_not'] != null) {
-        recipeListRequestParams['foodsAndNot'] = customFilterParams['foods_and_not'];
+        filters.value.foodsAndNot.modelValue = customFilterParams['foods_and_not']
     }
 
     if (customFilterParams['foods_or'] != null) {
-        recipeListRequestParams['foodsOr'] = customFilterParams['foods_or'];
+        filters.value.foods.modelValue.concat(customFilterParams['foods_or'])
     }
 
     if (customFilterParams['foods_or_not'] != null) {
-        recipeListRequestParams['foodsOrNot'] = customFilterParams['foods_or_not'];
+        filters.value.foodsOrNot.modelValue = customFilterParams['foods_or_not']
     }
 
-    if (customFilterParams['internal'] != null) {
-        recipeListRequestParams['internal'] = customFilterParams['internal'];
-    }
 
     if (customFilterParams['keywords'] != null) {
-        recipeListRequestParams['keywords'] = customFilterParams['keywords'];
+        filters.value.keywords.modelValue = customFilterParams['keywords'];
     }
 
     if (customFilterParams['keywords_and'] != null) {
-        recipeListRequestParams['keywordsAnd'] = customFilterParams['keywords_and'];
+        filters.value.keywordsAnd.modelValue = customFilterParams['keywords_and'];
     }
 
     if (customFilterParams['keywords_and_not'] != null) {
-        recipeListRequestParams['keywordsAndNot'] = customFilterParams['keywords_and_not'];
+        filters.value.keywordsAndNot.modelValue = customFilterParams['keywords_and_not'];
     }
 
     if (customFilterParams['keywords_or'] != null) {
-        recipeListRequestParams['keywordsOr'] = customFilterParams['keywords_or'];
+        filters.value.foodsOrNot.modelValue.concat(customFilterParams['keywords_or']);
     }
 
     if (customFilterParams['keywords_or_not'] != null) {
-        recipeListRequestParams['keywordsOrNot'] = customFilterParams['keywords_or_not'];
+        filters.value.keywordsOrNot.modelValue = customFilterParams['keywords_or_not'];
+    }
+
+
+    if (customFilterParams['internal'] != null) {
+        filters.value.internal.modelValue = customFilterParams['internal'];
     }
 
     if (customFilterParams['makenow'] != null) {
-        recipeListRequestParams['makenow'] = customFilterParams['makenow'];
-    }
-
-    if (customFilterParams['new'] != null) {
-        recipeListRequestParams['_new'] = customFilterParams['new'];
-    }
-
-    if (customFilterParams['num_recent'] != null) {
-        recipeListRequestParams['numRecent'] = customFilterParams['num_recent'];
-    }
-
-    if (customFilterParams['page'] != null) {
-        recipeListRequestParams['page'] = customFilterParams['page'];
-    }
-
-    if (customFilterParams['page_size'] != null) {
-        recipeListRequestParams['pageSize'] = customFilterParams['page_size'];
-    }
-
-    if (customFilterParams['query'] != null) {
-        recipeListRequestParams['query'] = customFilterParams['query'];
+        filters.value.makenow.modelValue = customFilterParams['makenow'];
     }
 
     if (customFilterParams['random'] != null) {
-        recipeListRequestParams['random'] = customFilterParams['random'];
-    }
-
-    if (customFilterParams['rating'] != null) {
-        recipeListRequestParams['rating'] = customFilterParams['rating'];
-    }
-
-    if (customFilterParams['timescooked'] != null) {
-        recipeListRequestParams['timescooked'] = customFilterParams['timescooked'];
+        filters.value.random.modelValue = customFilterParams['random'];
     }
 
     if (customFilterParams['units'] != null) {
-        recipeListRequestParams['units'] = customFilterParams['units'];
+        filters.value.units.modelValue = customFilterParams['units'];
     }
 
-    if (customFilterParams['updatedon'] != null) {
-        recipeListRequestParams['updatedon'] = customFilterParams['updatedon'];
+    // logic to load filters for parameters that changed since tandoor 1
+    if (customFilterParams['version'] == null) {
+        if (customFilterParams['cookedon'] != null) {
+            if (customFilterParams['cookedon'].startsWith('-')) {
+                filters.value.cookedonLte.modelValue = customFilterParams['cookedon'].substring(1)
+            } else {
+                filters.value.cookedonGte.modelValue = customFilterParams['cookedon']
+            }
+        }
+        if (customFilterParams['viewedon'] != null) {
+            if (customFilterParams['viewedon'].startsWith('-')) {
+                filters.value.viewedonLte.modelValue = customFilterParams['viewedon'].substring(1)
+            } else {
+                filters.value.viewedonGte.modelValue = customFilterParams['viewedon']
+            }
+        }
+        if (customFilterParams['updatedon'] != null) {
+            if (customFilterParams['updatedon'].startsWith('-')) {
+                filters.value.updatedonLte.modelValue = customFilterParams['updatedon'].substring(1)
+            } else {
+                filters.value.updatedonGte.modelValue = customFilterParams['updatedon']
+            }
+        }
+        if (customFilterParams['createdon'] != null) {
+            if (customFilterParams['createdon'].startsWith('-')) {
+                filters.value.createdonLte.modelValue = customFilterParams['createdon'].substring(1)
+            } else {
+                filters.value.createdonGte.modelValue = customFilterParams['createdon']
+            }
+        }
+
+        if (customFilterParams['rating'] != null) {
+            if (customFilterParams['rating'].startsWith('-')) {
+                filters.value.ratingLte.modelValue = customFilterParams['rating'].substring(1)
+            } else {
+                filters.value.ratingGte.modelValue = customFilterParams['rating']
+            }
+        }
+
+        if (customFilterParams['timescooked'] != null) {
+            if (customFilterParams['timescooked'].startsWith('-')) {
+                filters.value.timescookedLte.modelValue = customFilterParams['timescooked'].substring(1)
+            } else {
+                filters.value.timescookedGte.modelValue = customFilterParams['timescooked']
+            }
+        }
+    } else {
+        // logic to load tandoor 2 date filters
+        if (customFilterParams['cookedon_lte'] != null) {
+            filters.value.cookedonLte.modelValue = customFilterParams['cookedon_lte'];
+        }
+        if (customFilterParams['cookedon_gte'] != null) {
+            filters.value.cookedonGte.modelValue = customFilterParams['cookedon_gte'];
+        }
+
+        if (customFilterParams['viewedon_lte'] != null) {
+            filters.value.viewedonLte.modelValue = customFilterParams['viewedon_lte'];
+        }
+        if (customFilterParams['viewedon_gte'] != null) {
+            filters.value.viewedonGte.modelValue = customFilterParams['viewedon_gte'];
+        }
+
+        if (customFilterParams['createdon'] != null) {
+            filters.value.createdon.modelValue = customFilterParams['createdon'];
+        }
+        if (customFilterParams['createdon_lte'] != null) {
+            filters.value.createdonLte.modelValue = customFilterParams['createdon_lte'];
+        }
+        if (customFilterParams['createdon_gte'] != null) {
+            filters.value.createdonGte.modelValue = customFilterParams['createdon_gte'];
+        }
+
+        if (customFilterParams['updatedon'] != null) {
+            filters.value.updatedon.modelValue = customFilterParams['updatedon'];
+        }
+        if (customFilterParams['updatedon_lte'] != null) {
+            filters.value.updatedonLte.modelValue = customFilterParams['updatedon_lte'];
+        }
+        if (customFilterParams['updatedon_gte'] != null) {
+            filters.value.updatedonGte.modelValue = customFilterParams['updatedon_gte'];
+        }
     }
 
-    if (customFilterParams['viewedon'] != null) {
-        recipeListRequestParams['viewedon'] = customFilterParams['viewedon'];
-    }
 
     return recipeListRequestParams
 
@@ -493,6 +539,12 @@ function customFilterToApiRecipeListRequest(customFilterParams: any) {
 function filtersToCustomFilterFormat() {
     let customFilterParams: any = {};
 
+    // booksOr/keywordsOr/foodsOr are intentionally left out as they are merged into books/keywords/foods on load and no longer saved
+
+    if (query.value != '') {
+        customFilterParams['query'] = query.value;
+    }
+
     if (!isFilterDefaultValue(filters.value.books)) {
         customFilterParams['books'] = filters.value.books.modelValue;
     }
@@ -501,117 +553,98 @@ function filtersToCustomFilterFormat() {
         customFilterParams['books_and'] = filters.value.booksAnd.modelValue;
     }
 
-    if (urlSearchParams['booksAndNot'] != null) {
-        customFilterParams['books_and_not'] = urlSearchParams['booksAndNot'];
+    if (!isFilterDefaultValue(filters.value.booksAndNot)) {
+        customFilterParams['books_and_not'] = filters.value.booksAndNot.modelValue;
     }
 
-    if (urlSearchParams['booksOr'] != null) {
-        customFilterParams['books_or'] = urlSearchParams['booksOr'];
+    if (!isFilterDefaultValue(filters.value.booksOrNot)) {
+        customFilterParams['books_or_not'] = filters.value.booksOrNot.modelValue;
     }
 
-    if (urlSearchParams['booksOrNot'] != null) {
-        customFilterParams['books_or_not'] = urlSearchParams['booksOrNot'];
+    if (!isFilterDefaultValue(filters.value.foods)) {
+        customFilterParams['foods'] = filters.value.foods.modelValue;
     }
 
-    if (urlSearchParams['cookedon'] != null) {
-        customFilterParams['cookedon'] = urlSearchParams['cookedon'];
+    if (!isFilterDefaultValue(filters.value.foodsAnd)) {
+        customFilterParams['foods_and'] = filters.value.foodsAnd.modelValue;
     }
 
-    if (urlSearchParams['createdon'] != null) {
-        customFilterParams['createdon'] = urlSearchParams['createdon'];
+    if (!isFilterDefaultValue(filters.value.foodsAndNot)) {
+        customFilterParams['foods_and_not'] = filters.value.foodsAndNot.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.foodsOrNot)) {
+        customFilterParams['foods_or_not'] = filters.value.foodsOrNot.modelValue;
     }
 
-    if (urlSearchParams['foods'] != null) {
-        customFilterParams['foods'] = urlSearchParams['foods'];
+    if (!isFilterDefaultValue(filters.value.internal)) {
+        customFilterParams['internal'] = filters.value.internal.modelValue;
     }
 
-    if (urlSearchParams['foodsAnd'] != null) {
-        customFilterParams['foods_and'] = urlSearchParams['foodsAnd'];
+    if (!isFilterDefaultValue(filters.value.keywords)) {
+        customFilterParams['keywords'] = filters.value.keywords.modelValue;
     }
 
-    if (urlSearchParams['foodsAndNot'] != null) {
-        customFilterParams['foods_and_not'] = urlSearchParams['foodsAndNot'];
+    if (!isFilterDefaultValue(filters.value.keywordsAnd)) {
+        customFilterParams['keywords_and'] = filters.value.keywordsAnd.modelValue;
     }
 
-    if (urlSearchParams['foodsOr'] != null) {
-        customFilterParams['foods_or'] = urlSearchParams['foodsOr'];
+    if (!isFilterDefaultValue(filters.value.keywordsAndNot)) {
+        customFilterParams['keywords_and_not'] = filters.value.keywordsAndNot.modelValue;
     }
 
-    if (urlSearchParams['foodsOrNot'] != null) {
-        customFilterParams['foods_or_not'] = urlSearchParams['foodsOrNot'];
+    if (!isFilterDefaultValue(filters.value.keywordsOrNot)) {
+        customFilterParams['keywords_or_not'] = filters.value.keywordsOrNot.modelValue;
     }
 
-    if (urlSearchParams['internal'] != null) {
-        customFilterParams['internal'] = urlSearchParams['internal'];
+    if (!isFilterDefaultValue(filters.value.makenow)) {
+        customFilterParams['makenow'] = filters.value.makenow.modelValue;
     }
 
-    if (urlSearchParams['keywords'] != null) {
-        customFilterParams['keywords'] = urlSearchParams['keywords'];
+    if (!isFilterDefaultValue(filters.value.random)) {
+        customFilterParams['random'] = filters.value.random.modelValue;
     }
 
-    if (urlSearchParams['keywordsAnd'] != null) {
-        customFilterParams['keywords_and'] = urlSearchParams['keywordsAnd'];
+    if (!isFilterDefaultValue(filters.value.units)) {
+        customFilterParams['units'] = filters.value.units.modelValue;
     }
 
-    if (urlSearchParams['keywordsAndNot'] != null) {
-        customFilterParams['keywords_and_not'] = urlSearchParams['keywordsAndNot'];
+    if (!isFilterDefaultValue(filters.value.cookedonGte)) {
+        customFilterParams['cookedon_gte'] = filters.value.cookedonGte.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.cookedonLte)) {
+        customFilterParams['cookedon_lte'] = filters.value.cookedonLte.modelValue;
     }
 
-    if (urlSearchParams['keywordsOr'] != null) {
-        customFilterParams['keywords_or'] = urlSearchParams['keywordsOr'];
+    if (!isFilterDefaultValue(filters.value.viewedonLte)) {
+        customFilterParams['viewedon_lte'] = filters.value.viewedonLte.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.viewedonGte)) {
+        customFilterParams['viewedon_gte'] = filters.value.viewedonGte.modelValue;
     }
 
-    if (urlSearchParams['keywordsOrNot'] != null) {
-        customFilterParams['keywords_or_not'] = urlSearchParams['keywordsOrNot'];
+    if (!isFilterDefaultValue(filters.value.createdon)) {
+        customFilterParams['createdon'] = filters.value.createdon.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.createdonLte)) {
+        customFilterParams['createdon_lte'] = filters.value.createdonLte.modelValue;
+    }
+    if (!isFilterDefaultValue(filters.value.createdonGte)) {
+        customFilterParams['createdon_gte'] = filters.value.createdonGte.modelValue;
     }
 
-    if (urlSearchParams['makenow'] != null) {
-        customFilterParams['makenow'] = urlSearchParams['makenow'];
+    if (!isFilterDefaultValue(filters.value.updatedon)) {
+        customFilterParams['updatedon'] = filters.value.updatedon.modelValue;
     }
 
-    if (urlSearchParams['_new'] != null) {
-        customFilterParams['new'] = urlSearchParams['_new'];
+    if (!isFilterDefaultValue(filters.value.rating)) {
+        customFilterParams['rating'] = filters.value.rating.modelValue;
     }
 
-    if (urlSearchParams['numRecent'] != null) {
-        customFilterParams['num_recent'] = urlSearchParams['numRecent'];
+    if (!isFilterDefaultValue(filters.value.timescooked)) {
+        customFilterParams['timescooked'] = filters.value.timescooked.modelValue;
     }
 
-    if (urlSearchParams['page'] != null) {
-        customFilterParams['page'] = urlSearchParams['page'];
-    }
-
-    if (urlSearchParams['pageSize'] != null) {
-        customFilterParams['page_size'] = urlSearchParams['pageSize'];
-    }
-
-    if (urlSearchParams['query'] != null) {
-        customFilterParams['query'] = urlSearchParams['query'];
-    }
-
-    if (urlSearchParams['random'] != null) {
-        customFilterParams['random'] = urlSearchParams['random'];
-    }
-
-    if (urlSearchParams['rating'] != null) {
-        customFilterParams['rating'] = urlSearchParams['rating'];
-    }
-
-    if (urlSearchParams['timescooked'] != null) {
-        customFilterParams['timescooked'] = urlSearchParams['timescooked'];
-    }
-
-    if (urlSearchParams['units'] != null) {
-        customFilterParams['units'] = urlSearchParams['units'];
-    }
-
-    if (urlSearchParams['updatedon'] != null) {
-        customFilterParams['updatedon'] = urlSearchParams['updatedon'];
-    }
-
-    if (urlSearchParams['viewedon'] != null) {
-        customFilterParams['viewedon'] = urlSearchParams['viewedon'];
-    }
+    customFilterParams['version'] = 'tandoor_2'
 
     return customFilterParams
 }
@@ -811,6 +844,16 @@ const filters = ref({
         is: VSelect,
         items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
         modelValue: useRouteQuery('internal', "false")
+    },
+    random: {
+        id: 'random',
+        label: 'Random Order',
+        hint: 'Show recipes in random order',
+        enabled: false,
+        default: "false",
+        is: VSelect,
+        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
+        modelValue: useRouteQuery('random', "false")
     },
     rating: {
         id: 'rating',
