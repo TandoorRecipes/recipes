@@ -486,15 +486,19 @@ function customFilterToApiRecipeListRequest(customFilterParams: any) {
 
 }
 
-function apiRecipeListRequestToCustomFilter() {
+/**
+ * convert filters to custom filter format
+ */
+// TODO unchanged for backward compatability for now, change to something easier to use later
+function filtersToCustomFilterFormat() {
     let customFilterParams: any = {};
 
-    if (urlSearchParams['books'] != null) {
-        customFilterParams['books'] = urlSearchParams['books'];
+    if (!isFilterDefaultValue(filters.value.books)) {
+        customFilterParams['books'] = filters.value.books.modelValue;
     }
 
-    if (urlSearchParams['booksAnd'] != null) {
-        customFilterParams['books_and'] = urlSearchParams['booksAnd'];
+    if (!isFilterDefaultValue(filters.value.booksAnd)) {
+        customFilterParams['books_and'] = filters.value.booksAnd.modelValue;
     }
 
     if (urlSearchParams['booksAndNot'] != null) {
@@ -806,8 +810,7 @@ const filters = ref({
         default: "false",
         is: VSelect,
         items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-        modelValue: useRouteQuery('internal', "false"),
-    },
+        modelValue: useRouteQuery('internal', "false")
     rating: {
         id: 'rating',
         label: 'Rating (exact)',
