@@ -7,7 +7,7 @@ crispy-bootstrap4==2024.10
 django-tables2==2.7.4
 djangorestframework==3.15.2
 drf-writable-nested==0.7.1
-django-oauth-toolkit==2.4.0
+django-oauth-toolkit==3.0.1
 django-debug-toolbar==4.3.0
 bleach==6.2.0
 gunicorn==23.0.0
