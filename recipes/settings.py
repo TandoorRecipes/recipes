@@ -552,6 +552,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if DEBUG:
             print("Vite Dev Server is running")
             DJANGO_VITE['default']['dev_mode'] = True
+        else:
+            raise Exception('Debug not True, running in production mode')
     except Exception:
         print("Running django-vite in production mode (no HMR)")
 

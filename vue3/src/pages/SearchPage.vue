@@ -42,8 +42,8 @@
 
                                 <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
                                     <template #append>
-                                        <v-btn icon="fa-solid fa-upload" color="warning" :disabled="Object.keys(selectedCustomFilter).length == 0"
-                                               @click="loadCustomFilter()"></v-btn>
+                                        <v-btn icon="fa-solid fa-upload" color="warning" :disabled="selectedCustomFilter == null"
+                                               @click="loadSelectedCustomFilter()"></v-btn>
                                         <v-btn icon="$save" class="ms-1" color="save" @click="saveCustomFilter()"></v-btn>
                                     </template>
                                 </model-select>
@@ -204,7 +204,7 @@ const tableHeaders = computed(() => {
 const tableItemCount = ref(0)
 
 const recipes = ref([] as RecipeOverview[])
-const selectedCustomFilter = ref({} as CustomFilter)
+const selectedCustomFilter = ref<null|CustomFilter>(null)
 const newFilterName = ref('')
 
 /**
@@ -264,6 +264,7 @@ function reset() {
         filter.enabled = false
         filter.modelValue = filter.default
     })
+    selectedCustomFilter.value = null
     recipes.value = []
     searchRecipes({page: 1})
 }
@@ -312,7 +313,7 @@ function isFilterDefaultValue(filter: any) {
 function saveCustomFilter() {
     let api = new ApiApi()
 
-    if (Object.keys(selectedCustomFilter.value).length > 0) {
+    if (selectedCustomFilter.value != null) {
         loading.value = true
         selectedCustomFilter.value.search = JSON.stringify(filtersToCustomFilterFormat())
         api.apiCustomFilterUpdate({id: selectedCustomFilter.value.id!, customFilter: selectedCustomFilter.value}).then((r) => {
@@ -323,12 +324,13 @@ function saveCustomFilter() {
             loading.value = false
         })
     } else {
+        newFilterName.value = ''
         dialog.value = true
     }
 }
 
 /**
- * create new filter
+ * create a new saved search filter in the database via api
  */
 function createCustomFilter() {
     let api = new ApiApi()
@@ -344,457 +346,117 @@ function createCustomFilter() {
     })
 }
 
-function loadCustomFilter() {
-    let obj = customFilterToApiRecipeListRequest(selectedCustomFilter.value.search)
-    console.log(obj, selectedCustomFilter.value.search)
-    Object.keys(obj).forEach((key) => {
-        urlSearchParams[key] = obj[key]
-    })
-}
-
-
-function transformTandoor1Filter(customFilterParams: any){
-    if (customFilterParams['query'] != null) {
-        query.value = customFilterParams['query']
-    }
-
-    if (customFilterParams['books'] != null) {
-        filters.value.books.modelValue = customFilterParams['books']
-    }
-
-    if (customFilterParams['books_and'] != null) {
-        filters.value.booksAnd.modelValue = customFilterParams['books_and']
-    }
-
-    if (customFilterParams['books_and_not'] != null) {
-        filters.value.booksAndNot.modelValue = customFilterParams['books_and_not']
-    }
-
-    if (customFilterParams['books_or'] != null) {
-        filters.value.books.modelValue.concat(customFilterParams['books_or'])
-    }
-
-    if (customFilterParams['books_or_not'] != null) {
-        filters.value.booksOrNot.modelValue = customFilterParams['books_or_not']
-    }
-
-    if (customFilterParams['foods'] != null) {
-        filters.value.foods.modelValue = customFilterParams['foods']
-    }
-
-    if (customFilterParams['foods_and'] != null) {
-        filters.value.foodsAnd.modelValue = customFilterParams['foods_and']
-    }
-
-    if (customFilterParams['foods_and_not'] != null) {
-        filters.value.foodsAndNot.modelValue = customFilterParams['foods_and_not']
-    }
-
-    if (customFilterParams['foods_or'] != null) {
-        filters.value.foods.modelValue.concat(customFilterParams['foods_or'])
-    }
-
-    if (customFilterParams['foods_or_not'] != null) {
-        filters.value.foodsOrNot.modelValue = customFilterParams['foods_or_not']
-    }
-
-
-    if (customFilterParams['keywords'] != null) {
-        filters.value.keywords.modelValue = customFilterParams['keywords'];
-    }
-
-    if (customFilterParams['keywords_and'] != null) {
-        filters.value.keywordsAnd.modelValue = customFilterParams['keywords_and'];
-    }
-
-    if (customFilterParams['keywords_and_not'] != null) {
-        filters.value.keywordsAndNot.modelValue = customFilterParams['keywords_and_not'];
-    }
-
-    if (customFilterParams['keywords_or'] != null) {
-        filters.value.foodsOrNot.modelValue.concat(customFilterParams['keywords_or']);
-    }
-
-    if (customFilterParams['keywords_or_not'] != null) {
-        filters.value.keywordsOrNot.modelValue = customFilterParams['keywords_or_not'];
-    }
-
-
-    if (customFilterParams['internal'] != null) {
-        filters.value.internal.modelValue = customFilterParams['internal'];
-    }
-
-    if (customFilterParams['makenow'] != null) {
-        filters.value.makenow.modelValue = customFilterParams['makenow'];
-    }
-
-    if (customFilterParams['random'] != null) {
-        filters.value.random.modelValue = customFilterParams['random'];
-    }
-
-    if (customFilterParams['units'] != null) {
-        filters.value.units.modelValue = customFilterParams['units'];
-    }
-
-    // logic to load filters for parameters that changed since tandoor 1
-    if (customFilterParams['version'] == null) {
-        if (customFilterParams['cookedon'] != null) {
-            if (customFilterParams['cookedon'].startsWith('-')) {
-                filters.value.cookedonLte.modelValue = customFilterParams['cookedon'].substring(1)
-            } else {
-                filters.value.cookedonGte.modelValue = customFilterParams['cookedon']
-            }
-        }
-        if (customFilterParams['viewedon'] != null) {
-            if (customFilterParams['viewedon'].startsWith('-')) {
-                filters.value.viewedonLte.modelValue = customFilterParams['viewedon'].substring(1)
-            } else {
-                filters.value.viewedonGte.modelValue = customFilterParams['viewedon']
-            }
-        }
-        if (customFilterParams['updatedon'] != null) {
-            if (customFilterParams['updatedon'].startsWith('-')) {
-                filters.value.updatedonLte.modelValue = customFilterParams['updatedon'].substring(1)
-            } else {
-                filters.value.updatedonGte.modelValue = customFilterParams['updatedon']
-            }
-        }
-        if (customFilterParams['createdon'] != null) {
-            if (customFilterParams['createdon'].startsWith('-')) {
-                filters.value.createdonLte.modelValue = customFilterParams['createdon'].substring(1)
-            } else {
-                filters.value.createdonGte.modelValue = customFilterParams['createdon']
-            }
-        }
-
-        if (customFilterParams['rating'] != null) {
-            if (customFilterParams['rating'].startsWith('-')) {
-                filters.value.ratingLte.modelValue = customFilterParams['rating'].substring(1)
-            } else {
-                filters.value.ratingGte.modelValue = customFilterParams['rating']
-            }
-        }
-
-        if (customFilterParams['timescooked'] != null) {
-            if (customFilterParams['timescooked'].startsWith('-')) {
-                customFilterParams['timescooked_lte'] = customFilterParams['timescooked'].substring(1)
-            } else {
-                customFilterParams['timescooked_gte'] = customFilterParams['timescooked']
-            }
-        }
-    }
-
-
-    return customFilterParams
-}
-
-// TODO temporary function to convert old saved search format, either make proper db table or convert to native new format
 /**
- * turn data in the format of a CustomFilter into the format needed for api request
- * @param customFilterParams
+ * load selected custom filter into the filters system
  */
-function customFilterFormatToFilters(customFilterParams: any) {
-    let recipeListRequestParams: any = {};
-    customFilterParams = JSON.parse(customFilterParams)
+function loadSelectedCustomFilter() {
+    let customFilterParams = JSON.parse(selectedCustomFilter.value.search)
+    if (customFilterParams['version'] == null) {
+        customFilterParams = transformTandoor1Filter(customFilterParams)
+    }
 
     if (customFilterParams['query'] != null) {
         query.value = customFilterParams['query']
     }
 
-    if (customFilterParams['books'] != null) {
-        filters.value.books.modelValue = customFilterParams['books']
-    }
-
-    if (customFilterParams['books_and'] != null) {
-        filters.value.booksAnd.modelValue = customFilterParams['books_and']
-    }
-
-    if (customFilterParams['books_and_not'] != null) {
-        filters.value.booksAndNot.modelValue = customFilterParams['books_and_not']
-    }
-
-    if (customFilterParams['books_or'] != null) {
-        filters.value.books.modelValue.concat(customFilterParams['books_or'])
-    }
-
-    if (customFilterParams['books_or_not'] != null) {
-        filters.value.booksOrNot.modelValue = customFilterParams['books_or_not']
-    }
-
-    if (customFilterParams['foods'] != null) {
-        filters.value.foods.modelValue = customFilterParams['foods']
-    }
-
-    if (customFilterParams['foods_and'] != null) {
-        filters.value.foodsAnd.modelValue = customFilterParams['foods_and']
-    }
-
-    if (customFilterParams['foods_and_not'] != null) {
-        filters.value.foodsAndNot.modelValue = customFilterParams['foods_and_not']
-    }
-
-    if (customFilterParams['foods_or'] != null) {
-        filters.value.foods.modelValue.concat(customFilterParams['foods_or'])
-    }
-
-    if (customFilterParams['foods_or_not'] != null) {
-        filters.value.foodsOrNot.modelValue = customFilterParams['foods_or_not']
-    }
-
-
-    if (customFilterParams['keywords'] != null) {
-        filters.value.keywords.modelValue = customFilterParams['keywords'];
-    }
-
-    if (customFilterParams['keywords_and'] != null) {
-        filters.value.keywordsAnd.modelValue = customFilterParams['keywords_and'];
-    }
-
-    if (customFilterParams['keywords_and_not'] != null) {
-        filters.value.keywordsAndNot.modelValue = customFilterParams['keywords_and_not'];
-    }
-
-    if (customFilterParams['keywords_or'] != null) {
-        filters.value.foodsOrNot.modelValue.concat(customFilterParams['keywords_or']);
-    }
-
-    if (customFilterParams['keywords_or_not'] != null) {
-        filters.value.keywordsOrNot.modelValue = customFilterParams['keywords_or_not'];
-    }
-
-
-    if (customFilterParams['internal'] != null) {
-        filters.value.internal.modelValue = customFilterParams['internal'];
-    }
-
-    if (customFilterParams['makenow'] != null) {
-        filters.value.makenow.modelValue = customFilterParams['makenow'];
-    }
-
-    if (customFilterParams['random'] != null) {
-        filters.value.random.modelValue = customFilterParams['random'];
-    }
-
-    if (customFilterParams['units'] != null) {
-        filters.value.units.modelValue = customFilterParams['units'];
-    }
-
-    // logic to load filters for parameters that changed since tandoor 1
-    if (customFilterParams['version'] == null) {
-        if (customFilterParams['cookedon'] != null) {
-            if (customFilterParams['cookedon'].startsWith('-')) {
-                filters.value.cookedonLte.modelValue = customFilterParams['cookedon'].substring(1)
-            } else {
-                filters.value.cookedonGte.modelValue = customFilterParams['cookedon']
-            }
+    Object.values(filters.value).forEach((filter) => {
+        let filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+        if (customFilterParams[filterName] != null) {
+            filter.modelValue = customFilterParams[filterName]
+            filter.enabled = true
         }
-        if (customFilterParams['viewedon'] != null) {
-            if (customFilterParams['viewedon'].startsWith('-')) {
-                filters.value.viewedonLte.modelValue = customFilterParams['viewedon'].substring(1)
-            } else {
-                filters.value.viewedonGte.modelValue = customFilterParams['viewedon']
-            }
-        }
-        if (customFilterParams['updatedon'] != null) {
-            if (customFilterParams['updatedon'].startsWith('-')) {
-                filters.value.updatedonLte.modelValue = customFilterParams['updatedon'].substring(1)
-            } else {
-                filters.value.updatedonGte.modelValue = customFilterParams['updatedon']
-            }
-        }
-        if (customFilterParams['createdon'] != null) {
-            if (customFilterParams['createdon'].startsWith('-')) {
-                filters.value.createdonLte.modelValue = customFilterParams['createdon'].substring(1)
-            } else {
-                filters.value.createdonGte.modelValue = customFilterParams['createdon']
-            }
-        }
-
-        if (customFilterParams['rating'] != null) {
-            if (customFilterParams['rating'].startsWith('-')) {
-                filters.value.ratingLte.modelValue = customFilterParams['rating'].substring(1)
-            } else {
-                filters.value.ratingGte.modelValue = customFilterParams['rating']
-            }
-        }
-
-        if (customFilterParams['timescooked'] != null) {
-            if (customFilterParams['timescooked'].startsWith('-')) {
-                filters.value.timescookedLte.modelValue = customFilterParams['timescooked'].substring(1)
-            } else {
-                filters.value.timescookedGte.modelValue = customFilterParams['timescooked']
-            }
-        }
-    } else {
-        // logic to load tandoor 2 date filters
-        if (customFilterParams['cookedon_lte'] != null) {
-            filters.value.cookedonLte.modelValue = customFilterParams['cookedon_lte'];
-        }
-        if (customFilterParams['cookedon_gte'] != null) {
-            filters.value.cookedonGte.modelValue = customFilterParams['cookedon_gte'];
-        }
-
-        if (customFilterParams['viewedon_lte'] != null) {
-            filters.value.viewedonLte.modelValue = customFilterParams['viewedon_lte'];
-        }
-        if (customFilterParams['viewedon_gte'] != null) {
-            filters.value.viewedonGte.modelValue = customFilterParams['viewedon_gte'];
-        }
-
-        if (customFilterParams['createdon'] != null) {
-            filters.value.createdon.modelValue = customFilterParams['createdon'];
-        }
-        if (customFilterParams['createdon_lte'] != null) {
-            filters.value.createdonLte.modelValue = customFilterParams['createdon_lte'];
-        }
-        if (customFilterParams['createdon_gte'] != null) {
-            filters.value.createdonGte.modelValue = customFilterParams['createdon_gte'];
-        }
-
-        if (customFilterParams['updatedon'] != null) {
-            filters.value.updatedon.modelValue = customFilterParams['updatedon'];
-        }
-        if (customFilterParams['updatedon_lte'] != null) {
-            filters.value.updatedonLte.modelValue = customFilterParams['updatedon_lte'];
-        }
-        if (customFilterParams['updatedon_gte'] != null) {
-            filters.value.updatedonGte.modelValue = customFilterParams['updatedon_gte'];
-        }
-    }
-
-
-    return recipeListRequestParams
+    })
 
 }
 
 /**
  * convert filters to custom filter format
  */
-// TODO unchanged for backward compatability for now, change to something easier to use later
 function filtersToCustomFilterFormat() {
     let customFilterParams: any = {};
-
-    // booksOr/keywordsOr/foodsOr are intentionally left out as they are merged into books/keywords/foods on load and no longer saved
 
     if (query.value != '') {
         customFilterParams['query'] = query.value;
     }
 
-    if (!isFilterDefaultValue(filters.value.books)) {
-        customFilterParams['books'] = filters.value.books.modelValue;
+    Object.values(filters.value).forEach((filter) => {
+        if (!isFilterDefaultValue(filter)) {
+            let filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+            customFilterParams[filterName] = filter.modelValue
+        }
+    })
+
+    customFilterParams['version'] = '2'
+
+    return customFilterParams
+}
+
+/**
+ * transform a filter that is in the tandoor 1 format into the tandoor 2 format
+ * @param customFilterParams
+ */
+function transformTandoor1Filter(customFilterParams: any) {
+
+    // _or was basically an alias to the standard filter which behaves like an or filter
+    [['books_or', 'books'], ['foods_or', 'foods'], ['keywords_or', 'keywords'],].forEach(pair => {
+        if (customFilterParams[pair[1]] != null) {
+            if (customFilterParams[pair[2]] != null) {
+                customFilterParams[pair[2]].concat(customFilterParams[pair[1]])
+            } else {
+                customFilterParams[pair[2]] = customFilterParams[pair[1]]
+            }
+        }
+    })
+
+    if (customFilterParams['cookedon'] != null) {
+        if (customFilterParams['cookedon'].startsWith('-')) {
+            customFilterParams['cookedon_lte'] = customFilterParams['cookedon'].substring(1)
+        } else {
+            customFilterParams['cookedon_gte'] = customFilterParams['cookedon']
+        }
     }
 
-    if (!isFilterDefaultValue(filters.value.booksAnd)) {
-        customFilterParams['books_and'] = filters.value.booksAnd.modelValue;
+    if (customFilterParams['viewedon'] != null) {
+        if (customFilterParams['viewedon'].startsWith('-')) {
+            customFilterParams['viewedon_lte'] = customFilterParams['viewedon'].substring(1)
+        } else {
+            customFilterParams['viewedon_gte'] = customFilterParams['viewedon']
+        }
     }
 
-    if (!isFilterDefaultValue(filters.value.booksAndNot)) {
-        customFilterParams['books_and_not'] = filters.value.booksAndNot.modelValue;
+    if (customFilterParams['updatedon'] != null) {
+        if (customFilterParams['updatedon'].startsWith('-')) {
+            customFilterParams['updatedon_lte'] = customFilterParams['updatedon'].substring(1)
+        } else {
+            customFilterParams['updatedon_gte'] = customFilterParams['updatedon']
+        }
     }
 
-    if (!isFilterDefaultValue(filters.value.booksOrNot)) {
-        customFilterParams['books_or_not'] = filters.value.booksOrNot.modelValue;
+    if (customFilterParams['createdon'] != null) {
+        if (customFilterParams['createdon'].startsWith('-')) {
+            customFilterParams['createdon_lte'] = customFilterParams['createdon'].substring(1)
+        } else {
+            customFilterParams['createdon_gte'] = customFilterParams['createdon']
+        }
     }
 
-    if (!isFilterDefaultValue(filters.value.foods)) {
-        customFilterParams['foods'] = filters.value.foods.modelValue;
+    if (customFilterParams['rating'] != null) {
+        if (customFilterParams['rating'].startsWith('-')) {
+            customFilterParams['rating_lte'] = customFilterParams['rating'].substring(1)
+        } else {
+            customFilterParams['rating_gte'] = customFilterParams['rating']
+        }
     }
 
-    if (!isFilterDefaultValue(filters.value.foodsAnd)) {
-        customFilterParams['foods_and'] = filters.value.foodsAnd.modelValue;
+    if (customFilterParams['timescooked'] != null) {
+        if (customFilterParams['timescooked'].startsWith('-')) {
+            customFilterParams['timescooked_lte'] = customFilterParams['timescooked'].substring(1)
+        } else {
+            customFilterParams['timescooked_gte'] = customFilterParams['timescooked']
+        }
     }
 
-    if (!isFilterDefaultValue(filters.value.foodsAndNot)) {
-        customFilterParams['foods_and_not'] = filters.value.foodsAndNot.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.foodsOrNot)) {
-        customFilterParams['foods_or_not'] = filters.value.foodsOrNot.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.internal)) {
-        customFilterParams['internal'] = filters.value.internal.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.keywords)) {
-        customFilterParams['keywords'] = filters.value.keywords.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.keywordsAnd)) {
-        customFilterParams['keywords_and'] = filters.value.keywordsAnd.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.keywordsAndNot)) {
-        customFilterParams['keywords_and_not'] = filters.value.keywordsAndNot.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.keywordsOrNot)) {
-        customFilterParams['keywords_or_not'] = filters.value.keywordsOrNot.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.makenow)) {
-        customFilterParams['makenow'] = filters.value.makenow.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.random)) {
-        customFilterParams['random'] = filters.value.random.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.units)) {
-        customFilterParams['units'] = filters.value.units.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.cookedonGte)) {
-        customFilterParams['cookedon_gte'] = filters.value.cookedonGte.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.cookedonLte)) {
-        customFilterParams['cookedon_lte'] = filters.value.cookedonLte.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.viewedonLte)) {
-        customFilterParams['viewedon_lte'] = filters.value.viewedonLte.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.viewedonGte)) {
-        customFilterParams['viewedon_gte'] = filters.value.viewedonGte.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.createdon)) {
-        customFilterParams['createdon'] = filters.value.createdon.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.createdonLte)) {
-        customFilterParams['createdon_lte'] = filters.value.createdonLte.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.createdonGte)) {
-        customFilterParams['createdon_gte'] = filters.value.createdonGte.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.updatedon)) {
-        customFilterParams['updatedon'] = filters.value.updatedon.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.updatedonLte)) {
-        customFilterParams['updatedon_lte'] = filters.value.updatedonLte.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.updatedonGte)) {
-        customFilterParams['updatedon_gte'] = filters.value.updatedonGte.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.rating)) {
-        customFilterParams['rating'] = filters.value.rating.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.ratingLte)) {
-        customFilterParams['rating_lte'] = filters.value.ratingLte.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.ratingGte)) {
-        customFilterParams['rating_gte'] = filters.value.ratingGte.modelValue;
-    }
-
-    if (!isFilterDefaultValue(filters.value.timescookedLte)) {
-        customFilterParams['timescooked_lte'] = filters.value.timescookedLte.modelValue;
-    }
-    if (!isFilterDefaultValue(filters.value.timescookedGte)) {
-        customFilterParams['timescooked_gte'] = filters.value.timescookedGte.modelValue;
-    }
-
-    customFilterParams['version'] = 'tandoor_2'
+    customFilterParams['version'] = '2'
 
     return customFilterParams
 }
@@ -805,8 +467,8 @@ function filtersToCustomFilterFormat() {
 const filters = ref({
     keywords: {
         id: 'keywords',
-        label: 'Keyword (any)',
-        hint: 'Any of the given keywords',
+        label: `${t('Keywords')} (${t('any')})`,
+        hint: t('searchFilterObjectsHelp', {type: t('Keywords')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -818,8 +480,8 @@ const filters = ref({
     },
     keywordsAnd: {
         id: 'keywordsAnd',
-        label: 'Keyword (all)',
-        hint: 'All of the given keywords',
+        label: `${t('Keywords')} (${t('all')})`,
+        hint: t('searchFilterObjectsAndHelp', {type: t('Keywords')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -831,8 +493,8 @@ const filters = ref({
     },
     keywordsOrNot: {
         id: 'keywordsOrNot',
-        label: 'Keyword exclude (any)',
-        hint: 'Exclude recipes with any of the given keywords',
+        label: `${t('Keywords')} ${'exclude'} (${t('any')})`,
+        hint: t('searchFilterObjectsOrNotHelp', {type: t('Keywords')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -844,8 +506,8 @@ const filters = ref({
     },
     keywordsAndNot: {
         id: 'keywordsAndNot',
-        label: 'Keyword exclude (all)',
-        hint: 'Exclude recipes with all of the given keywords',
+        label: `${t('Keywords')} ${'exclude'} (${t('all')})`,
+        hint: t('searchFilterObjectsAndNotHelp', {type: t('Keywords')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -857,8 +519,8 @@ const filters = ref({
     },
     foods: {
         id: 'foods',
-        label: 'Foods (any)',
-        hint: 'Any of the given foods',
+        label: `${t('Foods')} (${t('any')})`,
+        hint: t('searchFilterObjectsHelp', {type: t('Foods')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -870,8 +532,8 @@ const filters = ref({
     },
     foodsAnd: {
         id: 'foodsAnd',
-        label: 'Food (all)',
-        hint: 'All of the given foods',
+        label: `${t('Keywords')} (${t('all')})`,
+        hint: t('searchFilterObjectsAndHelp', {type: t('Foods')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -883,8 +545,8 @@ const filters = ref({
     },
     foodsOrNot: {
         id: 'foodsOrNot',
-        label: 'Food exclude (any)',
-        hint: 'Exclude recipes with any of the given foods',
+        label: `${t('Foods')} ${'exclude'} (${t('any')})`,
+        hint: t('searchFilterObjectsOrNotHelp', {type: t('Foods')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -896,8 +558,8 @@ const filters = ref({
     },
     foodsAndNot: {
         id: 'foodsAndNot',
-        label: 'Food exclude (all)',
-        hint: 'Exclude recipes with all of the given foods',
+        label: `${t('Foods')} ${'exclude'} (${t('all')})`,
+        hint: t('searchFilterObjectsAndNotHelp', {type: t('Foods')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -909,8 +571,8 @@ const filters = ref({
     },
     books: {
         id: 'books',
-        label: 'Book (any)',
-        hint: 'Recipes that are in any of the given books',
+        label: `${t('Books')} (${t('any')})`,
+        hint: t('searchFilterObjectsHelp', {type: t('Books')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -922,8 +584,8 @@ const filters = ref({
     },
     booksAnd: {
         id: 'booksAnd',
-        label: 'Book (all)',
-        hint: 'Recipes that are in all of the given books',
+        label: `${t('Books')} (${t('all')})`,
+        hint: t('searchFilterObjectsAndHelp', {type: t('Books')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -935,8 +597,8 @@ const filters = ref({
     },
     booksOrNot: {
         id: 'booksOrNot',
-        label: 'Book exclude (any)',
-        hint: 'Exclude recipes with any of the given books',
+        label: `${t('Books')} ${'exclude'} (${t('any')})`,
+        hint: t('searchFilterObjectsOrNotHelp', {type: t('Books')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -948,8 +610,8 @@ const filters = ref({
     },
     booksAndNot: {
         id: 'booksAndNot',
-        label: 'Book exclude (all)',
-        hint: 'Exclude recipes with all of the given books',
+        label: `${t('Books')} ${'exclude'} (${t('all')})`,
+        hint: t('searchFilterObjectsAndNotHelp', {type: t('Books')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -961,8 +623,8 @@ const filters = ref({
     },
     createdby: {
         id: 'createdby',
-        label: 'Created By',
-        hint: 'Recipes created by the selected user',
+        label: t('CreatedBy'),
+        hint: t('searchFilterCreatedByHelp'),
         enabled: false,
         default: undefined,
         is: ModelSelect,
@@ -974,8 +636,8 @@ const filters = ref({
     },
     units: {
         id: 'units',
-        label: 'Unit (any)',
-        hint: 'Recipes that contain any of the given units',
+        label: `${t('Units')} (${t('any')})`,
+        hint: t('searchFilterObjectsHelp', {type: t('Units')}),
         enabled: false,
         default: [],
         is: ModelSelect,
@@ -987,8 +649,8 @@ const filters = ref({
     },
     internal: {
         id: 'internal',
-        label: 'Hide External',
-        hint: 'Hide external recipes',
+        label: t('Hide_External'),
+        hint: t('searchFilterHideExternalHelp'),
         enabled: false,
         default: "false",
         is: VSelect,
@@ -997,8 +659,8 @@ const filters = ref({
     },
     random: {
         id: 'random',
-        label: 'Random Order',
-        hint: 'Show recipes in random order',
+        label: t('RandomOrder'),
+        hint: t('searchFilterRandomHelp'),
         enabled: false,
         default: "false",
         is: VSelect,
@@ -1007,8 +669,8 @@ const filters = ref({
     },
     rating: {
         id: 'rating',
-        label: 'Rating (exact)',
-        hint: 'Recipes with the exact rating',
+        label: `${t('Rating')} (${t('exact')})`,
+        hint: '',
         enabled: false,
         default: undefined,
         is: RatingField,
@@ -1016,8 +678,8 @@ const filters = ref({
     },
     ratingGte: {
         id: 'ratingGte',
-        label: 'Rating (>=)',
-        hint: 'Recipes with the given or a greater rating',
+        label: `${t('Rating')} (>=)`,
+        hint: '',
         enabled: false,
         default: undefined,
         is: RatingField,
@@ -1025,17 +687,26 @@ const filters = ref({
     },
     ratingLte: {
         id: 'ratingLte',
-        label: 'Rating (<=)',
-        hint: 'Recipes with the given or a smaller rating',
+        label: `${t('Rating')} (<=)`,
+        hint: '',
         enabled: false,
         default: undefined,
         is: RatingField,
         modelValue: useRouteQuery('ratingLte', undefined, {transform: Number}),
     },
+    timescooked: {
+        id: 'timescooked',
+        label: `${t('times_cooked')} (${t('exact')})`,
+        hint: 'Recipes that were cooked at least X times',
+        enabled: false,
+        default: undefined,
+        is: VNumberInput,
+        modelValue: useRouteQuery('timescookedGte', undefined, {transform: Number}),
+    },
     timescookedGte: {
         id: 'timescookedGte',
-        label: 'Times Cooked (>=)',
-        hint: 'Recipes that were cooked at least X times',
+        label: `${t('times_cooked')} (>=)`,
+        hint: '',
         enabled: false,
         default: undefined,
         is: VNumberInput,
@@ -1043,8 +714,8 @@ const filters = ref({
     },
     timescookedLte: {
         id: 'timescookedLte',
-        label: 'Times Cooked (<=)',
-        hint: 'Recipes that were cooked at most X times',
+        label: `${t('times_cooked')} (<=)`,
+        hint: '',
         enabled: false,
         default: undefined,
         is: VNumberInput,
@@ -1052,19 +723,18 @@ const filters = ref({
     },
     makenow: {
         id: 'makenow',
-        label: 'Foods on Hand',
-        hint: 'Only recipes were all foods (or its substitutes) are marked as on hand',
+        label: t('OnHand'),
+        hint: t('searchFilterOnHandHelp'),
         enabled: false,
         default: "false",
         is: VSelect,
         items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
         modelValue: useRouteQuery('makenow', "false"),
     },
-
     cookedonGte: {
         id: 'cookedonGte',
-        label: 'Cooked after',
-        hint: 'Only recipes that were cooked on or after the given date.',
+        label: `${t('Cooked')} ${t('after')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1072,8 +742,8 @@ const filters = ref({
     },
     cookedonLte: {
         id: 'cookedonLte',
-        label: 'Cooked before',
-        hint: 'Only recipes that were cooked on or before the given date.',
+        label: `${t('Cooked')} ${t('before')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1081,8 +751,8 @@ const filters = ref({
     },
     viewedonGte: {
         id: 'viewedonGte',
-        label: 'Viewed after',
-        hint: 'Only recipes that were viewed on or after the given date.',
+        label: `${t('Viewed')} ${t('after')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1090,18 +760,17 @@ const filters = ref({
     },
     viewedonLte: {
         id: 'viewedonLte',
-        label: 'Viewed before',
-        hint: 'Only recipes that were viewed on or before the given date.',
+        label: `${t('Viewed')} ${t('before')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
         modelValue: useRouteQuery('viewedonLte', null, {transform: routeQueryDateTransformer}),
     },
-
     createdon: {
         id: 'createdon',
-        label: 'Created on',
-        hint: 'Only recipes that were created on the given date.',
+        label: `${t('Created')} ${t('on')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1109,8 +778,8 @@ const filters = ref({
     },
     createdonGte: {
         id: 'createdonGte',
-        label: 'Created on/after',
-        hint: 'Only recipes that were created on or after the given date.',
+        label: `${t('Created')} ${t('on')}/${t('after')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1118,8 +787,8 @@ const filters = ref({
     },
     createdonLte: {
         id: 'createdonLte',
-        label: 'Created on/before',
-        hint: 'Only recipes that were created on or before the given date.',
+        label: `${t('Created')} ${t('on')}/${t('before')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1127,8 +796,8 @@ const filters = ref({
     },
     updatedon: {
         id: 'updatedon',
-        label: 'Updated on',
-        hint: 'Only recipes that were updated on the given date.',
+        label: `${t('Updated')} ${t('on')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1136,8 +805,8 @@ const filters = ref({
     },
     updatedonGte: {
         id: 'updatedonGte',
-        label: 'Updated on/after',
-        hint: 'Only recipes that were updated on or after the given date.',
+        label: `${t('Updated')} ${t('on')}/${t('after')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
@@ -1145,8 +814,8 @@ const filters = ref({
     },
     updatedonLte: {
         id: 'updatedonLte',
-        label: 'Updated on/before',
-        hint: 'Only recipes that were updated on or before the given date.',
+        label: `${t('Updated')} ${t('on')}/${t('before')}`,
+        hint: '',
         enabled: false,
         default: null,
         is: VDateInput,
