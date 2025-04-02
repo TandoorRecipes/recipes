@@ -5,6 +5,7 @@ import {ApiApi, ServerSettings, Space, Supermarket, UserPreference, UserSpace} f
 import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
+import {useTheme} from "vuetify";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
@@ -43,6 +44,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     let isAuthenticated = ref(false)
 
+    let theme = useTheme()
+
     /**
      * holds the active user space if there is one or null if not
      */
@@ -66,6 +69,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             if (r.length == 1) {
                 userSettings.value = r[0]
                 isAuthenticated.value = true
+                updateTheme()
             } else {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, r)
             }
@@ -84,6 +88,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
         api.apiUserPreferencePartialUpdate({user: userSettings.value.user.id!, patchedUserPreference: userSettings.value}).then(r => {
             userSettings.value = r
+            updateTheme()
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
@@ -196,12 +201,24 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         }
     }
 
+    /**
+     * applies user settings regarding themes/styling
+     */
+    function updateTheme() {
+        if (userSettings.value.theme == 'TANDOOR') {
+            theme.global.name.value = 'light'
+        } else if (userSettings.value.theme == 'TANDOOR_DARK') {
+            theme.global.name.value = 'dark'
+        }
+    }
+
     // always load settings on first initialization of store
     loadUserSettings()
     loadServerSettings()
     loadActiveSpace()
     loadUserSpaces()
     loadSpaces()
+    updateTheme()
 
     return {
         deviceSettings,
@@ -216,7 +233,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         loadServerSettings,
         updateUserSettings,
         switchSpace,
-        resetDeviceSettings
+        resetDeviceSettings,
+        updateTheme,
     }
 })
 

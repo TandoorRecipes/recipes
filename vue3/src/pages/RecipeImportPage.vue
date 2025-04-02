@@ -115,19 +115,30 @@
                             <!-- ------------ -->
 
                             <v-stepper-window-item value="url">
-                                <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading"></v-text-field>
+                                <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading" autofocus
+                                              @keydown.enter="loadRecipeFromUrl({url: importUrl})"></v-text-field>
 
                                 <v-file-input v-model="image" :label="$t('Image')" v-if="importType == 'ai'" :loading="loading"></v-file-input>
 
-                                <v-textarea v-model="sourceImportText" label="JSON/HTML" :loading="loading" v-if="importType == 'source'" :hint="$t('SourceImportHelp')" persistent-hint></v-textarea>
+                                <v-textarea v-model="sourceImportText" label="JSON/HTML" :loading="loading" v-if="importType == 'source'" :hint="$t('SourceImportHelp')"
+                                            persistent-hint autofocus @keydown.enter="loadRecipeFromUrl({data: sourceImportText})"></v-textarea>
+
+                                <v-alert v-if="importResponse.error" :title="$t('Error')" :text="importResponse.msg" color="warning">
+
+                                </v-alert>
 
                                 <v-stepper-actions>
                                     <template #prev>
                                         <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
                                     </template>
                                     <template #next>
-                                        <v-btn @click="loadRecipeFromUrl({url: importUrl})" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{ $t('Load') }}</v-btn>
-                                        <v-btn @click="loadRecipeFromUrl({data: sourceImportText})" v-if="importType == 'source'" :disabled="sourceImportText == ''" :loading="loading">{{ $t('Load') }}</v-btn>
+                                        <v-btn @click="loadRecipeFromUrl({url: importUrl})" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{
+                                                $t('Load')
+                                            }}
+                                        </v-btn>
+                                        <v-btn @click="loadRecipeFromUrl({data: sourceImportText})" v-if="importType == 'source'" :disabled="sourceImportText == ''"
+                                               :loading="loading">{{ $t('Load') }}
+                                        </v-btn>
                                         <v-btn @click="uploadAndConvertImage()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
@@ -387,13 +398,15 @@
                             <!-- Bookmarklet  -->
                             <!-- ------------ -->
                             <v-stepper-window-item value="bookmarklet">
-                                {{$t('BookmarkletImportSubtitle')}}
+                                {{ $t('BookmarkletImportSubtitle') }}
 
                                 <ol>
-                                    <li>1. {{$t('BookmarkletHelp1')}}</li>
-                                    <li> <v-btn :href="bookmarkletContent" color="primary">{{$t('ImportIntoTandoor')}}</v-btn></li>
-                                    <li>2. {{$t('BookmarkletHelp2')}}</li>
-                                    <li>3. {{$t('BookmarkletHelp3')}}</li>
+                                    <li>1. {{ $t('BookmarkletHelp1') }}</li>
+                                    <li>
+                                        <v-btn :href="bookmarkletContent" color="primary">{{ $t('ImportIntoTandoor') }}</v-btn>
+                                    </li>
+                                    <li>2. {{ $t('BookmarkletHelp2') }}</li>
+                                    <li>3. {{ $t('BookmarkletHelp3') }}</li>
                                 </ol>
 
                                 <v-stepper-actions>
@@ -499,7 +512,14 @@ onMounted(() => {
 function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
     let api = new ApiApi()
     loading.value = true
+    importResponse.value = {} as RecipeFromSourceResponse
+
     api.apiRecipeFromSourceCreate({recipeFromSource: recipeFromSourceRequest}).then(r => {
+        if (r.recipeId != null) {
+            router.push({name: 'RecipeViewPage', params: {id: r.recipeId}})
+            return
+        }
+
         importResponse.value = r
 
         if (importResponse.value.duplicates && importResponse.value.duplicates.length > 0) {
@@ -508,7 +528,13 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
             stepper.value = 'image_chooser'
         }
     }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        err.response.json().then(r => {
+            if (r.error) {
+                importResponse.value = r
+            } else {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, r)
+            }
+        })
     }).finally(() => {
         loading.value = false
     })

@@ -7,7 +7,7 @@ from urllib.request import urlretrieve
 os.chdir('vue3/src/openapi')
 
 # generate base API client for all models
-os.system('openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/')
+os.system('openapi-generator-cli generate -g typescript-fetch -t templates -i http://127.0.0.1:8000/openapi/')
 
 sys.exit(0)
 

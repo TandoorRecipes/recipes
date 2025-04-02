@@ -1689,6 +1689,7 @@ class SourceImportDuplicateSerializer(serializers.Serializer):
 
 class RecipeFromSourceResponseSerializer(serializers.Serializer):
     recipe = SourceImportRecipeSerializer(default=None)
+    recipe_id = serializers.IntegerField(default=None)
     images = serializers.ListField(child=serializers.CharField(), default=[], allow_null=False)
     error = serializers.BooleanField(default=False)
     msg = serializers.CharField(max_length=1024, default='')

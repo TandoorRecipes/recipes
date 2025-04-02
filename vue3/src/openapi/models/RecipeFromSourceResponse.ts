@@ -40,6 +40,12 @@ export interface RecipeFromSourceResponse {
     recipe?: SourceImportRecipe;
     /**
      * 
+     * @type {number}
+     * @memberof RecipeFromSourceResponse
+     */
+    recipeId?: number;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof RecipeFromSourceResponse
      */
@@ -82,6 +88,7 @@ export function RecipeFromSourceResponseFromJSONTyped(json: any, ignoreDiscrimin
     return {
         
         'recipe': json['recipe'] == null ? undefined : SourceImportRecipeFromJSON(json['recipe']),
+        'recipeId': json['recipe_id'] == null ? undefined : json['recipe_id'],
         'images': json['images'] == null ? undefined : json['images'],
         'error': json['error'] == null ? undefined : json['error'],
         'msg': json['msg'] == null ? undefined : json['msg'],
@@ -96,6 +103,7 @@ export function RecipeFromSourceResponseToJSON(value?: RecipeFromSourceResponse 
     return {
         
         'recipe': SourceImportRecipeToJSON(value['recipe']),
+        'recipe_id': value['recipeId'],
         'images': value['images'],
         'error': value['error'],
         'msg': value['msg'],

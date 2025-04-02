@@ -44,7 +44,7 @@ export type TypeEnum = typeof TypeEnum[keyof typeof TypeEnum];
 export function instanceOfTypeEnum(value: any): boolean {
     for (const key in TypeEnum) {
         if (Object.prototype.hasOwnProperty.call(TypeEnum, key)) {
-            if (TypeEnum[key as keyof typeof TypeEnum] === value) {
+            if (TypeEnum[key] === value) {
                 return true;
             }
         }
@@ -62,9 +62,5 @@ export function TypeEnumFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
 
 export function TypeEnumToJSON(value?: TypeEnum | null): any {
     return value as any;
-}
-
-export function TypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): TypeEnum {
-    return value as TypeEnum;
 }
 
