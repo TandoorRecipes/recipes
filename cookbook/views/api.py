@@ -1869,8 +1869,12 @@ class ImageToRecipeView(APIView):
 
                 scrape = scrape_html(html=data, org_url='https://urlnotfound.none', supported_only=False)
                 if scrape:
+                    recipe = helper.get_from_scraper(scrape, request)
+                    obj, created = Keyword.objects.get_or_create(name='✨ AI', space=request.space)
+                    recipe['keywords'].append({'label': obj.name, 'name': obj.name, 'id': obj.id, 'import_keyword': True})
+
                     response = {}
-                    response['recipe'] = helper.get_from_scraper(scrape, request)
+                    response['recipe'] = recipe
                     response['images'] = []
                     response['duplicates'] = []
                     return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)

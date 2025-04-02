@@ -118,7 +118,13 @@
                                 <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading" autofocus
                                               @keydown.enter="loadRecipeFromUrl({url: importUrl})"></v-text-field>
 
-                                <v-file-input v-model="image" :label="$t('Image')" v-if="importType == 'ai'" :loading="loading"></v-file-input>
+                                <v-file-upload v-model="image"  v-if="importType == 'ai'" :loading="loading" clearable>
+                                    <template #icon>
+                                        <v-icon icon="fa-solid fa-file-pdf"></v-icon>
+                                        {{$t('or')}}
+                                        <v-icon icon="fa-solid fa-file-image"></v-icon>
+                                    </template>
+                                </v-file-upload>
 
                                 <v-textarea v-model="sourceImportText" label="JSON/HTML" :loading="loading" v-if="importType == 'source'" :hint="$t('SourceImportHelp')"
                                             persistent-hint autofocus @keydown.enter="loadRecipeFromUrl({data: sourceImportText})"></v-textarea>
@@ -365,11 +371,11 @@
                             <v-stepper-window-item value="file">
                                 <v-file-upload v-model="appImportFiles" multiple></v-file-upload>
 
-                                <v-card variant="outlined" elevation="1" density="compact" :title="$t('Duplicate')" :subtitle="$t('import_duplicates')" class="mt-2">
+                                <v-alert variant="outlined" elevation="1" density="compact" :title="$t('Duplicate')" :text="$t('import_duplicates')" class="mt-2">
                                     <template #prepend>
                                         <v-checkbox v-model="appImportDuplicates"></v-checkbox>
                                     </template>
-                                </v-card>
+                                </v-alert>
 
                                 <v-stepper-actions>
                                     <template #prev>
@@ -546,6 +552,9 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
     })
 }
 
+/**
+ * upload file to conversion endpoint
+ */
 function uploadAndConvertImage() {
     if (image.value != null) {
         loading.value = true
