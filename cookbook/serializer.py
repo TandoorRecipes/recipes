@@ -1697,4 +1697,4 @@ class RecipeFromSourceResponseSerializer(serializers.Serializer):
 
 
 class ImportImageSerializer(serializers.Serializer):
-    image = serializers.ImageField()
+    image = serializers.FileField()

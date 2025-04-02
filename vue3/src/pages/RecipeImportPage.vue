@@ -255,8 +255,10 @@
                                         <v-list>
                                             <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" empty-insert-threshold="25">
                                                 <v-list-item v-for="i in s.ingredients" border>
-                                                    <v-icon size="small" class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
-                                                    {{ i.amount }} <span v-if="i.unit">{{ i.unit.name }}</span> <span v-if="i.food">{{ i.food.name }}</span>
+                                                    <v-icon size="small" class="drag-handle cursor-grab mr-2" icon="$dragHandle"></v-icon>
+                                                    <v-chip density="compact" label class="mr-1">{{ i.amount }}</v-chip>
+                                                    <v-chip density="compact" label class="mr-1" v-if="i.unit">{{ i.unit.name }}</v-chip>
+                                                    <v-chip density="compact" label class="mr-1" v-if="i.food">{{ i.food.name }}</v-chip>
                                                     <template #append>
                                                         <v-btn variant="plain" size="small" icon class="float-right">
                                                             <v-icon icon="$menu"></v-icon>
@@ -525,7 +527,11 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
         if (importResponse.value.duplicates && importResponse.value.duplicates.length > 0) {
             stepper.value = 'duplicates'
         } else {
-            stepper.value = 'image_chooser'
+            if(importResponse.value.images && importResponse.value.images.length > 0){
+                stepper.value = 'image_chooser'
+            } else {
+                stepper.value = 'keywords_chooser'
+            }
         }
     }).catch(err => {
         err.response.json().then(r => {
@@ -546,7 +552,14 @@ function uploadAndConvertImage() {
         convertImageToRecipe(image.value).then(r => {
             loading.value = false
             importResponse.value = r
-            stepper.value = 'image_chooser'
+
+            if (!importResponse.value.error){
+                if(importResponse.value.images && importResponse.value.images.length > 0){
+                    stepper.value = 'image_chooser'
+                } else {
+                    stepper.value = 'keywords_chooser'
+                }
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })

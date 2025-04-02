@@ -41,7 +41,7 @@ from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
-from litellm import completion
+from litellm import completion, BadRequestError
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
@@ -112,7 +112,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, GOOGLE_AI_API_KEY
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_API_KEY, AI_MODEL_NAME
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -1722,8 +1722,8 @@ class RecipeUrlImportView(APIView):
                 if re.match('^(.)*/recipe/[0-9]+/\?share=[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     tandoor_url = url.replace('/recipe/', '/api/recipe/')
                 elif re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
-                    tandoor_url =  (url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1], '') + '?share=' +
-                                    re.split('/recipe/[0-9]+', url)[1].replace('/', ''))
+                    tandoor_url = (url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1], '') + '?share=' +
+                                   re.split('/recipe/[0-9]+', url)[1].replace('/', ''))
                 if tandoor_url and validate_import_url(tandoor_url):
                     recipe_json = requests.get(tandoor_url).json()
                     recipe_json = clean_dict(recipe_json, 'id')
@@ -1736,7 +1736,7 @@ class RecipeUrlImportView(APIView):
                             else:
                                 filetype = pathlib.Path(recipe_json["image"]).suffix
                             recipe.image = File(handle_image(request,
-                                                             File( io.BytesIO(requests.get(recipe_json['image']).content), name='image'),
+                                                             File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'),
                                                              filetype=filetype),
                                                 name=f'{uuid.uuid4()}_{recipe.pk}.{filetype}')
                         recipe.save()
@@ -1796,11 +1796,13 @@ class RecipeUrlImportView(APIView):
             return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
 
+class AiEndpointThrottle(UserRateThrottle):
+    rate = AI_RATELIMIT
+
+
 class ImageToRecipeView(APIView):
-    # serializer_class = ImportImageSerializer
-    # http_method_names = ['post', 'options']
     parser_classes = [MultiPartParser]
-    throttle_classes = [RecipeImportThrottle]
+    throttle_classes = [AiEndpointThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     @extend_schema(request=ImportImageSerializer(many=False), responses=RecipeFromSourceResponseSerializer(many=False))
@@ -1808,16 +1810,23 @@ class ImageToRecipeView(APIView):
         """
 
         """
-        print('method called')
         serializer = ImportImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            # generativeai.configure(api_key=GOOGLE_AI_API_KEY)
-            #
-            # model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
-            img = PIL.Image.open(serializer.validated_data['image'])
-            buffer = io.BytesIO()
-            img.save(buffer, format="PNG")  # or PNG if needed
-            image_bytes = buffer.getvalue()
+            # TODO max file size check
+
+            base64type = None
+            uploaded_file = serializer.validated_data['image']
+            try:
+                img = PIL.Image.open(uploaded_file)
+                buffer = io.BytesIO()
+                img.save(buffer, format=img.format)
+                base64type = 'image/' + img.format
+                file_bytes = buffer.getvalue()
+            except PIL.UnidentifiedImageError:
+                uploaded_file.seek(0)
+                file_bytes = uploaded_file.read()
+                # TODO detect if PDF
+                base64type = 'application/pdf'
 
             # TODO cant use ingredient splitting because scraper gets upset "Please separate the ingredients into amount, unit, food and if required a note. "
             # TODO maybe not use scraper?
@@ -1832,16 +1841,22 @@ class ImageToRecipeView(APIView):
                         },
                         {
                             "type": "image_url",
-                            "image_url": f'data:image/png;base64,{base64.b64encode(image_bytes).decode("utf-8")}'
+                            "image_url": f'data:{base64type};base64,{base64.b64encode(file_bytes).decode("utf-8")}'
                         },
 
                     ]
                 },
             ]
 
-            response = completion(api_key=GOOGLE_AI_API_KEY, model='gemini/gemini-2.0-flash', response_format={"type": "json_object"}, messages=messages, )
-
-            response_text = response.choices[0].message.content
+            try:
+                ai_response = completion(api_key=AI_API_KEY, model=AI_MODEL_NAME, response_format={"type": "json_object"}, messages=messages, )
+            except BadRequestError as err:
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+            response_text = ai_response.choices[0].message.content
 
             try:
                 data_json = json.loads(response_text)
@@ -1853,7 +1868,6 @@ class ImageToRecipeView(APIView):
                 # data = "<script type='application/ld+json'>" + response_text + "</script>"
 
                 scrape = scrape_html(html=data, org_url='https://urlnotfound.none', supported_only=False)
-                print(str(scrape.ingredients()))
                 if scrape:
                     response = {}
                     response['recipe'] = helper.get_from_scraper(scrape, request)
@@ -1862,13 +1876,17 @@ class ImageToRecipeView(APIView):
                     return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
             except JSONDecodeError:
                 traceback.print_exc()
-                print('Jsond dcode error')
-                pass
-
-            # TODO proper serializer response
-            return Response({'msg': 'PARSE_FAIL', 'response': response_text})
+                response = {
+                    'error': True,
+                    'msg': "Error parsing AI results. Response Text:\n\n" + response_text
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'msg': serializer.errors})
+            response = {
+                'error': True,
+                'msg': "Error parsing input:\n\n" + str(serializer.errors)
+            }
+            return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
 
 class AppImportView(APIView):
