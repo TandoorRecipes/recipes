@@ -15,6 +15,7 @@ const routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'view_home'},
     {path: '/search', redirect: {name: 'view_home'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
+    {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage'},
     {
         path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',
         children: [

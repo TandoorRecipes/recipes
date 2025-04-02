@@ -43,6 +43,12 @@
                             </template>
                             {{ $t('Database') }}
                         </v-list-item>
+                        <v-list-item :to="{ name: 'HelpPage' }">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-question"></v-icon>
+                            </template>
+                            {{ $t('Help') }}
+                        </v-list-item>
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
                         <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
                         <template v-if="useUserPreferenceStore().spaces.length > 1">
