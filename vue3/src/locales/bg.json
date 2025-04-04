@@ -506,6 +506,7 @@
   "reset_children_help": "Презаписване на всички последователи със стойности от наследени полета. Наследените полета на последователите ще бъдат зададени на наследяване на полета, освен ако последователите наследяват полета не е зададено.",
   "review_shopping": "Прегледайте записите за пазаруване, преди да запазите",
   "save_filter": "Запазване на филтъра",
+  "searchFilterCreatedByHelp": "",
   "searchFilterObjectsAndHelp": "",
   "searchFilterObjectsAndNotHelp": "",
   "searchFilterObjectsOrNotHelp": "",

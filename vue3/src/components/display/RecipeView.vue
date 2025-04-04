@@ -72,7 +72,7 @@
             </v-card>
         </template>
 
-        <property-view v-model="recipe" :servings="servings"></property-view>
+        <property-view v-model="recipe" :servings="servings" v-if="recipe.internal"></property-view>
 
         <v-expansion-panels class="mt-2">
 

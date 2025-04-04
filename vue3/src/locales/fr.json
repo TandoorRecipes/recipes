@@ -631,6 +631,7 @@
   "reusable_help_text": "Le lien d’invitation doit-il être utilisable par plus d’un utilisateur.",
   "review_shopping": "Vérifier les éléments de la liste avant de sauvegarder",
   "save_filter": "Sauvegarder le filtre",
+  "searchFilterCreatedByHelp": "",
   "searchFilterObjectsAndHelp": "",
   "searchFilterObjectsAndNotHelp": "",
   "searchFilterObjectsOrNotHelp": "",

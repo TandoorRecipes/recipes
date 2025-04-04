@@ -1,6 +1,6 @@
 <template>
     <v-card class="mt-1 h-100">
-        <iframe width="100%" height="700px" :src="`${getDjangoUrl('/api/get_recipe_file/')}${props.recipe.id}/`" v-if="isPdf"></iframe>
+        <iframe width="100%" height="700px" :src="`${getDjangoUrl('/static/pdfjs/web/viewer.html', false)}?file=${getDjangoUrl('/api/get_recipe_file/')}${props.recipe.id}/`" v-if="isPdf"></iframe>
 
         <v-img :src="`${getDjangoUrl('/api/get_recipe_file/')}${props.recipe.id}/`" v-if="isImage"></v-img>
     </v-card>
@@ -10,6 +10,7 @@
 import {computed, PropType} from "vue";
 import {Recipe} from "@/openapi";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
+
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe>, required: true}

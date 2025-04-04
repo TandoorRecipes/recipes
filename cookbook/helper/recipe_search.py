@@ -74,10 +74,13 @@ class RecipeSearch():
         }
         self._steps = self._params.get('steps', None)
         self._units = self._params.get('units', None)
-        # TODO image exists
-        self._sort_order = self._params.get('sort_order', None)
         self._internal = str2bool(self._params.get('internal', None))
-        self._random = str2bool(self._params.get('random', False))
+        self._sort_order = self._params.get('sort_order', None)
+        if self._sort_order == 'random':
+            self._random = True
+            self.sort_order = None
+        else:
+            self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
         self._num_recent = int(self._params.get('num_recent', 0))
         self._include_children = str2bool(

@@ -173,12 +173,13 @@
         ></v-snackbar-queued>
 
     </v-app>
+
 </template>
 
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
-import {useDisplay} from "vuetify"
+import {useDisplay, useTheme} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -186,9 +187,6 @@ import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerCo
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted, ref} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
-import SpaceSettings from "@/components/settings/SpaceSettings.vue";
-import SettingsPage from "@/pages/SettingsPage.vue";
-import MealPlanPage from "@/pages/MealPlanPage.vue";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()

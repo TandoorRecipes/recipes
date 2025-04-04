@@ -6,6 +6,7 @@ import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
 import {useTheme} from "vuetify";
+import tandoorDarkCustomCss from '@/assets/tandoor_dark.css?inline'
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
@@ -205,10 +206,23 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * applies user settings regarding themes/styling
      */
     function updateTheme() {
+        let customStyleTag = document.getElementById('id_style_custom_css')
+
         if (userSettings.value.theme == 'TANDOOR') {
             theme.global.name.value = 'light'
+
+            if (customStyleTag) {
+                document.head.removeChild(customStyleTag)
+            }
         } else if (userSettings.value.theme == 'TANDOOR_DARK') {
             theme.global.name.value = 'dark'
+
+            if (!customStyleTag) {
+                const styleTag = document.createElement('style')
+                styleTag.id = "id_style_custom_css"
+                styleTag.innerHTML = tandoorDarkCustomCss
+                document.head.appendChild(styleTag)
+            }
         }
     }
 

@@ -1126,8 +1126,10 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='createdby', description=_('Filter recipes for ones created by the given user ID'), type=int),
     OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']'), type=bool),
+    OpenApiParameter(name='sort_order', description=_('Determines the order of the results. Options are: score,-score,name,-name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,lastviewed,-lastviewed'), type=str),
     OpenApiParameter(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='num_recent', description=_('Returns the given number of recently viewed recipes before search results (if given)'), type=int),
+    OpenApiParameter(name='filter', description=_('ID of a custom filter. Returns all recipes matched by that filter.'), type=int),
     OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
 ]))
 class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):

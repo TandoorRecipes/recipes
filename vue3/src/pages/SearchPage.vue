@@ -204,7 +204,7 @@ const tableHeaders = computed(() => {
 const tableItemCount = ref(0)
 
 const recipes = ref([] as RecipeOverview[])
-const selectedCustomFilter = ref<null|CustomFilter>(null)
+const selectedCustomFilter = ref<null | CustomFilter>(null)
 const newFilterName = ref('')
 
 /**
@@ -461,10 +461,45 @@ function transformTandoor1Filter(customFilterParams: any) {
     return customFilterParams
 }
 
+/*
+[this.$t("search_rank"), "score", "1-9", "9-1"],
+[this.$t("Name"), "name", "A-z", "Z-a"],
+[this.$t("last_cooked"), "lastcooked", "↑", "↓"],
+[this.$t("Rating"), "rating", "1-5", "5-1"],
+[this.$t("times_cooked"), "favorite", "x-X", "X-x"],
+[this.$t("date_created"), "created_at", "↑", "↓"],
+[this.$t("date_viewed"), "lastviewed", "↑", "↓"],
+*/
 /**
  * all filters available to enable
  */
 const filters = ref({
+    sortOrder: {
+        id: 'sortOrder',
+        label: `${t('sort_by')}`,
+        hint: '',
+        enabled: false,
+        default: "",
+        is: VSelect,
+        items: [
+            {value: "random", title: `${t('RandomOrder')}`},
+            {value: "score", title: `${t('search_rank')} (1-9)`},
+            {value: "-score", title: `${t('search_rank')} (9-1)`},
+            {value: "name", title: `${t('Name')} (A-z)`},
+            {value: "-name", title: `${t('Name')} (Z-a)`},
+            {value: "lastcooked", title: `${t('last_cooked')} (↑)`},
+            {value: "-lastcooked", title: `${t('last_cooked')} (↓)`},
+            {value: "rating", title: `${t('Rating')} (1-5)`},
+            {value: "-rating", title: `${t('Rating')} (5-1)`},
+            {value: "times_cooked", title: `${t('favorite')} (↑)`},
+            {value: "-times_cooked", title: `${t('favorite')} (↓)`},
+            {value: "created_at", title: `${t('date_created')} (↑)`},
+            {value: "-created_at", title: `${t('date_created')} (↓)`},
+            {value: "lastviewed", title: `${t('date_viewed')} (↑)`},
+            {value: "-lastviewed", title: `${t('date_viewed')} (↓)`},
+        ],
+        modelValue: useRouteQuery('sortOrder', "")
+    },
     keywords: {
         id: 'keywords',
         label: `${t('Keywords')} (${t('any')})`,
@@ -532,7 +567,7 @@ const filters = ref({
     },
     foodsAnd: {
         id: 'foodsAnd',
-        label: `${t('Keywords')} (${t('all')})`,
+        label: `${t('Foods')} (${t('all')})`,
         hint: t('searchFilterObjectsAndHelp', {type: t('Foods')}),
         enabled: false,
         default: [],

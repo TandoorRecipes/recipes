@@ -40,6 +40,8 @@ export default createVuetify({
                     edit: '#385f84',
                     delete: '#a7240e',
                     cancel: '#eaaa21',
+
+                    recipeImagePlaceholderBg: '#ffffff',
                 },
             },
             dark: {
@@ -57,6 +59,8 @@ export default createVuetify({
                     edit: '#385f84',
                     delete: '#a7240e',
                     cancel: '#eaaa21',
+
+                    recipeImagePlaceholderBg: '#212121',
                 },
             },
         },

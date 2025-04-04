@@ -1,5 +1,5 @@
 <template>
-    <v-img :cover="cover" :style="{'height': height, 'width': width,}" style="background-color: #ffffff" :src="image" :alt="$t('Recipe_Image')" :rounded="props.rounded">
+    <v-img :cover="cover" :style="{'height': height, 'width': width,}" color="recipeImagePlaceholderBg" :src="image" :alt="$t('Recipe_Image')" :rounded="props.rounded">
         <slot name="overlay">
 
         </slot>

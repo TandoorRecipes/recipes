@@ -1,0 +1,40 @@
+/* Meal-Plan */
+
+.cv-header {
+    background-color: #303030 !important;
+}
+
+.cv-weeknumber, .cv-header-day {
+    background-color: #303030 !important;
+    color: #fff !important;
+}
+
+.cv-day.past {
+    background-color: #333333 !important;
+}
+
+.cv-day.today {
+    background-color: var(--primary) !important;
+}
+
+.cv-day.outsideOfMonth {
+    background-color: #0d0d0d !important;
+}
+
+.cv-item {
+    background-color: #4E4E4E !important;
+}
+
+.d01 .cv-day-number {
+    background-color: #b98766!important;
+}
+
+/* vueform/multiselect */
+
+.multiselect-dropdown {
+    background: #212121!important;
+}
+
+.multiselect-option.is-pointed {
+    background: #b98766!important;
+}

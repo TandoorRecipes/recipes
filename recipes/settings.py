@@ -680,3 +680,4 @@ ACCOUNT_RATE_LIMITS = {
 }
 
 mimetypes.add_type("text/javascript", ".js", True)
+mimetypes.add_type("text/javascript", ".mjs", True)

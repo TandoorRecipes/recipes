@@ -647,6 +647,7 @@
   "reusable_help_text": "Soll der Einladungslink für mehr als eine Person nutzbar sein.",
   "review_shopping": "Überprüfe die Einkaufsliste vor dem Speichern",
   "save_filter": "Filter speichern",
+  "searchFilterCreatedByHelp": "Rezepte die vom ausgewählten Nutzer erstellt wurden.",
   "searchFilterObjectsAndHelp": "Rezepte mit allen gewählten {type}",
   "searchFilterObjectsAndNotHelp": "Rezepte ausschließen die alle gewählten {type} haben.",
   "searchFilterObjectsHelp": "Rezepte mit einem beliebigen der ausgewählten {type}",
