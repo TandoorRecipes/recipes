@@ -450,6 +450,20 @@ S3_ENDPOINT_URL= # when using a custom endpoint like minio
 S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/TandoorRecipes/recipes/issues/1943)
 ```
 
+#### AI Integration
+
+To use AI to perform different tasks you need to configure an API key and the AI provider. [LiteLLM](https://www.litellm.ai/) is used
+to make a standardized request to different AI providers of your liking. 
+
+Configuring this via environment parameters is a temporary solution. In the future I plan on adding support for multiple AI providers per Tandoor instance
+with the option to select them for various tasks. For now only gemini 2.0 flash has been tested but feel free to try out other models. 
+
+```
+AI_API_KEY=
+AI_MODEL_NAME=gemini/gemini-2.0-flash
+AI_RATELIMIT=60/hour
+```
+
 #### FDC Api
 
 The FDC Api is used to automatically load nutrition information from
