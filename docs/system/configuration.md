@@ -132,6 +132,13 @@ This can either be a relative path from the applications base path or the url of
 STATIC_URL=/static/
 ```
 
+#### Static root
+
+> default `<basedir>/staticfiles` - options `/some/other/media/path`.
+
+Where staticfiles should be stored on disk. The default location is a
+`staticfiles` subfolder at the root of the application directory.
+
 #### Media URL
 
 > default `/static/` - options: `/any/url/path/`, `https://any.domain.name/and/url/path`
