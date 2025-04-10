@@ -201,7 +201,7 @@ class UserSerializer(WritableNestedModelSerializer):
         list_serializer_class = SpaceFilterSerializer
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'display_name', 'is_staff', 'is_superuser', 'is_active')
-        read_only_fields = ('username',)
+        read_only_fields = ('id', 'username', 'display_name', 'is_staff', 'is_superuser', 'is_active')
 
 
 class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -214,6 +214,7 @@ class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name')
+        read_only_fields = ('id', 'name')
 
 
 class FoodInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -1513,6 +1514,7 @@ class FdcQuerySerializer(serializers.Serializer):
     currentPage = serializers.IntegerField()
     totalPages = serializers.IntegerField()
     foods = FdcQueryFoodsSerializer(many=True)
+
 
 # Export/Import Serializers
 

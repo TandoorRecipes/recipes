@@ -23,6 +23,8 @@
         <p class="text-h6 mt-3">{{ $t('DeviceSettings') }}</p>
         <p class="text-disabled">{{ $t('DeviceSettingsHelp') }}</p>
 
+        <v-checkbox v-model="useUserPreferenceStore().deviceSettings.start_showMealPlan" :label="$t('ShowMealPlanOnStartPage')"></v-checkbox>
+
         <v-btn @click="useUserPreferenceStore().resetDeviceSettings()" color="warning">{{ $t('Reset') }}</v-btn>  <br/>
         <v-btn @click="useUserPreferenceStore().deviceSettings.general_closedHelpAlerts = []" color="warning" class="mt-1">{{ $t('ResetHelp') }}</v-btn>
 

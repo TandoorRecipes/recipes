@@ -110,3 +110,19 @@ def test_user_update(u1_s1, u2_s1, u1_s2):
         content_type='application/json'
     )
     assert r.status_code == 404
+
+    # test can't update any read only fields (superuser/staff/active/...)
+    user = auth.get_user(u1_s1)
+    r = u1_s1.patch(
+        reverse(
+            DETAIL_URL,
+            args={auth.get_user(u1_s1).id}
+        ),
+        {'first_name': 'test'},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == 200
+    assert response['is_staff'] == user.is_staff
+    assert response['is_superuser'] == user.is_superuser
+    assert response['is_active'] == user.is_active

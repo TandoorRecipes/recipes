@@ -6,7 +6,7 @@
 
                 <v-card-text>
 
-                    <v-number-input v-model="mutableNumber" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
+                    <v-number-input precision="2" v-model="mutableNumber" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
                     </v-number-input>
 
                     <v-btn-group divided class="d-flex">
@@ -53,7 +53,6 @@ const mutableNumber = ref(0)
 
 watch(() => props.number, (newVal) => {
     mutableNumber.value = newVal
-    console.log('prop updated')
 })
 
 onMounted(() => {
@@ -77,7 +76,7 @@ function updateNumber(operation: string) {
     if (operation === 'sub') {
         mutableNumber.value = mutableNumber.value - 1
     }
-    console.log('change emitted')
+
     emit('change', mutableNumber.value)
 }
 </script>

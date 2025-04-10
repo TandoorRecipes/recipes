@@ -3,21 +3,27 @@
         <v-card :loading="loading">
             <v-closable-card-title :title="$t('Add_Servings_to_Shopping', {servings: servings})" v-model="dialog"></v-closable-card-title>
             <v-card-text>
-                <v-expansion-panels variant="accordion">
-                    <v-expansion-panel v-for="r in dialogRecipes">
+                <v-expansion-panels variant="accordion" v-model="panel">
+                    <v-expansion-panel v-for="r in dialogRecipes" :key="r.recipe.id!" :value="r.recipe.id!">
                         <v-expansion-panel-title>{{ r.recipe.name }}</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-list>
-                                <v-list-item v-for="e in r.entries">
-                                    <v-checkbox v-model="e.checked" size="small" density="compact" hide-details>
-                                        <template #label>
-                                            {{ $n(e.amount * (servings / r.recipe.servings)) }}
-                                            <span class="ms-1" v-if="e.unit">{{ e.unit.name }}</span>
-                                            <span class="ms-1" v-if="e.food">{{e.food.name }}</span>
-                                        </template>
-                                    </v-checkbox>
-                                </v-list-item>
-                            </v-list>
+                            <v-table density="compact">
+                                <tbody>
+                                <tr v-for="e in r.entries" :key="e.id" @click="e.checked = !e.checked" class="cursor-pointer">
+                                    <td style="width: 1%; text-wrap: nowrap" class="pa-0">
+                                        <v-checkbox-btn v-model="e.checked" color="success"></v-checkbox-btn>
+                                    </td>
+                                    <td style="width: 1%; text-wrap: nowrap" class="pr-1"
+                                        v-html="calculateFoodAmount(e.amount, 1, useUserPreferenceStore().userSettings.useFractions)"></td>
+                                    <td style="width: 1%; text-wrap: nowrap" class="pr-1">
+                                        <template v-if="e.unit"> {{ e.unit.name }}</template>
+                                    </td>
+                                    <td>
+                                        <template v-if="e.food"> {{ e.food.name }}</template>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
@@ -38,6 +44,8 @@ import {ApiApi, Recipe, RecipeFlat, RecipeOverview, type ShoppingListEntryBulkCr
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {ShoppingDialogRecipe, ShoppingDialogRecipeEntry} from "@/types/Shopping";
+import {calculateFoodAmount} from "@/utils/number_utils";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true},
@@ -45,6 +53,7 @@ const props = defineProps({
 
 const dialog = ref(false)
 const loading = ref(false)
+const panel = ref(0)
 
 const servings = ref(1)
 const recipe = ref({} as Recipe)
@@ -66,7 +75,7 @@ function loadRecipeData() {
     let recipeRequest = api.apiRecipeRetrieve({id: props.recipe.id!}).then(r => {
         recipe.value = r
         servings.value = r.servings ? r.servings : 1
-        console.log('main loaded')
+        panel.value = r.id!
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
@@ -76,13 +85,11 @@ function loadRecipeData() {
         r.forEach(rs => {
             let p = api.apiRecipeRetrieve({id: rs.id!}).then(recipe => {
                 relatedRecipes.value.push(recipe)
-                console.log('related loaded', recipe.name)
             })
             promises.push(p)
         })
 
         Promise.allSettled(promises).then(() => {
-            console.log('ALL LOADED')
             loading.value = false
 
             let allRecipes = [recipe.value].concat(relatedRecipes.value)

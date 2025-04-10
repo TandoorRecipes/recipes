@@ -20,6 +20,8 @@ export type DeviceSettings = {
     search_itemsPerPage: number,
     search_viewMode: 'table'|'grid',
 
+    start_showMealPlan: boolean,
+
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
 }

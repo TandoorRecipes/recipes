@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <horizontal-meal-plan-window></horizontal-meal-plan-window>
+        <horizontal-meal-plan-window v-if="useUserPreferenceStore().deviceSettings.start_showMealPlan"></horizontal-meal-plan-window>
 
         <v-card v-if="totalRecipes == 0" class="mt-5 mb-5">
             <v-card-title><i class="fa-solid fa-eye-slash"></i> {{ $t('search_no_recipes') }}</v-card-title>
@@ -37,6 +37,7 @@ import {ApiApi} from "@/openapi"
 import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeWindow.vue"
 import HorizontalMealPlanWindow from "@/components/display/HorizontalMealPlanWindow.vue"
 import SearchPage from "@/pages/SearchPage.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const totalRecipes = ref(-1)
 

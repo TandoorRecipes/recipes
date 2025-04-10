@@ -197,6 +197,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             search_itemsPerPage: 50,
             search_viewMode: 'grid',
 
+            start_showMealPlan: true,
+
             general_tableItemsPerPage: 10,
             general_closedHelpAlerts: [],
         }
