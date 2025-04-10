@@ -7,7 +7,6 @@
 
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <Multiselect
-
             :ref="`ref_${props.id}`"
             class="material-multiselect "
             :class="{'model-select--density-compact': props.density == 'compact', 'model-select--density-comfortable': props.density == 'comfortable', 'model-select--density-default': props.density == ''}"
@@ -37,7 +36,16 @@
                 dropdown: 'multiselect-dropdown z-3000',
                 containerActive: '',
             }"
-        />
+        >
+          <template #option="{ option }">
+            <div class="d-flex align-center justify-space-between w-100">
+              <span>{{ option[itemLabel] }}</span>
+              <v-chip size="x-small" :color="option.__CREATE__ ? 'success' : 'primary'" class="ml-2">
+                {{ option.__CREATE__ ? $t("New") : $t("Existing") }}
+              </v-chip>
+            </div>
+          </template>
+        </Multiselect>
 
         <template #append v-if="$slots.append">
             <slot name="append">
