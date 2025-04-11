@@ -45,6 +45,12 @@
               </v-chip>
             </div>
           </template>
+
+          <template #clear="{ clear }" v-if="props.canClear">
+            <span @click="clear" aria-hidden="true" tabindex="-1" role="button" data-clear="" aria-roledescription="❎" class="multiselect-clear">
+              <span class="multiselect-clear-icon"></span>
+            </span>
+          </template>
         </Multiselect>
 
         <template #append v-if="$slots.append">
