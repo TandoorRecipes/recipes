@@ -29,6 +29,9 @@
                     </span>
                     <recipe-context-menu :recipe="recipe"></recipe-context-menu>
                 </v-sheet>
+               <v-sheet class="ps-2 text-disabled">
+                   {{ recipe.description }}
+               </v-sheet>
             </v-card>
         </v-card>
 
