@@ -1648,14 +1648,14 @@ class SourceImportIngredientSerializer(serializers.Serializer):
 class SourceImportStepSerializer(serializers.Serializer):
     instruction = serializers.CharField()
     ingredients = SourceImportIngredientSerializer(many=True)
-    show_ingredients_table = serializers.BooleanField()
+    show_ingredients_table = serializers.BooleanField(default=True)
 
 
 class SourceImportKeywordSerializer(serializers.Serializer):
     id = serializers.IntegerField(allow_null=True)
     label = serializers.CharField()
     name = serializers.CharField()
-    import_keyword = serializers.BooleanField()
+    import_keyword = serializers.BooleanField(default=True)
 
 
 class SourceImportPropertyTypeSerializer(serializers.Serializer):
@@ -1670,18 +1670,18 @@ class SourceImportPropertySerializer(serializers.Serializer):
 
 class SourceImportRecipeSerializer(serializers.Serializer):
     steps = SourceImportStepSerializer(many=True)
-    internal = serializers.BooleanField()
+    internal = serializers.BooleanField(default=True)
     source_url = serializers.URLField()
     name = serializers.CharField()
-    description = serializers.CharField()
-    servings = serializers.IntegerField()
-    servings_text = serializers.CharField()
-    working_time = serializers.IntegerField()
-    waiting_time = serializers.IntegerField()
-    image_url = serializers.URLField()
-    keywords = SourceImportKeywordSerializer(many=True)
+    description = serializers.CharField(default=None)
+    servings = serializers.IntegerField(default=1)
+    servings_text = serializers.CharField(default='')
+    working_time = serializers.IntegerField(default=0)
+    waiting_time = serializers.IntegerField(default=0)
+    image_url = serializers.URLField(default=None)
+    keywords = SourceImportKeywordSerializer(many=True, default=[])
 
-    properties = serializers.ListField(child=SourceImportPropertySerializer())
+    properties = serializers.ListField(child=SourceImportPropertySerializer(), default=[])
 
 
 class SourceImportDuplicateSerializer(serializers.Serializer):
