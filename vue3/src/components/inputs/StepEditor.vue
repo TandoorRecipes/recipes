@@ -331,12 +331,14 @@ function parseAndInsertIngredients() {
         }
     })
     Promise.allSettled(promises).then(r => {
+        console.log(r)
         r.forEach(i => {
+            console.log(i)
             step.value.ingredients.push({
-                amount: i.amount,
-                food: i.food,
-                unit: i.unit,
-                note: i.note
+                amount: i.value.amount,
+                food: i.value.food,
+                unit: i.value.unit,
+                note: i.value.note
             } as Ingredient)
         })
         ingredientTextInput.value = ""
