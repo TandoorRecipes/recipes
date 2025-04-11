@@ -331,7 +331,6 @@ function parseAndInsertIngredients() {
         }
     })
     Promise.allSettled(promises).then(r => {
-        console.log(r)
         r.forEach(i => {
             console.log(i)
             step.value.ingredients.push({
