@@ -118,13 +118,23 @@
                                 <v-text-field :label="$t('Website') + ' (https://...)'" v-model="importUrl" v-if="importType == 'url'" :loading="loading" autofocus
                                               @keydown.enter="loadRecipeFromUrl({url: importUrl})"></v-text-field>
 
-                                <v-file-upload v-model="image"  v-if="importType == 'ai'" :loading="loading" clearable>
-                                    <template #icon>
-                                        <v-icon icon="fa-solid fa-file-pdf"></v-icon>
-                                        {{$t('or')}}
-                                        <v-icon icon="fa-solid fa-file-image"></v-icon>
-                                    </template>
-                                </v-file-upload>
+                                <div v-if="importType == 'ai'">
+                                    <v-btn-toggle v-model="aiMode">
+                                        <v-btn value="file">{{ $t('File') }}</v-btn>
+                                        <v-btn value="text">{{ $t('Text') }}</v-btn>
+                                    </v-btn-toggle>
+
+                                    <v-file-upload v-model="image" v-if="aiMode == 'file'" :loading="loading" clearable>
+                                        <template #icon>
+                                            <v-icon icon="fa-solid fa-file-pdf"></v-icon>
+                                            {{ $t('or') }}
+                                            <v-icon icon="fa-solid fa-file-image"></v-icon>
+                                        </template>
+                                    </v-file-upload>
+
+                                    <v-textarea v-model="sourceImportText" :loading="loading" autofocus v-if="aiMode == 'text'"
+                                                @keydown.enter="loadRecipeFromAiImport()"></v-textarea>
+                                </div>
 
                                 <v-textarea v-model="sourceImportText" label="JSON/HTML" :loading="loading" v-if="importType == 'source'" :hint="$t('SourceImportHelp')"
                                             persistent-hint autofocus @keydown.enter="loadRecipeFromUrl({data: sourceImportText})"></v-textarea>
@@ -145,7 +155,7 @@
                                         <v-btn @click="loadRecipeFromUrl({data: sourceImportText})" v-if="importType == 'source'" :disabled="sourceImportText == ''"
                                                :loading="loading">{{ $t('Load') }}
                                         </v-btn>
-                                        <v-btn @click="uploadAndConvertImage()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
+                                        <v-btn @click="loadRecipeFromAiImport()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
@@ -460,7 +470,7 @@ import bookmarkletJs from '@/assets/bookmarklet_v3?url'
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
-const {updateRecipeImage, convertImageToRecipe, doAppImport, fileApiLoading} = useFileApi()
+const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
 const {getDjangoUrl} = useDjangoUrls()
 
 const bookmarkletContent = computed(() => {
@@ -488,6 +498,7 @@ const appImportFiles = ref<File[]>([])
 const appImportDuplicates = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
+const aiMode = ref<'file' | 'text'>('file')
 
 const bookmarkletToken = ref("")
 
@@ -533,7 +544,7 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
         if (importResponse.value.duplicates && importResponse.value.duplicates.length > 0) {
             stepper.value = 'duplicates'
         } else {
-            if(importResponse.value.images && importResponse.value.images.length > 0){
+            if (importResponse.value.images && importResponse.value.images.length > 0) {
                 stepper.value = 'image_chooser'
             } else {
                 stepper.value = 'keywords_chooser'
@@ -555,15 +566,22 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
 /**
  * upload file to conversion endpoint
  */
-function uploadAndConvertImage() {
-    if (image.value != null) {
+function loadRecipeFromAiImport() {
+    let request = null
+    if (image.value != null && aiMode.value == 'file') {
+        request = doAiImport(image.value)
+    } else if (sourceImportText.value != '' && aiMode.value == 'text') {
+        request = doAiImport(null, sourceImportText.value)
+    }
+
+    if (request != null) {
         loading.value = true
-        convertImageToRecipe(image.value).then(r => {
+        request.then(r => {
             loading.value = false
             importResponse.value = r
 
-            if (!importResponse.value.error){
-                if(importResponse.value.images && importResponse.value.images.length > 0){
+            if (!importResponse.value.error) {
+                if (importResponse.value.images && importResponse.value.images.length > 0) {
                     stepper.value = 'image_chooser'
                 } else {
                     stepper.value = 'keywords_chooser'
@@ -573,6 +591,7 @@ function uploadAndConvertImage() {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
+
 }
 
 function appImport() {

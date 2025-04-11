@@ -54,19 +54,19 @@ export interface PatchedUser {
      * @type {boolean}
      * @memberof PatchedUser
      */
-    isStaff?: boolean;
+    readonly isStaff?: boolean;
     /**
      * Designates that this user has all permissions without explicitly assigning them.
      * @type {boolean}
      * @memberof PatchedUser
      */
-    isSuperuser?: boolean;
+    readonly isSuperuser?: boolean;
     /**
      * Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
      * @type {boolean}
      * @memberof PatchedUser
      */
-    isActive?: boolean;
+    readonly isActive?: boolean;
 }
 
 /**
@@ -97,7 +97,7 @@ export function PatchedUserFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedUserToJSON(value?: Omit<PatchedUser, 'username'|'displayName'> | null): any {
+export function PatchedUserToJSON(value?: Omit<PatchedUser, 'username'|'displayName'|'isStaff'|'isSuperuser'|'isActive'> | null): any {
     if (value == null) {
         return value;
     }
@@ -106,9 +106,6 @@ export function PatchedUserToJSON(value?: Omit<PatchedUser, 'username'|'displayN
         'id': value['id'],
         'first_name': value['firstName'],
         'last_name': value['lastName'],
-        'is_staff': value['isStaff'],
-        'is_superuser': value['isSuperuser'],
-        'is_active': value['isActive'],
     };
 }
 

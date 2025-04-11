@@ -64,7 +64,7 @@ export interface Group {
      * @type {string}
      * @memberof Group
      */
-    name: string;
+    readonly name: string;
 }
 
 /**
@@ -90,14 +90,13 @@ export function GroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Gro
     };
 }
 
-export function GroupToJSON(value?: Group | null): any {
+export function GroupToJSON(value?: Omit<Group, 'name'> | null): any {
     if (value == null) {
         return value;
     }
     return {
         
         'id': value['id'],
-        'name': value['name'],
     };
 }
 

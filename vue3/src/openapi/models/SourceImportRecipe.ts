@@ -49,7 +49,7 @@ export interface SourceImportRecipe {
      * @type {boolean}
      * @memberof SourceImportRecipe
      */
-    internal: boolean;
+    internal?: boolean;
     /**
      * 
      * @type {string}
@@ -67,49 +67,49 @@ export interface SourceImportRecipe {
      * @type {string}
      * @memberof SourceImportRecipe
      */
-    description: string;
+    description?: string;
     /**
      * 
      * @type {number}
      * @memberof SourceImportRecipe
      */
-    servings: number;
+    servings?: number;
     /**
      * 
      * @type {string}
      * @memberof SourceImportRecipe
      */
-    servingsText: string;
+    servingsText?: string;
     /**
      * 
      * @type {number}
      * @memberof SourceImportRecipe
      */
-    workingTime: number;
+    workingTime?: number;
     /**
      * 
      * @type {number}
      * @memberof SourceImportRecipe
      */
-    waitingTime: number;
+    waitingTime?: number;
     /**
      * 
      * @type {string}
      * @memberof SourceImportRecipe
      */
-    imageUrl: string;
+    imageUrl?: string;
     /**
      * 
      * @type {Array<SourceImportKeyword>}
      * @memberof SourceImportRecipe
      */
-    keywords: Array<SourceImportKeyword>;
+    keywords?: Array<SourceImportKeyword>;
     /**
      * 
      * @type {Array<SourceImportProperty>}
      * @memberof SourceImportRecipe
      */
-    properties: Array<SourceImportProperty>;
+    properties?: Array<SourceImportProperty>;
 }
 
 /**
@@ -117,17 +117,8 @@ export interface SourceImportRecipe {
  */
 export function instanceOfSourceImportRecipe(value: object): value is SourceImportRecipe {
     if (!('steps' in value) || value['steps'] === undefined) return false;
-    if (!('internal' in value) || value['internal'] === undefined) return false;
     if (!('sourceUrl' in value) || value['sourceUrl'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('description' in value) || value['description'] === undefined) return false;
-    if (!('servings' in value) || value['servings'] === undefined) return false;
-    if (!('servingsText' in value) || value['servingsText'] === undefined) return false;
-    if (!('workingTime' in value) || value['workingTime'] === undefined) return false;
-    if (!('waitingTime' in value) || value['waitingTime'] === undefined) return false;
-    if (!('imageUrl' in value) || value['imageUrl'] === undefined) return false;
-    if (!('keywords' in value) || value['keywords'] === undefined) return false;
-    if (!('properties' in value) || value['properties'] === undefined) return false;
     return true;
 }
 
@@ -142,17 +133,17 @@ export function SourceImportRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'steps': ((json['steps'] as Array<any>).map(SourceImportStepFromJSON)),
-        'internal': json['internal'],
+        'internal': json['internal'] == null ? undefined : json['internal'],
         'sourceUrl': json['source_url'],
         'name': json['name'],
-        'description': json['description'],
-        'servings': json['servings'],
-        'servingsText': json['servings_text'],
-        'workingTime': json['working_time'],
-        'waitingTime': json['waiting_time'],
-        'imageUrl': json['image_url'],
-        'keywords': ((json['keywords'] as Array<any>).map(SourceImportKeywordFromJSON)),
-        'properties': ((json['properties'] as Array<any>).map(SourceImportPropertyFromJSON)),
+        'description': json['description'] == null ? undefined : json['description'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
+        'workingTime': json['working_time'] == null ? undefined : json['working_time'],
+        'waitingTime': json['waiting_time'] == null ? undefined : json['waiting_time'],
+        'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
+        'keywords': json['keywords'] == null ? undefined : ((json['keywords'] as Array<any>).map(SourceImportKeywordFromJSON)),
+        'properties': json['properties'] == null ? undefined : ((json['properties'] as Array<any>).map(SourceImportPropertyFromJSON)),
     };
 }
 
@@ -172,8 +163,8 @@ export function SourceImportRecipeToJSON(value?: SourceImportRecipe | null): any
         'working_time': value['workingTime'],
         'waiting_time': value['waitingTime'],
         'image_url': value['imageUrl'],
-        'keywords': ((value['keywords'] as Array<any>).map(SourceImportKeywordToJSON)),
-        'properties': ((value['properties'] as Array<any>).map(SourceImportPropertyToJSON)),
+        'keywords': value['keywords'] == null ? undefined : ((value['keywords'] as Array<any>).map(SourceImportKeywordToJSON)),
+        'properties': value['properties'] == null ? undefined : ((value['properties'] as Array<any>).map(SourceImportPropertyToJSON)),
     };
 }
 

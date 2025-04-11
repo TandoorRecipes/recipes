@@ -42,7 +42,7 @@ export interface SourceImportKeyword {
      * @type {boolean}
      * @memberof SourceImportKeyword
      */
-    importKeyword: boolean;
+    importKeyword?: boolean;
 }
 
 /**
@@ -51,7 +51,6 @@ export interface SourceImportKeyword {
 export function instanceOfSourceImportKeyword(value: object): value is SourceImportKeyword {
     if (!('label' in value) || value['label'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('importKeyword' in value) || value['importKeyword'] === undefined) return false;
     return true;
 }
 
@@ -68,7 +67,7 @@ export function SourceImportKeywordFromJSONTyped(json: any, ignoreDiscriminator:
         'id': json['id'] == null ? undefined : json['id'],
         'label': json['label'],
         'name': json['name'],
-        'importKeyword': json['import_keyword'],
+        'importKeyword': json['import_keyword'] == null ? undefined : json['import_keyword'],
     };
 }
 

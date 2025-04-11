@@ -43,7 +43,7 @@ export interface SourceImportStep {
      * @type {boolean}
      * @memberof SourceImportStep
      */
-    showIngredientsTable: boolean;
+    showIngredientsTable?: boolean;
 }
 
 /**
@@ -52,7 +52,6 @@ export interface SourceImportStep {
 export function instanceOfSourceImportStep(value: object): value is SourceImportStep {
     if (!('instruction' in value) || value['instruction'] === undefined) return false;
     if (!('ingredients' in value) || value['ingredients'] === undefined) return false;
-    if (!('showIngredientsTable' in value) || value['showIngredientsTable'] === undefined) return false;
     return true;
 }
 
@@ -68,7 +67,7 @@ export function SourceImportStepFromJSONTyped(json: any, ignoreDiscriminator: bo
         
         'instruction': json['instruction'],
         'ingredients': ((json['ingredients'] as Array<any>).map(SourceImportIngredientFromJSON)),
-        'showIngredientsTable': json['show_ingredients_table'],
+        'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
 

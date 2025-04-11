@@ -79,14 +79,15 @@ export function useFileApi() {
     /**
      * uploads the given file to the image recognition endpoint
      * @param file file object to upload
+     * @param text text to import
      */
-    function convertImageToRecipe(file: File) {
+    function doAiImport(file: File|null, text: string = '') {
         let formData = new FormData()
-        if (file != null) {
-            formData.append('image', file)
-        }
 
-        return fetch(getDjangoUrl(`api/image-to-recipe/`), {
+        formData.append('file', '')
+        formData.append('text', text)
+
+        return fetch(getDjangoUrl(`api/ai-import/`), {
             method: 'POST',
             headers: {'X-CSRFToken': getCookie('csrftoken')},
             body: formData
@@ -127,5 +128,5 @@ export function useFileApi() {
         })
     }
 
-    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage, convertImageToRecipe, doAppImport}
+    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage, doAiImport, doAppImport}
 }
