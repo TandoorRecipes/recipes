@@ -76,7 +76,7 @@
                                     </v-text-field>
                                 </v-col>
                                 <v-col cols="1">
-                                    <v-btn variant="plain" icon>
+                                    <v-btn variant="plain" tabindex="-1" icon>
                                         <v-icon icon="$settings"></v-icon>
                                         <v-menu activator="parent">
                                             <v-list>
@@ -207,7 +207,7 @@
             <v-card-text>
                 <v-form>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
-                                    :min="0" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
+                                    :min="0" :precision="2" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
                                   allow-create></model-select>
                     <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
