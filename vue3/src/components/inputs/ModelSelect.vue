@@ -37,7 +37,7 @@
                 containerActive: '',
             }"
         >
-          <template #option="{ option }">
+          <template #option="{ option }" v-if="props.allowCreate">
             <div class="d-flex align-center justify-space-between w-100">
               <span>{{ option[itemLabel] }}</span>
               <v-chip size="x-small" :color="option.__CREATE__ ? 'success' : 'primary'" class="ml-2">
