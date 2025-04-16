@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-04-01 12:58+0000\n"
+"PO-Revision-Date: 2025-04-16 07:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -2186,6 +2186,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            La vostra configuració permet tots els amfitrions, això està bé "
+"en algunes instal·lacions, però en general cal evitar-ho. Consulteu la "
+"documentació sobre aquest tema.\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2212,18 +2217,26 @@ msgid ""
 "issue.\n"
 "        "
 msgstr ""
+"\n"
+"            Les migracions de dades no haurien de fallar mai!\n"
+"            Els errors de migració podrien provocar problemes operatius "
+"importants a l'aplicació.\n"
+"            Si una migració falla, assegureu-vos que teniu l'última versió "
+"i, si és així, publiqueu el registre de migració i la visió general a "
+"continuació en un tiquet de GitHub.\n"
+"        "
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
-msgstr ""
+msgstr "Fals"
 
 #: .\cookbook\templates\system.html:182
 msgid "True"
-msgstr ""
+msgstr "Cert"
 
 #: .\cookbook\templates\system.html:207
 msgid "Hide"
-msgstr ""
+msgstr "Amagar"
 
 #: .\cookbook\templates\system.html:210
 #, fuzzy
@@ -2304,6 +2317,7 @@ msgstr "Afegit {obj.name} a la llista de la compra."
 #: .\cookbook\views\api.py:742
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filtrar els plans d'àpats des de la data (inclosa) en el format AAAA-MM-DD."
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
@@ -2438,40 +2452,54 @@ msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
+"Filtra les receptes cuinades X vegades o més.   Els valors negatius retornen "
+"les receptes cuinades menys de X vegades"
 
 #: .\cookbook\views\api.py:931
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filtra les receptes que s'han cuinat per última vegada el AAAA-MM-DD o "
+"després. Prefixació: filtra la data exacta o abans de la data."
 
 #: .\cookbook\views\api.py:932
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filtra les receptes que s'han creat el AAAA-MM-DD o després. Prefixació: "
+"filtra la data exacta o abans de la data."
 
 #: .\cookbook\views\api.py:933
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filtra les receptes que s'han actualitzat el AAAA-MM-DD o després. "
+"Prefixació: filtra la data exacta o abans de la data."
 
 #: .\cookbook\views\api.py:934
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filtra les receptes que s'han visitat per última vegada el AAAA-MM-DD o "
+"després. Prefixació: filtra la data exacta o abans de la data."
 
 #: .\cookbook\views\api.py:935
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
+"Filtra receptes que poden elaborar-se amb aliments disponibles. [true/"
+"<b>false</b>]"
 
 #: .\cookbook\views\api.py:1122
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr ""
+"Retorna l'entrada de la llista de la compra amb una clau primària "
+"d'identificador.  Es permeten diversos valors."
 
 #: .\cookbook\views\api.py:1125
 msgid ""
