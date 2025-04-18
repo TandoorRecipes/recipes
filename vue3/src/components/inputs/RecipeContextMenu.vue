@@ -8,7 +8,7 @@
                 </v-list-item>
                 <v-list-item prepend-icon="$mealplan" link>
                     {{ $t('Add_to_Plan') }}
-                    <model-edit-dialog model="MealPlan" :itemDefaults="{recipe: recipe}"></model-edit-dialog>
+                    <model-edit-dialog model="MealPlan" :itemDefaults="{recipe: recipe, servings: recipe.servings}"></model-edit-dialog>
                 </v-list-item>
                 <v-list-item prepend-icon="$shopping" link>
                     {{ $t('Add_to_Shopping') }}
@@ -37,7 +37,7 @@ import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 
 
 const props = defineProps({
-    recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true},
+    recipe: {type: Object as PropType<Recipe | RecipeOverview>, required: true},
     size: {type: String, default: 'medium'},
 })
 
