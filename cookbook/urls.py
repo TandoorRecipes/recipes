@@ -77,11 +77,11 @@ for p in PLUGINS:
 urlpatterns = [
 
     path('setup/', views.setup, name='view_setup'),
-    path('no-group', views.no_groups, name='view_no_group'),
-    path('space-overview', views.space_overview, name='view_space_overview'),
+    path('no-group/', views.no_groups, name='view_no_group'),
+    path('space-overview/', views.space_overview, name='view_space_overview'),
     path('space-manage/<int:space_id>', views.space_manage, name='view_space_manage'),
     path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
-    path('no-perm', views.no_perm, name='view_no_perm'),
+    path('no-perm/', views.no_perm, name='view_no_perm'),
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
 

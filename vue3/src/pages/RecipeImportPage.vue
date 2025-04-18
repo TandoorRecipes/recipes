@@ -274,7 +274,7 @@
                                             </v-menu>
                                         </v-btn>
                                     </v-col>
-                                    <v-col cols="12" md="confirm">
+                                    <v-col cols="12" md="6">
                                         <v-list>
                                             <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" empty-insert-threshold="25">
                                                 <v-list-item v-for="i in s.ingredients" border>
@@ -757,7 +757,7 @@ function autoSortIngredients() {
         ingredients.forEach(i => {
             let found = false
             importResponse.value.recipe!.steps.forEach(s => {
-                if (s.instruction.includes(i.food.name.trim()) && !found) {
+                if (s.instruction.toLowerCase().includes(i.food.name.trim().toLowerCase()) && !found) {
                     found = true
                     s.ingredients.push(i)
                 }

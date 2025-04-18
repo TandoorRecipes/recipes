@@ -2006,7 +2006,7 @@ def reset_food_inheritance(request):
 
 @api_view(['GET'])
 # @schema(AutoSchema()) #TODO add proper schema
-@permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
+@permission_classes([CustomIsGuest & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
 def switch_active_space(request, space_id):
     """
