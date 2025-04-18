@@ -36,6 +36,12 @@ export interface ServerSettings {
      * @type {boolean}
      * @memberof ServerSettings
      */
+    enableAiImport: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ServerSettings
+     */
     disableExternalConnectors: boolean;
     /**
      * 
@@ -81,6 +87,7 @@ export interface ServerSettings {
 export function instanceOfServerSettings(value: object): value is ServerSettings {
     if (!('shoppingMinAutosyncInterval' in value) || value['shoppingMinAutosyncInterval'] === undefined) return false;
     if (!('enablePdfExport' in value) || value['enablePdfExport'] === undefined) return false;
+    if (!('enableAiImport' in value) || value['enableAiImport'] === undefined) return false;
     if (!('disableExternalConnectors' in value) || value['disableExternalConnectors'] === undefined) return false;
     if (!('termsUrl' in value) || value['termsUrl'] === undefined) return false;
     if (!('privacyUrl' in value) || value['privacyUrl'] === undefined) return false;
@@ -103,6 +110,7 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'shoppingMinAutosyncInterval': json['shopping_min_autosync_interval'],
         'enablePdfExport': json['enable_pdf_export'],
+        'enableAiImport': json['enable_ai_import'],
         'disableExternalConnectors': json['disable_external_connectors'],
         'termsUrl': json['terms_url'],
         'privacyUrl': json['privacy_url'],
@@ -121,6 +129,7 @@ export function ServerSettingsToJSON(value?: ServerSettings | null): any {
         
         'shopping_min_autosync_interval': value['shoppingMinAutosyncInterval'],
         'enable_pdf_export': value['enablePdfExport'],
+        'enable_ai_import': value['enableAiImport'],
         'disable_external_connectors': value['disableExternalConnectors'],
         'terms_url': value['termsUrl'],
         'privacy_url': value['privacyUrl'],

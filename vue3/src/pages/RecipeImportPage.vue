@@ -53,6 +53,7 @@
                                             @click="importType = 'url'">
                                         </v-card>
                                     </v-col>
+
                                     <v-col cols="12" md="6">
                                         <v-card
                                             :title="$t('AI')"
@@ -61,9 +62,11 @@
                                             variant="outlined"
                                             :color="(importType == 'ai') ? 'primary' : ''"
                                             elevation="1"
-                                            @click="importType = 'ai'">
+                                            @click="importType = 'ai'"
+                                            :disabled="!useUserPreferenceStore().serverSettings.enableAiImport">
                                         </v-card>
                                     </v-col>
+
                                     <v-col cols="12" md="6">
                                         <v-card
                                             :title="$t('App')"
@@ -155,7 +158,9 @@
                                         <v-btn @click="loadRecipeFromUrl({data: sourceImportText})" v-if="importType == 'source'" :disabled="sourceImportText == ''"
                                                :loading="loading">{{ $t('Load') }}
                                         </v-btn>
-                                        <v-btn @click="loadRecipeFromAiImport()" v-if="importType == 'ai'" :disabled="image == null" :loading="loading">{{ $t('Load') }}</v-btn>
+                                        <v-btn @click="loadRecipeFromAiImport()" v-if="importType == 'ai'"
+                                               :disabled="(aiMode == 'file' && image == null) || (aiMode == 'text' && sourceImportText == '')" :loading="loading">{{ $t('Load') }}
+                                        </v-btn>
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>

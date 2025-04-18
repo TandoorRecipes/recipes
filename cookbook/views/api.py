@@ -2155,6 +2155,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         # Attention: No login required, do not return sensitive data
         s['shopping_min_autosync_interval'] = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
         s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT
+        s['enable_ai_import'] = settings.AI_API_KEY != ''
         s['disable_external_connectors'] = settings.DISABLE_EXTERNAL_CONNECTORS
         s['terms_url'] = settings.TERMS_URL
         s['privacy_url'] = settings.PRIVACY_URL
