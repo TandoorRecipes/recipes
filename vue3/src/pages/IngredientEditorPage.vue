@@ -148,7 +148,6 @@ import {onMounted, ref} from "vue";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUrlSearchParams} from "@vueuse/core";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";

@@ -455,7 +455,6 @@ import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {useFileApi} from "@/composables/useFileApi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";

@@ -187,7 +187,6 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 
 type IngredientLoading = Ingredient & { loading?: boolean }
 

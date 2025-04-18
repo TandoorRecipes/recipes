@@ -42,7 +42,6 @@ import {onMounted, PropType, ref} from "vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview, type ShoppingListEntryBulkCreate, ShoppingListRecipe} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {ShoppingDialogRecipe, ShoppingDialogRecipeEntry} from "@/types/Shopping";
 import {calculateFoodAmount} from "@/utils/number_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";

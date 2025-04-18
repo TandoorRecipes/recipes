@@ -145,7 +145,6 @@ import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/open
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {VDateInput} from 'vuetify/labs/VDateInput'
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import {useRouter} from "vue-router";

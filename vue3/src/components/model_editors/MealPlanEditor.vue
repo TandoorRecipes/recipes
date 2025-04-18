@@ -27,6 +27,10 @@
                                 <v-text-field :label="$t('Title')" v-model="editingObj.title"></v-text-field>
                                 <v-date-input
                                     v-model="dateRangeValue"
+                                    @update:modelValue="updateDate()"
+                                    :display-format="(date: Date) => DateTime.fromJSDate(date).toLocaleString()"
+                                    :first-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
+                                    :show-week="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
                                     :label="$t('Date')"
                                     multiple="range"
                                     prepend-icon=""
@@ -99,7 +103,6 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {DateTime} from "luxon";
 import {adjustDateRangeLength, shiftDateRange} from "@/utils/date_utils";
-import {VNumberInput} from "vuetify/labs/VNumberInput";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeCard from "@/components/display/RecipeCard.vue";
 import {VDateInput} from "vuetify/labs/VDateInput";
@@ -223,6 +226,11 @@ function initializeDateRange() {
     } else {
         dateRangeValue.value = [editingObj.value.fromDate, editingObj.value.fromDate]
     }
+}
+
+function formatDate(date: Date) {
+    console.log('called date format')
+    return DateTime.fromJSDate(date).toLocaleString()
 }
 
 </script>

@@ -121,7 +121,6 @@ import {computed, onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Food,  Unit, UnitConversion} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";

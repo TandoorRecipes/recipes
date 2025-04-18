@@ -51,7 +51,6 @@ import {onMounted, PropType} from "vue";
 import {UnitConversion} from "@/openapi";
 
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 

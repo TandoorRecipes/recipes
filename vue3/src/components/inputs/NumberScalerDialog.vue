@@ -31,7 +31,6 @@
 <script setup lang="ts">
 
 import {defineComponent, onMounted, ref, watch} from 'vue'
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue"; //TODO remove once component is out of labs
 
 const emit = defineEmits({

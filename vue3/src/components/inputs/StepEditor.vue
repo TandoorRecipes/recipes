@@ -239,7 +239,6 @@
 import {nextTick, onMounted, ref} from 'vue'
 import {ApiApi, Ingredient, ParsedIngredient, Recipe, Step, Unit} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";

@@ -63,7 +63,7 @@
 
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
+
 </script>
 
 <style scoped>

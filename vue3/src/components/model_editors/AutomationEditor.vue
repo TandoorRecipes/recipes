@@ -36,7 +36,6 @@ import {Automation} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
-import {VNumberInput} from "vuetify/labs/VNumberInput";
 
 const {t} = useI18n()
 

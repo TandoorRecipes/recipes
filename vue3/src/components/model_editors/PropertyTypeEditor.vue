@@ -31,7 +31,6 @@ import {onMounted, PropType, ref} from "vue";
 import {PropertyType} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import {VNumberInput} from "vuetify/labs/VNumberInput";
 import {FDC_PROPERTY_TYPES} from "@/utils/fdc";
 
 const props = defineProps({

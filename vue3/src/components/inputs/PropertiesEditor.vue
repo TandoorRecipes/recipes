@@ -41,7 +41,6 @@
 <script setup lang="ts">
 
 import {ApiApi, Property} from "@/openapi";
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 

@@ -58,7 +58,6 @@
 
 <script setup lang="ts">
 
-import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import {onMounted, PropType, ref} from "vue";
 import {ApiApi, Recipe, RecipeBook, RecipeBookEntry, User} from "@/openapi";
 import {VDataTableUpdateOptions} from "@/vuetify";

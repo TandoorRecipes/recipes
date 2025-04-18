@@ -37,7 +37,6 @@ import {onMounted, PropType} from "vue";
 import {ShoppingListEntry} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import {VNumberInput} from "vuetify/labs/VNumberInput";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const props = defineProps({
