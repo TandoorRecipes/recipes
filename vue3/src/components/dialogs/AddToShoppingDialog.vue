@@ -101,13 +101,15 @@ function loadRecipeData() {
 
                 recipe.steps.forEach(step => {
                     step.ingredients.forEach(ingredient => {
-                        dialogRecipe.entries.push({
-                            amount: ingredient.amount,
-                            food: ingredient.food,
-                            unit: ingredient.unit,
-                            ingredient: ingredient,
-                            checked: (ingredient.food ? !(ingredient.food.ignoreShopping || ingredient.food.foodOnhand) : true),
-                        })
+                        if(!ingredient.isHeader){
+                            dialogRecipe.entries.push({
+                                amount: ingredient.amount,
+                                food: ingredient.food,
+                                unit: ingredient.unit,
+                                ingredient: ingredient,
+                                checked: (ingredient.food ? !(ingredient.food.ignoreShopping || ingredient.food.foodOnhand) : true),
+                            })
+                        }
                     })
                 })
 
