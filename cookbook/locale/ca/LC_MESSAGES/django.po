@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-04-16 07:58+0000\n"
+"PO-Revision-Date: 2025-04-22 10:12+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -284,10 +284,8 @@ msgid "You have more users than allowed in your space."
 msgstr "Tens més usuaris dels permesos al teu espai."
 
 #: .\cookbook\helper\recipe_url_import.py:310
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Utilitza fraccions"
+msgstr "Direcció inversa"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
@@ -548,10 +546,8 @@ msgid "Instruction Replace"
 msgstr "Substituir les Instruccions"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Nova Unitat"
+msgstr "Mai unitats"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
@@ -562,10 +558,8 @@ msgid "Food Replace"
 msgstr "Aliment equivalent"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description"
 msgid "Unit Replace"
-msgstr "Descripció"
+msgstr "Reemplaçar la descripció"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
@@ -577,10 +571,8 @@ msgid "Recipe"
 msgstr "Recepta"
 
 #: .\cookbook\models.py:1504
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
-msgstr "Menjars"
+msgstr "Menjar o aliment"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -1013,10 +1005,8 @@ msgstr "Historial"
 #: .\cookbook\templates\base.html:263
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Ingredients"
+msgstr "Editor d'ingredients"
 
 #: .\cookbook\templates\base.html:275
 #: .\cookbook\templates\export_response.html:7
@@ -1029,10 +1019,8 @@ msgid "Properties"
 msgstr "Propietats"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "Connexions de Compte"
+msgstr "Conversió d'unitats"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1052,10 +1040,8 @@ msgid "Space Settings"
 msgstr "Opcions d'espai"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "Receptes Externes"
+msgstr "Connectors Externs"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1067,10 +1053,8 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Sense Espai"
+msgstr "El teu espai"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
@@ -1519,10 +1503,8 @@ msgid "Back"
 msgstr "Enrere"
 
 #: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Property Editor"
-msgstr "Ingredients"
+msgstr "Editor de propietats"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1887,17 +1869,15 @@ msgstr "Crear compte de superusuari"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Accés Social"
+msgstr "Error d'inici de sessió mitjançant l'inici de sessió social"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "Error a l'intentar moure "
+msgstr ""
+"S'ha produït un error en intentar iniciar sessió mitjançant el teu compte de "
+"xarxa social."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -1985,10 +1965,8 @@ msgid "Sign in using"
 msgstr "Registrar emprant"
 
 #: .\cookbook\templates\space_manage.html:7
-#, fuzzy
-#| msgid "Members"
 msgid "Space Management"
-msgstr "Membres"
+msgstr "Gestiona de l'espai"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -1999,10 +1977,8 @@ msgid "Manage Subscription"
 msgstr "Administra Subscripció"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:184
-#, fuzzy
-#| msgid "Space:"
 msgid "Space"
-msgstr "Espai:"
+msgstr "Espai"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -2022,10 +1998,8 @@ msgid "Owner"
 msgstr "Propietari"
 
 #: .\cookbook\templates\space_overview.html:57
-#, fuzzy
-#| msgid "Create Space"
 msgid "Leave Space"
-msgstr "Crear Espai"
+msgstr "Abandonar l'espai"
 
 #: .\cookbook\templates\space_overview.html:78
 #: .\cookbook\templates\space_overview.html:88
@@ -2201,10 +2175,8 @@ msgid "Info"
 msgstr "Info"
 
 #: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Utilitza fraccions"
+msgstr "Migracions"
 
 #: .\cookbook\templates\system.html:116
 msgid ""
@@ -2239,10 +2211,8 @@ msgid "Hide"
 msgstr "Amagar"
 
 #: .\cookbook\templates\system.html:210
-#, fuzzy
-#| msgid "Show Log"
 msgid "Show"
-msgstr "Mostra Logs"
+msgstr "Mostra"
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
@@ -2321,13 +2291,13 @@ msgstr ""
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
-msgstr ""
+msgstr "Filtreu els plans de menús actuals (inclosos) en el format AAAA-MM-DD."
 
 #: .\cookbook\views\api.py:744
-#, fuzzy
-#| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
-msgstr "ID de recepta forma part d'un pas. Per a múltiples repeteix paràmetre."
+msgstr ""
+"Filtra els plans d'àpats amb MealType ID. Per a múltiples paràmetres de "
+"repetició."
 
 #: .\cookbook\views\api.py:872
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2625,7 +2595,7 @@ msgstr "Canvis desats!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "Configuració del connector"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
@@ -2685,7 +2655,7 @@ msgstr "Passos"
 
 #: .\cookbook\views\lists.py:270
 msgid "Property Types"
-msgstr ""
+msgstr "Tipus de propietat"
 
 #: .\cookbook\views\new.py:86
 #, fuzzy
@@ -2749,15 +2719,16 @@ msgstr "Cerca difusa no és compatible amb aquest mètode de cerca!"
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
+"PostgreSQL %(v)s està obsolet.  Actualitza a una versió totalment compatible!"
 
 #: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
-msgstr ""
+msgstr "Estàs fent servir PostgreSQL %(v1)s.  Es recomana PostgreSQL %(v2)s"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "No es pot determinar la versió de PostgreSQL."
 
 #: .\cookbook\views\views.py:317
 #, fuzzy
@@ -2829,7 +2800,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "Gestiona receptes, llistes de la compra, menús setmanals i molt més."
 
 #: .\cookbook\views\views.py:458
 msgid "Plan"
@@ -2837,11 +2808,11 @@ msgstr "Pla"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
-msgstr ""
+msgstr "Veure la planificació de menús"
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "Veure els meus llibres de receptes"
 
 #: .\cookbook\views\views.py:460
 #, fuzzy
