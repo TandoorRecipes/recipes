@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-04-22 10:12+0000\n"
+"PO-Revision-Date: 2025-04-24 07:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -434,10 +434,8 @@ msgid "Other"
 msgstr "Altres"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
-msgstr "Greixos"
+msgstr "Greix"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
@@ -2316,24 +2314,26 @@ msgstr ""
 "també cerca text complet."
 
 #: .\cookbook\views\api.py:910
-#, fuzzy
-#| msgid "ID of keyword a recipe should have. For multiple repeat parameter."
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
 "ID de la paraula clau que hauria de tenir una recepta. Per a múltiples "
-"repeteix paràmetre."
+"repeteix paràmetre. Equivalent a keywords_or"
 
 #: .\cookbook\views\api.py:911
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
+"Identificadors (IDs) de paraules clau, Paraules clau d'identificació, "
+"repetiu-ne per a múltiples. Retorna receptes amb qualsevol paraula clau"
 
 #: .\cookbook\views\api.py:912
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
+"Paraules clau d'identificació (IDs), repetiu-ne per a múltiples. Torna "
+"receptes que contenen totes les paraules clau."
 
 #: .\cookbook\views\api.py:913
 msgid ""
