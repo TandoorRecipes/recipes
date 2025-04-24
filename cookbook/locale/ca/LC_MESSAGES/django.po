@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-04-24 07:58+0000\n"
+"PO-Revision-Date: 2025-04-25 09:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -2400,22 +2400,28 @@ msgstr ""
 #: .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"ID del llibre. Es pot especificar diverses vegades. Exclou les receptes dels "
+"llibres amb l'ID especificat."
 
 #: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
+"ID dels llibres, es pot especificar diverses vegades. Exclou les receptes "
+"amb tots els llibres amb les ID especificades."
 
 #: .\cookbook\views\api.py:927
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
-msgstr ""
+msgstr "Només cal retornar les receptes internes. [sí/<b>no</b>]"
 
 #: .\cookbook\views\api.py:928
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr ""
+msgstr "Retorna resultats en ordre aleatori. [sí/<b>no</b>]"
 
 #: .\cookbook\views\api.py:929
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
+"En primer lloc, retorna nous resultats als resultats de la cerca. [cert/"
+"<b>fals</b>]"
 
 #: .\cookbook\views\api.py:930
 msgid ""
@@ -2477,10 +2483,15 @@ msgid ""
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
+"Filtreu les entrades de la llista de compres per marcades.  [cert, fals, "
+"ambdues, <b>recent</b>]<br>                  -recent inclou elements no "
+"marcats i elements completats recentment."
 
 #: .\cookbook\views\api.py:1128
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
+"Retorna les entrades de la llista de la compra ordenades per comanda de "
+"categoria de supermercat."
 
 #: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
