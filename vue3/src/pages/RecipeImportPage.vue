@@ -66,7 +66,7 @@
                                             :disabled="!useUserPreferenceStore().serverSettings.enableAiImport">
                                         </v-card>
                                         <!-- TODO temporary until AI backend system is improved -->
-                                        <v-label class="font-italic" v-if="useUserPreferenceStore().serverSettings.enableAiImport">Set AI_API_KEY on server to use AI</v-label>
+                                        <v-label class="font-italic" v-if="!useUserPreferenceStore().serverSettings.enableAiImport">Set AI_API_KEY on server to use AI</v-label>
                                     </v-col>
 
                                     <v-col cols="12" md="6">
@@ -310,11 +310,15 @@
                                     <v-card>
                                         <v-closable-card-title v-model="dialog" :title="$t('Ingredient Editor')"></v-closable-card-title>
                                         <v-card-text>
-                                            <v-text-field :label="$t('Original_Text')" v-model="editingIngredient.originalText" disabled></v-text-field>
+                                            <v-text-field :label="$t('Original_Text')" v-model="editingIngredient.originalText" readonly></v-text-field>
                                             <v-text-field :label="$t('Amount')" v-model="editingIngredient.amount"></v-text-field>
 
-                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" v-if="editingIngredient.unit"></v-text-field>
-                                            <v-btn prepend-icon="$create" color="create" v-else>{{ $t('Unit') }}</v-btn>
+                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" v-if="editingIngredient.unit">
+                                                <template #append-inner>
+                                                     <v-btn icon="$delete" color="delete" @click="editingIngredient.unit = null"></v-btn>
+                                                </template>
+                                            </v-text-field>
+                                            <v-btn prepend-icon="$create" color="create" class="mb-4" @click="editingIngredient.unit = {name: ''}" v-else>{{ $t('Unit') }}</v-btn>
 
                                             <v-text-field :label="$t('Food')" v-model="editingIngredient.food.name"></v-text-field>
                                             <v-text-field :label="$t('Note')" v-model="editingIngredient.note"></v-text-field>
@@ -472,6 +476,7 @@ import ImportLogViewer from "@/components/display/ImportLogViewer.vue";
 import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import bookmarkletJs from '@/assets/bookmarklet_v3?url'
+import BtnCopy from "@/components/buttons/BtnCopy.vue";
 
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
