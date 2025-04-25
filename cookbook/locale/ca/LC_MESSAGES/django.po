@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-04-25 09:58+0000\n"
+"PO-Revision-Date: 2025-04-26 11:58+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -2339,11 +2339,15 @@ msgstr ""
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
+"Identificador (ID) de les paraules clau, repetiu-ne per a diversos. Exclou "
+"les receptes que continguin alguna de les paraules clau."
 
 #: .\cookbook\views\api.py:914
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
+"Identificació (ID) de les paraules clau, repetiu-ne per a diversos. Exclou "
+"les receptes que continguin alguna de les paraules clau."
 
 #: .\cookbook\views\api.py:915
 msgid "ID of food a recipe should have. For multiple repeat parameter."
@@ -2372,6 +2376,8 @@ msgstr ""
 #: .\cookbook\views\api.py:919
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
+"Identificació (ID) dels aliments, repetiu-ne per a diversos. Exclou les "
+"receptes que continguin tots els aliments."
 
 #: .\cookbook\views\api.py:920
 msgid "ID of unit a recipe should have."
