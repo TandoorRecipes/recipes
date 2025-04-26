@@ -8,7 +8,7 @@
             :vertical="showViewButton && props.vertical"
             :location="props.location"
             :close-on-back="false"
-            multi-line
+            :multi-line="showViewButton"
         >
 <!--            <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>-->
             <h3 v-if="visibleMessage.msg.title">{{ visibleMessage.msg.title }}</h3>
