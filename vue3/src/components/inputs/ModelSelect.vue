@@ -40,9 +40,9 @@
           <template #option="{ option }" v-if="props.allowCreate">
             <div class="d-flex align-center justify-space-between w-100">
               <span>{{ option[itemLabel] }}</span>
-              <v-chip size="x-small" color="create" class="ml-2" v-if="option.__CREATE__">
+              <v-chip size="x-small" variant="flat" color="create" class="ml-2" v-if="option.__CREATE__">
                   <v-icon icon="$create"></v-icon>
-                  <template class="d-none d-lg-block">{{$t('Create')}}</template>
+                  <template class="d-none d-lg-block"> {{$t('Create')}}</template>
               </v-chip>
             </div>
           </template>
