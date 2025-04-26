@@ -157,7 +157,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
 import {routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
-import {VSelect, VTextField} from "vuetify/components";
+import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
 
 const {t} = useI18n()
