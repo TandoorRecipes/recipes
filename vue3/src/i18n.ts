@@ -7,9 +7,9 @@ import type {
     Composer,
     I18nMode
 } from 'vue-i18n'
-import de from "../../vue/src/locales/de.json";
+
 import {createI18n} from "vue-i18n";
-import en from "../../vue/src/locales/en.json";
+import en from "../../vue3/src/locales/en.json";
 
 /**
  * lazy loading of translation, resources:
@@ -37,7 +37,7 @@ export function setupI18n() {
         fallbackLocale: 'en',
         messages: {
             en
-        }
+        },
     }) as I18n
 
     // async load user locale into existing i18n instance
@@ -58,12 +58,19 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
         getResourceMessages
     )
 
+    // remove empty strings
+
+    Object.entries(messages).forEach(([key, value]) => {
+        if (value === '') {
+            delete messages[key]
+        }
+    })
+
     // set messages for locale
     i18n.global.setLocaleMessage(locale, messages)
+
     // switch to given locale
     setLocale(i18n, locale)
-
-    console.log('loaded user locale')
 
     return nextTick()
 }
