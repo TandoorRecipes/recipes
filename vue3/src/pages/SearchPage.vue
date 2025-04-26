@@ -159,6 +159,7 @@ import {routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/ut
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
+import {VNumberInput} from 'vuetify/labs/VNumberInput';
 
 const {t} = useI18n()
 const router = useRouter()
