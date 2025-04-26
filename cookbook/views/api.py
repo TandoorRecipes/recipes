@@ -2135,7 +2135,7 @@ class LocalizationViewSet(viewsets.GenericViewSet):
     def list(self, request, *args, **kwargs):
         langs = []
         for l in settings.LANGUAGES:
-            langs.append({'code': l[0], 'language': l[1]})
+            langs.append({'code': l[0], 'language': f'{l[1]} ({l[0]})'})
         return Response(LocalizationSerializer(langs, many=True).data)
 
 
