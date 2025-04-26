@@ -121,6 +121,7 @@
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item prepend-icon="$recipes" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="$search" :title="$t('Search')" :to="{ name: 'SearchPage' }"></v-list-item>
                 <v-list-item prepend-icon="$mealplan" :title="$t('Meal_Plan')" :to="{ name: 'MealPlanPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="$shopping" :title="$t('Shopping_list')" :to="{ name: 'ShoppingListPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
