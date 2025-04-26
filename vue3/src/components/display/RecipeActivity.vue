@@ -37,7 +37,7 @@
             <v-row de>
                 <v-col cols="12" md="4">
                     <v-label>{{$t('Rating')}}</v-label><br/>
-                    <v-rating v-model="newCookLog.rating" clearable half-increments hover density="compact"></v-rating>
+                    <v-rating v-model="newCookLog.rating" clearable hover density="compact"></v-rating>
                 </v-col>
                 <v-col cols="12" md="4">
 
