@@ -7,6 +7,7 @@ import App from './Tandoor.vue'
 import mavonEditor from 'mavon-editor'
 import 'vite/modulepreload-polyfill';
 import vuetify from "@/vuetify";
+import { createRulesPlugin } from 'vuetify/labs/rules'
 
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
@@ -58,6 +59,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(vuetify)
+app.use(createRulesPlugin({ /* options */ }, vuetify.locale))
 app.use(router)
 app.use(i18n)
 app.use(mavonEditor) // TODO only use on pages that need it
