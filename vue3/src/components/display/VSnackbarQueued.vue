@@ -5,7 +5,7 @@
             :timer="true"
             :timeout="visibleMessage.showTimeout"
             :color="visibleMessage.type"
-            :vertical="props.vertical"
+            :vertical="showViewButton && props.vertical"
             :location="props.location"
             :close-on-back="false"
             multi-line
@@ -14,13 +14,16 @@
             <h3 v-if="visibleMessage.msg.title">{{ visibleMessage.msg.title }}</h3>
             <span class="text-pre">{{ visibleMessage.msg.text }}</span>
 
-            <template v-slot:actions>
+            <template #actions v-if="showViewButton">
 
                 <v-btn ref="ref_btn_view">{{$t('View')}}</v-btn>
                 <v-btn variant="text" @click="removeItem()">
                     <span v-if="useMessageStore().snackbarQueue.length > 1">{{$t('Next')}} ({{ useMessageStore().snackbarQueue.length - 1 }})</span>
                     <span v-else>{{$t('Close')}}</span>
                 </v-btn>
+            </template>
+            <template #actions v-else>
+                <v-btn icon="$close" size="x-small" @click="removeItem()"></v-btn>
             </template>
         </v-snackbar>
 
@@ -30,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, useTemplateRef} from 'vue'
+import {computed, ref, useTemplateRef} from 'vue'
 import {Message, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
@@ -54,6 +57,16 @@ const props = defineProps({
         type: Boolean,
         default: false
     }
+})
+
+/**
+ * determine the snackbar layout depending if data is given or not
+ */
+const showViewButton = computed(() => {
+    if(Object.keys(visibleMessage.value).length > 0){
+        return Object.keys(visibleMessage.value.data).length > 0
+    }
+    return false
 })
 
 // ref to open message list dialog
