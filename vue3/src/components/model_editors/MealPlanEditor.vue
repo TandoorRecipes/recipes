@@ -28,7 +28,6 @@
                                 <v-date-input
                                     v-model="dateRangeValue"
                                     @update:modelValue="updateDate()"
-                                    :display-format="(date: Date) => DateTime.fromJSDate(date).toLocaleString()"
                                     :first-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
                                     :show-week="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
                                     :label="$t('Date')"

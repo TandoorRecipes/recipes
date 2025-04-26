@@ -4,6 +4,7 @@ import {aliases, fa} from 'vuetify/iconsets/fa'
 
 // Composables
 import {createVuetify} from 'vuetify'
+import {DateTime} from "luxon";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -19,6 +20,10 @@ export default createVuetify({
         // limiting max width of base container so UIs dont become too wide
         VContainer: {
             maxWidth: '1400px'
+        },
+        // always localize the date display of DateInputs
+        VDateInput: {
+            displayFormat : (date: Date) => DateTime.fromJSDate(date).toLocaleString()
         }
     },
     theme: {
