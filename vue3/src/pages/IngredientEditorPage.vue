@@ -104,7 +104,7 @@
 
                 <template v-slot:item.amount="{ item }">
                     <v-number-input :label="$t('Amount')" v-model="item.amount" inset control-variant="stacked" hide-details :min="0" density="compact"
-                                    @update:modelValue="item.changed = true"></v-number-input>
+                                    @update:modelValue="item.changed = true" :precision="2"></v-number-input>
                 </template>
                 <template v-slot:item.unit="{ item }">
                     <model-select model="Unit" v-model="item.unit" :label="$t('Unit')" density="compact" hide-details allow-create append-to-body

@@ -27,7 +27,7 @@
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
-                <v-number-input v-model="servings" class="mt-3" control-variant="split" :label="$t('Servings')"></v-number-input>
+                <v-number-input v-model="servings" class="mt-3" control-variant="split" :label="$t('Servings')" :precision="2"></v-number-input>
             </v-card-text>
             <v-card-actions>
                 <v-btn class="float-right" prepend-icon="$create" color="create" @click="createShoppingListRecipe()">{{ $t('Add_to_Shopping') }}</v-btn>

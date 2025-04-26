@@ -49,7 +49,7 @@
                                 </v-input>
 
                                 <ModelSelect model="MealType" :allow-create="true" v-model="editingObj.mealType"></ModelSelect>
-                                <v-number-input control-variant="split" :min="0" v-model="editingObj.servings" :label="$t('Servings')"></v-number-input>
+                                <v-number-input control-variant="split" :min="0" v-model="editingObj.servings" :label="$t('Servings')" :precision="2"></v-number-input>
                                 <ModelSelect model="User" :allow-create="false" v-model="editingObj.shared" item-label="displayName" mode="tags"></ModelSelect>
                             </v-col>
                             <v-col cols="12" md="6">

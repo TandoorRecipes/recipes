@@ -18,7 +18,7 @@
                 </v-row>
                 <v-row>
                     <v-col md="6">
-                        <v-number-input :label="$t('Amount')" :step="10" v-model="editingObj.baseAmount" control-variant="stacked"></v-number-input>
+                        <v-number-input :label="$t('Amount')" :step="10" v-model="editingObj.baseAmount" control-variant="stacked" :precision="3"></v-number-input>
                     </v-col>
                     <v-col md="6">
                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
@@ -32,7 +32,7 @@
                 </v-row>
                 <v-row>
                     <v-col md="6">
-                        <v-number-input :label="$t('Amount')" :step="10" v-model="editingObj.convertedAmount" control-variant="stacked"></v-number-input>
+                        <v-number-input :label="$t('Amount')" :step="10" v-model="editingObj.convertedAmount" control-variant="stacked" :precision="3"></v-number-input>
                     </v-col>
                     <v-col md="6">
                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->

@@ -11,7 +11,7 @@
         :object-name="editingObjName()">
         <v-card-text>
             <v-form :disabled="loading">
-                <v-number-input v-model="editingObj.amount" control-variant="split">
+                <v-number-input v-model="editingObj.amount" control-variant="split" :precision="2">
                     <template #prepend>
                         <v-btn icon="" @click="editingObj.amount = editingObj.amount / 2">
                             <v-icon icon="fa-solid fa-divide"></v-icon>

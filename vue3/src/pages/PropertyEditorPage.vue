@@ -81,7 +81,7 @@
                         </td>
                         <td>
                             <v-number-input v-model="ingredient.food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(ingredient)"
-                                          :loading="ingredient.loading" style="min-width: 100px" control-variant="hidden">
+                                          :loading="ingredient.loading" style="min-width: 100px" control-variant="hidden" :precision="2">
 
                             </v-number-input>
                         </td>
@@ -90,7 +90,7 @@
                                           :loading="ingredient.loading"></model-select>
                         </td>
                         <td v-for="p in ingredient.food.properties" v-bind:key="`${ingredient.food.id}_${p.propertyType.id}`">
-                            <v-number-input v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)"
+                            <v-number-input v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)" :precision="2"
                                           :loading="ingredient.loading" @click:clear="deleteFoodProperty(p, ingredient)" style="min-width: 120px" control-variant="hidden" clearable>
 
                             </v-number-input>

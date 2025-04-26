@@ -34,7 +34,7 @@
                 <v-tabs-window-item value="properties">
                     <v-alert icon="$help">{{ $t('PropertiesFoodHelp') }}</v-alert>
                     <v-form :disabled="loading" class="mt-5">
-                        <v-number-input :label="$t('Properties_Food_Amount')" v-model="editingObj.propertiesFoodAmount"></v-number-input>
+                        <v-number-input :label="$t('Properties_Food_Amount')" v-model="editingObj.propertiesFoodAmount" :precision="2"></v-number-input>
                         <model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></model-select>
 
                         <properties-editor v-model="editingObj.properties" :amount-for="propertiesAmountFor"></properties-editor>
@@ -63,7 +63,7 @@
                             <v-card-text class="d-none d-md-block">
                                 <v-row>
                                     <v-col md="6">
-                                        <v-number-input :label="$t('Amount')" :step="10" v-model="uc.baseAmount" control-variant="stacked"></v-number-input>
+                                        <v-number-input :label="$t('Amount')" :step="10" v-model="uc.baseAmount" control-variant="stacked" :precision="3"></v-number-input>
                                     </v-col>
                                     <v-col md="6">
                                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
@@ -72,7 +72,7 @@
                                 </v-row>
                                 <v-row>
                                     <v-col md="6">
-                                        <v-number-input :label="$t('Amount')" :step="10" v-model="uc.convertedAmount" control-variant="stacked"></v-number-input>
+                                        <v-number-input :label="$t('Amount')" :step="10" v-model="uc.convertedAmount" control-variant="stacked" :precision="3"></v-number-input>
                                     </v-col>
                                     <v-col md="6">
                                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->

@@ -6,7 +6,7 @@
 
     <v-row class="d-none d-md-flex mt-2" v-for="p in properties" dense>
         <v-col cols="0" md="5">
-            <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked">
+            <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked" :precision="2">
                 <template #append-inner v-if="p.propertyType">
                     <v-chip class="me-4">{{ p.propertyType.unit }} / {{ props.amountFor }}
                     </v-chip>

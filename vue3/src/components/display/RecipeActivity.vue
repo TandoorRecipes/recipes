@@ -41,7 +41,7 @@
                 </v-col>
                 <v-col cols="12" md="4">
 
-                    <v-number-input :label="$t('Servings')" v-model="newCookLog.servings"></v-number-input>
+                    <v-number-input :label="$t('Servings')" v-model="newCookLog.servings" :precision="2"></v-number-input>
                 </v-col>
                 <v-col cols="12" md="4">
                     <v-date-input :label="$t('Date')" v-model="newCookLog.createdAt"></v-date-input>
