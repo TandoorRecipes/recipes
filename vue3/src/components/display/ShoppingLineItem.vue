@@ -1,5 +1,5 @@
 <template>
-    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()" @click="dialog = true;"
+    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()"
                  v-if="isShoppingListFoodVisible(props.shoppingListFood, useUserPreferenceStore().deviceSettings)"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
@@ -7,14 +7,14 @@
         <!--        </div>-->
 
 
-        <div class="flex-grow-1 p-2">
+        <div class="flex-grow-1 p-2" @click="dialog = true;">
             <div class="d-flex">
                 <div class="d-flex flex-column pr-2">
                     <span v-for="a in amounts" v-bind:key="a.key">
                         <span>
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
                             <i class="fas fa-clock-rotate-left text-info fa-fw" v-if="a.delayed"></i> <b>
-                            <span :class="{'text-disabled': a.checked || a.delayed}">
+                            <span :class="{'text-disabled': a.checked || a.delayed}" class="text-no-wrap">
                                 {{ $n(a.amount) }}
                                 <span v-if="a.unit">{{ a.unit.name }}</span>
                             </span>
@@ -129,7 +129,7 @@ const amounts = computed((): ShoppingLineAmount[] => {
 
                 let uaMerged = false
                 unitAmounts.forEach(ua => {
-                    if (((ua.unit == null && e.unit == null) || ua.unit.id! == unit) && ua.checked == e.checked && ua.delayed == isDelayed(e)) {
+                    if (((ua.unit == null && e.unit == null) || (ua.unit != null && ua.unit.id! == unit)) && ua.checked == e.checked && ua.delayed == isDelayed(e)) {
                         ua.amount += e.amount
                         uaMerged = true
                     }
@@ -182,7 +182,7 @@ const infoRow = computed(() => {
                 }
 
                 if (e.listRecipeData.mealplan != null) {
-                    let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
+                    let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + (e.listRecipeData.mealPlanData.mealType.name.length > 8 ? '..' : '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
                     if (meal_pans.indexOf(meal_plan_entry) === -1) {
                         meal_pans.push(meal_plan_entry)
                     }
