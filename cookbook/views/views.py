@@ -32,6 +32,7 @@ from cookbook.models import Comment, CookLog, InviteLink, SearchFields, SearchPr
 from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
+from cookbook.views.api import get_recipe_provider
 from recipes.settings import PLUGINS
 
 
@@ -194,6 +195,12 @@ def books(request):
 @group_required('user')
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
+
+
+@group_required('guest')
+def recipe_pdf_viewer(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+    return render(request, 'pdf_viewer.html', {'recipe_id': pk})
 
 
 @group_required('guest')

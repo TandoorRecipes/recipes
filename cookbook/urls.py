@@ -100,12 +100,13 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
+    path('view-recipe-pdf/<int:pk>/', views.recipe_pdf_viewer, name='view_recipe_pdf'),
 
     # Tandoor v1 redirects
     path('view/recipe/<int:pk>', views.redirect_recipe_view, name='redirect_recipe_view'),
     path('view/recipe/<int:pk>/<slug:share>', views.redirect_recipe_share_view, name='redirect_recipe_share_view'),
 
-    # TODO move to generic "new" view
+
     path('data/sync', data.sync, name='data_sync'),
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
     path('data/batch/import', data.batch_import, name='data_batch_import'),
