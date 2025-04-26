@@ -19,6 +19,7 @@ export type DeviceSettings = {
 
     search_itemsPerPage: number,
     search_viewMode: 'table'|'grid',
+    search_visibleFilters: String[],
 
     start_showMealPlan: boolean,
 

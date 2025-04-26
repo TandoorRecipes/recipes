@@ -173,10 +173,13 @@ const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettin
  */
 const availableFilters = computed(() => {
     let f: Array<{ value: string, title: string }> = []
+    useUserPreferenceStore().deviceSettings.search_visibleFilters = []
     Object.entries(filters.value).forEach((entry) => {
         let [key, filter] = entry
         if (!filter.enabled) {
             f.push({value: filter.id, title: filter.label})
+        } else {
+            useUserPreferenceStore().deviceSettings.search_visibleFilters.push(filter.id)
         }
     })
     return f
@@ -218,6 +221,11 @@ watch(() => query.value, () => {
  * perform initial search on mounted
  */
 onMounted(() => {
+    // load filters that were previously enabled
+    useUserPreferenceStore().deviceSettings.search_visibleFilters.forEach(f => {
+        filters.value[f].enabled = true
+    })
+
     enableFiltersWithValues()
     searchRecipes({page: page.value})
 })
@@ -260,7 +268,7 @@ function reset() {
     page.value = 1
     query.value = ''
     Object.values(filters.value).forEach((filter) => {
-        filter.enabled = false
+        //filter.enabled = false
         filter.modelValue = filter.default
     })
     selectedCustomFilter.value = null
