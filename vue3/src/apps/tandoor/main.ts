@@ -4,9 +4,9 @@ import {createPinia} from 'pinia'
 // @ts-ignore
 import App from './Tandoor.vue'
 
+import vuetify from "@/vuetify";
 import mavonEditor from 'mavon-editor'
 import 'vite/modulepreload-polyfill';
-import vuetify from "@/vuetify";
 import { createRulesPlugin } from 'vuetify/labs/rules'
 
 import {setupI18n} from "@/i18n";
