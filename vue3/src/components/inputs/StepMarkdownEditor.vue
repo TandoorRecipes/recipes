@@ -32,10 +32,8 @@
 <script setup lang="ts">
 
 import {Ingredient, Step} from "@/openapi";
-import 'mavon-editor/dist/css/index.css'
 import IngredientString from "@/components/display/IngredientString.vue";
 import {computed, nextTick, useTemplateRef} from "vue";
-import editor from "mavon-editor";
 
 const step = defineModel<Step>({required: true})
 const markdownEditor = useTemplateRef('markdownEditor')
