@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-04-26 11:58+0000\n"
+"PO-Revision-Date: 2025-04-29 02:39+0000\n"
 "Last-Translator: Nico G <aprops@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
@@ -252,7 +252,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "No heu iniciat la sessió, no podeu veure aquesta pàgina."
+msgstr "No heu iniciat la sessió, no podeu veure aquesta pàgina!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:174
@@ -389,7 +389,7 @@ msgstr "Temps de preparació"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "Receptari"
+msgstr "Llibre de receptes"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
@@ -1103,7 +1103,7 @@ msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:75
 msgid "Sync"
-msgstr "Sync"
+msgstr "Sincronitzar"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
@@ -1319,14 +1319,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Markdown és un llenguatge de marcatge lleuger que es pot utilitzar per donar "
-"format a text pla de forma senzilla.\n"
+"        Markdown és un llenguatge de marcatge lleuger que es pot utilitzar "
+"per donar format a text pla de forma senzilla.\n"
 "Aquest lloc utilitza la biblioteca <a href=\"https://python-markdown.github."
-"io/\" target=\"_blank\"> Python Markown</a> per convertir el teu text en un "
-"bonic format HTML. La documentació completa de Markdown es pot trobar <a "
-"href=\"https://daringfireball.net/projects/markdown/syntax\" target=\"_blank"
-"\">aquí</a>.\n"
-"Pots trobar informació incompleta, encara que suficient més avall."
+"io/\" target=\"_blank\"> Python Markown</a>  \n"
+"per convertir el teu text en un bonic format HTML. La documentació completa "
+"de Markdown es pot trobar\n"
+" <a href=\"https://daringfireball.net/projects/markdown/syntax\" target="
+"\"_blank\">aquí</a>.\n"
+"Pots trobar informació incompleta, encara que suficient més avall.\n"
+"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
@@ -1432,9 +1434,8 @@ msgid ""
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
 "Les taules de rebaixes són difícils de crear a mà. Es recomana utilitzar un "
-"editor de taules com\n"
-"<a href=\"https://www.tablesgenerator.com/markdown_tables\" rel=\"noreferrer "
-"noopener\" target=\"_blank\">aquest.</a>"
+"editor de taules com <a href=\"https://www.tablesgenerator.com/"
+"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">aquest.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1519,7 +1520,7 @@ msgstr "Comentari"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr "Receptari"
+msgstr "Pàgina d'inici"
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
@@ -1906,7 +1907,7 @@ msgstr "Afegir Compte de tercers"
 #: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
 msgid "Signup"
-msgstr "Registre"
+msgstr "Registrar"
 
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
@@ -2090,11 +2091,12 @@ msgid ""
 "        "
 msgstr ""
 "No es recomana publicar fitxers multimèdia directament mitjançant "
-"<b>gunicorn / python.</b>\n"
+"<b>gunicorn / python</b>!\n"
 "Seguiu els passos descrits\n"
 "<a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">aquí</"
 "a> per actualitzar\n"
-"la vostra instal·lació."
+"la vostra instal·lació.\n"
+"        "
 
 #: .\cookbook\templates\system.html:55 .\cookbook\templates\system.html:70
 #: .\cookbook\templates\system.html:83 .\cookbook\templates\system.html:94
@@ -2119,12 +2121,13 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"No teniu un <code>SECRET_KEY </code>configurat al fitxer<code> .env.</code> "
-"Django per defecte ha estat\n"
+"            No teniu un <code>SECRET_KEY </code>configurat al fitxer<code> ."
+"env.</code> Django per defecte ha estat\n"
 "clau estàndard\n"
 "subministrat amb la instal·lació que és coneguda i insegura públicament. "
 "Estableix-ho\n"
-"<code>SECRET_KEY</code> al fitxer de configuració<code> .env.</code>"
+"<code>SECRET_KEY</code> al fitxer de configuració<code> .env.</code>\n"
+"        "
 
 #: .\cookbook\templates\system.html:73
 msgid "Debug Mode"
@@ -2141,10 +2144,11 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Aquesta aplicació encara s’executa en mode de depuració. És probable que "
-"això no sigui necessari. Activa el mode de depuració\n"
+"            Aquesta aplicació encara s’executa en mode de depuració. És "
+"probable que això no sigui necessari. Activa el mode de depuració\n"
 "configuració\n"
-"<code>DEBUG = 0</code> al fitxer de configuració<code> .env.</code>"
+"<code>DEBUG = 0</code> al fitxer de configuració<code> .env.</code>\n"
+"        "
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
@@ -2388,6 +2392,8 @@ msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr ""
+"Tingues en compte que una recepta hauria de tenir o ser superior. [0 - 5] Un "
+"valor negatiu filtra una puntuació inferior a."
 
 #: .\cookbook\views\api.py:922
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
@@ -2398,10 +2404,14 @@ msgstr ""
 #: .\cookbook\views\api.py:923
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
+"Identificadors de llibre (IDs), repeteix per a diversos. Retorna receptes "
+"amb qualsevol dels llibres"
 
 #: .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
+"Identificador (IDs) de llibres, repetiu-ho per a diversos. Torna receptes "
+"amb tots els llibres."
 
 #: .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
@@ -2501,13 +2511,15 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "Filtrar les entrades amb la recepta especificada"
 
 #: .\cookbook\views\api.py:1292
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
+"Retorna l'entrada de la llista de la compra amb una clau primària de "
+"l'identificador. Es permeten múltiples valors."
 
 #: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
@@ -2515,7 +2527,7 @@ msgstr "Res a fer."
 
 #: .\cookbook\views\api.py:1445
 msgid "Invalid Url"
-msgstr ""
+msgstr "Url Invàlida"
 
 #: .\cookbook\views\api.py:1449
 msgid "Connection Refused."
@@ -2523,7 +2535,7 @@ msgstr "Connexió Refusada."
 
 #: .\cookbook\views\api.py:1451
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Esquema URL erroni."
 
 #: .\cookbook\views\api.py:1474
 msgid "No usable data could be found."
@@ -2531,7 +2543,7 @@ msgstr "No s'han trobat dades utilitzables."
 
 #: .\cookbook\views\api.py:1549
 msgid "File is above space limit"
-msgstr ""
+msgstr "El fitxer supera el límit d'emmagatzematge"
 
 #: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
@@ -2546,7 +2558,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1671
 msgid "Sync successful!"
-msgstr "Sincronització correcte"
+msgstr "Sincronització correcta!"
 
 #: .\cookbook\views\api.py:1674
 msgid "Error synchronizing with Storage"
@@ -2577,38 +2589,32 @@ msgstr ""
 "almenys un monitor."
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "Backend d'emmagatzematge"
+msgstr "Back-end de configuració de connectors"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
 msgstr "Enllaç de invitació"
 
 #: .\cookbook\views\delete.py:168
-#, fuzzy
-#| msgid "Members"
 msgid "Space Membership"
-msgstr "Membres"
+msgstr "Membres de l'espai"
 
 #: .\cookbook\views\edit.py:84
 msgid "You cannot edit this storage!"
-msgstr "No podeu editar aquest emmagatzematge."
+msgstr "No podeu editar aquest emmagatzematge!"
 
 #: .\cookbook\views\edit.py:108
 msgid "Storage saved!"
-msgstr "Emmagatzematge desat."
+msgstr "Emmagatzematge desat!"
 
 #: .\cookbook\views\edit.py:110
 msgid "There was an error updating this storage backend!"
-msgstr "S'ha produït un error en actualitzar aquest backend d'emmagatzematge."
+msgstr "S'ha produït un error en actualitzar aquest backend d'emmagatzematge!"
 
 #: .\cookbook\views\edit.py:134
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Config saved!"
-msgstr "Canvis desats!"
+msgstr "Configuració desada!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
@@ -2643,10 +2649,8 @@ msgid "Shopping List"
 msgstr "Llista de la Compra"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "Backend d'emmagatzematge"
+msgstr "Configuració del backend per a connectors"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2661,10 +2665,8 @@ msgid "Shopping Categories"
 msgstr "Categories de Compres"
 
 #: .\cookbook\views\lists.py:202
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "Filtre"
+msgstr "Filtres personalitzats"
 
 #: .\cookbook\views\lists.py:239
 msgid "Steps"
@@ -2675,10 +2677,8 @@ msgid "Property Types"
 msgstr "Tipus de propietat"
 
 #: .\cookbook\views\new.py:86
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not enabled by the server admin!"
-msgstr "Funció no està disponible a la versió de demostració!"
+msgstr "Aquesta funció no està activada per l'administrador del servidor!"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2694,11 +2694,9 @@ msgid "This feature is not available in the demo version!"
 msgstr "Funció no està disponible a la versió de demostració!"
 
 #: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Has arribat al nombre màxim de receptes per al vostre espai."
+msgstr "Has assolit la quantitat màxima d'espais que pots tenir."
 
 #: .\cookbook\views\views.py:89
 msgid ""
@@ -2748,36 +2746,24 @@ msgid "Unable to determine PostgreSQL version."
 msgstr "No es pot determinar la versió de PostgreSQL."
 
 #: .\cookbook\views\views.py:317
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"Aquesta aplicació no s’executa amb un backend de base de dades Postgres. "
-"Això està bé, però no es recomana com alguns\n"
-"les funcions només funcionen amb bases de dades postgres."
+"Aquesta aplicació no s'executa amb un backend de base de dades Postgres. "
+"Això està bé, però no es recomanable, ja que algunes funcions només "
+"funcionen amb bases de dades Postgres."
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
-"La pàgina de configuració només es pot utilitzar per crear el primer usuari. "
-"Si heu oblidat les vostres credencials de superusuari, consulteu la "
-"documentació de django sobre com restablir les contrasenyes."
+"La pàgina de configuració només es pot utilitzar per crear el primer "
+"usuari!                     Si heu oblidat les vostres credencials de "
+"superusuari, consulteu la documentació de django sobre com restablir les "
+"contrasenyes."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
@@ -2789,7 +2775,7 @@ msgstr "L'usuari s'ha creat, si us plau inicieu la sessió!"
 
 #: .\cookbook\views\views.py:393
 msgid "Malformed Invite Link supplied!"
-msgstr "S'ha proporcionat un enllaç d'invitació mal format."
+msgstr "S'ha proporcionat un enllaç d'invitació amb un format incorrecte!"
 
 #: .\cookbook\views\views.py:410
 msgid "Successfully joined space."
@@ -2797,7 +2783,7 @@ msgstr "Unit correctament a l'espai."
 
 #: .\cookbook\views\views.py:416
 msgid "Invite Link not valid or already used!"
-msgstr "L'enllaç d'invitació no és vàlid o ja s'ha utilitzat."
+msgstr "L'enllaç d'invitació no és vàlid o ja s'ha utilitzat!"
 
 #: .\cookbook\views\views.py:432
 msgid ""
@@ -2832,10 +2818,8 @@ msgid "View your cookbooks"
 msgstr "Veure els meus llibres de receptes"
 
 #: .\cookbook\views\views.py:460
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "View your shopping lists"
-msgstr "Nova Llista de Compra"
+msgstr "Veure la teva llista de la compra"
 
 #~ msgid "Default unit"
 #~ msgstr "Unitat per defecte"
