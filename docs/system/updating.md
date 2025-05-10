@@ -53,7 +53,7 @@ docker compose down
 4. Rename the tandoor volume
 
 ``` bash
-sudo mv ./postgresql ./postgresql.old
+mv ./postgresql ./postgresql.old
 ```
 
 5. Update image tag on postgres container in the docker-compose.yaml
@@ -77,7 +77,7 @@ docker compose pull && docker compose up -d db_recipes
 7. Import the database export
 
 ``` bash
-cat ~/tandoor.sql | sudo docker exec -i {{database_container}} psql postgres -U {{djangouser}}
+cat ~/tandoor.sql | docker exec -i {{database_container}} psql postgres -U {{djangouser}}
 ```
 
 8. Install postgres extensions
