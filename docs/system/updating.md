@@ -7,9 +7,9 @@ While intermediate updates can be skipped when updating please make sure to
 For all setups using Docker the updating process look something like this
 
 0. Before updating it is recommended to **create a [backup](/system/backup)!**
-1. Stop the container using `docker-compose down`
-2. Pull the latest image using `docker-compose pull`
-3. Start the container again using `docker-compose up -d`
+1. Stop the container using `docker compose down`
+2. Pull the latest image using `docker compose pull`
+3. Start the container again using `docker compose up -d`
 
 ## Manual
 
@@ -45,49 +45,50 @@ docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | awk
 docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
 ```
 
-3. Stop the postgres container
+3. Stop the tandoor application
 ``` bash
-docker stop {{database_container}} {{tandoor_container}}
+docker compose down
 ```
 
 4. Rename the tandoor volume
 
 ``` bash
-sudo mv ~/.docker/compose/postgres ~/.docker/compose/postgres.old
+sudo mv ./postgresql ./postgresql.old
 ```
 
-5. Update image tag on postgres container.
+5. Update image tag on postgres container in the docker-compose.yaml
 
- ``` yaml
- db_recipes:
-   restart: always
-   image: postgres:16-alpine
-   volumes:
-     - ./postgresql:/var/lib/postgresql/data
-   env_file:
-     - ./.env
- ```
+``` yaml
+db_recipes:
+  restart: always
+  image: postgres:16-alpine
+  volumes:
+    - ./postgresql:/var/lib/postgresql/data
+  env_file:
+    - ./.env
+```
 
-6. Pull and rebuild container.
+6. Pull and rebuild database container
 
-  ``` bash
-  docker-compose pull && docker-compose up -d
-  ```
+``` bash
+docker compose pull && docker compose up -d db_recipes
+```
 
 7. Import the database export
 
-  ``` bash
-  cat ~/tandoor.sql | sudo docker exec -i {{database_container}} psql postgres -U {{djangouser}}
-  ```
-  8. Install postgres extensions
-  ``` bash
-  docker exec -it {{database_container}} psql postgres -U {{djangouser}}
-  ```
+``` bash
+cat ~/tandoor.sql | sudo docker exec -i {{database_container}} psql postgres -U {{djangouser}}
+```
+
+8. Install postgres extensions
+``` bash
+docker exec -it {{database_container}} psql postgres -U {{djangouser}}
+```
   then
-  ``` psql
-  CREATE EXTENSION IF NOT EXISTS unaccent;
-  CREATE EXTENSION IF NOT EXISTS pg_trgm;
-  ```
+``` psql
+CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+```
 
 If anything fails, go back to the old postgres version and data directory and try again.
 
