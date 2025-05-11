@@ -56,6 +56,28 @@
 
                         </v-expansion-panel-text>
                     </v-expansion-panel>
+
+                    <v-expansion-panel>
+                        <v-expansion-panel-title>
+                            <i :class="TUnit.icon" class="fa-fw me-2"></i> {{ $t('Units') }} & {{ $t('UnitConversion') }}
+                        </v-expansion-panel-title>
+                        <v-expansion-panel-text>
+                            <p>Units allow you to measure how much of something you need in a recipe or on a shopping list. They are
+                            also essential for the calculation of Properties. </p>
+
+                            <p class="mt-1">Setting a base unit allows you to name your Unit however you want (e.g. grams, g, G, gram)
+                            while allowing Tandoor to automatically convert between the units in the same system (weight/volume).
+                            Additionally you can use custom unit conversion to convert between volume and weight trough the
+                            specific density of a food (e.g. 1 cup of flour = 120 g). These conversions are used to calculate
+                            the Properties for a Recipe and might allow cosmetic display changes later.</p>
+
+                            <v-divider class="mt-2 mb-2"></v-divider>
+                            <v-btn color="info" variant="tonal" prepend-icon="$create" class="me-2" :to="{ name: 'ModelEditPage', params: {model: 'unit'} }">{{ $t('Unit') }}
+                            </v-btn>
+                            <v-btn color="info" variant="tonal" prepend-icon="$create" class="me-2" :to="{ name: 'ModelEditPage', params: {model: 'unitconversion'} }">{{ $t('UnitConversion') }}</v-btn>
+
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
                 </v-expansion-panels>
             </v-col>
         </v-row>
@@ -66,7 +88,7 @@
 
 <script setup lang="ts">
 
-import {TKeyword, TRecipe, TUserSpace} from "@/types/Models";
+import {TKeyword, TRecipe, TUnit, TUserSpace} from "@/types/Models";
 import {useUserPreferenceStore} from "../stores/UserPreferenceStore";
 </script>
 
