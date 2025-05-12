@@ -36,12 +36,13 @@
                 <td style="width: 1%; text-wrap: nowrap" class="pa-0" v-if="showCheckbox">
                     <v-checkbox-btn v-model="i.checked" color="success" v-if="!i.isHeader"></v-checkbox-btn>
                 </td>
-                <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)"></td>
+                <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)" v-if="!i.noAmount"></td>
+                <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-if="i.noAmount"></td>
                 <td style="width: 1%; text-wrap: nowrap" class="pr-1">
-                    <template v-if="i.unit"> {{ i.unit.name }}</template>
+                    <template v-if="i.unit"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
                 </td>
                 <td>
-                    <template v-if="i.food"> {{ i.food.name }}</template>
+                    <template v-if="i.food"> {{ ingredientToFoodString(i, ingredientFactor) }}</template>
                 </td>
 
                 <td style="width: 1%; text-wrap: nowrap">
@@ -61,6 +62,7 @@ import {Ingredient} from "@/openapi";
 import {computed} from "vue";
 import {calculateFoodAmount} from "../../utils/number_utils";
 import {useUserPreferenceStore} from "../../stores/UserPreferenceStore";
+import {ingredientToFoodString, ingredientToUnitString} from "@/utils/model_utils.ts";
 
 const ingredients = defineModel<Ingredient[]>({required: true})
 

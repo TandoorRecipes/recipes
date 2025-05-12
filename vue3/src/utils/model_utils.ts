@@ -15,10 +15,10 @@ export function ingredientToString(ingredient: Ingredient) {
         content.push(ingredient.amount)
     }
     if (ingredient.unit) {
-        content.push(ingredient.unit.name)
+        content.push(ingredientToUnitString(ingredient, 1))
     }
     if (ingredient.food) {
-        content.push(ingredient.food.name)
+        content.push(ingredientToFoodString(ingredient, 1))
     }
     if (ingredient.note) {
         content.push(`(${ingredient.note})`)
@@ -26,6 +26,49 @@ export function ingredientToString(ingredient: Ingredient) {
     return content.join(' ')
 }
 
+/**
+ * returns the food string from an ingredient, pluralizing if necessary
+ * @param ingredient
+ * @param ingredientFactor
+ * @return food string or empty string if no food is available for the given ingredient
+ */
+export function ingredientToFoodString(ingredient: Ingredient, ingredientFactor: number) {
+    if (ingredient.food) {
+        if (ingredient.food.pluralName == '' || ingredient.food.pluralName == undefined || ingredient.noAmount) {
+            return ingredient.food.name
+        } else {
+            if (ingredient.alwaysUsePluralFood || ingredient.amount * ingredientFactor > 1) {
+                return ingredient.food.pluralName
+            } else {
+                return ingredient.food.name
+            }
+        }
+    } else {
+        return ''
+    }
+}
+
+/**
+ * returns the unit name from an ingredient, pluralizing if necessary
+ * @param ingredient
+ * @param ingredientFactor
+ * @return unit name or empty string if no food is available for the given ingredient
+ */
+export function ingredientToUnitString(ingredient: Ingredient, ingredientFactor: number) {
+    if (ingredient.unit) {
+        if (ingredient.unit.pluralName == '' || ingredient.unit.pluralName == undefined || ingredient.noAmount) {
+            return ingredient.unit.name
+        } else {
+            if (ingredient.alwaysUsePluralUnit || ingredient.amount * ingredientFactor > 1) {
+                return ingredient.unit.pluralName
+            } else {
+                return ingredient.unit.name
+            }
+        }
+    } else {
+        return ''
+    }
+}
 
 /**
  * returns a list of all ingredients used by the given recipe

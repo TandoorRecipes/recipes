@@ -14,12 +14,12 @@
                                         <v-checkbox-btn v-model="e.checked" color="success"></v-checkbox-btn>
                                     </td>
                                     <td style="width: 1%; text-wrap: nowrap" class="pr-1"
-                                        v-html="calculateFoodAmount(e.amount, 1, useUserPreferenceStore().userSettings.useFractions)"></td>
+                                        v-html="calculateFoodAmount(e.amount, ingredientFactor, useUserPreferenceStore().userSettings.useFractions)"></td>
                                     <td style="width: 1%; text-wrap: nowrap" class="pr-1">
-                                        <template v-if="e.unit"> {{ e.unit.name }}</template>
+                                        <template v-if="e.unit"> {{ ingredientToUnitString(e.ingredient, ingredientFactor) }}</template>
                                     </td>
                                     <td>
-                                        <template v-if="e.food"> {{ e.food.name }}</template>
+                                        <template v-if="e.food"> {{ ingredientToFoodString(e.ingredient, ingredientFactor) }}</template>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -38,13 +38,14 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref} from "vue";
+import {computed, onMounted, PropType, ref} from "vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview, type ShoppingListEntryBulkCreate, ShoppingListRecipe} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {ShoppingDialogRecipe, ShoppingDialogRecipeEntry} from "@/types/Shopping";
 import {calculateFoodAmount} from "@/utils/number_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {ingredientToUnitString, ingredientToFoodString} from "@/utils/model_utils.ts";
 
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true},
@@ -59,6 +60,10 @@ const recipe = ref({} as Recipe)
 const relatedRecipes = ref([] as Recipe[])
 
 const dialogRecipes = ref([] as ShoppingDialogRecipe[])
+
+const ingredientFactor = computed(() => {
+    return servings.value / ((recipe.value.servings != undefined) ? recipe.value.servings : 1)
+})
 
 onMounted(() => {
     loadRecipeData()
