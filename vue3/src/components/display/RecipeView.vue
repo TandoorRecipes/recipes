@@ -18,10 +18,6 @@
                     :recipe="recipe"
                     v-if="recipe.internal"
                 >
-                    <template #overlay>
-                        <v-chip class="ms-2" color="primary" variant="flat" size="x-small">by {{ recipe.createdBy.displayName }}</v-chip>
-                        <keywords-component variant="flat" class="ms-1 mb-2" :keywords="recipe.keywords"></keywords-component>
-                    </template>
                 </recipe-image>
 
                 <v-card>
@@ -31,6 +27,7 @@
                     </span>
                         <recipe-context-menu :recipe="recipe"></recipe-context-menu>
                     </v-sheet>
+                    <keywords-component variant="flat" class="ms-1 mb-2" :keywords="recipe.keywords"></keywords-component>
                     <v-sheet class="ps-2 text-disabled">
                         {{ recipe.description }}
                     </v-sheet>
