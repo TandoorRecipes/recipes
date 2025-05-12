@@ -580,8 +580,10 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
 function loadRecipeFromAiImport() {
     let request = null
     if (image.value != null && aiMode.value == 'file') {
+        console.log('file import')
         request = doAiImport(image.value)
     } else if (sourceImportText.value != '' && aiMode.value == 'text') {
+        console.log('text import')
         request = doAiImport(null, sourceImportText.value)
     }
 

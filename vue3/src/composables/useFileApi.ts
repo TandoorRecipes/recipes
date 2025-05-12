@@ -84,7 +84,11 @@ export function useFileApi() {
     function doAiImport(file: File|null, text: string = '') {
         let formData = new FormData()
 
-        formData.append('file', '')
+        if(file != null){
+            formData.append('file', file)
+        } else {
+            formData.append('file', '')
+        }
         formData.append('text', text)
 
         return fetch(getDjangoUrl(`api/ai-import/`), {
