@@ -188,6 +188,7 @@ import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerCo
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted, ref} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
+import '@/assets/tandoor_light.css'
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
@@ -199,6 +200,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 
 </style>

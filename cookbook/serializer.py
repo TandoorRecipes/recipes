@@ -658,7 +658,7 @@ class RecipeSimpleSerializer(WritableNestedModelSerializer):
 
     def update(self, instance, validated_data):
         # don't allow writing to Recipe via this API
-        return Recipe.objects.get(**validated_data)
+        return instance
 
     class Meta:
         model = Recipe
@@ -1702,3 +1702,56 @@ class RecipeFromSourceResponseSerializer(serializers.Serializer):
 class AiImportSerializer(serializers.Serializer):
     file = serializers.FileField(allow_null=True)
     text = serializers.CharField(allow_null=True, allow_blank=True)
+
+
+class ImportOpenDataSerializer(serializers.Serializer):
+    selected_version = serializers.CharField()
+    selected_datatypes = serializers.ListField(child=serializers.CharField())
+    update_existing = serializers.BooleanField(default=True)
+    use_metric = serializers.BooleanField(default=True)
+
+
+class ImportOpenDataResponseDetailSerializer(serializers.Serializer):
+    total_created = serializers.IntegerField(default=0)
+    total_updated = serializers.IntegerField(default=0)
+    total_untouched = serializers.IntegerField(default=0)
+    total_errored = serializers.IntegerField(default=0)
+
+class ImportOpenDataResponseSerializer(serializers.Serializer):
+    food = ImportOpenDataResponseDetailSerializer(required=False)
+    unit = ImportOpenDataResponseDetailSerializer(required=False)
+    category = ImportOpenDataResponseDetailSerializer(required=False)
+    property = ImportOpenDataResponseDetailSerializer(required=False)
+    store = ImportOpenDataResponseDetailSerializer(required=False)
+    conversion = ImportOpenDataResponseDetailSerializer(required=False)
+
+class ImportOpenDataVersionMetaDataSerializer(serializers.Serializer):
+    food = serializers.IntegerField()
+    unit = serializers.IntegerField()
+    category = serializers.IntegerField()
+    property = serializers.IntegerField()
+    store = serializers.IntegerField()
+    conversion = serializers.IntegerField()
+
+class ImportOpenDataMetaDataSerializer(serializers.Serializer):
+    versions = serializers.ListField(child=serializers.CharField())
+    datatypes = serializers.ListField(child=serializers.CharField())
+
+    base = ImportOpenDataVersionMetaDataSerializer()
+    cs = ImportOpenDataVersionMetaDataSerializer()
+    da = ImportOpenDataVersionMetaDataSerializer()
+    de = ImportOpenDataVersionMetaDataSerializer()
+    el = ImportOpenDataVersionMetaDataSerializer()
+    en = ImportOpenDataVersionMetaDataSerializer()
+    es = ImportOpenDataVersionMetaDataSerializer()
+    fr = ImportOpenDataVersionMetaDataSerializer()
+    hu = ImportOpenDataVersionMetaDataSerializer()
+    it = ImportOpenDataVersionMetaDataSerializer()
+    nb_NO = ImportOpenDataVersionMetaDataSerializer()
+    nl = ImportOpenDataVersionMetaDataSerializer()
+    pl = ImportOpenDataVersionMetaDataSerializer()
+    pt = ImportOpenDataVersionMetaDataSerializer()
+    pt_BR = ImportOpenDataVersionMetaDataSerializer()
+    sk = ImportOpenDataVersionMetaDataSerializer()
+    sl = ImportOpenDataVersionMetaDataSerializer()
+    zh_Hans = ImportOpenDataVersionMetaDataSerializer()

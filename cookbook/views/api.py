@@ -108,7 +108,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
-                                 AiImportSerializer
+                                 AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -2081,46 +2081,44 @@ def import_files(request):
         return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# TODO implement schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 class ImportOpenData(APIView):
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
+    @extend_schema(responses=ImportOpenDataMetaDataSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['GET'])
     def get(self, request, format=None):
         response = requests.get(
             'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/meta.json')
         metadata = json.loads(response.content)
         return Response(metadata)
 
+    @extend_schema(request=ImportOpenDataSerializer(many=False), responses=ImportOpenDataResponseSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['POST'])
     def post(self, request, *args, **kwargs):
-        # TODO validate data
-        print(request.data)
-        selected_version = request.data['selected_version']
-        selected_datatypes = request.data['selected_datatypes']
-        update_existing = str2bool(request.data['update_existing'])
-        use_metric = str2bool(request.data['use_metric'])
+        serializer = ImportOpenDataSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            response = requests.get(
+                f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{serializer.validated_data["selected_version"]}.json')  # TODO catch 404, timeout, ...
+            data = json.loads(response.content)
 
-        response = requests.get(
-            f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{selected_version}.json')  # TODO catch 404, timeout, ...
-        data = json.loads(response.content)
+            response_obj = {}
 
-        response_obj = {}
+            data_importer = OpenDataImporter(request, data, update_existing=serializer.validated_data["update_existing"], use_metric=serializer.validated_data["use_metric"])
 
-        data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
+            if 'unit' in serializer.validated_data['selected_datatypes']:
+                response_obj['unit'] = data_importer.import_units().to_dict()
+            if 'category' in serializer.validated_data['selected_datatypes']:
+                response_obj['category'] = data_importer.import_category().to_dict()
+            if 'property' in serializer.validated_data['selected_datatypes']:
+                response_obj['property'] = data_importer.import_property().to_dict()
+            if 'store' in serializer.validated_data['selected_datatypes']:
+                response_obj['store'] = data_importer.import_supermarket().to_dict()
+            if 'food' in serializer.validated_data['selected_datatypes']:
+                response_obj['food'] = data_importer.import_food().to_dict()
+            if 'conversion' in serializer.validated_data['selected_datatypes']:
+                response_obj['conversion'] = data_importer.import_conversion().to_dict()
 
-        if selected_datatypes['unit']['selected']:
-            response_obj['unit'] = data_importer.import_units().to_dict()
-        if selected_datatypes['category']['selected']:
-            response_obj['category'] = data_importer.import_category().to_dict()
-        if selected_datatypes['property']['selected']:
-            response_obj['property'] = data_importer.import_property().to_dict()
-        if selected_datatypes['store']['selected']:
-            response_obj['store'] = data_importer.import_supermarket().to_dict()
-        if selected_datatypes['food']['selected']:
-            response_obj['food'] = data_importer.import_food().to_dict()
-        if selected_datatypes['conversion']['selected']:
-            response_obj['conversion'] = data_importer.import_conversion().to_dict()
-
-        return Response(response_obj)
+            return Response(ImportOpenDataResponseSerializer(context={'request': request}).to_representation(response_obj))
 
 
 # TODO implement schema

@@ -65,7 +65,7 @@ import {VDataTableUpdateOptions} from "@/vuetify";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useI18n} from "vue-i18n";
 
@@ -113,12 +113,25 @@ function addRecipeToBook() {
     let api = new ApiApi()
 
     if (Object.keys(selectedRecipe.value).length > 0) {
-        api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
-            recipeBookEntries.value.push(r)
-            selectedRecipe.value = {} as Recipe
-        }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        let duplicateFound = false
+
+        recipeBookEntries.value.forEach(rBE => {
+            if (rBE.recipe == selectedRecipe.value.id){
+                duplicateFound = true
+            }
         })
+
+        if (!duplicateFound){
+            api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
+                recipeBookEntries.value.push(r)
+                selectedRecipe.value = {} as Recipe
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            })
+        } else {
+            selectedRecipe.value = {} as Recipe
+            useMessageStore().addMessage(MessageType.WARNING, $t('WarningRecipeBookEntryDuplicate'), 5000)
+        }
     }
 }
 

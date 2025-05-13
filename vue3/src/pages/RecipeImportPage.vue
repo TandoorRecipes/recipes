@@ -261,9 +261,9 @@
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
-                                <v-row v-for="(s,i) in importResponse.recipe.steps" :key="i">
+                                <v-row v-for="(s, stepIndex) in importResponse.recipe.steps" :key="i">
                                     <v-col cols="12">
-                                        <v-chip color="primary">#{{ i + 1 }}</v-chip>
+                                        <v-chip color="primary">#{{ stepIndex + 1 }}</v-chip>
                                         <v-btn variant="plain" size="small" icon class="float-right">
                                             <v-icon icon="$menu"></v-icon>
                                             <v-menu activator="parent">
@@ -277,7 +277,7 @@
                                     <v-col cols="12" md="6">
                                         <v-list>
                                             <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" empty-insert-threshold="25">
-                                                <v-list-item v-for="i in s.ingredients" border>
+                                                <v-list-item v-for="(i, ingredientIndex) in s.ingredients" border>
                                                     <v-icon size="small" class="drag-handle cursor-grab mr-2" icon="$dragHandle"></v-icon>
                                                     <v-chip density="compact" label class="mr-1">{{ i.amount }}</v-chip>
                                                     <v-chip density="compact" label class="mr-1" v-if="i.unit">{{ i.unit.name }}</v-chip>
@@ -289,6 +289,7 @@
                                                                 <v-list>
                                                                     <v-list-item prepend-icon="$edit" @click="editingIngredient = i; dialog=true">{{ $t('Edit') }}</v-list-item>
                                                                     <v-list-item prepend-icon="$delete" @click="deleteIngredient(s,i)">{{ $t('Delete') }}</v-list-item>
+                                                                    <v-list-item prepend-icon="fa-solid fa-sort" @click="editingIngredientIndex = ingredientIndex; editingStepIndex = stepIndex; editingStep = s;  dialogIngredientSorter = true">{{ $t('Move') }}</v-list-item>
                                                                 </v-list>
                                                             </v-menu>
                                                         </v-btn>
@@ -349,7 +350,10 @@
                                             <v-number-input :label="$t('Servings')" v-model="importResponse.recipe.servings" :precision="2"></v-number-input>
                                             <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
                                             <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" clearable></v-textarea>
+
+                                            <v-checkbox v-model="editAfterImport" :label="$t('Edit_Recipe')" hide-details></v-checkbox>
                                         </v-col>
+
                                     </v-row>
 
                                 </v-card>
@@ -455,12 +459,15 @@
             </v-col>
         </v-row>
     </v-container>
+
+     <step-ingredient-sorter-dialog :step-index="editingStepIndex" :step="editingStep" :recipe="importResponse.recipe" v-model="dialogIngredientSorter" :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
+
 </template>
 
 <script lang="ts" setup>
 
 import {computed, onMounted, ref} from "vue";
-import {AccessToken, ApiApi, ImportLog, type RecipeFromSource, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep} from "@/openapi";
+import {AccessToken, ApiApi, ImportLog, type RecipeFromSource, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep, Step} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -476,7 +483,7 @@ import ImportLogViewer from "@/components/display/ImportLogViewer.vue";
 import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import bookmarkletJs from '@/assets/bookmarklet_v3?url'
-import BtnCopy from "@/components/buttons/BtnCopy.vue";
+import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
 
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
@@ -500,6 +507,7 @@ const importType = ref<'url' | 'ai' | 'app' | 'bookmarklet' | 'source'>("url")
 const importApp = ref('DEFAULT')
 const stepper = ref("type")
 const dialog = ref(false)
+
 const loading = ref(false)
 
 const importUrl = ref("")
@@ -510,12 +518,19 @@ const appImportDuplicates = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
 const aiMode = ref<'file' | 'text'>('file')
+const editAfterImport = ref(false)
 
 const bookmarkletToken = ref("")
 
 const importResponse = ref({} as RecipeFromSourceResponse)
 const keywordSelect = ref<null | SourceImportKeyword>(null)
 const editingIngredient = ref({} as SourceImportIngredient)
+
+// stuff for ingredient mover, find some better solution at some point (finally merge importer/editor?)
+const editingIngredientIndex = ref(0)
+const dialogIngredientSorter = ref(false)
+const editingStep = ref<Step| SourceImportStep>({} as Step)
+const editingStepIndex = ref(0)
 
 onMounted(() => {
     loadOrCreateBookmarkletToken()
@@ -641,7 +656,11 @@ function createRecipeFromImport() {
 
         api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
             updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
-                router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
+                if(editAfterImport.value){
+                    router.push({name: 'ModelEditPage', params: {id: recipe.id, model: 'recipe'}})
+                } else {
+                    router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
+                }
             })
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)

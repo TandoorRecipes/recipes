@@ -493,6 +493,7 @@
   "WaitingTime": "Waiting Time",
   "WarnPageLeave": "There are unsaved changes that will get lost. Leave page anyway?",
   "Warning": "Warning",
+  "WarningRecipeBookEntryDuplicate": "A recipe can only be added once to a book.",
   "Warning_Delete_Supermarket_Category": "Deleting a supermarket category will also delete all relations to foods. Are you sure?",
   "Website": "Website",
   "Wednesday": "Wednesday",

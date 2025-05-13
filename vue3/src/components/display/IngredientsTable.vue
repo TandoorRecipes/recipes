@@ -42,7 +42,13 @@
                     <template v-if="i.unit"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
                 </td>
                 <td>
-                    <template v-if="i.food"> {{ ingredientToFoodString(i, ingredientFactor) }}</template>
+                    <template v-if="i.food">
+                        <router-link v-if="i.food.recipe" :to="{name: 'RecipeViewPage', params: {id: i.food.recipe.id}}">
+                            {{ ingredientToFoodString(i, ingredientFactor) }}
+                        </router-link>
+                        <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
+                        <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
+                    </template>
                 </td>
 
                 <td style="width: 1%; text-wrap: nowrap">

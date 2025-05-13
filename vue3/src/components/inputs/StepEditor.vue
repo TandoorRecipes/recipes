@@ -171,35 +171,7 @@
         </v-card>
     </v-dialog>
 
-    <v-dialog
-        v-model="dialogIngredientSorter"
-        :max-width="(mobile) ? '100vw': '25vw'"
-        :fullscreen="mobile">
-        <v-card>
-            <v-closable-card-title :title="$t('Move')" v-model="dialogIngredientSorter"
-                                   :sub-title="ingredientToString(step.ingredients[editingIngredientIndex])"></v-closable-card-title>
-            <v-card-text>
-                <v-btn block :disabled="editingIngredientIndex== 0" @click="moveIngredient(editingIngredientIndex, props.stepIndex, 0)">{{ $t('First') }}</v-btn>
-                <v-btn block :disabled="editingIngredientIndex == 0" class="mt-1" @click="moveIngredient(editingIngredientIndex, props.stepIndex, editingIngredientIndex - 1)">{{
-                        $t('Up')
-                    }}
-                </v-btn>
-                <v-btn block :disabled="editingIngredientIndex + 1 == step.ingredients.length" class="mt-1"
-                       @click="moveIngredient(editingIngredientIndex, props.stepIndex, editingIngredientIndex + 1)"> {{ $t('Down') }}
-                </v-btn>
-                <v-btn block :disabled="editingIngredientIndex + 1 == step.ingredients.length" class="mt-1"
-                       @click="moveIngredient(editingIngredientIndex, props.stepIndex, step.ingredients.length - 1)">{{ $t('Last') }}
-                </v-btn>
-                {{ $t('Step') }}
-                <v-btn block v-for="(s,i) in recipe.steps" :disabled="i == props.stepIndex" class="mt-1"
-                       @click="moveIngredient(editingIngredientIndex, i, recipe.steps[i].ingredients.length)">{{ i + 1 }} {{ s.name }}
-                </v-btn>
-            </v-card-text>
-            <v-card-actions>
-
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+   <step-ingredient-sorter-dialog :step-index="props.stepIndex" :step="step" :recipe="recipe" v-model="dialogIngredientSorter" :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
 
     <v-bottom-sheet v-model="dialogIngredientEditor">
         <v-card v-if="editingIngredientIndex >= 0">
@@ -247,6 +219,7 @@ import IngredientString from "@/components/display/IngredientString.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {ingredientToString} from "@/utils/model_utils";
+import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
 
 const emit = defineEmits(['delete'])
 
@@ -288,25 +261,6 @@ onMounted(() => {
         })
     }
 })
-
-/**
- * move the ingredient at the given index of this step to the step and index at that step given in the target
- * @param sourceIngredientIndex index of the ingredient to move
- * @param targetStepIndex index of the step to place ingredient into
- * @param targetIngredientIndex place in the target steps ingredient list to insert into
- */
-function moveIngredient(sourceIngredientIndex: number, targetStepIndex: number, targetIngredientIndex: number,) {
-    let ingredient = step.value.ingredients[sourceIngredientIndex]
-    step.value.ingredients.splice(sourceIngredientIndex, 1)
-    recipe.value.steps[targetStepIndex].ingredients.splice(targetIngredientIndex, 0, ingredient)
-
-    // close dialog if moved to a new step, update index if its in the same step
-    if (targetStepIndex != props.stepIndex) {
-        dialogIngredientSorter.value = false
-    } else {
-        editingIngredientIndex.value = targetIngredientIndex
-    }
-}
 
 /**
  * sort function called by draggable when ingredient table is sorted
