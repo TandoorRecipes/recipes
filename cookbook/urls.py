@@ -106,7 +106,6 @@ urlpatterns = [
     path('view/recipe/<int:pk>', views.redirect_recipe_view, name='redirect_recipe_view'),
     path('view/recipe/<int:pk>/<slug:share>', views.redirect_recipe_share_view, name='redirect_recipe_share_view'),
 
-
     path('data/sync', data.sync, name='data_sync'),
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
     path('data/batch/import', data.batch_import, name='data_batch_import'),
@@ -118,6 +117,7 @@ urlpatterns = [
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/ai-import/', api.AiImportView.as_view(), name='api_ai_import'),
+    path('api/import-open-data/', api.ImportOpenData.as_view(), name='api_import_open_data'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/fdc-search/', api.FdcSearchView.as_view(), name='api_fdc_search'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
@@ -135,7 +135,7 @@ urlpatterns = [
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
-    path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
+
     path('offline/', views.offline, name='view_offline'),
     path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
