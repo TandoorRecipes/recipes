@@ -41,6 +41,9 @@ if [ -f "${SOCIALACCOUNT_PROVIDERS_FILE}" ]; then
     export SOCIALACCOUNT_PROVIDERS=$(cat "$SOCIALACCOUNT_PROVIDERS_FILE")
 fi
 
+if [ -f "${S3_SECRET_ACCESS_KEY_FILE}" ]; then
+    export S3_SECRET_ACCESS_KEY=$(cat "$S3_SECRET_ACCESS_KEY_FILE")
+fi
 
 echo "Waiting for database to be ready..."
 
