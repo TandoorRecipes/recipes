@@ -499,7 +499,7 @@ const bookmarkletContent = computed(() => {
         `localStorage.setItem("importURL", "${getDjangoUrl('/api/bookmarklet-import/')}");` +
         `localStorage.setItem("redirectURL", "${getDjangoUrl('/recipe/import/')}");` +
         `localStorage.setItem("token", "${bookmarkletToken.value}");` +
-        `document.body.appendChild(document.createElement("script")).src="${bookmarkletJs}?r="+Math.floor(Math.random()*999999999)}` +
+        `document.body.appendChild(document.createElement("script")).src="${bookmarkletJs}"}` +
         `})()`
 })
 
