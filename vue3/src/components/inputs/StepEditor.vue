@@ -91,7 +91,10 @@
                                                         $t('Move')
                                                     }}
                                                 </v-list-item>
-
+                                                <v-list-item v-if="ingredient.originalText" prepend-icon="$import">
+                                                    <v-list-item-title>{{$t('Original_Text')}}</v-list-item-title>
+                                                    <v-list-item-subtitle>{{ ingredient.originalText}}</v-list-item-subtitle>
+                                                </v-list-item>
                                             </v-list>
                                         </v-menu>
                                     </v-btn>
@@ -178,6 +181,7 @@
             <v-closable-card-title :title="$t('Ingredient Editor')" v-model="dialogIngredientEditor"></v-closable-card-title>
             <v-card-text>
                 <v-form>
+                    <v-text-field :label="$t('Original_Text')" readonly v-model="step.ingredients[editingIngredientIndex].originalText" v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
                                     :min="0" :precision="2" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"

@@ -735,16 +735,11 @@ export class GenericModel {
     /**
      * gets a label for a specific object instance using the model toStringKeys property
      * @param obj obj to get label for
-     * @param includeId debug function to include the ID as part of the object label
      */
-    getLabel(obj: EditorSupportedTypes, includeId?: boolean) {
+    getLabel(obj: EditorSupportedTypes) {
         let name = ''
 
         if (obj) {
-            if (includeId) {
-                name += '#' + obj.id
-            }
-
             this.model.toStringKeys.forEach(key => {
                 let value = getNestedProperty(obj, key)
                 name += ' ' + ((value != null) ? value : '')

@@ -1,8 +1,8 @@
 <template>
     <v-card :loading="loading">
         <v-closable-card-title
-            :title="$t(modelClass.model.localizationKey) + ((isChanged) ? '*' : '')"
-            :sub-title="objectName"
+            :sub-title="$t(modelClass.model.localizationKey) + ((isChanged) ? ` (${$t('unsaved')})` : '')"
+            :title="objectName"
             :icon="modelClass.model.icon"
             @close="closeDialog()"
             :hide-close="!dialog"

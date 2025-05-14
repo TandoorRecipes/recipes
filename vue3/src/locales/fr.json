@@ -694,6 +694,7 @@
   "total": "total",
   "tree_root": "Racine de l’arbre",
   "tree_select": "Utiliser l'arbre de sélection",
+  "unsaved": "",
   "updatedon": "Mis à jour le",
   "view_recipe": "Voir la recette",
   "warning_duplicate_filter": "Attention : en raison de limitations techniques, l'emploi de multiples filtres (and/or/not) peut mener à des résultats inattendus.",

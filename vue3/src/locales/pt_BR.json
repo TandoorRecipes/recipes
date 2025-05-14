@@ -670,6 +670,7 @@
   "total": "total",
   "tree_root": "Raiz",
   "tree_select": "Usar Árvore de Seleção",
+  "unsaved": "",
   "updatedon": "Atualizado Em",
   "view_recipe": "Visualizar receita",
   "warning_duplicate_filter": "Aviso: Por limitações técnicas, ter múltiplos filtros de uma mesma combinação (e, ou, não) pode ocasionar resultados inesperados.",

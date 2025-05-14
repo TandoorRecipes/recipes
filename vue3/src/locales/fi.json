@@ -371,5 +371,6 @@
   "to_navigate": "",
   "to_select": "",
   "tree_root": "Root of Tree",
+  "unsaved": "",
   "warning_feature_beta": "Tämä ominaisuus on BETA (testaus) vaiheessa. Bugeja ja hajottavia muutoksia saattaa ilmaantua tulevaisuudessa tätä ominaisuutta (mahdollisesti menettää ominaisuuksiin liittyvää tietoa) käytettäessä."
 }

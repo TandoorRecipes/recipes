@@ -153,9 +153,8 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
 
         let name = ''
 
-
         if (editingObj.value.id) {
-            name =  modelClass.value.getLabel(editingObj.value, useUserPreferenceStore().serverSettings.debug)
+            name =  modelClass.value.getLabel(editingObj.value)
         }
 
         if (name == '') {

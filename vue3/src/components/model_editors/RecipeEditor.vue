@@ -15,7 +15,7 @@
                 <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
                 <v-tab value="steps">{{ $t('Steps') }}</v-tab>
                 <v-tab value="properties">{{ $t('Properties') }}</v-tab>
-                <v-tab value="settings">{{ $t('Settings') }}</v-tab>
+                <v-tab value="settings">{{ $t('Miscellaneous') }}</v-tab>
             </v-tabs>
         </v-card-text>
         <v-card-text v-if="!isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
@@ -24,7 +24,7 @@
 
                     <v-form :disabled="loading || fileApiLoading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2"></v-textarea>
+                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2" auto-grow></v-textarea>
 
                         <v-row>
                             <v-col cols="12" md="6">
@@ -99,9 +99,9 @@
                                     v-model="editingObj.showIngredientOverview"></v-checkbox>
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
-                        <v-checkbox :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj._private"></v-checkbox>
+                        <v-checkbox :label="$t('Private_Recipe')" persistent-hint v-model="editingObj._private"></v-checkbox>
                         <model-select mode="tags" model="User" :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj.shared"
-                                      append-to-body></model-select>
+                                      append-to-body v-if="editingObj._private"></model-select>
 
                     </v-form>
                 </v-tabs-window-item>
