@@ -39,7 +39,7 @@
                 <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)" v-if="!i.noAmount"></td>
                 <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-if="i.noAmount"></td>
                 <td style="width: 1%; text-wrap: nowrap" class="pr-1">
-                    <template v-if="i.unit"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
+                    <template v-if="i.unit && !i.noAmount"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
                 </td>
                 <td>
                     <template v-if="i.food">
