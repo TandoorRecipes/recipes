@@ -1,5 +1,5 @@
 {
-    "warning_feature_beta": "Este recurso está atualmente em um estado BETA (teste). Por favor, espere bugs e possíveis mudanças no futuro (possivelmente perdendo dados relacionados a esta funcionalidade) ao usar este recurso.",
+    "warning_feature_beta": "Este recurso está atualmente em fase de teste (BETA). Por favor, espere bugs e possíveis mudanças no futuro ao usar este recurso (possivelmente perdendo dados relacionados a esta funcionalidade).",
     "err_fetching_resource": "Ocorreu um erro ao buscar um recurso!",
     "err_creating_resource": "Ocorreu um erro ao criar um recurso!",
     "err_updating_resource": "Ocorreu um erro ao atualizar um recurso!",
