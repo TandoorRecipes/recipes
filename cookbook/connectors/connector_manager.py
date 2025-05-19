@@ -12,7 +12,7 @@ from typing import List, Any, Dict, Optional, Type
 from django.conf import settings
 from django_scopes import scope
 
-from cookbook.connectors.connector import Connector
+from cookbook.connectors.connector import Connector, ShoppingListEntryDTO
 from cookbook.connectors.homeassistant import HomeAssistant
 from cookbook.models import ShoppingListEntry, Space, ConnectorConfig
 
@@ -63,9 +63,6 @@ class ConnectorManager(metaclass=Singleton):
 
     # Called by post save & post delete signals
     def __call__(self, instance: Any, **kwargs) -> None:
-        if not isinstance(instance, self._listening_to_classes) or not hasattr(instance, "space"):
-            return
-
         action_type: ActionType
         if "created" in kwargs and kwargs["created"]:
             action_type = ActionType.CREATED
@@ -80,7 +77,10 @@ class ConnectorManager(metaclass=Singleton):
 
     def _add_work(self, action_type: ActionType, *instances: REGISTERED_CLASSES):
         for instance in instances:
+            if not isinstance(instance, self._listening_to_classes) or not hasattr(instance, "space"):
+                continue
             try:
+                _force_load_instance(instance)
                 self._queue.put_nowait(Work(instance, action_type))
             except queue.Full:
                 self._logger.info(f"queue was full, so skipping {action_type} of type {type(instance)}")
@@ -90,8 +90,8 @@ class ConnectorManager(metaclass=Singleton):
         self._worker.join()
 
     @classmethod
-    def is_initialized(cls) -> bool:
-        return cls in Singleton._instances
+    def is_initialized(cls):
+        return cls in cls._instances
 
     @staticmethod
     def add_work(action_type: ActionType, *instances: REGISTERED_CLASSES):
@@ -135,7 +135,7 @@ class ConnectorManager(metaclass=Singleton):
 
             if connectors is None or refresh_connector_cache:
                 if connectors is not None:
-                    loop.run_until_complete(close_connectors(connectors))
+                    loop.run_until_complete(_close_connectors(connectors))
 
                 with scope(space=space):
                     connectors: List[Connector] = list()
@@ -161,7 +161,7 @@ class ConnectorManager(metaclass=Singleton):
 
             logger.debug(f"running {len(connectors)} connectors for {item.instance=} with {item.actionType=}")
 
-            loop.run_until_complete(run_connectors(connectors, space, item.instance, item.actionType))
+            loop.run_until_complete(run_connectors(connectors, item.instance, item.actionType))
             worker_queue.task_done()
 
         logger.info(f"terminating ConnectionManager worker {worker_id}")
@@ -178,7 +178,14 @@ class ConnectorManager(metaclass=Singleton):
                 return None
 
 
-async def close_connectors(connectors: List[Connector]):
+def _force_load_instance(instance: REGISTERED_CLASSES):
+    if isinstance(instance, ShoppingListEntry):
+        _ = instance.food  # Force load food
+        _ = instance.unit  # Force load unit
+        _ = instance.created_by  # Force load created_by
+
+
+async def _close_connectors(connectors: List[Connector]):
     tasks: List[Task] = [asyncio.create_task(connector.close()) for connector in connectors]
 
     if len(tasks) == 0:
@@ -190,22 +197,24 @@ async def close_connectors(connectors: List[Connector]):
         logging.exception("received an exception while closing one of the connectors")
 
 
-async def run_connectors(connectors: List[Connector], space: Space, instance: REGISTERED_CLASSES, action_type: ActionType):
+async def run_connectors(connectors: List[Connector], instance: REGISTERED_CLASSES, action_type: ActionType):
     tasks: List[Task] = list()
 
     if isinstance(instance, ShoppingListEntry):
-        shopping_list_entry: ShoppingListEntry = instance
+        shopping_list_entry = ShoppingListEntryDTO.try_create_from_entry(instance)
+        if shopping_list_entry is None:
+            return
 
         match action_type:
             case ActionType.CREATED:
                 for connector in connectors:
-                    tasks.append(asyncio.create_task(connector.on_shopping_list_entry_created(space, shopping_list_entry)))
+                    tasks.append(asyncio.create_task(connector.on_shopping_list_entry_created(shopping_list_entry)))
             case ActionType.UPDATED:
                 for connector in connectors:
-                    tasks.append(asyncio.create_task(connector.on_shopping_list_entry_updated(space, shopping_list_entry)))
+                    tasks.append(asyncio.create_task(connector.on_shopping_list_entry_updated(shopping_list_entry)))
             case ActionType.DELETED:
                 for connector in connectors:
-                    tasks.append(asyncio.create_task(connector.on_shopping_list_entry_deleted(space, shopping_list_entry)))
+                    tasks.append(asyncio.create_task(connector.on_shopping_list_entry_deleted(shopping_list_entry)))
 
     if len(tasks) == 0:
         return

@@ -18,7 +18,7 @@ def obj_1(space_1, u1_s1):
 async def test_run_connectors(space_1, u1_s1, obj_1) -> None:
     connector_mock = Mock(spec=Connector)
 
-    await run_connectors([connector_mock], space_1, obj_1, ActionType.DELETED)
+    await run_connectors([connector_mock], obj_1, ActionType.DELETED)
 
     assert not connector_mock.on_shopping_list_entry_updated.called
     assert not connector_mock.on_shopping_list_entry_created.called
