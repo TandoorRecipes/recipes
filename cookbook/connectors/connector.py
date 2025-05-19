@@ -11,10 +11,10 @@ class UserDTO:
     first_name: Optional[str]
 
     @staticmethod
-    def try_create_from_user(instance: Optional[User]) -> 'UserDTO':
+    def create_from_user(instance: User) -> 'UserDTO':
         return UserDTO(
             username=instance.username,
-            first_name=instance.first_name if instance.first_name and len(instance.first_name) > 0 else None
+            first_name=instance.first_name if instance.first_name else None
         )
 
 
@@ -33,10 +33,10 @@ class ShoppingListEntryDTO:
 
         return ShoppingListEntryDTO(
             food_name=instance.food.name,
-            amount=instance.amount if instance.amount and instance.amount > 0 else None,
+            amount=instance.amount if instance.amount else None,
             unit_name=instance.unit.name if instance.unit else None,
-            base_unit=instance.unit.base_unit if instance.unit and instance.unit.base_unit and len(instance.unit.base_unit) > 0 else None,
-            created_by=UserDTO.try_create_from_user(instance.created_by),
+            base_unit=instance.unit.base_unit if instance.unit and instance.unit.base_unit else None,
+            created_by=UserDTO.create_from_user(instance.created_by),
         )
 
 
