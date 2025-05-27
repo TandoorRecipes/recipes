@@ -73,7 +73,7 @@
                                            @click="fdcSelectedIngredient = ingredient; fdcDialog = true"></v-btn>
                                     <v-btn @click="updateFoodFdcData(ingredient)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain"
                                            v-if="ingredient.food.fdcId"></v-btn>
-                                    <v-btn :href="`https://fdc.nal.usda.gov/food-details/${ingredient.food.fdcId}/nutrients`" target="_blank"
+                                    <v-btn @click="openFdcPage(ingredient.food.fdcId)" :href="`https://fdc.nal.usda.gov/food-details/${ingredient.food.fdcId}/nutrients`" target="_blank"
                                            icon="fa-solid fa-arrow-up-right-from-square"
                                            size="small" variant="plain" v-if="ingredient.food.fdcId"></v-btn>
                                 </template>
@@ -379,6 +379,14 @@ function changeAllPropertyFoodAmounts(amount: number) {
         ingredient.food.propertiesFoodAmount = amount
         updateFood(ingredient)
     })
+}
+
+/**
+ * for some reason v-btn href does not work in append inner slot of text field so open link with js
+ * @param fdcId
+ */
+function openFdcPage(fdcId: number){
+    window.open(`https://fdc.nal.usda.gov/food-details/${fdcId}/nutrients`, '_blank')
 }
 
 </script>

@@ -8,6 +8,7 @@
                                    :sub-title="ingredientToString(step.ingredients[editingIngredientIndex])"></v-closable-card-title>
             <v-card-text>
                 <template v-if="step.ingredients.length > 1">
+                    {{$t('Order')}}
                     <v-btn block :disabled="editingIngredientIndex== 0" @click="moveIngredient(editingIngredientIndex, props.stepIndex, 0)">{{ $t('First') }}</v-btn>
                     <v-btn block :disabled="editingIngredientIndex == 0" class="mt-1" @click="moveIngredient(editingIngredientIndex, props.stepIndex, editingIngredientIndex - 1)">
                         {{
@@ -22,7 +23,7 @@
                     </v-btn>
                 </template>
 
-                {{ $t('Step') }}
+                {{ $t('MoveToStep') }}
                 <v-btn block v-for="(s,i) in recipe.steps" :disabled="i == props.stepIndex" class="mt-1"
                        @click="moveIngredient(editingIngredientIndex, i, recipe.steps[i].ingredients.length)">{{ i + 1 }} <span v-if="'name' in s">{{ s.name }}</span>
                 </v-btn>

@@ -165,7 +165,7 @@ const showDetailDialog = ref(false)
  */
 function addTestMessage() {
     let types = [MessageType.SUCCESS, MessageType.ERROR, MessageType.INFO, MessageType.WARNING]
-    useMessageStore().addMessage(types[Math.floor(Math.random() * types.length)], {title: 'Test', text: `Lorem Ipsum ${Math.random() * 1000}`}, 5000, {json: "data", 'msg': 'whatever', data: 1})
+    useMessageStore().addMessage(types[Math.floor(Math.random() * types.length)], {title: 'Test', text: `Lorem Ipsum Lorem Ipsum Lorem Ipsum LINEBREAK \n Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum ${Math.random() * 1000}`}, 5000, {json: "data", 'msg': 'whatever', data: 1})
 }
 
 </script>

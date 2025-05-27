@@ -37,7 +37,7 @@
 
             <v-row>
                 <v-col cols="12" md="6" v-if="showTime || step.time != 0">
-                    <v-number-input :label="$t('Time')" v-model="step.time" :min="0" :step="5" control-variant="split" ></v-number-input>
+                    <v-number-input :label="$t('Time')" v-model="step.time" :min="0" :step="5" control-variant="split"></v-number-input>
                 </v-col>
                 <v-col cols="12" md="6" v-if="showRecipe || step.stepRecipe != null">
                     <model-select model="Recipe" v-model="step.stepRecipe" :object="false" append-to-body></model-select>
@@ -51,9 +51,14 @@
                 <v-col cols="12">
                     <v-label>{{ $t('Ingredients') }}</v-label>
                     <div v-if="!mobile">
-                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" empty-insert-threshold="25" group="ingredients">
+                        <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" :empty-insert-threshold="25" group="ingredients">
                             <v-row v-for="(ingredient, index) in step.ingredients" dense>
                                 <v-col cols="2" v-if="!ingredient.isHeader">
+                                    <v-input hide-details>
+                                        <template #prepend>
+                                            <v-icon icon="$dragHandle" class="drag-handle cursor-grab" v-if="ingredient.noAmount" density="compact"></v-icon>
+                                        </template>
+                                    </v-input>
                                     <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
                                                   hide-details v-if="!ingredient.noAmount">
 
@@ -92,8 +97,8 @@
                                                     }}
                                                 </v-list-item>
                                                 <v-list-item v-if="ingredient.originalText" prepend-icon="$import">
-                                                    <v-list-item-title>{{$t('Original_Text')}}</v-list-item-title>
-                                                    <v-list-item-subtitle>{{ ingredient.originalText}}</v-list-item-subtitle>
+                                                    <v-list-item-title>{{ $t('Original_Text') }}</v-list-item-title>
+                                                    <v-list-item-subtitle>{{ ingredient.originalText }}</v-list-item-subtitle>
                                                 </v-list-item>
                                             </v-list>
                                         </v-menu>
@@ -174,14 +179,16 @@
         </v-card>
     </v-dialog>
 
-   <step-ingredient-sorter-dialog :step-index="props.stepIndex" :step="step" :recipe="recipe" v-model="dialogIngredientSorter" :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
+    <step-ingredient-sorter-dialog :step-index="props.stepIndex" :step="step" :recipe="recipe" v-model="dialogIngredientSorter"
+                                   :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
 
     <v-bottom-sheet v-model="dialogIngredientEditor">
         <v-card v-if="editingIngredientIndex >= 0">
             <v-closable-card-title :title="$t('Ingredient Editor')" v-model="dialogIngredientEditor"></v-closable-card-title>
             <v-card-text>
                 <v-form>
-                    <v-text-field :label="$t('Original_Text')" readonly v-model="step.ingredients[editingIngredientIndex].originalText" v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
+                    <v-text-field :label="$t('Original_Text')" readonly v-model="step.ingredients[editingIngredientIndex].originalText"
+                                  v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
                                     :min="0" :precision="2" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"

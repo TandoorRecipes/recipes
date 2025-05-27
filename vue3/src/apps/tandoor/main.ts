@@ -14,8 +14,8 @@ import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 
 const routes = [
-    {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'view_home'},
-    {path: '/search', redirect: {name: 'view_home'}},
+    {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
+    {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage'},
     {

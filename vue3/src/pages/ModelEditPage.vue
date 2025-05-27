@@ -12,7 +12,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <component :is="editorComponent" :item-id="id" @delete="router.go(-1)" @create="(obj: any) => objectCreated(obj)"></component>
+                <component :is="editorComponent" :item-id="id" @delete="objectDeleted" @create="(obj: any) => objectCreated(obj)"></component>
             </v-col>
         </v-row>
     </v-container>
@@ -50,6 +50,17 @@ watch(() => props.id, (newValue, oldValue) => {
 function objectCreated(obj: any) {
     if (obj.id) {
         router.push({name: 'ModelEditPage', params: {model: props.model, id: obj.id}})
+    }
+}
+
+/**
+ * determines where to redirect user after object deletion based on selected model
+ */
+function objectDeleted(){
+    if (props.model.toLowerCase() == 'recipe'){
+        router.push({name : 'StartPage'})
+    } else {
+        router.go(-1)
     }
 }
 

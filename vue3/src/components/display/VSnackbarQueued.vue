@@ -12,7 +12,7 @@
         >
 <!--            <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>-->
             <h3 v-if="visibleMessage.msg.title">{{ visibleMessage.msg.title }}</h3>
-            <span class="text-pre">{{ visibleMessage.msg.text }}</span>
+            <span  style="white-space: pre-wrap">{{ visibleMessage.msg.text }}</span>
 
             <template #actions v-if="showViewButton">
 

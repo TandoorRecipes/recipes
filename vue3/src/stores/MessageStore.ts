@@ -30,6 +30,7 @@ export enum PreparedMessage {
     MERGE_SUCCESS = 'MERGE_SUCCESS',
     MOVE_SUCCESS = 'MOVE_SUCCESS',
     NOT_FOUND = 'NOT_FOUND',
+    RATE_LIMIT = 'RATE_LIMIT',
 }
 
 /**
@@ -154,6 +155,14 @@ export const useMessageStore = defineStore('message_store', () => {
         }
         if (preparedMessage == PreparedMessage.NOT_FOUND) {
             addMessage(MessageType.WARNING, {title: t('NotFound'), text: t('NotFoundHelp')} as StructuredMessage, 6000, data)
+        }
+
+        if (preparedMessage == PreparedMessage.RATE_LIMIT) {
+            data.response.json().then(responseJson => {
+                addMessage(MessageType.WARNING, {title: t(''), text: t('RateLimitHelp') + '\n' + responseJson.detail} as StructuredMessage, 6000, data)
+            }).catch(() => {
+                addMessage(MessageType.WARNING, {title: t(''), text: t('RateLimitHelp')} as StructuredMessage, 6000, data)
+            })
         }
     }
 

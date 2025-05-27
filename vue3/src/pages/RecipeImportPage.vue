@@ -37,6 +37,12 @@
                                 <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet" icon=" "></v-stepper-item>
                             </template>
 
+                            <template v-if="importType == 'url-list'">
+                                <v-stepper-item :title="$t('UrlList')" value="url_list_input" icon=" "></v-stepper-item>
+                                <v-divider></v-divider>
+                                <v-stepper-item :title="$t('Import')" value="url_list_import" icon=" "></v-stepper-item>
+                            </template>
+
                         </v-stepper-header>
 
                         <v-stepper-window>
@@ -102,15 +108,27 @@
                                             @click="importType = 'source'">
                                         </v-card>
                                     </v-col>
+                                    <v-col cols="12" md="6">
+                                        <v-card
+                                            :title="$t('UrlList')"
+                                            :subtitle="$t('UrlListSubtitle')"
+                                            prepend-icon="fa-solid fa-list"
+                                            variant="outlined"
+                                            :color="(importType == 'url-list') ? 'primary' : ''"
+                                            elevation="1"
+                                            @click="importType = 'url-list'">
+                                        </v-card>
+                                    </v-col>
                                 </v-row>
                                 <v-stepper-actions>
                                     <template #prev>
                                         <v-spacer></v-spacer>
                                     </template>
                                     <template #next>
-                                        <v-btn @click="stepper = 'url'" v-if="['url','ai', 'source'].includes(importType)">{{ $t('Next') }}</v-btn>
-                                        <v-btn @click="stepper = 'app'" v-if="importType == 'app'">{{ $t('Next') }}</v-btn>
-                                        <v-btn @click="stepper = 'bookmarklet'" v-if="importType == 'bookmarklet'">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'url'" v-if="['url','ai', 'source'].includes(importType)" color="success">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'app'" v-if="importType == 'app'" color="success">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'bookmarklet'" v-if="importType == 'bookmarklet'" color="success">{{ $t('Next') }}</v-btn>
+                                        <v-btn @click="stepper = 'url_list_input'" v-if="importType == 'url-list'" color="success">{{ $t('Next') }}</v-btn>
                                     </template>
                                 </v-stepper-actions>
                             </v-stepper-window-item>
@@ -289,7 +307,10 @@
                                                                 <v-list>
                                                                     <v-list-item prepend-icon="$edit" @click="editingIngredient = i; dialog=true">{{ $t('Edit') }}</v-list-item>
                                                                     <v-list-item prepend-icon="$delete" @click="deleteIngredient(s,i)">{{ $t('Delete') }}</v-list-item>
-                                                                    <v-list-item prepend-icon="fa-solid fa-sort" @click="editingIngredientIndex = ingredientIndex; editingStepIndex = stepIndex; editingStep = s;  dialogIngredientSorter = true">{{ $t('Move') }}</v-list-item>
+                                                                    <v-list-item prepend-icon="fa-solid fa-sort"
+                                                                                 @click="editingIngredientIndex = ingredientIndex; editingStepIndex = stepIndex; editingStep = s;  dialogIngredientSorter = true">
+                                                                        {{ $t('Move') }}
+                                                                    </v-list-item>
                                                                 </v-list>
                                                             </v-menu>
                                                         </v-btn>
@@ -299,8 +320,9 @@
                                         </v-list>
                                     </v-col>
                                     <v-col cols="12" md="6">
-                                        <v-textarea class="mt-2" v-model="s.instruction"></v-textarea>
+                                        <v-textarea class="mt-2" v-model="s.instruction" auto-grow></v-textarea>
                                     </v-col>
+                                    <v-divider></v-divider>
                                 </v-row>
                                 <v-row>
                                     <v-col class="text-center">
@@ -314,9 +336,9 @@
                                             <v-text-field :label="$t('Original_Text')" v-model="editingIngredient.originalText" readonly></v-text-field>
                                             <v-text-field :label="$t('Amount')" v-model="editingIngredient.amount"></v-text-field>
 
-                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" v-if="editingIngredient.unit">
+                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" :rules="[rules.required()]" v-if="editingIngredient.unit">
                                                 <template #append-inner>
-                                                     <v-btn icon="$delete" color="delete" @click="editingIngredient.unit = null"></v-btn>
+                                                    <v-btn icon="$delete" color="delete" @click="editingIngredient.unit = null"></v-btn>
                                                 </template>
                                             </v-text-field>
                                             <v-btn prepend-icon="$create" color="create" class="mb-4" @click="editingIngredient.unit = {name: ''}" v-else>{{ $t('Unit') }}</v-btn>
@@ -346,10 +368,11 @@
                                             <v-img v-if="importResponse.recipe.imageUrl" :src="importResponse.recipe.imageUrl"></v-img>
                                         </v-col>
                                         <v-col cols="12" md="6">
-                                            <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name"></v-text-field>
+                                            <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name" :rules="[rules.maxLength(128)]"></v-text-field>
                                             <v-number-input :label="$t('Servings')" v-model="importResponse.recipe.servings" :precision="2"></v-number-input>
                                             <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
-                                            <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" clearable></v-textarea>
+                                            <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" :rules="[rules.maxLength(512)]" counter
+                                                        clearable></v-textarea>
 
                                             <v-checkbox v-model="editAfterImport" :label="$t('Edit_Recipe')" hide-details></v-checkbox>
                                         </v-col>
@@ -452,23 +475,83 @@
                                 </v-stepper-actions>
                             </v-stepper-window-item>
 
+                            <!-- ---------------- -->
+                            <!-- URL List         -->
+                            <!-- ---------------- -->
+
+                            <v-stepper-window-item value="url_list_input">
+
+                                <v-textarea :hint="$t('one_url_per_line')" auto-grow max-rows="20" persistent-hint v-model="urlListImportInput">
+
+                                </v-textarea>
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="stepper = 'url_list_import'; doListImport()" :disabled="urlListImportInput.length == 0">{{ $t('Import') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+
+                            <v-stepper-window-item value="url_list_import">
+
+                                <v-progress-linear :height="16" :model-value="urlListImportedRecipes.length / urlListImportInput.split('\n').length * 100">
+                                    {{ urlListImportedRecipes.length }} / {{ urlListImportInput.split('\n').length }}
+                                </v-progress-linear>
+
+                                <v-list>
+                                    <v-list-item border v-for="r in urlListImportedRecipes" :title="r.name" :subtitle="r.sourceUrl" :key="r.id" :to="{name: 'RecipeViewPage', params: {id: r.id}}" target="_blank">
+
+                                    </v-list-item>
+                                </v-list>
+
+                                <v-stepper-actions>
+                                    <template #prev>
+                                        <v-btn @click="stepper = 'url_list_input'">{{ $t('Back') }}</v-btn>
+                                    </template>
+                                    <template #next>
+                                        <v-btn @click="resetImporter()" :disabled="loading">{{ $t('Reset') }}</v-btn>
+                                    </template>
+                                </v-stepper-actions>
+                            </v-stepper-window-item>
+
 
                         </v-stepper-window>
                     </template>
                 </v-stepper>
             </v-col>
         </v-row>
+        <v-row dense>
+            <v-col class="text-center">
+                <v-btn size="small" prepend-icon="fa-solid fa-arrow-rotate-left" variant="tonal" color="warning" @click="resetImporter()">{{ $t('Reset') }}</v-btn>
+            </v-col>
+        </v-row>
     </v-container>
 
-     <step-ingredient-sorter-dialog :step-index="editingStepIndex" :step="editingStep" :recipe="importResponse.recipe" v-model="dialogIngredientSorter" :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
+    <step-ingredient-sorter-dialog :step-index="editingStepIndex" :step="editingStep" :recipe="importResponse.recipe" v-model="dialogIngredientSorter"
+                                   :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
 
 </template>
 
 <script lang="ts" setup>
 
+import {useI18n} from "vue-i18n";
 import {computed, onMounted, ref} from "vue";
-import {AccessToken, ApiApi, ImportLog, type RecipeFromSource, RecipeFromSourceResponse, type SourceImportIngredient, SourceImportKeyword, SourceImportStep, Step} from "@/openapi";
-import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
+import {
+    AccessToken,
+    ApiApi,
+    ImportLog,
+    Recipe,
+    type RecipeFromSource,
+    RecipeFromSourceResponse,
+    type SourceImportIngredient,
+    SourceImportKeyword,
+    SourceImportStep,
+    Step
+} from "@/openapi";
+import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {VueDraggable} from "vue-draggable-plus";
@@ -484,10 +567,55 @@ import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import bookmarkletJs from '@/assets/bookmarklet_v3?url'
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
+import {useRules} from "vuetify/labs/rules";
+
+function doListImport() {
+    urlList.value = urlListImportInput.value.split('\n')
+    loading.value = true
+    importFromUrlList()
+}
+
+function importFromUrlList() {
+    let api = new ApiApi()
+    let url = urlList.value.pop()
+
+    if(url != undefined && url.trim() != ''){
+
+        api.apiRecipeFromSourceCreate({recipeFromSource: {url: url}}).then(sourceResponse => {
+            if(sourceResponse.recipe){
+                api.apiRecipeCreate({recipe: sourceResponse.recipe}).then(recipe => {
+                    urlListImportedRecipes.value.push(recipe)
+                    updateRecipeImage(recipe.id!, null, sourceResponse.recipe?.imageUrl).then(imageResponse => {
+                        setTimeout(importFromUrlList, 500)
+                    })
+                }).catch(err => {
+
+                }).finally(() => {
+                    loading.value = false
+                })
+            }
+        }).catch(err => {
+            if (err.response.status == 429){
+                useMessageStore().addPreparedMessage(PreparedMessage.RATE_LIMIT, err)
+            } else {
+                useMessageStore().addMessage(MessageType.WARNING, t('ErrorUrlListImport'), 8000, url)
+            }
+            urlListImportInput.value = url + '\n' + urlList.value.join('\n')
+            stepper.value = 'url_list_input'
+        }).finally(() => {
+
+        })
+    } else {
+        useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+        loading.value = false
+    }
+}
 
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
+const rules = useRules()
+const {t} = useI18n()
 const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
 const {getDjangoUrl} = useDjangoUrls()
 
@@ -503,7 +631,7 @@ const bookmarkletContent = computed(() => {
         `})()`
 })
 
-const importType = ref<'url' | 'ai' | 'app' | 'bookmarklet' | 'source'>("url")
+const importType = ref<'url' | 'ai' | 'app' | 'bookmarklet' | 'source' | 'url-list'>("url")
 const importApp = ref('DEFAULT')
 const stepper = ref("type")
 const dialog = ref(false)
@@ -511,6 +639,10 @@ const dialog = ref(false)
 const loading = ref(false)
 
 const importUrl = ref("")
+
+const urlListImportInput = ref("")
+const urlList = ref([] as string[])
+const urlListImportedRecipes = ref([] as Recipe[])
 
 const sourceImportText = ref("")
 const appImportFiles = ref<File[]>([])
@@ -529,7 +661,7 @@ const editingIngredient = ref({} as SourceImportIngredient)
 // stuff for ingredient mover, find some better solution at some point (finally merge importer/editor?)
 const editingIngredientIndex = ref(0)
 const dialogIngredientSorter = ref(false)
-const editingStep = ref<Step| SourceImportStep>({} as Step)
+const editingStep = ref<Step | SourceImportStep>({} as Step)
 const editingStepIndex = ref(0)
 
 onMounted(() => {
@@ -656,7 +788,7 @@ function createRecipeFromImport() {
 
         api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
             updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
-                if(editAfterImport.value){
+                if (editAfterImport.value) {
                     router.push({name: 'ModelEditPage', params: {id: recipe.id, model: 'recipe'}})
                 } else {
                     router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
@@ -850,6 +982,13 @@ function loadOrCreateBookmarkletToken() {
             })
         }
     })
+}
+
+/**
+ * reset the importer at any point
+ */
+function resetImporter() {
+    location.reload()
 }
 
 </script>

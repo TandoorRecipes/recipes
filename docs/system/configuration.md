@@ -300,6 +300,12 @@ PRIVACY_URL=
 IMPRINT_URL=
 ```
 
+#### Rate Limits
+
+There are some rate limits that can be configured.
+
+- RATELIMIT_URL_IMPORT_REQUESTS: limit the number of external URL import requests. Useful to prevent your server from being abused for malicious requests.
+
 ### Authentication
 
 All configurable variables regarding authentication.

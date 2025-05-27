@@ -491,7 +491,11 @@ def get_images_from_soup(soup, url):
         u = u.split('?')[0]
         filename = re.search(r'/([\w_-]+[.](jpg|jpeg|gif|png))$', u)
         if filename:
-            if (('http' not in u) and (url)):
+            if u.startswith('//'):
+                # urls from e.g. ottolenghi.co.uk start with //
+                u = 'https:' + u
+            if ('http' not in u) and url:
+                print(f'rewriting URL {u}')
                 # sometimes an image source can be relative
                 # if it is provide the base url
                 u = '{}://{}{}'.format(prot, site, u)

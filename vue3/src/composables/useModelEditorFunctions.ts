@@ -207,7 +207,6 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
 
         return modelClass.value.destroy(editingObj.value.id).then((r: any) => {
             emit('delete', editingObj.value)
-            console.log('deleted')
             editingObj.value = {} as T
         }).catch((err: any) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)

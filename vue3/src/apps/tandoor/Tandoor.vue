@@ -4,7 +4,7 @@
 
          </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().userSettings.navBgColor" flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated">
-            <router-link :to="{ name: 'view_home', params: {} }">
+            <router-link :to="{ name: 'StartPage', params: {} }">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo"></v-img>
             </router-link>
             <v-spacer></v-spacer>
@@ -120,7 +120,7 @@
                     <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-list-item prepend-icon="$recipes" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
+                <v-list-item prepend-icon="$recipes" title="Home" :to="{ name: 'StartPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="$search" :title="$t('Search')" :to="{ name: 'SearchPage' }"></v-list-item>
                 <v-list-item prepend-icon="$mealplan" :title="$t('Meal_Plan')" :to="{ name: 'MealPlanPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="$shopping" :title="$t('Shopping_list')" :to="{ name: 'ShoppingListPage', params: {} }"></v-list-item>
@@ -144,7 +144,7 @@
         </v-navigation-drawer>
 
         <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp">
-            <v-btn value="recent" :to="{ name: 'view_home', params: {} }">
+            <v-btn value="recent" :to="{ name: 'StartPage', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
 
@@ -163,6 +163,7 @@
                         <v-list-item prepend-icon="fa-solid fa-sliders" :to="{ name: 'SettingsPage', params: {} }" :title="$t('Settings')"></v-list-item>
                         <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
                         <v-list-item prepend-icon="fa-solid fa-folder-tree" :to="{ name: 'ModelListPage', params: {model: 'food'} }" :title="$t('Database')"></v-list-item>
+                        <v-list-item prepend-icon="$books" :title="$t('Books')" :to="{ name: 'BooksPage', params: {} }"></v-list-item>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>
