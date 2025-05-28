@@ -55,7 +55,7 @@
                 <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('CreatedBy')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_created_by"></v-switch>
                 </v-list-item>
-                <v-list-item >
+                <v-list-item>
                     <v-switch color="primary" hide-details label="New Input" v-model="useUserPreferenceStore().deviceSettings.shopping_input_autocomplete"></v-switch>
                 </v-list-item>
                 <v-list-item v-if="useUserPreferenceStore().serverSettings.debug">
@@ -64,6 +64,11 @@
 
             </v-list>
         </v-menu>
+
+        <v-btn height="100%" rounded="0" variant="plain">
+            <i class="fa-solid fa-download"></i>
+            <shopping-export-dialog></shopping-export-dialog>
+        </v-btn>
 
         <v-btn height="100%" rounded="0" variant="plain" @click="useShoppingStore().undoChange()">
             <i class="fa-solid fa-arrow-rotate-left"></i>
@@ -96,14 +101,14 @@
                         </v-list>
                         <v-list class="mt-3" density="compact" v-else>
                             <template v-for="category in useShoppingStore().getEntriesByGroup" :key="category.name">
-                                <template v-if="isCategoryVisible(category)">
+                                <template v-if="isShoppingCategoryVisible(category)">
 
                                     <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
                                     <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
                                     <v-divider></v-divider>
 
                                     <template v-for="[i, value] in category.foods" :key="value.food.id">
-                                        <shopping-line-item :shopping-list-food="value" ></shopping-line-item>
+                                        <shopping-line-item :shopping-list-food="value"></shopping-line-item>
                                     </template>
 
                                 </template>
@@ -166,14 +171,14 @@
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
                                         <template #prepend>
-                                            <v-btn color="edit" icon >
+                                            <v-btn color="edit" icon>
                                                 {{ r.servings }}
                                                 <number-scaler-dialog
                                                     v-if="r.mealplan == undefined"
                                                     :number="r.servings"
                                                     @confirm="(servings: number) => {updateRecipeServings(r, servings)}"
                                                 ></number-scaler-dialog>
-                                                <model-edit-dialog model="MealPlan" :item-id="r.mealplan" v-if="r.mealplan != undefined" activator="parent"> </model-edit-dialog>
+                                                <model-edit-dialog model="MealPlan" :item-id="r.mealplan" v-if="r.mealplan != undefined" activator="parent"></model-edit-dialog>
                                             </v-btn>
 
                                         </template>
@@ -207,7 +212,7 @@
                 <v-row>
                     <v-col>
                         <supermarket-editor :item="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"
-                                           @save="(args: Supermarket) => (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = args)"></supermarket-editor>
+                                            @save="(args: Supermarket) => (useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = args)"></supermarket-editor>
                     </v-col>
                 </v-row>
             </v-container>
@@ -237,6 +242,8 @@ import {DateTime} from "luxon";
 import MealPlanEditor from "@/components/model_editors/MealPlanEditor.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {onBeforeRouteLeave} from "vue-router";
+import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
+import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 
 const {t} = useI18n()
 
@@ -273,22 +280,6 @@ onMounted(() => {
         })
     }
 })
-
-/**
- * determines if a category as entries that should be visible
- * @param category
- */
-function isCategoryVisible(category: IShoppingListCategory) {
-    let entryCount = category.stats.countUnchecked
-
-    if (useUserPreferenceStore().deviceSettings.shopping_show_checked_entries) {
-        entryCount += category.stats.countChecked
-    }
-    if (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries) {
-        entryCount += category.stats.countUncheckedDelayed
-    }
-    return entryCount > 0
-}
 
 /**
  * update the number of servings for an embedded recipe and with it the ShoppingListEntry amounts

@@ -1,11 +1,13 @@
 <template>
 
     <v-btn  ref="copyBtn" :color="color" :size="size" :density="density" @click="clickCopy()" :variant="variant">
-        <v-icon icon="$copy"></v-icon>
-        <v-tooltip v-model="showToolip" :target="btn" location="top">
+        <slot name="default">
             <v-icon icon="$copy"></v-icon>
-            Copied!
-        </v-tooltip>
+            <v-tooltip v-model="showToolip" :target="btn" location="top">
+                <v-icon icon="$copy"></v-icon>
+                {{$t('Copied')}}!
+            </v-tooltip>
+        </slot>
     </v-btn>
 
 </template>

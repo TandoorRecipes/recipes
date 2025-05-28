@@ -1,6 +1,7 @@
 import {ShoppingListEntry, Space} from "@/openapi";
-import {IShoppingListFood} from "@/types/Shopping";
+import {IShoppingListCategory, IShoppingListFood} from "@/types/Shopping";
 import {DeviceSettings} from "@/types/settings";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 // -------------- SHOPPING RELATED ----------------------
 
@@ -25,7 +26,7 @@ export function isEntryVisible(entry: ShoppingListEntry, deviceSettings: DeviceS
  * @param slf shopping list food holder
  * @param deviceSettings user device settings based on which entry visibility is controlled
  */
-export function isShoppingListFoodVisible(slf: IShoppingListFood, deviceSettings: DeviceSettings){
+export function isShoppingListFoodVisible(slf: IShoppingListFood, deviceSettings: DeviceSettings) {
     let foodVisible = false
     slf.entries.forEach(entry => {
         foodVisible = foodVisible || isEntryVisible(entry, deviceSettings)
@@ -52,6 +53,23 @@ export function isShoppingListFoodDelayed(slf: IShoppingListFood) {
         hasDelayedEntry = hasDelayedEntry || isDelayed(sle)
     })
     return hasDelayedEntry
+}
+
+/**
+ * determines if a category has entries that should be visible
+ * @param category
+ */
+export function isShoppingCategoryVisible(category: IShoppingListCategory) {
+    let entryCount = category.stats.countUnchecked
+
+    if (useUserPreferenceStore().deviceSettings.shopping_show_checked_entries) {
+        entryCount += category.stats.countChecked
+    }
+    if (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries) {
+        entryCount += category.stats.countUncheckedDelayed
+    }
+
+    return entryCount > 0
 }
 
 // -------------- SPACE RELATED ----------------------

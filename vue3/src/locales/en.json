@@ -74,6 +74,7 @@
   "ConversionsHelp": "With conversions you can calculate the amount of a food in different units. Currently this is only used for property calculation, later it might also be used in other parts of tandoor. ",
   "CookLog": "Cook Log",
   "Cooked": "Cooked",
+  "Copied": "Copied",
   "Copy": "Copy",
   "Copy Link": "Copy Link",
   "Copy Token": "Copy Token",

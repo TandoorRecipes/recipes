@@ -294,7 +294,7 @@
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <v-list>
-                                            <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" empty-insert-threshold="25">
+                                            <vue-draggable v-model="s.ingredients" group="ingredients" handle=".drag-handle" :empty-insert-threshold="25">
                                                 <v-list-item v-for="(i, ingredientIndex) in s.ingredients" border>
                                                     <v-icon size="small" class="drag-handle cursor-grab mr-2" icon="$dragHandle"></v-icon>
                                                     <v-chip density="compact" label class="mr-1">{{ i.amount }}</v-chip>
