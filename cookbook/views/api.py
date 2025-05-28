@@ -61,6 +61,7 @@ from rest_framework.viewsets import ViewSetMixin
 from rest_framework.serializers import CharField, IntegerField, UUIDField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
+from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
@@ -1254,8 +1255,6 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj, mealplan=mealplan,
                                    servings=servings)
 
-        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-        http_status = status.HTTP_204_NO_CONTENT
         if servings and servings <= 0:
             result = SLR.delete()
         elif list_recipe:
@@ -1392,6 +1391,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                 )
 
             ShoppingListEntry.objects.bulk_create(entries)
+            ConnectorManager.add_work(ActionType.CREATED, *entries)
             return Response(serializer.validated_data)
         else:
             return Response(serializer.errors, 400)
