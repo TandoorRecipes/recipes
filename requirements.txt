@@ -51,7 +51,7 @@ python3-openid==3.2.0
 python3-saml==1.16.0
 
 # Development
-pytest==8.0.0
+pytest==8.3.5
 pytest-django==4.10.0
 pytest-cov===5.0.0
 pytest-factoryboy==2.7.0
