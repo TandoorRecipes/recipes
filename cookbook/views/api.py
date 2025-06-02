@@ -62,7 +62,7 @@ from rest_framework.serializers import CharField, IntegerField, UUIDField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.connectors.connector_manager import ConnectorManager, ActionType
-from cookbook.forms import ImportForm
+from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
 from cookbook.helper.image_processing import handle_image
@@ -109,7 +109,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
-                                 AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer
+                                 AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -1951,6 +1951,38 @@ class AppImportView(APIView):
         else:
             return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class AppExportView(APIView):
+    throttle_classes = [RecipeImportThrottle]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    @extend_schema(request=ExportRequestSerializer(many=False), responses=ExportLogSerializer(many=False))
+    def post(self, request, *args, **kwargs):
+
+        serializer = ExportRequestSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            if serializer.validated_data['all']:
+                recipes = Recipe.objects.filter(space=request.space, internal=True).all()
+            elif serializer.validated_data['custom_filter']:
+                search = RecipeSearch(request, filter=serializer.initial_data['custom_filter']['id'])
+                recipes = search.get_queryset(Recipe.objects.filter(space=request.space, internal=True))
+            elif len(serializer.validated_data['recipes']) > 0:
+                recipes = Recipe.objects.filter(space=request.space, internal=True, id__in=[item['id'] for item in serializer.initial_data['recipes']]).all()
+
+            integration = get_integration(request, serializer.validated_data['type'])
+
+            if serializer.validated_data['type'] == ImportExportBase.PDF and not settings.ENABLE_PDF_EXPORT:
+                return JsonResponse({'error': _('The PDF Exporter is not enabled on this instance as it is still in an experimental state.')})
+
+            el = ExportLog.objects.create(type=serializer.validated_data['type'], created_by=request.user, space=request.space)
+
+            t = threading.Thread(target=integration.do_export, args=[recipes, el])
+            t.setDaemon(True)
+            t.start()
+
+            return Response(ExportLogSerializer(context={'request': request}).to_representation(el), status=status.HTTP_200_OK)
+
+        return Response({'error': True, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class FdcSearchView(APIView):
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]

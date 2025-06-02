@@ -1704,6 +1704,12 @@ class AiImportSerializer(serializers.Serializer):
     text = serializers.CharField(allow_null=True, allow_blank=True)
 
 
+class ExportRequestSerializer(serializers.Serializer):
+    type = serializers.CharField()
+    all = serializers.BooleanField(default=False)
+    recipes = RecipeFlatSerializer(many=True, default=[])
+    custom_filter = CustomFilterSerializer(many=False, default=None, allow_null=True)
+
 class ImportOpenDataSerializer(serializers.Serializer):
     selected_version = serializers.CharField()
     selected_datatypes = serializers.ListField(child=serializers.CharField())
@@ -1717,6 +1723,7 @@ class ImportOpenDataResponseDetailSerializer(serializers.Serializer):
     total_untouched = serializers.IntegerField(default=0)
     total_errored = serializers.IntegerField(default=0)
 
+
 class ImportOpenDataResponseSerializer(serializers.Serializer):
     food = ImportOpenDataResponseDetailSerializer(required=False)
     unit = ImportOpenDataResponseDetailSerializer(required=False)
@@ -1725,6 +1732,7 @@ class ImportOpenDataResponseSerializer(serializers.Serializer):
     store = ImportOpenDataResponseDetailSerializer(required=False)
     conversion = ImportOpenDataResponseDetailSerializer(required=False)
 
+
 class ImportOpenDataVersionMetaDataSerializer(serializers.Serializer):
     food = serializers.IntegerField()
     unit = serializers.IntegerField()
@@ -1732,6 +1740,7 @@ class ImportOpenDataVersionMetaDataSerializer(serializers.Serializer):
     property = serializers.IntegerField()
     store = serializers.IntegerField()
     conversion = serializers.IntegerField()
+
 
 class ImportOpenDataMetaDataSerializer(serializers.Serializer):
     versions = serializers.ListField(child=serializers.CharField())

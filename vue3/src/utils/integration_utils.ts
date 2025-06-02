@@ -20,7 +20,7 @@ export const INTEGRATIONS: Array<Integration> = [
     {id: 'MEALIE', name: "Mealie", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#mealie'},
     {id: 'MEALMASTER', name: "Mealmaster", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#mealmaster'},
     {id: 'MELARECIPES', name: "Melarecipes", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#melarecipes'},
-    {id: 'NEXTCLOUD', name: "Nextcloud Cookbook", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#nextcloud'},
+    {id: 'NEXTCLOUD', name: "Nextcloud Cookbook", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#nextcloud'},
     {id: 'OPENEATS', name: "Openeats", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#openeats'},
     {id: 'PAPRIKA', name: "Paprika", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#paprika'},
     {id: 'PEPPERPLATE', name: "Pepperplate", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#pepperplate'},

@@ -31,49 +31,43 @@ export interface ImportOpenDataResponse {
      * @type {ImportOpenDataResponseDetail}
      * @memberof ImportOpenDataResponse
      */
-    food: ImportOpenDataResponseDetail;
+    food?: ImportOpenDataResponseDetail;
     /**
      * 
      * @type {ImportOpenDataResponseDetail}
      * @memberof ImportOpenDataResponse
      */
-    unit: ImportOpenDataResponseDetail;
+    unit?: ImportOpenDataResponseDetail;
     /**
      * 
      * @type {ImportOpenDataResponseDetail}
      * @memberof ImportOpenDataResponse
      */
-    category: ImportOpenDataResponseDetail;
+    category?: ImportOpenDataResponseDetail;
     /**
      * 
      * @type {ImportOpenDataResponseDetail}
      * @memberof ImportOpenDataResponse
      */
-    property: ImportOpenDataResponseDetail;
+    property?: ImportOpenDataResponseDetail;
     /**
      * 
      * @type {ImportOpenDataResponseDetail}
      * @memberof ImportOpenDataResponse
      */
-    store: ImportOpenDataResponseDetail;
+    store?: ImportOpenDataResponseDetail;
     /**
      * 
      * @type {ImportOpenDataResponseDetail}
      * @memberof ImportOpenDataResponse
      */
-    conversion: ImportOpenDataResponseDetail;
+    conversion?: ImportOpenDataResponseDetail;
 }
 
 /**
  * Check if a given object implements the ImportOpenDataResponse interface.
  */
 export function instanceOfImportOpenDataResponse(value: object): value is ImportOpenDataResponse {
-    if (!('food' in value) || value['food'] === undefined) return false;
-    if (!('unit' in value) || value['unit'] === undefined) return false;
-    if (!('category' in value) || value['category'] === undefined) return false;
-    if (!('property' in value) || value['property'] === undefined) return false;
-    if (!('store' in value) || value['store'] === undefined) return false;
-    if (!('conversion' in value) || value['conversion'] === undefined) return false;
     return true;
 }
 
@@ -87,12 +81,12 @@ export function ImportOpenDataResponseFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
-        'food': ImportOpenDataResponseDetailFromJSON(json['food']),
-        'unit': ImportOpenDataResponseDetailFromJSON(json['unit']),
-        'category': ImportOpenDataResponseDetailFromJSON(json['category']),
-        'property': ImportOpenDataResponseDetailFromJSON(json['property']),
-        'store': ImportOpenDataResponseDetailFromJSON(json['store']),
-        'conversion': ImportOpenDataResponseDetailFromJSON(json['conversion']),
+        'food': json['food'] == null ? undefined : ImportOpenDataResponseDetailFromJSON(json['food']),
+        'unit': json['unit'] == null ? undefined : ImportOpenDataResponseDetailFromJSON(json['unit']),
+        'category': json['category'] == null ? undefined : ImportOpenDataResponseDetailFromJSON(json['category']),
+        'property': json['property'] == null ? undefined : ImportOpenDataResponseDetailFromJSON(json['property']),
+        'store': json['store'] == null ? undefined : ImportOpenDataResponseDetailFromJSON(json['store']),
+        'conversion': json['conversion'] == null ? undefined : ImportOpenDataResponseDetailFromJSON(json['conversion']),
     };
 }
 

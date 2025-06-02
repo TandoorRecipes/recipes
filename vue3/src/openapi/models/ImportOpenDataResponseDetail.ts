@@ -24,35 +24,31 @@ export interface ImportOpenDataResponseDetail {
      * @type {number}
      * @memberof ImportOpenDataResponseDetail
      */
-    totalCreated: number;
+    totalCreated?: number;
     /**
      * 
      * @type {number}
      * @memberof ImportOpenDataResponseDetail
      */
-    totalUpdated: number;
+    totalUpdated?: number;
     /**
      * 
      * @type {number}
      * @memberof ImportOpenDataResponseDetail
      */
-    totalUntouched: number;
+    totalUntouched?: number;
     /**
      * 
      * @type {number}
      * @memberof ImportOpenDataResponseDetail
      */
-    totalErrored: number;
+    totalErrored?: number;
 }
 
 /**
  * Check if a given object implements the ImportOpenDataResponseDetail interface.
  */
 export function instanceOfImportOpenDataResponseDetail(value: object): value is ImportOpenDataResponseDetail {
-    if (!('totalCreated' in value) || value['totalCreated'] === undefined) return false;
-    if (!('totalUpdated' in value) || value['totalUpdated'] === undefined) return false;
-    if (!('totalUntouched' in value) || value['totalUntouched'] === undefined) return false;
-    if (!('totalErrored' in value) || value['totalErrored'] === undefined) return false;
     return true;
 }
 
@@ -66,10 +62,10 @@ export function ImportOpenDataResponseDetailFromJSONTyped(json: any, ignoreDiscr
     }
     return {
         
-        'totalCreated': json['total_created'],
-        'totalUpdated': json['total_updated'],
-        'totalUntouched': json['total_untouched'],
-        'totalErrored': json['total_errored'],
+        'totalCreated': json['total_created'] == null ? undefined : json['total_created'],
+        'totalUpdated': json['total_updated'] == null ? undefined : json['total_updated'],
+        'totalUntouched': json['total_untouched'] == null ? undefined : json['total_untouched'],
+        'totalErrored': json['total_errored'] == null ? undefined : json['total_errored'],
     };
 }
 

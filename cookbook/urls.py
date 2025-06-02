@@ -111,6 +111,7 @@ urlpatterns = [
     path('data/batch/import', data.batch_import, name='data_batch_import'),
     path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
     path('api/import/', api.AppImportView.as_view(), name='view_import'),
+    path('api/export/', api.AppExportView.as_view(), name='api_export'),
     path('data/import/url', data.import_url, name='data_import_url'),
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
