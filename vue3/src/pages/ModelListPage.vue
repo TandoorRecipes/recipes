@@ -171,7 +171,11 @@ function loadItems(options: VDataTableUpdateOptions) {
     if (tablePage.value != options.page) {
         tablePage.value = options.page
     }
-    router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
+    if(route.query.page == undefined){
+        router.replace({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
+    } else {
+        router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
+    }
 
     useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
 
