@@ -12,9 +12,9 @@
         <v-row dense>
             <v-col>
                 <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)">
-                    <template #subtitle v-if="TFood.localizationKeyDescription">
+                    <template #subtitle v-if="genericModel.model.localizationKeyDescription">
                         <div class="text-wrap">
-                            {{ $t(TFood.localizationKeyDescription) }}
+                            {{ $t(genericModel.model.localizationKeyDescription) }}
                         </div>
                     </template>
                     <template #append>

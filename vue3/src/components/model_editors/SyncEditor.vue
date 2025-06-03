@@ -1,0 +1,53 @@
+<template>
+    <model-editor-base
+        :loading="loading"
+        :dialog="dialog"
+        @save="saveObject"
+        @delete="deleteObject"
+        @close="emit('close'); editingObjChanged = false"
+        :is-update="isUpdate()"
+        :is-changed="editingObjChanged"
+        :model-class="modelClass"
+        :object-name="editingObjName()">
+        <v-card-text>
+            <v-form :disabled="loading">
+
+                <v-text-field :label="$t('Path')" v-model="editingObj.path"></v-text-field>
+                <v-checkbox :label="$t('Enabled')" v-model="editingObj.active"></v-checkbox>
+
+                <p>{{$t('Updated')}}: {{editingObj.updatedAt}}</p>
+
+            </v-form>
+        </v-card-text>
+    </model-editor-base>
+
+</template>
+
+<script setup lang="ts">
+
+import {onMounted, PropType} from "vue";
+import { Sync} from "@/openapi";
+import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
+import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+
+const props = defineProps({
+    item: {type: {} as PropType<Sync>, required: false, default: null},
+    itemId: {type: [Number, String], required: false, default: undefined},
+    itemDefaults: {type: {} as PropType<Sync>, required: false, default: {} as Sync},
+    dialog: {type: Boolean, default: false}
+})
+
+const emit = defineEmits(['create', 'save', 'delete', 'close'])
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Sync>('Sync', emit)
+
+// object specific data (for selects/display)
+
+onMounted(() => {
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
+})
+
+</script>
+
+<style scoped>
+
+</style>

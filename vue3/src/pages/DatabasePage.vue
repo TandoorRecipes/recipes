@@ -49,13 +49,26 @@
             <database-model-col model="Automation"></database-model-col>
             <database-model-col model="UserFile"></database-model-col>
             <database-model-col model="CustomFilter"></database-model-col>
-            <database-link-col :to="{name: 'IngredientEditorPage'}"
+            <database-model-col model="CookLog"></database-model-col>
+            <database-model-col model="ViewLog"></database-model-col>
+            
+             <database-link-col :to="{name: 'IngredientEditorPage'}"
                                prepend-icon="fa-solid fa-table-list"
                                :title="$t('Ingredient Editor')"
                                :subtitle="$t('IngredientEditorHelp')">
 
             </database-link-col>
+        </v-row>
 
+        <v-row>
+            <v-col>
+                <h2>{{ $t('External') }}</h2>
+            </v-col>
+        </v-row>
+        <v-row dense>
+            <database-model-col model="Sync"></database-model-col>
+            <database-model-col model="SyncLog"></database-model-col>
+            <database-model-col model="Storage"></database-model-col>
         </v-row>
 
     </v-container>

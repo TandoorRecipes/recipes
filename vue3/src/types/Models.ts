@@ -1,6 +1,6 @@
 import {
     AccessToken,
-    ApiApi, Automation, type AutomationTypeEnum, CustomFilter,
+    ApiApi, Automation, type AutomationTypeEnum, CookLog, CustomFilter,
     Food,
     Ingredient,
     InviteLink, Keyword,
@@ -10,10 +10,10 @@ import {
     Recipe, RecipeBook, RecipeBookEntry, ShoppingListEntry,
     Step,
     Supermarket,
-    SupermarketCategory,
+    SupermarketCategory, Sync, SyncLog,
     Unit,
     UnitConversion, User, UserFile,
-    UserSpace
+    UserSpace, ViewLog
 } from "@/openapi";
 import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
@@ -135,6 +135,11 @@ export type EditorSupportedModels =
     | 'RecipeBook'
     | 'RecipeBookEntry'
     | 'CustomFilter'
+    | 'Sync'
+    | 'SyncLog'
+    | 'Storage'
+    | 'CookLog'
+    | 'ViewLog'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -161,6 +166,11 @@ export type EditorSupportedTypes =
     | RecipeBook
     | RecipeBookEntry
     | CustomFilter
+    | Sync
+    | SyncLog
+    | Storage
+    | CookLog
+    | ViewLog
 
 export const TFood = {
     name: 'Food',
@@ -611,6 +621,65 @@ export const TInviteLink = {
     ]
 } as Model
 registerModel(TInviteLink)
+
+export const TStorage = {
+    name: 'Storage',
+    localizationKey: 'Storage',
+    localizationKeyDescription: 'StorageHelp',
+    icon: 'fa-solid fa-cloud',
+
+    disableListView: false,
+    toStringKeys: ['name'],
+    isPaginated: false,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TStorage)
+
+export const TSync = {
+    name: 'Sync',
+    localizationKey: 'SyncedPath',
+    localizationKeyDescription: 'SyncedPathHelp',
+    icon: 'fa-solid fa-folder-plus',
+
+    disableListView: false,
+    toStringKeys: ['path'],
+    isPaginated: true,
+
+    tableHeaders: [
+        {title: 'SyncedPath', key: 'path'},
+        {title: 'ExternalStorage', key: 'storage.name'},
+        {title: 'Updated', key: 'lastChecked'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TSync)
+
+export const TSyncLog = {
+    name: 'SyncLog',
+    localizationKey: 'SyncLog',
+    localizationKeyDescription: 'SyncLogHelp',
+    icon: 'fa-solid fa-bars-staggered',
+
+    disableListView: false,
+    toStringKeys: ['sync.path'],
+    isPaginated: true,
+
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+
+    tableHeaders: [
+        {title: 'SyncedPath', key: 'sync.path'},
+        {title: 'Status', key: 'status'},
+        {title: 'Created', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TSyncLog)
 
 export const TFoodInheritField = {
     name: 'FoodInheritField',
