@@ -2,30 +2,29 @@
     <v-container>
         <v-row>
             <v-col>
-                <span class="text-h4">
-                    <v-btn icon="fa-solid fa-caret-down" variant="tonal">
-                        <i class="fa-solid fa-caret-down"></i>
-                        <v-menu activator="parent">
-                            <v-list>
-
-                                <v-list-item
-                                    v-for="m in getListModels()"
-                                    @click="changeModel(m)"
-                                    :active="m.name == genericModel.model.name"
-                                >
-                                     <template #prepend><v-icon :icon="m.icon"></v-icon> </template>
-                                     {{ $t(m.localizationKey) }}
-                                </v-list-item>
-                            </v-list>
-                        </v-menu>
-                    </v-btn>
-                    <i :class="genericModel.model.icon"></i>
-                    {{ $t(genericModel.model.localizationKey) }}</span>
-                <v-btn class="float-right" icon="$create" color="create">
-                    <i class="fa-solid fa-plus"></i>
-                    <model-edit-dialog :close-after-create="false" :model="model"
-                                       @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
-                </v-btn>
+                <v-card>
+                    <v-card-text class="pt-2 pb-2">
+                        <v-btn variant="flat" @click="router.go(-1)" prepend-icon="fa-solid fa-arrow-left">{{ $t('Back') }}</v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row dense>
+            <v-col>
+                <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)">
+                    <template #subtitle v-if="TFood.localizationKeyDescription">
+                        <div class="text-wrap">
+                            {{ $t(TFood.localizationKeyDescription) }}
+                        </div>
+                    </template>
+                    <template #append>
+                        <v-btn class="float-right" icon="$create" color="create">
+                            <i class="fa-solid fa-plus"></i>
+                            <model-edit-dialog :close-after-create="false" :model="model"
+                                               @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
+                        </v-btn>
+                    </template>
+                </v-card>
             </v-col>
         </v-row>
         <v-row>
@@ -85,7 +84,7 @@ import {
     EditorSupportedModels,
     GenericModel,
     getGenericModelFromString, getListModels,
-    Model,
+    Model, TFood,
 } from "@/types/Models";
 import {VDataTable} from "vuetify/components";
 import {useUrlSearchParams} from "@vueuse/core";
@@ -171,7 +170,7 @@ function loadItems(options: VDataTableUpdateOptions) {
     if (tablePage.value != options.page) {
         tablePage.value = options.page
     }
-    if(route.query.page == undefined){
+    if (route.query.page == undefined) {
         router.replace({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
     } else {
         router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})

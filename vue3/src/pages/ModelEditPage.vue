@@ -10,7 +10,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row dense>
             <v-col>
                 <component :is="editorComponent" :item-id="id" @delete="objectDeleted" @create="(obj: any) => objectCreated(obj)"></component>
             </v-col>

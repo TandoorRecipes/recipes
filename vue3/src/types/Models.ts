@@ -86,6 +86,7 @@ type ModelTableHeaders = {
 export type Model = {
     name: string,
     localizationKey: string,
+    localizationKeyDescription: string,
     icon: string,
     toStringKeys: Array<string>,
 
@@ -164,6 +165,7 @@ export type EditorSupportedTypes =
 export const TFood = {
     name: 'Food',
     localizationKey: 'Food',
+    localizationKeyDescription: 'FoodHelp',
     icon: 'fa-solid fa-carrot',
 
     isPaginated: true,
@@ -183,6 +185,7 @@ registerModel(TFood)
 export const TUnit = {
     name: 'Unit',
     localizationKey: 'Unit',
+    localizationKeyDescription: 'UnitHelp',
     icon: 'fa-solid fa-scale-balanced',
 
     isPaginated: true,
@@ -201,6 +204,7 @@ registerModel(TUnit)
 export const TKeyword = {
     name: 'Keyword',
     localizationKey: 'Keyword',
+    localizationKeyDescription: 'KeywordHelp',
     icon: 'fa-solid fa-tags',
 
     isPaginated: true,
@@ -218,6 +222,7 @@ registerModel(TKeyword)
 export const TRecipe = {
     name: 'Recipe',
     localizationKey: 'Recipe',
+    localizationKeyDescription: 'RecipeHelp',
     icon: 'fa-solid fa-book',
 
     isPaginated: true,
@@ -235,6 +240,7 @@ registerModel(TRecipe)
 export const TStep = {
     name: 'Step',
     localizationKey: 'Step',
+    localizationKeyDescription: 'StepHelp',
     icon: 'fa-solid fa-list',
 
     isPaginated: true,
@@ -252,6 +258,7 @@ registerModel(TStep)
 export const TIngredient = {
     name: 'Ingredient',
     localizationKey: 'Ingredient',
+    localizationKeyDescription: 'IngredientHelp',
     icon: 'fa-solid fa-jar',
 
     isPaginated: true,
@@ -269,6 +276,7 @@ registerModel(TIngredient)
 export const TMealType = {
     name: 'MealType',
     localizationKey: 'Meal_Type',
+    localizationKeyDescription: 'MealTypeHelp',
     icon: 'fa-solid fa-utensils',
 
     isPaginated: true,
@@ -284,6 +292,7 @@ registerModel(TMealType)
 export const TMealPlan = {
     name: 'MealPlan',
     localizationKey: 'Meal_Plan',
+    localizationKeyDescription: 'MealPlanHelp',
     icon: 'fa-solid fa-calendar-days',
 
     isPaginated: true,
@@ -302,6 +311,7 @@ registerModel(TMealPlan)
 export const TRecipeBook = {
     name: 'RecipeBook',
     localizationKey: 'Recipe_Book',
+    localizationKeyDescription: 'RecipeBookHelp',
     icon: 'fa-solid fa-book-bookmark',
 
     isPaginated: true,
@@ -319,6 +329,7 @@ registerModel(TRecipeBook)
 export const TRecipeBookEntry = {
     name: 'RecipeBookEntry',
     localizationKey: 'Recipe_Book',
+    localizationKeyDescription: 'RecipeBookEntryHelp',
     icon: 'fa-solid fa-book-bookmark',
 
     isPaginated: true,
@@ -337,6 +348,7 @@ registerModel(TRecipeBookEntry)
 export const TCustomFilter = {
     name: 'CustomFilter',
     localizationKey: 'SavedSearch',
+    localizationKeyDescription: 'SavedSearchHelp',
     icon: 'fa-solid fa-filter',
 
     isPaginated: true,
@@ -352,6 +364,7 @@ registerModel(TCustomFilter)
 export const TUser = {
     name: 'User',
     localizationKey: 'User',
+    localizationKeyDescription: 'UserHelp',
     icon: 'fa-solid fa-user',
 
     disableCreate: true,
@@ -373,6 +386,7 @@ registerModel(TUser)
 export const TSupermarket = {
     name: 'Supermarket',
     localizationKey: 'Supermarket',
+    localizationKeyDescription: 'SupermarketHelp',
     icon: 'fa-solid fa-store',
 
     isPaginated: true,
@@ -388,6 +402,7 @@ registerModel(TSupermarket)
 export const TSupermarketCategory = {
     name: 'SupermarketCategory',
     localizationKey: 'Category',
+    localizationKeyDescription: 'SupermarketCategoryHelp',
     icon: 'fa-solid fa-boxes-stacked',
 
     isPaginated: true,
@@ -404,6 +419,7 @@ registerModel(TSupermarketCategory)
 export const TShoppingListEntry = {
     name: 'ShoppingListEntry',
     localizationKey: 'ShoppingListEntry',
+    localizationKeyDescription: 'ShoppingListEntryHelp',
     icon: 'fa-solid fa-list-check',
 
     disableListView: true,
@@ -422,6 +438,7 @@ registerModel(TShoppingListEntry)
 export const TPropertyType = {
     name: 'PropertyType',
     localizationKey: 'Property',
+    localizationKeyDescription: 'PropertyTypeHelp',
     icon: 'fa-solid fa-database',
 
     isPaginated: true,
@@ -437,6 +454,7 @@ registerModel(TPropertyType)
 export const TProperty = {
     name: 'Property',
     localizationKey: 'Property',
+    localizationKeyDescription: 'PropertyHelp',
     icon: 'fa-solid fa-database',
 
     disableListView: true,
@@ -454,6 +472,7 @@ registerModel(TProperty)
 export const TUnitConversion = {
     name: 'UnitConversion',
     localizationKey: 'UnitConversion',
+    localizationKeyDescription: 'UnitConversionHelp',
     icon: 'fa-solid fa-exchange-alt',
 
     isPaginated: true,
@@ -473,6 +492,7 @@ registerModel(TUnitConversion)
 export const TUserFile = {
     name: 'UserFile',
     localizationKey: 'File',
+    localizationKeyDescription: 'UserFileHelp',
     icon: 'fa-solid fa-file',
 
     isPaginated: true,
@@ -488,6 +508,7 @@ registerModel(TUserFile)
 export const TAutomation = {
     name: 'Automation',
     localizationKey: 'Automation',
+    localizationKeyDescription: 'AutomationHelp',
     icon: 'fa-solid fa-robot',
 
     isPaginated: true,
@@ -504,6 +525,7 @@ registerModel(TAutomation)
 export const TCookLog = {
     name: 'CookLog',
     localizationKey: 'CookLog',
+    localizationKeyDescription: 'CookLogHelp',
     icon: 'fa-solid fa-table-list',
 
     isPaginated: true,
@@ -520,6 +542,7 @@ registerModel(TCookLog)
 export const TViewLog = {
     name: 'ViewLog',
     localizationKey: 'History',
+    localizationKeyDescription: 'ViewLogHelp',
     icon: 'fa-solid fa-clock-rotate-left',
 
     isPaginated: true,
@@ -536,6 +559,7 @@ registerModel(TViewLog)
 export const TAccessToken = {
     name: 'AccessToken',
     localizationKey: 'Access_Token',
+    localizationKeyDescription: 'AccessTokenHelp',
     icon: 'fa-solid fa-key',
 
     disableListView: true,
@@ -553,6 +577,7 @@ registerModel(TAccessToken)
 export const TUserSpace = {
     name: 'UserSpace',
     localizationKey: 'SpaceMembers',
+    localizationKeyDescription: 'SpaceMembersHelp',
     icon: 'fa-solid fa-users',
 
     disableListView: true,
@@ -571,6 +596,7 @@ registerModel(TUserSpace)
 export const TInviteLink = {
     name: 'InviteLink',
     localizationKey: 'Invite_Link',
+    localizationKeyDescription: 'InviteLinkHelp',
     icon: 'fa-solid fa-link',
 
     disableListView: true,
@@ -589,6 +615,7 @@ registerModel(TInviteLink)
 export const TFoodInheritField = {
     name: 'FoodInheritField',
     localizationKey: 'FoodInherit',
+    localizationKeyDescription: 'food_inherit_info',
     icon: 'fa-solid fa-list',
 
     disableListView: true,

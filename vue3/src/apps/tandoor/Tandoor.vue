@@ -126,7 +126,7 @@
                 <v-list-item prepend-icon="$shopping" :title="$t('Shopping_list')" :to="{ name: 'ShoppingListPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
                 <v-list-item prepend-icon="$books" :title="$t('Books')" :to="{ name: 'BooksPage', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'ModelListPage', params: {model: 'food'} }"></v-list-item>
+                <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'DatabasePage' }"></v-list-item>
 
                 <navigation-drawer-context-menu></navigation-drawer-context-menu>
             </v-list>
@@ -162,7 +162,7 @@
                     <v-list nav>
                         <v-list-item prepend-icon="fa-solid fa-sliders" :to="{ name: 'SettingsPage', params: {} }" :title="$t('Settings')"></v-list-item>
                         <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
-                        <v-list-item prepend-icon="fa-solid fa-folder-tree" :to="{ name: 'ModelListPage', params: {model: 'food'} }" :title="$t('Database')"></v-list-item>
+                        <v-list-item prepend-icon="fa-solid fa-folder-tree" :to="{ name: 'DatabasePage' }" :title="$t('Database')"></v-list-item>
                         <v-list-item prepend-icon="$books" :title="$t('Books')" :to="{ name: 'BooksPage', params: {} }"></v-list-item>
                     </v-list>
                 </v-bottom-sheet>
