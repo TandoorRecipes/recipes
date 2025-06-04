@@ -21,7 +21,7 @@ import {
 } from './MethodEnum';
 
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface PatchedStorage
  */
@@ -64,6 +64,18 @@ export interface PatchedStorage {
     token?: string;
     /**
      * 
+     * @type {string}
+     * @memberof PatchedStorage
+     */
+    url?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedStorage
+     */
+    path?: string;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedStorage
      */
@@ -93,6 +105,8 @@ export function PatchedStorageFromJSONTyped(json: any, ignoreDiscriminator: bool
         'username': json['username'] == null ? undefined : json['username'],
         'password': json['password'] == null ? undefined : json['password'],
         'token': json['token'] == null ? undefined : json['token'],
+        'url': json['url'] == null ? undefined : json['url'],
+        'path': json['path'] == null ? undefined : json['path'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
@@ -109,6 +123,8 @@ export function PatchedStorageToJSON(value?: Omit<PatchedStorage, 'createdBy'> |
         'username': value['username'],
         'password': value['password'],
         'token': value['token'],
+        'url': value['url'],
+        'path': value['path'],
     };
 }
 

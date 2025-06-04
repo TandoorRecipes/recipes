@@ -13,8 +13,15 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Storage } from './Storage';
+import {
+    StorageFromJSON,
+    StorageFromJSONTyped,
+    StorageToJSON,
+} from './Storage';
+
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface PatchedSync
  */
@@ -27,10 +34,10 @@ export interface PatchedSync {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {Storage}
      * @memberof PatchedSync
      */
-    storage?: number;
+    storage?: Storage;
     /**
      * 
      * @type {string}
@@ -81,7 +88,7 @@ export function PatchedSyncFromJSONTyped(json: any, ignoreDiscriminator: boolean
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'storage': json['storage'] == null ? undefined : json['storage'],
+        'storage': json['storage'] == null ? undefined : StorageFromJSON(json['storage']),
         'path': json['path'] == null ? undefined : json['path'],
         'active': json['active'] == null ? undefined : json['active'],
         'lastChecked': json['last_checked'] == null ? undefined : (new Date(json['last_checked'])),
@@ -97,7 +104,7 @@ export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'createdAt'|'updated
     return {
         
         'id': value['id'],
-        'storage': value['storage'],
+        'storage': StorageToJSON(value['storage']),
         'path': value['path'],
         'active': value['active'],
         'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),

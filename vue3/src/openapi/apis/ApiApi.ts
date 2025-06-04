@@ -63,11 +63,13 @@ import type {
   PaginatedPropertyTypeList,
   PaginatedRecipeBookEntryList,
   PaginatedRecipeBookList,
+  PaginatedRecipeImportList,
   PaginatedRecipeOverviewList,
   PaginatedShoppingListEntryList,
   PaginatedShoppingListRecipeList,
   PaginatedSpaceList,
   PaginatedStepList,
+  PaginatedStorageList,
   PaginatedSupermarketCategoryList,
   PaginatedSupermarketCategoryRelationList,
   PaginatedSupermarketList,
@@ -105,6 +107,7 @@ import type {
   PatchedRecipe,
   PatchedRecipeBook,
   PatchedRecipeBookEntry,
+  PatchedRecipeImport,
   PatchedShoppingListEntry,
   PatchedShoppingListRecipe,
   PatchedSpace,
@@ -129,6 +132,7 @@ import type {
   RecipeFromSource,
   RecipeFromSourceResponse,
   RecipeImage,
+  RecipeImport,
   RecipeShoppingUpdate,
   RecipeSimple,
   ServerSettings,
@@ -250,6 +254,8 @@ import {
     PaginatedRecipeBookEntryListToJSON,
     PaginatedRecipeBookListFromJSON,
     PaginatedRecipeBookListToJSON,
+    PaginatedRecipeImportListFromJSON,
+    PaginatedRecipeImportListToJSON,
     PaginatedRecipeOverviewListFromJSON,
     PaginatedRecipeOverviewListToJSON,
     PaginatedShoppingListEntryListFromJSON,
@@ -260,6 +266,8 @@ import {
     PaginatedSpaceListToJSON,
     PaginatedStepListFromJSON,
     PaginatedStepListToJSON,
+    PaginatedStorageListFromJSON,
+    PaginatedStorageListToJSON,
     PaginatedSupermarketCategoryListFromJSON,
     PaginatedSupermarketCategoryListToJSON,
     PaginatedSupermarketCategoryRelationListFromJSON,
@@ -334,6 +342,8 @@ import {
     PatchedRecipeBookToJSON,
     PatchedRecipeBookEntryFromJSON,
     PatchedRecipeBookEntryToJSON,
+    PatchedRecipeImportFromJSON,
+    PatchedRecipeImportToJSON,
     PatchedShoppingListEntryFromJSON,
     PatchedShoppingListEntryToJSON,
     PatchedShoppingListRecipeFromJSON,
@@ -382,6 +392,8 @@ import {
     RecipeFromSourceResponseToJSON,
     RecipeImageFromJSON,
     RecipeImageToJSON,
+    RecipeImportFromJSON,
+    RecipeImportToJSON,
     RecipeShoppingUpdateFromJSON,
     RecipeShoppingUpdateToJSON,
     RecipeSimpleFromJSON,
@@ -1211,6 +1223,42 @@ export interface ApiRecipeImageUpdateRequest {
     imageUrl?: string;
 }
 
+export interface ApiRecipeImportCreateRequest {
+    recipeImport: Omit<RecipeImport, 'createdAt'>;
+}
+
+export interface ApiRecipeImportDestroyRequest {
+    id: number;
+}
+
+export interface ApiRecipeImportImportAllCreateRequest {
+    recipeImport: Omit<RecipeImport, 'createdAt'>;
+}
+
+export interface ApiRecipeImportImportRecipeCreateRequest {
+    id: number;
+    recipeImport: Omit<RecipeImport, 'createdAt'>;
+}
+
+export interface ApiRecipeImportListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiRecipeImportPartialUpdateRequest {
+    id: number;
+    patchedRecipeImport?: Omit<PatchedRecipeImport, 'createdAt'>;
+}
+
+export interface ApiRecipeImportRetrieveRequest {
+    id: number;
+}
+
+export interface ApiRecipeImportUpdateRequest {
+    id: number;
+    recipeImport: Omit<RecipeImport, 'createdAt'>;
+}
+
 export interface ApiRecipeListRequest {
     books?: Array<number>;
     booksAnd?: Array<number>;
@@ -1402,6 +1450,11 @@ export interface ApiStorageDestroyRequest {
     id: number;
 }
 
+export interface ApiStorageListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiStoragePartialUpdateRequest {
     id: number;
     patchedStorage?: Omit<PatchedStorage, 'createdBy'>;
@@ -1544,6 +1597,11 @@ export interface ApiSyncLogRetrieveRequest {
 export interface ApiSyncPartialUpdateRequest {
     id: number;
     patchedSync?: Omit<PatchedSync, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiSyncPerformUpdateCreateRequest {
+    id: number;
+    sync: Omit<Sync, 'createdAt'|'updatedAt'>;
 }
 
 export interface ApiSyncRetrieveRequest {
@@ -8931,6 +8989,331 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
+    async apiRecipeImportCreateRaw(requestParameters: ApiRecipeImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImport>> {
+        if (requestParameters['recipeImport'] == null) {
+            throw new runtime.RequiredError(
+                'recipeImport',
+                'Required parameter "recipeImport" was null or undefined when calling apiRecipeImportCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeImportToJSON(requestParameters['recipeImport']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeImportFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportCreate(requestParameters: ApiRecipeImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImport> {
+        const response = await this.apiRecipeImportCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportDestroyRaw(requestParameters: ApiRecipeImportDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeImportDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportDestroy(requestParameters: ApiRecipeImportDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiRecipeImportDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportImportAllCreateRaw(requestParameters: ApiRecipeImportImportAllCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImport>> {
+        if (requestParameters['recipeImport'] == null) {
+            throw new runtime.RequiredError(
+                'recipeImport',
+                'Required parameter "recipeImport" was null or undefined when calling apiRecipeImportImportAllCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/import_all/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeImportToJSON(requestParameters['recipeImport']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeImportFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportImportAllCreate(requestParameters: ApiRecipeImportImportAllCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImport> {
+        const response = await this.apiRecipeImportImportAllCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportImportRecipeCreateRaw(requestParameters: ApiRecipeImportImportRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeImportImportRecipeCreate().'
+            );
+        }
+
+        if (requestParameters['recipeImport'] == null) {
+            throw new runtime.RequiredError(
+                'recipeImport',
+                'Required parameter "recipeImport" was null or undefined when calling apiRecipeImportImportRecipeCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/{id}/import_recipe/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeImportToJSON(requestParameters['recipeImport']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportImportRecipeCreate(requestParameters: ApiRecipeImportImportRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiRecipeImportImportRecipeCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportListRaw(requestParameters: ApiRecipeImportListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeImportList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedRecipeImportListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportList(requestParameters: ApiRecipeImportListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeImportList> {
+        const response = await this.apiRecipeImportListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportPartialUpdateRaw(requestParameters: ApiRecipeImportPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImport>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeImportPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeImportToJSON(requestParameters['patchedRecipeImport']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeImportFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportPartialUpdate(requestParameters: ApiRecipeImportPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImport> {
+        const response = await this.apiRecipeImportPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportRetrieveRaw(requestParameters: ApiRecipeImportRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImport>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeImportRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeImportFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportRetrieve(requestParameters: ApiRecipeImportRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImport> {
+        const response = await this.apiRecipeImportRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportUpdateRaw(requestParameters: ApiRecipeImportUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImport>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeImportUpdate().'
+            );
+        }
+
+        if (requestParameters['recipeImport'] == null) {
+            throw new runtime.RequiredError(
+                'recipeImport',
+                'Required parameter "recipeImport" was null or undefined when calling apiRecipeImportUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeImportToJSON(requestParameters['recipeImport']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeImportFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeImportUpdate(requestParameters: ApiRecipeImportUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImport> {
+        const response = await this.apiRecipeImportUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
     async apiRecipeListRaw(requestParameters: ApiRecipeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeOverviewList>> {
         const queryParameters: any = {};
 
@@ -10479,8 +10862,16 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiStorageListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Storage>>> {
+    async apiStorageListRaw(requestParameters: ApiStorageListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedStorageList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -10495,14 +10886,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(StorageFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedStorageListFromJSON(jsonValue));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiStorageList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Storage>> {
-        const response = await this.apiStorageListRaw(initOverrides);
+    async apiStorageList(requestParameters: ApiStorageListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedStorageList> {
+        const response = await this.apiStorageListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -11708,6 +12099,53 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSyncPartialUpdate(requestParameters: ApiSyncPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSyncPerformUpdateCreateRaw(requestParameters: ApiSyncPerformUpdateCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SyncLog>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSyncPerformUpdateCreate().'
+            );
+        }
+
+        if (requestParameters['sync'] == null) {
+            throw new runtime.RequiredError(
+                'sync',
+                'Required parameter "sync" was null or undefined when calling apiSyncPerformUpdateCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/sync/{id}/perform_update/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SyncToJSON(requestParameters['sync']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SyncLogFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSyncPerformUpdateCreate(requestParameters: ApiSyncPerformUpdateCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SyncLog> {
+        const response = await this.apiSyncPerformUpdateCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

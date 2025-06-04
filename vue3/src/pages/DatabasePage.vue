@@ -69,6 +69,7 @@
             <database-model-col model="Sync"></database-model-col>
             <database-model-col model="SyncLog"></database-model-col>
             <database-model-col model="Storage"></database-model-col>
+            <database-model-col model="RecipeImport"></database-model-col>
         </v-row>
 
     </v-container>

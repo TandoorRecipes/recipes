@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Sync } from './Sync';
+import {
+    SyncFromJSON,
+    SyncFromJSONTyped,
+    SyncToJSON,
+} from './Sync';
+
 /**
  * 
  * @export
@@ -27,10 +34,10 @@ export interface SyncLog {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {Sync}
      * @memberof SyncLog
      */
-    sync: number;
+    readonly sync: Sync;
     /**
      * 
      * @type {string}
@@ -72,21 +79,20 @@ export function SyncLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'sync': json['sync'],
+        'sync': SyncFromJSON(json['sync']),
         'status': json['status'],
         'msg': json['msg'] == null ? undefined : json['msg'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
-export function SyncLogToJSON(value?: Omit<SyncLog, 'createdAt'> | null): any {
+export function SyncLogToJSON(value?: Omit<SyncLog, 'sync'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
     return {
         
         'id': value['id'],
-        'sync': value['sync'],
         'status': value['status'],
         'msg': value['msg'],
     };

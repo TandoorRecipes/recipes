@@ -18,12 +18,15 @@
                         </div>
                     </template>
                     <template #append>
-                        <v-btn class="float-right" icon="$create" color="create">
+                        <v-btn class="float-right" icon="$create" color="create" v-if="!genericModel.model.disableCreate">
                             <i class="fa-solid fa-plus"></i>
                             <model-edit-dialog :close-after-create="false" :model="model"
                                                @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
                         </v-btn>
                     </template>
+                    <v-card-actions v-if="genericModel.model.name == 'RecipeImport'">
+                        <v-btn prepend-icon="fa-solid fa-rotate" color="success" @click="importAllRecipes()">{{ $t('ImportAll') }}</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
@@ -48,7 +51,7 @@
                             <v-icon icon="$menu"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact">
-                                    <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
+                                    <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}" v-if="!genericModel.model.disableCreate && !genericModel.model.disableUpdate && !genericModel.model.disableDelete" >
                                         {{ $t('Edit') }}
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
@@ -64,6 +67,13 @@
                                                  v-if="genericModel.model.name == 'Unit'">
                                         {{ $t('Ingredient Editor') }}
                                     </v-list-item>
+                                    <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'Sync'" link>
+                                        {{ $t('Import') }}
+                                        <sync-dialog :sync="item"></sync-dialog>
+                                    </v-list-item>
+                                     <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'RecipeImport'" @click="importRecipe(item)">
+                                        {{ $t('Import') }}
+                                    </v-list-item>
                                 </v-list>
                             </v-menu>
                         </v-btn>
@@ -77,22 +87,17 @@
 <script setup lang="ts">
 
 
-import {onBeforeMount, onMounted, PropType, ref, watch} from "vue";
-import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {onBeforeMount, PropType, ref, watch} from "vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {
-    EditorSupportedModels,
-    GenericModel,
-    getGenericModelFromString, getListModels,
-    Model, TFood,
-} from "@/types/Models";
-import {VDataTable} from "vuetify/components";
-import {useUrlSearchParams} from "@vueuse/core";
+import {EditorSupportedModels, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
+import SyncDialog from "@/components/dialogs/SyncDialog.vue";
+import {ApiApi, RecipeImport} from "@/openapi";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -196,6 +201,34 @@ function changeModel(m: Model) {
     tablePage.value = 1
     router.push({name: 'ModelListPage', params: {model: m.name.toLowerCase()}, query: {page: 1}})
     window.scrollTo({top: 0, behavior: 'smooth'})
+}
+
+// model specific functions
+
+/**
+ * convert a RecipeImport to a "real" external recipes and reload the table
+ * @param item
+ */
+function importRecipe(item: RecipeImport){
+let api = new ApiApi()
+    api.apiRecipeImportImportRecipeCreate({id: item.id!, recipeImport: item}).then(r => {
+        loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+}
+
+/**
+ * convert all RecipeImports to "real" external recipes and reload the table (should be empty afterwards)
+ */
+function importAllRecipes(){
+    let api = new ApiApi()
+
+    api.apiRecipeImportImportAllCreate({recipeImport: {} as RecipeImport}).then(r => {
+        loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
 }
 
 </script>

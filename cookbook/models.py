@@ -1094,6 +1094,19 @@ class RecipeImport(models.Model, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    def convert_to_recipe(self, user):
+        recipe = Recipe(
+            name=self.name,
+            file_path=self.file_path,
+            storage=self.storage,
+            file_uid=self.file_uid,
+            created_by=user,
+            space=self.space
+        )
+        recipe.save()
+        self.delete()
+        return recipe
+
 
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)

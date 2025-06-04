@@ -447,27 +447,6 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         read_only_fields = ('user',)
 
 
-class StorageSerializer(SpacedModelSerializer):
-
-    def create(self, validated_data):
-        validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
-
-    class Meta:
-        model = Storage
-        fields = (
-            'id', 'name', 'method', 'username', 'password',
-            'token', 'created_by'
-        )
-
-        read_only_fields = ('created_by',)
-
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'token': {'write_only': True},
-        }
-
-
 class ConnectorConfigConfigSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
@@ -489,7 +468,38 @@ class ConnectorConfigConfigSerializer(SpacedModelSerializer):
         }
 
 
-class SyncSerializer(SpacedModelSerializer):
+class StorageSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    class Meta:
+        model = Storage
+        fields = (
+            'id', 'name', 'method', 'username', 'password',
+            'token', 'url', 'path', 'created_by'
+        )
+
+        read_only_fields = ( 'id', 'created_by',)
+
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'token': {'write_only': True},
+        }
+
+
+class RecipeImportSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
+    storage = StorageSerializer()
+
+    class Meta:
+        model = RecipeImport
+        fields = ('id', 'storage', 'name', 'file_uid', 'file_path', 'created_at')
+
+
+class SyncSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
+    storage = StorageSerializer()
+
     class Meta:
         model = Sync
         fields = (
@@ -499,6 +509,8 @@ class SyncSerializer(SpacedModelSerializer):
 
 
 class SyncLogSerializer(SpacedModelSerializer):
+    sync = SyncSerializer(read_only=True)
+
     class Meta:
         model = SyncLog
         fields = ('id', 'sync', 'status', 'msg', 'created_at')
@@ -1709,6 +1721,7 @@ class ExportRequestSerializer(serializers.Serializer):
     all = serializers.BooleanField(default=False)
     recipes = RecipeFlatSerializer(many=True, default=[])
     custom_filter = CustomFilterSerializer(many=False, default=None, allow_null=True)
+
 
 class ImportOpenDataSerializer(serializers.Serializer):
     selected_version = serializers.CharField()

@@ -7,7 +7,7 @@ import {
     MealPlan,
     MealType,
     Property, PropertyType,
-    Recipe, RecipeBook, RecipeBookEntry, ShoppingListEntry,
+    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingListEntry,
     Step,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
@@ -137,6 +137,7 @@ export type EditorSupportedModels =
     | 'CustomFilter'
     | 'Sync'
     | 'SyncLog'
+    | 'RecipeImport'
     | 'Storage'
     | 'CookLog'
     | 'ViewLog'
@@ -168,6 +169,7 @@ export type EditorSupportedTypes =
     | CustomFilter
     | Sync
     | SyncLog
+    | RecipeImport
     | Storage
     | CookLog
     | ViewLog
@@ -630,7 +632,7 @@ export const TStorage = {
 
     disableListView: false,
     toStringKeys: ['name'],
-    isPaginated: false,
+    isPaginated: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -680,6 +682,29 @@ export const TSyncLog = {
     ]
 } as Model
 registerModel(TSyncLog)
+
+export const TRecipeImport = {
+    name: 'RecipeImport',
+    localizationKey: 'ExternalRecipeImport',
+    localizationKeyDescription: 'ExternalRecipeImportHelp',
+    icon: 'fa-solid fa-file-half-dashed',
+
+    disableListView: false,
+    toStringKeys: ['name'],
+    isPaginated: true,
+
+    disableCreate: true,
+    disableDelete: false,
+    disableUpdate: false,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Storage', key: 'storage.name'},
+        {title: 'Created', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TRecipeImport)
 
 export const TFoodInheritField = {
     name: 'FoodInheritField',

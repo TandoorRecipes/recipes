@@ -85,7 +85,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -109,7 +109,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
-                                 AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer
+                                 AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
+                                 RecipeImportSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -585,17 +586,7 @@ class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Storage.objects
     serializer_class = StorageSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
-    pagination_disabled = True
-
-    def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
-
-
-class ConnectorConfigConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
-    queryset = ConnectorConfig.objects
-    serializer_class = ConnectorConfigConfigSerializer
-    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
-    pagination_disabled = True
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -610,6 +601,21 @@ class SyncViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
 
+    @extend_schema(responses=SyncLogSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['POST'], )
+    def perform_update(self, request, pk):
+        sync = get_object_or_404(Sync, pk=pk)
+
+        sync_log = None
+        if sync.storage.method == Storage.DROPBOX:
+            sync_log = Dropbox.import_all(sync)
+        if sync.storage.method == Storage.NEXTCLOUD:
+            sync_log = Nextcloud.import_all(sync)
+        if sync.storage.method == Storage.LOCAL:
+            sync_log = Local.import_all(sync)
+
+        return Response(SyncLogSerializer(sync_log, many=False, context={'request': self.request}).data)
+
 
 class SyncLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     queryset = SyncLog.objects
@@ -619,6 +625,42 @@ class SyncLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return self.queryset.filter(sync__space=self.request.space)
+
+
+class RecipeImportViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = RecipeImport.objects
+    serializer_class = RecipeImportSerializer
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+    @extend_schema(responses=RecipeSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['POST'], )
+    def import_recipe(self, request, pk):
+        new_recipe = get_object_or_404(RecipeImport, pk=pk, space=request.space)
+        recipe = new_recipe.convert_to_recipe(request.user)
+
+        return Response(RecipeSerializer(recipe, many=False, context={'request': self.request}).data)
+
+    @decorators.action(detail=False, pagination_class=None, methods=['POST'], )
+    def import_all(self, request):
+        imports = RecipeImport.objects.filter(space=request.space).all()
+        for new_recipe in imports:
+            new_recipe.convert_to_recipe(request.user)
+
+        return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
+
+
+class ConnectorConfigConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = ConnectorConfig.objects
+    serializer_class = ConnectorConfigConfigSerializer
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
 
 
 class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet):
@@ -1983,6 +2025,7 @@ class AppExportView(APIView):
             return Response(ExportLogSerializer(context={'request': request}).to_representation(el), status=status.HTTP_200_OK)
 
         return Response({'error': True, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class FdcSearchView(APIView):
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]

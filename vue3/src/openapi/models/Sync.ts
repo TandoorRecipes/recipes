@@ -13,8 +13,15 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Storage } from './Storage';
+import {
+    StorageFromJSON,
+    StorageFromJSONTyped,
+    StorageToJSON,
+} from './Storage';
+
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface Sync
  */
@@ -27,10 +34,10 @@ export interface Sync {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {Storage}
      * @memberof Sync
      */
-    storage: number;
+    storage: Storage;
     /**
      * 
      * @type {string}
@@ -84,7 +91,7 @@ export function SyncFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sync
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'storage': json['storage'],
+        'storage': StorageFromJSON(json['storage']),
         'path': json['path'] == null ? undefined : json['path'],
         'active': json['active'] == null ? undefined : json['active'],
         'lastChecked': json['last_checked'] == null ? undefined : (new Date(json['last_checked'])),
@@ -100,7 +107,7 @@ export function SyncToJSON(value?: Omit<Sync, 'createdAt'|'updatedAt'> | null): 
     return {
         
         'id': value['id'],
-        'storage': value['storage'],
+        'storage': StorageToJSON(value['storage']),
         'path': value['path'],
         'active': value['active'],
         'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),

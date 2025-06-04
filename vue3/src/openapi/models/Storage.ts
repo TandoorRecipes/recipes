@@ -21,7 +21,7 @@ import {
 } from './MethodEnum';
 
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface Storage
  */
@@ -64,6 +64,18 @@ export interface Storage {
     token?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Storage
+     */
+    url?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    path?: string;
+    /**
+     * 
      * @type {number}
      * @memberof Storage
      */
@@ -95,6 +107,8 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
         'username': json['username'] == null ? undefined : json['username'],
         'password': json['password'] == null ? undefined : json['password'],
         'token': json['token'] == null ? undefined : json['token'],
+        'url': json['url'] == null ? undefined : json['url'],
+        'path': json['path'] == null ? undefined : json['path'],
         'createdBy': json['created_by'],
     };
 }
@@ -111,6 +125,8 @@ export function StorageToJSON(value?: Omit<Storage, 'createdBy'> | null): any {
         'username': value['username'],
         'password': value['password'],
         'token': value['token'],
+        'url': value['url'],
+        'path': value['path'],
     };
 }
 
