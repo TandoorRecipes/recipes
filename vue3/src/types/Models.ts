@@ -1,6 +1,6 @@
 import {
     AccessToken,
-    ApiApi, Automation, type AutomationTypeEnum, CookLog, CustomFilter,
+    ApiApi, Automation, type AutomationTypeEnum, ConnectorConfig, CookLog, CustomFilter,
     Food,
     Ingredient,
     InviteLink, Keyword,
@@ -141,6 +141,7 @@ export type EditorSupportedModels =
     | 'Storage'
     | 'CookLog'
     | 'ViewLog'
+    | 'ConnectorConfig'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -173,6 +174,7 @@ export type EditorSupportedTypes =
     | Storage
     | CookLog
     | ViewLog
+    | ConnectorConfig
 
 export const TFood = {
     name: 'Food',
@@ -705,6 +707,28 @@ export const TRecipeImport = {
     ]
 } as Model
 registerModel(TRecipeImport)
+
+export const TConnectorConfig = {
+    name: 'ConnectorConfig',
+    localizationKey: 'ConnectorConfig',
+    localizationKeyDescription: 'ConnectorConfigHelp',
+    icon: 'fa-solid fa-arrows-turn-to-dots',
+
+    disableListView: false,
+    toStringKeys: ['name'],
+    isPaginated: true,
+
+    disableCreate: false,
+    disableDelete: false,
+    disableUpdate: false,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Type', key: 'type'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TConnectorConfig)
 
 export const TFoodInheritField = {
     name: 'FoodInheritField',

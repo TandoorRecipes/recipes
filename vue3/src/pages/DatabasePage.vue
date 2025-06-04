@@ -70,6 +70,7 @@
             <database-model-col model="SyncLog"></database-model-col>
             <database-model-col model="Storage"></database-model-col>
             <database-model-col model="RecipeImport"></database-model-col>
+            <database-model-col model="ConnectorConfig"></database-model-col>
         </v-row>
 
     </v-container>

@@ -19,7 +19,7 @@ import type {
   AutoMealPlan,
   Automation,
   BookmarkletImport,
-  ConnectorConfigConfig,
+  ConnectorConfig,
   CookLog,
   CustomFilter,
   ExportLog,
@@ -49,6 +49,7 @@ import type {
   OpenDataVersion,
   PaginatedAutomationList,
   PaginatedBookmarkletImportListList,
+  PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
   PaginatedExportLogList,
@@ -84,7 +85,7 @@ import type {
   PatchedAccessToken,
   PatchedAutomation,
   PatchedBookmarkletImport,
-  PatchedConnectorConfigConfig,
+  PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
   PatchedExportLog,
@@ -166,8 +167,8 @@ import {
     AutomationToJSON,
     BookmarkletImportFromJSON,
     BookmarkletImportToJSON,
-    ConnectorConfigConfigFromJSON,
-    ConnectorConfigConfigToJSON,
+    ConnectorConfigFromJSON,
+    ConnectorConfigToJSON,
     CookLogFromJSON,
     CookLogToJSON,
     CustomFilterFromJSON,
@@ -226,6 +227,8 @@ import {
     PaginatedAutomationListToJSON,
     PaginatedBookmarkletImportListListFromJSON,
     PaginatedBookmarkletImportListListToJSON,
+    PaginatedConnectorConfigListFromJSON,
+    PaginatedConnectorConfigListToJSON,
     PaginatedCookLogListFromJSON,
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
@@ -296,8 +299,8 @@ import {
     PatchedAutomationToJSON,
     PatchedBookmarkletImportFromJSON,
     PatchedBookmarkletImportToJSON,
-    PatchedConnectorConfigConfigFromJSON,
-    PatchedConnectorConfigConfigToJSON,
+    PatchedConnectorConfigFromJSON,
+    PatchedConnectorConfigToJSON,
     PatchedCookLogFromJSON,
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
@@ -529,16 +532,21 @@ export interface ApiBookmarkletImportUpdateRequest {
 }
 
 export interface ApiConnectorConfigCreateRequest {
-    connectorConfigConfig: Omit<ConnectorConfigConfig, 'createdBy'>;
+    connectorConfig: Omit<ConnectorConfig, 'createdBy'>;
 }
 
 export interface ApiConnectorConfigDestroyRequest {
     id: number;
 }
 
+export interface ApiConnectorConfigListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiConnectorConfigPartialUpdateRequest {
     id: number;
-    patchedConnectorConfigConfig?: Omit<PatchedConnectorConfigConfig, 'createdBy'>;
+    patchedConnectorConfig?: Omit<PatchedConnectorConfig, 'createdBy'>;
 }
 
 export interface ApiConnectorConfigRetrieveRequest {
@@ -547,7 +555,7 @@ export interface ApiConnectorConfigRetrieveRequest {
 
 export interface ApiConnectorConfigUpdateRequest {
     id: number;
-    connectorConfigConfig: Omit<ConnectorConfigConfig, 'createdBy'>;
+    connectorConfig: Omit<ConnectorConfig, 'createdBy'>;
 }
 
 export interface ApiCookLogCreateRequest {
@@ -2628,11 +2636,11 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigCreateRaw(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
-        if (requestParameters['connectorConfigConfig'] == null) {
+    async apiConnectorConfigCreateRaw(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfig>> {
+        if (requestParameters['connectorConfig'] == null) {
             throw new runtime.RequiredError(
-                'connectorConfigConfig',
-                'Required parameter "connectorConfigConfig" was null or undefined when calling apiConnectorConfigCreate().'
+                'connectorConfig',
+                'Required parameter "connectorConfig" was null or undefined when calling apiConnectorConfigCreate().'
             );
         }
 
@@ -2651,16 +2659,16 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ConnectorConfigConfigToJSON(requestParameters['connectorConfigConfig']),
+            body: ConnectorConfigToJSON(requestParameters['connectorConfig']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigFromJSON(jsonValue));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigCreate(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+    async apiConnectorConfigCreate(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfig> {
         const response = await this.apiConnectorConfigCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -2704,8 +2712,16 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ConnectorConfigConfig>>> {
+    async apiConnectorConfigListRaw(requestParameters: ApiConnectorConfigListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedConnectorConfigList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -2720,21 +2736,21 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ConnectorConfigConfigFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedConnectorConfigListFromJSON(jsonValue));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ConnectorConfigConfig>> {
-        const response = await this.apiConnectorConfigListRaw(initOverrides);
+    async apiConnectorConfigList(requestParameters: ApiConnectorConfigListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedConnectorConfigList> {
+        const response = await this.apiConnectorConfigListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigPartialUpdateRaw(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+    async apiConnectorConfigPartialUpdateRaw(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfig>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -2757,16 +2773,16 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedConnectorConfigConfigToJSON(requestParameters['patchedConnectorConfigConfig']),
+            body: PatchedConnectorConfigToJSON(requestParameters['patchedConnectorConfig']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigFromJSON(jsonValue));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigPartialUpdate(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+    async apiConnectorConfigPartialUpdate(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfig> {
         const response = await this.apiConnectorConfigPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -2774,7 +2790,7 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigRetrieveRaw(requestParameters: ApiConnectorConfigRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+    async apiConnectorConfigRetrieveRaw(requestParameters: ApiConnectorConfigRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfig>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -2797,13 +2813,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigFromJSON(jsonValue));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigRetrieve(requestParameters: ApiConnectorConfigRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+    async apiConnectorConfigRetrieve(requestParameters: ApiConnectorConfigRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfig> {
         const response = await this.apiConnectorConfigRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -2811,7 +2827,7 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigUpdateRaw(requestParameters: ApiConnectorConfigUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+    async apiConnectorConfigUpdateRaw(requestParameters: ApiConnectorConfigUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfig>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -2819,10 +2835,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['connectorConfigConfig'] == null) {
+        if (requestParameters['connectorConfig'] == null) {
             throw new runtime.RequiredError(
-                'connectorConfigConfig',
-                'Required parameter "connectorConfigConfig" was null or undefined when calling apiConnectorConfigUpdate().'
+                'connectorConfig',
+                'Required parameter "connectorConfig" was null or undefined when calling apiConnectorConfigUpdate().'
             );
         }
 
@@ -2841,16 +2857,16 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ConnectorConfigConfigToJSON(requestParameters['connectorConfigConfig']),
+            body: ConnectorConfigToJSON(requestParameters['connectorConfig']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigFromJSON(jsonValue));
     }
 
     /**
      * logs request counts to redis cache total/per user/
      */
-    async apiConnectorConfigUpdate(requestParameters: ApiConnectorConfigUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+    async apiConnectorConfigUpdate(requestParameters: ApiConnectorConfigUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfig> {
         const response = await this.apiConnectorConfigUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }

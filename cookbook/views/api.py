@@ -92,7 +92,7 @@ from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, AutoMealPlanSerializer,
                                  BookmarkletImportListSerializer, BookmarkletImportSerializer,
-                                 ConnectorConfigConfigSerializer, CookLogSerializer, CustomFilterSerializer,
+                                 CookLogSerializer, CustomFilterSerializer,
                                  ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer,
                                  ImportLogSerializer, IngredientSerializer, IngredientSimpleSerializer,
@@ -110,7 +110,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -653,11 +653,11 @@ class RecipeImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 
 
-class ConnectorConfigConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
+class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ConnectorConfig.objects
-    serializer_class = ConnectorConfigConfigSerializer
+    serializer_class = ConnectorConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
-    pagination_disabled = True
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)

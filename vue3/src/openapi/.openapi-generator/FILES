@@ -10,7 +10,8 @@ models/AutomationTypeEnum.ts
 models/BaseUnitEnum.ts
 models/BookmarkletImport.ts
 models/BookmarkletImportList.ts
-models/ConnectorConfigConfig.ts
+models/ConnectorConfig.ts
+models/ConnectorConfigTypeEnum.ts
 models/CookLog.ts
 models/CustomFilter.ts
 models/DefaultPageEnum.ts
@@ -52,6 +53,7 @@ models/OpenDataUnitTypeEnum.ts
 models/OpenDataVersion.ts
 models/PaginatedAutomationList.ts
 models/PaginatedBookmarkletImportListList.ts
+models/PaginatedConnectorConfigList.ts
 models/PaginatedCookLogList.ts
 models/PaginatedCustomFilterList.ts
 models/PaginatedExportLogList.ts
@@ -87,7 +89,7 @@ models/ParsedIngredient.ts
 models/PatchedAccessToken.ts
 models/PatchedAutomation.ts
 models/PatchedBookmarkletImport.ts
-models/PatchedConnectorConfigConfig.ts
+models/PatchedConnectorConfig.ts
 models/PatchedCookLog.ts
 models/PatchedCustomFilter.ts
 models/PatchedExportLog.ts

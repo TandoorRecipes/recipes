@@ -447,7 +447,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         read_only_fields = ('user',)
 
 
-class ConnectorConfigConfigSerializer(SpacedModelSerializer):
+class ConnectorConfigSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -456,7 +456,7 @@ class ConnectorConfigConfigSerializer(SpacedModelSerializer):
     class Meta:
         model = ConnectorConfig
         fields = (
-            'id', 'name', 'url', 'token', 'todo_entity', 'enabled',
+            'id', 'name', 'type','url', 'token', 'todo_entity', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
             'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'created_by'
         )
