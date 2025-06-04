@@ -21,12 +21,6 @@ mediafiles
 staticfiles
 db.sqlite3
 pytest.ini
-vue/**/*.vue
-vue/**/*.ts
 **/.openapi-generator
 mkdocs.yml
-vue/babel.config*
-vue/package.json
-vue/tsconfig.json
-vue/src/utils/openapi
 venv
