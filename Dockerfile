@@ -107,10 +107,17 @@ RUN <<EOF
 EOF
 
 FROM base AS runner
-COPY --link --from=builder /opt/recipes/ ./
-COPY --link --from=node-builder /src/recipes/vue3/build ./cookbook/static/vue3/
+
+RUN <<EOF
+addgroup -g 1000 tandoor
+adduser -u 1000 -G tandoor -H -D tandoor
+EOF
+
+COPY --link --chown=1000:1000 --from=builder /opt/recipes/ ./
+COPY --link --chown=1000:1000 --from=node-builder /src/recipes/vue3/build ./cookbook/static/vue3/
 
 # This port will be used by gunicorn.
 EXPOSE 8080
+USER 1000:1000
 
 ENTRYPOINT ["/opt/recipes/boot.sh"]
