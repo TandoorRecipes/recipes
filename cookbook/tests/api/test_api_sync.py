@@ -80,6 +80,7 @@ def test_list_space(obj_1, obj_2, a1_s1, a1_s2, space_2):
 ])
 def test_update(arg, request, obj_1):
     c = request.getfixturevalue(arg[0])
+    print(reverse(DETAIL_URL, args={obj_1.id}))
     r = c.patch(reverse(DETAIL_URL, args={obj_1.id}), {'path': 'new'},
                 content_type='application/json')
     response = json.loads(r.content)

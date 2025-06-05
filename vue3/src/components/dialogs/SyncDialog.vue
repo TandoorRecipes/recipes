@@ -44,7 +44,7 @@ const syncLog = ref<undefined | SyncLog>(undefined)
 function performSync() {
     let api = new ApiApi()
 
-    api.apiSyncPerformUpdateCreate({id: props.sync.id!, sync: props.sync}).then(r => {
+    api.apiSyncQuerySyncedFolderCreate({id: props.sync.id!, sync: props.sync}).then(r => {
         syncLog.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)

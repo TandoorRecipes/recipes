@@ -603,7 +603,7 @@ class SyncViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     @extend_schema(responses=SyncLogSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['POST'], )
-    def perform_update(self, request, pk):
+    def query_synced_folder(self, request, pk):
         sync = get_object_or_404(Sync, pk=pk)
 
         sync_log = None
