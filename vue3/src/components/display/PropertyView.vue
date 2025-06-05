@@ -4,7 +4,7 @@
             <v-icon icon="$properties"></v-icon>
             {{ $t('Properties') }}
 
-            <v-btn-toggle border divided density="compact" class="float-right" v-if="hasRecipeProperties && hasRecipeProperties" v-model="sourceSelectedToShow">
+            <v-btn-toggle border divided density="compact" class="float-right d-print-none" v-if="hasRecipeProperties && hasRecipeProperties" v-model="sourceSelectedToShow">
                 <v-btn size="small" value="food">{{ $t('Food') }}</v-btn>
                 <v-btn size="small" value="recipe">{{ $t('Recipe') }}</v-btn>
             </v-btn-toggle>
@@ -25,9 +25,9 @@
                     <td>{{ $n(p.propertyAmountPerServing) }} {{ p.unit }}</td>
                     <td>{{ $n(p.propertyAmountTotal) }} {{ p.unit }}</td>
                     <td v-if="sourceSelectedToShow == 'food'">
-                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small"
+                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small" class="d-print-none"
                                v-if="p.missingValue"></v-btn>
-                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue"></v-btn>
+                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue" class="d-print-none"></v-btn>
                     </td>
                 </tr>
                 </tbody>

@@ -1,93 +1,97 @@
 <template>
     <v-app>
-         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated">
+        <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated">
 
-         </v-app-bar>
+        </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().userSettings.navBgColor" flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated">
             <router-link :to="{ name: 'StartPage', params: {} }">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo"></v-img>
             </router-link>
-            <v-spacer></v-spacer>
-            <global-search-dialog></global-search-dialog>
-            <v-btn icon="$add">
-                <v-icon icon="$add" class="fa-fw"></v-icon>
-                <v-menu activator="parent">
-                    <v-list>
-                        <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
-                        <v-list-item prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-list-item>
-                    </v-list>
-                </v-menu>
-            </v-btn>
 
-            <v-avatar color="primary" class="me-2 cursor-pointer">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
-                <v-menu activator="parent">
 
-                    <v-list density="compact">
-                        <v-list-item class="mb-1">
-                            <template #prepend>
-                                <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                            </template>
-                            <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-                        </v-list-item>
-                        <v-divider></v-divider>
-                        <v-list-item :to="{ name: 'SettingsPage', params: {} }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-sliders"></v-icon>
-                            </template>
-                            {{ $t('Settings') }}
-                        </v-list-item>
-                        <v-list-item :to="{ name: 'ModelListPage', params: {model: 'food'} }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-folder-tree"></v-icon>
-                            </template>
-                            {{ $t('Database') }}
-                        </v-list-item>
-                        <v-list-item :to="{ name: 'HelpPage' }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-question"></v-icon>
-                            </template>
-                            {{ $t('Help') }}
-                        </v-list-item>
-                        <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
-                        <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
-                        <template v-if="useUserPreferenceStore().spaces.length > 1">
-                            <v-divider></v-divider>
-                            <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
-                            <v-list-item v-for="s in useUserPreferenceStore().spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
+                <v-spacer></v-spacer>
+                <global-search-dialog ></global-search-dialog>
+                <v-btn icon="$add" class="d-print-none">
+                    <v-icon icon="$add" class="fa-fw"></v-icon>
+                    <v-menu activator="parent">
+                        <v-list>
+                            <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
+                            <v-list-item prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-list-item>
+                        </v-list>
+                    </v-menu>
+                </v-btn>
+
+                <v-avatar color="primary" class="me-2 cursor-pointer d-print-none">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
+                    <v-menu activator="parent">
+
+                        <v-list density="compact">
+                            <v-list-item class="mb-1">
                                 <template #prepend>
-                                    <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
-                                    <v-icon icon="fa-solid fa-circle" v-else></v-icon>
+                                    <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
                                 </template>
-                                {{ s.name }}
+                                <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
+                                <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                             </v-list-item>
-                        </template>
+                            <v-divider></v-divider>
+                            <v-list-item :to="{ name: 'SettingsPage', params: {} }">
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-sliders"></v-icon>
+                                </template>
+                                {{ $t('Settings') }}
+                            </v-list-item>
+                            <v-list-item :to="{ name: 'ModelListPage', params: {model: 'food'} }">
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-folder-tree"></v-icon>
+                                </template>
+                                {{ $t('Database') }}
+                            </v-list-item>
+                            <v-list-item :to="{ name: 'HelpPage' }">
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-question"></v-icon>
+                                </template>
+                                {{ $t('Help') }}
+                            </v-list-item>
+                            <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
+                            <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
+                            <template v-if="useUserPreferenceStore().spaces.length > 1">
+                                <v-divider></v-divider>
+                                <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
+                                <v-list-item v-for="s in useUserPreferenceStore().spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
+                                    <template #prepend>
+                                        <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
+                                        <v-icon icon="fa-solid fa-circle" v-else></v-icon>
+                                    </template>
+                                    {{ s.name }}
+                                </v-list-item>
+                            </template>
 
-                        <v-divider></v-divider>
-                        <v-list-item link>
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-database"></v-icon>
-                            </template>
-                            {{ $t('Messages') }}
-                            <message-list-dialog></message-list-dialog>
-                        </v-list-item>
-                        <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-shield"></v-icon>
-                            </template>
-                            {{ $t('Admin') }}
-                        </v-list-item>
-                        <v-list-item :href="getDjangoUrl('accounts/logout')" link>
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
-                            </template>
-                            {{ $t('Logout') }}
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-            </v-avatar>
+                            <v-divider></v-divider>
+                            <v-list-item link>
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-database"></v-icon>
+                                </template>
+                                {{ $t('Messages') }}
+                                <message-list-dialog></message-list-dialog>
+                            </v-list-item>
+                            <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-shield"></v-icon>
+                                </template>
+                                {{ $t('Admin') }}
+                            </v-list-item>
+                            <v-list-item :href="getDjangoUrl('accounts/logout')" link>
+                                <template #prepend>
+                                    <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
+                                </template>
+                                {{ $t('Logout') }}
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </v-avatar>
+
         </v-app-bar>
-        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
+        <v-app-bar color="info" density="compact"
+                   v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
                 <v-btn color="success" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
@@ -110,7 +114,8 @@
             <router-view></router-view>
         </v-main>
 
-        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated">
+        <!-- completely hide in print mode because setting d-print-node keeps layout -->
+        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !isPrintMode">
             <v-list nav>
                 <v-list-item :to="{ name: 'SettingsPage', params: {} }">
                     <template #prepend>
@@ -190,9 +195,12 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted, ref} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import '@/assets/tandoor_light.css'
+import {useMediaQuery} from "@vueuse/core";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
+
+const isPrintMode = useMediaQuery('print')
 
 onMounted(() => {
     useUserPreferenceStore()

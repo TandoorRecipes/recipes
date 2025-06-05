@@ -1,10 +1,8 @@
 <template>
 
-    <v-card class="mt-1">
+    <v-card class="mt-1" v-if="cookLogs.length > 0">
         <v-card-title>{{ $t('Activity') }}</v-card-title>
         <v-card-text>
-
-
             <v-list>
                 <v-list-item v-for="c in cookLogs.sort((a,b) =>  a.createdAt! > b.createdAt! ? 1 : -1)" :key="c.id">
                     <template #prepend>
@@ -31,7 +29,7 @@
         </v-card-text>
     </v-card>
 
-    <v-card class="mt-1">
+    <v-card class="mt-1 d-print-none">
         <v-card-text>
             <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment"></v-textarea>
             <v-row de>

@@ -8,56 +8,63 @@
 
     <!--    </v-table>-->
 
-<!--    <v-data-table :items="ingredients" hide-default-footer hide-default-header :headers="tableHeaders" density="compact" v-if="ingredients.length > 0" @click:row="handleRowClick"-->
-<!--                  items-per-page="0">-->
-<!--        <template v-slot:item.checked="{ item }">-->
-<!--            <v-checkbox-btn v-model="item.checked" color="success" v-if="!item.isHeader"></v-checkbox-btn>-->
-<!--        </template>-->
-<!--        <template v-slot:item.amount="{ item }">-->
-<!--            <template v-if="item.isHeader"><p style="width: 100px"><b>{{ item.note }}</b></p></template>-->
-<!--            <template v-else>{{ item.amount * props.ingredientFactor }}</template>-->
-<!--        </template>-->
+    <!--    <v-data-table :items="ingredients" hide-default-footer hide-default-header :headers="tableHeaders" density="compact" v-if="ingredients.length > 0" @click:row="handleRowClick"-->
+    <!--                  items-per-page="0">-->
+    <!--        <template v-slot:item.checked="{ item }">-->
+    <!--            <v-checkbox-btn v-model="item.checked" color="success" v-if="!item.isHeader"></v-checkbox-btn>-->
+    <!--        </template>-->
+    <!--        <template v-slot:item.amount="{ item }">-->
+    <!--            <template v-if="item.isHeader"><p style="width: 100px"><b>{{ item.note }}</b></p></template>-->
+    <!--            <template v-else>{{ item.amount * props.ingredientFactor }}</template>-->
+    <!--        </template>-->
 
-<!--        <template v-slot:item.note="{ item }">-->
-<!--            <v-icon class="far fa-comment float-right" v-if="item.note != '' && item.note != undefined">-->
-<!--                <v-tooltip activator="parent" open-on-click location="start">{{ item.note }}</v-tooltip>-->
-<!--            </v-icon>-->
-<!--        </template>-->
-<!--    </v-data-table>-->
+    <!--        <template v-slot:item.note="{ item }">-->
+    <!--            <v-icon class="far fa-comment float-right" v-if="item.note != '' && item.note != undefined">-->
+    <!--                <v-tooltip activator="parent" open-on-click location="start">{{ item.note }}</v-tooltip>-->
+    <!--            </v-icon>-->
+    <!--        </template>-->
+    <!--    </v-data-table>-->
 
     <v-table density="compact">
         <tbody>
+        <template v-for="i in ingredients" :key="i.id" @click="i.checked = !i.checked">
+            <tr>
+                <template v-if="i.isHeader">
+                    <td colspan="5" class="font-weight-bold">{{ i.note }}</td>
+                </template>
+                <template v-else>
+                    <td style="width: 1%; text-wrap: nowrap" class="pa-0 d-print-none" v-if="showCheckbox">
+                        <v-checkbox-btn v-model="i.checked" color="success" v-if="!i.isHeader"></v-checkbox-btn>
+                    </td>
+                    <td style="width: 1%; text-wrap: nowrap" class="pr-1"
+                        v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)" v-if="!i.noAmount"></td>
+                    <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-if="i.noAmount"></td>
+                    <td style="width: 1%; text-wrap: nowrap" class="pr-1">
+                        <template v-if="i.unit && !i.noAmount"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
+                    </td>
+                    <td>
+                        <template v-if="i.food">
+                            <router-link v-if="i.food.recipe" :to="{name: 'RecipeViewPage', params: {id: i.food.recipe.id}}">
+                                {{ ingredientToFoodString(i, ingredientFactor) }}
+                            </router-link>
+                            <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
+                            <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
+                            <template v-if="i.note != '' && i.note != undefined">
+                                <span class="text-disabled font-italic">&nbsp;{{ i.note }}</span>
+                            </template>
+                        </template>
 
-        <tr v-for="i in ingredients" :key="i.id" @click="i.checked = !i.checked">
-            <template v-if="i.isHeader">
-                <td colspan="5" class="font-weight-bold">{{ i.note }}</td>
-            </template>
-            <template v-else>
-                <td style="width: 1%; text-wrap: nowrap" class="pa-0" v-if="showCheckbox">
-                    <v-checkbox-btn v-model="i.checked" color="success" v-if="!i.isHeader"></v-checkbox-btn>
-                </td>
-                <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-html="calculateFoodAmount(i.amount, props.ingredientFactor, useUserPreferenceStore().userSettings.useFractions)" v-if="!i.noAmount"></td>
-                <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-if="i.noAmount"></td>
-                <td style="width: 1%; text-wrap: nowrap" class="pr-1">
-                    <template v-if="i.unit && !i.noAmount"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
-                </td>
-                <td>
-                    <template v-if="i.food">
-                        <router-link v-if="i.food.recipe" :to="{name: 'RecipeViewPage', params: {id: i.food.recipe.id}}">
-                            {{ ingredientToFoodString(i, ingredientFactor) }}
-                        </router-link>
-                        <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
-                        <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
-                    </template>
-                </td>
 
-                <td style="width: 1%; text-wrap: nowrap">
-                    <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
-                        <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
-                    </v-icon>
-                </td>
-            </template>
-        </tr>
+                    </td>
+
+                    <td style="width: 1%; text-wrap: nowrap" class="d-print-none">
+                        <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
+                            <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
+                        </v-icon>
+                    </td>
+                </template>
+            </tr>
+        </template>
         </tbody>
     </v-table>
 

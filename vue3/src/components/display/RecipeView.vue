@@ -89,15 +89,15 @@
                         </v-card-text>
 
                         <v-row class="text-center text-body-2 mb-1 flex-grow-0">
-                            <v-col >
+                            <v-col>
                                 <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} {{ $t('min') }}<br/>
                                 <div class="text-grey">{{ $t('WorkingTime') }}</div>
                             </v-col>
-                            <v-col >
+                            <v-col>
                                 <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} {{ $t('min') }}</div>
                                 <div class="text-grey">{{ $t('WaitingTime') }}</div>
                             </v-col>
-                            <v-col >
+                            <v-col>
                                 <div class="cursor-pointer">
                                     <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
                                     <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
@@ -129,56 +129,46 @@
 
         <property-view v-model="recipe" :servings="servings" v-if="recipe.internal"></property-view>
 
-        <v-expansion-panels class="mt-2">
-
-            <v-expansion-panel>
-                <v-expansion-panel-title>
-                    <v-icon icon="fa-solid fa-circle-info" class="me-2"></v-icon>
-                    {{ $t('Information') }}
-                </v-expansion-panel-title>
-                <v-expansion-panel-text>
-                    <v-row>
-                        <v-col cols="12" md="3">
-                            <v-card
-                                variant="outlined"
-                                :title="$t('CreatedBy')"
-                                :subtitle="recipe.createdBy.displayName"
-                                prepend-icon="fa-solid fa-user">
-                            </v-card>
-                        </v-col>
-                        <v-col cols="12" md="3">
-                            <v-card
-                                variant="outlined"
-                                :title="$t('Created')"
-                                :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
-                                prepend-icon="$create">
-                            </v-card>
-                        </v-col>
-                        <v-col cols="12" md="3">
-                            <v-card
-                                variant="outlined"
-                                :title="$t('Updated')"
-                                :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
-                                prepend-icon="$edit">
-                            </v-card>
-                        </v-col>
-                        <v-col cols="12" md="3" v-if="recipe.sourceUrl">
-                            <v-card
-                                variant="outlined"
-                                :title="$t('Imported_From')"
-                                prepend-icon="$import">
-                                <template #subtitle>
-                                    <a :href="recipe.sourceUrl" target="_blank">{{ recipe.sourceUrl }}</a>
-                                </template>
-                            </v-card>
-                        </v-col>
-                    </v-row>
-                </v-expansion-panel-text>
-            </v-expansion-panel>
-
-
-        </v-expansion-panels>
-
+        <v-card class="mt-2">
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12" md="3">
+                        <v-card
+                            variant="outlined"
+                            :title="$t('CreatedBy')"
+                            :subtitle="recipe.createdBy.displayName"
+                            prepend-icon="fa-solid fa-user">
+                        </v-card>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-card
+                            variant="outlined"
+                            :title="$t('Created')"
+                            :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
+                            prepend-icon="$create">
+                        </v-card>
+                    </v-col>
+                    <v-col cols="12" md="3">
+                        <v-card
+                            variant="outlined"
+                            :title="$t('Updated')"
+                            :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
+                            prepend-icon="$edit">
+                        </v-card>
+                    </v-col>
+                    <v-col cols="12" md="3" v-if="recipe.sourceUrl">
+                        <v-card
+                            variant="outlined"
+                            :title="$t('Imported_From')"
+                            prepend-icon="$import">
+                            <template #subtitle>
+                                <a :href="recipe.sourceUrl" target="_blank">{{ recipe.sourceUrl }}</a>
+                            </template>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+        </v-card>
 
         <recipe-activity :recipe="recipe"></recipe-activity>
     </template>
@@ -195,12 +185,13 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
-import {useWakeLock} from "@vueuse/core";
+import {useMediaQuery, useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
 import {DateTime} from "luxon";
 import PropertyView from "@/components/display/PropertyView.vue";
 
 const {request, release} = useWakeLock()
+const isPrintMode = useMediaQuery('print')
 
 const recipe = defineModel<Recipe>({required: true})
 

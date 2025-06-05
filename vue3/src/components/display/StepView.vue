@@ -8,7 +8,7 @@
                     <span v-else>{{ $t('Step') }} {{ props.stepNumber }}</span>
                 </v-col>
                 <v-col class="text-right">
-                    <v-btn-group density="compact" variant="tonal">
+                    <v-btn-group density="compact" variant="tonal" class="d-print-none">
                         <v-btn size="small" color="info" v-if="step.time != undefined && step.time > 0" @click="timerRunning = true"><i
                             class="fas fa-stopwatch mr-1 fa-fw"></i> {{ step.time }}
                         </v-btn>
