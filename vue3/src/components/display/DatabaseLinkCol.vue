@@ -1,7 +1,7 @@
 <template>
-    <v-col cols="12" md="6" lg="4">
+    <v-col :cols="props.cols" :md="props.md" :lg="props.lg">
         <v-card :prepend-icon="props.prependIcon" :title="props.title" :subtitle="props.subtitle" variant="outlined" elevation="1"
-                :to="props.to"
+                :to="props.to" :link="isLink" :href="props.href"
                 append-icon="fa-solid fa-arrow-right">
         </v-card>
     </v-col>
@@ -9,8 +9,7 @@
 
 <script setup lang="ts">
 
-import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models.ts";
-import {onBeforeMount, PropType, ref, watch} from "vue";
+import {computed, onBeforeMount, PropType, ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
 import type { RouteLocationRaw } from 'vue-router';
 
@@ -20,9 +19,17 @@ const props = defineProps({
     prependIcon: {type: String, default: ''},
     title: {type: String, default: ''},
     subtitle: {type: String, default: ''},
-    to: {type: {} as PropType<RouteLocationRaw>  }
+    to: {type: {} as PropType<RouteLocationRaw>  },
+    href: {type: String, default: ''},
+    cols: {type: Number, default: 12 },
+    md: {type: Number, default: 6 },
+    lg: {type: Number, default: 4 },
 })
 
+
+const isLink = computed(() => {
+    return props.href != '' && props.to == undefined
+})
 
 </script>
 
