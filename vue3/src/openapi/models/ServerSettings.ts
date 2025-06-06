@@ -79,6 +79,78 @@ export interface ServerSettings {
      * @memberof ServerSettings
      */
     version: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ServerSettings
+     */
+    unauthenticatedThemeFromSpace: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ServerSettings
+     */
+    forceThemeFromSpace: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColor32?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColor128?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColor144?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColor180?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColor192?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColor512?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    logoColorSvg?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    customSpaceTheme?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    navLogo?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    navBgColor?: string;
 }
 
 /**
@@ -95,6 +167,8 @@ export function instanceOfServerSettings(value: object): value is ServerSettings
     if (!('hosted' in value) || value['hosted'] === undefined) return false;
     if (!('debug' in value) || value['debug'] === undefined) return false;
     if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('unauthenticatedThemeFromSpace' in value) || value['unauthenticatedThemeFromSpace'] === undefined) return false;
+    if (!('forceThemeFromSpace' in value) || value['forceThemeFromSpace'] === undefined) return false;
     return true;
 }
 
@@ -118,6 +192,18 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         'hosted': json['hosted'],
         'debug': json['debug'],
         'version': json['version'],
+        'unauthenticatedThemeFromSpace': json['unauthenticated_theme_from_space'],
+        'forceThemeFromSpace': json['force_theme_from_space'],
+        'logoColor32': json['logo_color_32'] == null ? undefined : json['logo_color_32'],
+        'logoColor128': json['logo_color_128'] == null ? undefined : json['logo_color_128'],
+        'logoColor144': json['logo_color_144'] == null ? undefined : json['logo_color_144'],
+        'logoColor180': json['logo_color_180'] == null ? undefined : json['logo_color_180'],
+        'logoColor192': json['logo_color_192'] == null ? undefined : json['logo_color_192'],
+        'logoColor512': json['logo_color_512'] == null ? undefined : json['logo_color_512'],
+        'logoColorSvg': json['logo_color_svg'] == null ? undefined : json['logo_color_svg'],
+        'customSpaceTheme': json['custom_space_theme'] == null ? undefined : json['custom_space_theme'],
+        'navLogo': json['nav_logo'] == null ? undefined : json['nav_logo'],
+        'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
     };
 }
 
@@ -137,6 +223,18 @@ export function ServerSettingsToJSON(value?: ServerSettings | null): any {
         'hosted': value['hosted'],
         'debug': value['debug'],
         'version': value['version'],
+        'unauthenticated_theme_from_space': value['unauthenticatedThemeFromSpace'],
+        'force_theme_from_space': value['forceThemeFromSpace'],
+        'logo_color_32': value['logoColor32'],
+        'logo_color_128': value['logoColor128'],
+        'logo_color_144': value['logoColor144'],
+        'logo_color_180': value['logoColor180'],
+        'logo_color_192': value['logoColor192'],
+        'logo_color_512': value['logoColor512'],
+        'logo_color_svg': value['logoColorSvg'],
+        'custom_space_theme': value['customSpaceTheme'],
+        'nav_logo': value['navLogo'],
+        'nav_bg_color': value['navBgColor'],
     };
 }
 

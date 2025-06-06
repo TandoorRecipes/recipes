@@ -8,7 +8,8 @@
                 <v-card>
                     <v-card-title><i class="fa-solid fa-book"></i> {{ $t('Recipes') }}</v-card-title>
                     <v-card-text>{{ $n(space.recipeCount) }} / {{ space.maxRecipes == 0 ? '∞' : $n(space.maxRecipes) }}</v-card-text>
-                    <v-progress-linear :color="isSpaceAboveRecipeLimit(space) ? 'error' : 'success'" height="10" :model-value="(space.recipeCount / space.maxRecipes) * 100"></v-progress-linear>
+                    <v-progress-linear :color="isSpaceAboveRecipeLimit(space) ? 'error' : 'success'" height="10"
+                                       :model-value="(space.recipeCount / space.maxRecipes) * 100"></v-progress-linear>
                 </v-card>
             </v-col>
             <v-col cols="12" md="4">
@@ -16,7 +17,8 @@
 
                     <v-card-title><i class="fa-solid fa-users"></i> {{ $t('Users') }}</v-card-title>
                     <v-card-text>{{ $n(space.userCount) }} / {{ space.maxUsers == 0 ? '∞' : $n(space.maxUsers) }}</v-card-text>
-                    <v-progress-linear :color="isSpaceAboveUserLimit(space) ? 'error' : 'success'" height="10" :model-value="(space.userCount / space.maxUsers) * 100"></v-progress-linear>
+                    <v-progress-linear :color="isSpaceAboveUserLimit(space) ? 'error' : 'success'" height="10"
+                                       :model-value="(space.userCount / space.maxUsers) * 100"></v-progress-linear>
                 </v-card>
             </v-col>
             <v-col cols="12" md="4">
@@ -69,22 +71,28 @@
         </v-alert>
 
 
-
         <p class="text-h6 mt-2">{{ $t('Settings') }}</p>
         <v-divider class="mb-2"></v-divider>
 
         <user-file-field v-model="space.image" :label="$t('Image')" :hint="$t('CustomImageHelp')" persistent-hint></user-file-field>
-        <user-file-field v-model="space.navLogo" :label="$t('Logo')" :hint="$t('CustomNavLogoHelp')" persistent-hint></user-file-field>
+
 
         <v-textarea v-model="space.message" :label="$t('Message')"></v-textarea>
 
-<!--        <model-select v-model="space.foodInherit" model="FoodInheritField" mode="tags"></model-select>-->
+        <!--        <model-select v-model="space.foodInherit" model="FoodInheritField" mode="tags"></model-select>-->
 
         <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
 
-        <p class="text-h6 mt-2">{{ $t('Logo') }}</p>
-        <v-divider></v-divider>
-        <p class="text-subtitle-2">{{ $t('CustomLogoHelp') }}</p>
+        <v-divider class="mt-4 mb-2"></v-divider>
+        <h2>{{$t('Cosmetic')}}</h2>
+        <span>{{$t('Space_Cosmetic_Settings')}}</span>
+
+        <v-label class="mt-4">{{ $t('Nav_Color') }}</v-label>
+        <v-color-picker v-model="space.navBgColor" class="mb-4" mode="hex" :modes="['hex']" show-swatches
+                        :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
+        <v-btn class="mb-4" @click="space.navBgColor = ''">{{$t('Reset')}}</v-btn>
+
+        <user-file-field v-model="space.navLogo" :label="$t('Logo')" :hint="$t('CustomNavLogoHelp')" persistent-hint></user-file-field>
 
         <user-file-field v-model="space.logoColor32" :label="$t('Logo') + ' 32x32px'"></user-file-field>
         <user-file-field v-model="space.logoColor128" :label="$t('Logo') + ' 128x128px'"></user-file-field>
@@ -93,6 +101,7 @@
         <user-file-field v-model="space.logoColor192" :label="$t('Logo') + ' 192x192px'"></user-file-field>
         <user-file-field v-model="space.logoColor512" :label="$t('Logo') + ' 512x512px'"></user-file-field>
         <user-file-field v-model="space.logoColorSvg" :label="$t('Logo') + ' SVG'"></user-file-field>
+        <user-file-field v-model="space.customSpaceTheme" :label="$t('CustomTheme') + ' CSS'"></user-file-field>
 
 
         <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>

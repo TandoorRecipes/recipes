@@ -2236,7 +2236,32 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['hosted'] = settings.HOSTED
         s['debug'] = settings.DEBUG
         s['version'] = TANDOOR_VERSION
+        s['unauthenticated_theme_from_space'] = settings.UNAUTHENTICATED_THEME_FROM_SPACE
+        s['force_theme_from_space'] = settings.FORCE_THEME_FROM_SPACE
 
+        # include the settings handled by the space
+        space = None
+        if not request.user.is_authenticated and settings.UNAUTHENTICATED_THEME_FROM_SPACE > 0:
+            with scopes_disabled():
+                space = Space.objects.filter(id=settings.UNAUTHENTICATED_THEME_FROM_SPACE).first()
+        if request.user.is_authenticated and settings.FORCE_THEME_FROM_SPACE:
+            with scopes_disabled():
+                space = Space.objects.filter(id=settings.FORCE_THEME_FROM_SPACE).first()
+                print(f'taking theme from space: {space}')
+
+        if space:
+            print('applying theme from space logo_color_32:', space.logo_color_32.file)
+            s['logo_color_32'] = space.logo_color_32.file if space.logo_color_32 else None
+            s['logo_color_128'] = space.logo_color_128.file if space.logo_color_128 else None
+            s['logo_color_144'] = space.logo_color_144.file if space.logo_color_144 else None
+            s['logo_color_180'] = space.logo_color_180.file if space.logo_color_180 else None
+            s['logo_color_192'] = space.logo_color_192.file if space.logo_color_192 else None
+            s['logo_color_512'] = space.logo_color_512.file if space.logo_color_512 else None
+            s['logo_color_svg'] = space.logo_color_svg.file if space.logo_color_svg else None
+            s['custom_theme'] = space.custom_space_theme.file if space.custom_space_theme else None
+            s['nav_logo'] = space.nav_logo.file if space.nav_logo else None
+            s['nav_bg_color'] = space.nav_bg_color
+        print(s)
         return Response(ServerSettingsSerializer(s, many=False).data)
 
 

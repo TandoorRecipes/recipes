@@ -1511,6 +1511,20 @@ class ServerSettingsSerializer(serializers.Serializer):
     debug = serializers.BooleanField()
     version = serializers.CharField()
 
+    unauthenticated_theme_from_space = serializers.IntegerField()
+    force_theme_from_space = serializers.IntegerField()
+
+    logo_color_32 = serializers.ImageField(default=None)
+    logo_color_128 = serializers.CharField(default=None)
+    logo_color_144 = serializers.CharField(default=None)
+    logo_color_180 = serializers.CharField(default=None)
+    logo_color_192 = serializers.CharField(default=None)
+    logo_color_512 = serializers.CharField(default=None)
+    logo_color_svg = serializers.CharField(default=None)
+    custom_space_theme = serializers.CharField(default=None)
+    nav_logo = serializers.CharField(default=None)
+    nav_bg_color = serializers.CharField(default=None)
+
     class Meta:
         fields = '__ALL__'
         read_only_fields = '__ALL__'

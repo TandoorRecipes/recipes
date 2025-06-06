@@ -455,7 +455,7 @@
   "SpaceMembers": "Space Mitglieder",
   "SpaceMembersHelp": "Benutzer und Ihre Rechte in einem Space.",
   "SpaceSettings": "Space Einstellungen",
-  "Space_Cosmetic_Settings": "Einige optische Einstellungen können von Administratoren des Bereichs geändert werden und setzen die Client-Einstellungen für diesen Bereich außer Kraft.",
+  "Space_Cosmetic_Settings": "Kosmetische Einstellungen auf Space Ebene überschreiben die Einstellungen der einzelnen Nutzer. ",
   "Split": "Aufteilen",
   "Split_All_Steps": "Teile alle Zeilen in separate Schritte auf.",
   "StartDate": "Startdatum",
