@@ -3,9 +3,10 @@
         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated">
 
         </v-app-bar>
-        <v-app-bar :color="useUserPreferenceStore().userSettings.navBgColor" flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated">
+        <v-app-bar :color="useUserPreferenceStore().userSettings.navBgColor" flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated" :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? '' : 'hide'">
             <router-link :to="{ name: 'StartPage', params: {} }">
-                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo"></v-img>
+                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo && !useUserPreferenceStore().activeSpace.navLogo"></v-img>
+                <v-img :src="useUserPreferenceStore().activeSpace.navLogo.preview" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo && useUserPreferenceStore().activeSpace.navLogo != undefined"></v-img>
             </router-link>
 
 

@@ -213,6 +213,7 @@ function addStep() {
     editingObj.value.steps.push({
         ingredients: [] as Ingredient[],
         time: 0,
+        showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients
     } as Step)
 }
 

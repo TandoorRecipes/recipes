@@ -78,7 +78,7 @@
 
         <v-textarea v-model="space.message" :label="$t('Message')"></v-textarea>
 
-        <model-select v-model="space.foodInherit" model="FoodInheritField" mode="tags"></model-select>
+<!--        <model-select v-model="space.foodInherit" model="FoodInheritField" mode="tags"></model-select>-->
 
         <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
 
