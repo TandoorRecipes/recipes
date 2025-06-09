@@ -2283,8 +2283,8 @@ def get_recipe_provider(recipe):
 )
 @api_view(['GET'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-def get_external_file_link(request, recipe_id):
-    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
+def get_external_file_link(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
     if not recipe.link:
         recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
         recipe.save()
@@ -2297,9 +2297,9 @@ def get_external_file_link(request, recipe_id):
     responses=None,
 )
 @api_view(['GET'])
-@permission_classes([(CustomIsGuest | CustomIsUser) & CustomTokenHasReadWriteScope])
-def get_recipe_file(request, recipe_id):
-    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
+@permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
+def get_recipe_file(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk) # space check handled by CustomRecipePermission
     if recipe.storage:
         return FileResponse(get_recipe_provider(recipe).get_file(recipe), filename=f'{recipe.name}.pdf')
     else:
