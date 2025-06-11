@@ -1,6 +1,6 @@
 <template>
-    <v-dialog max-width="1400" :activator="dialogActivator" v-model="model">
-        <component :is="editorComponent" :item="props.item" :item-id="props.itemId" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="model = false" :itemDefaults="props.itemDefaults"></component>
+    <v-dialog max-width="1400" :activator="dialogActivator" v-model="dialog">
+        <component :is="editorComponent" :item="props.item" :item-id="props.itemId" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false; " :itemDefaults="props.itemDefaults"></component>
     </v-dialog>
 </template>
 
@@ -30,8 +30,8 @@ const props = defineProps({
 
 const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
 
-const model = defineModel<Boolean|undefined>({default: undefined})
-const dialogActivator = (model.value !== undefined) ? undefined : props.activator
+const dialog = defineModel<Boolean|undefined>({default: undefined})
+const dialogActivator = (dialog.value !== undefined) ? undefined : props.activator
 
 /**
  * for some reason editorComponent is not updated automatically when prop is changed
@@ -44,8 +44,8 @@ watch(() => props.model, () => {
 /**
  * Allow opening the model edit dialog trough v-model property of the dialog by watching for model changes
  */
-watch(model, (value, oldValue, onCleanup) => {
-    model.value = !!value
+watch(dialog, (value, oldValue, onCleanup) => {
+    dialog.value = !!value
 })
 
 /**
@@ -54,7 +54,7 @@ watch(model, (value, oldValue, onCleanup) => {
  */
 function createEvent(arg: any) {
     emit('create', arg)
-    model.value = model.value && !props.closeAfterCreate
+    dialog.value = dialog.value && !props.closeAfterCreate
 }
 
 /**
@@ -63,7 +63,7 @@ function createEvent(arg: any) {
  */
 function saveEvent(arg: any) {
     emit('save', arg)
-    model.value = model.value && !props.closeAfterSave
+    dialog.value = dialog.value && !props.closeAfterSave
 }
 
 /**
@@ -72,7 +72,7 @@ function saveEvent(arg: any) {
  */
 function deleteEvent(arg: any) {
     emit('delete', arg)
-    model.value = model.value && !props.closeAfterDelete
+    dialog.value = dialog.value && !props.closeAfterDelete
 }
 
 </script>

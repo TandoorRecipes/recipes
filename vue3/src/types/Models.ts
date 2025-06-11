@@ -543,6 +543,9 @@ export const TCookLog = {
     icon: 'fa-solid fa-table-list',
 
     isPaginated: true,
+    disableCreate: true,
+    disableUpdate: true,
+    disableDelete: true,
     toStringKeys: ['recipe'],
 
     tableHeaders: [
@@ -560,6 +563,9 @@ export const TViewLog = {
     icon: 'fa-solid fa-clock-rotate-left',
 
     isPaginated: true,
+    disableCreate: true,
+    disableUpdate: true,
+    disableDelete: true,
     toStringKeys: ['recipe'],
 
     tableHeaders: [

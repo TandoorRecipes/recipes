@@ -96,7 +96,7 @@
 
 <script setup lang="ts">
 
-import {nextTick, onMounted, PropType, ref} from "vue";
+import {nextTick, onMounted, PropType, ref, toRaw} from "vue";
 import {ApiApi, MealPlan, MealType, ShoppingListRecipe} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -179,6 +179,7 @@ onMounted(() => {
                     editingObjChanged.value = false
                 })
             }, existingItemFunction: () => {
+                editingObj.value = structuredClone(toRaw(editingObj.value))
                 initializeDateRange()
                 loadShoppingListEntries()
             }
@@ -200,7 +201,6 @@ function updateDate() {
         }
     } else {
         useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
-        return
     }
 }
 
@@ -225,11 +225,6 @@ function initializeDateRange() {
     } else {
         dateRangeValue.value = [editingObj.value.fromDate, editingObj.value.fromDate]
     }
-}
-
-function formatDate(date: Date) {
-    console.log('called date format')
-    return DateTime.fromJSDate(date).toLocaleString()
 }
 
 </script>

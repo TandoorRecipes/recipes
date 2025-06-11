@@ -59,7 +59,6 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     function applyItemDefaults(itemDefaults: T) {
         if (Object.keys(itemDefaults).length > 0) {
             Object.keys(itemDefaults).forEach(k => {
-                console.log('applying default ', k, itemDefaults[k])
                 editingObj.value[k] = itemDefaults[k]
             })
         }
