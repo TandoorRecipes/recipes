@@ -27,8 +27,8 @@
 
     <v-table density="compact">
         <tbody>
-        <template v-for="i in ingredients" :key="i.id" @click="i.checked = !i.checked">
-            <tr>
+        <template v-for="i in ingredients" :key="i.id" >
+            <tr @click="i.checked = !i.checked">
                 <template v-if="i.isHeader">
                     <td colspan="5" class="font-weight-bold">{{ i.note }}</td>
                 </template>
@@ -50,7 +50,7 @@
                             <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
                             <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
                             <template v-if="i.note != '' && i.note != undefined">
-                                <span class="text-disabled font-italic">&nbsp;{{ i.note }}</span>
+                                <span class="d-none d-print-block text-disabled font-italic">&nbsp;{{ i.note }}</span>
                             </template>
                         </template>
 
