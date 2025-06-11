@@ -116,10 +116,12 @@
 
         </template>
         <v-row>
-            <v-col cols="12" md="6" offset-md="3">
+            <v-col cols="12" md="6" offset-md="3" class="text-center">
                 <v-pagination v-model="page" :length="Math.ceil(tableItemCount/pageSize)"
                               @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
+                              v-if="filters['sortOrder'].modelValue != 'random'"
                 ></v-pagination>
+                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes()">{{$t('Random Recipes')}}</v-btn>
             </v-col>
         </v-row>
 
@@ -223,7 +225,11 @@ watch(() => query.value, () => {
 onMounted(() => {
     // load filters that were previously enabled
     useUserPreferenceStore().deviceSettings.search_visibleFilters.forEach(f => {
-        filters.value[f].enabled = true
+        if(f in filters.value){
+            filters.value[f].enabled = true
+        } else {
+            useUserPreferenceStore().deviceSettings.search_visibleFilters.splice(useUserPreferenceStore().deviceSettings.search_visibleFilters.indexOf(f), 1)
+        }
     })
 
     enableFiltersWithValues()
@@ -699,16 +705,16 @@ const filters = ref({
         items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
         modelValue: useRouteQuery('internal', "false")
     },
-    random: {
-        id: 'random',
-        label: t('RandomOrder'),
-        hint: t('searchFilterRandomHelp'),
-        enabled: false,
-        default: "false",
-        is: VSelect,
-        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-        modelValue: useRouteQuery('random', "false")
-    },
+    // random: {
+    //     id: 'random',
+    //     label: t('RandomOrder'),
+    //     hint: t('searchFilterRandomHelp'),
+    //     enabled: false,
+    //     default: "false",
+    //     is: VSelect,
+    //     items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
+    //     modelValue: useRouteQuery('random', "false")
+    // },
     rating: {
         id: 'rating',
         label: `${t('Rating')} (${t('exact')})`,
