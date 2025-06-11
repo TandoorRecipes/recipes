@@ -21,22 +21,23 @@ To contribute to the project you are required to use the following packages with
 - prettier
 
 !!! tip "Manual Formatting"
-    It is possible to run formatting manually, but it is recommended to setup your IDE to format on save.
-    ``` bash
+It is possible to run formatting manually, but it is recommended to setup your IDE to format on save.
+`bash
     flake8 file.py --ignore=E501 | isort -q file.py | yapf -i file.py
     prettier --write file.vue
-    ```
+   `
 
 ## Testing
-Django uses pytest-django to implement a full suite of testing.  If you make any functional changes, please implment the appropriate
+
+Django uses pytest-django to implement a full suite of testing. If you make any functional changes, please implment the appropriate
 tests.
 
-Tandoor is also actively soliciting contribors willing to setup vue3 testing.  If you have knowledge in this area it would be greatly appreciated.
+Tandoor is also actively soliciting contribors willing to setup vue3 testing. If you have knowledge in this area it would be greatly appreciated.
 
 ## API Client
 
-Tandoor uses [django-rest-framework](https://www.django-rest-framework.org/) for API implementation.  Making contributions that impact the API requires an understanding of
-Viewsets and Serializers.  
+Tandoor uses [django-rest-framework](https://www.django-rest-framework.org/) for API implementation. Making contributions that impact the API requires an understanding of
+Viewsets and Serializers.
 
 Also double check that your changes are actively reflected in the schema so that client apis are generated accurately.
 
@@ -59,5 +60,6 @@ Generate the schema using `openapi-generator-cli generate -g typescript-fetch -i
 
 ## Install and Configuration
 
-Instructions for [VSCode](/contribute/vscode)
-Instructions for [PyCharm](/contribute/pycharm)
+- [Installation Guide](/contribute/installation)
+- [VSCode Setup](/contribute/vscode)
+- [PyCharm Setup](/contribute/pycharm)
