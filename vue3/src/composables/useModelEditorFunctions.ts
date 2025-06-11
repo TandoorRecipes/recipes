@@ -30,6 +30,13 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     }, {deep: true})
 
     /**
+     * emit the changed state of the object to parent components for display or navigation blocking
+     */
+    watch(() => editingObjChanged.value, () => {
+        emit('changedState', editingObjChanged.value)
+    })
+
+    /**
      * before mounting the component UI set the model class based on the given model name
      */
     onBeforeMount(() => {

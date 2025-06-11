@@ -46,7 +46,7 @@ const props = defineProps({
     dialog: {type: Boolean, default: false}
 })
 
-const emit = defineEmits(['create', 'save', 'delete', 'close'])
+const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Automation>('Automation', emit)
 
 // object specific data (for selects/display)

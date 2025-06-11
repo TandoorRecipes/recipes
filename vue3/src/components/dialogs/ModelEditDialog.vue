@@ -1,13 +1,13 @@
 <template>
-    <v-dialog max-width="1400" :activator="dialogActivator" v-model="dialog">
-        <component :is="editorComponent" :item="props.item" :item-id="props.itemId" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false; " :itemDefaults="props.itemDefaults"></component>
+    <v-dialog max-width="1400" :activator="dialogActivator" v-model="dialog" :persistent="editingObjChangedState">
+        <component :is="editorComponent" :item="props.item" :item-id="props.itemId" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false; " @changed-state="(state:boolean) => {editingObjChangedState = state}" :itemDefaults="props.itemDefaults"></component>
     </v-dialog>
 </template>
 
 <script setup lang="ts">
 
 
-import {defineAsyncComponent, PropType, shallowRef, watch} from "vue";
+import {defineAsyncComponent, PropType, ref, shallowRef, watch} from "vue";
 import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models";
 import {useI18n} from "vue-i18n";
 import {MealPlan} from "@/openapi";
@@ -32,6 +32,8 @@ const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/componen
 
 const dialog = defineModel<Boolean|undefined>({default: undefined})
 const dialogActivator = (dialog.value !== undefined) ? undefined : props.activator
+
+const editingObjChangedState = ref(false)
 
 /**
  * for some reason editorComponent is not updated automatically when prop is changed
