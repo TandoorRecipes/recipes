@@ -126,7 +126,6 @@
             </v-card>
         </template>
 
-
         <property-view v-model="recipe" :servings="servings" v-if="recipe.internal"></property-view>
 
         <v-card class="mt-2">
@@ -192,7 +191,6 @@ import PropertyView from "@/components/display/PropertyView.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const {request, release} = useWakeLock()
-const isPrintMode = useMediaQuery('print')
 
 const recipe = defineModel<Recipe>({required: true})
 
