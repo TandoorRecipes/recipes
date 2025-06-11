@@ -52,7 +52,7 @@
               <span class="multiselect-clear-icon"></span>
             </span>
             </template>
-            <template #afterlist>
+            <template v-if="hasMoreItems" #afterlist>
                 <span class="text-disabled font-italic text-caption ms-3">{{$t('ModelSelectResultsHelp')}}</span>
             </template>
         </Multiselect>
@@ -127,6 +127,7 @@ const itemLabel = computed(() => {
 const model = defineModel()
 const modelClass = ref({} as GenericModel)
 const loading = ref(false)
+const hasMoreItems = ref(false)
 
 const multiselect = useTemplateRef(`ref_${props.id}`)
 
@@ -145,8 +146,12 @@ function search(query: string) {
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: props.limit}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
+            if(r.next){
+                hasMoreItems.value = true
+            }
             return r.results
         } else {
+            hasMoreItems.value = false
             return r
         }
     }).catch((err: any) => {
