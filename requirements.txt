@@ -16,7 +16,7 @@ Markdown==3.5.1
 Pillow==11.1.0
 psycopg2-binary==2.9.9
 python-dotenv==1.0.0
-requests==2.32.3
+requests==2.32.4
 six==1.16.0
 webdavclient3==3.14.6
 whitenoise==6.8.2
