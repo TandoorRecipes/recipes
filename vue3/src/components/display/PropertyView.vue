@@ -44,7 +44,7 @@
                     <v-list-item border v-for="fv in dialogProperty.foodValues" :key="`${dialogProperty.id}_${fv.id}`">
                         <template #prepend>
                             <v-progress-circular size="55" width="5" :model-value="(fv.value/dialogProperty.propertyAmountTotal)*100"
-                                                 :color="colorScale((fv.value/dialogProperty.propertyAmountTotal)*100)" v-if="fv.value != null">
+                                                 :color="colorScale((fv.value/dialogProperty.propertyAmountTotal)*100)" v-if="fv.value != null && dialogProperty.propertyAmountTotal > 0">
                                 {{ Math.round((fv.value / dialogProperty.propertyAmountTotal) * 100) }}%
                             </v-progress-circular>
                             <v-progress-circular size="55" width="5" v-if="fv.value == null">?</v-progress-circular>
