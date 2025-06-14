@@ -1,5 +1,6 @@
 <template>
-    <v-text-field :label="$t('Shopping_input_placeholder')" density="compact" @keyup.enter="addIngredient()" v-model="ingredientInput" :loading="props.loading" hide-detail  v-if="!useUserPreferenceStore().deviceSettings.shopping_input_autocomplete"s>
+    <v-text-field :label="$t('Shopping_input_placeholder')" density="compact" @keyup.enter="addIngredient()" v-model="ingredientInput" :loading="props.loading" hide-detail
+                  v-if="!useUserPreferenceStore().deviceSettings.shopping_input_autocomplete" s>
         <template #append>
             <v-btn
                 density="comfortable"
@@ -36,7 +37,7 @@
 
 
 import {PropType, ref} from "vue";
-import {ApiApi, Food, IngredientString, MealPlan, ShoppingListEntry, ShoppingListRecipe} from "@/openapi";
+import {ApiApi, Food, IngredientString, MealPlan, ShoppingListEntry, ShoppingListRecipe, Unit} from "@/openapi";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import Multiselect from "@vueform/multiselect";
@@ -60,32 +61,36 @@ const loading = ref(false)
 /**
  * add new ingredient from ingredient text input
  */
-function addIngredient() {
+function addIngredient(amount: number, unit: Unit|null, food: Food|null) {
+    let sle = {
+        amount: Math.max(amount, 1),
+        unit: unit,
+        food: food,
+    } as ShoppingListEntry
+
+    console.log('adding SLR ? ', props.mealPlan)
+    if (props.mealPlan) {
+        console.log('yes')
+        sle.mealplanId = props.mealPlan.id
+    }
+
+    useShoppingStore().createObject(sle, true).finally(() => {
+        loading.value = false
+    })
+    ingredientInput.value = ''
+
+    ingredientInputIcon.value = 'fa-solid fa-check'
+    setTimeout(() => {
+        ingredientInputIcon.value = 'fa-solid fa-plus'
+    }, 1000)
+}
+
+function parseIngredient() {
     const api = new ApiApi()
     loading.value = true
 
     api.apiIngredientFromStringCreate({ingredientString: {text: ingredientInput.value} as IngredientString}).then(r => {
-        let sle = {
-            amount: Math.max(r.amount, 1),
-            unit: r.unit,
-            food: r.food,
-        } as ShoppingListEntry
-
-        console.log('adding SLR ? ', props.mealPlan)
-        if (props.mealPlan) {
-            console.log('yes')
-            sle.mealplanId = props.mealPlan.id
-        }
-
-        useShoppingStore().createObject(sle, true).finally(() => {
-            loading.value = false
-        })
-        ingredientInput.value = ''
-
-        ingredientInputIcon.value = 'fa-solid fa-check'
-        setTimeout(() => {
-            ingredientInputIcon.value = 'fa-solid fa-plus'
-        }, 1000)
+        addIngredient(r.amount, r.unit, r.food)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         loading.value = false
@@ -99,14 +104,14 @@ function createObject(object: any, select$: Multiselect) {
     ingredientModelInput.value = {} as Food
     select$.close()
     select$.clearSearch()
-    addIngredient()
+    parseIngredient()
     return false
 }
 
 function selectObject(foodId: number, food: Food, select$: Multiselect) {
-    ingredientInput.value = food.name
+    //ingredientInput.value = food.name
     ingredientModelInput.value = {} as Food
-    addIngredient()
+    addIngredient(1, null, food)
     return false
 }
 
@@ -118,7 +123,7 @@ function search(query: string) {
     loading.value = true
     let api = new ApiApi()
 
-    return  api.apiFoodList({query: query, page: 1, pageSize: 25}).then(r => {
+    return api.apiFoodList({query: query, page: 1, pageSize: 25}).then(r => {
         return r.results
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
