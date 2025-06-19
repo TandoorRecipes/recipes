@@ -48,7 +48,7 @@ class FoodPropertyHelper:
                     found_property = False
                     # if food has a value for the given property type (no matter if conversion is possible)
                     has_property_value = False
-                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:  # if food is configured incorrectly
+                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None and not (i.amount == 0 or i.no_amount):  # if food is configured incorrectly
                         computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
                         computed_properties[pt.id]['missing_value'] = True
                     else:
@@ -62,7 +62,7 @@ class FoodPropertyHelper:
                                         computed_properties[pt.id]['food_values'] = self.add_or_create(
                                             computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
-                        if i.amount == 0:  # don't count ingredients without an amount as missing
+                        if i.amount == 0 or i.no_amount:  # don't count ingredients without an amount as missing
                             computed_properties[pt.id]['missing_value'] = computed_properties[pt.id]['missing_value'] or False  # don't override if another food was already missing
                             computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
                         else:
