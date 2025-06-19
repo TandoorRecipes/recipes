@@ -523,6 +523,9 @@ def report_share_abuse(request, token):
     return HttpResponseRedirect(reverse('index'))
 
 
+def service_worker(request):
+    return
+
 def web_manifest(request):
     theme_values = get_theming_values(request)
 
