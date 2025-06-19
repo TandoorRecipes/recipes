@@ -48,13 +48,15 @@
             </template>
 
             <template #clear="{ clear }" v-if="props.canClear">
-            <span @click="clear" aria-hidden="true" tabindex="-1" role="button" data-clear="" aria-roledescription="❎" class="multiselect-clear">
-              <span class="multiselect-clear-icon"></span>
-            </span>
+                <span @click="clear" aria-hidden="true" tabindex="-1" role="button" data-clear="" aria-roledescription="❎" class="multiselect-clear">
+                  <span class="multiselect-clear-icon"></span>
+                </span>
             </template>
-            <template v-if="hasMoreItems" #afterlist>
-                <span class="text-disabled font-italic text-caption ms-3">{{$t('ModelSelectResultsHelp')}}</span>
+
+            <template v-if="hasMoreItems && !loading" #afterlist>
+                <span class="text-disabled font-italic text-caption ms-3">{{ $t('ModelSelectResultsHelp') }}</span>
             </template>
+
         </Multiselect>
 
         <template #append v-if="$slots.append">
@@ -146,7 +148,7 @@ function search(query: string) {
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: props.limit}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
-            if(r.next){
+            if (r.next) {
                 hasMoreItems.value = true
             }
             return r.results

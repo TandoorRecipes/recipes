@@ -32,7 +32,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery"></v-text-field>
+                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery" clearable></v-text-field>
                 <v-data-table-server
                     @update:options="loadItems"
                     :items="items"
@@ -57,7 +57,7 @@
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
                                         <model-merge-dialog :model="model" :source="item"
-                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-merge-dialog>
+                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
                                                  v-if="genericModel.model.name == 'Food'">

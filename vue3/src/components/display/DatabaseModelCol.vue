@@ -1,6 +1,6 @@
 <template>
     <v-col cols="12" md="6" lg="4">
-        <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)" :subtitle="$t(genericModel.model.localizationKeyDescription)" variant="outlined" elevation="1"
+        <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)" :subtitle="$t(genericModel.model.localizationKeyDescription)"
                 :to="{name: 'ModelListPage', params: {model: genericModel.model.name}}"
                 append-icon="fa-solid fa-arrow-right">
         </v-card>
