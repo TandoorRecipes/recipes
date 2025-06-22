@@ -195,7 +195,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient.listPropertyTypes().then(result => {
-                this.property_types = result.data
+                this.property_types = result.data.results
 
                 apiClient.retrieveRecipe(window.RECIPE_ID).then(result => {
                     this.recipe = result.data

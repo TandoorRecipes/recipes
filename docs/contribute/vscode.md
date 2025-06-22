@@ -27,19 +27,23 @@ VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=esbenp.
 
 <!-- prettier-ignore -->
 !!! hint
-    Adding a comma at the end of a list will trigger yapf to put each element of the list on a new line
+     Adding a comma at the end of a list will trigger yapf to put each element of the list on a new line
 
 ## VSCode Tasks
 
+<!-- prettier-ignore -->
+!!! note
+     In order to debug vue yarn and vite servers must be started before starting the django server.
+
 There are a number of built in tasks that are available. Here are a few of the key ones:
 
--   `Setup Dev Server` - Runs all the prerequisite steps so that the dev server can be run inside VSCode.
--   `Setup Tests` - Runs all prerequisites so tests can be run inside VSCode.
+- `Setup Dev Server` - Runs all the prerequisite steps so that the dev server can be run inside VSCode.
+- `Setup Tests` - Runs all prerequisites so tests can be run inside VSCode.
 
 Once these are run, you should be able to run/debug a django server in VSCode as well as run/debug tests directly through VSCode.
 There are also a few other tasks specified in case you have specific development needs:
 
--   `Run Dev Server` - Runs a django development server not connected to VSCode.
--   `Run all pytests` - Runs all the pytests outside of VSCode.
--   `Yarn Serve` - Runs development Vue.js server not connected to VSCode. Useful if you want to make Vue changes and see them in realtime.
--   `Serve Documentation` - Runs a documentation server. Useful if you want to see how changes to documentation show up.
+- `Run Dev Server` - Runs a django development server not connected to VSCode.
+- `Run all pytests` - Runs all the pytests outside of VSCode.
+- `Yarn Serve` - Runs development Vue.js server not connected to VSCode. Useful if you want to make Vue changes and see them in realtime.
+- `Serve Documentation` - Runs a documentation server. Useful if you want to see how changes to documentation show up.

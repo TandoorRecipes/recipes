@@ -878,7 +878,6 @@ import GenericMultiselect from "@/components/GenericMultiselect"
 import MealPlanEditModal from "@/components/MealPlanEditModal.vue"
 import RecipeCard from "@/components/RecipeCard"
 import { useMealPlanStore } from "@/stores/MealPlanStore"
-import { ApiApiFactory } from "@/utils/openapi/api"
 import { ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin } from "@/utils/utils"
 
 Vue.use(VueCookies)
@@ -1126,10 +1125,6 @@ export default {
 
             this.loadMealPlan()
             this.refreshData(false)
-        })
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then((r) => {
-            this.use_plural = r.data.use_plural
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
         moment.locale(window.CUSTOM_LOCALE)

@@ -1,6 +1,7 @@
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ApiApiFactory} from "@/utils/openapi/api";
-import {StandardToasts} from "@/utils/utils";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
+import {Models, Actions} from "@/utils/models"
 import _ from 'lodash';
 import moment from "moment/moment";
 import {defineStore} from "pinia";
@@ -188,7 +189,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 apiClient.listShoppingListEntrys().then((r) => {
                     this.entries = {}
 
-                    r.data.forEach((e) => {
+                    r.data.results.forEach((e) => {
                         Vue.set(this.entries, e.id, e)
                     })
                     this.currently_updating = false
@@ -198,13 +199,13 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 })
 
                 apiClient.listSupermarketCategorys().then(r => {
-                    this.supermarket_categories = r.data
+                    this.supermarket_categories = r.data.results
                 }).catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
 
                 apiClient.listSupermarkets().then(r => {
-                    this.supermarkets = r.data
+                    this.supermarkets = r.data.results
                 }).catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
@@ -223,10 +224,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 let previous_autosync = this.last_autosync
                 this.last_autosync = new Date().getTime();
 
-                let apiClient = new ApiApiFactory()
-                apiClient.listShoppingListEntrys(undefined, undefined, undefined, {'query': {'last_autosync': previous_autosync}
+                let GenericAPI = ApiMixin.methods.genericAPI
+
+                GenericAPI(Models.SHOPPING_LIST, Actions.LIST, {'options': {'last_autosync': previous_autosync}
                 }).then((r) => {
-                    r.data.forEach((e) => {
+                    r.data.results.forEach((e) => {
                         // dont update stale client data
                         if (!(Object.keys(this.entries).includes(e.id.toString())) || Date.parse(this.entries[e.id].updated_at) < Date.parse(e.updated_at)) {
                             console.log('auto sync updating entry ', e)

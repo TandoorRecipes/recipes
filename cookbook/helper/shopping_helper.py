@@ -153,8 +153,9 @@ class RecipeShoppingEditor():
             return True
 
         for sle in ShoppingListEntry.objects.filter(list_recipe=self._shopping_list_recipe):
-            sle.amount = sle.ingredient.amount * Decimal(self._servings_factor)
-            sle.save()
+            if sle.ingredient: # TODO temporarily dont scale manual entries until ingredient_amount or some other base amount has been migrated to SLE
+                sle.amount = sle.ingredient.amount * Decimal(self._servings_factor)
+                sle.save()
         self._shopping_list_recipe.servings = self.servings
         self._shopping_list_recipe.save()
         return True

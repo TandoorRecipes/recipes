@@ -240,15 +240,14 @@ export default {
                 this.ingredients = []
             } else {
                 this.loading = true
-                let apiClient = new ApiApiFactory()
-                let params = {'query': {'simple': 1,}}
+                let params = {'page': this.current_page, 'pageSize': this.page_size, 'query': {'simple': 1,}}
                 if (this.food !== null) {
-                    params.query.food = this.food.id
+                    params.food = this.food.id
                 }
                 if (this.unit !== null) {
-                    params.query.unit = this.unit.id
+                    params.unit = this.unit.id
                 }
-                apiClient.listIngredients(this.current_page, this.page_size, params).then(result => {
+                this.genericAPI(this.Models.INGREDIENT, this.Actions.LIST, params).then(result => {
                     this.ingredients = result.data.results
                     this.total_object_count = result.data.count
                     this.loading = false

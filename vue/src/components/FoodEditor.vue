@@ -384,7 +384,7 @@ export default {
         addAllProperties: function () {
             let apiClient = new ApiApiFactory()
             apiClient.listPropertyTypes().then(r => {
-                r.data.forEach(x => {
+                r.data.results.forEach(x => {
                     this.food.properties.push({property_type: x, property_amount: 0})
                 })
             }).catch(err => {
@@ -400,7 +400,7 @@ export default {
         loadUnitConversions: function () {
             let apiClient = new ApiApiFactory()
             apiClient.listUnitConversions(this.food.id).then(r => {
-                this.unit_conversions = r.data
+                this.unit_conversions = r.data.results
             })
         },
         addUnitConversion: function () {

@@ -1,7 +1,8 @@
+<!-- prettier-ignore -->
 !!! warning
-Automations are currently in a beta stage. They work pretty stable but if I encounter any
-issues while working on them, I might change how they work breaking existing automations.
-I will try to avoid this and am pretty confident it won't happen.
+     Automations are currently in a beta stage. They work pretty stable but if I encounter any
+     issues while working on them, I might change how they work breaking existing automations.
+     I will try to avoid this and am pretty confident it won't happen.
 
 Automations allow Tandoor to automatically perform certain tasks, especially when importing recipes, that
 would otherwise have to be done manually. Currently, the following automations are supported.
@@ -45,10 +46,11 @@ ChatGPT and similiar LLMs are also useful for creating RegEx patterns:
 `ChatGPT please create a Regex expression in the format of re.sub(<parameter 2>, <parameter 3>, <description>, count=1)
 that will change the string <example string here> into the string <desired result here>`
 
+<!-- prettier-ignore -->
 !!! info
-In order to prevent denial of service attacks on the RegEx engine the number of replace automations
-and the length of the inputs that are processed are limited. Those limits should never be reached
-during normal usage.
+    In order to prevent denial of service attacks on the RegEx engine the number of replace automations
+    and the length of the inputs that are processed are limited. Those limits should never be reached
+    during normal usage.
 
 ## Instruction Replace, Title Replace, Food Replace & Unit Replace
 

@@ -5,6 +5,7 @@ from io import StringIO
 from uuid import UUID
 
 import redis
+from allauth.utils import build_absolute_uri
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -16,40 +17,64 @@ from django.core.management import call_command
 from django.db import models
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
+from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
+from rest_framework.response import Response
 
 from cookbook.forms import CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm, UserPreference
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
+from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink, Space, UserSpace, ViewLog
 from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
+from cookbook.views.api import get_recipe_provider
 from recipes.settings import PLUGINS
 
 
-def index(request):
+def index(request, path=None, resource=None):
+    # show setup page when no users exist
     with scopes_disabled():
         if not request.user.is_authenticated:
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
-            return HttpResponseRedirect(reverse_lazy('view_search'))
 
-    try:
-        page_map = {UserPreference.SEARCH: reverse_lazy('view_search'), UserPreference.PLAN: reverse_lazy('view_plan'), UserPreference.BOOKS: reverse_lazy('view_books'),
-                    UserPreference.SHOPPING: reverse_lazy('view_shopping'), }
+    # show frontend if at least group permissions
+    if has_group_permission(request.user, ('guest',)):
+        return render(request, 'frontend/tandoor.html', {})
+    else:
+        # show no_group if logged in but no permission
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('view_no_group'))
+        else:
+            # show recipe if not logged in but share link is given
+            if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
+                return render(request, 'frontend/tandoor.html', {})
+            # redirect to login if none of the above matched
+            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
-        return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
-    except UserPreference.DoesNotExist:
-        return HttpResponseRedirect(reverse('view_search'))
+
+def redirect_recipe_view(request, pk):
+    if request.GET.get('share'):
+        return index(request)
+    return HttpResponseRedirect(build_absolute_uri(request, reverse('index')) + f'recipe/{pk}')
 
 
-# TODO need to deprecate
+def redirect_recipe_share_view(request, pk, share):
+    if re.match(r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}', share):
+        return HttpResponseRedirect(build_absolute_uri(request, reverse('index')) + f'recipe/{pk}/?share={share}')
+    return HttpResponseRedirect(reverse('index'))
+
+
 def search(request):
+    if settings.V3_BETA:
+        return HttpResponseRedirect(reverse('vue3'))
+
     if has_group_permission(request.user, ('guest',)):
         return render(request, 'search.html', {})
     else:
@@ -171,6 +196,16 @@ def books(request):
 @group_required('user')
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
+
+
+def recipe_pdf_viewer(request, pk):
+    with scopes_disabled():
+        recipe = get_object_or_404(Recipe, pk=pk)
+        if share_link_valid(recipe, request.GET.get('share', None)) or (has_group_permission(
+                request.user, ['guest']) and recipe.space == request.space):
+
+            return render(request, 'pdf_viewer.html', {'recipe_id': pk, 'share': request.GET.get('share', None)})
+        return HttpResponseRedirect(reverse('index'))
 
 
 @group_required('guest')
@@ -388,9 +423,18 @@ def system(request):
 
     return render(
         request, 'system.html', {
-            'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'postgres_version': postgres_ver, 'postgres_status': database_status,
-            'postgres_message': database_message, 'version_info': VERSION_INFO, 'plugins': PLUGINS, 'secret_key': secret_key, 'orphans': orphans, 'migration_info': migration_info,
-            'missing_migration': missing_migration, 'allowed_hosts': settings.ALLOWED_HOSTS, 'api_stats': api_stats, 'api_space_stats': api_space_stats
+            'gunicorn_media': settings.GUNICORN_MEDIA,
+            'debug': settings.DEBUG,
+            'postgres': postgres,
+            'postgres_version': postgres_ver,
+            'postgres_status': database_status,
+            'postgres_message': database_message,
+            'version_info': VERSION_INFO,
+            'plugins': PLUGINS,
+            'secret_key': secret_key,
+            'orphans': orphans,
+            'migration_info': migration_info,
+            'missing_migration': missing_migration,
         })
 
 
@@ -400,8 +444,7 @@ def setup(request):
             messages.add_message(
                 request, messages.ERROR,
                 _('The setup page can only be used to create the first user! \
-                    If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'
-                  ))
+                    If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
             return HttpResponseRedirect(reverse('account_login'))
 
         if request.method == 'POST':
@@ -480,27 +523,93 @@ def report_share_abuse(request, token):
     return HttpResponseRedirect(reverse('index'))
 
 
+def service_worker(request):
+    return
+
 def web_manifest(request):
     theme_values = get_theming_values(request)
 
-    icons = [{"src": theme_values['logo_color_svg'], "sizes": "any"}, {"src": theme_values['logo_color_144'], "type": "image/png", "sizes": "144x144"},
-             {"src": theme_values['logo_color_512'], "type": "image/png", "sizes": "512x512"}]
+    icons = [{
+        "src": theme_values['logo_color_svg'],
+        "sizes": "any"
+    }, {
+        "src": theme_values['logo_color_144'],
+        "type": "image/png",
+        "sizes": "144x144"
+    }, {
+        "src": theme_values['logo_color_512'],
+        "type": "image/png",
+        "sizes": "512x512"
+    }]
 
     manifest_info = {
         "name":
-            theme_values['app_name'], "short_name":
-            theme_values['app_name'], "description":
-            _("Manage recipes, shopping list, meal plans and more."), "icons":
-            icons, "start_url":
-            "./", "background_color":
-            theme_values['nav_bg_color'], "display":
-            "standalone", "scope":
-            ".", "theme_color":
-            theme_values['nav_bg_color'], "shortcuts":
-            [{"name": _("Plan"), "short_name": _("Plan"), "description": _("View your meal Plan"), "url":
-                "./plan"}, {"name": _("Books"), "short_name": _("Books"), "description": _("View your cookbooks"), "url": "./books"},
-             {"name": _("Shopping"), "short_name": _("Shopping"), "description": _("View your shopping lists"), "url":
-                 "./shopping/"}], "share_target": {"action": "/data/import/url", "method": "GET", "params": {"title": "title", "url": "url", "text": "text"}}
+            theme_values['app_name'],
+        "short_name":
+            theme_values['app_name'],
+        "description":
+            _("Manage recipes, shopping list, meal plans and more."),
+        "icons":
+            icons,
+        "start_url":
+            "./",
+        "background_color":
+            theme_values['nav_bg_color'],
+        "display":
+            "standalone",
+        "scope":
+            ".",
+        "theme_color":
+            theme_values['nav_bg_color'],
+        "shortcuts": [{
+            "name": _("Plan"),
+            "short_name": _("Plan"),
+            "description": _("View your meal Plan"),
+            "url": "./mealplan",
+            "icons": [
+                {
+                    "src": static('assets/logo_color_plan.svg'),
+                    "sizes": "any"
+                }, {
+                    "src": static('assets/logo_color_plan_144.png'),
+                    "type": "image/png",
+                    "sizes": "144x144"
+                }, {
+                    "src": static('assets/logo_color_plan_512.png'),
+                    "type": "image/png",
+                    "sizes": "512x512"
+                }
+            ]
+        }, {
+            "name": _("Shopping"),
+            "short_name": _("Shopping"),
+            "description": _("View your shopping lists"),
+            "url": "./shopping",
+            "icons": [
+                {
+                    "src": static('assets/logo_color_shopping.svg'),
+                    "sizes": "any"
+                }, {
+                    "src": static('assets/logo_color_shopping_144.png'),
+                    "type": "image/png",
+                    "sizes": "144x144"
+                }, {
+                    "src": static('assets/logo_color_shopping_512.png'),
+                    "type": "image/png",
+                    "sizes": "512x512"
+                }
+            ]
+        }],
+        "share_target": {
+            "action": "/recipe/import",
+            "method": "GET",
+            "enctype": "application/x-www-form-urlencoded",
+            "params": {
+                "title": "title",
+                "url": "url",
+                "text": "text"
+            }
+        }
     }
 
     return JsonResponse(manifest_info, json_dumps_params={'indent': 4})
@@ -514,9 +623,14 @@ def search_info(request):
     return render(request, 'search_info.html', {})
 
 
-@group_required('guest')
-def api_info(request):
-    return render(request, 'api_info.html', {})
+class Redoc(GroupRequiredMixin, SpectacularRedocView):
+    permission_classes = [CustomIsGuest]
+    groups_required = ['guest']
+
+
+class Swagger(GroupRequiredMixin, SpectacularSwaggerView):
+    permission_classes = [CustomIsGuest]
+    groups_required = ['guest']
 
 
 def offline(request):
@@ -539,6 +653,10 @@ def test(request):
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+
+
+def tandoor_frontend(request):
+    return render(request, 'frontend/tandoor.html', {})
 
 
 def get_orphan_files(delete_orphans=False):
@@ -584,3 +702,7 @@ def get_orphan_files(delete_orphans=False):
         orphans = find_orphans()
 
     return [img[1] for img in orphans]
+
+
+def vue3(request):
+    return HttpResponseRedirect(reverse('index'))

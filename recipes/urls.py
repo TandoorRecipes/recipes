@@ -24,7 +24,6 @@ from django.views.static import serve
 from django_js_reverse import views as reverse_views
 
 urlpatterns = [
-    path('', include('cookbook.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
@@ -56,3 +55,8 @@ for p in settings.PLUGINS:
         if settings.DEBUG:
             print(f'ERROR failed loading urls for plugin <{p["name"]}>')
             traceback.format_exc()
+
+# include cookbook urls last because it has a catchall view to the tandoor frontend
+urlpatterns.append(
+    path('', include('cookbook.urls')),
+)

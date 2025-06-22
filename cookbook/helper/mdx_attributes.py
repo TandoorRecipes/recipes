@@ -6,8 +6,8 @@ class StyleTreeprocessor(Treeprocessor):
 
     def run_processor(self, node):
         for child in node:
-            if child.tag == "table":
-                child.set("class", "table table-bordered")
+            # if child.tag == "table":
+            #     child.set("class", "markdown-body")
             if child.tag == "img":
                 child.set("class", "img-fluid")
             self.run_processor(child)

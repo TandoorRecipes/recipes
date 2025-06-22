@@ -325,7 +325,7 @@ export default {
         apiFactory.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.space = r.data
         })
-        apiFactory.listUserSpaces(1, 25).then(r => { //TODO build proper pagination
+        apiFactory.listUserSpaces(undefined, 1, 25).then(r => { //TODO build proper pagination
             this.user_spaces = r.data.results
         })
         this.loadInviteLinks()

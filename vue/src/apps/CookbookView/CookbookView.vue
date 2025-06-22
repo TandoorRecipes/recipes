@@ -154,10 +154,9 @@ export default {
     },
     methods: {
         refreshData: function () {
-            let apiClient = new ApiApiFactory()
             
-            apiClient.listRecipeBooks().then((result) => {
-                this.cookbooks = result.data
+            this.genericAPI(this.Models.RECIPE_BOOK, this.Actions.LIST).then((result) => {
+                this.cookbooks = result.data.results
             })
         },
         openBook: function (book, keepopen = false) {
@@ -174,8 +173,8 @@ export default {
                 return b.id == book
             })[0]
 
-            apiClient.listRecipeBookEntrys({ query: { book: book } }).then((result) => {
-                this.recipes = result.data
+            this.genericAPI(this.Models.RECIPE_BOOK_ENTRY, this.Actions.LIST, { book: book }).then((result) => {
+                this.recipes = result.data.results
                 if (book_contents.filter) this.appendRecipeFilter(1, book_contents)
                 this.loading = false
             })
@@ -214,15 +213,14 @@ export default {
             })
         },
         orderBy: function(order_field,order_direction){
-            let apiClient = new ApiApiFactory()
             const options = {
                 order_field: order_field,
                 order_direction: order_direction
             }
             this.activeSortField = order_field
             this.activeSortDirection = order_direction
-            apiClient.listRecipeBooks(options).then((result) => {
-                this.cookbooks = result.data
+            this.genericAPI(this.Models.RECIPE_BOOK, this.Actions.LIST, options).then((result) => {
+                this.cookbooks = result.data.results
             })
         },
         isActiveSort: function(field, direction) {

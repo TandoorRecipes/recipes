@@ -1,0 +1,299 @@
+:root, :before, :after, * {
+  --vf-primary: #b98766;
+  --vf-primary-darker: #b55e4f;
+  --vf-danger: #a7240e;
+  --vf-danger-lighter: #eaaa21;
+  --vf-success: #82aa8b;
+  --vf-success-lighter: #385f84;
+
+  --vf-ring-width: 0;
+  --vf-ring-color: #673AB766;
+
+  --vf-gray-50: #FAFAFA;
+  --vf-gray-100: #F5F5F5;
+  --vf-gray-200: #EEEEEE;
+  --vf-gray-300: #E0E0E0;
+  --vf-gray-400: #BDBDBD;
+  --vf-gray-500: #9E9E9E;
+  --vf-gray-600: #757575;
+  --vf-gray-700: #616161;
+  --vf-gray-800: #424242;
+  --vf-gray-900: #212121;
+
+  --vf-font-size: 1rem;
+  --vf-font-size-sm: 0.875rem;
+  --vf-font-size-lg: 1rem;
+
+  --vf-font-size-small: 0.875rem;
+  --vf-font-size-small-sm: 0.75rem;
+  --vf-font-size-small-lg: 0.875rem;
+
+  --vf-line-height: 1.5rem;
+  --vf-line-height-sm: 1.25rem;
+  --vf-line-height-lg: 1.5rem;
+
+  --vf-line-height-small: 1.25rem;
+  --vf-line-height-small-sm: 1.125rem;
+  --vf-line-height-small-lg: 1.25rem;
+
+  --vf-letter-spacing: 0;
+  --vf-letter-spacing-sm: 0;
+  --vf-letter-spacing-lg: 0;
+
+  --vf-letter-spacing-small: 0;
+  --vf-letter-spacing-small-sm: 0;
+  --vf-letter-spacing-small-lg: 0;
+
+  --vf-gutter: 1rem;
+  --vf-gutter-sm: 0.5rem;
+  --vf-gutter-lg: 1rem;
+
+  --vf-min-height-input: 3rem;
+  --vf-min-height-input-sm: 2.125rem;
+  --vf-min-height-input-lg: 3.5rem;
+
+  --vf-py-input: 0.75rem;
+  --vf-py-input-sm: 0.375rem;
+  --vf-py-input-lg: 1rem;
+
+  --vf-px-input: 1rem;
+  --vf-px-input-sm: 0.625rem;
+  --vf-px-input-lg: 1rem;
+
+  --vf-py-btn: 0.375rem;
+  --vf-py-btn-sm: 0.5rem;
+  --vf-py-btn-lg: 0.5rem;
+
+  --vf-px-btn: 1rem;
+  --vf-px-btn-sm: 1rem;
+  --vf-px-btn-lg: 1rem;
+
+  --vf-py-btn-small: calc(var(--vf-py-btn) * 0.75);
+  --vf-py-btn-small-sm: calc(var(--vf-py-btn-sm) * 0.75);
+  --vf-py-btn-small-lg: calc(var(--vf-py-btn-lg) * 0.75);
+
+  --vf-px-btn-small: calc(var(--vf-px-btn) * 0.75);
+  --vf-px-btn-small-sm: calc(var(--vf-px-btn-sm) * 0.75);
+  --vf-px-btn-small-lg: calc(var(--vf-px-btn-lg) * 0.75);
+
+  --vf-py-group-tabs: var(--vf-py-input);
+  --vf-py-group-tabs-sm: var(--vf-py-input-sm);
+  --vf-py-group-tabs-lg: var(--vf-py-input-lg);
+
+  --vf-px-group-tabs: var(--vf-px-input);
+  --vf-px-group-tabs-sm: var(--vf-px-input-sm);
+  --vf-px-group-tabs-lg: var(--vf-px-input-lg);
+
+  --vf-py-group-blocks: 1rem;
+  --vf-py-group-blocks-sm: 0.75rem;
+  --vf-py-group-blocks-lg: 1.25rem;
+
+  --vf-px-group-blocks: 1.25rem;
+  --vf-px-group-blocks-sm: 1rem;
+  --vf-px-group-blocks-lg: 1.5rem;
+
+  --vf-py-tag: 0.1875rem;
+  --vf-py-tag-sm: 0.125rem;
+  --vf-py-tag-lg: 0.1875rem;
+
+  --vf-px-tag: 0.675rem;
+  --vf-px-tag-sm: 0.5rem;
+  --vf-px-tag-lg: 0.75rem;
+
+  --vf-py-slider-tooltip: 0.25rem;
+  --vf-py-slider-tooltip-sm: 0.1875rem;
+  --vf-py-slider-tooltip-lg: 0.3125rem;
+
+  --vf-px-slider-tooltip: 0.5rem;
+  --vf-px-slider-tooltip-sm: 0.375rem;
+  --vf-px-slider-tooltip-lg: 0.625rem;
+
+  // Space between addon and text input
+  --vf-space-addon: 0;
+  --vf-space-addon-sm: var(--vf-space-addon);
+  --vf-space-addon-lg: var(--vf-space-addon);
+
+  // Space between checkboxes & radios and their labels
+  --vf-space-checkbox: 0.5rem;
+  --vf-space-checkbox-sm: 0.5rem;
+  --vf-space-checkbox-lg: 0.625rem;
+
+  // Space between tags in `TagsElement`
+  --vf-space-tags: 0.1875rem;
+  --vf-space-tags-sm: var(--vf-space-tags);
+  --vf-space-tags-lg: 0.3125rem;
+
+  // Space between the field's top and floating label
+  --vf-floating-top: 0.75rem;
+  --vf-floating-top-sm: 0rem;
+  --vf-floating-top-lg: 0.875rem;
+
+  --vf-bg-input: var(--vf-gray-100);
+  --vf-bg-input-hover: #ececec;
+  --vf-bg-input-focus: #dcdcdc;
+  --vf-bg-input-danger: var(--vf-bg-input);
+  --vf-bg-input-success: var(--vf-bg-input);
+  --vf-bg-checkbox: var(--vf-bg-input);
+  --vf-bg-checkbox-hover: var(--vf-bg-input-hover);
+  --vf-bg-checkbox-focus: var(--vf-bg-input-focus);
+  --vf-bg-checkbox-danger: var(--vf-bg-input-danger);
+  --vf-bg-checkbox-success: var(--vf-bg-input-success);
+  --vf-bg-disabled: var(--vf-gray-50);
+  --vf-bg-selected: rgba(17,24,39,0.05); // Used eg. when select option is hovered or a checkbox is selected in `blocks` view
+  --vf-bg-passive: var(--vf-gray-300); // Used as a background color for eg. slider, toggle
+  --vf-bg-icon: var(--vf-gray-700);
+  --vf-bg-danger: var(--vf-danger-lighter);
+  --vf-bg-success: var(--vf-success-lighter);
+  --vf-bg-tag: var(--vf-primary);
+  --vf-bg-slider-handle: var(--vf-primary);
+  --vf-bg-toggle-handle: #ffffff;
+  --vf-bg-date-head: var(--vf-gray-100);
+  --vf-bg-addon: transparent;
+  --vf-bg-btn: var(--vf-primary);
+  --vf-bg-btn-danger: var(--vf-danger);
+  --vf-bg-btn-secondary: var(--vf-gray-200);
+
+  --vf-color-input: var(--vf-gray-900);
+  --vf-color-input-focus: var(--vf-color-input);
+  --vf-color-input-hover: var(--vf-color-input);
+  --vf-color-input-danger: var(--vf-color-input);
+  --vf-color-input-success: var(--vf-color-input);
+  --vf-color-disabled: #AFAFAF;
+  --vf-color-placeholder: rgba(0,0,0,.6);
+  --vf-color-passive: var(--vf-gray-700); // Used when text is displayed on passive background eg. `off` toggle
+  --vf-color-muted: rgba(0,0,0,.6); // Used for helper texts eg. element description, floating label
+  --vf-color-floating: var(--vf-color-muted);
+  --vf-color-floating-focus: var(--vf-primary); // Used when the input is focused
+  --vf-color-floating-success: var(--vf-success); // Used when the input is filled with success
+  --vf-color-floating-danger: var(--vf-danger); // Used when the input has error
+  --vf-color-on-primary: #ffffff; // Used when text is displayed on primary color
+  --vf-color-danger: var(--vf-danger);
+  --vf-color-success: var(--vf-success);
+  --vf-color-tag: var(--vf-color-on-primary);
+  --vf-color-addon: var(--vf-color-input);
+  --vf-color-date-head: var(--vf-gray-700);
+  --vf-color-btn: var(--vf-color-on-primary);
+  --vf-color-btn-danger: #ffffff;
+  --vf-color-btn-secondary: var(--vf-gray-700);
+
+  --vf-border-color-input: var(--vf-gray-600);
+  --vf-border-color-input-focus: var(--vf-primary);
+  --vf-border-color-input-hover: var(--vf-border-color-input);
+  --vf-border-color-input-danger: var(--vf-danger);
+  --vf-border-color-input-success: var(--vf-border-color-input);
+  --vf-border-color-checkbox: var(--vf-border-color-input);
+  --vf-border-color-checkbox-focus: var(--vf-border-color-input-hover);
+  --vf-border-color-checkbox-hover: var(--vf-border-color-input-focus);
+  --vf-border-color-checkbox-danger: var(--vf-border-color-input-danger);
+  --vf-border-color-checkbox-success: var(--vf-border-color-input-success);
+  --vf-border-color-checked: var(--vf-primary);
+  --vf-border-color-passive: var(--vf-gray-300); // Used as a border for passive states eg. `off` toggle
+  --vf-border-color-slider-tooltip: var(--vf-primary);
+  --vf-border-color-tag: var(--vf-primary);
+  --vf-border-color-btn: var(--vf-primary);
+  --vf-border-color-btn-danger: var(--vf-danger);
+  --vf-border-color-btn-secondary: var(--vf-gray-200);
+
+  --vf-border-width-input-t: 0px;
+  --vf-border-width-input-r: 0px;
+  --vf-border-width-input-b: 1px;
+  --vf-border-width-input-l: 0px;
+
+  --vf-border-width-radio-t: 2px;
+  --vf-border-width-radio-r: 2px;
+  --vf-border-width-radio-b: 2px;
+  --vf-border-width-radio-l: 2px;
+
+  --vf-border-width-checkbox-t: 2px;
+  --vf-border-width-checkbox-r: 2px;
+  --vf-border-width-checkbox-b: 2px;
+  --vf-border-width-checkbox-l: 2px;
+
+  --vf-border-width-dropdown: 0px;
+  --vf-border-width-toggle: 0.25rem;
+  --vf-border-width-btn: 1px;
+  --vf-border-width-tag: 1px;
+
+  --vf-shadow-input: 0px 0px 0px 0px rgba(0,0,0,0);
+  --vf-shadow-input-hover: 0px 0px 0px 0px rgba(0,0,0,0);
+  --vf-shadow-input-focus: 0px 0px 0px 0px rgba(0,0,0,0);
+  --vf-shadow-handles: 0px 0px 0px 0px rgba(0,0,0,0);
+  --vf-shadow-handles-hover: 0px 0px 0px 9px rgba(0,0,0,0.15);
+  --vf-shadow-handles-focus: 0px 0px 0px 9px rgba(0,0,0,0.15);
+  --vf-shadow-btn: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+  --vf-shadow-dropdown: 0 4px 6px 0 rgb(32 33 36 / 28%);
+
+  --vf-radius-input: 0.25rem 0.25rem 0 0;
+  --vf-radius-input-sm: var(--vf-radius-input);
+  --vf-radius-input-lg: var(--vf-radius-input);
+
+  --vf-radius-btn: 0.25rem;
+  --vf-radius-btn-sm: 0.25rem;
+  --vf-radius-btn-lg: 0.25rem;
+
+  // Used for eg. list button, slider tooltip, info tooltip
+  --vf-radius-small: 0.125rem;
+  --vf-radius-small-sm: 0.125rem;
+  --vf-radius-small-lg: 0.125rem;
+
+  // Used for larger inputs eg. textarea, editor, drag and drop, checkbox/radio blocks
+  --vf-radius-large: 0.5rem 0.5rem 0 0;
+  --vf-radius-large-sm: 0.5rem 0.5rem 0 0;
+  --vf-radius-large-lg: 0.5rem 0.5rem 0 0;
+
+  --vf-radius-tag: 999px;
+  --vf-radius-tag-sm: 999px;
+  --vf-radius-tag-lg: 999px;
+
+  --vf-radius-checkbox: 0.25rem;
+  --vf-radius-checkbox-sm: 0.25rem;
+  --vf-radius-checkbox-lg: 0.25rem;
+
+  --vf-radius-slider: 1rem;
+  --vf-radius-slider-sm: 1rem;
+  --vf-radius-slider-lg: 1rem;
+
+  --vf-radius-image: 0.25rem 0.25rem 0 0;
+  --vf-radius-image-sm: 0.25rem 0.25rem 0 0;
+  --vf-radius-image-lg: 0.25rem 0.25rem 0 0;
+
+  --vf-radius-gallery: 0.25rem 0.25rem 0 0;
+  --vf-radius-gallery-sm: 0.25rem 0.25rem 0 0;
+  --vf-radius-gallery-lg: 0.25rem 0.25rem 0 0;
+
+  --vf-checkbox-size: 1rem;
+  --vf-checkbox-size-sm: 0.9375rem;
+  --vf-checkbox-size-lg: 1.125rem;
+
+  --vf-gallery-size: 6rem;
+  --vf-gallery-size-sm: 5rem;
+  --vf-gallery-size-lg: 7rem;
+
+  --vf-toggle-width: 3rem;
+  --vf-toggle-width-sm: 2.75rem;
+  --vf-toggle-width-lg: 3rem;
+
+  --vf-toggle-height: 1rem;
+  --vf-toggle-height-sm: 1.125rem;
+  --vf-toggle-height-lg: 1.25rem;
+
+  --vf-slider-height: 0.375rem;
+  --vf-slider-height-sm: 0.3125rem;
+  --vf-slider-height-lg: 0.4375rem;
+
+  --vf-slider-height-vertical: 20rem;
+  --vf-slider-height-vertical-sm: var(--vf-slider-height-vertical);
+  --vf-slider-height-vertical-lg: var(--vf-slider-height-vertical);
+
+  --vf-slider-handle-size: 1.25rem;
+  --vf-slider-handle-size-sm: var(--vf-slider-handle-size);
+  --vf-slider-handle-size-lg: 1.4375rem;
+
+  --vf-slider-tooltip-distance: 0.625rem;
+  --vf-slider-tooltip-distance-sm: var(--vf-slider-tooltip-distance);
+  --vf-slider-tooltip-distance-lg: var(--vf-slider-tooltip-distance);
+
+  --vf-slider-tooltip-arrow-size: 0.375rem;
+  --vf-slider-tooltip-arrow-size-sm: var(--vf-slider-tooltip-arrow-size);
+  --vf-slider-tooltip-arrow-size-lg: var(--vf-slider-tooltip-arrow-size);
+}

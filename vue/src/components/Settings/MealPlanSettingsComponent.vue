@@ -4,7 +4,7 @@
         <b-form-group :label="$t('Share')" :description="$t('plan_share_desc')">
             <generic-multiselect
                 @change="user_preferences.plan_share = $event.val;updateSettings(false)"
-                :model="Models.USER"
+                :model="Models.USER_NAME"
                 :initial_selection="user_preferences.plan_share"
                 label="display_name"
                 :multiple="true"
@@ -125,7 +125,7 @@ export default {
         this.loadSettings()
 
         this.settings = useMealPlanStore().client_settings
-        
+
 
         this.loadMealTypes()
     },
@@ -159,7 +159,7 @@ export default {
         loadMealTypes: function () {
             let apiClient = new ApiApiFactory()
             apiClient.listMealTypes().then(result => {
-                this.meal_types = result.data
+                this.meal_types = result.data.results
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
