@@ -22,7 +22,8 @@
     "vue-router": "^4.5.0",
     "vue-simple-calendar": "7.1.0",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.8.9"
+    "@types/sortablejs": "^1.15.8",
+    "vuetify": "^3.8.10"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -35,6 +36,8 @@
     "typescript": "^5.8.3",
     "vite": "6.2.6",
     "vite-plugin-pwa": "^1.0.0",
+    "workbox-build": "^7.3.0",
+    "workbox-window": "^7.3.0",
     "vite-plugin-vuetify": "^2.1.1",
     "vue-tsc": "^2.2.8"
   }

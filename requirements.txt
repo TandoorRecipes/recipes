@@ -3,8 +3,6 @@ cryptography===44.0.1
 django-annoying==0.10.6
 django-cleanup==8.0.0
 django-crispy-forms==2.3
-crispy-bootstrap4==2024.10
-django-tables2==2.7.4
 djangorestframework==3.15.2
 drf-spectacular==0.27.1
 drf-spectacular-sidecar==2024.2.1
@@ -29,8 +27,6 @@ beautifulsoup4==4.12.3
 microdata==0.8.0
 mock==5.1.0
 Jinja2==3.1.6
-django-webpack-loader==3.0.1
-git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==65.3.1
 recipe-scrapers==15.6.0
 django-scopes==2.0.0
@@ -52,7 +48,7 @@ pyjwt==2.10.1
 python3-openid==3.2.0
 python3-saml==1.16.0
 django-vite==3.0.3
-litellm==1.60.8
+litellm==1.64.1
 
 # Development
 pytest==8.0.0
