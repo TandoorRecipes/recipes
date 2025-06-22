@@ -268,19 +268,24 @@ class UserFileSerializer(serializers.ModelSerializer):
                     > self.context['request'].space.max_file_storage_mb != 0):
                 raise ValidationError(_('You have reached your file upload limit.'))
 
-    def create(self, validated_data):
-        if not is_file_type_allowed(validated_data['file'].name):
-            return None
+    def check_file_type(self, validated_data):
+        print('checking file type')
+        if 'file' in validated_data:
+            print('filke present in data')
+            if not is_file_type_allowed(validated_data['file'].name, image_only=False):
+                print('is not allowed')
+                raise ValidationError(_('The given file type is not allowed.'))
 
+    def create(self, validated_data):
         self.check_file_limit(validated_data)
+        self.check_file_type(validated_data)
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if not is_file_type_allowed(validated_data['file'].name):
-            return None
         self.check_file_limit(validated_data)
+        self.check_file_type(validated_data)
         return super().update(instance, validated_data)
 
     class Meta:
@@ -456,7 +461,7 @@ class ConnectorConfigSerializer(SpacedModelSerializer):
     class Meta:
         model = ConnectorConfig
         fields = (
-            'id', 'name', 'type','url', 'token', 'todo_entity', 'enabled',
+            'id', 'name', 'type', 'url', 'token', 'todo_entity', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
             'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'created_by'
         )
@@ -481,7 +486,7 @@ class StorageSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
             'token', 'url', 'path', 'created_by'
         )
 
-        read_only_fields = ( 'id', 'created_by',)
+        read_only_fields = ('id', 'created_by',)
 
         extra_kwargs = {
             'password': {'write_only': True},

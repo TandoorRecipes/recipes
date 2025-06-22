@@ -79,11 +79,20 @@ onMounted(() => {
  * save file to database via fileApi composable
  */
 function saveFile() {
+    loading.value = true
+
+    let event: ("create" | "save") = isUpdate() ? 'save' : 'create'
+
     createOrUpdateUserFile(editingObj.value.name, file.value, editingObj.value.id).then(r => {
         editingObj.value = r
+        editingObjChanged.value = false
+        emit(event, r)
         useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    }).finally(() => {
+        editingObjChanged.value = false
+        loading.value = false
     })
 }
 

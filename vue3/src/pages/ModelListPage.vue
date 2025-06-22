@@ -21,7 +21,9 @@
                         <v-btn class="float-right" icon="$create" color="create" v-if="!genericModel.model.disableCreate">
                             <i class="fa-solid fa-plus"></i>
                             <model-edit-dialog :close-after-create="false" :model="model"
-                                               @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
+                                               @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"
+                                               @save="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"
+                                               @delete="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
                         </v-btn>
                     </template>
                     <v-card-actions v-if="genericModel.model.name == 'RecipeImport'">
@@ -51,7 +53,8 @@
                             <v-icon icon="$menu"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact">
-                                    <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}" v-if="!genericModel.model.disableCreate && !genericModel.model.disableUpdate && !genericModel.model.disableDelete" >
+                                    <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}"
+                                                 v-if="!genericModel.model.disableCreate && !genericModel.model.disableUpdate && !genericModel.model.disableDelete">
                                         {{ $t('Edit') }}
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
@@ -71,7 +74,7 @@
                                         {{ $t('Import') }}
                                         <sync-dialog :sync="item"></sync-dialog>
                                     </v-list-item>
-                                     <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'RecipeImport'" @click="importRecipe(item)">
+                                    <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'RecipeImport'" @click="importRecipe(item)">
                                         {{ $t('Import') }}
                                     </v-list-item>
                                 </v-list>
@@ -209,8 +212,8 @@ function changeModel(m: Model) {
  * convert a RecipeImport to a "real" external recipes and reload the table
  * @param item
  */
-function importRecipe(item: RecipeImport){
-let api = new ApiApi()
+function importRecipe(item: RecipeImport) {
+    let api = new ApiApi()
     api.apiRecipeImportImportRecipeCreate({id: item.id!, recipeImport: item}).then(r => {
         loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
     }).catch(err => {
@@ -221,7 +224,7 @@ let api = new ApiApi()
 /**
  * convert all RecipeImports to "real" external recipes and reload the table (should be empty afterwards)
  */
-function importAllRecipes(){
+function importAllRecipes() {
     let api = new ApiApi()
 
     api.apiRecipeImportImportAllCreate({recipeImport: {} as RecipeImport}).then(r => {
