@@ -1,7 +1,7 @@
 Django==4.2.22
 cryptography===44.0.1
 django-annoying==0.10.6
-django-cleanup==8.0.0
+django-cleanup==9.0.0
 django-crispy-forms==2.3
 djangorestframework==3.15.2
 drf-spectacular==0.27.1
