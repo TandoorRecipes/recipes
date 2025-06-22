@@ -2247,10 +2247,8 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         if request.user.is_authenticated and settings.FORCE_THEME_FROM_SPACE:
             with scopes_disabled():
                 space = Space.objects.filter(id=settings.FORCE_THEME_FROM_SPACE).first()
-                print(f'taking theme from space: {space}')
 
         if space:
-            print('applying theme from space logo_color_32:', space.logo_color_32.file)
             s['logo_color_32'] = space.logo_color_32.file if space.logo_color_32 else None
             s['logo_color_128'] = space.logo_color_128.file if space.logo_color_128 else None
             s['logo_color_144'] = space.logo_color_144.file if space.logo_color_144 else None
@@ -2261,7 +2259,6 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
             s['custom_theme'] = space.custom_space_theme.file if space.custom_space_theme else None
             s['nav_logo'] = space.nav_logo.file if space.nav_logo else None
             s['nav_bg_color'] = space.nav_bg_color
-        print(s)
         return Response(ServerSettingsSerializer(s, many=False).data)
 
 
