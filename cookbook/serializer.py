@@ -36,7 +36,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -449,6 +449,40 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
+        read_only_fields = ('user',)
+
+
+class SearchFieldsSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        return instance
+
+    class Meta:
+        model = SearchFields
+        fields = ('id', 'name', 'field',)
+        read_only_fields = ('id',)
+
+
+class SearchPreferenceSerializer(WritableNestedModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    unaccent = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    icontains = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    istartswith = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    trigram = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    fulltext = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = SearchPreference
+        fields = ('user', 'search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
         read_only_fields = ('user',)
 
 

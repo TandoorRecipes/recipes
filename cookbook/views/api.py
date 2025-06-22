@@ -85,7 +85,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -110,7 +110,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer, ConnectorConfigSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -577,7 +577,30 @@ class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
     http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
-        with scopes_disabled():  # need to disable scopes as user preference is no longer a spaced method
+        with scopes_disabled():  # need to disable scopes as user preferences are not scoped
+            return self.queryset.filter(user=self.request.user)
+
+
+class SearchFieldsViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = SearchFields.objects
+    serializer_class = SearchFieldsSerializer
+    permission_classes = [CustomIsGuest & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
+
+    def get_queryset(self):
+        with scopes_disabled():  # need to disable scopes as fields are global
+            return self.queryset
+
+
+class SearchPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = SearchPreference.objects
+    serializer_class = SearchPreferenceSerializer
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
+    http_method_names = ['get', 'patch', ]
+
+    def get_queryset(self):
+        with scopes_disabled():  # need to disable scopes as search preferences are not scoped
             return self.queryset.filter(user=self.request.user)
 
 
@@ -2296,7 +2319,7 @@ def get_external_file_link(request, pk):
 @api_view(['GET'])
 @permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
 def get_recipe_file(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk) # space check handled by CustomRecipePermission
+    recipe = get_object_or_404(Recipe, pk=pk)  # space check handled by CustomRecipePermission
     if recipe.storage:
         return FileResponse(get_recipe_provider(recipe).get_file(recipe), filename=f'{recipe.name}.pdf')
     else:
