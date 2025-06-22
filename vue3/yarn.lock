@@ -3381,12 +3381,12 @@ vue-router@^4.5.0:
   dependencies:
     "@vue/devtools-api" "^6.6.4"
 
-vue-simple-calendar@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/vue-simple-calendar/-/vue-simple-calendar-7.1.0.tgz#d850eb834bdb7a257bb43781908fcbb9a5af56c2"
-  integrity sha512-WNbvRVGQQJlStaLPvvpe2ZsB/E1n8eFgUh4hD931ljp2czPA8xT81i4jGD5+jKZT1OHDFpON5mNn0KwO2QC9rA==
+vue-simple-calendar@7.2.1:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/vue-simple-calendar/-/vue-simple-calendar-7.2.1.tgz#0ecf407338178f4f73a49679cc46a8b9bb0abdf3"
+  integrity sha512-dVb8y1cgT6PKipJG28/movptyv68aOvDsQoU8XuBeUN6IKs7JaJ4SPxwyFTb9phrosl4B5CmTQgYCMs4Yue+YA==
   dependencies:
-    vue "^3.4.15"
+    vue "^3.5.13"
 
 vue-tsc@^2.2.8:
   version "2.2.10"
@@ -3396,7 +3396,7 @@ vue-tsc@^2.2.8:
     "@volar/typescript" "~2.4.11"
     "@vue/language-core" "2.2.10"
 
-vue@^3.4.15, vue@^3.5.13:
+vue@^3.5.13:
   version "3.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.17.tgz#ea8a6a45abb2b0620e7d479319ce8434b55650cf"
   integrity sha512-LbHV3xPN9BeljML+Xctq4lbz2lVHCR6DtbpTf5XIO6gugpXUN49j2QQPcMj086r9+AkJ0FfUT8xjulKKBkkr9g==
