@@ -40,7 +40,7 @@
                                 </template>
                                 {{ $t('Settings') }}
                             </v-list-item>
-                            <v-list-item :to="{ name: 'ModelListPage', params: {model: 'food'} }">
+                            <v-list-item :to="{ name: 'DatabasePage', params: {} }">
                                 <template #prepend>
                                     <v-icon icon="fa-solid fa-folder-tree"></v-icon>
                                 </template>
