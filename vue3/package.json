@@ -29,7 +29,7 @@
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@tsconfig/node22": "^22.0.1",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^22.14.1",
+    "@types/node": "^24.0.3",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
     "jsdom": "^26.1.0",
