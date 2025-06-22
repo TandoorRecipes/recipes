@@ -118,7 +118,7 @@ class IngredientParser:
         note = ''
         start = 0
         # search for first occurrence of an argument ending in a comma
-        while start < len(tokens) and not tokens[start].endswith(','):
+        while start < len(tokens) and not tokens[start].endswith((',', ';', ':')):
             start += 1
         if start == len(tokens):
             # no token ending in a comma found -> use everything as food

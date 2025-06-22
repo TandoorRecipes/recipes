@@ -965,12 +965,12 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
     image_url = serializers.CharField(max_length=4096, required=False, allow_null=True)
 
     def create(self, validated_data):
-        if not is_file_type_allowed(validated_data['image'].name, image_only=True):
+        if 'image' in validated_data and not is_file_type_allowed(validated_data['image'].name, image_only=True):
             return None
         return super().create( validated_data)
 
     def update(self, instance, validated_data):
-        if not is_file_type_allowed(validated_data['image'].name, image_only=True):
+        if 'image' in validated_data and not is_file_type_allowed(validated_data['image'].name, image_only=True):
             return None
         return super().update(instance, validated_data)
 
@@ -1093,6 +1093,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     mealplan_from_date = serializers.ReadOnlyField(source='mealplan.from_date')
     mealplan_type = serializers.ReadOnlyField(source='mealplan.meal_type.name')
     servings = CustomDecimalField()
+    created_by = UserSerializer(read_only=True)
 
     def get_name(self, obj):
         if not isinstance(value := obj.servings, Decimal):
@@ -1106,6 +1107,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
                 or obj.recipe.name
         ) + f' ({value:.2g})'
 
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
         if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
@@ -1116,8 +1122,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingListRecipe
         fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note', 'mealplan_from_date',
-                  'mealplan_type')
-        read_only_fields = ('id',)
+                  'mealplan_type', 'created_by')
+        read_only_fields = ('id',  'created_by',)
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):

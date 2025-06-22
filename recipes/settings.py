@@ -27,8 +27,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Get vars from .env files
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
-DEBUG = bool(int(os.getenv('DEBUG', True)))
-DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', True)))
+DEBUG = bool(int(os.getenv('DEBUG', '0')))
+DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', '0')))
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
 
@@ -577,5 +577,20 @@ ACCOUNT_RATE_LIMITS = {
 
 DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', False)))
 EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
+
+# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+ACCOUNT_FORMS = {
+    'signup': 'cookbook.forms.AllAuthSignupForm',
+    'reset_password': 'cookbook.forms.CustomPasswordResetForm'
+}
+
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "1/m/user",
+    "reset_password": "1/m/ip,1/m/key",
+    "reset_password_from_key": "1/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
+}
 
 mimetypes.add_type("text/javascript", ".js", True)

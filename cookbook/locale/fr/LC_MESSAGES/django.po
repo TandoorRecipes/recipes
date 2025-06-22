@@ -14,16 +14,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-05-28 00:57+0000\n"
-"Last-Translator: tarek EL SOL <tarek.elsol@gmail.com>\n"
-"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/fr/>\n"
+"PO-Revision-Date: 2025-02-16 14:58+0000\n"
+"Last-Translator: Elvis Gosselin <elvis.gosselin@tutanota.com>\n"
+"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -506,18 +506,16 @@ msgid "Nutrition"
 msgstr "Informations nutritionnelles"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Fusionner"
+msgstr "Allergène"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Prix"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Objectif"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -1039,7 +1037,7 @@ msgstr "Exporter"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Propriétés"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 #, fuzzy
@@ -2112,6 +2110,11 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            Vous devez exécuter <code>version.py</code> dans votre script de "
+"mise à jour pour générer les informations de version (automatique avec "
+"docker).\n"
+"        "
 
 #: .\cookbook\templates\system.html:46
 msgid "Media Serving"
@@ -2199,7 +2202,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Hôtes autorisés"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
@@ -2209,6 +2212,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            Votre configuration autorise tous les hôtes, cela  ok dans "
+"certaines installations mais  évité. Veuillez consulter les documentations à "
+"ce sujet.\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2235,18 +2243,26 @@ msgid ""
 "issue.\n"
 "        "
 msgstr ""
+"\n"
+"            Les migrations de données ne devraient jamais échouer!\n"
+"            Les échecs de migrations vont causer des problèmes de "
+"fonctionnement majeurs dans l’application..\n"
+"            Si une migration échoue, vérifiez que vous êtes sur la dernière "
+"version et si c'est le cas veuillez créer un ticket sur GitHub avec le "
+"contenu du journal de migration.\n"
+"        "
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
-msgstr ""
+msgstr "Faux"
 
 #: .\cookbook\templates\system.html:182
 msgid "True"
-msgstr ""
+msgstr "Vrai"
 
 #: .\cookbook\templates\system.html:207
 msgid "Hide"
-msgstr ""
+msgstr "Cacher"
 
 #: .\cookbook\templates\system.html:210
 #, fuzzy
@@ -2328,11 +2344,13 @@ msgstr "{obj.name} a été ajouté(e) à la liste de courses."
 
 #: .\cookbook\views\api.py:742
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
-msgstr ""
+msgstr "Filtrer les repas depuis la date (incluse) avec le format YYYY-MM-DD."
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filtrer les plannings de repas depuis la date (incluse) avec le format YYYY-"
+"MM-DD."
 
 #: .\cookbook\views\api.py:744
 #, fuzzy
