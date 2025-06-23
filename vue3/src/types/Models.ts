@@ -7,7 +7,7 @@ import {
     MealPlan,
     MealType,
     Property, PropertyType,
-    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingListEntry,
+    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingListEntry,
     Step,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
@@ -142,6 +142,7 @@ export type EditorSupportedModels =
     | 'CookLog'
     | 'ViewLog'
     | 'ConnectorConfig'
+    | 'SearchFields'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -175,6 +176,7 @@ export type EditorSupportedTypes =
     | CookLog
     | ViewLog
     | ConnectorConfig
+    | SearchFields
 
 export const TFood = {
     name: 'Food',
@@ -543,6 +545,9 @@ export const TCookLog = {
     icon: 'fa-solid fa-table-list',
 
     isPaginated: true,
+    disableCreate: true,
+    disableUpdate: true,
+    disableDelete: true,
     toStringKeys: ['recipe'],
 
     tableHeaders: [
@@ -560,6 +565,9 @@ export const TViewLog = {
     icon: 'fa-solid fa-clock-rotate-left',
 
     isPaginated: true,
+    disableCreate: true,
+    disableUpdate: true,
+    disableDelete: true,
     toStringKeys: ['recipe'],
 
     tableHeaders: [
@@ -746,6 +754,23 @@ export const TFoodInheritField = {
     isPaginated: false,
 } as Model
 registerModel(TFoodInheritField)
+
+export const TSearchFields = {
+    name: 'SearchFields',
+    localizationKey: 'SearchFields',
+    localizationKeyDescription: '',
+    icon: 'fa-solid fa-search',
+
+    disableListView: true,
+    toStringKeys: ['name'],
+
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+
+    isPaginated: false,
+} as Model
+registerModel(TSearchFields)
 
 
 /**

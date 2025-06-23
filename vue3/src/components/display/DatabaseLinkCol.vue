@@ -1,6 +1,6 @@
 <template>
     <v-col :cols="props.cols" :md="props.md" :lg="props.lg">
-        <v-card :prepend-icon="props.prependIcon" :title="props.title" :subtitle="props.subtitle" variant="outlined" elevation="1"
+        <v-card :prepend-icon="props.prependIcon" :title="props.title" :subtitle="props.subtitle"
                 :to="props.to" :link="isLink" :href="props.href"
                 append-icon="fa-solid fa-arrow-right">
         </v-card>
@@ -28,7 +28,7 @@ const props = defineProps({
 
 
 const isLink = computed(() => {
-    return props.href != '' && props.to == undefined
+    return props.href != '' || props.to != undefined
 })
 
 </script>

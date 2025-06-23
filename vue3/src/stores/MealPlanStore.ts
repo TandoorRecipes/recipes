@@ -2,7 +2,7 @@ import {acceptHMRUpdate, defineStore} from "pinia"
 import {ApiApi, MealPlan} from "@/openapi";
 import {computed, ref} from "vue";
 import {DateTime} from "luxon";
-import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
 
 const _STORE_ID = "meal_plan_store"
@@ -96,7 +96,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
         const api = new ApiApi()
         loading.value = true
         return api.apiMealPlanCreate({mealPlan: object}).then((r) => {
-            useMessageStore().addMessage(MessageType.SUCCESS, 'Created successfully', 7000, object)
+            useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
             plans.value.set(r.id!, r)
             return r
         }).catch((err) => {
@@ -109,7 +109,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     function updateObject(object: MealPlan) {
         const api = new ApiApi()
         return api.apiMealPlanUpdate({id: object.id!, mealPlan: object}).then((r) => {
-            useMessageStore().addMessage(MessageType.SUCCESS, 'Updated successfully', 7000, object)
+            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
             plans.value.set(r.id!, r)
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
@@ -120,7 +120,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
         const api = new ApiApi()
         loading.value = true
         return api.apiMealPlanDestroy({id: object.id!}).then((r) => {
-            useMessageStore().addMessage(MessageType.INFO, 'Deleted successfully', 7000, object)
+            useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
             plans.value.delete(object.id!)
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)

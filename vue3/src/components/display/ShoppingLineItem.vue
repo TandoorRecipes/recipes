@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <template #append>
+        <template v-slot:[checkBtnSlot]>
             <v-btn color="success" @click.native.stop="useShoppingStore().setEntriesCheckedState(entries, !isChecked, true);"
                    :class="{'btn-success': !isChecked, 'btn-warning': isChecked}" :icon="actionButtonIcon" variant="plain">
             </v-btn>
@@ -66,6 +66,7 @@ const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
     hideInfoRow: {type: Boolean, default: false}
 })
+const checkBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'prepend' : 'append')
 
 const dialog = ref(false)
 

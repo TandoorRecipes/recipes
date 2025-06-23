@@ -25,6 +25,7 @@ const routes = [
             {path: 'cosmetic', component: () => import("@/components/settings/CosmeticSettings.vue"), name: 'CosmeticSettings'},
             {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings'},
             {path: 'meal-plan', component: () => import("@/components/settings/MealPlanSettings.vue"), name: 'MealPlanSettings'},
+            {path: 'search', component: () => import("@/components/settings/SearchSettings.vue"), name: 'SearchSettings'},
             {path: 'space', component: () => import("@/components/settings/SpaceSettings.vue"), name: 'SpaceSettings'},
             {path: 'space-members', component: () => import("@/components/settings/SpaceMemberSettings.vue"), name: 'SpaceMemberSettings'},
             {path: 'user-space', component: () => import("@/components/settings/UserSpaceSettings.vue"), name: 'UserSpaceSettings'},

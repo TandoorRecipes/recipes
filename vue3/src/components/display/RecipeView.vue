@@ -117,7 +117,7 @@
             <external-recipe-viewer :recipe="recipe"></external-recipe-viewer>
         </template>
         <template v-else>
-            <v-card class="mt-1" v-if="recipe.steps.length > 1">
+            <v-card class="mt-1" v-if="recipe.steps.length > 1 && recipe.showIngredientOverview">
                 <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
             </v-card>
 
@@ -125,7 +125,6 @@
                 <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
             </v-card>
         </template>
-
 
         <property-view v-model="recipe" :servings="servings" v-if="recipe.internal"></property-view>
 
@@ -170,7 +169,7 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe"></recipe-activity>
+        <recipe-activity :recipe="recipe" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
     </template>
 </template>
 
@@ -189,9 +188,9 @@ import {useMediaQuery, useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
 import {DateTime} from "luxon";
 import PropertyView from "@/components/display/PropertyView.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const {request, release} = useWakeLock()
-const isPrintMode = useMediaQuery('print')
 
 const recipe = defineModel<Recipe>({required: true})
 

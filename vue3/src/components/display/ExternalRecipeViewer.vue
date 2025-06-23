@@ -1,8 +1,8 @@
 <template>
     <v-card class="mt-1 h-100">
-        <iframe width="100%" height="700px" :src="`${getDjangoUrl('/view-recipe-pdf/')}${props.recipe.id}/`" v-if="isPdf"></iframe>
+        <iframe width="100%" height="700px" :src="externalUrl" v-if="isPdf"></iframe>
 
-        <v-img :src="`${getDjangoUrl('/api/get_recipe_file/')}${props.recipe.id}/`" v-if="isImage"></v-img>
+        <v-img :src="externalUrl" v-if="isImage"></v-img>
     </v-card>
 </template>
 
@@ -10,12 +10,14 @@
 import {computed, PropType} from "vue";
 import {Recipe} from "@/openapi";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
+import {useUrlSearchParams} from "@vueuse/core";
 
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe>, required: true}
 })
 
+const params = useUrlSearchParams('history')
 const {getDjangoUrl} = useDjangoUrls()
 
 /**
@@ -38,6 +40,21 @@ const isImage = computed(() => {
         return filePath.includes('.png') || filePath.includes('.jpg') || filePath.includes('.jpeg') || filePath.includes('.gif')
     }
     return false
+})
+
+const externalUrl = computed(() => {
+    let url = ''
+    if (isImage.value) {
+        url = `${getDjangoUrl('/api/get_recipe_file/')}${props.recipe.id}/`
+    } else if (isPdf.value) {
+        url = `${getDjangoUrl('/view-recipe-pdf/')}${props.recipe.id}/`
+    }
+
+    if (params.share && typeof params.share == "string") {
+        url += `?share=${params.share}`
+    }
+
+    return url
 })
 
 

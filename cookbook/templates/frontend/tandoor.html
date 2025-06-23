@@ -12,6 +12,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>Tandoor</title>
+    <meta name="description" content="{% trans 'Tandoor Recipe Manager' %}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
@@ -32,6 +33,9 @@
 
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
+    {% if theme_values.custom_theme %}
+        <link id="id_custom_space_css" href="{{ theme_values.custom_theme }}" rel="stylesheet">
+    {% endif %}
 
 </head>
 <body>
@@ -43,16 +47,19 @@
 <script type="application/javascript">
     localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
 
-    window.addEventListener("load", () => {
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {
-            }).catch(function (err) {
-                console.warn('Error whilst registering service worker', err);
-            });
-        } else {
-            console.warn('service worker not in navigator');
-        }
-    });
+
+    {#window.addEventListener("load", () => {#}
+    {#    if ("serviceWorker" in navigator) {#}
+    {#        navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {#}
+    {#        }).catch(function (err) {#}
+    {#            console.warn('Error whilst registering service worker', err);#}
+    {#        });#}
+    {#    } else {#}
+    {#        console.warn('service worker not in navigator');#}
+    {#    }#}
+    {#});#}
+
+
 </script>
 
 </body>

@@ -1,7 +1,7 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, UserFile, UserFileFromJSON} from "@/openapi";
+import {RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
 
 
 /**
@@ -40,9 +40,13 @@ export function useFileApi() {
             headers: {'X-CSRFToken': getCookie('csrftoken')},
             body: formData
         }).then(r => {
-            return r.json().then(r => {
-                return UserFileFromJSON(r)
-            })
+            if (r.ok) {
+                return r.json().then(r => {
+                    return UserFileFromJSON(r)
+                })
+            } else {
+                throw new ResponseError(r)
+            }
         }).finally(() => {
             fileApiLoading.value = false
         })
@@ -81,10 +85,10 @@ export function useFileApi() {
      * @param file file object to upload
      * @param text text to import
      */
-    function doAiImport(file: File|null, text: string = '') {
+    function doAiImport(file: File | null, text: string = '') {
         let formData = new FormData()
 
-        if(file != null){
+        if (file != null) {
             formData.append('file', file)
         } else {
             formData.append('file', '')

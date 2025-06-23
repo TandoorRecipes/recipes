@@ -22,6 +22,13 @@
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile &&  step.file == null">{{ $t('File') }}</v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showRecipe = true" v-if="!showRecipe && step.stepRecipe == null">{{ $t('Recipe') }}</v-list-item>
 
+                        <v-list-item link>
+                            <v-switch v-model="step.showIngredientsTable" :label="$t('ShowIngredients')" hide-details></v-switch>
+                        </v-list-item>
+                        <v-list-item link>
+                            <v-switch v-model="step.showAsHeader" :label="$t('Show_as_header')" hide-details></v-switch>
+                        </v-list-item>
+
                         <v-list-item prepend-icon="$delete" @click="emit('delete')">{{ $t('Delete') }}</v-list-item>
                     </v-list>
                 </v-menu>

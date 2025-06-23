@@ -72,9 +72,20 @@ const newPlanDialogDefaultItem = ref({} as MealPlan)
 const planItems = computed(() => {
     let items = [] as IMealPlanCalendarItem[]
     useMealPlanStore().planList.forEach(mp => {
+        let startDate = mp.fromDate
+        let endDate = mp.toDate ? mp.toDate : mp.fromDate
+
+        if (mp.mealType.time) {
+            let hour = parseInt(mp.mealType.time.split(':')[0])
+            let minutes = parseInt(mp.mealType.time.split(':')[1])
+            let seconds = parseInt(mp.mealType.time.split(':')[2])
+            startDate.setHours(hour, minutes, seconds)
+            endDate.setHours(hour, minutes, seconds)
+        }
+        console.log(startDate, endDate)
         items.push({
-            startDate: mp.fromDate,
-            endDate: mp.toDate,
+            startDate: startDate,
+            endDate: endDate,
             id: mp.id,
             mealPlan: mp,
         } as IMealPlanCalendarItem)

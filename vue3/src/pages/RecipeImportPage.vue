@@ -336,7 +336,7 @@
                                             <v-text-field :label="$t('Original_Text')" v-model="editingIngredient.originalText" readonly></v-text-field>
                                             <v-text-field :label="$t('Amount')" v-model="editingIngredient.amount"></v-text-field>
 
-                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" :rules="[rules.required()]" v-if="editingIngredient.unit">
+                                            <v-text-field :label="$t('Unit')" v-model="editingIngredient.unit.name" :rules="['required']" v-if="editingIngredient.unit">
                                                 <template #append-inner>
                                                     <v-btn icon="$delete" color="delete" @click="editingIngredient.unit = null"></v-btn>
                                                 </template>
@@ -368,10 +368,10 @@
                                             <v-img v-if="importResponse.recipe.imageUrl" :src="importResponse.recipe.imageUrl"></v-img>
                                         </v-col>
                                         <v-col cols="12" md="6">
-                                            <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name" :rules="[rules.maxLength(128)]"></v-text-field>
+                                            <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name" :rules="[['maxLength',128]]"></v-text-field>
                                             <v-number-input :label="$t('Servings')" v-model="importResponse.recipe.servings" :precision="2"></v-number-input>
                                             <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
-                                            <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" :rules="[rules.maxLength(512)]" counter
+                                            <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" :rules="[['maxLength',512]]" counter
                                                         clearable></v-textarea>
 
                                             <v-checkbox v-model="editAfterImport" :label="$t('Edit_Recipe')" hide-details></v-checkbox>
@@ -502,7 +502,8 @@
                                 </v-progress-linear>
 
                                 <v-list>
-                                    <v-list-item border v-for="r in urlListImportedRecipes" :title="r.name" :subtitle="r.sourceUrl" :key="r.id" :to="{name: 'RecipeViewPage', params: {id: r.id}}" target="_blank">
+                                    <v-list-item border v-for="r in urlListImportedRecipes" :title="r.name" :subtitle="r.sourceUrl" :key="r.id"
+                                                 :to="{name: 'RecipeViewPage', params: {id: r.id}}" target="_blank">
 
                                     </v-list-item>
                                 </v-list>
@@ -567,7 +568,6 @@ import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import bookmarkletJs from '@/assets/bookmarklet_v3?url'
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
-import {useRules} from "vuetify/labs/rules";
 
 function doListImport() {
     urlList.value = urlListImportInput.value.split('\n')
@@ -579,10 +579,10 @@ function importFromUrlList() {
     let api = new ApiApi()
     let url = urlList.value.pop()
 
-    if(url != undefined && url.trim() != ''){
+    if (url != undefined && url.trim() != '') {
 
         api.apiRecipeFromSourceCreate({recipeFromSource: {url: url}}).then(sourceResponse => {
-            if(sourceResponse.recipe){
+            if (sourceResponse.recipe) {
                 api.apiRecipeCreate({recipe: sourceResponse.recipe}).then(recipe => {
                     urlListImportedRecipes.value.push(recipe)
                     updateRecipeImage(recipe.id!, null, sourceResponse.recipe?.imageUrl).then(imageResponse => {
@@ -595,7 +595,7 @@ function importFromUrlList() {
                 })
             }
         }).catch(err => {
-            if (err.response.status == 429){
+            if (err.response.status == 429) {
                 useMessageStore().addPreparedMessage(PreparedMessage.RATE_LIMIT, err)
             } else {
                 useMessageStore().addMessage(MessageType.WARNING, t('ErrorUrlListImport'), 8000, url)
@@ -614,7 +614,6 @@ function importFromUrlList() {
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
-const rules = useRules()
 const {t} = useI18n()
 const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
 const {getDjangoUrl} = useDjangoUrls()

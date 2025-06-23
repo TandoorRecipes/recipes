@@ -30,6 +30,13 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     }, {deep: true})
 
     /**
+     * emit the changed state of the object to parent components for display or navigation blocking
+     */
+    watch(() => editingObjChanged.value, () => {
+        emit('changedState', editingObjChanged.value)
+    })
+
+    /**
      * before mounting the component UI set the model class based on the given model name
      */
     onBeforeMount(() => {
@@ -59,7 +66,6 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     function applyItemDefaults(itemDefaults: T) {
         if (Object.keys(itemDefaults).length > 0) {
             Object.keys(itemDefaults).forEach(k => {
-                console.log('applying default ', k, itemDefaults[k])
                 editingObj.value[k] = itemDefaults[k]
             })
         }

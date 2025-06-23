@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <title>PDF</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>PDF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF</title>
     <style>
         html, body {
             height: 100%;
@@ -23,9 +24,13 @@
     </style>
 
 </head>
-<body >
+<body>
 
-    <iframe  src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'api_get_recipe_file' recipe_id %}" ></iframe>
+{% if share %}
+    <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'api_get_recipe_file' recipe_id %}?share={{ share }}"></iframe>
+{% else %}
+    <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'api_get_recipe_file' recipe_id %}"></iframe>
+{% endif %}
 
 </body>
 </html>

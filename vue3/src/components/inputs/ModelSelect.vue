@@ -1,7 +1,9 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
+
+    <v-label class="mt-2" v-if="props.label" >{{props.label}}</v-label>
     <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails">
-        <template #prepend  v-if="$slots.prepend">
+        <template #prepend v-if="$slots.prepend">
             <slot name="prepend"></slot>
         </template>
 
@@ -37,21 +39,26 @@
                 containerActive: '',
             }"
         >
-          <template #option="{ option }" v-if="props.allowCreate">
-            <div class="d-flex align-center justify-space-between w-100">
-              <span>{{ option[itemLabel] }}</span>
-              <v-chip size="x-small" variant="flat" color="create" class="ml-2" v-if="option.__CREATE__">
-                  <v-icon icon="$create"></v-icon>
-                  <template class="d-none d-lg-block"> {{$t('Create')}}</template>
-              </v-chip>
-            </div>
-          </template>
+            <template #option="{ option }" v-if="props.allowCreate">
+                <div class="d-flex align-center justify-space-between w-100">
+                    <span>{{ option[itemLabel] }}</span>
+                    <v-chip size="x-small" variant="flat" color="create" class="ml-2" v-if="option.__CREATE__">
+                        <v-icon icon="$create"></v-icon>
+                        <template class="d-none d-lg-block"> {{ $t('Create') }}</template>
+                    </v-chip>
+                </div>
+            </template>
 
-          <template #clear="{ clear }" v-if="props.canClear">
-            <span @click="clear" aria-hidden="true" tabindex="-1" role="button" data-clear="" aria-roledescription="❎" class="multiselect-clear">
-              <span class="multiselect-clear-icon"></span>
-            </span>
-          </template>
+            <template #clear="{ clear }" v-if="props.canClear">
+                <span @click="clear" aria-hidden="true" tabindex="-1" role="button" data-clear="" aria-roledescription="❎" class="multiselect-clear">
+                  <span class="multiselect-clear-icon"></span>
+                </span>
+            </template>
+
+            <template v-if="hasMoreItems && !loading" #afterlist>
+                <span class="text-disabled font-italic text-caption ms-3">{{ $t('ModelSelectResultsHelp') }}</span>
+            </template>
+
         </Multiselect>
 
         <template #append v-if="$slots.append">
@@ -124,6 +131,7 @@ const itemLabel = computed(() => {
 const model = defineModel()
 const modelClass = ref({} as GenericModel)
 const loading = ref(false)
+const hasMoreItems = ref(false)
 
 const multiselect = useTemplateRef(`ref_${props.id}`)
 
@@ -140,10 +148,14 @@ onBeforeMount(() => {
  */
 function search(query: string) {
     loading.value = true
-    return modelClass.value.list({query: query, page: 1, pageSize: 25}).then((r: any) => {
+    return modelClass.value.list({query: query, page: 1, pageSize: props.limit}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
+            if (r.next) {
+                hasMoreItems.value = true
+            }
             return r.results
         } else {
+            hasMoreItems.value = false
             return r
         }
     }).catch((err: any) => {

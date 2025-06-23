@@ -36,7 +36,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -268,19 +268,24 @@ class UserFileSerializer(serializers.ModelSerializer):
                     > self.context['request'].space.max_file_storage_mb != 0):
                 raise ValidationError(_('You have reached your file upload limit.'))
 
-    def create(self, validated_data):
-        if not is_file_type_allowed(validated_data['file'].name):
-            return None
+    def check_file_type(self, validated_data):
+        print('checking file type')
+        if 'file' in validated_data:
+            print('filke present in data')
+            if not is_file_type_allowed(validated_data['file'].name, image_only=False):
+                print('is not allowed')
+                raise ValidationError(_('The given file type is not allowed.'))
 
+    def create(self, validated_data):
         self.check_file_limit(validated_data)
+        self.check_file_type(validated_data)
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if not is_file_type_allowed(validated_data['file'].name):
-            return None
         self.check_file_limit(validated_data)
+        self.check_file_type(validated_data)
         return super().update(instance, validated_data)
 
     class Meta:
@@ -447,6 +452,40 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         read_only_fields = ('user',)
 
 
+class SearchFieldsSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        return instance
+
+    class Meta:
+        model = SearchFields
+        fields = ('id', 'name', 'field',)
+        read_only_fields = ('id',)
+
+
+class SearchPreferenceSerializer(WritableNestedModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    unaccent = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    icontains = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    istartswith = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    trigram = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    fulltext = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = SearchPreference
+        fields = ('user', 'search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
+        read_only_fields = ('user',)
+
+
 class ConnectorConfigSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
@@ -456,7 +495,7 @@ class ConnectorConfigSerializer(SpacedModelSerializer):
     class Meta:
         model = ConnectorConfig
         fields = (
-            'id', 'name', 'type','url', 'token', 'todo_entity', 'enabled',
+            'id', 'name', 'type', 'url', 'token', 'todo_entity', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
             'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'created_by'
         )
@@ -481,7 +520,7 @@ class StorageSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
             'token', 'url', 'path', 'created_by'
         )
 
-        read_only_fields = ( 'id', 'created_by',)
+        read_only_fields = ('id', 'created_by',)
 
         extra_kwargs = {
             'password': {'write_only': True},
@@ -1510,6 +1549,20 @@ class ServerSettingsSerializer(serializers.Serializer):
     hosted = serializers.BooleanField()
     debug = serializers.BooleanField()
     version = serializers.CharField()
+
+    unauthenticated_theme_from_space = serializers.IntegerField()
+    force_theme_from_space = serializers.IntegerField()
+
+    logo_color_32 = serializers.ImageField(default=None)
+    logo_color_128 = serializers.CharField(default=None)
+    logo_color_144 = serializers.CharField(default=None)
+    logo_color_180 = serializers.CharField(default=None)
+    logo_color_192 = serializers.CharField(default=None)
+    logo_color_512 = serializers.CharField(default=None)
+    logo_color_svg = serializers.CharField(default=None)
+    custom_space_theme = serializers.CharField(default=None)
+    nav_logo = serializers.CharField(default=None)
+    nav_bg_color = serializers.CharField(default=None)
 
     class Meta:
         fields = '__ALL__'

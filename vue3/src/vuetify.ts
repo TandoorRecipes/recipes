@@ -24,6 +24,10 @@ export default createVuetify({
         // always localize the date display of DateInputs
         VDateInput: {
             displayFormat : (date: Date) => DateTime.fromJSDate(date).toLocaleString()
+        },
+        // always use color for switches to properly see if enabled or not
+        VSwitch: {
+            color: 'primary'
         }
     },
     theme: {

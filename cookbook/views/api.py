@@ -85,7 +85,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -110,7 +110,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer, ConnectorConfigSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -577,7 +577,30 @@ class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
     http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
-        with scopes_disabled():  # need to disable scopes as user preference is no longer a spaced method
+        with scopes_disabled():  # need to disable scopes as user preferences are not scoped
+            return self.queryset.filter(user=self.request.user)
+
+
+class SearchFieldsViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = SearchFields.objects
+    serializer_class = SearchFieldsSerializer
+    permission_classes = [CustomIsGuest & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
+
+    def get_queryset(self):
+        with scopes_disabled():  # need to disable scopes as fields are global
+            return self.queryset
+
+
+class SearchPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = SearchPreference.objects
+    serializer_class = SearchPreferenceSerializer
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
+    http_method_names = ['get', 'patch', ]
+
+    def get_queryset(self):
+        with scopes_disabled():  # need to disable scopes as search preferences are not scoped
             return self.queryset.filter(user=self.request.user)
 
 
@@ -2236,7 +2259,29 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['hosted'] = settings.HOSTED
         s['debug'] = settings.DEBUG
         s['version'] = TANDOOR_VERSION
+        s['unauthenticated_theme_from_space'] = settings.UNAUTHENTICATED_THEME_FROM_SPACE
+        s['force_theme_from_space'] = settings.FORCE_THEME_FROM_SPACE
 
+        # include the settings handled by the space
+        space = None
+        if not request.user.is_authenticated and settings.UNAUTHENTICATED_THEME_FROM_SPACE > 0:
+            with scopes_disabled():
+                space = Space.objects.filter(id=settings.UNAUTHENTICATED_THEME_FROM_SPACE).first()
+        if request.user.is_authenticated and settings.FORCE_THEME_FROM_SPACE:
+            with scopes_disabled():
+                space = Space.objects.filter(id=settings.FORCE_THEME_FROM_SPACE).first()
+
+        if space:
+            s['logo_color_32'] = space.logo_color_32.file if space.logo_color_32 else None
+            s['logo_color_128'] = space.logo_color_128.file if space.logo_color_128 else None
+            s['logo_color_144'] = space.logo_color_144.file if space.logo_color_144 else None
+            s['logo_color_180'] = space.logo_color_180.file if space.logo_color_180 else None
+            s['logo_color_192'] = space.logo_color_192.file if space.logo_color_192 else None
+            s['logo_color_512'] = space.logo_color_512.file if space.logo_color_512 else None
+            s['logo_color_svg'] = space.logo_color_svg.file if space.logo_color_svg else None
+            s['custom_theme'] = space.custom_space_theme.file if space.custom_space_theme else None
+            s['nav_logo'] = space.nav_logo.file if space.nav_logo else None
+            s['nav_bg_color'] = space.nav_bg_color
         return Response(ServerSettingsSerializer(s, many=False).data)
 
 
@@ -2258,8 +2303,8 @@ def get_recipe_provider(recipe):
 )
 @api_view(['GET'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-def get_external_file_link(request, recipe_id):
-    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
+def get_external_file_link(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
     if not recipe.link:
         recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
         recipe.save()
@@ -2272,9 +2317,9 @@ def get_external_file_link(request, recipe_id):
     responses=None,
 )
 @api_view(['GET'])
-@permission_classes([(CustomIsGuest | CustomIsUser) & CustomTokenHasReadWriteScope])
-def get_recipe_file(request, recipe_id):
-    recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
+@permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
+def get_recipe_file(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)  # space check handled by CustomRecipePermission
     if recipe.storage:
         return FileResponse(get_recipe_provider(recipe).get_file(recipe), filename=f'{recipe.name}.pdf')
     else:
