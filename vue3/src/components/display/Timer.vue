@@ -88,7 +88,8 @@ function formatFinishTime(durationSeconds: number): string {
         target.startOf('day').diff(now.startOf('day'), 'days').days
     )
     if (daysDifference >= 1) {
-        timeString += ` +${daysDifference}d`
+        const label = daysDifference === 1 ? t('Day') : t('Days');
+        timeString += ` +${daysDifference} ${label}`;
     }
     return timeString
 }
