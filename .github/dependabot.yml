@@ -10,15 +10,6 @@ updates:
     schedule:
       interval: weekly
 
-  # DAILY update only for recipe-scrapers
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-name: "recipe-scrapers"
-
-  # WEEKLY update for all other packages
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
