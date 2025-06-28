@@ -8,21 +8,73 @@ updates:
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    labels:
+      - "devcontainer"
+      - "dependencies"
+      - "automerge"
 
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "recipe-scrapers"  # Don't double-update it here
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    labels:
+      - "python"
+      - "dependencies"
+      - "automerge"
 
   - package-ecosystem: "npm"
     directory: "/vue/"
     schedule:
       interval: "monthly"
+    open-pull-requests-limit: 0
+    versioning-strategy: "increase-if-necessary"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    allow:
+      - dependency-type: "direct"
+        update-type: "version-update:semver-patch"
+      - dependency-type: "direct"
+        update-type: "version-update:semver-minor"
+      - dependency-type: "indirect"
+        update-type: "version-update:semver-patch"
+      - dependency-type: "indirect"
+        update-type: "version-update:semver-minor"
+    labels:
+      - "javascript"
+      - "vue"
+      - "dependencies"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    labels:
+      - "github-actions"
+      - "automerge"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    labels:
+      - "docker"
+      - "dependencies"
+      - "automerge"
