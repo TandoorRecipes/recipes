@@ -1,0 +1,25 @@
+name: Auto-merge recipe-scrapers updates
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  automerge:
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.title, 'recipe-scrapers')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: hmarr/auto-approve-action@v3
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: pascalgn/automerge-action@v0.16.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_LABELS: ""
+          MERGE_METHOD: squash
+          DELETE_BRANCH_ON_MERGE: true
