@@ -14,8 +14,6 @@ updates:
       semver-minor-days: 3
       semver-patch-days: 3
     directory: "/"
-    ignore:
-      - dependency-name: "*"
     groups:
       pip-patches:
         patterns: ["*"]
@@ -42,7 +40,6 @@ updates:
       semver-patch-days: 3
     directory: "/vue/"
     ignore:
-      - dependency-name: "*"
       - dependency-name: "*vue*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "pinia*"
@@ -66,8 +63,6 @@ updates:
     schedule:
       interval: "weekly"
     directory: "/"
-    ignore:
-      - dependency-name: "*"
     groups:
       actions-updates:
           patterns: ["*"]
@@ -84,8 +79,6 @@ updates:
     schedule:
       interval: "weekly"
     directory: "/"
-    ignore:
-      - dependency-name: "*"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -99,8 +92,6 @@ updates:
     schedule:
       interval: "weekly"
     directory: "/"
-    ignore:
-      - dependency-name: "*"
     commit-message:
       prefix: "chore"
       include: "scope"
