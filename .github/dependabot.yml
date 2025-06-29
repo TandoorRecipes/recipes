@@ -9,7 +9,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 0
+    open-pull-requests-limit: 1
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
@@ -22,7 +22,18 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 0
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 3  
+      semver-patch-days: 3
+    groups:
+      pip-patches:
+        patterns: ["*"]
+        update-types: ["patch"]
+      pip-minors:
+        patterns: ["*"]
+        update-types: ["minor"]
+    open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
@@ -33,22 +44,29 @@ updates:
 
   - package-ecosystem: "npm"
     directory: "/vue/"
+    groups:
+      npm-patches:
+        patterns: ["*"]
+        update-types: ["patch"]
+      npm-minors:
+        patterns: ["*"]
+        update-types: ["minor"]
     schedule:
       interval: "monthly"
-    open-pull-requests-limit: 0
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 3  
+      semver-patch-days: 3
+    open-pull-requests-limit: 5
     versioning-strategy: "increase-if-necessary"
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
     allow:
       - dependency-type: "direct"
-        update-type: "version-update:semver-patch"
-      - dependency-type: "direct"
-        update-type: "version-update:semver-minor"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
       - dependency-type: "indirect"
-        update-type: "version-update:semver-patch"
-      - dependency-type: "indirect"
-        update-type: "version-update:semver-minor"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
     labels:
       - "javascript"
       - "vue"
@@ -56,9 +74,17 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
+    groups:
+      actions-updates:
+          patterns: ["*"]
+          update-types: ["patch", "minor"]
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 0
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 3  
+      semver-patch-days: 3
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
@@ -70,7 +96,11 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 0
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 3  
+      semver-patch-days: 3
+    open-pull-requests-limit: 1
     commit-message:
       prefix: "chore(deps)"
       include: "scope"

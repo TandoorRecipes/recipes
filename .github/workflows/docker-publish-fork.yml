@@ -17,6 +17,8 @@ jobs:
         github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.head_branch == 'working'
       )
+    concurrency:
+      group: docker-build-${{ github.ref }}
     name: Build Tandoor Container
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.continue-on-error }}
@@ -34,7 +36,6 @@ jobs:
             continue-on-error: false
     steps:
       - uses: actions/checkout@v4
-
       - name: Get version number
         id: get_version
         run: |
