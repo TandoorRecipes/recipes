@@ -62,11 +62,9 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
-    allow:
-      - dependency-type: "direct"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
-      - dependency-type: "indirect"
-        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+    ignore:
+      - dependency-name: "vue*"
+        update-types: ["version-update:semver-major"]
     labels:
       - "javascript"
       - "vue"
