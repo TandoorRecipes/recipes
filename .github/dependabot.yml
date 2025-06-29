@@ -21,6 +21,9 @@ updates:
       pip-minors:
         patterns: ["*"]
         update-types: ["minor"]
+      pip-pytest:
+        patterns: ["pytest*"]
+        update-types: ["minor", "patch"]
     
     commit-message:
       prefix: "chore"
