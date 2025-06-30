@@ -17,9 +17,11 @@ updates:
     groups:
       pip-patches:
         patterns: ["*"]
+        exclude-patterns: ["pytest*"]
         update-types: ["patch"]
       pip-minors:
         patterns: ["*"]
+        exclude-patterns: ["pytest*"]
         update-types: ["minor"]
       pip-pytest:
         patterns: ["pytest*"]
@@ -88,7 +90,6 @@ updates:
     labels:
       - "docker"
       - "dependencies"
-      - "automerge"
 
   - package-ecosystem: "devcontainers"
     open-pull-requests-limit: 5
@@ -101,4 +102,3 @@ updates:
     labels:
       - "devcontainer"
       - "dependencies"
-      - "automerge"

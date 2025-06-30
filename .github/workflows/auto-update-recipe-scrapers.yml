@@ -1,4 +1,4 @@
-name: Auto-update recipe-scrapers daily
+name: Auto-update recipe-scrapers
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  bump:
+  update:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,62 +16,51 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Get current recipe-scrapers version
-        id: current
+      - name: Update recipe-scrapers to latest
         run: |
-          CURRENT=$(grep '^recipe-scrapers==' requirements.txt | cut -d '=' -f3)
-          echo "current=$CURRENT" >> $GITHUB_OUTPUT
-
-      - name: Get latest recipe-scrapers version from PyPI
-        id: latest
-        run: |
+          # Install jq for JSON parsing
+          sudo apt-get update && sudo apt-get install -y jq
+          
+          # Get latest version from PyPI
           LATEST=$(curl -s https://pypi.org/pypi/recipe-scrapers/json | jq -r .info.version)
-          echo "latest=$LATEST" >> $GITHUB_OUTPUT
-
-      - name: Compare versions
-        id: compare
-        run: |
-          echo "Current: ${{ steps.current.outputs.current }}"
-          echo "Latest:  ${{ steps.latest.outputs.latest }}"
-          if [ "${{ steps.latest.outputs.latest }}" != "${{ steps.current.outputs.current }}" ]; then
-            echo "update=true" >> $GITHUB_OUTPUT
-          else
-            echo "update=false" >> $GITHUB_OUTPUT
+          
+          # Update requirements.txt
+          sed -i "s/^recipe-scrapers==.*/recipe-scrapers==${LATEST}/" requirements.txt
+          
+          # Check if anything changed
+          if git diff --quiet requirements.txt; then
+            echo "No update needed - already at latest version"
+            exit 0
           fi
+          
+          echo "Updated to version: $LATEST"
 
-      - name: Stop if already up to date
-        if: steps.compare.outputs.update == 'false'
-        run: echo "recipe-scrapers is already up to date."
-
-      - name: Update requirements.txt
-        if: steps.compare.outputs.update == 'true'
-        run: |
-          sed -i 's/^recipe-scrapers==.*/recipe-scrapers==${{ steps.latest.outputs.latest }}/' requirements.txt
-
-      - name: Commit updated requirements.txt
-        if: steps.compare.outputs.update == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v6
-        with:
-          commit_message: "chore: bump recipe-scrapers to ${{ steps.latest.outputs.latest }}"
-          branch: bump-recipe-scrapers
-          create_branch: true
-
-      - name: Create PR with automerge label
-        if: steps.compare.outputs.update == 'true'
+      - name: Create PR and enable automerge
         uses: peter-evans/create-pull-request@v5
+        id: create-pr
         with:
-          branch: bump-recipe-scrapers
-          title: "chore: bump recipe-scrapers to ${{ steps.latest.outputs.latest }}"
-          body: "Automated update of recipe-scrapers"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update recipe-scrapers to latest version"
+          title: "chore: update recipe-scrapers to latest version"
+          body: |
+            Automated update of recipe-scrapers to the latest version.
+            
+            This PR will be automatically merged if all checks pass.
+          branch: update-recipe-scrapers
           delete-branch: true
           labels: |
             dependencies
-            automerge
+
+      - name: Auto-approve and enable automerge
+        if: steps.create-pr.outputs.pull-request-number
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
+
+      - name: Enable auto-merge
+        if: steps.create-pr.outputs.pull-request-number
+        uses: alexwilson/enable-github-automerge-action@2.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          merge-method: "SQUASH"
