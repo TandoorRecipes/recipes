@@ -58,7 +58,7 @@ jobs:
 
       - name: Commit updated requirements.txt
         if: steps.compare.outputs.update == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: "chore: bump recipe-scrapers to ${{ steps.latest.outputs.latest }}"
           branch: bump-recipe-scrapers
