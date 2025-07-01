@@ -2,7 +2,7 @@ name: Dependabot Auto-merge
 
 on:
   pull_request_target:
-    types: [labeled, opened]
+    types: [labeled, opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
