@@ -76,7 +76,7 @@ updates:
       prefix: "chore"
       include: "scope"
     labels:
-      - "github-actions"
+      - "github_actions"
       - "automerge"
 
   - package-ecosystem: "docker"

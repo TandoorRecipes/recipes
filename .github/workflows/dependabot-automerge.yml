@@ -14,9 +14,19 @@ jobs:
         uses: hmarr/auto-approve-action@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          review-message: |
+            🤖 **Dependabot Auto-merge**
+            
+            This PR has been automatically approved and enabled for auto-merge. It will be merged automatically once all required checks pass.
           
       - name: Enable auto-merge
-        uses: alexwilson/enable-github-automerge-action@2.0.0
+        uses: daneden/enable-automerge-action@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          merge-method: "REBASE"
+
+          # The name of the PR author to enable automerge for
+          # Defaults to dependabot[bot]
+          allowed-author: "dependabot[bot]"
+
+          # Allowed values: MERGE | SQUASH | REBASE
+          merge-method: REBASE
