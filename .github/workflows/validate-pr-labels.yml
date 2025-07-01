@@ -21,7 +21,7 @@ jobs:
           labels: invalid
           
       - name: Comment restriction
-        uses: peter-evans/create-or-update-comment@v3
+        uses: peter-evans/create-or-update-comment@23ff15729ef2fc348714a3bb66d2f655ca9066f2  # v4.0.0
         with:
           body: |
             ⚠️ **Automerge Restriction Notice**
