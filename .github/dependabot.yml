@@ -8,11 +8,11 @@ updates:
   - package-ecosystem: "pip"
     open-pull-requests-limit: 20
     schedule:
-      interval: "weekly"
+      interval: "daily"
     cooldown:
       semver-major-days: 30
       semver-minor-days: 3
-      semver-patch-days: 3
+      semver-patch-days: 1
     directory: "/"
     groups:
       pip-patches:
