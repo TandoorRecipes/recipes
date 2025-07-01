@@ -7,14 +7,23 @@ on:
     types:
       - completed
     branches: [working]
+  push:
+    branches: [working]
+    paths:
+      # also catch dependabot PRs
+      - '**/requirements.txt'
+      - '**/pyproject.toml'
+      - '.github/workflows/**'
+      - 'Dockerfile'
+
 
 jobs:
   build-container:
     if: >
-      (github.event_name == 'workflow_dispatch') ||
       (
-        github.event_name == 'workflow_run' &&
-        github.event.workflow_run.conclusion == 'success'
+        github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+        (github.event_name == 'push' && github.actor == 'dependabot[bot]')
       )
     concurrency:
       group: docker-build-${{ github.ref }}
