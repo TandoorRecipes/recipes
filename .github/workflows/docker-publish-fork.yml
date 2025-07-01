@@ -6,16 +6,15 @@ on:
     workflows: ["Continuous Integration"]
     types:
       - completed
+    branches: [working]
 
 jobs:
   build-container:
-    # Conditional: only run if CI passed AND branch is 'working'
     if: >
       (github.event_name == 'workflow_dispatch') ||
       (
         github.event_name == 'workflow_run' &&
-        github.event.workflow_run.conclusion == 'success' &&
-        github.event.workflow_run.head_branch == 'working'
+        github.event.workflow_run.conclusion == 'success'
       )
     concurrency:
       group: docker-build-${{ github.ref }}
