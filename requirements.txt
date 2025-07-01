@@ -51,7 +51,7 @@ django-vite==3.0.3
 litellm==1.64.1
 
 # Development
-pytest==8.0.0
+pytest==8.4.1
 pytest-django==4.10.0
 pytest-cov===5.0.0
 pytest-factoryboy==2.7.0
