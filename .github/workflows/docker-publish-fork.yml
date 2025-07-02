@@ -11,8 +11,8 @@ on:
     branches: [working]
     paths:
       # also catch dependabot PRs
-      - '**/requirements.txt'
-      - '**/pyproject.toml'
+      - 'requirements.txt'
+      - 'pyproject.toml'
       - '.github/workflows/**'
       - 'Dockerfile'
 
