@@ -18,6 +18,17 @@ on:
 
 
 jobs:
+  debug-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        run: |
+          echo "event_name: ${{ github.event_name }}"
+          echo "actor: ${{ github.actor }}"
+          echo "ref: ${{ github.ref }}"
+          echo "event path: ${{ github.event_path }}"
+          echo "workflow: ${{ github.workflow }}"
+          echo "sha: ${{ github.sha }}"
   build-container:
     if: >
       (
