@@ -2,18 +2,48 @@ name: Dependabot Auto-merge
 
 on:
   pull_request_target:
-    types: [labeled, opened, synchronize, reopened]
-  workflow_dispatch:
+    types: [opened,  synchronize, reopened, ready_for_review]
 
 jobs:
-  auto-merge:
-    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge') || github.event_name == 'workflow_dispatch'
+  validate:
+    if: contains(github.event.pull_request.labels.*.name, 'automerge') && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
+      - name: Remove automerge label
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: automerge
+
+      - name: Add invalid label
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: invalid
+          
+      - name: Comment restriction
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043  # v4.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ⚠️ **Automerge Restriction Notice**
+            
+            The `automerge` label has been removed from this PR because it has restricted use. Only PRs created by `dependabot[bot]` are allowed to use the automerge functionality.
+            
+            If you believe this is an error, please contact a repository maintainer.
+  
+  auto-merge:
+    if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1.5.1
+        with:
+          app_id: ${{ secrets.BOT_APP_ID }}
+          private_key: ${{ secrets.BOT_PRIVATE_KEY }}
       - name: Auto-approve PR
         uses: hmarr/auto-approve-action@v4
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ steps.generate_token.outputs.token }}
           review-message: |
             🤖 **Dependabot Auto-merge**
             
@@ -22,7 +52,7 @@ jobs:
       - name: Enable auto-merge
         uses: daneden/enable-automerge-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ steps.generate_token.outputs.token }}
 
           # The name of the PR author to enable automerge for
           # Defaults to dependabot[bot]
