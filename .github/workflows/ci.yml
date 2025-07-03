@@ -9,8 +9,8 @@ jobs:
         strategy:
             max-parallel: 4
             matrix:
-                python-version: ["3.10"]
-                node-version: ["18"]
+                python-version: ["3.12"]
+                node-version: ["22"]
         steps:
             - uses: actions/checkout@v4
             - uses: awalsh128/cache-apt-pkgs-action@v1.4.3
@@ -36,7 +36,6 @@ jobs:
               with:
                   path: |
                       ./cookbook/static
-                      ./vue/webpack-stats.json
                       ./staticfiles
                   key: |
                       ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
@@ -48,30 +47,28 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "yarn"
-                  cache-dependency-path: ./vue/yarn.lock
+                  cache-dependency-path: ./vue3/yarn.lock
 
             - name: Install Vue dependencies
               if: steps.django_cache.outputs.cache-hit != 'true'
-              working-directory: ./vue
+              working-directory: ./vue3
               run: yarn install
 
             - name: Build Vue dependencies
               if: steps.django_cache.outputs.cache-hit != 'true'
-              working-directory: ./vue
+              working-directory: ./vue3
               run: yarn build
 
             - name: Compile Django StaticFiles
               if: steps.django_cache.outputs.cache-hit != 'true'
               run: |
                   python3 manage.py collectstatic --noinput
-                  python3 manage.py collectstatic_js_reverse
 
             - uses: actions/cache/save@v4
               if: steps.django_cache.outputs.cache-hit != 'true'
               with:
                   path: |
                       ./cookbook/static
-                      ./vue/webpack-stats.json
                       ./staticfiles
                   key: |
                       ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
