@@ -7,16 +7,16 @@ updates:
       interval: "daily"
     cooldown:
       semver-major-days: 30
-      semver-minor-days: 3
-      semver-patch-days: 1
+      semver-minor-days: 7
+      semver-patch-days: 3
+      exclude:
+        - "recipe-scrapers"
     directory: "/"
     groups:
       pip-patches:
-        patterns: ["*"]
         exclude-patterns: ["pytest*"]
         update-types: ["patch"]
       pip-minors:
-        patterns: ["*"]
         exclude-patterns: ["pytest*"]
         update-types: ["minor"]
       pip-pytest:
