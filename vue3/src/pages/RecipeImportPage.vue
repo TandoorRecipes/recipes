@@ -279,7 +279,7 @@
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
-                                <v-row v-for="(s, stepIndex) in importResponse.recipe.steps" :key="i">
+                                <v-row v-for="(s, stepIndex) in importResponse.recipe.steps" :key="stepIndex">
                                     <v-col cols="12">
                                         <v-chip color="primary">#{{ stepIndex + 1 }}</v-chip>
                                         <v-btn variant="plain" size="small" icon class="float-right">

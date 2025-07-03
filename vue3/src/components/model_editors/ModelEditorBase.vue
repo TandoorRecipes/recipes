@@ -44,7 +44,7 @@ import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {GenericModel} from "@/types/Models";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {onBeforeRouteLeave, RouteLocationNormalized} from "vue-router";
-import {ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 
 const emit = defineEmits(['save', 'delete', 'close'])
 
@@ -59,6 +59,14 @@ const props = defineProps({
 
 const leaveConfirmDialog = ref(false)
 const leaveGoTo = ref<RouteLocationNormalized | null>(null)
+
+onMounted(() => {
+    window.addEventListener("keydown", keyEvent)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener("keydown", keyEvent)
+})
 
 /**
  * before navigating to another page check for unsaved changes, if so display confirmation dialog
@@ -81,6 +89,17 @@ function closeDialog() {
         leaveConfirmDialog.value = true
     } else {
         emit('close');
+    }
+}
+
+/**
+ * add hotkey functionality to model editor
+ * @param e
+ */
+function keyEvent(e: KeyboardEvent) {
+    if (e.code === "KeyS" && e.ctrlKey) {
+        e.preventDefault()
+        emit('save')
     }
 }
 

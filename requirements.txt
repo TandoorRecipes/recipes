@@ -2,7 +2,8 @@ Django==4.2.22
 cryptography===44.0.1
 django-annoying==0.10.6
 django-cleanup==9.0.0
-django-crispy-forms==2.3
+django-crispy-forms==2.4
+crispy-bootstrap4==2025.6
 djangorestframework==3.15.2
 drf-spectacular==0.27.1
 drf-spectacular-sidecar==2024.2.1
@@ -27,7 +28,7 @@ beautifulsoup4==4.12.3
 microdata==0.8.0
 mock==5.1.0
 Jinja2==3.1.6
-django-allauth==65.3.1
+django-allauth[mfa,socialaccount]==65.9.0
 recipe-scrapers==15.6.0
 django-scopes==2.0.0
 django-treebeard==4.7.1
