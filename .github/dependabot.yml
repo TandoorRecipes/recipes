@@ -39,7 +39,7 @@ updates:
       semver-major-days: 30
       semver-minor-days: 3
       semver-patch-days: 3
-    directory: "/vue/"
+    directory: "vue"
     ignore:
       - dependency-name: "*vue*"
         update-types: ["version-update:semver-major"]
@@ -63,7 +63,7 @@ updates:
     open-pull-requests-limit: 20
     schedule:
       interval: "weekly"
-    directory: "/"
+    directory: "/.github/"
     groups:
       actions-updates:
           patterns: ["*"]
@@ -92,7 +92,7 @@ updates:
     open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
-    directory: "/"
+    directory: "/.devcontainer/"
     commit-message:
       prefix: "chore"
       include: "scope"
