@@ -49,6 +49,10 @@ updates:
       npm-patches:
         patterns: ["*"]
         update-types: ["patch"]
+        labels:
+        - "javascript"
+        - "dependencies"
+        - "automerge"
       npm-minors:
         patterns: ["*"]
         update-types: ["minor"]
@@ -92,7 +96,7 @@ updates:
     open-pull-requests-limit: 5
     schedule:
       interval: "weekly"
-    directory: "/.devcontainer/"
+    directory: "/"
     commit-message:
       prefix: "chore"
       include: "scope"
