@@ -88,14 +88,3 @@ updates:
       - "docker"
       - "dependencies"
 
-  - package-ecosystem: "devcontainers"
-    open-pull-requests-limit: 5
-    schedule:
-      interval: "weekly"
-    directory: "/"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-    labels:
-      - "devcontainer"
-      - "dependencies"
