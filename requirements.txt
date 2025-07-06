@@ -53,12 +53,12 @@ litellm==1.64.1
 
 # Development
 pytest==8.4.1
-pytest-django==4.10.0
-pytest-cov===5.0.0
-pytest-factoryboy==2.7.0
+pytest-django==4.11.0
+pytest-cov===6.0.0
+pytest-factoryboy==2.8.0
 pytest-html==4.1.1
-pytest-asyncio==0.23.5
-pytest-xdist==3.6.1
+pytest-asyncio==0.25.3
+pytest-xdist==3.7.0
 autopep8==2.3.2
 flake8==7.3.0
 yapf==0.40.2
