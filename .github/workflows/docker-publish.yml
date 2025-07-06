@@ -26,14 +26,14 @@ jobs:
             suffix: ""
             continue-on-error: false
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/checkout@v4
       - name: Get version number
         id: get_version
         run: |
           echo VERSION=latest >> $GITHUB_OUTPUT
 
       # Build Vue frontend
-      - uses: actions/setup-node@08f58d1471bff7f3a07d167b4ad7df25d5fcfcb6  # v4.1.0
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: yarn
