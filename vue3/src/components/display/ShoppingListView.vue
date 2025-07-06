@@ -79,6 +79,14 @@
     <v-window v-model="currentTab">
         <v-window-item value="shopping">
             <v-container>
+                <v-row class="pa-0" dense>
+                    <v-col class="pa-0">
+                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0" >
+                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{s.name}}</v-chip>
+                        </v-chip-group>
+                    </v-col>
+                </v-row>
+
                 <v-row>
                     <v-col>
                         <v-alert v-if="useShoppingStore().hasFailedItems()" color="warning" class="mb-2">
@@ -226,20 +234,18 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, IngredientString, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
+import {ApiApi, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
-import {IShoppingListCategory, IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
+import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.vue";
 import {DateTime} from "luxon";
-import MealPlanEditor from "@/components/model_editors/MealPlanEditor.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {onBeforeRouteLeave} from "vue-router";
 import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
@@ -248,6 +254,7 @@ import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue"
 const {t} = useI18n()
 
 const currentTab = ref("shopping")
+const supermarkets = ref([] as Supermarket[])
 
 /**
  * VSelect items for shopping list grouping options with localized names
@@ -279,6 +286,8 @@ onMounted(() => {
             }
         })
     }
+
+    loadSupermarkets()
 })
 
 /**
@@ -336,6 +345,20 @@ function deleteListRecipe(slr: ShoppingListRecipe) {
         useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+    })
+}
+
+/**
+ * load a list of supermarkets
+ */
+function loadSupermarkets(){
+    let api = new ApiApi()
+
+    api.apiSupermarketList().then(r => {
+        supermarkets.value = r.results
+        // TODO either recursive or add a "favorite" attribute to supermarkets for them to display at all
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 }
 
