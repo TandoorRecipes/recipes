@@ -39,10 +39,16 @@ jobs:
   run-ci:
     needs: detect-pr-merge
     if: needs.detect-pr-merge.outputs.pr_merged != 'true'
+    permissions:
+      contents: read
+      actions: write
     uses: ./.github/workflows/ci.yml
     secrets: inherit
 
   docker-publish:
+    permissions:
+      contents: read
+      packages: write
     needs: [detect-pr-merge, run-ci]
     if: |
       needs.detect-pr-merge.outputs.pr_merged == 'true' ||
