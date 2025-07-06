@@ -21,12 +21,11 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
-from django_js_reverse import views as reverse_views
 
 urlpatterns = [
-    path('', include('cookbook.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path("_allauth/", include("allauth.headless.urls")),
     path('i18n/', include('django.conf.urls.i18n')),
     path(
         'jsi18n/',
@@ -43,7 +42,6 @@ if settings.ENABLE_METRICS:
 
 if settings.GUNICORN_MEDIA or settings.DEBUG:
     urlpatterns += re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    urlpatterns += re_path(r'^jsreverse.json$', reverse_views.urls_js, name='js_reverse'),
 
 for p in settings.PLUGINS:
     try:
@@ -56,3 +54,8 @@ for p in settings.PLUGINS:
         if settings.DEBUG:
             print(f'ERROR failed loading urls for plugin <{p["name"]}>')
             traceback.format_exc()
+
+# include cookbook urls last because it has a catchall view to the tandoor frontend
+urlpatterns.append(
+    path('', include('cookbook.urls')),
+)

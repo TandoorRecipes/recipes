@@ -106,14 +106,14 @@ def get_from_scraper(scrape, request):
 
     # assign image
     try:
-        recipe_json['image'] = parse_image(scrape.image()) or None
+        recipe_json['image_url'] = parse_image(scrape.image()) or None
     except Exception:
-        recipe_json['image'] = None
-    if not recipe_json['image']:
+        recipe_json['image_url'] = None
+    if not recipe_json['image_url']:
         try:
-            recipe_json['image'] = parse_image(scrape.schema.data.get('image')) or ''
+            recipe_json['image_url'] = parse_image(scrape.schema.data.get('image')) or ''
         except Exception:
-            recipe_json['image'] = ''
+            recipe_json['image_url'] = ''
 
     # assign keywords
     try:
@@ -205,6 +205,7 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
 
+    recipe_json['properties'] = []
     try:
         recipe_json['properties'] = get_recipe_properties(request.space, scrape.schema.nutrients())
         print(recipe_json['properties'])
@@ -227,6 +228,13 @@ def get_recipe_properties(space, property_data):
         "property-proteins": "proteinContent",
         "property-fats": "fatContent",
     }
+
+    serving_size = 1
+    try:
+        serving_size = parse_servings(property_data['servingSize'])
+    except KeyError:
+        pass
+
     recipe_properties = []
     for pt in PropertyType.objects.filter(space=space, open_data_slug__in=list(properties.keys())).all():
         for p in list(properties.keys()):
@@ -237,7 +245,7 @@ def get_recipe_properties(space, property_data):
                             'id': pt.id,
                             'name': pt.name,
                         },
-                        'property_amount': parse_servings(property_data[properties[p]]) / parse_servings(property_data['servingSize']),
+                        'property_amount': parse_servings(property_data[properties[p]]) / serving_size,
                     })
 
     return recipe_properties
@@ -424,9 +432,9 @@ def parse_keywords(keyword_json, request):
         if len(kw) != 0:
             kw = automation_engine.apply_keyword_automation(kw)
             if k := Keyword.objects.filter(name__iexact=kw, space=request.space).first():
-                keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
+                keywords.append({'label': str(k), 'name': k.name, 'id': k.id, 'import_keyword': True})
             else:
-                keywords.append({'label': kw, 'name': kw})
+                keywords.append({'label': kw, 'name': kw, 'import_keyword': False})
 
     return keywords
 
@@ -483,7 +491,11 @@ def get_images_from_soup(soup, url):
         u = u.split('?')[0]
         filename = re.search(r'/([\w_-]+[.](jpg|jpeg|gif|png))$', u)
         if filename:
-            if (('http' not in u) and (url)):
+            if u.startswith('//'):
+                # urls from e.g. ottolenghi.co.uk start with //
+                u = 'https:' + u
+            if ('http' not in u) and url:
+                print(f'rewriting URL {u}')
                 # sometimes an image source can be relative
                 # if it is provide the base url
                 u = '{}://{}{}'.format(prot, site, u)

@@ -16,7 +16,7 @@ updates:
       interval: "monthly"
 
   - package-ecosystem: "npm"
-    directory: "/vue/"
+    directory: "/vue3/"
     schedule:
       interval: "monthly"
 

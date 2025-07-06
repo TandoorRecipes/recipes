@@ -2,8 +2,8 @@ from django import template
 from django.templatetags.static import static
 from django_scopes import scopes_disabled
 
-from cookbook.models import UserPreference, UserFile, Space
-from recipes.settings import STICKY_NAV_PREF_DEFAULT, UNAUTHENTICATED_THEME_FROM_SPACE, FORCE_THEME_FROM_SPACE
+from cookbook.models import UserPreference, Space
+from recipes.settings import UNAUTHENTICATED_THEME_FROM_SPACE, FORCE_THEME_FROM_SPACE
 
 register = template.Library()
 

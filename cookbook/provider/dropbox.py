@@ -31,7 +31,7 @@ class Dropbox(Provider):
         except ValueError:
             log_entry = SyncLog(status='ERROR', msg=str(r), sync=monitor)
             log_entry.save()
-            return r
+            return log_entry
 
         import_count = 0
         # TODO check if has_more is set and import that as well
@@ -59,7 +59,7 @@ class Dropbox(Provider):
         monitor.last_checked = datetime.now()
         monitor.save()
 
-        return True
+        return log_entry
 
     @staticmethod
     def create_share_link(recipe):

@@ -42,7 +42,7 @@ class Local(Provider):
         monitor.last_checked = datetime.now()
         monitor.save()
 
-        return True
+        return log_entry
 
     @staticmethod
     def get_file(recipe):

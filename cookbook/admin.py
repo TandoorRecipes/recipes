@@ -7,16 +7,19 @@ from django.utils import translation
 from django_scopes import scopes_disabled
 from treebeard.admin import TreeAdmin
 from treebeard.forms import movenodeform_factory
+from allauth.account.decorators import secure_admin_login
 
 from cookbook.managers import DICTIONARY
 
-from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+from .models import (BookmarkletImport, Comment, CookLog, CustomFilter, Food, ImportLog, Ingredient, InviteLink,
                      Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
                      TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
                      ViewLog, ConnectorConfig)
+
+admin.site.login = secure_admin_login(admin.site.login)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -101,6 +104,13 @@ class ConnectorConfigAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ConnectorConfig, ConnectorConfigAdmin)
+
+
+class CustomFilterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'type', 'name')
+
+
+admin.site.register(CustomFilter, CustomFilterAdmin)
 
 
 class SyncAdmin(admin.ModelAdmin):

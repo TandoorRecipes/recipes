@@ -31,7 +31,7 @@ def test_preference_list(u1_s1, u2_s1, u1_s2):
     assert r.status_code == 200
     response = json.loads(r.content)
     assert len(response) == 1
-    assert response[0]['user'] == auth.get_user(u1_s1).id
+    assert response[0]['user']['id'] == auth.get_user(u1_s1).id
 
 
 @pytest.mark.parametrize("arg", [

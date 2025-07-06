@@ -18,7 +18,7 @@ DETAIL_URL = 'api:invitelink-detail'
     ['a1_s1', 200, 1],
     ['a2_s1', 403, 0],
 ])
-def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
+def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1, ids=lambda arg: arg[0]):
     space_1.created_by = auth.get_user(a1_s1)
     space_1.save()
     InviteLink.objects.create(group_id=1, created_by=auth.get_user(a1_s1), space=space_1)
@@ -27,7 +27,7 @@ def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
     result = c.get(reverse(LIST_URL))
     assert result.status_code == arg[1]
     if arg[1] == 200:
-        assert len(json.loads(result.content)) == arg[2]
+        assert len(json.loads(result.content)['results']) == arg[2]
 
 
 @pytest.mark.parametrize("arg", [
@@ -39,7 +39,7 @@ def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
     ['u1_s2', 403],
     ['a1_s2', 403],
 ])
-def test_update(arg, request, space_1, u1_s1, a1_s1):
+def test_update(arg, request, space_1, u1_s1, a1_s1, ids=lambda arg: arg[0]):
     with scopes_disabled():
         space_1.created_by = auth.get_user(a1_s1)
         space_1.save()

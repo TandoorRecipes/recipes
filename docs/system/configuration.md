@@ -132,6 +132,13 @@ This can either be a relative path from the applications base path or the url of
 STATIC_URL=/static/
 ```
 
+#### Static root
+
+> default `<basedir>/staticfiles` - options `/some/other/media/path`.
+
+Where staticfiles should be stored on disk. The default location is a
+`staticfiles` subfolder at the root of the application directory.
+
 #### Media URL
 
 > default `/static/` - options: `/any/url/path/`, `https://any.domain.name/and/url/path`
@@ -292,6 +299,12 @@ TERMS_URL=
 PRIVACY_URL=
 IMPRINT_URL=
 ```
+
+#### Rate Limits
+
+There are some rate limits that can be configured.
+
+- RATELIMIT_URL_IMPORT_REQUESTS: limit the number of external URL import requests. Useful to prevent your server from being abused for malicious requests.
 
 ### Authentication
 
@@ -455,6 +468,20 @@ S3_QUERYSTRING_AUTH=1 # default true, set to 0 to serve media from a public buck
 S3_QUERYSTRING_EXPIRE=3600 # number of seconds querystring are valid for
 S3_ENDPOINT_URL= # when using a custom endpoint like minio
 S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/TandoorRecipes/recipes/issues/1943)
+```
+
+#### AI Integration
+
+To use AI to perform different tasks you need to configure an API key and the AI provider. [LiteLLM](https://www.litellm.ai/) is used
+to make a standardized request to different AI providers of your liking. 
+
+Configuring this via environment parameters is a temporary solution. In the future I plan on adding support for multiple AI providers per Tandoor instance
+with the option to select them for various tasks. For now only gemini 2.0 flash has been tested but feel free to try out other models. 
+
+```
+AI_API_KEY=
+AI_MODEL_NAME=gemini/gemini-2.0-flash
+AI_RATELIMIT=60/hour
 ```
 
 #### FDC Api

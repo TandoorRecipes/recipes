@@ -1,75 +1,131 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "Run Migrations",
-        "type": "shell",
-        "command": "python3 manage.py migrate",
-      },
-      {
-        "label": "Collect Static Files",
-        "type": "shell",
-        "command": "python3 manage.py collectstatic",
-        "dependsOn": ["Yarn Build"],
-      },
-      {
-        "label": "Setup Dev Server",
-        "dependsOn": ["Run Migrations", "Yarn Build"],
-      },
-      {
-        "label": "Run Dev Server",
-        "type": "shell",
-        "dependsOn": ["Setup Dev Server"],
-        "command": "python3 manage.py runserver",
-      },
-      {
-        "label": "Yarn Install",
-        "type": "shell",
-        "command": "yarn install",
-        "options": {
-          "cwd": "${workspaceFolder}/vue"
-        }
-      },
-      {
-        "label": "Yarn Serve",
-        "type": "shell",
-        "command": "yarn serve",
-        "dependsOn": ["Yarn Install"],
-        "options": {
-          "cwd": "${workspaceFolder}/vue"
-        }
-      },
-      {
-        "label": "Yarn Build",
-        "type": "shell",
-        "command": "yarn build",
-        "dependsOn": ["Yarn Install"],
-        "options": {
-          "cwd": "${workspaceFolder}/vue"
-        },
-        "group": "build",
-      },
-      {
-        "label": "Setup Tests",
-        "dependsOn": ["Run Migrations", "Collect Static Files"],
-      },
-      {
-        "label": "Run all pytests",
-        "type": "shell",
-        "command": "python3 -m pytest cookbook/tests",
-        "dependsOn": ["Setup Tests"],
-        "group": "test",
-      },
-      {
-        "label": "Setup Documentation Dependencies",
-        "type": "shell",
-        "command": "pip install mkdocs-material mkdocs-include-markdown-plugin",
-      },
-      {
-        "label": "Serve Documentation",
-        "type": "shell",
-        "command": "mkdocs serve",
-        "dependsOn": ["Setup Documentation Dependencies"],
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Migrations",
+      "type": "shell",
+      "command": "python3 manage.py migrate"
+    },
+    {
+      "label": "Collect Static Files",
+      "type": "shell",
+      "command": "python3 manage.py collectstatic",
+      "dependsOn": ["Yarn Build"]
+    },
+    {
+      "label": "Setup Dev Server",
+      "dependsOn": ["Run Migrations", "Yarn Build"]
+    },
+    {
+      "label": "Run Dev Server",
+      "type": "shell",
+      "dependsOn": ["Setup Dev Server"],
+      "command": "python3 manage.py runserver"
+    },
+    {
+      "label": "Yarn Install",
+      "dependsOn": ["Yarn Install - Vue", "Yarn Install - Vue3"]
+    },
+    {
+      "label": "Yarn Install - Vue",
+      "type": "shell",
+      "command": "yarn install --force",
+      "options": {
+        "cwd": "${workspaceFolder}/vue"
       }
-    ]
+    },
+    {
+      "label": "Yarn Install - Vue3",
+      "type": "shell",
+      "command": "yarn install --force",
+      "options": {
+        "cwd": "${workspaceFolder}/vue3"
+      }
+    },
+    {
+      "label": "Generate API",
+      "dependsOn": ["Generate API - Vue", "Generate API - Vue3"]
+    },
+    {
+      "label": "Generate API - Vue",
+      "type": "shell",
+      "command": "openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/",
+      "options": {
+        "cwd": "${workspaceFolder}/vue/src/utils/openapi"
+      }
+    },
+    {
+      "label": "Generate API - Vue3",
+      "type": "shell",
+      "command": "openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/",
+      "options": {
+        "cwd": "${workspaceFolder}/vue3/src/openapi"
+      }
+    },
+    {
+      "label": "Yarn Serve",
+      "type": "shell",
+      "command": "yarn serve",
+      "dependsOn": ["Yarn Install - Vue"],
+      "options": {
+        "cwd": "${workspaceFolder}/vue"
+      }
+    },
+    {
+      "label": "Vite Serve",
+      "type": "shell",
+      "command": "vite",
+      "dependsOn": ["Yarn Install - Vue3"],
+      "options": {
+        "cwd": "${workspaceFolder}/vue3"
+      }
+    },
+    {
+      "label": "Yarn Build",
+      "dependsOn": ["Yarn Build - Vue", "Vite Build - Vue3"],
+      "group": "build"
+    },
+    {
+      "label": "Yarn Build - Vue",
+      "type": "shell",
+      "command": "yarn build",
+      "dependsOn": ["Yarn Install - Vue"],
+      "options": {
+        "cwd": "${workspaceFolder}/vue"
+      },
+      "group": "build"
+    },
+    {
+      "label": "Vite Build - Vue3",
+      "type": "shell",
+      "command": "vite build",
+      "dependsOn": ["Yarn Install - Vue3"],
+      "options": {
+        "cwd": "${workspaceFolder}/vue3"
+      },
+      "group": "build"
+    },
+    {
+      "label": "Setup Tests",
+      "dependsOn": ["Run Migrations", "Collect Static Files"]
+    },
+    {
+      "label": "Run all pytests",
+      "type": "shell",
+      "command": "python3 -m pytest cookbook/tests",
+      "dependsOn": ["Setup Tests"],
+      "group": "test"
+    },
+    {
+      "label": "Setup Documentation Dependencies",
+      "type": "shell",
+      "command": "pip install mkdocs-material mkdocs-include-markdown-plugin"
+    },
+    {
+      "label": "Serve Documentation",
+      "type": "shell",
+      "command": "mkdocs serve",
+      "dependsOn": ["Setup Documentation Dependencies"]
+    }
+  ]
 }

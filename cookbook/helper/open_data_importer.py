@@ -6,6 +6,8 @@ from cookbook.models import (Food, FoodProperty, Property, PropertyType, Superma
                              SupermarketCategory, SupermarketCategoryRelation, Unit, UnitConversion)
 import re
 
+from recipes.settings import DEBUG
+
 
 class OpenDataImportResponse:
     total_created = 0
@@ -367,12 +369,28 @@ class OpenDataImporter:
                 create_list.append({'data': obj_dict})
 
         if self.update_existing and len(update_list) > 0:
-            model_type.objects.bulk_update(update_list, field_list)
-            od_response.total_updated += len(update_list)
+            try:
+                model_type.objects.bulk_update(update_list, field_list)
+                od_response.total_updated += len(update_list)
+            except Exception:
+                if DEBUG:
+                    print('========= LOAD FOOD FAILED ============')
+                    print(update_list)
+                    print(existing_data_names)
+                    print(existing_data_slugs)
+                    traceback.print_exc()
 
         if len(create_list) > 0:
-            Food.load_bulk(create_list, None)
-            od_response.total_created += len(create_list)
+            try:
+                Food.load_bulk(create_list, None)
+                od_response.total_created += len(create_list)
+            except Exception:
+                if DEBUG:
+                    print('========= LOAD FOOD FAILED ============')
+                    print(create_list)
+                    print(existing_data_names)
+                    print(existing_data_slugs)
+                    traceback.print_exc()
 
         # --------------- PROPERTY STUFF -----------------------
         model_type = Property
