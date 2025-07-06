@@ -3310,10 +3310,10 @@ update-browserslist-db@^1.1.3:
     escalade "^3.2.0"
     picocolors "^1.1.1"
 
-vite-plugin-pwa@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/vite-plugin-pwa/-/vite-plugin-pwa-1.0.0.tgz#bd0ee81e71851bd45cae2f4aec90e52e9833152d"
-  integrity sha512-X77jo0AOd5OcxmWj3WnVti8n7Kw2tBgV1c8MCXFclrSlDV23ePzv2eTDIALXI2Qo6nJ5pZJeZAuX0AawvRfoeA==
+vite-plugin-pwa@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vite-plugin-pwa/-/vite-plugin-pwa-1.0.1.tgz#fec0cc65ffd592bb9ca8374176bd9a2aeaafe97b"
+  integrity sha512-STyUomQbydj7vGamtgQYIJI0YsUZ3T4pJLGBQDQPhzMse6aGSncmEN21OV35PrFsmCvmtiH+Nu1JS1ke4RqBjQ==
   dependencies:
     debug "^4.3.6"
     pretty-bytes "^6.1.1"
