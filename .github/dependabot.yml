@@ -49,10 +49,6 @@ updates:
       npm-patches:
         patterns: ["*"]
         update-types: ["patch"]
-        labels:
-        - "javascript"
-        - "dependencies"
-        - "automerge"
       npm-minors:
         patterns: ["*"]
         update-types: ["minor"]
