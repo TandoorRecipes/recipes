@@ -59,7 +59,7 @@
                     <v-label>{{ $t('Ingredients') }}</v-label>
                     <div v-if="!mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" :empty-insert-threshold="25" group="ingredients">
-                            <v-row v-for="(ingredient, index) in step.ingredients" dense>
+                            <v-row v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" dense>
                                 <v-col cols="2" v-if="!ingredient.isHeader">
                                     <v-input hide-details>
                                         <template #prepend>
@@ -118,7 +118,7 @@
 
                     <v-list v-if="mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" group="ingredients" empty-insert-threshold="25">
-                            <v-list-item v-for="(ingredient, index) in step.ingredients" border @click="editingIngredientIndex = index; dialogIngredientEditor = true">
+                            <v-list-item v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" border @click="editingIngredientIndex = index; dialogIngredientEditor = true">
                                 <ingredient-string :ingredient="ingredient"></ingredient-string>
                                 <template #append>
                                     <v-icon icon="$dragHandle" class="drag-handle"></v-icon>
@@ -344,6 +344,7 @@ function insertAndFocusIngredient() {
 
     step.value.ingredients.push(ingredient)
     nextTick(() => {
+        sortIngredients()
         if (mobile.value) {
             editingIngredientIndex.value = step.value.ingredients.length - 1
             dialogIngredientEditor.value = true
