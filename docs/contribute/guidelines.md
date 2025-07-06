@@ -59,5 +59,5 @@ Generate the schema using `openapi-generator-cli generate -g typescript-fetch -i
 
 ## Install and Configuration
 
-Instructions for [VSCode](/contribute/vscode)
-Instructions for [PyCharm](/contribute/pycharm)
+Instructions for [VSCode](/docs/contribute/vscode)
+Instructions for [PyCharm](/docs/contribute/pycharm)

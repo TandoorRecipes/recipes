@@ -29,7 +29,7 @@ Add a new language to the long list of existing translations.
 -   Spanish
 -   Swedish
 
-See [here](/contribute/translations) for further information on how to contribute translation to Tandoor.
+See [here](/docs/contribute/translations) for further information on how to contribute translation to Tandoor.
 
 ## Issues and Feature Requests
 
@@ -44,12 +44,12 @@ Helping improve the documentation for Tandoor is one of the easiest ways to give
 You can write guides on how to install and configure Tandoor expanding our repository of non-standard configuations.
 Or you can write how-to guides using some of Tandoor's advanced features such as authentication or automation.
 
-See [here](/contribute/documentation) for more information on how to add documentation to Tandoor.
+See [here](/docs/contribute/documentation) for more information on how to add documentation to Tandoor.
 
 ## Contributing Code
 
 For the truly ambitious, you can help write code to fix issues, add additional features, or write your own scripts using
 Tandoor's extensive API and share your work with the community.
 
-Before writing any code, please make sure that you review [contribution guidelines](/contribute/guidelines) and
-[VSCode](/contribute/vscode) or [PyCharm](/contribute/pycharm) specific configurations.
+Before writing any code, please make sure that you review [contribution guidelines](/docs/contribute/guidelines) and
+[VSCode](/docs/contribute/vscode) or [PyCharm](/docs/contribute/pycharm) specific configurations.
