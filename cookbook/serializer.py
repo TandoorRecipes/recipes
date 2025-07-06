@@ -729,6 +729,7 @@ class RecipeFlatSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image')
+        read_only_fields = ('id', 'name', 'image')
 
 
 class FoodSimpleSerializer(serializers.ModelSerializer):
@@ -1772,7 +1773,7 @@ class AiImportSerializer(serializers.Serializer):
 class ExportRequestSerializer(serializers.Serializer):
     type = serializers.CharField()
     all = serializers.BooleanField(default=False)
-    recipes = RecipeFlatSerializer(many=True, default=[])
+    recipes = RecipeSimpleSerializer(many=True, default=[])
     custom_filter = CustomFilterSerializer(many=False, default=None, allow_null=True)
 
 
