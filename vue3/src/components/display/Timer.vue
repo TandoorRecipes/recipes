@@ -2,7 +2,7 @@
     <v-progress-linear :model-value="timerProgress" color="primary" height="5"></v-progress-linear>
     <v-alert :color="timerColor" class="rounded-0" variant="tonal">
         <v-alert-title><i class="fas fa-stopwatch mr-1"></i> {{ Duration.fromMillis(durationSeconds * 1000).toFormat('hh:mm:ss') }}</v-alert-title>
-        {{$t('FinishedAt')}} {{ DateTime.now().plus({'seconds': durationSeconds}).toLocaleString(DateTime.TIME_SIMPLE) }}
+        {{$t('FinishedAt')}} {{ formatFinishTime(durationSeconds) }}
         <template #close>
             <v-btn-group divided>
                 <v-btn width="40" @click="changeTimer(-60)"><i class="fas fa-minus"></i>1</v-btn>
@@ -74,6 +74,24 @@ function stopTimer() {
     durationSeconds.value = props.seconds
     initialDurationSeconds.value = props.seconds
     emit('stop')
+}
+
+/**
+* formats a future time based on a duration in seconds from now
+* displays the time in "hh:mm" format and adds a "+Xd" suffix if the target day differs from today
+*/
+function formatFinishTime(durationSeconds: number): string {
+    const now = DateTime.now()
+    const target = now.plus({ seconds: durationSeconds })
+    let timeString = target.toLocaleString(DateTime.TIME_SIMPLE)
+    const daysDifference = Math.floor(
+        target.startOf('day').diff(now.startOf('day'), 'days').days
+    )
+    if (daysDifference >= 1) {
+        const label = daysDifference === 1 ? t('Day') : t('Days');
+        timeString += ` +${daysDifference} ${label}`;
+    }
+    return timeString
 }
 
 </script>
