@@ -641,7 +641,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
 
     class Meta:
         model = SupermarketCategory
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'open_data_slug')
 
 
 class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):

@@ -71,6 +71,12 @@ export interface PatchedSupermarketCategory {
      * @memberof PatchedSupermarketCategory
      */
     description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedSupermarketCategory
+     */
+    openDataSlug?: string;
 }
 
 /**
@@ -93,6 +99,7 @@ export function PatchedSupermarketCategoryFromJSONTyped(json: any, ignoreDiscrim
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
@@ -105,6 +112,7 @@ export function PatchedSupermarketCategoryToJSON(value?: PatchedSupermarketCateg
         'id': value['id'],
         'name': value['name'],
         'description': value['description'],
+        'open_data_slug': value['openDataSlug'],
     };
 }
 
