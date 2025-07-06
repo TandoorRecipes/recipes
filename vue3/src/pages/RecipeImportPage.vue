@@ -168,7 +168,7 @@
 
                                 <v-stepper-actions>
                                     <template #prev>
-                                        <v-btn @click="stepper = 'type'">{{ $t('Back') }}</v-btn>
+                                        <v-btn @click="stepper = 'type'; importResponse = {}">{{ $t('Back') }}</v-btn>
                                     </template>
                                     <template #next>
                                         <v-btn @click="loadRecipeFromUrl({url: importUrl})" v-if="importType == 'url'" :disabled="importUrl == ''" :loading="loading">{{
