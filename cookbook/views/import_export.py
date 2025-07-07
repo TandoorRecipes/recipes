@@ -83,6 +83,8 @@ def get_integration(request, export_type):
         return Rezeptsuitede(request, export_type)
     if export_type == ImportExportBase.GOURMET:
         return Gourmet(request, export_type)
+
+
 @group_required('user')
 def export_file(request, pk):
     el = get_object_or_404(ExportLog, pk=pk, space=request.space)
@@ -92,7 +94,7 @@ def export_file(request, pk):
     if cacheData is None:
         el.possibly_not_expired = False
         el.save()
-        return render(request, 'export_response.html', {'pk': pk})
+        return JsonResponse({'msg': 'Export Expired or not found'}, status=404)
 
     response = HttpResponse(cacheData['file'], content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename="' + cacheData['filename'] + '"'
