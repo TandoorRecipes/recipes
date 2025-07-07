@@ -52,4 +52,38 @@ p, ol, ul, li {
     margin: revert;
 }
 
+
+/* css classes needed to render markdown blockquotes */
+blockquote {
+    background: rgb(200,200,200,0.2);
+    border-left: 4px solid #ccc;
+    margin: 1.5em 10px;
+    padding: .5em 10px;
+    quotes: none;
+}
+
+blockquote:before {
+    color: #ccc;
+    content: open-quote;
+    font-size: 4em;
+    line-height: .1em;
+    margin-right: .25em;
+    vertical-align: -.4em;
+}
+
+blockquote p {
+    display: inline;
+}
+
+.markdown-table {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+.markdown-table-cell {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 8px;
+}
+
 </style>

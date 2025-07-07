@@ -71,6 +71,12 @@ export interface SupermarketCategory {
      * @memberof SupermarketCategory
      */
     description?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategory
+     */
+    openDataSlug?: string;
 }
 
 /**
@@ -94,6 +100,7 @@ export function SupermarketCategoryFromJSONTyped(json: any, ignoreDiscriminator:
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
@@ -106,6 +113,7 @@ export function SupermarketCategoryToJSON(value?: SupermarketCategory | null): a
         'id': value['id'],
         'name': value['name'],
         'description': value['description'],
+        'open_data_slug': value['openDataSlug'],
     };
 }
 

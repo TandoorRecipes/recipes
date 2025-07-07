@@ -341,7 +341,7 @@ class OpenDataImporter:
             obj_dict = {
                 'name': self.data[datatype][k]['name'],
                 'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
-                'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
+                'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']] if self.data[datatype][k]['store_category'] in self.slug_id_cache['category'] else None,
                 'fdc_id': re.sub(r'\D', '', self.data[datatype][k]['fdc_id']) if self.data[datatype][k]['fdc_id'] != '' else None,
                 'open_data_slug': k,
                 'properties_food_unit_id': None,

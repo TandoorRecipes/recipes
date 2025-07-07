@@ -30,13 +30,13 @@ export interface RecipeFlat {
      * @type {string}
      * @memberof RecipeFlat
      */
-    name: string;
+    readonly name: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeFlat
      */
-    image?: string;
+    readonly image: string | null;
 }
 
 /**
@@ -44,6 +44,7 @@ export interface RecipeFlat {
  */
 export function instanceOfRecipeFlat(value: object): value is RecipeFlat {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('image' in value) || value['image'] === undefined) return false;
     return true;
 }
 
@@ -59,19 +60,17 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
-        'image': json['image'] == null ? undefined : json['image'],
+        'image': json['image'],
     };
 }
 
-export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
+export function RecipeFlatToJSON(value?: Omit<RecipeFlat, 'name'|'image'> | null): any {
     if (value == null) {
         return value;
     }
     return {
         
         'id': value['id'],
-        'name': value['name'],
-        'image': value['image'],
     };
 }
 

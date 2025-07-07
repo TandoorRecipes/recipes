@@ -20,7 +20,7 @@ UNINSTALL_MIDDLEWARE = [
 ]
 
 UNINSTALL_INSTALLED_APPS = [
-    'django.contrib.messages', 'django.contrib.sites', 'django.contrib.staticfiles', 'corsheaders', 'django_cleanup.apps.CleanupConfig', 'django_js_reverse', 'hcaptcha']
+    'django.contrib.messages', 'django.contrib.sites', 'django.contrib.staticfiles', 'corsheaders', 'django_cleanup.apps.CleanupConfig', 'hcaptcha']
 
 # disable extras not needed for testing
 for x in UNINSTALL_MIDDLEWARE:
