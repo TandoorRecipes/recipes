@@ -62,10 +62,11 @@ class CookBookApp(Integration):
 
         try:
             for url in images:
-                # import all valid images which are not cookbookapp logos
+                # import the first valid image which is not cookbookapp branding
                 if validate_import_url(url) and not url.startswith("https://media.cookbookmanager.com/brand/"):
                     response = requests.get(url)
                     self.import_recipe_image(recipe, BytesIO(response.content))
+                    break
         except Exception as e:
             print('failed to import image ', str(e))
 
