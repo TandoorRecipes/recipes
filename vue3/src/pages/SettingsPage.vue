@@ -10,7 +10,7 @@
                     <v-list-item :to="{name: 'CosmeticSettings'}" prepend-icon="fa-solid fa-palette">{{ $t('Cosmetic') }}</v-list-item>
                     <v-list-item :to="{name: 'ShoppingSettings'}" prepend-icon="$shopping">{{ $t('Shopping_list') }}</v-list-item>
                     <v-list-item :to="{name: 'MealPlanSettings'}" prepend-icon="$mealplan">{{ $t('Meal_Plan') }}</v-list-item>
-                    <v-list-item :href="getDjangoUrl('settings-shopping/')" target="_blank" prepend-icon="$search">{{ $t('Search') }}</v-list-item>
+                    <v-list-item :to="{name: 'SearchSettings'}" prepend-icon="$search">{{ $t('Search') }}</v-list-item>
                     <v-divider></v-divider>
                     <v-list-subheader>Space</v-list-subheader>
                     <v-list-item :to="{name: 'UserSpaceSettings'}" prepend-icon="$spaces">{{ $t('YourSpaces') }}</v-list-item>

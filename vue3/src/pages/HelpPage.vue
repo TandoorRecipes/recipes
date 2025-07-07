@@ -14,6 +14,11 @@
             </v-col>
         </v-row>
 
+        <v-btn>
+            Test Dialog
+            <help-dialog></help-dialog>
+        </v-btn>
+
         <v-row>
             <v-col>
                 <v-expansion-panels>
@@ -90,6 +95,7 @@
 
 import {TKeyword, TRecipe, TUnit, TUserSpace} from "@/types/Models";
 import {useUserPreferenceStore} from "../stores/UserPreferenceStore";
+import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 </script>
 
 <style scoped>

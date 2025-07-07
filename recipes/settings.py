@@ -22,8 +22,10 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
+
 def extract_bool(env_key, default):
     return bool(int(os.getenv(env_key, default)))
+
 
 def extract_comma_list(env_key, default=None):
     if os.getenv(env_key):
@@ -170,7 +172,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'oauth2_provider',
-    'django_tables2',
     'corsheaders',
     'crispy_forms',
     'crispy_bootstrap4',
@@ -179,13 +180,16 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'django_cleanup.apps.CleanupConfig',
-    'webpack_loader',
     'django_vite',
-    'django_js_reverse',
     'hcaptcha',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.headless',
+    'allauth.mfa',
+    'allauth.usersessions',
+
     'cookbook.apps.CookbookConfig',
     'treebeard',
 ]
@@ -235,11 +239,14 @@ SOCIAL_PROVIDERS = extract_comma_list('SOCIAL_PROVIDERS')
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_MAX_EMAIL_ADDRESSES = 3
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'email2*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 90
 ACCOUNT_LOGOUT_ON_GET = True
+
+USERSESSIONS_TRACK_ACTIVITY = True
+
+HEADLESS_SERVE_SPECIFICATION = True
 
 try:
     SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
@@ -261,6 +268,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.usersessions.middleware.UserSessionsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

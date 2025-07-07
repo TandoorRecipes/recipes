@@ -50,61 +50,53 @@ import { mapValues } from '../runtime';
  * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
  * you should put `UniqueFieldsMixin` ahead.
  * @export
- * @interface SupermarketCategory
+ * @interface SearchFields
  */
-export interface SupermarketCategory {
+export interface SearchFields {
     /**
      * 
      * @type {number}
-     * @memberof SupermarketCategory
+     * @memberof SearchFields
      */
     id?: number;
     /**
      * 
      * @type {string}
-     * @memberof SupermarketCategory
+     * @memberof SearchFields
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {string}
-     * @memberof SupermarketCategory
+     * @memberof SearchFields
      */
-    description?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SupermarketCategory
-     */
-    openDataSlug?: string;
+    field?: string;
 }
 
 /**
- * Check if a given object implements the SupermarketCategory interface.
+ * Check if a given object implements the SearchFields interface.
  */
-export function instanceOfSupermarketCategory(value: object): value is SupermarketCategory {
-    if (!('name' in value) || value['name'] === undefined) return false;
+export function instanceOfSearchFields(value: object): value is SearchFields {
     return true;
 }
 
-export function SupermarketCategoryFromJSON(json: any): SupermarketCategory {
-    return SupermarketCategoryFromJSONTyped(json, false);
+export function SearchFieldsFromJSON(json: any): SearchFields {
+    return SearchFieldsFromJSONTyped(json, false);
 }
 
-export function SupermarketCategoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): SupermarketCategory {
+export function SearchFieldsFromJSONTyped(json: any, ignoreDiscriminator: boolean): SearchFields {
     if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'name': json['name'],
-        'description': json['description'] == null ? undefined : json['description'],
-        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'field': json['field'] == null ? undefined : json['field'],
     };
 }
 
-export function SupermarketCategoryToJSON(value?: SupermarketCategory | null): any {
+export function SearchFieldsToJSON(value?: SearchFields | null): any {
     if (value == null) {
         return value;
     }
@@ -112,8 +104,7 @@ export function SupermarketCategoryToJSON(value?: SupermarketCategory | null): a
         
         'id': value['id'],
         'name': value['name'],
-        'description': value['description'],
-        'open_data_slug': value['openDataSlug'],
+        'field': value['field'],
     };
 }
 

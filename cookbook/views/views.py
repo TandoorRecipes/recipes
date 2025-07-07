@@ -16,24 +16,20 @@ from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.db import models
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
-from django.utils import timezone
 from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
-from rest_framework.response import Response
 
-from cookbook.forms import CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm, UserPreference
+from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, group_required, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink, Space, UserSpace, ViewLog
-from cookbook.tables import CookLogTable, ViewLogTable
+from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space
+from cookbook.models import InviteLink, ShareLink, Space, UserSpace
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
-from cookbook.views.api import get_recipe_provider
 from recipes.settings import PLUGINS
 
 
@@ -44,19 +40,10 @@ def index(request, path=None, resource=None):
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
-    # show frontend if at least group permissions
-    if has_group_permission(request.user, ('guest',)):
+    if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share') :
         return render(request, 'frontend/tandoor.html', {})
     else:
-        # show no_group if logged in but no permission
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('view_no_group'))
-        else:
-            # show recipe if not logged in but share link is given
-            if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
-                return render(request, 'frontend/tandoor.html', {})
-            # redirect to login if none of the above matched
-            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
 
 def redirect_recipe_view(request, pk):
@@ -146,58 +133,6 @@ def no_perm(request):
         return HttpResponseRedirect(reverse('account_login') + '?next=' + request.GET.get('next', '/search/'))
     return render(request, 'no_perm_info.html')
 
-
-def recipe_view(request, pk, share=None):
-    with scopes_disabled():
-        recipe = get_object_or_404(Recipe, pk=pk)
-
-        if not request.user.is_authenticated and not share_link_valid(recipe, share):
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
-
-        if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
-            messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-            return HttpResponseRedirect(reverse('index'))
-
-        comments = Comment.objects.filter(recipe__space=request.space, recipe=recipe)
-
-        if request.method == "POST":
-            if not request.user.is_authenticated:
-                messages.add_message(request, messages.ERROR, _('You do not have the required permissions to perform this action!'))
-                return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': recipe.pk, 'share': share}))
-
-            comment_form = CommentForm(request.POST, prefix='comment')
-            if comment_form.is_valid():
-                comment = Comment()
-                comment.recipe = recipe
-                comment.text = comment_form.cleaned_data['text']
-                comment.created_by = request.user
-                comment.save()
-
-                messages.add_message(request, messages.SUCCESS, _('Comment saved!'))
-
-        comment_form = CommentForm()
-
-        if request.user.is_authenticated:
-            if not ViewLog.objects.filter(recipe=recipe, created_by=request.user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)), space=request.space).exists():
-                ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-
-        servings = recipe.servings
-        if request.method == "GET" and 'servings' in request.GET:
-            servings = request.GET.get("servings")
-        return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings})
-
-
-@group_required('user')
-def books(request):
-    return render(request, 'books.html', {})
-
-
-@group_required('user')
-def meal_plan(request):
-    return render(request, 'meal_plan.html', {})
-
-
 def recipe_pdf_viewer(request, pk):
     with scopes_disabled():
         recipe = get_object_or_404(Recipe, pk=pk)
@@ -206,120 +141,6 @@ def recipe_pdf_viewer(request, pk):
 
             return render(request, 'pdf_viewer.html', {'recipe_id': pk, 'share': request.GET.get('share', None)})
         return HttpResponseRedirect(reverse('index'))
-
-
-@group_required('guest')
-def user_settings(request):
-    if request.space.demo:
-        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
-        return redirect('index')
-
-    return render(request, 'user_settings.html', {})
-
-
-@group_required('user')
-def ingredient_editor(request):
-    template_vars = {'food_id': -1, 'unit_id': -1}
-    food_id = request.GET.get('food_id', None)
-    if food_id and re.match(r'^(\d)+$', food_id):
-        template_vars['food_id'] = food_id
-
-    unit_id = request.GET.get('unit_id', None)
-    if unit_id and re.match(r'^(\d)+$', unit_id):
-        template_vars['unit_id'] = unit_id
-    return render(request, 'ingredient_editor.html', template_vars)
-
-
-@group_required('user')
-def property_editor(request, pk):
-    return render(request, 'property_editor.html', {'recipe_id': pk})
-
-
-@group_required('guest')
-def shopping_settings(request):
-    if request.space.demo:
-        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
-        return redirect('index')
-
-    sp = request.user.searchpreference
-    search_error = False
-
-    if request.method == "POST":
-        if 'search_form' in request.POST:
-            search_form = SearchPreferenceForm(request.POST, prefix='search')
-            if search_form.is_valid():
-                if not sp:
-                    sp = SearchPreferenceForm(user=request.user)
-                fields_searched = (len(search_form.cleaned_data['icontains']) + len(search_form.cleaned_data['istartswith']) + len(search_form.cleaned_data['trigram'])
-                                   + len(search_form.cleaned_data['fulltext']))
-                if search_form.cleaned_data['preset'] == 'fuzzy':
-                    sp.search = SearchPreference.SIMPLE
-                    sp.lookup = True
-                    sp.unaccent.set([SearchFields.objects.get(name='Name')])
-                    sp.icontains.set([SearchFields.objects.get(name='Name')])
-                    sp.istartswith.clear()
-                    sp.trigram.set([SearchFields.objects.get(name='Name')])
-                    sp.fulltext.clear()
-                    sp.trigram_threshold = 0.2
-                    sp.save()
-                elif search_form.cleaned_data['preset'] == 'precise':
-                    sp.search = SearchPreference.WEB
-                    sp.lookup = True
-                    sp.unaccent.set(SearchFields.objects.all())
-                    # full text on food is very slow, add search_vector field and index it (including Admin functions and postsave signal to rebuild index)
-                    sp.icontains.set([SearchFields.objects.get(name='Name')])
-                    sp.istartswith.set([SearchFields.objects.get(name='Name')])
-                    sp.trigram.clear()
-                    sp.fulltext.set(SearchFields.objects.filter(name__in=['Ingredients']))
-                    sp.trigram_threshold = 0.2
-                    sp.save()
-                elif fields_searched == 0:
-                    search_form.add_error(None, _('You must select at least one field to search!'))
-                    search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['fulltext']) == 0:
-                    search_form.add_error('search', _('To use this search method you must select at least one full text search field!'))
-                    search_error = True
-                elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(search_form.cleaned_data['trigram']) > 0:
-                    search_form.add_error(None, _('Fuzzy search is not compatible with this search method!'))
-                    search_error = True
-                else:
-                    sp.search = search_form.cleaned_data['search']
-                    sp.lookup = search_form.cleaned_data['lookup']
-                    sp.unaccent.set(search_form.cleaned_data['unaccent'])
-                    sp.icontains.set(search_form.cleaned_data['icontains'])
-                    sp.istartswith.set(search_form.cleaned_data['istartswith'])
-                    sp.trigram.set(search_form.cleaned_data['trigram'])
-                    sp.fulltext.set(search_form.cleaned_data['fulltext'])
-                    sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
-                    sp.save()
-            else:
-                search_error = True
-
-    fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(sp.fulltext.all())
-    if sp and not search_error and fields_searched > 0:
-        search_form = SearchPreferenceForm(instance=sp)
-    elif not search_error:
-        search_form = SearchPreferenceForm()
-
-    # these fields require postgresql - just disable them if postgresql isn't available
-    if not settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
-        sp.search = SearchPreference.SIMPLE
-        sp.trigram.clear()
-        sp.fulltext.clear()
-        sp.save()
-
-    return render(request, 'settings.html', {'search_form': search_form, })
-
-
-@group_required('guest')
-def history(request):
-    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user, space=request.space).order_by('-created_at').all(), prefix="viewlog-")
-    view_log.paginate(page=request.GET.get("viewlog-page", 1), per_page=25)
-
-    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all(), prefix="cooklog-")
-    cook_log.paginate(page=request.GET.get("cooklog-page", 1), per_page=25)
-    return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
-
 
 def system(request):
     if not request.user.is_superuser:
@@ -502,16 +323,6 @@ def invite_link(request, token):
     return HttpResponseRedirect(reverse('view_space_overview'))
 
 
-@group_required('admin')
-def space_manage(request, space_id):
-    if request.space.demo:
-        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
-        return redirect('index')
-    space = get_object_or_404(Space, id=space_id)
-    switch_user_active_space(request.user, space)
-    return render(request, 'space_manage.html', {})
-
-
 def report_share_abuse(request, token):
     if not settings.SHARING_ABUSE:
         messages.add_message(request, messages.WARNING, _('Reporting share links is not enabled for this instance. Please notify the page administrator to report problems.'))
@@ -522,9 +333,6 @@ def report_share_abuse(request, token):
             messages.add_message(request, messages.WARNING, _('Recipe sharing link has been disabled! For additional information please contact the page administrator.'))
     return HttpResponseRedirect(reverse('index'))
 
-
-def service_worker(request):
-    return
 
 def web_manifest(request):
     theme_values = get_theming_values(request)
@@ -703,6 +511,3 @@ def get_orphan_files(delete_orphans=False):
 
     return [img[1] for img in orphans]
 
-
-def vue3(request):
-    return HttpResponseRedirect(reverse('index'))

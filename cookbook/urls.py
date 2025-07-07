@@ -1,19 +1,14 @@
 from pydoc import locate
 
-from django.urls import include, path, re_path
-from django.views.generic import TemplateView, RedirectView
+from django.urls import include, path
+from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from rest_framework import routers
 
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
-
-from .models import (
-    Automation, Comment, ConnectorConfig, CustomFilter, Food, InviteLink, Keyword, PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport, Space, Step, Storage,
-    Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion, UserFile, UserSpace, get_model_name
-)
-from .views import api, data, delete, edit, import_export, lists, new, telegram, views
-from .views.api import CustomAuthToken, ImportOpenData
+from .views import api, telegram, views, import_export
+from .views.api import CustomAuthToken
 
 
 # extend DRF default router class to allow including additional routers
@@ -61,6 +56,8 @@ router.register(r'unit', api.UnitViewSet)
 router.register(r'user-file', api.UserFileViewSet)
 router.register(r'user', api.UserViewSet)
 router.register(r'user-preference', api.UserPreferenceViewSet)
+router.register(r'search-fields', api.SearchFieldsViewSet)
+router.register(r'search-preference', api.SearchPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
@@ -80,40 +77,24 @@ urlpatterns = [
     path('setup/', views.setup, name='view_setup'),
     path('no-group/', views.no_groups, name='view_no_group'),
     path('space-overview/', views.space_overview, name='view_space_overview'),
-    path('space-manage/<int:space_id>', views.space_manage, name='view_space_manage'),
     path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     path('no-perm/', views.no_perm, name='view_no_perm'),
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
 
-    path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),  # TODO rename to search settings
 
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 
-    path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
-    path('export/', import_export.export_recipe, name='view_export'),
-    path('export-response/<int:pk>/', import_export.export_response, name='view_export_response'),
     path('export-file/<int:pk>/', import_export.export_file, name='view_export_file'),
-
     # for internal use only
-    path('edit/recipe/internal/<int:pk>/', edit.internal_recipe_update, name='edit_internal_recipe'),
-    path('edit/recipe/external/<int:pk>/', edit.ExternalRecipeUpdate.as_view(), name='edit_external_recipe'),
-    path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
-    path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
-    path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
     path('view-recipe-pdf/<int:pk>/', views.recipe_pdf_viewer, name='view_recipe_pdf'),
 
     # Tandoor v1 redirects
     path('view/recipe/<int:pk>', views.redirect_recipe_view, name='redirect_recipe_view'),
     path('view/recipe/<int:pk>/<slug:share>', views.redirect_recipe_share_view, name='redirect_recipe_share_view'),
 
-    path('data/sync', data.sync, name='data_sync'),
-    path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
-    path('data/batch/import', data.batch_import, name='data_batch_import'),
-    path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
     path('api/import/', api.AppImportView.as_view(), name='view_import'),
     path('api/export/', api.AppExportView.as_view(), name='api_export'),
-    path('data/import/url', data.import_url, name='data_import_url'),
     path('api/get_external_file_link/<int:pk>/', api.get_external_file_link, name='api_get_external_file_link'),
     path('api/get_recipe_file/<int:pk>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
@@ -139,36 +120,10 @@ urlpatterns = [
     path('api-token-auth/', CustomAuthToken.as_view()),
 
     path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
+    #path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
 
 ]
-
-generic_models = (Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync, Comment, RecipeBookEntry, InviteLink, UserSpace, Space)
-
-for m in generic_models:
-    py_name = get_model_name(m)
-    url_name = py_name.replace('_', '-')
-
-    if c := locate(f'cookbook.views.new.{m.__name__}Create'):
-        urlpatterns.append(path(f'new/{url_name}/', c.as_view(), name=f'new_{py_name}'))
-
-    if c := locate(f'cookbook.views.edit.{m.__name__}Update'):
-        urlpatterns.append(path(f'edit/{url_name}/<int:pk>/', c.as_view(), name=f'edit_{py_name}'))
-
-    if c := getattr(lists, py_name, None):
-        urlpatterns.append(path(f'list/{url_name}/', c, name=f'list_{py_name}'))
-
-    if c := locate(f'cookbook.views.delete.{m.__name__}Delete'):
-        urlpatterns.append(path(f'delete/{url_name}/<int:pk>/', c.as_view(), name=f'delete_{py_name}'))
-
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, PropertyType]
-for m in vue_models:
-    py_name = get_model_name(m)
-    url_name = py_name.replace('_', '-')
-
-    if c := getattr(lists, py_name, None):
-        urlpatterns.append(path(f'list/{url_name}/', c, name=f'list_{py_name}'))
 
 if DEBUG:
     urlpatterns.append(path('test/', views.test, name='view_test'))
@@ -176,7 +131,6 @@ if DEBUG:
 
 # catchall view for new frontend
 urlpatterns += [
-    re_path(r'^v3/.*', views.vue3, name='vue_3'),
     path('', views.index, name='index'),
     path('<path:resource>', views.index, name='tandoor_frontend'),
 ]

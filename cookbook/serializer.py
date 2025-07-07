@@ -36,7 +36,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -452,6 +452,40 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         read_only_fields = ('user',)
 
 
+class SearchFieldsSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        return instance
+
+    class Meta:
+        model = SearchFields
+        fields = ('id', 'name', 'field',)
+        read_only_fields = ('id',)
+
+
+class SearchPreferenceSerializer(WritableNestedModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    unaccent = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    icontains = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    istartswith = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    trigram = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+    fulltext = SearchFieldsSerializer(many=True, allow_null=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = SearchPreference
+        fields = ('user', 'search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
+        read_only_fields = ('user',)
+
+
 class ConnectorConfigSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
@@ -607,7 +641,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
 
     class Meta:
         model = SupermarketCategory
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'open_data_slug')
 
 
 class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
@@ -695,6 +729,7 @@ class RecipeFlatSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image')
+        read_only_fields = ('id', 'name', 'image')
 
 
 class FoodSimpleSerializer(serializers.ModelSerializer):
@@ -1738,7 +1773,7 @@ class AiImportSerializer(serializers.Serializer):
 class ExportRequestSerializer(serializers.Serializer):
     type = serializers.CharField()
     all = serializers.BooleanField(default=False)
-    recipes = RecipeFlatSerializer(many=True, default=[])
+    recipes = RecipeSimpleSerializer(many=True, default=[])
     custom_filter = CustomFilterSerializer(many=False, default=None, allow_null=True)
 
 

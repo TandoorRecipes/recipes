@@ -109,6 +109,7 @@ import type {
   PatchedRecipeBook,
   PatchedRecipeBookEntry,
   PatchedRecipeImport,
+  PatchedSearchPreference,
   PatchedShoppingListEntry,
   PatchedShoppingListRecipe,
   PatchedSpace,
@@ -136,6 +137,8 @@ import type {
   RecipeImport,
   RecipeShoppingUpdate,
   RecipeSimple,
+  SearchFields,
+  SearchPreference,
   ServerSettings,
   ShareLink,
   ShoppingListEntry,
@@ -347,6 +350,8 @@ import {
     PatchedRecipeBookEntryToJSON,
     PatchedRecipeImportFromJSON,
     PatchedRecipeImportToJSON,
+    PatchedSearchPreferenceFromJSON,
+    PatchedSearchPreferenceToJSON,
     PatchedShoppingListEntryFromJSON,
     PatchedShoppingListEntryToJSON,
     PatchedShoppingListRecipeFromJSON,
@@ -401,6 +406,10 @@ import {
     RecipeShoppingUpdateToJSON,
     RecipeSimpleFromJSON,
     RecipeSimpleToJSON,
+    SearchFieldsFromJSON,
+    SearchFieldsToJSON,
+    SearchPreferenceFromJSON,
+    SearchPreferenceToJSON,
     ServerSettingsFromJSON,
     ServerSettingsToJSON,
     ShareLinkFromJSON,
@@ -718,11 +727,11 @@ export interface ApiFoodUpdateRequest {
 }
 
 export interface ApiGetExternalFileLinkRetrieveRequest {
-    recipeId: number;
+    id: number;
 }
 
 export interface ApiGetRecipeFileRetrieveRequest {
-    recipeId: number;
+    id: number;
 }
 
 export interface ApiGroupRetrieveRequest {
@@ -1335,6 +1344,19 @@ export interface ApiRecipeShoppingUpdateRequest {
 export interface ApiRecipeUpdateRequest {
     id: number;
     recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiSearchFieldsRetrieveRequest {
+    id: number;
+}
+
+export interface ApiSearchPreferencePartialUpdateRequest {
+    user: number;
+    patchedSearchPreference?: Omit<PatchedSearchPreference, 'user'>;
+}
+
+export interface ApiSearchPreferenceRetrieveRequest {
+    user: number;
 }
 
 export interface ApiShareLinkRetrieveRequest {
@@ -4253,10 +4275,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiGetExternalFileLinkRetrieveRaw(requestParameters: ApiGetExternalFileLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['recipeId'] == null) {
+        if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
-                'recipeId',
-                'Required parameter "recipeId" was null or undefined when calling apiGetExternalFileLinkRetrieve().'
+                'id',
+                'Required parameter "id" was null or undefined when calling apiGetExternalFileLinkRetrieve().'
             );
         }
 
@@ -4269,7 +4291,7 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/get_external_file_link/{recipeId}/`.replace(`{${"recipeId"}}`, encodeURIComponent(String(requestParameters['recipeId']))),
+            path: `/api/get_external_file_link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4287,10 +4309,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiGetRecipeFileRetrieveRaw(requestParameters: ApiGetRecipeFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['recipeId'] == null) {
+        if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
-                'recipeId',
-                'Required parameter "recipeId" was null or undefined when calling apiGetRecipeFileRetrieve().'
+                'id',
+                'Required parameter "id" was null or undefined when calling apiGetRecipeFileRetrieve().'
             );
         }
 
@@ -4303,7 +4325,7 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/get_recipe_file/{recipeId}/`.replace(`{${"recipeId"}}`, encodeURIComponent(String(requestParameters['recipeId']))),
+            path: `/api/get_recipe_file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9768,6 +9790,180 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiResetFoodInheritanceCreate(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiResetFoodInheritanceCreateRaw(initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchFieldsListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<SearchFields>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/search-fields/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SearchFieldsFromJSON));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchFieldsList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<SearchFields>> {
+        const response = await this.apiSearchFieldsListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchFieldsRetrieveRaw(requestParameters: ApiSearchFieldsRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SearchFields>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSearchFieldsRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/search-fields/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SearchFieldsFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchFieldsRetrieve(requestParameters: ApiSearchFieldsRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SearchFields> {
+        const response = await this.apiSearchFieldsRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchPreferenceListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<SearchPreference>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/search-preference/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SearchPreferenceFromJSON));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchPreferenceList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<SearchPreference>> {
+        const response = await this.apiSearchPreferenceListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchPreferencePartialUpdateRaw(requestParameters: ApiSearchPreferencePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SearchPreference>> {
+        if (requestParameters['user'] == null) {
+            throw new runtime.RequiredError(
+                'user',
+                'Required parameter "user" was null or undefined when calling apiSearchPreferencePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/search-preference/{user}/`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedSearchPreferenceToJSON(requestParameters['patchedSearchPreference']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SearchPreferenceFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchPreferencePartialUpdate(requestParameters: ApiSearchPreferencePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SearchPreference> {
+        const response = await this.apiSearchPreferencePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchPreferenceRetrieveRaw(requestParameters: ApiSearchPreferenceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SearchPreference>> {
+        if (requestParameters['user'] == null) {
+            throw new runtime.RequiredError(
+                'user',
+                'Required parameter "user" was null or undefined when calling apiSearchPreferenceRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/search-preference/{user}/`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SearchPreferenceFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSearchPreferenceRetrieve(requestParameters: ApiSearchPreferenceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SearchPreference> {
+        const response = await this.apiSearchPreferenceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

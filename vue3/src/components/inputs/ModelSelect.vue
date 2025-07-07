@@ -1,5 +1,7 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
+
+    <v-label class="mt-2" v-if="props.label" >{{props.label}}</v-label>
     <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails">
         <template #prepend v-if="$slots.prepend">
             <slot name="prepend"></slot>
