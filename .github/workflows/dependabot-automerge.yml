@@ -46,11 +46,11 @@ jobs:
     steps:
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@3eb77c7243b85c65e84acfa93fdbac02fb6bd532  # v2.1.0
-        
+        uses: actions/create-github-app-token@v2
         with:
-          app_id: ${{ secrets.BOT_APP_ID }}
-          private_key: ${{ secrets.BOT_PRIVATE_KEY }}
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - name: Auto-approve PR
         uses: hmarr/auto-approve-action@b40d6c9ed2fa10c9a2749eca7eb004418a705501  # v4.0.0
         with:
@@ -64,10 +64,5 @@ jobs:
         uses: daneden/enable-automerge-action@f8558b65c5b8d8bfb592c4e74e3d491624a38fbd  # v1.0.0
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
-
-          # The name of the PR author to enable automerge for
-          # Defaults to dependabot[bot]
           allowed-author: "dependabot[bot]"
-
-          # Allowed values: MERGE | SQUASH | REBASE
-          merge-method: REBASE
+          merge-method: REBASE # Allowed values: MERGE | SQUASH | REBASE
