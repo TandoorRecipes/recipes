@@ -266,20 +266,10 @@ onMounted(() => {
         background-color: #b98766 !important;
     }
 
-    /* vueform/multiselect */
-
-    .multiselect-dropdown {
-        background: #212121 !important;
-    }
-
-    .multiselect-option.is-pointed {
-        background: #b98766 !important;
-    }
-
 }
 
 .v-theme--light {
-    a {
+    a:not([class]) {
         color: #b98766;
         text-decoration: none;
         background-color: transparent
@@ -299,7 +289,20 @@ onMounted(() => {
         outline: 0
     }
 
+}
 
+/* vueform/multiselect */
+
+.multiselect-dropdown {
+    background: #212121 !important;
+}
+
+.multiselect-option.is-pointed {
+    background: #b98766 !important;
+}
+
+.multiselect-option.is-selected {
+    background: #b55e4f !important;
 }
 
 </style>
