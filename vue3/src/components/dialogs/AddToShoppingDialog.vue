@@ -47,6 +47,8 @@ import {calculateFoodAmount} from "@/utils/number_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ingredientToUnitString, ingredientToFoodString} from "@/utils/model_utils.ts";
 
+const emit = defineEmits(['created'])
+
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true},
 })
@@ -157,6 +159,7 @@ function createShoppingListRecipe() {
         api.apiShoppingListRecipeBulkCreateEntriesCreate({id: slr.id!, shoppingListEntryBulkCreate: shoppingListEntries}).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
             dialog.value = false
+            emit('created')
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         }).finally(() => {

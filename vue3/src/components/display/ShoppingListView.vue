@@ -81,8 +81,8 @@
             <v-container>
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
-                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0" >
-                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{s.name}}</v-chip>
+                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">
+                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{ s.name }}</v-chip>
                         </v-chip-group>
                     </v-col>
                 </v-row>
@@ -176,6 +176,15 @@
                         <v-card>
                             <v-card-title>{{ $t('Recipes') }} / {{ $t('Meal_Plan') }}</v-card-title>
                             <v-card-text>
+                                <ModelSelect model="Recipe" v-model="manualAddRecipe" append-to-body>
+                                    <template #append>
+                                        <v-btn icon="$create" color="create" :disabled="manualAddRecipe == undefined">
+                                            <v-icon icon="$create"></v-icon>
+                                            <add-to-shopping-dialog :recipe="manualAddRecipe" v-if="manualAddRecipe != undefined" @created="useShoppingStore().refreshFromAPI(); manualAddRecipe = undefined"></add-to-shopping-dialog>
+                                        </v-btn>
+                                    </template>
+                                </ModelSelect>
+
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
                                         <template #prepend>
@@ -208,6 +217,8 @@
                                         </template>
                                     </v-list-item>
                                 </v-list>
+
+
                             </v-card-text>
                         </v-card>
                     </v-col>
@@ -234,7 +245,7 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
+import {ApiApi, Recipe, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -250,11 +261,13 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {onBeforeRouteLeave} from "vue-router";
 import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
+import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 
 const {t} = useI18n()
 
 const currentTab = ref("shopping")
 const supermarkets = ref([] as Supermarket[])
+const manualAddRecipe = ref<undefined | Recipe>(undefined)
 
 /**
  * VSelect items for shopping list grouping options with localized names
@@ -351,7 +364,7 @@ function deleteListRecipe(slr: ShoppingListRecipe) {
 /**
  * load a list of supermarkets
  */
-function loadSupermarkets(){
+function loadSupermarkets() {
     let api = new ApiApi()
 
     api.apiSupermarketList().then(r => {
