@@ -215,7 +215,7 @@ onMounted(() => {
 
 .v-theme--dark {
 
-    a:not(.v-*) {
+    a:not([class]) {
         color: #b98766;
         text-decoration: none;
         background-color: transparent
@@ -234,7 +234,6 @@ onMounted(() => {
     a:not([href]):not([tabindex]):focus {
         outline: 0
     }
-
 
     /* Meal-Plan */
 
