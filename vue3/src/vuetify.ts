@@ -98,6 +98,7 @@ export default createVuetify({
             menu: 'fa-solid fa-ellipsis-vertical',
             import: 'fa-solid fa-globe',
             properties: 'fa-solid fa-database',
+            automation: 'fa-solid fa-robot',
             ai: 'fa-solid fa-wand-magic-sparkles'
         },
         sets: {

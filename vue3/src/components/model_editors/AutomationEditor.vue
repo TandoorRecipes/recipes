@@ -22,7 +22,7 @@
                 <v-number-input :label="$t('Order')" :step="10" v-model="editingObj.order" :hint="$t('OrderInformation')" control-variant="stacked"></v-number-input>
                 <v-checkbox :label="$t('Disabled')" v-model="editingObj.disabled"></v-checkbox>
 
-                <a href="https://docs.tandoor.dev/features/automation/" target="_blank">{{$t('Learn_More')}}</a>
+                <a href="https://docs.tandoor.dev/features/automation/" target="_blank">{{ $t('Learn_More') }}</a>
             </v-form>
         </v-card-text>
     </model-editor-base>
@@ -47,7 +47,18 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Automation>('Automation', emit)
+const {
+    setupState,
+    deleteObject,
+    saveObject,
+    isUpdate,
+    editingObjName,
+    loading,
+    editingObj,
+    editingObjChanged,
+    modelClass,
+    applyItemDefaults
+} = useModelEditorFunctions<Automation>('Automation', emit)
 
 // object specific data (for selects/display)
 
@@ -68,6 +79,8 @@ onMounted(() => {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.order = 0
+
+            applyItemDefaults(props.itemDefaults)
         },
         itemDefaults: props.itemDefaults
     })
