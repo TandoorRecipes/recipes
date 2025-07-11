@@ -5,7 +5,7 @@
     </v-btn-group>
 
     <v-row class="d-none d-md-flex mt-2" v-for="p in properties" dense>
-        <v-col cols="0" md="5">
+        <v-col cols="0" md="6">
             <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked" :precision="2">
                 <template #append-inner v-if="p.propertyType">
                     <v-chip class="me-4">{{ p.propertyType.unit }} / {{ props.amountFor }}
@@ -14,13 +14,13 @@
             </v-number-input>
         </v-col>
         <v-col cols="0" md="6">
-            <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-            <model-select :label="$t('Property')" v-model="p.propertyType" model="PropertyType"></model-select>
-        </v-col>
-        <v-col cols="0" md="1">
-            <v-btn color="delete" @click="deleteProperty(p)">
-                <v-icon icon="$delete"></v-icon>
-            </v-btn>
+            <model-select  v-model="p.propertyType" model="PropertyType">
+                <template #append>
+                    <v-btn color="delete" icon @click="deleteProperty(p)">
+                        <v-icon icon="$delete"></v-icon>
+                    </v-btn>
+                </template>
+            </model-select>
         </v-col>
     </v-row>
     <v-list class="d-md-none">

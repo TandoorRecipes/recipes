@@ -82,7 +82,7 @@ const planItems = computed(() => {
             startDate.setHours(hour, minutes, seconds)
             endDate.setHours(hour, minutes, seconds)
         }
-        console.log(startDate, endDate)
+
         items.push({
             startDate: startDate,
             endDate: endDate,

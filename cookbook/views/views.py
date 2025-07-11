@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
+from django.core.cache import caches
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.db import models
@@ -242,6 +243,10 @@ def system(request):
                 space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
             api_space_stats.append(space_stats)
 
+    cache_response = caches['default'].get(f'system_view_test_cache_entry', None)
+    if not cache_response:
+        caches['default'].set(f'system_view_test_cache_entry', datetime.now(), 10)
+
     return render(
         request, 'system.html', {
             'gunicorn_media': settings.GUNICORN_MEDIA,
@@ -256,6 +261,7 @@ def system(request):
             'orphans': orphans,
             'migration_info': migration_info,
             'missing_migration': missing_migration,
+            'cache_response': cache_response,
         })
 
 

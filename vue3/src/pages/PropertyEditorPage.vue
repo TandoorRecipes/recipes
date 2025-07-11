@@ -187,6 +187,7 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
+import {openFdcPage} from "@/utils/fdc.ts";
 
 type IngredientLoading = Ingredient & { loading?: boolean }
 
@@ -346,8 +347,8 @@ function updateFood(ingredient: IngredientLoading) {
  */
 function updateFoodFdcData(ingredient: IngredientLoading) {
     let api = new ApiApi()
-    ingredient.loading = true
     if (ingredient.food.fdcId) {
+        ingredient.loading = true
         api.apiFoodFdcCreate({id: ingredient.food.id!, food: ingredient.food}).then(r => {
             ingredient.food = r
             ingredients.value.set(r.id!, buildIngredientFoodProperties(ingredient))
@@ -381,13 +382,6 @@ function changeAllPropertyFoodAmounts(amount: number) {
     })
 }
 
-/**
- * for some reason v-btn href does not work in append inner slot of text field so open link with js
- * @param fdcId
- */
-function openFdcPage(fdcId: number){
-    window.open(`https://fdc.nal.usda.gov/food-details/${fdcId}/nutrients`, '_blank')
-}
 
 </script>
 

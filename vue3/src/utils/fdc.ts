@@ -1,4 +1,14 @@
+/**
+ * for some reason v-btn href does not work in append inner slot of text field so open link with js
+ * @param fdcId
+ */
+export function openFdcPage(fdcId: number){
+    window.open(`https://fdc.nal.usda.gov/food-details/${fdcId}/nutrients`, '_blank')
+}
 
+/**
+ * different types defined in the FDC Database
+ */
 export const FDC_PROPERTY_TYPES = [
     {value: 1002, text: "Nitrogen [g] (1002)"},
     {value: 1003, text: "Protein [g] (1003)"},

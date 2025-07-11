@@ -29,6 +29,12 @@
                                                 <model-merge-dialog :source="selectedFood" model="Food"
                                                                     @change="(obj: Food) => {selectedFood = obj;refreshPage()} "></model-merge-dialog>
                                             </v-list-item>
+
+                                            <v-list-item link prepend-icon="$automation" :disabled="!selectedFood">
+                                                {{ $t('Automate') }}
+                                                <model-edit-dialog model="Automation"  activator="parent" :item-defaults="{param1: selectedFood.name, type: 'FOOD_ALIAS'}" v-if="selectedFood"></model-edit-dialog>
+                                            </v-list-item>
+
                                             <v-list-item link prepend-icon="$delete" :disabled="!selectedFood">
                                                 {{ $t('Delete') }}
                                                 <delete-confirm-dialog :model-name="$t('Food')" :object-name="selectedFood.name" v-if="selectedFood"
@@ -57,6 +63,10 @@
                                                 {{ $t('Merge') }}
                                                 <model-merge-dialog :source="selectedUnit" model="Unit"
                                                                     @change="(obj: Food) => {selectedUnit = obj;refreshPage()} "></model-merge-dialog>
+                                            </v-list-item>
+                                            <v-list-item link prepend-icon="$automation" :disabled="!selectedUnit">
+                                                {{ $t('Automate') }}
+                                                <model-edit-dialog model="Automation"  activator="parent" :item-defaults="{param1: selectedUnit.name, type: 'UNIT_ALIAS'}" v-if="selectedUnit"></model-edit-dialog>
                                             </v-list-item>
                                             <v-list-item link prepend-icon="$delete" :disabled="!selectedUnit">
                                                 {{ $t('Delete') }}

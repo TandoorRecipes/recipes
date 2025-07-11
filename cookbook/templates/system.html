@@ -20,7 +20,7 @@
 <div class="container">
 
 
-    <h1 >{% trans 'System' %}</h1>
+    <h1>{% trans 'System' %}</h1>
     {% blocktrans %}
         Tandoor Recipes is an open source free software application. It can be found on
         <a href="https://github.com/TandoorRecipes/recipes">GitHub</a>.
@@ -212,6 +212,14 @@
                 </tr>
             {% endfor %}
         </table>
+    {% endif %}
+    <h4 class="mt-3">Cache Test</h4>
+    On first load this should be None, on second load it should be the time of the first load. Expiration is set to 10 seconds after that it should be None again. <br/>
+    {% if cache_response %}
+
+        <span class="badge text-bg-success">Cache entry from {{ cache_response|date:" d m Y H:i:s" }}</span>
+    {% else %}
+        <span class="badge text-bg-info">No cache entry before load</span>
     {% endif %}
     <h4 class="mt-3">Debug</h4>
     <textarea class="form-control" rows="20">
