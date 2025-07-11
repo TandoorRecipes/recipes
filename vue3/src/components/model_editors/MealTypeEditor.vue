@@ -43,11 +43,8 @@
 
 import {onMounted, PropType, ref} from "vue";
 import {MealType} from "@/openapi";
-import {VTimePicker} from 'vuetify/labs/VTimePicker'; // TODO remove once out of labs
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import {DateTime} from "luxon";
-
 
 const props = defineProps({
     item: {type: {} as PropType<MealType>, required: false, default: null},
