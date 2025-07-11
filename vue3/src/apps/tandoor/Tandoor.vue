@@ -3,92 +3,95 @@
         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated">
 
         </v-app-bar>
-        <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor" flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated" :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? '' : 'hide'">
+        <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor"
+                   flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated" :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? '' : 'hide'">
             <router-link :to="{ name: 'StartPage', params: {} }">
-                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo && !useUserPreferenceStore().activeSpace.navLogo"></v-img>
-                <v-img :src="useUserPreferenceStore().activeSpace.navLogo.preview" width="140px" class="ms-2" v-if="useUserPreferenceStore().userSettings.navShowLogo && useUserPreferenceStore().activeSpace.navLogo != undefined"></v-img>
+                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"
+                       v-if="useUserPreferenceStore().userSettings.navShowLogo && !useUserPreferenceStore().activeSpace.navLogo"></v-img>
+                <v-img :src="useUserPreferenceStore().activeSpace.navLogo.preview" width="140px" class="ms-2"
+                       v-if="useUserPreferenceStore().userSettings.navShowLogo && useUserPreferenceStore().activeSpace.navLogo != undefined"></v-img>
             </router-link>
 
 
-                <v-spacer></v-spacer>
-                <global-search-dialog ></global-search-dialog>
-                <v-btn icon="$add" class="d-print-none">
-                    <v-icon icon="$add" class="fa-fw"></v-icon>
-                    <v-menu activator="parent">
-                        <v-list>
-                            <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
-                            <v-list-item prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-list-item>
-                        </v-list>
-                    </v-menu>
-                </v-btn>
+            <v-spacer></v-spacer>
+            <global-search-dialog></global-search-dialog>
+            <v-btn icon="$add" class="d-print-none">
+                <v-icon icon="$add" class="fa-fw"></v-icon>
+                <v-menu activator="parent">
+                    <v-list>
+                        <v-list-item prepend-icon="$add" :to="{ name: 'ModelEditPage', params: {model: 'recipe'} }">{{ $t('Create Recipe') }}</v-list-item>
+                        <v-list-item prepend-icon="fa-solid fa-globe" :to="{ name: 'RecipeImportPage', params: {} }">{{ $t('Import Recipe') }}</v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-btn>
 
-                <v-avatar color="primary" class="me-2 cursor-pointer d-print-none">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
-                    <v-menu activator="parent">
+            <v-avatar color="primary" class="me-2 cursor-pointer d-print-none">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}
+                <v-menu activator="parent">
 
-                        <v-list density="compact">
-                            <v-list-item class="mb-1">
-                                <template #prepend>
-                                    <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                                </template>
-                                <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-                            </v-list-item>
-                            <v-divider></v-divider>
-                            <v-list-item :to="{ name: 'SettingsPage', params: {} }">
-                                <template #prepend>
-                                    <v-icon icon="fa-solid fa-sliders"></v-icon>
-                                </template>
-                                {{ $t('Settings') }}
-                            </v-list-item>
-                            <v-list-item :to="{ name: 'DatabasePage', params: {} }">
-                                <template #prepend>
-                                    <v-icon icon="fa-solid fa-folder-tree"></v-icon>
-                                </template>
-                                {{ $t('Database') }}
-                            </v-list-item>
-                            <v-list-item :to="{ name: 'HelpPage' }">
-                                <template #prepend>
-                                    <v-icon icon="fa-solid fa-question"></v-icon>
-                                </template>
-                                {{ $t('Help') }}
-                            </v-list-item>
-                            <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
-                            <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
-                            <template v-if="useUserPreferenceStore().spaces.length > 1">
-                                <v-divider></v-divider>
-                                <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
-                                <v-list-item v-for="s in useUserPreferenceStore().spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
-                                    <template #prepend>
-                                        <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
-                                        <v-icon icon="fa-solid fa-circle" v-else></v-icon>
-                                    </template>
-                                    {{ s.name }}
-                                </v-list-item>
+                    <v-list density="compact">
+                        <v-list-item class="mb-1">
+                            <template #prepend>
+                                <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
                             </template>
-
+                            <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item :to="{ name: 'SettingsPage', params: {} }">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-sliders"></v-icon>
+                            </template>
+                            {{ $t('Settings') }}
+                        </v-list-item>
+                        <v-list-item :to="{ name: 'DatabasePage', params: {} }">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-folder-tree"></v-icon>
+                            </template>
+                            {{ $t('Database') }}
+                        </v-list-item>
+                        <v-list-item :to="{ name: 'HelpPage' }">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-question"></v-icon>
+                            </template>
+                            {{ $t('Help') }}
+                        </v-list-item>
+                        <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
+                        <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
+                        <template v-if="useUserPreferenceStore().spaces.length > 1">
                             <v-divider></v-divider>
-                            <v-list-item link>
+                            <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
+                            <v-list-item v-for="s in useUserPreferenceStore().spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
                                 <template #prepend>
-                                    <v-icon icon="fa-solid fa-database"></v-icon>
+                                    <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
+                                    <v-icon icon="fa-solid fa-circle" v-else></v-icon>
                                 </template>
-                                {{ $t('Messages') }}
-                                <message-list-dialog></message-list-dialog>
+                                {{ s.name }}
                             </v-list-item>
-                            <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
-                                <template #prepend>
-                                    <v-icon icon="fa-solid fa-shield"></v-icon>
-                                </template>
-                                {{ $t('Admin') }}
-                            </v-list-item>
-                            <v-list-item :href="getDjangoUrl('accounts/logout')" link>
-                                <template #prepend>
-                                    <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
-                                </template>
-                                {{ $t('Logout') }}
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-                </v-avatar>
+                        </template>
+
+                        <v-divider></v-divider>
+                        <v-list-item link>
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-database"></v-icon>
+                            </template>
+                            {{ $t('Messages') }}
+                            <message-list-dialog></message-list-dialog>
+                        </v-list-item>
+                        <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-shield"></v-icon>
+                            </template>
+                            {{ $t('Admin') }}
+                        </v-list-item>
+                        <v-list-item :href="getDjangoUrl('accounts/logout')" link>
+                            <template #prepend>
+                                <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
+                            </template>
+                            {{ $t('Logout') }}
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-avatar>
 
         </v-app-bar>
         <v-app-bar color="info" density="compact"
@@ -187,15 +190,14 @@
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
-import {useDisplay, useTheme} from "vuetify"
+import {useDisplay} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
-import '@/assets/tandoor_light.css'
 import {useMediaQuery} from "@vueuse/core";
 
 const {lgAndUp} = useDisplay()
@@ -209,6 +211,96 @@ onMounted(() => {
 
 </script>
 
-<style scoped>
+<style>
+
+.v-theme--dark {
+
+    a:not(.v-*) {
+        color: #b98766;
+        text-decoration: none;
+        background-color: transparent
+    }
+
+    a:hover {
+        color: #fff;
+        text-decoration: none
+    }
+
+    a:not([href]):not([tabindex]), a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
+        color: inherit;
+        text-decoration: none
+    }
+
+    a:not([href]):not([tabindex]):focus {
+        outline: 0
+    }
+
+
+    /* Meal-Plan */
+
+    .cv-header {
+        background-color: #303030 !important;
+    }
+
+    .cv-weeknumber, .cv-header-day {
+        background-color: #303030 !important;
+        color: #fff !important;
+    }
+
+    .cv-day.past {
+        background-color: #333333 !important;
+    }
+
+    .cv-day.today {
+        background-color: var(--primary) !important;
+    }
+
+    .cv-day.outsideOfMonth {
+        background-color: #0d0d0d !important;
+    }
+
+    .cv-item {
+        background-color: #4E4E4E !important;
+    }
+
+    .d01 .cv-day-number {
+        background-color: #b98766 !important;
+    }
+
+    /* vueform/multiselect */
+
+    .multiselect-dropdown {
+        background: #212121 !important;
+    }
+
+    .multiselect-option.is-pointed {
+        background: #b98766 !important;
+    }
+
+}
+
+.v-theme--light {
+    a {
+        color: #b98766;
+        text-decoration: none;
+        background-color: transparent
+    }
+
+    a:hover {
+        color: #000;
+        text-decoration: none
+    }
+
+    a:not([href]):not([tabindex]), a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
+        color: inherit;
+        text-decoration: none
+    }
+
+    a:not([href]):not([tabindex]):focus {
+        outline: 0
+    }
+
+
+}
 
 </style>
