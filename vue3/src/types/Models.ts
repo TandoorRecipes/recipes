@@ -896,7 +896,7 @@ export class GenericModel {
             throw new Error('Cannot merge on this model!')
         } else {
             let mergeRequestParams: any = {id: source.id, target: target.id}
-            mergeRequestParams[this.model.name.toLowerCase()] = {}
+            mergeRequestParams[this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1)] = {}
 
             return this.api[`api${this.model.name}MergeUpdate`](mergeRequestParams)
         }
