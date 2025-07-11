@@ -521,6 +521,12 @@ CACHES = {
     }
 }
 
+if REDIS_HOST:
+    CACHES['default'] = {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': f'redis://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}',
+    }
+
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
 
