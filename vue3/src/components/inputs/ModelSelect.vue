@@ -1,7 +1,7 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
 
-    <v-label class="mt-2" v-if="props.label" >{{props.label}}</v-label>
+    <v-label class="mt-2" v-if="props.label">{{ props.label }}</v-label>
     <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails">
         <template #prepend v-if="$slots.prepend">
             <slot name="prepend"></slot>
@@ -18,7 +18,7 @@
             :on-create="createObject"
             :createOption="props.allowCreate"
             :delay="300"
-            :object="props.object"
+            :object="true"
             :valueProp="itemValue"
             :label="itemLabel"
             :searchable="true"
@@ -92,7 +92,7 @@ const props = defineProps({
 
     mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
     appendToBody: {type: Boolean, default: false},
-    object: {type: Boolean, default: true},
+    //object: {type: Boolean, default: true}, // TODO broken either fix or finally get other multiselect working
 
     allowCreate: {type: Boolean, default: false},
     placeholder: {type: String, default: undefined},
@@ -150,9 +150,7 @@ function search(query: string) {
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: props.limit}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
-            if (r.next) {
-                hasMoreItems.value = true
-            }
+            hasMoreItems.value = !!r.next
             return r.results
         } else {
             hasMoreItems.value = false
