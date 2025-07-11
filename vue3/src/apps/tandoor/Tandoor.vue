@@ -144,8 +144,9 @@
             <template #append>
                 <v-list nav>
                     <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'SettingsPage', params: {} }"></v-list-item>
-                    <v-list-item prepend-icon="fa-solid fa-heart" href="https://tandoor.dev" target="_blank">
+                    <v-list-item prepend-icon="fa-solid fa-heart" link>
                         Tandoor {{ useUserPreferenceStore().serverSettings.version }}
+                         <help-dialog></help-dialog>
                     </v-list-item>
                 </v-list>
             </template>
@@ -199,6 +200,7 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {onMounted} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {useMediaQuery} from "@vueuse/core";
+import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
