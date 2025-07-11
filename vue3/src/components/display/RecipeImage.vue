@@ -29,10 +29,6 @@ const image = computed(() => {
     }
 })
 
-watch(() => props.recipe, () => {
-    console.log('changed')
-})
-
 </script>
 
 <style scoped>

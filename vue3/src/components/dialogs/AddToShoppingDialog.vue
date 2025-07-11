@@ -27,10 +27,10 @@
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
-                <v-number-input v-model="servings" class="mt-3" control-variant="split" :label="$t('Servings')" :precision="2"></v-number-input>
+                <v-number-input v-model="servings" class="mt-3" control-variant="split" :label="$t('Servings')" :precision="2" :disabled="loading"></v-number-input>
             </v-card-text>
             <v-card-actions>
-                <v-btn class="float-right" prepend-icon="$create" color="create" @click="createShoppingListRecipe()">{{ $t('Add_to_Shopping') }}</v-btn>
+                <v-btn class="float-right" prepend-icon="$create" color="create" @click="createShoppingListRecipe()" :disabled="loading">{{ $t('Add_to_Shopping') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -40,7 +40,7 @@
 
 import {computed, onMounted, PropType, ref} from "vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {ApiApi, Recipe, RecipeFlat, RecipeOverview, type ShoppingListEntryBulkCreate, ShoppingListRecipe} from "@/openapi";
+import {ApiApi, MealPlan, Recipe, RecipeFlat, RecipeOverview, type ShoppingListEntryBulkCreate, ShoppingListRecipe} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {ShoppingDialogRecipe, ShoppingDialogRecipeEntry} from "@/types/Shopping";
 import {calculateFoodAmount} from "@/utils/number_utils";
@@ -51,6 +51,7 @@ const emit = defineEmits(['created'])
 
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true},
+    mealPlan: {type: Object as PropType<MealPlan>, required: false},
 })
 
 const dialog = ref(false)
@@ -77,6 +78,7 @@ onMounted(() => {
 function loadRecipeData() {
     let api = new ApiApi()
     let promises: Promise<any>[] = []
+    loading.value = true
 
     let recipeRequest = api.apiRecipeRetrieve({id: props.recipe.id!}).then(r => {
         recipe.value = r
@@ -108,7 +110,7 @@ function loadRecipeData() {
 
                 recipe.steps.forEach(step => {
                     step.ingredients.forEach(ingredient => {
-                        if(!ingredient.isHeader){
+                        if (!ingredient.isHeader) {
                             dialogRecipe.entries.push({
                                 amount: ingredient.amount,
                                 food: ingredient.food,
@@ -137,6 +139,10 @@ function createShoppingListRecipe() {
         recipe: props.recipe.id,
         servings: servings.value,
     } as ShoppingListRecipe
+
+    if (props.mealPlan && props.mealPlan.id) {
+        shoppingListRecipe.mealplan = props.mealPlan.id!
+    }
 
     let shoppingListEntries = {
         entries: []
