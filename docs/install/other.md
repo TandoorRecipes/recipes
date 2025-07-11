@@ -35,7 +35,6 @@ docker-compose:
     environment:
       # all the other env
       - SCRIPT_NAME=/<sub path>
-      - JS_REVERSE_SCRIPT_PREFIX=/<sub path>/
       - STATIC_URL=/<www path>/static/
       - MEDIA_URL=/<www path>/media/
     labels:
@@ -100,7 +99,6 @@ and the relevant section from the docker-compose.yml:
      image: vabene1111/recipes
      environment:
        - SCRIPT_NAME=/tandoor
-       - JS_REVERSE_SCRIPT_PREFIX=/tandoor
        - STATIC_URL=/tandoor/static/
        - MEDIA_URL=/tandoor/media/
        - GUNICORN_MEDIA=0

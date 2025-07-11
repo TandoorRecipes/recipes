@@ -12,7 +12,7 @@ class ScopeMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        prefix = settings.JS_REVERSE_SCRIPT_PREFIX or ''
+        prefix = settings.SCRIPT_NAME or ''
 
         # need to disable scopes for writing requests into userpref and enable for loading ?
         if request.path.startswith(prefix + '/api/user-preference/'):
