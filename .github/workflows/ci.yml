@@ -1,6 +1,11 @@
 name: Continuous Integration
 
-on: [push, pull_request]
+on: 
+  push:
+    branches: [disabled]
+  pull_request:
+    branches: [disabled]
+
 
 jobs:
     build:

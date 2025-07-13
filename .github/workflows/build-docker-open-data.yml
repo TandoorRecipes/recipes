@@ -1,6 +1,8 @@
 name: Build Docker Container with open data plugin installed
 
-on: push
+on:  
+  push:
+    branches: [disabled]
 
 jobs:
   build-container:
