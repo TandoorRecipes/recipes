@@ -1,9 +1,9 @@
 # Git attributes configuration for selective merging
 
-# Prevent merging of GitHub workflow and configuration files
-.github/** merge=ours
-.github/workflows/** merge=ours
-.github/ISSUE_TEMPLATE/** merge=ours
+# Prevent merging of GitHub workflow and configuration files - use custom driver
+.github/** merge=keep-ours
+.github/workflows/** merge=keep-ours  
+.github/ISSUE_TEMPLATE/** merge=keep-ours
 
 # Prevent merging of version info files
 cookbook/version_info.py merge=ours
