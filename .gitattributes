@@ -1,0 +1,10 @@
+# Git attributes configuration for selective merging
+
+# Prevent merging of GitHub workflow and configuration files
+.github/** merge=ours
+.github/workflows/** merge=ours
+.github/ISSUE_TEMPLATE/** merge=ours
+
+# Prevent merging of version info files
+cookbook/version_info.py merge=ours
+version.py merge=ours
