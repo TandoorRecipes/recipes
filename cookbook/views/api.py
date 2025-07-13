@@ -732,8 +732,12 @@ class FoodViewSet(LoggingMixin, viewsets.ModelViewSet, TreeMixin):
         except Exception:
             traceback.print_exc()
             return JsonResponse({'msg': 'there was an error parsing the FDC data, please check the server logs'}, status=500, json_dumps_params={'indent': 4})
-    
-    @decorators.action(detail=True, methods=['GET'], serializer_class=FoodSimpleSerializer, )
+
+    @decorators.action(
+        detail=True,
+        methods=['GET'],
+        serializer_class=FoodSimpleSerializer,
+    )
     def substitutes(self, request, pk):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)

@@ -23,8 +23,8 @@ try:
     version_info.append({
         'name': 'Tandoor ',
         'version': re.sub(r'<.*>', '', r),
-        'website': 'https://github.com/smilerz/recipes',
-        'commit_link': 'https://github.com/smilerz/recipes/commit/' + r.split('\n')[0].split(' ')[1],
+        'website': 'https://github.com/TandoorRecipes/recipes',
+        'commit_link': 'https://github.com/TandoorRecipes/recipes/commit/' + r.split('\n')[0].split(' ')[1],
         'ref': tandoor_hash,
         'branch': tandoor_branch,
         'tag': tandoor_tag
