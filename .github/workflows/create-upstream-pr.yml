@@ -1,0 +1,178 @@
+name: Create Upstream PR
+
+on:
+#   workflow_run:
+#     workflows: ["publish docker image"]
+#     types:
+#       - completed
+#     branches: [working]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-upstream-pr:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: upstream-pr-${{ github.ref }}
+      cancel-in-progress: true
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/TandoorRecipes/recipes.git
+          git fetch upstream
+
+      - name: Rebase on upstream
+        run: |
+          echo "Rebasing working branch on upstream/tandoor-1..."
+          git rebase upstream/tandoor-1
+          if [ $? -ne 0 ]; then
+            echo "❌ Rebase conflicts detected - manual intervention required"
+            git rebase --abort
+            exit 1
+          fi
+          echo "✅ Rebase successful"
+
+      - name: Get commits ahead of upstream
+        id: commits
+        run: |
+          echo "Getting commits ahead of upstream/tandoor-1..."
+          COMMITS=$(git log upstream/tandoor-1..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No commits ahead of upstream - exiting"
+            exit 0
+          fi
+          
+          echo "Found $(echo "$COMMITS" | wc -l) new commits"
+          echo "COMMITS<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMITS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Get trigger PR info
+        id: trigger_pr
+        uses: actions/github-script@v7
+        if: github.event_name == 'workflow_run'
+        with:
+          script: |
+            // Get the triggering workflow run
+            const triggerRun = github.event.workflow_run;
+            
+            // Find associated PR
+            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: triggerRun.head_sha
+            });
+            
+            const pr = prs.data.find(pr => pr.state === 'open' || pr.merged_at);
+            
+            if (pr) {
+              console.log(`Found PR: ${pr.title}`);
+              return {
+                title: pr.title,
+                number: pr.number
+              };
+            }
+            
+            // Fallback to commit message
+            const commit = await github.rest.repos.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: triggerRun.head_sha
+            });
+            
+            return {
+              title: commit.data.commit.message.split('\n')[0],
+              number: null
+            };
+
+      - name: Create clean branch for PR
+        run: |
+          # Create new branch from current working branch
+          git checkout -b upstream-pr-$(date +%Y%m%d-%H%M%S)
+          
+          # Remove custom workflows directory
+          git rm -r .github/workflows/ || true
+          
+          # Restore upstream workflows
+          git checkout upstream/tandoor-1 -- .github/workflows/ || true
+          
+          # Stage the changes
+          git add .github/workflows/ || true
+          
+          # Commit if there are changes
+          if ! git diff --cached --quiet; then
+            git commit -m "Restore upstream workflows for PR"
+          fi
+
+      - name: Push branch to fork
+        run: |
+          BRANCH_NAME=$(git branch --show-current)
+          git push origin $BRANCH_NAME
+
+      - name: Create Pull Request
+        id: create_pr
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branchName = await exec.getExecOutput('git', ['branch', '--show-current']);
+            const currentBranch = branchName.stdout.trim();
+            
+            // Use trigger PR title or fallback
+            const prTitle = ${{ github.event_name == 'workflow_run' && steps.trigger_pr.outputs.result && fromJSON(steps.trigger_pr.outputs.result).title }} || 
+                           'Sync changes from fork';
+            
+            // Build PR body
+            const commits = `${{ steps.commits.outputs.COMMITS }}`;
+            const prBody = ${{ github.event_name == 'workflow_run' }} ? 
+              `**Automated PR from successful Docker publish**
+              
+              This PR was automatically created after a successful Docker image publish.
+              
+              **Recent commits:**
+              ${commits}
+              
+              **Source:** ${context.repo.owner}/${context.repo.repo}:${currentBranch}
+              **Excludes:** Custom workflows (preserved upstream versions)` :
+              `**Manual PR creation**
+              
+              **Recent commits:**
+              ${commits}
+              
+              **Source:** ${context.repo.owner}/${context.repo.repo}:${currentBranch}`;
+            
+            const pr = await github.rest.pulls.create({
+              owner: 'TandoorRecipes',
+              repo: 'recipes',
+              title: prTitle,
+              body: prBody,
+              head: '${context.repo.owner}:' + currentBranch,
+              base: 'tandoor-1'
+            });
+            
+            console.log(`Created PR #${pr.data.number}: ${pr.data.html_url}`);
+            return {
+              pr_number: pr.data.number,
+              pr_url: pr.data.html_url
+            };
+
+      - name: Comment on success
+        if: success()
+        run: |
+          echo "✅ Successfully created upstream PR!"
