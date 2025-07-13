@@ -20,6 +20,7 @@
                                     :ingredient="i"
                                     :ingredient_factor="ingredient_factor"
                                     @checked-state-changed="$set(i, 'checked', !i.checked)"
+                                    :settings="settings"
                                 />
                             </table>
                         </div>
@@ -32,13 +33,14 @@
                             </b-card-header>
                             <b-collapse :id="'accordion-' + r.recipe.id" accordion="my-accordion" role="tabpanel">
                                 <div v-for="i in r.steps.flatMap((s) => s.ingredients)" v-bind:key="i.id">
-                                    <table class="table table-sm mb-0">
+                                    <table class="table table-sm mb-0" v-if="settings">
                                         <ingredient-component
                                             :key="i.id"
                                             :detailed="true"
                                             :ingredient="i"
                                             :ingredient_factor="ingredient_factor"
                                             @checked-state-changed="$set(i, 'checked', !i.checked)"
+                                            :settings="settings"
                                         />
                                     </table>
                                 </div>
@@ -74,7 +76,7 @@ import { BootstrapVue } from "bootstrap-vue"
 Vue.use(BootstrapVue)
 
 const { ApiApiFactory } = require("@/utils/openapi/api")
-import { StandardToasts } from "@/utils/utils"
+import { StandardToasts, getUserPreference } from "@/utils/utils"
 import IngredientComponent from "@/components/IngredientComponent"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { useMealPlanStore } from "@/stores/MealPlanStore"
@@ -98,10 +100,14 @@ export default {
             recipe_servings: undefined,
             add_shopping: [],
             related_recipes: [],
+            settings: {
+                ingredient_context: false,
+            },
         }
     },
     mounted() {
         this.recipe_servings = this.servings
+        this.settings = getUserPreference()
     },
     computed: {
         ingredient_factor: function () {

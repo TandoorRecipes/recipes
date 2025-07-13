@@ -191,7 +191,7 @@ class TreeModel(MP_Node):
 
         return queryset.model.objects.filter(id__in=queryset.values_list('id')).exclude(descendants)
 
-    def include_ancestors(queryset=None):
+    def include_ancestors(queryset=None, filter=None):
         """
         :param queryset: Model Queryset to add ancestors
         :param filter: Filter (include) the ancestors nodes with the provided Q filter
@@ -487,6 +487,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_recent_days = models.PositiveIntegerField(default=7)
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
+    ingredient_context = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
@@ -766,6 +767,22 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             if len(fields) > 0:
                 obj.inherit_fields.set(fields)
         obj.save()
+
+    def get_substitutes(self, onhand=False, shopping_users=None):
+        # filters = ~Q(id=self.id)
+        filters = Q()
+        if self.substitute:
+            filters |= Q(id__in=self.substitute.values('id'))
+        if self.substitute_children:
+            filters |= Q(path__startswith=self.path, depth__gt=self.depth)
+        if self.substitute_siblings:
+            sibling_path = self.path[:Food.steplen * (self.depth - 1)]
+            filters |= Q(path__startswith=sibling_path, depth=self.depth)
+
+        qs = Food.objects.filter(filters).exclude(id=self.id)
+        if onhand:
+            qs = qs.filter(onhand_users__in=shopping_users)
+        return qs
 
     @staticmethod
     def reset_inheritance(space=None, food=None):

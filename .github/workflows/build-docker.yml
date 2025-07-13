@@ -81,16 +81,3 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  notify-maintenance:
-    name: Notify Beta
-    runs-on: ubuntu-latest
-    needs: build-container
-    if: github.ref == 'refs/heads/tandoor-1'
-    steps:
-      # Send beta discord notification
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_BETA_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
-        with:
-          args: '🚀 The v1 Maintenance Image has been updated! 🥳'

@@ -2,19 +2,19 @@
  * Utility functions to call bootstrap toasts
  * */
 import i18n from "@/i18n"
-import {frac} from "@/utils/fractions"
+import { frac } from "@/utils/fractions"
 /*
  * Utility functions to use OpenAPIs generically
  * */
-import {ApiApiFactory} from "@/utils/openapi/api.ts"
+import { ApiApiFactory } from "@/utils/openapi/api.ts"
 import axios from "axios"
-import {BToast} from "bootstrap-vue"
+import { BToast } from "bootstrap-vue"
 // /*
 // * Utility functions to use manipulate nested components
 // * */
+import moment from "moment"
 import Vue from "vue"
-import {Actions, Models} from "./models"
-import moment from "moment";
+import { Actions, Models } from "./models"
 
 export const ToastMixin = {
     name: "ToastMixin",
@@ -53,73 +53,73 @@ export class StandardToasts {
     static FAIL_IMPORT = "FAIL_IMPORT"
 
     static makeStandardToast(context, toast, err = undefined, always_show_errors = false) {
-        let title = ''
-        let msg = ''
-        let variant = ''
+        let title = ""
+        let msg = ""
+        let variant = ""
 
         switch (toast) {
             case StandardToasts.SUCCESS_CREATE:
-                variant = 'success'
+                variant = "success"
                 title = i18n.tc("Success")
                 msg = i18n.tc("success_creating_resource")
                 break
             case StandardToasts.SUCCESS_FETCH:
-                variant = 'success'
+                variant = "success"
                 title = i18n.tc("Success")
                 msg = i18n.tc("success_fetching_resource")
                 break
             case StandardToasts.SUCCESS_UPDATE:
-                variant = 'success'
+                variant = "success"
                 title = i18n.tc("Success")
                 msg = i18n.tc("success_updating_resource")
                 break
             case StandardToasts.SUCCESS_DELETE:
-                variant = 'success'
+                variant = "success"
                 title = i18n.tc("Success")
                 msg = i18n.tc("success_deleting_resource")
                 break
             case StandardToasts.SUCCESS_MOVE:
-                variant = 'success'
+                variant = "success"
                 title = i18n.tc("Success")
                 msg = i18n.tc("success_moving_resource")
                 break
             case StandardToasts.SUCCESS_MERGE:
-                variant = 'success'
+                variant = "success"
                 title = i18n.tc("Success")
                 msg = i18n.tc("success_merging_resource")
                 break
             case StandardToasts.FAIL_CREATE:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_creating_resource")
                 break
             case StandardToasts.FAIL_FETCH:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_fetching_resource")
                 break
             case StandardToasts.FAIL_UPDATE:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_updating_resource")
                 break
             case StandardToasts.FAIL_DELETE:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_deleting_resource")
                 break
             case StandardToasts.FAIL_DELETE_PROTECTED:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_deleting_protected_resource")
                 break
             case StandardToasts.FAIL_MOVE:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_moving_resource")
                 break
             case StandardToasts.FAIL_MERGE:
-                variant = 'danger'
+                variant = "danger"
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_merging_resource")
                 break
@@ -179,28 +179,27 @@ export const RandomIconMixin = {
 
 export function getRandomFoodIcon() {
     let icons = [
-        'fas fa-hamburger',
-        'fas fa-utensils',
-        'fas fa-apple-alt',
-        'fas fa-bacon',
-        'fas fa-bread-slice',
-        'fas fa-candy-cane',
-        'fas fa-carrot',
-        'fas fa-cheese',
-        'fas fa-cookie',
-        'fas fa-drumstick-bite',
-        'fas fa-egg',
-        'fas fa-fish',
-        'fas fa-hotdog',
-        'fas fa-ice-cream',
-        'fas fa-lemon',
-        'fas fa-pepper-hot',
-        'fas fa-pizza-slice',
-        'fas fa-cookie-bite'
-
+        "fas fa-hamburger",
+        "fas fa-utensils",
+        "fas fa-apple-alt",
+        "fas fa-bacon",
+        "fas fa-bread-slice",
+        "fas fa-candy-cane",
+        "fas fa-carrot",
+        "fas fa-cheese",
+        "fas fa-cookie",
+        "fas fa-drumstick-bite",
+        "fas fa-egg",
+        "fas fa-fish",
+        "fas fa-hotdog",
+        "fas fa-ice-cream",
+        "fas fa-lemon",
+        "fas fa-pepper-hot",
+        "fas fa-pizza-slice",
+        "fas fa-cookie-bite",
     ]
 
-    return icons[Math.floor(Math.random() * icons.length)];
+    return icons[Math.floor(Math.random() * icons.length)]
 }
 
 /*
@@ -279,8 +278,8 @@ export const StaticMixin = {
 }
 
 export function resolveDjangoStatic(param) {
-    let url = localStorage.getItem('STATIC_URL') + param
-    return url.replace('//', '/') //replace // with / in case param started with / which resulted in // after the static base url
+    let url = localStorage.getItem("STATIC_URL") + param
+    return url.replace("//", "/") //replace // with / in case param started with / which resulted in // after the static base url
 }
 
 /*
@@ -422,7 +421,7 @@ export const ApiMixin = {
             return apiClient[func](...parameters)
         },
         genericGetAPI: function (url, options) {
-            return axios.get(resolveDjangoUrl(url), {params: options, emulateJSON: true})
+            return axios.get(resolveDjangoUrl(url), { params: options, emulateJSON: true })
         },
         genericPostAPI: function (url, form) {
             let data = new FormData()
@@ -533,7 +532,7 @@ export function getConfig(model, action) {
     let f = action.function
     // if not defined partialUpdate will use params from create
     if (f === "partialUpdate" && !model?.[f]?.params) {
-        model[f] = {params: [...["id"], ...model.create.params]}
+        model[f] = { params: [...["id"], ...model.create.params] }
     }
 
     let config = {
@@ -541,12 +540,12 @@ export function getConfig(model, action) {
         apiName: model.apiName,
     }
     // spread operator merges dictionaries - last item in list takes precedence
-    config = {...config, ...action, ...model.model_type?.[f], ...model?.[f]}
+    config = { ...config, ...action, ...model.model_type?.[f], ...model?.[f] }
     // nested dictionaries are not merged - so merge again on any nested keys
-    config.config = {...action?.config, ...model.model_type?.[f]?.config, ...model?.[f]?.config}
+    config.config = { ...action?.config, ...model.model_type?.[f]?.config, ...model?.[f]?.config }
     // look in partialUpdate again if necessary
     if (f === "partialUpdate" && Object.keys(config.config).length === 0) {
-        config.config = {...model.model_type?.create?.config, ...model?.create?.config}
+        config.config = { ...model.model_type?.create?.config, ...model?.create?.config }
     }
     config["function"] = f + config.apiName + (config?.suffix ?? "") // parens are required to force optional chaining to evaluate before concat
     return config
@@ -557,17 +556,17 @@ export function getConfig(model, action) {
 // * */
 export function getForm(model, action, item1, item2) {
     let f = action.function
-    let config = {...action?.form, ...model.model_type?.[f]?.form, ...model?.[f]?.form}
+    let config = { ...action?.form, ...model.model_type?.[f]?.form, ...model?.[f]?.form }
     // if not defined partialUpdate will use form from create
     if (f === "partialUpdate" && Object.keys(config).length == 0) {
-        config = {...Actions.CREATE?.form, ...model.model_type?.["create"]?.form, ...model?.["create"]?.form}
-        config["title"] = {...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title}
+        config = { ...Actions.CREATE?.form, ...model.model_type?.["create"]?.form, ...model?.["create"]?.form }
+        config["title"] = { ...action?.form_title, ...model.model_type?.[f]?.form_title, ...model?.[f]?.form_title }
         // form functions should not be inherited
         if (config?.["form_function"]?.includes("Create")) {
             delete config["form_function"]
         }
     }
-    let form = {fields: []}
+    let form = { fields: [] }
     let value = ""
     for (const [k, v] of Object.entries(config)) {
         if (v?.function) {
@@ -698,7 +697,7 @@ const specialCases = {
         let params = []
         if (action.function === "partialUpdate") {
             API = GenericAPI
-            params = [Models.SUPERMARKET, Actions.FETCH, {id: options.id}]
+            params = [Models.SUPERMARKET, Actions.FETCH, { id: options.id }]
         } else if (action.function === "create") {
             API = new ApiApiFactory()[setup.function]
             params = buildParams(options, setup)
@@ -735,15 +734,15 @@ const specialCases = {
                 let order = Math.max(...existing_categories.map((x) => x?.order ?? 0), ...updated_categories.map((x) => x?.order ?? 0), 0) + 1
 
                 removed_categories.forEach((x) => {
-                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, {id: x.id}))
+                    promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.DELETE, { id: x.id }))
                 })
-                let item = {supermarket: id}
+                let item = { supermarket: id }
                 added_categories.forEach((x) => {
                     item.order = x?.order ?? order
                     if (!x?.order) {
                         order = order + 1
                     }
-                    item.category = {id: x.category.id, name: x.category.name}
+                    item.category = { id: x.category.id, name: x.category.name }
                     promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.CREATE, item))
                 })
                 changed_categories.forEach((x) => {
@@ -752,13 +751,13 @@ const specialCases = {
                     if (!x?.order) {
                         order = order + 1
                     }
-                    item.category = {id: x.category.id, name: x.category.name}
+                    item.category = { id: x.category.id, name: x.category.name }
                     promises.push(GenericAPI(Models.SHOPPING_CATEGORY_RELATION, Actions.UPDATE, item))
                 })
 
                 return Promise.all(promises).then(() => {
                     // finally get and return the Supermarket which everything downstream is expecting
-                    return GenericAPI(Models.SUPERMARKET, Actions.FETCH, {id: id})
+                    return GenericAPI(Models.SUPERMARKET, Actions.FETCH, { id: id })
                 })
             })
     },
@@ -769,8 +768,8 @@ export const formFunctions = {
         form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
         return form
     },
-    InviteLinkDefaultValid: function (form){
-        form.fields.filter((x) => x.field === "valid_until")[0].value = moment().add(7, "days").format('yyyy-MM-DD')
+    InviteLinkDefaultValid: function (form) {
+        form.fields.filter((x) => x.field === "valid_until")[0].value = moment().add(7, "days").format("yyyy-MM-DD")
         return form
     },
     AutomationOrderDefault: function (form) {

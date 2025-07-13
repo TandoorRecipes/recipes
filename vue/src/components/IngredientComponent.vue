@@ -37,7 +37,11 @@
 
                     <div class="ingredients__note ingredients__note_print d-none d-print-block"><i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}</div>
                 </template>
+                <span class="justify-content-end align-baseline p-0" v-if="settings.ingredient_context">
+                    <ingredient-context-menu :ingredient="ingredient" class="float-right"></ingredient-context-menu>
+                </span>
             </td>
+            <td v-if="!detailed && ingredient.food.substitute_onhand"><SubstituteBadge :item="ingredient.food" /></td>
         </template>
     </tr>
 </template>
@@ -47,6 +51,8 @@ import {calculateAmount, ResolveUrlMixin, EscapeCSSMixin} from "@/utils/utils"
 
 import Vue from "vue"
 import VueSanitize from "vue-sanitize"
+import IngredientContextMenu from "@/components/ContextMenu/IngredientContextMenu"
+import SubstituteBadge from "@/components/Badges/Substitute"
 
 Vue.use(VueSanitize)
 
@@ -54,10 +60,12 @@ export default {
     name: "IngredientComponent",
     props: {
         ingredient: Object,
-        ingredient_factor: {type: Number, default: 1},
-        detailed: {type: Boolean, default: true},
+        ingredient_factor: { type: Number, default: 1 },
+        detailed: { type: Boolean, default: true },
+        settings: Object,
     },
     mixins: [ResolveUrlMixin, EscapeCSSMixin],
+    components: { IngredientContextMenu, SubstituteBadge },
     data() {
         return {
             checked: false,
