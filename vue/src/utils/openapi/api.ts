@@ -959,31 +959,6 @@ export interface FoodSimple {
 /**
  * 
  * @export
- * @interface FoodSimple
- */
-export interface FoodSimple {
-    /**
-     *
-     * @type {number}
-     * @memberof FoodSimple
-     */
-    id?: number;
-    /**
-     *
-     * @type {string}
-     * @memberof FoodSimple
-     */
-    name: string;
-    /**
-     *
-     * @type {string}
-     * @memberof FoodSimple
-     */
-    plural_name?: string | null;
-}
-/**
- *
- * @export
  * @interface FoodSubstitute
  */
 export interface FoodSubstitute {

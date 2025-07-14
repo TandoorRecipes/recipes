@@ -118,7 +118,7 @@ jobs:
           is_infrastructure_file() {
             local file="$1"
             case "$file" in
-              .github|.github/*|cookbook/version_info.py|.gitattributes) return 0 ;;
+              .github|.github/*|cookbook/version*.py|.gitattributes) return 0 ;;
               *) return 1 ;;
             esac
           }
