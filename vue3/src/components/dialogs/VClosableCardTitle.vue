@@ -1,7 +1,7 @@
 <template>
     <v-card-title class="pb-1 pt-1 pl-1 pr-1">
-        <v-row align="center">
-            <v-col cols="10" md="11" class="text-truncate pt-0 pb-0">
+        <v-row no-gutters align="center">
+            <v-col cols="10" md="11" class="text-truncate pt-0 pb-0 pl-4">
                 <slot name="content">
                     <i :class="props.icon" v-if="props.icon != ''"></i>
                     {{ props.title }}
