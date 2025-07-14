@@ -75,41 +75,66 @@ jobs:
             printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
             echo "❌ Working branch is behind upstream - manual sync required"
           else
+            # Diverged: check if only infrastructure files differ
             printf "%s\n" "status=diverged" >> $GITHUB_OUTPUT
             printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
-            echo "❌ Branches have diverged - manual sync required"
-          fi
+            echo "❌ Branches have diverged - checking if only infrastructure files differ"
 
-          # Get upstream commits for guidance
-          UPSTREAM_COMMITS=$(git log HEAD..upstream/tandoor-1 --oneline | wc -l)
-          WORKING_COMMITS=$(git log upstream/tandoor-1..HEAD --oneline | wc -l)
+            # Helper function to check if file is infrastructure
+            is_infrastructure_file() {
+              local file="$1"
+              case "$file" in
+                .github|.github/*|cookbook/version*.py|.gitattributes) return 0 ;;
+                *) return 1 ;;
+              esac
+            }
 
-          printf "%s\n" "upstream_commits=$UPSTREAM_COMMITS" >> $GITHUB_OUTPUT
-          printf "%s\n" "working_commits=$WORKING_COMMITS" >> $GITHUB_OUTPUT
+            CHANGED_FILES=$(git diff upstream/tandoor-1..HEAD --name-only)
+            ONLY_INFRA=true
+            for file in $CHANGED_FILES; do
+              if ! is_infrastructure_file "$file"; then
+                ONLY_INFRA=false
+                break
+              fi
+            done
 
-          # Create resolution commands as JSON array
-          cat >> $GITHUB_OUTPUT << 'EOF'
-          resolution_commands=["git fetch upstream", "git checkout working", "git rebase upstream/tandoor-1", "git push --force-with-lease"]
-          EOF
-          echo "" >> $GITHUB_OUTPUT
+            if [ "$ONLY_INFRA" = true ]; then
+              echo "⚠️ Divergence is only in infrastructure files. Skipping error."
+              printf "%s\n" "infra_only_divergence=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
 
-          # Output detailed error message
-          cat << EOL
-          ❌ Manual sync required - automatic rebase too risky
-          Branch Status: $([ "$WORKING_COMMITS" -gt 0 ] && [ "$UPSTREAM_COMMITS" -gt 0 ] && echo "DIVERGED" || echo "BEHIND")
-          Upstream has: $UPSTREAM_COMMITS new commits since last sync
-          Working has: $WORKING_COMMITS new commits
-          🔧 Manual Resolution Required:
-          1. git fetch upstream
-          2. git checkout working
-          3. git rebase upstream/tandoor-1
-          4. Resolve any conflicts manually
-          5. Test your changes against new upstream base
-          6. git push --force-with-lease
-          7. Re-run this workflow
-          💡 Why manual?: Auto-rebase can change commit semantics and create untested code
-          EOL
-          exit 1
+            # If not only infra, fail as before
+            # Get upstream commits for guidance
+            UPSTREAM_COMMITS=$(git log HEAD..upstream/tandoor-1 --oneline | wc -l)
+            WORKING_COMMITS=$(git log upstream/tandoor-1..HEAD --oneline | wc -l)
+
+            printf "%s\n" "upstream_commits=$UPSTREAM_COMMITS" >> $GITHUB_OUTPUT
+            printf "%s\n" "working_commits=$WORKING_COMMITS" >> $GITHUB_OUTPUT
+
+            # Create resolution commands as JSON array
+            cat >> $GITHUB_OUTPUT << 'EOF'
+            resolution_commands=["git fetch upstream", "git checkout working", "git rebase upstream/tandoor-1", "git push --force-with-lease"]
+            EOF
+            echo "" >> $GITHUB_OUTPUT
+
+            # Output detailed error message
+            cat << EOL
+            ❌ Manual sync required - automatic rebase too risky
+            Branch Status: $([ "$WORKING_COMMITS" -gt 0 ] && [ "$UPSTREAM_COMMITS" -gt 0 ] && echo "DIVERGED" || echo "BEHIND")
+            Upstream has: $UPSTREAM_COMMITS new commits since last sync
+            Working has: $WORKING_COMMITS new commits
+            🔧 Manual Resolution Required:
+            1. git fetch upstream
+            2. git checkout working
+            3. git rebase upstream/tandoor-1
+            4. Resolve any conflicts manually
+            5. Test your changes against new upstream base
+            6. git push --force-with-lease
+            7. Re-run this workflow
+            💡 Why manual?: Auto-rebase can change commit semantics and create untested code
+            EOL
+            exit 1
 
       - name: Analyze commits and get trigger info
         id: commit_analysis
