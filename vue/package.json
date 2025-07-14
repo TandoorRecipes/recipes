@@ -117,7 +117,6 @@
     "path-to-regexp": "^0.1.12",
     "body-parser": "1.20.3",
     "serialize-javascript": "^6.0.2",
-    "brace-expansion": "2.0.2",
     "cookie": "^0.7.0",
     "send": "^0.19.0",
     "serve-static": "^1.16.0",
