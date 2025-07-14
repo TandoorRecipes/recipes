@@ -2,7 +2,7 @@ name: Create Upstream PR
 
 on:
   workflow_run:
-    workflows: ["publish docker image"]
+    workflows: ["Push Workflow"]
     types:
       - completed
     branches: [working]
@@ -11,12 +11,13 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: read
 
 jobs:
   create-upstream-pr:
     runs-on: ubuntu-latest
     concurrency:
-      group: upstream-pr-${{ github.ref }}
+      group: upstream-pr
       cancel-in-progress: true
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     steps:
@@ -33,196 +34,364 @@ jobs:
 
       - name: Add upstream remote
         run: |
-          git remote add upstream https://github.com/TandoorRecipes/recipes.git
+          git remote get-url upstream || git remote add upstream https://github.com/TandoorRecipes/recipes.git
           git fetch upstream
 
-      - name: Rebase on upstream
+      - name: Ensure jq is available
         run: |
-          echo "Rebasing working branch on upstream/tandoor-1..."
-          git rebase upstream/tandoor-1
-          if [ $? -ne 0 ]; then
-            echo "❌ Rebase conflicts detected - manual intervention required"
-            git rebase --abort
-            exit 1
-          fi
-          echo "✅ Rebase successful"
-
-      - name: Get last upstream PR commit
-        id: last_commit
-        uses: actions/github-script@v7
-        with:
-          script: |
-            try {
-              // Look for the last PR we created to upstream
-              const prs = await github.rest.pulls.list({
-                owner: 'TandoorRecipes',
-                repo: 'recipes',
-                head: `${context.repo.owner}:upstream-pr-`,
-                state: 'all',
-                sort: 'created',
-                direction: 'desc',
-                per_page: 1
-              });
-
-              if (prs.data.length > 0) {
-                const lastPR = prs.data[0];
-                console.log(`Found last upstream PR: #${lastPR.number}`);
-
-                // Get the commits from that PR
-                const commits = await github.rest.pulls.listCommits({
-                  owner: 'TandoorRecipes',
-                  repo: 'recipes',
-                  pull_number: lastPR.number
-                });
-
-                if (commits.data.length > 0) {
-                  const lastCommitSha = commits.data[commits.data.length - 1].sha;
-                  console.log(`Last processed commit: ${lastCommitSha}`);
-                  return lastCommitSha;
-                }
-              }
-
-              console.log('No previous upstream PR found, will include recent commits');
-              return null;
-            } catch (error) {
-              console.log('Error finding last PR, will include recent commits:', error.message);
-              return null;
-            }
-
-      - name: Get new commits since last upstream PR
-        id: commits
-        run: |
-          LAST_COMMIT="${{ steps.last_commit.outputs.result }}"
-          if [ "$LAST_COMMIT" != "null" ] && [ -n "$LAST_COMMIT" ]; then
-            # Remove quotes from the commit SHA
-            LAST_COMMIT=$(echo $LAST_COMMIT | tr -d '"')
-            echo "Getting commits since: $LAST_COMMIT"
-            COMMITS=$(git log ${LAST_COMMIT}..HEAD --pretty=format:"- %s (%h)" --no-merges)
-          else
-            # If no previous commit found, get last 10 commits
-            echo "No previous upstream PR found, getting recent commits"
-            COMMITS=$(git log -10 --pretty=format:"- %s (%h)" --no-merges)
+          if ! command -v jq &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y jq
           fi
 
-          if [ -z "$COMMITS" ]; then
-            echo "No new commits since last upstream PR - exiting"
+      - name: Check branch state and detect divergence
+        id: branch_sync
+        run: |
+          WORKING_SHA=$(git rev-parse HEAD)
+          UPSTREAM_SHA=$(git rev-parse upstream/tandoor-1)
+
+          echo "Working branch: $WORKING_SHA"
+          echo "Upstream branch: $UPSTREAM_SHA"
+
+          if [ "$WORKING_SHA" = "$UPSTREAM_SHA" ]; then
+            printf "%s\n" "status=up-to-date" >> $GITHUB_OUTPUT
+            printf "%s\n" "manual_resolution_required=false" >> $GITHUB_OUTPUT
+            echo "✅ Branches are up-to-date"
             exit 0
           fi
 
-          echo "COMMITS<<EOF" >> $GITHUB_OUTPUT
-          echo "$COMMITS" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          if git merge-base --is-ancestor upstream/tandoor-1 HEAD; then
+            printf "%s\n" "status=ahead" >> $GITHUB_OUTPUT
+            printf "%s\n" "manual_resolution_required=false" >> $GITHUB_OUTPUT
+            echo "✅ Working branch is ahead of upstream - can proceed with PR creation"
+            exit 0
+          fi
 
-      - name: Get trigger PR info
-        id: trigger_pr
-        uses: actions/github-script@v7
-        if: github.event_name == 'workflow_run'
-        with:
-          script: |
-            // Get the triggering workflow run
-            const triggerRun = github.event.workflow_run;
+          if git merge-base --is-ancestor HEAD upstream/tandoor-1; then
+            printf "%s\n" "status=behind" >> $GITHUB_OUTPUT
+            printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
+            echo "❌ Working branch is behind upstream - manual sync required"
+          else
+            printf "%s\n" "status=diverged" >> $GITHUB_OUTPUT
+            printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
+            echo "❌ Branches have diverged - manual sync required"
+          fi
 
-            // Find associated PR
-            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: triggerRun.head_sha
-            });
+          UPSTREAM_COMMITS=$(git log HEAD..upstream/tandoor-1 --oneline | wc -l)
+          WORKING_COMMITS=$(git log upstream/tandoor-1..HEAD --oneline | wc -l)
 
-            const pr = prs.data.find(pr => pr.state === 'open' || pr.merged_at);
+          printf "%s\n" "upstream_commits=$UPSTREAM_COMMITS" >> $GITHUB_OUTPUT
+          printf "%s\n" "working_commits=$WORKING_COMMITS" >> $GITHUB_OUTPUT
 
-            if (pr) {
-              console.log(`Found PR: ${pr.title}`);
-              return {
-                title: pr.title,
-                number: pr.number
-              };
-            }
+          cat >> $GITHUB_OUTPUT << 'EOF'
+          resolution_commands=["git fetch upstream", "git checkout working", "git rebase upstream/tandoor-1", "git push --force-with-lease"]
+          EOF
+          echo "" >> $GITHUB_OUTPUT
 
-            // Fallback to commit message
-            const commit = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: triggerRun.head_sha
-            });
+          # Output detailed error message
+          cat << EOL
+          ❌ Manual sync required - automatic rebase too risky
 
-            return {
-              title: commit.data.commit.message.split('\n')[0],
-              number: null
-            };
+          Branch Status: $([ "$WORKING_COMMITS" -gt 0 ] && [ "$UPSTREAM_COMMITS" -gt 0 ] && echo "DIVERGED" || echo "BEHIND")
+          Upstream has: $UPSTREAM_COMMITS new commits since last sync
+          Working has: $WORKING_COMMITS new commits
 
-      - name: Create clean branch for PR
+          🔧 Manual Resolution Required:
+          1. git fetch upstream
+          2. git checkout working
+          3. git rebase upstream/tandoor-1
+          4. Resolve any conflicts manually
+          5. Test your changes against new upstream base
+          6. git push --force-with-lease
+          7. Re-run this workflow
+
+          💡 Why manual?: Auto-rebase can change commit semantics and create untested code
+          EOL
+
+          exit 1
+
+      - name: Analyze commits and get trigger info
+        id: commit_analysis
         run: |
-          # Create new branch from current working branch
-          git checkout -b upstream-pr-$(date +%Y%m%d-%H%M%S)
+          is_infrastructure_file() {
+            local file="$1"
+            case "$file" in
+              .github|.github/*|cookbook/version_info.py|.gitattributes) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
 
-          # Remove gitattributes and restore upstream workflows and version file for PR
+          COMMITS_RAW=$(git log upstream/tandoor-1..working --oneline)
+
+          if [ -z "$COMMITS_RAW" ]; then
+            printf "%s\n" "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ No commits to contribute - exiting gracefully"
+            exit 0
+          fi
+
+          CHANGED_FILES=$(git diff upstream/tandoor-1..working --name-only)
+
+          INFRASTRUCTURE_FILES=()
+          CODE_FILES=()
+
+          for file in $CHANGED_FILES; do
+            if is_infrastructure_file "$file"; then
+              INFRASTRUCTURE_FILES+=("$file")
+            else
+              CODE_FILES+=("$file")
+            fi
+          done
+
+          if [ ${#CODE_FILES[@]} -eq 0 ]; then
+            printf "%s\n" "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ Only infrastructure files changed - no PR needed"
+            exit 0
+          fi
+
+          printf "%s\n" "has_changes=true" >> $GITHUB_OUTPUT
+          printf "%s\n" "changed_files_count=${#CODE_FILES[@]}" >> $GITHUB_OUTPUT
+
+          FILTERED_COMMITS_JSON="[]"
+          COMMIT_SUBJECTS_ARRAY=()
+
+          while IFS= read -r commit_line; do
+            if [ -z "$commit_line" ]; then continue; fi
+
+            COMMIT_SHA=$(echo "$commit_line" | cut -d' ' -f1)
+            COMMIT_SUBJECT=$(echo "$commit_line" | cut -d' ' -f2-)
+            COMMIT_SUBJECTS_ARRAY+=("- $COMMIT_SUBJECT")
+
+            COMMIT_FILES=$(git diff-tree --no-commit-id --name-only -r $COMMIT_SHA)
+
+            HAS_CODE_CHANGES=false
+            NON_INFRA_FILES=()
+
+            for commit_file in $COMMIT_FILES; do
+              if ! is_infrastructure_file "$commit_file"; then
+                HAS_CODE_CHANGES=true
+                NON_INFRA_FILES+=("$commit_file")
+              fi
+            done
+
+            if [ "$HAS_CODE_CHANGES" = "true" ]; then
+              FILES_JSON="[]"
+              for non_infra_file in "${NON_INFRA_FILES[@]}"; do
+                FILES_JSON=$(echo "$FILES_JSON" | jq --arg file "$non_infra_file" '. + [$file]')
+              done
+
+              COMMIT_JSON=$(jq -n \
+                --arg sha "$COMMIT_SHA" \
+                --arg subject "$COMMIT_SUBJECT" \
+                --argjson files "$FILES_JSON" \
+                '{sha: $sha, subject: $subject, files: $files}')
+
+              FILTERED_COMMITS_JSON=$(echo "$FILTERED_COMMITS_JSON" | jq --argjson item "$COMMIT_JSON" '. + [$item]')
+            fi
+          done <<< "$COMMITS_RAW"
+
+          INFRA_JSON="[]"
+          for infra_file in "${INFRASTRUCTURE_FILES[@]}"; do
+            INFRA_JSON=$(echo "$INFRA_JSON" | jq --arg file "$infra_file" '. + [$file]')
+          done
+
+          CODE_COUNT=${#CODE_FILES[@]}
+          INFRA_COUNT=${#INFRASTRUCTURE_FILES[@]}
+          CHANGES_SUMMARY="Modified $CODE_COUNT code files"
+          if [ "$INFRA_COUNT" -gt 0 ]; then
+            CHANGES_SUMMARY="$CHANGES_SUMMARY and $INFRA_COUNT infrastructure files"
+          fi
+
+          echo 'COMMITS<<EOF' >> $GITHUB_OUTPUT
+          printf "%s\n" "$FILTERED_COMMITS_JSON" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+          echo "COMMIT_SUBJECTS<<EOF" >> $GITHUB_OUTPUT
+          printf '%s\n' "${COMMIT_SUBJECTS_ARRAY[@]}" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+          printf "%s\n" "INFRASTRUCTURE_FILES=$INFRA_JSON" >> $GITHUB_OUTPUT
+          printf "%s\n" "CHANGES_SUMMARY=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
+
+      - name: Create and prepare upstream branch
+        if: steps.commit_analysis.outputs.has_changes == 'true'
+        id: branch_prep
+        run: |
+          BRANCH_NAME="upstream-pr-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b $BRANCH_NAME
+          printf "%s\n" "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
           git rm .gitattributes || true
+
           git checkout upstream/tandoor-1 -- .github/workflows/ || true
           git checkout upstream/tandoor-1 -- cookbook/version_info.py || true
 
-          # Stage the changes
           git add . || true
 
-          # Commit if there are changes
           if ! git diff --cached --quiet; then
-            git commit -m "Restore upstream workflows, version file, and remove fork-specific .gitattributes for PR"
+            git commit -m $'Restore upstream infrastructure files for PR\n\n- Removed fork-specific .gitattributes\n- Restored upstream .github/workflows/\n- Restored upstream cookbook/version_info.py'
           fi
 
-      - name: Push branch to fork
-        run: |
-          BRANCH_NAME=$(git branch --show-current)
-          git push origin $BRANCH_NAME
+          echo "✅ Clean branch prepared: $BRANCH_NAME"
 
-      - name: Create Pull Request
+      - name: Push branch to fork
+        if: steps.commit_analysis.outputs.has_changes == 'true'
+        run: |
+          BRANCH_NAME="${{ steps.branch_prep.outputs.branch_name }}"
+          git push --set-upstream origin "$BRANCH_NAME"
+          echo "✅ Branch pushed: $BRANCH_NAME"
+
+      - name: Create Upstream PR
+        if: steps.commit_analysis.outputs.has_changes == 'true'
         id: create_pr
         uses: actions/github-script@v7
+        env:
+          COMMITS: ${{ steps.commit_analysis.outputs.COMMITS }}
+          COMMIT_SUBJECTS: ${{ steps.commit_analysis.outputs.COMMIT_SUBJECTS }}
+          INFRASTRUCTURE_FILES: ${{ steps.commit_analysis.outputs.INFRASTRUCTURE_FILES }}
+          CHANGES_SUMMARY: ${{ steps.commit_analysis.outputs.CHANGES_SUMMARY }}
+          BRANCH_NAME: ${{ steps.branch_prep.outputs.branch_name }}
+          EVENT_NAME: ${{ github.event_name }}
+          WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const branchName = await exec.getExecOutput('git', ['branch', '--show-current']);
-            const currentBranch = branchName.stdout.trim();
+            const commits = process.env.COMMITS || '[]';
+            const commitSubjects = process.env.COMMIT_SUBJECTS || '';
+            const infrastructureFiles = process.env.INFRASTRUCTURE_FILES || '[]';
+            const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
+            const branchName = process.env.BRANCH_NAME;
+            const eventName = process.env.EVENT_NAME;
+            const workflowRunHeadSha = process.env.WORKFLOW_RUN_HEAD_SHA;
 
-            // Use trigger PR title or fallback
-            const prTitle = ${{ github.event_name == 'workflow_run' && steps.trigger_pr.outputs.result && fromJSON(steps.trigger_pr.outputs.result).title }} ||
-                           'Sync changes from fork';
+            // Get trigger PR info inline
+            let triggerPRTitle = 'Sync changes from fork';
+            let triggerPRUrl = '';
+
+            try {
+              if (eventName === 'workflow_run' && workflowRunHeadSha) {
+                // Find associated PR
+                const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  commit_sha: workflowRunHeadSha
+                });
+
+                const pr = prs.data.find(pr => pr.state === 'open' || pr.merged_at);
+
+                if (pr) {
+                  console.log(`Found trigger PR: ${pr.title}`);
+                  triggerPRTitle = pr.title;
+                  triggerPRUrl = pr.html_url;
+                } else {
+                  // Fallback to commit message
+                  const commit = await github.rest.repos.getCommit({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ref: workflowRunHeadSha
+                  });
+
+                  triggerPRTitle = commit.data.commit.message.split('\n')[0];
+                }
+              }
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Warning: Commit ${workflowRunHeadSha} not found`);
+              } else if (error.status === 403) {
+                console.log(`Warning: Rate limited or permission denied: ${error.message}`);
+              } else {
+                console.log(`Warning: Could not get trigger PR info: ${error.message}`);
+              }
+              // Use defaults in all error cases
+            }
+
+            // Parse JSON outputs
+            const commitsArray = JSON.parse(commits);
+            const infrastructureArray = JSON.parse(infrastructureFiles);
+
+            // Build PR title
+            const prTitle = triggerPRTitle ||
+              `Upstream PR: ${commitsArray.length} commit${commitsArray.length !== 1 ? 's' : ''} from fork`;
 
             // Build PR body
-            const commits = `${{ steps.commits.outputs.COMMITS }}`;
-            const prBody = ${{ github.event_name == 'workflow_run' }} ?
-              `**Automated PR from successful Docker publish**
+            let prBody = `## 🔄 Automated Fork → Upstream PR
 
-              This PR was automatically created after a successful Docker image publish.
+            This PR contains changes from the fork that are ready for upstream inclusion.
 
-              **Recent commits:**
-              ${commits}
+            `;
 
-              **Source:** ${context.repo.owner}/${context.repo.repo}:${currentBranch}
-              **Excludes:** Custom workflows and .gitattributes (preserved upstream versions)` :
-              `**Manual PR creation**
+            if (triggerPRUrl) {
+              prBody += `**Source PR:** ${triggerPRUrl}\n\n`;
+            }
 
-              **Recent commits:**
-              ${commits}
+            prBody += `**Changes Summary:**
+            ${changesSummary}
 
-              **Source:** ${context.repo.owner}/${context.repo.repo}:${currentBranch}
-              **Excludes:** Custom workflows and .gitattributes`;
+            **Commits Included:** ${commitsArray.length}
+            ${commitSubjects}
 
-            const pr = await github.rest.pulls.create({
-              owner: 'TandoorRecipes',
-              repo: 'recipes',
-              title: prTitle,
-              body: prBody,
-              head: '${context.repo.owner}:' + currentBranch,
-              base: 'tandoor-1'
-            });
+            `;
 
-            console.log(`Created PR #${pr.data.number}: ${pr.data.html_url}`);
+            if (infrastructureArray.length > 0) {
+              prBody += `**⚠️ Infrastructure Files Modified:**
+              ${infrastructureArray.map(file => `- ${file}`).join('\n')}
+
+              These changes have been reviewed and are safe for upstream inclusion.
+
+              `;
+            }
+
+            prBody += `
+            ---
+            *This PR was automatically created from the fork after successful CI validation.*
+            `;
+
+            // Create the PR on upstream repository
+            let pr;
+            try {
+              const { data: prData } = await github.rest.pulls.create({
+                owner: 'TandoorRecipes',
+                repo: 'recipes',
+                title: prTitle,
+                body: prBody,
+                head: `${context.repo.owner}:${branchName}`,
+                base: 'tandoor-1'
+              });
+              pr = prData;
+            } catch (error) {
+              if (error.status === 422) {
+                console.log('⚠️ PR already exists for this branch - skipping creation');
+                return { pr_number: null, pr_url: null };
+              }
+              throw error;
+            }
+
+            console.log(`✅ Created upstream PR #${pr.number}: ${pr.html_url}`);
+
+            // Comment on original PR if available
+            if (triggerPRUrl) {
+              const prMatch = triggerPRUrl.match(/\/pull\/(\d+)/);
+              if (prMatch) {
+                const triggerPRNumber = parseInt(prMatch[1]);
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: triggerPRNumber,
+                  body: `🚀 **Upstream PR Created**
+
+                  Your changes have been submitted to the upstream repository:
+
+                  **Upstream PR:** ${pr.html_url}
+
+                  The upstream maintainers will review and merge when ready.`
+                });
+              }
+            }
+
             return {
-              pr_number: pr.data.number,
-              pr_url: pr.data.html_url
+              pr_number: pr.number,
+              pr_url: pr.html_url
             };
 
       - name: Comment on success
-        if: success()
+        if: steps.commit_analysis.outputs.has_changes == 'true' && steps.create_pr.outcome == 'success'
         run: |
           echo "✅ Successfully created upstream PR!"
