@@ -9,7 +9,6 @@
                 </div>
             </div>
             <div class="card-body p-1 p-md-3">
-
                 <div class="row no-gutter">
                     <div class="col-12 m-0" :class="{ 'p-0': !header }">
                         <table class="table table-sm mb-0">
@@ -27,6 +26,7 @@
                                         :key="i.id"
                                         :detailed="detailed"
                                         @checked-state-changed="$emit('checked-state-changed', $event)"
+                                        :settings="settings"
                                     />
                                 </template>
                             </template>
@@ -41,18 +41,18 @@
 
 <script>
 import Vue from "vue"
-import {BootstrapVue} from "bootstrap-vue"
+import { BootstrapVue } from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import IngredientComponent from "@/components/IngredientComponent"
-import {ApiMixin} from "@/utils/utils"
+import { ApiMixin, getUserPreference } from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientCard",
     mixins: [ApiMixin],
-    components: {IngredientComponent},
+    components: { IngredientComponent },
     props: {
         steps: {
             type: Array,
@@ -66,23 +66,20 @@ export default {
         detailed: {type: Boolean, default: true},
         header: {type: Boolean, default: false},
         recipe_list: {type: Number, default: undefined},
+        substitutes: { type: Boolean, default: false },
     },
     data() {
         return {
-
+            settings: {
+                ingredient_context: false,
+            },
         }
     },
-    computed: {
-
-    },
-    watch: {
-
-    },
+    computed: {},
+    watch: {},
     mounted() {
-
+        this.settings = getUserPreference()
     },
-    methods: {
-
-    },
+    methods: {},
 }
 </script>

@@ -2,9 +2,10 @@ name: "Code scanning - action"
 
 on:
   push:
+    branches: [disabled]
   pull_request:
-  schedule:
-    - cron: '0 13 * * 2'
+    branches: [disabled]
+
 
 jobs:
   CodeQL-Build:

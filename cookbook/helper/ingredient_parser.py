@@ -58,8 +58,7 @@ class IngredientParser:
     def parse_fraction(self, x):
         if len(x) == 1 and 'fraction' in unicodedata.decomposition(x):
             frac_split = unicodedata.decomposition(x[-1:]).split()
-            return (float((frac_split[1]).replace('003', ''))
-                    / float((frac_split[3]).replace('003', '')))
+            return (float((frac_split[1]).replace('003', '')) / float((frac_split[3]).replace('003', '')))
         else:
             frac_split = x.split('/')
             if not len(frac_split) == 2:
@@ -78,12 +77,7 @@ class IngredientParser:
 
         did_check_frac = False
         end = 0
-        while (end < len(x) and (x[end] in string.digits
-                                 or (
-            (x[end] == '.' or x[end] == ',' or x[end] == '/')
-            and end + 1 < len(x)
-            and x[end + 1] in string.digits
-        ))):
+        while (end < len(x) and (x[end] in string.digits or ((x[end] == '.' or x[end] == ',' or x[end] == '/') and end + 1 < len(x) and x[end + 1] in string.digits))):
             end += 1
         if end > 0:
             if "/" in x[:end]:
@@ -107,8 +101,9 @@ class IngredientParser:
         if unit is not None and unit.strip() == '':
             unit = None
 
-        if unit is not None and (unit.startswith('(') or unit.startswith(
-                '-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
+        if unit is not None and (
+            unit.startswith('(') or unit.startswith('-')
+        ):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
             unit = None
             note = x
         return amount, unit, note

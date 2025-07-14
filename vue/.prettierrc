@@ -1,0 +1,12 @@
+{
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": false,
+    "experimentalTernaries": true,
+    "printWidth": 179,
+    "bracketSpacing": true,
+    "singleAttributePerLine": false
+  }
+}
