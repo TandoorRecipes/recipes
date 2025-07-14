@@ -75,10 +75,11 @@ jobs:
             printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
             echo "❌ Working branch is behind upstream - manual sync required"
           else
-            # Diverged: check if only infrastructure files differ
+
+            # Diverged: check if only infrastructure files are ahead in upstream
             printf "%s\n" "status=diverged" >> $GITHUB_OUTPUT
             printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
-            echo "❌ Branches have diverged - checking if only infrastructure files differ"
+            echo "❌ Branches have diverged - checking if only infrastructure files are ahead in upstream"
 
             # Helper function to check if file is infrastructure
             is_infrastructure_file() {
@@ -89,22 +90,23 @@ jobs:
               esac
             }
 
-            CHANGED_FILES=$(git diff upstream/tandoor-1..HEAD --name-only)
-            ONLY_INFRA=true
-            for file in $CHANGED_FILES; do
+            # Only consider files that are ahead in upstream (i.e., touched by commits in upstream not in working)
+            UPSTREAM_AHEAD_FILES=$(git log --name-only --pretty=format: refs/remotes/upstream/tandoor-1 ^working | grep . | sort -u)
+            ONLY_INFRA_AHEAD=true
+            for file in $UPSTREAM_AHEAD_FILES; do
               if ! is_infrastructure_file "$file"; then
-                ONLY_INFRA=false
+                ONLY_INFRA_AHEAD=false
                 break
               fi
             done
 
-            if [ "$ONLY_INFRA" = true ]; then
-              echo "⚠️ Divergence is only in infrastructure files. Skipping error."
+            if [ "$ONLY_INFRA_AHEAD" = true ]; then
+              echo "⚠️ Divergence is only in infrastructure files (ahead in upstream). Skipping error."
               printf "%s\n" "infra_only_divergence=true" >> $GITHUB_OUTPUT
               exit 0
             fi
 
-            # If not only infra, fail as before
+            # If not only infra ahead, fail as before
             # Get upstream commits for guidance
             UPSTREAM_COMMITS=$(git log HEAD..upstream/tandoor-1 --oneline | wc -l)
             WORKING_COMMITS=$(git log upstream/tandoor-1..HEAD --oneline | wc -l)
