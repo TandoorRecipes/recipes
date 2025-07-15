@@ -33,6 +33,7 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
             nav_sticky: true,
             ingredient_decimals: 2,
             comments: true,
+            ingredient_context: false,
             shopping_auto_sync: 5,
             mealplan_autoadd_shopping: false,
             food_inherit_default: [],
