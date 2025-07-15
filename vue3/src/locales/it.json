@@ -777,5 +777,22 @@
     "WarnPageLeave": "Ci sono modifiche non salvate che andranno perse. Vuoi comunque abbandonare la pagina?",
     "searchFilterCreatedByHelp": "Ricette create dall'utente selezionato.",
     "searchFilterObjectsAndNotHelp": "Escludi le ricette con tutti i {type} selezionati",
-    "SupermarketCategoryHelp": "Le categorie descrivono le aree dei supermercati (ad esempio, frutta, gastronomia, ...). Possono essere collegate agli alimenti e ai supermercati per la selezione/filtraggio automatici."
+    "SupermarketCategoryHelp": "Le categorie descrivono le aree dei supermercati (ad esempio, frutta, gastronomia, ...). Possono essere collegate agli alimenti e ai supermercati per la selezione/filtraggio automatici.",
+    "Apply": "Applica",
+    "IgnoreAccents": "Ignora accenti",
+    "PartialMatch": "Corrispondenza parziale",
+    "SearchMethod": "Metodo di ricerca",
+    "PartialMatchHelp": "Campi in cui cercare corrispondenze parziali. (ad esempio, la ricerca di \"Pan\" restituirà \"pane\", \"panino\" e \"campana\")",
+    "StartsWithHelp": "ld per cercare le corrispondenze all'inizio delle parole. (ad esempio, la ricerca di 'sa' restituirà 'salame' e 'sardina')",
+    "StartsWith": "Inizia con",
+    "SearchSettingsOverview": "Scegli una delle preimpostazioni consigliate o modifica tu stesso le impostazioni qui sotto.",
+    "FulltextHelp": "Campi per la ricerca full text.  Nota: i metodi di ricerca 'web', 'phrase', e 'raw' funzionano solo con i campi fulltext.",
+    "TrigramThresholdHelp": "Controlla quanti errori di ortografia vengono ignorati quando si utilizza la ricerca fuzzy. Valori più bassi ignorano più differenze/producono più risultati.",
+    "IgnoreAccentsHelp": "Ignora gli accenti durante la ricerca nei campi specificati. ",
+    "Fulltext": "Fulltext",
+    "FuzzySearchHelp": "Utilizza la ricerca fuzzy per trovare voci anche quando ci sono differenze nel modo in cui la parola è scritta.",
+    "Fuzzy": "Fuzzy",
+    "PrecisionSearchHelp": "Preimpostazione che restituisce solo voci con ortografia corretta. ",
+    "SearchSettingsWarning": "Di solito non è necessario modificare le impostazioni di ricerca. Queste impostazioni sono disponibili solo per utenti esperti con esigenze specifiche. ",
+    "TrigramThreshold": "Soglia del trigramma"
 }
