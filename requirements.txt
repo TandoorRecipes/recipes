@@ -41,7 +41,7 @@ python-ldap==3.4.4
 django-auth-ldap==4.6.0
 pyppeteer==2.0.0
 pytubefix==9.2.2
-aiohttp==3.10.11
+aiohttp==3.12.14
 inflection==0.5.1
 redis==5.2.1
 hiredis==3.2.1
