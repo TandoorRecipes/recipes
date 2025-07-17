@@ -60,14 +60,15 @@ class CookBookApp(Integration):
                 food=f, unit=u, amount=ingredient.get('amount', None), note=ingredient.get('note', None), original_text=ingredient.get('original_text', None), space=self.request.space,
             ))
 
-        if len(images) > 0:
-            try:
-                url = images[0]
-                if validate_import_url(url):
+        try:
+            for url in images:
+                # import the first valid image which is not cookbookapp branding
+                if validate_import_url(url) and not url.startswith("https://media.cookbookmanager.com/brand/"):
                     response = requests.get(url)
                     self.import_recipe_image(recipe, BytesIO(response.content))
-            except Exception as e:
-                print('failed to import image ', str(e))
+                    break
+        except Exception as e:
+            print('failed to import image ', str(e))
 
         recipe.save()
         return recipe
