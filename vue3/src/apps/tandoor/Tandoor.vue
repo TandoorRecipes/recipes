@@ -37,58 +37,8 @@
                             <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                         </v-list-item>
                         <v-divider></v-divider>
-                        <v-list-item :to="{ name: 'SettingsPage', params: {} }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-sliders"></v-icon>
-                            </template>
-                            {{ $t('Settings') }}
-                        </v-list-item>
-                        <v-list-item :to="{ name: 'DatabasePage', params: {} }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-folder-tree"></v-icon>
-                            </template>
-                            {{ $t('Database') }}
-                        </v-list-item>
-                        <v-list-item :to="{ name: 'HelpPage' }">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-question"></v-icon>
-                            </template>
-                            {{ $t('Help') }}
-                        </v-list-item>
-                        <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>-->
-                        <!--                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>-->
-                        <template v-if="useUserPreferenceStore().spaces.length > 1">
-                            <v-divider></v-divider>
-                            <v-list-subheader>{{ $t('YourSpaces') }}</v-list-subheader>
-                            <v-list-item v-for="s in useUserPreferenceStore().spaces" :key="s.id" @click="useUserPreferenceStore().switchSpace(s)">
-                                <template #prepend>
-                                    <v-icon icon="fa-solid fa-circle-dot" v-if="s.id == useUserPreferenceStore().activeSpace.id"></v-icon>
-                                    <v-icon icon="fa-solid fa-circle" v-else></v-icon>
-                                </template>
-                                {{ s.name }}
-                            </v-list-item>
-                        </template>
 
-                        <v-divider></v-divider>
-                        <v-list-item link>
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-database"></v-icon>
-                            </template>
-                            {{ $t('Messages') }}
-                            <message-list-dialog></message-list-dialog>
-                        </v-list-item>
-                        <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-shield"></v-icon>
-                            </template>
-                            {{ $t('Admin') }}
-                        </v-list-item>
-                        <v-list-item :href="getDjangoUrl('accounts/logout')" link>
-                            <template #prepend>
-                                <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
-                            </template>
-                            {{ $t('Logout') }}
-                        </v-list-item>
+                        <component :is="item.component" :="item" v-for="item in useNavigation().getUserNavigation()"></component>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -129,17 +79,10 @@
                     <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-list-item prepend-icon="$recipes" title="Home" :to="{ name: 'StartPage', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="$search" :title="$t('Search')" :to="{ name: 'SearchPage' }"></v-list-item>
-                <v-list-item prepend-icon="$mealplan" :title="$t('Meal_Plan')" :to="{ name: 'MealPlanPage', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="$shopping" :title="$t('Shopping_list')" :to="{ name: 'ShoppingListPage', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="$books" :title="$t('Books')" :to="{ name: 'BooksPage', params: {} }"></v-list-item>
-                <v-list-item prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')" :to="{ name: 'DatabasePage' }"></v-list-item>
+                <component :is="item.component" :="item" v-for="item in useNavigation().NAVIGATION_DRAWER"></component>
 
                 <navigation-drawer-context-menu></navigation-drawer-context-menu>
             </v-list>
-
 
             <template #append>
                 <v-list nav>
@@ -170,10 +113,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <v-list-item prepend-icon="fa-solid fa-sliders" :to="{ name: 'SettingsPage', params: {} }" :title="$t('Settings')"></v-list-item>
-                        <v-list-item prepend-icon="fas fa-globe" :title="$t('Import')" :to="{ name: 'RecipeImportPage', params: {} }"></v-list-item>
-                        <v-list-item prepend-icon="fa-solid fa-folder-tree" :to="{ name: 'DatabasePage' }" :title="$t('Database')"></v-list-item>
-                        <v-list-item prepend-icon="$books" :title="$t('Books')" :to="{ name: 'BooksPage', params: {} }"></v-list-item>
+                        <component :is="item.component" :="item" v-for="item in useNavigation().BOTTOM_NAVIGATION"></component>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>
@@ -201,6 +141,8 @@ import {onMounted} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {useMediaQuery} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
+import {NAVIGATION_DRAWER} from "@/utils/navigation.ts";
+import {useNavigation} from "@/composables/useNavigation.ts";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
