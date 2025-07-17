@@ -148,6 +148,7 @@ import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 import {openFdcPage} from "@/utils/fdc.ts";
+import {DateTime} from "luxon";
 
 
 const props = defineProps({
@@ -160,6 +161,13 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Food>('Food', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
 
 // object specific data (for selects/display)
 
@@ -192,8 +200,14 @@ const stopConversionsWatcher = watch(tab, (value, oldValue, onCleanup) => {
     }
 })
 
-
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.propertiesFoodAmount = 100
@@ -201,7 +215,7 @@ onMounted(() => {
         },
         itemDefaults: props.itemDefaults,
     })
-})
+}
 
 
 /**

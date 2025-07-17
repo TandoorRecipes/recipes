@@ -146,7 +146,7 @@
                     <v-list-item prepend-icon="fas fa-sliders" :title="$t('Settings')" :to="{ name: 'SettingsPage', params: {} }"></v-list-item>
                     <v-list-item prepend-icon="fa-solid fa-heart" link>
                         Tandoor {{ useUserPreferenceStore().serverSettings.version }}
-                         <help-dialog></help-dialog>
+                        <help-dialog></help-dialog>
                     </v-list-item>
                 </v-list>
             </template>
@@ -268,6 +268,11 @@ onMounted(() => {
         background-color: #b98766 !important;
     }
 
+    /* vueform/multiselect */
+
+    .multiselect-dropdown {
+        background: #212121 !important;
+    }
 }
 
 .v-theme--light {
@@ -294,10 +299,6 @@ onMounted(() => {
 }
 
 /* vueform/multiselect */
-
-.multiselect-dropdown {
-    background: #212121 !important;
-}
 
 .multiselect-option.is-pointed {
     background: #b98766 !important;

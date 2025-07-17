@@ -30,8 +30,8 @@
 <script setup lang="ts">
 
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
-import {onMounted, PropType} from "vue";
-import {AccessToken} from "@/openapi";
+import {onMounted, PropType, watch} from "vue";
+import {AccessToken, ApiApi} from "@/openapi";
 
 import {DateTime} from "luxon";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
@@ -49,8 +49,22 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<AccessToken>('AccessToken', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
 
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.expires = DateTime.now().plus({year: 1}).toJSDate()
@@ -58,7 +72,7 @@ onMounted(() => {
         },
         itemDefaults: props.itemDefaults
     })
-})
+}
 
 </script>
 

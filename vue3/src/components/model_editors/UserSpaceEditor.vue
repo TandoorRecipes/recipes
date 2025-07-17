@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Group, UserSpace} from "@/openapi";
 
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
@@ -39,10 +39,25 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<UserSpace>('UserSpace', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
+
 // object specific data (for selects/display)
 const groups = ref([] as Group[])
 
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
     const api = new ApiApi()
     api.apiGroupList().then(r => {
         groups.value = r
@@ -51,8 +66,7 @@ onMounted(() => {
     })
 
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
-})
-
+}
 
 </script>
 

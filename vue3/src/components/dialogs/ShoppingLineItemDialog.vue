@@ -6,7 +6,7 @@
             <v-card-text class="pt-0 pr-4 pl-4">
 
                 <v-label>{{ $t('Choose_Category') }}</v-label>
-                <model-select model="SupermarketCategory" @update:modelValue="categoryUpdate"></model-select>
+                <model-select model="SupermarketCategory" @update:modelValue="categoryUpdate" allow-create></model-select>
 
                 <v-row>
                     <v-col class="pr-0">

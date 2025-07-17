@@ -25,7 +25,7 @@
 <script setup lang="ts">
 
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Group, InviteLink} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
@@ -43,11 +43,26 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<InviteLink>('InviteLink', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
+
 // object specific data (for selects/display)
 const groups = ref([] as Group[])
 
 onMounted(() => {
-    const api = new ApiApi()
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
+     const api = new ApiApi()
 
     api.apiGroupList().then(r => {
         groups.value = r
@@ -63,8 +78,7 @@ onMounted(() => {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
-})
-
+}
 </script>
 
 <style scoped>
