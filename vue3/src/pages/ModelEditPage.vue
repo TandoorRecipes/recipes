@@ -32,7 +32,7 @@ const props = defineProps({
     id: {type: String, required: false, default: undefined},
 })
 
-const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
+const editorComponent = shallowRef(getGenericModelFromString(props.model, t).model.editorComponent)
 
 const router = useRouter()
 

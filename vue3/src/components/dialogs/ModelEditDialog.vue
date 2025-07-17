@@ -28,7 +28,7 @@ const props = defineProps({
     closeAfterDelete: {default: true},
 })
 
-const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
+const editorComponent = shallowRef(getGenericModelFromString(props.model, t).model.editorComponent)
 
 const dialog = defineModel<Boolean|undefined>({default: undefined})
 const dialogActivator = (dialog.value !== undefined) ? undefined : props.activator
@@ -40,7 +40,7 @@ const editingObjChangedState = ref(false)
  * because of this watch prop changes and update manually if prop is changed
  */
 watch(() => props.model, () => {
-    editorComponent.value = defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`))
+    editorComponent.value = getGenericModelFromString(props.model, t).model.editorComponent
 })
 
 /**
