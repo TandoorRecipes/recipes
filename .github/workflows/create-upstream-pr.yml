@@ -183,6 +183,21 @@ jobs:
           printf '%s\n' "${COMMIT_SUBJECTS_ARRAY[@]}" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
+      - name: Remove infrastructure files before push
+        if: steps.get_commits.outputs.has_changes == 'true'
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          git checkout "$BRANCH_NAME"
+          git rm -rf .github || echo "No .github to remove"
+          git rm -f cookbook/version_info.py || echo "No version_info.py to remove"
+          git rm -f .gitattributes || echo "No .gitattributes to remove"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove infrastructure files before pushing to fork"
+          else
+            echo "No infrastructure files to remove before push."
+          fi
+
       - name: Push branch to fork
         if: steps.get_commits.outputs.has_changes == 'true'
         run: |
