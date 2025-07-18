@@ -122,12 +122,8 @@ jobs:
               CODE_FILES+=("$file")
             fi
           done <<< "${{ steps.get_files.outputs.changed_files }}"
-          echo "code_files<<EOF" >> $GITHUB_OUTPUT
-          printf "%s\n" "${CODE_FILES[@]}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          echo "infra_files<<EOF" >> $GITHUB_OUTPUT
-          printf "%s\n" "${INFRASTRUCTURE_FILES[@]}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          echo "code_files=$(printf '%s\n' "${CODE_FILES[@]}" | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
+          echo "infra_files=$(printf '%s\n' "${INFRASTRUCTURE_FILES[@]}" | jq -R . | jq -s .)" >> $GITHUB_OUTPUT
           echo "code_count=${#CODE_FILES[@]}" >> $GITHUB_OUTPUT
           echo "infra_count=${#INFRASTRUCTURE_FILES[@]}" >> $GITHUB_OUTPUT
 
