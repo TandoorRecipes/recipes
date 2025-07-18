@@ -72,8 +72,12 @@ jobs:
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
           git checkout "$BRANCH_NAME"
-          git merge --no-edit upstream/tandoor-1 || { echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually."; exit 1; }
-          echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
+          if git merge --no-edit upstream/tandoor-1; then
+            echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
+          else
+            echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually." >&2
+            exit 1
+          fi
 
       - name: Get commit list
         id: get_commits
