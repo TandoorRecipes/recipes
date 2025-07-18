@@ -290,73 +290,21 @@ jobs:
               triggerPRUrl: triggerPRUrl || ''
             };
 
-      - name: Create upstream PR
+
+      - name: Print PR creation instructions
         if: steps.get_commits.outputs.has_changes == 'true'
-        id: create_pr
-        uses: actions/github-script@v7
         env:
+          BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
           PR_TITLE: ${{ steps.build_pr_content.outputs.prTitle }}
           PR_BODY: ${{ steps.build_pr_content.outputs.prBody }}
-          BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const prTitle = process.env.PR_TITLE || '';
-            const prBody = process.env.PR_BODY || '';
-            const branchName = process.env.BRANCH_NAME || '';
-            let pr;
-            try {
-            // Get owner and repo from environment
-            const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/');
-            const { data: prData } = await github.rest.pulls.create({
-                owner: 'TandoorRecipes',
-                repo: 'recipes',
-                title: prTitle,
-                body: prBody,
-                head: `${owner}:${branchName}`,
-                base: 'tandoor-1'
-              });
-              pr = prData;
-            } catch (error) {
-              if (error.status === 422) {
-                console.log('⚠️ PR already exists for this branch - skipping creation');
-                return { pr_number: '', pr_url: '' };
-              }
-              throw error;
-            }
-            console.log(`✅ Created upstream PR #${pr.number}: ${pr.html_url}`);
-            return {
-              pr_number: pr.number ? pr.number.toString() : '',
-              pr_url: pr.html_url || ''
-            };
-
-      - name: Comment on original PR
-        if: steps.get_commits.outputs.has_changes == 'true'
-        uses: actions/github-script@v7
-        env:
-          TRIGGER_PR_URL: ${{ steps.build_pr_content.outputs.triggerPRUrl }}
-          UPSTREAM_PR_URL: ${{ steps.create_pr.outputs.pr_url }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const triggerPRUrl = process.env.TRIGGER_PR_URL;
-            const upstreamPRUrl = process.env.UPSTREAM_PR_URL;
-            // Only comment if both URLs are present
-            if (triggerPRUrl && upstreamPRUrl) {
-              const prMatch = triggerPRUrl.match(/\/pull\/(\d+)/);
-              if (prMatch) {
-                const triggerPRNumber = parseInt(prMatch[1]);
-                // Get owner and repo from environment
-                const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/');
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: triggerPRNumber,
-                  body: `🚀 **Upstream PR Created**\n\nYour changes have been submitted to the upstream repository:\n\n**Upstream PR:** ${upstreamPRUrl}\n\nThe upstream maintainers will review and merge when ready.`
-                });
-              }
-            }
-
-      - name: Comment on success
-        if: steps.get_commits.outputs.has_changes == 'true' && steps.create_pr.outcome == 'success'
-        run: echo "✅ Successfully created upstream PR!"
+        run: |
+          echo "✅ Branch pushed: $BRANCH_NAME"
+          echo
+          echo "To create a pull request, open:"
+          echo "https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${{ github.repository_owner }}:$BRANCH_NAME?expand=1"
+          echo
+          echo "Suggested PR title:"
+          echo "$PR_TITLE"
+          echo
+          echo "Suggested PR body:"
+          echo "$PR_BODY"
