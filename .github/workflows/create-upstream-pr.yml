@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Configure git
+      - name: Setup git user
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
@@ -43,105 +43,63 @@ jobs:
             sudo apt-get update && sudo apt-get install -y jq
           fi
 
-      - name: Check branch state and detect divergence
-        id: branch_sync
+      - name: Create upstream PR branch
+        id: create_branch
         run: |
-          # Get current commit SHAs
-          WORKING_SHA=$(git rev-parse HEAD)
-          UPSTREAM_SHA=$(git rev-parse upstream/tandoor-1)
+          BRANCH_NAME="upstream-pr-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH_NAME" || { echo "❌ Failed to create branch $BRANCH_NAME"; exit 1; }
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "✅ Created branch: $BRANCH_NAME"
 
-          echo "Working branch: $WORKING_SHA"
-          echo "Upstream branch: $UPSTREAM_SHA"
+      - name: Merge upstream branch
+        id: merge_upstream
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          git checkout "$BRANCH_NAME"
+          git merge --no-edit upstream/tandoor-1 || { echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually."; exit 1; }
+          echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
 
-          # Check if branches are identical
-          if [ "$WORKING_SHA" = "$UPSTREAM_SHA" ]; then
-            printf "%s\n" "status=up-to-date" >> $GITHUB_OUTPUT
-            printf "%s\n" "manual_resolution_required=false" >> $GITHUB_OUTPUT
-            echo "✅ Branches are up-to-date"
-            exit 0
-          fi
-
-          # Check if working is ahead of upstream
-          if git merge-base --is-ancestor upstream/tandoor-1 HEAD; then
-            printf "%s\n" "status=ahead" >> $GITHUB_OUTPUT
-            printf "%s\n" "manual_resolution_required=false" >> $GITHUB_OUTPUT
-            echo "✅ Working branch is ahead of upstream - can proceed with PR creation"
-            exit 0
-          fi
-
-          # Check if working is behind upstream
-          if git merge-base --is-ancestor HEAD upstream/tandoor-1; then
-            printf "%s\n" "status=behind" >> $GITHUB_OUTPUT
-            printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
-            echo "❌ Working branch is behind upstream - manual sync required"
+      - name: Restore upstream infrastructure files
+        id: restore_infra
+        run: |
+          git rm .gitattributes || echo "ℹ️ .gitattributes not present, skipping removal."
+          git checkout upstream/tandoor-1 -- .github/workflows/ || echo "ℹ️ No workflows to restore."
+          git checkout upstream/tandoor-1 -- cookbook/version_info.py || echo "ℹ️ No version_info.py to restore."
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m $'Restore upstream infrastructure files for PR\n\n- Removed fork-specific .gitattributes\n- Restored upstream .github/workflows/\n- Restored upstream cookbook/version_info.py'
+            echo "✅ Infrastructure files restored and committed."
           else
+            echo "ℹ️ No infrastructure changes to commit."
+          fi
 
-            # Diverged: check if only infrastructure files are ahead in upstream
-            printf "%s\n" "status=diverged" >> $GITHUB_OUTPUT
-            printf "%s\n" "manual_resolution_required=true" >> $GITHUB_OUTPUT
-            echo "❌ Branches have diverged - checking if only infrastructure files are ahead in upstream"
-
-            # Helper function to check if file is infrastructure
-            is_infrastructure_file() {
-              local file="$1"
-              case "$file" in
-                .github|.github/*|cookbook/version*.py|.gitattributes) return 0 ;;
-                *) return 1 ;;
-              esac
-            }
-
-            # Only consider files that are ahead in upstream (i.e., touched by commits in upstream not in working)
-            UPSTREAM_AHEAD_FILES=$(git log --name-only --pretty=format: refs/remotes/upstream/tandoor-1 ^working | grep . | sort -u)
-            ONLY_INFRA_AHEAD=true
-            for file in $UPSTREAM_AHEAD_FILES; do
-              if ! is_infrastructure_file "$file"; then
-                ONLY_INFRA_AHEAD=false
-                break
-              fi
-            done
-
-            if [ "$ONLY_INFRA_AHEAD" = true ]; then
-              echo "⚠️ Divergence is only in infrastructure files (ahead in upstream). Skipping error."
-              printf "%s\n" "infra_only_divergence=true" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-
-            # If not only infra ahead, fail as before
-            # Get upstream commits for guidance
-            UPSTREAM_COMMITS=$(git log HEAD..upstream/tandoor-1 --oneline | wc -l)
-            WORKING_COMMITS=$(git log upstream/tandoor-1..HEAD --oneline | wc -l)
-
-            printf "%s\n" "upstream_commits=$UPSTREAM_COMMITS" >> $GITHUB_OUTPUT
-            printf "%s\n" "working_commits=$WORKING_COMMITS" >> $GITHUB_OUTPUT
-
-            # Create resolution commands as JSON array
-            cat >> $GITHUB_OUTPUT << 'EOF'
-            resolution_commands=["git fetch upstream", "git checkout working", "git rebase upstream/tandoor-1", "git push --force-with-lease"]
-            EOF
-            echo "" >> $GITHUB_OUTPUT
-
-            # Output detailed error message
-            cat << EOL
-            ❌ Manual sync required - automatic rebase too risky
-            Branch Status: $([ "$WORKING_COMMITS" -gt 0 ] && [ "$UPSTREAM_COMMITS" -gt 0 ] && echo "DIVERGED" || echo "BEHIND")
-            Upstream has: $UPSTREAM_COMMITS new commits since last sync
-            Working has: $WORKING_COMMITS new commits
-            🔧 Manual Resolution Required:
-            1. git fetch upstream
-            2. git checkout working
-            3. git rebase upstream/tandoor-1
-            4. Resolve any conflicts manually
-            5. Test your changes against new upstream base
-            6. git push --force-with-lease
-            7. Re-run this workflow
-            💡 Why manual?: Auto-rebase can change commit semantics and create untested code
-            EOL
-            exit 1
-
-      - name: Analyze commits and get trigger info
-        id: commit_analysis
+      - name: Get commit list
+        id: get_commits
         run: |
-          # Helper function to check if file is infrastructure
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          COMMITS_RAW=$(git log upstream/tandoor-1..$BRANCH_NAME --oneline)
+          if [ -z "$COMMITS_RAW" ]; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "✅ No commits to contribute - exiting gracefully"
+            exit 0
+          fi
+          echo "commits_raw<<EOF" >> $GITHUB_OUTPUT
+          printf "%s\n" "$COMMITS_RAW" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+
+      - name: Get changed files
+        id: get_files
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          CHANGED_FILES=$(git diff upstream/tandoor-1..$BRANCH_NAME --name-only)
+          echo "changed_files<<EOF" >> $GITHUB_OUTPUT
+          printf "%s\n" "$CHANGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Filter code and infrastructure files
+        id: filter_files
+        run: |
           is_infrastructure_file() {
             local file="$1"
             case "$file" in
@@ -149,43 +107,55 @@ jobs:
               *) return 1 ;;
             esac
           }
-          COMMITS_RAW=$(git log upstream/tandoor-1..working --oneline)
-          if [ -z "$COMMITS_RAW" ]; then
-            printf "%s\n" "has_changes=false" >> $GITHUB_OUTPUT
-            echo "✅ No commits to contribute - exiting gracefully"
-            exit 0
-          fi
-          CHANGED_FILES=$(git diff upstream/tandoor-1..working --name-only)
-          INFRASTRUCTURE_FILES=()
           CODE_FILES=()
-          for file in $CHANGED_FILES; do
+          INFRASTRUCTURE_FILES=()
+          while IFS= read -r file; do
             if is_infrastructure_file "$file"; then
               INFRASTRUCTURE_FILES+=("$file")
             else
               CODE_FILES+=("$file")
             fi
-          done
+          done <<< "${{ steps.get_files.outputs.changed_files }}"
+          echo "code_files<<EOF" >> $GITHUB_OUTPUT
+          printf "%s\n" "${CODE_FILES[@]}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "infra_files<<EOF" >> $GITHUB_OUTPUT
+          printf "%s\n" "${INFRASTRUCTURE_FILES[@]}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "code_count=${#CODE_FILES[@]}" >> $GITHUB_OUTPUT
+          echo "infra_count=${#INFRASTRUCTURE_FILES[@]}" >> $GITHUB_OUTPUT
 
-          # Check if only infrastructure files changed
-          if [ ${#CODE_FILES[@]} -eq 0 ]; then
-            printf "%s\n" "has_changes=false" >> $GITHUB_OUTPUT
-            echo "✅ Only infrastructure files changed - no PR needed"
-            exit 0
+      - name: Summarize changes
+        id: summarize_changes
+        run: |
+          CODE_COUNT=${{ steps.filter_files.outputs.code_count }}
+          INFRA_COUNT=${{ steps.filter_files.outputs.infra_count }}
+          CHANGES_SUMMARY="Modified $CODE_COUNT code files"
+          if [ "$INFRA_COUNT" -gt 0 ]; then
+            CHANGES_SUMMARY="$CHANGES_SUMMARY and $INFRA_COUNT infrastructure files"
           fi
-          printf "%s\n" "has_changes=true" >> $GITHUB_OUTPUT
-          printf "%s\n" "changed_files_count=${#CODE_FILES[@]}" >> $GITHUB_OUTPUT
+          echo "changes_summary=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
+
+      - name: Prepare commit subjects and JSON
+        id: prepare_commits
+        run: |
+          COMMITS_RAW="${{ steps.get_commits.outputs.commits_raw }}"
+          CODE_FILES=( $(echo "${{ steps.filter_files.outputs.code_files }}") )
           FILTERED_COMMITS_JSON="[]"
           COMMIT_SUBJECTS_ARRAY=()
+          is_infrastructure_file() {
+            local file="$1"
+            case "$file" in
+              .github|.github/*|cookbook/version*.py|.gitattributes) return 0 ;;
+              *) return 1 ;;
+            esac
+          }
           while IFS= read -r commit_line; do
             if [ -z "$commit_line" ]; then continue; fi
             COMMIT_SHA=$(echo "$commit_line" | cut -d' ' -f1)
             COMMIT_SUBJECT=$(echo "$commit_line" | cut -d' ' -f2-)
             COMMIT_SUBJECTS_ARRAY+=("- $COMMIT_SUBJECT")
-
-            # Get files changed in this commit
             mapfile -t COMMIT_FILES < <(git diff-tree --no-commit-id --name-only -r "$COMMIT_SHA")
-
-            # Check if commit has non-infrastructure files
             HAS_CODE_CHANGES=false
             NON_INFRA_FILES=()
             for commit_file in "${COMMIT_FILES[@]}"; do
@@ -195,222 +165,181 @@ jobs:
               fi
             done
             if [ "$HAS_CODE_CHANGES" = "true" ]; then
-              # Use jq to safely build the files array
               FILES_JSON=$(printf '%s\n' "${NON_INFRA_FILES[@]}" | jq -R . | jq -s .)
               COMMIT_JSON=$(jq -n --arg sha "$COMMIT_SHA" --arg subject "$COMMIT_SUBJECT" --argjson files "$FILES_JSON" '{sha: $sha, subject: $subject, files: $files}')
               FILTERED_COMMITS_JSON=$(echo "$FILTERED_COMMITS_JSON" | jq --argjson item "$COMMIT_JSON" '. + [$item]')
             fi
           done <<< "$COMMITS_RAW"
-          if [ ${#INFRASTRUCTURE_FILES[@]} -gt 0 ]; then
-            INFRA_JSON=$(printf '%s\n' "${INFRASTRUCTURE_FILES[@]}" | jq -R . | jq -s .)
-          else
-            INFRA_JSON="[]"
-          fi
-
-          # Create changes summary
-          CODE_COUNT=${#CODE_FILES[@]}
-          INFRA_COUNT=${#INFRASTRUCTURE_FILES[@]}
-          CHANGES_SUMMARY="Modified $CODE_COUNT code files"
-          if [ "$INFRA_COUNT" -gt 0 ]; then
-            CHANGES_SUMMARY="$CHANGES_SUMMARY and $INFRA_COUNT infrastructure files"
-          fi
-          echo 'COMMITS<<EOF' >> $GITHUB_OUTPUT
+          echo 'commits_json<<EOF' >> $GITHUB_OUTPUT
           printf "%s\n" "$FILTERED_COMMITS_JSON" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
-          echo "COMMIT_SUBJECTS<<EOF" >> $GITHUB_OUTPUT
+          echo "commit_subjects<<EOF" >> $GITHUB_OUTPUT
           printf '%s\n' "${COMMIT_SUBJECTS_ARRAY[@]}" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
-          printf "%s\n" "INFRASTRUCTURE_FILES=$INFRA_JSON" >> $GITHUB_OUTPUT
-          printf "%s\n" "CHANGES_SUMMARY=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
-
-
-
-      - name: Create and prepare upstream branch
-        if: steps.commit_analysis.outputs.has_changes == 'true'
-        id: branch_prep
-        run: |
-          # Create timestamped branch from current working branch
-          BRANCH_NAME="upstream-pr-$(date +%Y%m%d-%H%M%S)"
-          git checkout -b $BRANCH_NAME
-          printf "%s\n" "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-
-          # Remove fork-specific merge rules
-          git rm .gitattributes || true
-
-          # Restore upstream versions of infrastructure files
-          git checkout upstream/tandoor-1 -- .github/workflows/ || true
-          git checkout upstream/tandoor-1 -- cookbook/version_info.py || true
-
-          # Stage the changes
-          git add . || true
-
-          # Commit only if there are changes
-          if ! git diff --cached --quiet; then
-            git commit -m $'Restore upstream infrastructure files for PR\n\n- Removed fork-specific .gitattributes\n- Restored upstream .github/workflows/\n- Restored upstream cookbook/version_info.py'
-          fi
-
-          echo "✅ Clean branch prepared: $BRANCH_NAME"
 
       - name: Push branch to fork
-        if: steps.commit_analysis.outputs.has_changes == 'true'
+        if: steps.get_commits.outputs.has_changes == 'true'
         run: |
-          BRANCH_NAME="${{ steps.branch_prep.outputs.branch_name }}"
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
           git push --set-upstream origin "$BRANCH_NAME"
           echo "✅ Branch pushed: $BRANCH_NAME"
 
-      - name: Create Upstream PR
-        if: steps.commit_analysis.outputs.has_changes == 'true'
-        id: create_pr
+      - name: Get trigger PR info
+        if: steps.get_commits.outputs.has_changes == 'true'
+        id: get_trigger_pr
         uses: actions/github-script@v7
         env:
-          COMMITS: ${{ steps.commit_analysis.outputs.COMMITS }}
-          COMMIT_SUBJECTS: ${{ steps.commit_analysis.outputs.COMMIT_SUBJECTS }}
-          INFRASTRUCTURE_FILES: ${{ steps.commit_analysis.outputs.INFRASTRUCTURE_FILES }}
-          CHANGES_SUMMARY: ${{ steps.commit_analysis.outputs.CHANGES_SUMMARY }}
-          BRANCH_NAME: ${{ steps.branch_prep.outputs.branch_name }}
           EVENT_NAME: ${{ github.event_name }}
           WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commits = process.env.COMMITS || '[]';
-            const commitSubjects = process.env.COMMIT_SUBJECTS || '';
-            const infrastructureFiles = process.env.INFRASTRUCTURE_FILES || '[]';
-            const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
-            const branchName = process.env.BRANCH_NAME;
-            const eventName = process.env.EVENT_NAME;
-            const workflowRunHeadSha = process.env.WORKFLOW_RUN_HEAD_SHA;
-
-            // Get trigger PR info inline
             let triggerPRTitle = 'Sync changes from fork';
             let triggerPRUrl = '';
-
-            try {
-              if (eventName === 'workflow_run' && workflowRunHeadSha) {
-                // Find associated PR
+            // Get owner and repo from environment
+            const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/');
+            const eventName = process.env.EVENT_NAME;
+            const workflowRunHeadSha = process.env.WORKFLOW_RUN_HEAD_SHA;
+            if (eventName === 'workflow_run' && workflowRunHeadSha) {
+              try {
                 const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
+                  owner,
+                  repo,
                   commit_sha: workflowRunHeadSha
                 });
-
                 const pr = prs.data.find(pr => pr.state === 'open' || pr.merged_at);
-
                 if (pr) {
-                  console.log(`Found trigger PR: ${pr.title}`);
                   triggerPRTitle = pr.title;
                   triggerPRUrl = pr.html_url;
                 } else {
-                  // Fallback to commit message
                   const commit = await github.rest.repos.getCommit({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
+                    owner,
+                    repo,
                     ref: workflowRunHeadSha
                   });
-
                   triggerPRTitle = commit.data.commit.message.split('\n')[0];
                 }
+              } catch (error) {
+                if (error.status === 404) {
+                  console.log(`Warning: Commit ${workflowRunHeadSha} not found`);
+                } else if (error.status === 403) {
+                  console.log(`Warning: Rate limited or permission denied: ${error.message}`);
+                } else {
+                  console.log(`Warning: Could not get trigger PR info: ${error.message}`);
+                }
               }
-            } catch (error) {
-              if (error.status === 404) {
-                console.log(`Warning: Commit ${workflowRunHeadSha} not found`);
-              } else if (error.status === 403) {
-                console.log(`Warning: Rate limited or permission denied: ${error.message}`);
-              } else {
-                console.log(`Warning: Could not get trigger PR info: ${error.message}`);
-              }
-              // Use defaults in all error cases
             }
+            return {
+              triggerPRTitle: triggerPRTitle || '',
+              triggerPRUrl: triggerPRUrl || ''
+            };
 
-            // Parse JSON outputs
+      - name: Build PR content
+        if: steps.get_commits.outputs.has_changes == 'true'
+        id: build_pr_content
+        uses: actions/github-script@v7
+        env:
+          COMMITS_JSON: ${{ steps.prepare_commits.outputs.commits_json }}
+          COMMIT_SUBJECTS: ${{ steps.prepare_commits.outputs.commit_subjects }}
+          INFRASTRUCTURE_FILES: ${{ steps.filter_files.outputs.infra_files }}
+          CHANGES_SUMMARY: ${{ steps.summarize_changes.outputs.changes_summary }}
+          TRIGGER_PR_TITLE: ${{ steps.get_trigger_pr.outputs.triggerPRTitle }}
+          TRIGGER_PR_URL: ${{ steps.get_trigger_pr.outputs.triggerPRUrl }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const commits = process.env.COMMITS_JSON || '[]';
+            const commitSubjects = process.env.COMMIT_SUBJECTS || '';
+            const infrastructureFiles = process.env.INFRASTRUCTURE_FILES || '[]';
+            const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
+            const triggerPRTitle = process.env.TRIGGER_PR_TITLE || 'Sync changes from fork';
+            const triggerPRUrl = process.env.TRIGGER_PR_URL || '';
             const commitsArray = JSON.parse(commits);
             const infrastructureArray = JSON.parse(infrastructureFiles);
-
-            // Build PR title
             const prTitle = triggerPRTitle ||
               `Upstream PR: ${commitsArray.length} commit${commitsArray.length !== 1 ? 's' : ''} from fork`;
-
-            // Build PR body
-            let prBody = `## 🔄 Automated Fork → Upstream PR
-
-            This PR contains changes from the fork that are ready for upstream inclusion.
-
-            `;
-
+            let prBody = `## 🔄 Automated Fork → Upstream PR\n\nThis PR contains changes from the fork that are ready for upstream inclusion.\n\n`;
             if (triggerPRUrl) {
               prBody += `**Source PR:** ${triggerPRUrl}\n\n`;
             }
-
-            prBody += `**Changes Summary:**
-            ${changesSummary}
-
-            **Commits Included:** ${commitsArray.length}
-            ${commitSubjects}
-
-            `;
-
+            prBody += `**Changes Summary:**\n${changesSummary}\n\n**Commits Included:** ${commitsArray.length}\n${commitSubjects}\n\n`;
             if (infrastructureArray.length > 0) {
-              prBody += `**⚠️ Infrastructure Files Modified:**
-              ${infrastructureArray.map(file => `- ${file}`).join('\n')}
-
-              These changes have been reviewed and are safe for upstream inclusion.
-
-              `;
+              prBody += `**⚠️ Infrastructure Files Modified:**\n${infrastructureArray.map(file => `- ${file}`).join('\n')}\n\nThese changes have been reviewed and are safe for upstream inclusion.\n\n`;
             }
+            prBody += `\n---\n*This PR was automatically created from the fork after successful CI validation.*\n`;
+            return {
+              prTitle: prTitle || '',
+              prBody: prBody || '',
+              triggerPRUrl: triggerPRUrl || ''
+            };
 
-            prBody += `
-            ---
-            *This PR was automatically created from the fork after successful CI validation.*
-            `;
-
-            // Create the PR on upstream repository
+      - name: Create upstream PR
+        if: steps.get_commits.outputs.has_changes == 'true'
+        id: create_pr
+        uses: actions/github-script@v7
+        env:
+          PR_TITLE: ${{ steps.build_pr_content.outputs.prTitle }}
+          PR_BODY: ${{ steps.build_pr_content.outputs.prBody }}
+          BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prTitle = process.env.PR_TITLE || '';
+            const prBody = process.env.PR_BODY || '';
+            const branchName = process.env.BRANCH_NAME || '';
             let pr;
             try {
-              const { data: prData } = await github.rest.pulls.create({
+            // Get owner and repo from environment
+            const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/');
+            const { data: prData } = await github.rest.pulls.create({
                 owner: 'TandoorRecipes',
                 repo: 'recipes',
                 title: prTitle,
                 body: prBody,
-                head: `${context.repo.owner}:${branchName}`,
+                head: `${owner}:${branchName}`,
                 base: 'tandoor-1'
               });
               pr = prData;
             } catch (error) {
               if (error.status === 422) {
                 console.log('⚠️ PR already exists for this branch - skipping creation');
-                return { pr_number: null, pr_url: null };
+                return { pr_number: '', pr_url: '' };
               }
               throw error;
             }
-
             console.log(`✅ Created upstream PR #${pr.number}: ${pr.html_url}`);
+            return {
+              pr_number: pr.number ? pr.number.toString() : '',
+              pr_url: pr.html_url || ''
+            };
 
-            // Comment on original PR if available
-            if (triggerPRUrl) {
+      - name: Comment on original PR
+        if: steps.get_commits.outputs.has_changes == 'true'
+        uses: actions/github-script@v7
+        env:
+          TRIGGER_PR_URL: ${{ steps.build_pr_content.outputs.triggerPRUrl }}
+          UPSTREAM_PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const triggerPRUrl = process.env.TRIGGER_PR_URL;
+            const upstreamPRUrl = process.env.UPSTREAM_PR_URL;
+            // Only comment if both URLs are present
+            if (triggerPRUrl && upstreamPRUrl) {
               const prMatch = triggerPRUrl.match(/\/pull\/(\d+)/);
               if (prMatch) {
                 const triggerPRNumber = parseInt(prMatch[1]);
+                // Get owner and repo from environment
+                const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/');
                 await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
+                  owner,
+                  repo,
                   issue_number: triggerPRNumber,
-                  body: `🚀 **Upstream PR Created**
-
-                  Your changes have been submitted to the upstream repository:
-
-                  **Upstream PR:** ${pr.html_url}
-
-                  The upstream maintainers will review and merge when ready.`
+                  body: `🚀 **Upstream PR Created**\n\nYour changes have been submitted to the upstream repository:\n\n**Upstream PR:** ${upstreamPRUrl}\n\nThe upstream maintainers will review and merge when ready.`
                 });
               }
             }
 
-            return {
-              pr_number: pr.number,
-              pr_url: pr.html_url
-            };
-
       - name: Comment on success
-        if: steps.commit_analysis.outputs.has_changes == 'true' && steps.create_pr.outcome == 'success'
-        run: |
-          echo "✅ Successfully created upstream PR!"
+        if: steps.get_commits.outputs.has_changes == 'true' && steps.create_pr.outcome == 'success'
+        run: echo "✅ Successfully created upstream PR!"
