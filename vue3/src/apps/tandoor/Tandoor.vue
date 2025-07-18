@@ -38,7 +38,7 @@
                         </v-list-item>
                         <v-divider></v-divider>
 
-                        <component :is="item.component" :="item" v-for="item in useNavigation().getUserNavigation()"></component>
+                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -79,7 +79,7 @@
                     <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                 </v-list-item>
                 <v-divider></v-divider>
-                <component :is="item.component" :="item" v-for="item in useNavigation().NAVIGATION_DRAWER"></component>
+                <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
 
                 <navigation-drawer-context-menu></navigation-drawer-context-menu>
             </v-list>
@@ -113,7 +113,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <component :is="item.component" :="item" v-for="item in useNavigation().BOTTOM_NAVIGATION"></component>
+                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>

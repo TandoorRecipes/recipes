@@ -2,6 +2,8 @@ import {useI18n} from "vue-i18n";
 import {VDivider, VListItem} from "vuetify/components";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
+import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import {plugin} from "@/plugins/open_data_plugin/plugin.ts";
 
 /**
  * manages configuration and loading of navigation entries for tandoor main app and plugins
@@ -9,27 +11,46 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 export function useNavigation() {
     const {t} = useI18n()
 
-    let NAVIGATION_DRAWER = [
-        {component: VListItem, prependIcon: '$recipes', title: 'Home', to: {name: 'StartPage', params: {}}},
-        {component: VListItem, prependIcon: '$search', title: t('Search'), to: {name: 'SearchPage', params: {}}},
-        {component: VListItem, prependIcon: '$mealplan', title: t('Meal_Plan'), to: {name: 'MealPlanPage', params: {}}},
-        {component: VListItem, prependIcon: '$shopping', title: t('Shopping_list'), to: {name: 'ShoppingListPage', params: {}}},
-        {component: VListItem, prependIcon: 'fas fa-globe', title: t('Import'), to: {name: 'RecipeImportPage', params: {}}},
-        {component: VListItem, prependIcon: '$books', title: t('Books'), to: {name: 'BooksPage', params: {}}},
-        {component: VListItem, prependIcon: 'fa-solid fa-folder-tree', title: t('DatabasePage'), to: {name: 'SearchPage', params: {}}},
-    ]
+    function getNavigationDrawer() {
+        let navigation = [
+            {component: VListItem, prependIcon: '$recipes', title: 'Home', to: {name: 'StartPage', params: {}}},
+            {component: VListItem, prependIcon: '$search', title: t('Search'), to: {name: 'SearchPage', params: {}}},
+            {component: VListItem, prependIcon: '$mealplan', title: t('Meal_Plan'), to: {name: 'MealPlanPage', params: {}}},
+            {component: VListItem, prependIcon: '$shopping', title: t('Shopping_list'), to: {name: 'ShoppingListPage', params: {}}},
+            {component: VListItem, prependIcon: 'fas fa-globe', title: t('Import'), to: {name: 'RecipeImportPage', params: {}}},
+            {component: VListItem, prependIcon: '$books', title: t('Books'), to: {name: 'BooksPage', params: {}}},
+            {component: VListItem, prependIcon: 'fa-solid fa-folder-tree', title: t('Database'), to: {name: 'DatabasePage', params: {}}},
+        ]
 
-    let BOTTOM_NAVIGATION = [
-        {component: VListItem, prependIcon: 'fa-solid fa-sliders', title: t('Settings'), to: {name: 'SettingsPage', params: {}}},
-        {component: VListItem, prependIcon: 'fas fa-globe', title: t('Import'), to: {name: 'RecipeImportPage', params: {}}},
-        {component: VListItem, prependIcon: 'fa-solid fa-folder-tree', title: t('Database'), to: {name: 'DatabasePage', params: {}}},
-        {component: VListItem, prependIcon: '$books', title: t('Books'), to: {name: 'BooksPage', params: {}}},
-    ]
+        TANDOOR_PLUGINS.forEach(plugin => {
+            plugin.navigationDrawer.forEach(navEntry => {
+                let navEntryCopy = Object.assign({}, navEntry)
+                navEntryCopy.title = t(navEntryCopy.title)
+                navigation.push(navEntryCopy)
+            })
+        })
 
-    let USER_NAVIGATION = [
-        {component: VListItem, prependIcon: 'fa-solid fa-sliders', title: t('Settings'), to: {name: 'SettingsPage', params: {}}},
-        {component: VListItem, prependIcon: 'fa-solid fa-question', title: t('Settings'), to: {name: 'HelpPage', params: {}}},
-    ]
+        return navigation
+    }
+
+    function getBottomNavigation() {
+        let navigation = [
+            {component: VListItem, prependIcon: 'fa-solid fa-sliders', title: t('Settings'), to: {name: 'SettingsPage', params: {}}},
+            {component: VListItem, prependIcon: 'fas fa-globe', title: t('Import'), to: {name: 'RecipeImportPage', params: {}}},
+            {component: VListItem, prependIcon: 'fa-solid fa-folder-tree', title: t('Database'), to: {name: 'DatabasePage', params: {}}},
+            {component: VListItem, prependIcon: '$books', title: t('Books'), to: {name: 'BooksPage', params: {}}},
+        ]
+
+        TANDOOR_PLUGINS.forEach(plugin => {
+            plugin.bottomNavigation.forEach(navEntry => {
+                let navEntryCopy = Object.assign({}, navEntry)
+                navEntryCopy.title = t(navEntryCopy.title)
+                navigation.push(navEntryCopy)
+            })
+        })
+
+        return navigation
+    }
 
     function getUserNavigation() {
         let navigation = []
@@ -56,26 +77,18 @@ export function useNavigation() {
             navigation.push({component: VDivider})
         }
 
+        TANDOOR_PLUGINS.forEach(plugin => {
+            plugin.userNavigation.forEach(navEntry => {
+                let navEntryCopy = Object.assign({}, navEntry)
+                navEntryCopy.title = t(navEntryCopy.title)
+                navigation.push(navEntryCopy)
+            })
+        })
+
         navigation.push({component: VListItem, prependIcon: 'fa-solid fa-arrow-right-from-bracket', title: t('Logout'), href: useDjangoUrls().getDjangoUrl('accounts/logout')})
 
         return navigation
     }
 
-    return {NAVIGATION_DRAWER, BOTTOM_NAVIGATION, USER_NAVIGATION, getUserNavigation}
+    return {getNavigationDrawer, getBottomNavigation, getUserNavigation}
 }
-
-
-//
-
-// <v-list-item :href="getDjangoUrl('admin')" target="_blank" v-if="useUserPreferenceStore().userSettings.user.isSuperuser">
-//     <template #prepend>
-//         <v-icon icon="fa-solid fa-shield"></v-icon>
-//     </template>
-//     {{ $t('Admin') }}
-// </v-list-item>
-// <v-list-item :href="getDjangoUrl('accounts/logout')" link>
-//     <template #prepend>
-//         <v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon>
-//     </template>
-//     {{ $t('Logout') }}
-// </v-list-item>
