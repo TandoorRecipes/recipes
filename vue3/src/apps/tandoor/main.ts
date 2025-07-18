@@ -1,5 +1,5 @@
 import {createApp} from "vue";
-import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 // @ts-ignore
 import App from './Tandoor.vue'
@@ -12,8 +12,9 @@ import { createRulesPlugin } from 'vuetify/labs/rules'
 
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
+import {TandoorPlugin} from "@/types/Plugins.ts";
 
-const routes = [
+let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
@@ -54,6 +55,13 @@ const routes = [
 
     {path: '/space-setup', component: () => import("@/pages/SpaceSetupPage.vue"), name: 'SpaceSetupPage'},
 ]
+
+const pluginModules = import.meta.glob('@/plugins/*/plugin.ts', { eager: true })
+const tandoorPlugins = [] as TandoorPlugin[]
+Object.values(pluginModules).forEach(module => {
+    tandoorPlugins.push(module.plugin)
+    routes = routes.concat(module.plugin.routes)
+})
 
 const router = createRouter({
     history: createWebHistory(),

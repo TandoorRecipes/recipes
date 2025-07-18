@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, PropType, ref} from "vue";
+import {computed, onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Supermarket, SupermarketCategory, SupermarketCategoryRelation} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -120,6 +120,14 @@ const props = defineProps({
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Supermarket>('Supermarket', emit)
+
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
 
 // object specific data (for selects/display)
 const tab = ref("supermarket")
@@ -148,6 +156,13 @@ const unusedSupermarketCategories = computed(() => {
 })
 
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
     const api = new ApiApi()
 
     api.apiSupermarketCategoryList({pageSize: 100}).then(r => {
@@ -161,7 +176,7 @@ onMounted(() => {
             itemDefaults: props.itemDefaults,
         })
     })
-})
+}
 
 /**
  * called whenever something in the list is moved to track the last moved element (to be used in add/remove functions)

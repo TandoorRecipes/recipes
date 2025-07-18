@@ -14,11 +14,6 @@
             </v-col>
         </v-row>
 
-        <v-btn>
-            Test Dialog
-            <help-dialog></help-dialog>
-        </v-btn>
-
         <v-row>
             <v-col>
                 <v-expansion-panels>

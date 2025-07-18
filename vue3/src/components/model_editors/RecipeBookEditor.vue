@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Recipe, RecipeBook, RecipeBookEntry, User} from "@/openapi";
 import {VDataTableUpdateOptions} from "@/vuetify";
 
@@ -79,6 +79,14 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<RecipeBook>('RecipeBook', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
+
 const {t} = useI18n()
 const tab = ref("book")
 const recipeBookEntries = ref([] as RecipeBookEntry[])
@@ -94,6 +102,13 @@ const tableHeaders = [
 ]
 
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.shared = [] as User[]
@@ -104,7 +119,7 @@ onMounted(() => {
         },
         itemDefaults: props.itemDefaults
     })
-})
+}
 
 /**
  * add selected recipe into the book and client list
@@ -116,12 +131,12 @@ function addRecipeToBook() {
         let duplicateFound = false
 
         recipeBookEntries.value.forEach(rBE => {
-            if (rBE.recipe == selectedRecipe.value.id){
+            if (rBE.recipe == selectedRecipe.value.id) {
                 duplicateFound = true
             }
         })
 
-        if (!duplicateFound){
+        if (!duplicateFound) {
             api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
                 recipeBookEntries.value.push(r)
                 selectedRecipe.value = {} as Recipe

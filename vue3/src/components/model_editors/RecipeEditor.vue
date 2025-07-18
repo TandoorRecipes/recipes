@@ -137,7 +137,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref, shallowRef} from "vue";
+import {onMounted, PropType, ref, shallowRef, watch} from "vue";
 import {Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -164,6 +164,14 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Recipe>('Recipe', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
+
 // object specific data (for selects/display)
 const {mobile} = useDisplay()
 
@@ -174,6 +182,13 @@ const {fileApiLoading, updateRecipeImage} = useFileApi()
 const file = shallowRef<File | null>(null)
 
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
@@ -181,7 +196,7 @@ onMounted(() => {
         },
         itemDefaults: props.itemDefaults,
     })
-})
+}
 
 /**
  * save recipe via normal saveMethod and update image afterward if it was changed

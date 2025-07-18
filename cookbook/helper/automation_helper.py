@@ -109,7 +109,7 @@ class AutomationEngine:
         Moves a string that should never be treated as a unit to next token and optionally replaced with default unit
         e.g. NEVER_UNIT: param1: egg, param2: None would modify ['1', 'egg', 'white'] to ['1', '', 'egg', 'white']
         or NEVER_UNIT: param1: egg, param2: pcs would modify ['1', 'egg', 'yolk'] to ['1', 'pcs', 'egg', 'yolk']
-        :param1 string: string that should never be considered a unit, will be moved to token[2]
+        :param1 tokens: string that should never be considered a unit, will be moved to token[2]
         :param2 (optional) unit as string: will insert unit string into token[1]
         :return: unit as string (possibly changed by automation)
         """
@@ -135,7 +135,7 @@ class AutomationEngine:
                 new_unit = self.never_unit[tokens[1].lower()]
                 never_unit = True
             except KeyError:
-                return tokens
+                return tokens, never_unit
         else:
             if a := Automation.objects.annotate(param_1_lower=Lower('param_1')).filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1_lower__in=[
                     tokens[1].lower(), alt_unit.lower()], disabled=False).order_by('order').first():
@@ -144,7 +144,7 @@ class AutomationEngine:
 
         if never_unit:
             tokens.insert(1, new_unit)
-        return tokens
+        return tokens, never_unit
 
     def apply_transpose_automation(self, string):
         """

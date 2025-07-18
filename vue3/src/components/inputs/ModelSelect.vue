@@ -18,7 +18,7 @@
             :on-create="createObject"
             :createOption="props.allowCreate"
             :delay="300"
-            :object="true"
+            :object="props.object"
             :valueProp="itemValue"
             :label="itemLabel"
             :searchable="true"
@@ -92,7 +92,7 @@ const props = defineProps({
 
     mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
     appendToBody: {type: Boolean, default: false},
-    //object: {type: Boolean, default: true}, // TODO broken either fix or finally get other multiselect working
+    object: {type: Boolean, default: true}, // TODO broken either fix or finally get other multiselect working
 
     allowCreate: {type: Boolean, default: false},
     placeholder: {type: String, default: undefined},

@@ -13,7 +13,7 @@
             <v-form :disabled="loading">
 
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
+
 
             </v-form>
         </v-card-text>
@@ -23,41 +23,26 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, watch} from "vue";
-import {Keyword} from "@/openapi";
+import {onMounted, PropType} from "vue";
+import {Keyword, OpenDataFood} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 
 const props = defineProps({
-    item: {type: {} as PropType<Keyword>, required: false, default: null},
+    item: {type: {} as PropType<OpenDataFood>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
-    itemDefaults: {type: {} as PropType<Keyword>, required: false, default: {} as Keyword},
+    itemDefaults: {type: {} as PropType<OpenDataFood>, required: false, default: {} as OpenDataFood},
     dialog: {type: Boolean, default: false}
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Keyword>('Keyword', emit)
-
-/**
- * watch prop changes and re-initialize editor
- * required to embed editor directly into pages and be able to change item from the outside
- */
-watch([() => props.item, () => props.itemId], () => {
-    initializeEditor()
-})
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<OpenDataFood>('OpenDataFood', emit)
 
 // object specific data (for selects/display)
 
 onMounted(() => {
-    initializeEditor()
-})
-
-/**
- * component specific state setup logic
- */
-function initializeEditor(){
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
-}
+})
 
 </script>
 

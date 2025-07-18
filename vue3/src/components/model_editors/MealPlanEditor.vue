@@ -100,7 +100,7 @@
 
 <script setup lang="ts">
 
-import {nextTick, onMounted, PropType, ref, toRaw} from "vue";
+import {nextTick, onMounted, PropType, ref, toRaw, watch} from "vue";
 import {ApiApi, MealPlan, MealType, ShoppingListRecipe} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -139,12 +139,27 @@ const {
     modelClass
 } = useModelEditorFunctions<MealPlan>('MealPlan', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
+
 // object specific data (for selects/display)
 const tab = ref('plan')
 
 const dateRangeValue = ref([] as Date[])
 
 onMounted(() => {
+    initializeEditor()
+})
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
     const api = new ApiApi()
 
     // load meal types and create new object based on default type when initially loading
@@ -190,7 +205,7 @@ onMounted(() => {
             }
         },)
     })
-})
+}
 
 /**
  * update the editing object with data from the date range selector whenever its changed (could probably be a watcher)

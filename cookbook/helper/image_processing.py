@@ -84,7 +84,6 @@ def handle_image(request, image_object, filetype):
         if filetype == '.png':
             return rescale_image_png(image_object)
     else:
-        print('STripping image')
         return strip_image_meta(image_object, file_format)
 
     # TODO webp and gifs bypass the scaling and metadata checks, fix

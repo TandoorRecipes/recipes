@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType} from "vue";
+import {onMounted, PropType, watch} from "vue";
 import {CustomFilter} from "@/openapi";
 
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -35,10 +35,26 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<CustomFilter>('CustomFilter', emit)
 
+/**
+ * watch prop changes and re-initialize editor
+ * required to embed editor directly into pages and be able to change item from the outside
+ */
+watch([() => props.item, () => props.itemId], () => {
+    initializeEditor()
+})
+
+// object specific data (for selects/display)
 
 onMounted(() => {
-    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
+    initializeEditor()
 })
+
+/**
+ * component specific state setup logic
+ */
+function initializeEditor(){
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
+}
 
 </script>
 

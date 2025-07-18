@@ -212,38 +212,43 @@ class IngredientParser:
                 # a fraction for the amount
                 if len(tokens) > 2:
                     if not self.ignore_rules:
-                        tokens = self.automation.apply_never_unit_automation(tokens)
-                    try:
-                        if unit is not None:
-                            # a unit is already found, no need to try the second argument for a fraction
-                            # probably not the best method to do it, but I didn't want to make an if check and paste the exact same thing in the else as already is in the except
-                            raise ValueError
-                        # try to parse second argument as amount and add that, in case of '2 1/2' or '2 ½'
-                        amount += self.parse_fraction(tokens[1])
-                        # assume that units can't end with a comma
-                        if len(tokens) > 3 and not tokens[2].endswith(','):
-                            # try to use third argument as unit and everything else as food, use everything as food if it fails
-                            try:
-                                food, note = self.parse_food(tokens[3:])
-                                unit = tokens[2]
-                            except ValueError:
-                                food, note = self.parse_food(tokens[2:])
-                        else:
+                        tokens, never_unit_applied = self.automation.apply_never_unit_automation(tokens)
+                        if never_unit_applied:
+                            unit = tokens[1]
                             food, note = self.parse_food(tokens[2:])
-                    except ValueError:
-                        # assume that units can't end with a comma
-                        if not tokens[1].endswith(','):
-                            # try to use second argument as unit and everything else as food, use everything as food if it fails
-                            try:
-                                food, note = self.parse_food(tokens[2:])
-                                if unit is None:
-                                    unit = tokens[1]
-                                else:
-                                    note = tokens[1]
-                            except ValueError:
-                                food, note = self.parse_food(tokens[1:])
                         else:
-                            food, note = self.parse_food(tokens[1:])
+                            try:
+                                if unit is not None:
+                                    # a unit is already found, no need to try the second argument for a fraction
+                                    # probably not the best method to do it, but I didn't want to make an if check and paste the exact same thing in the else as already is in the except
+                                    raise ValueError
+                                # try to parse second argument as amount and add that, in case of '2 1/2' or '2 ½'
+                                if tokens[1]:
+                                    amount += self.parse_fraction(tokens[1])
+                                # assume that units can't end with a comma
+                                if len(tokens) > 3 and not tokens[2].endswith(','):
+                                    # try to use third argument as unit and everything else as food, use everything as food if it fails
+                                    try:
+                                        food, note = self.parse_food(tokens[3:])
+                                        unit = tokens[2]
+                                    except ValueError:
+                                        food, note = self.parse_food(tokens[2:])
+                                else:
+                                    food, note = self.parse_food(tokens[2:])
+                            except ValueError:
+                                # assume that units can't end with a comma
+                                if not tokens[1].endswith(','):
+                                    # try to use second argument as unit and everything else as food, use everything as food if it fails
+                                    try:
+                                        food, note = self.parse_food(tokens[2:])
+                                        if unit is None:
+                                            unit = tokens[1]
+                                        else:
+                                            note = tokens[1]
+                                    except ValueError:
+                                        food, note = self.parse_food(tokens[1:])
+                                else:
+                                    food, note = self.parse_food(tokens[1:])
                 else:
                     # only two arguments, first one is the amount
                     # which means this is the food
@@ -275,5 +280,7 @@ class IngredientParser:
 
         if len(food.strip()) == 0:
             raise ValueError(f'Error parsing string {ingredient}, food cannot be empty')
+
+        print(f'parsed {ingredient} to {amount} - {unit} - {food} - {note}')
 
         return amount, unit, food, note[:Ingredient._meta.get_field('note').max_length].strip()
