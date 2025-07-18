@@ -51,17 +51,11 @@ jobs:
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "✅ Created branch: $BRANCH_NAME"
 
-      - name: Merge upstream branch
-        id: merge_upstream
-        run: |
-          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          git checkout "$BRANCH_NAME"
-          git merge --no-edit upstream/tandoor-1 || { echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually."; exit 1; }
-          echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
-
       - name: Restore upstream infrastructure files
         id: restore_infra
         run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          git checkout "$BRANCH_NAME"
           git rm .gitattributes || echo "ℹ️ .gitattributes not present, skipping removal."
           git checkout upstream/tandoor-1 -- .github/workflows/ || echo "ℹ️ No workflows to restore."
           git checkout upstream/tandoor-1 -- cookbook/version_info.py || echo "ℹ️ No version_info.py to restore."
@@ -72,6 +66,14 @@ jobs:
           else
             echo "ℹ️ No infrastructure changes to commit."
           fi
+
+      - name: Merge upstream branch
+        id: merge_upstream
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          git checkout "$BRANCH_NAME"
+          git merge --no-edit upstream/tandoor-1 || { echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually."; exit 1; }
+          echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
 
       - name: Get commit list
         id: get_commits
