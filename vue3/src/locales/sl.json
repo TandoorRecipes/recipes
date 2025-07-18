@@ -777,5 +777,22 @@
     "ResetHelp": "Pomoč pri ponastavitvi",
     "SupermarketCategoryHelp": "Kategorije opisujejo območja v supermarketih (npr. sadje, delikatese itd.). Povežejo se lahko z živili in supermarketi za samodejno razvrščanje/filtriranje.",
     "ThanksTextSelfhosted": "Za uporabo Tandoorja. Če želite podpreti prihodnji razvoj, razmislite o sponzoriranju projekta s pomočjo sponzorjev GitHub-a.",
-    "UnitConversion": "Pretvorba enot"
+    "UnitConversion": "Pretvorba enot",
+    "Apply": "Uporabi",
+    "FulltextHelp": "Polja za iskanje po celotnem besedilu.  Opomba: metode iskanja »splet«, »fraza« in »surovo« delujejo samo s polji po celotnem besedilu.",
+    "PartialMatchHelp": "Polja za iskanje delnih zadetkov. (npr. iskanje »Pie« bo vrnilo »pie«, »piece« in »soapie«)",
+    "SearchSettingsOverview": "Izberite eno od priporočenih prednastavitev ali pa sami prilagodite spodnje nastavitve.",
+    "Fulltext": "Celotno besedilo",
+    "PartialMatch": "Delno ujemanje",
+    "SearchMethod": "Metoda iskanja",
+    "StartsWith": "Začne se s/z",
+    "StartsWithHelp": "ldentitete za iskanje zadetkov na začetku besede. (npr. iskanje »sa« bo vrnilo »solata« in »sendvič«)",
+    "TrigramThresholdHelp": "Določa, koliko črkovalnih napak se prezre pri uporabi mehkega iskanja. Nižje vrednosti prezrejo več razlik/prinesejo več rezultatov.",
+    "Fuzzy": "Nejasno",
+    "FuzzySearchHelp": "Uporabite mehko iskanje za iskanje vnosov, tudi če obstajajo razlike v načinu pisanja besede.",
+    "IgnoreAccents": "Prezri naglase",
+    "IgnoreAccentsHelp": "Pri iskanju v danih poljih prezri naglas. ",
+    "PrecisionSearchHelp": "Prednastavitev, ki vrne samo vnose s pravilnim črkovanjem. ",
+    "SearchSettingsWarning": "Spreminjanje nastavitev iskanja običajno ni potrebno. Te nastavitve so na voljo le strokovnjakom s posebnimi potrebami. ",
+    "TrigramThreshold": "Trigramski prag"
 }
