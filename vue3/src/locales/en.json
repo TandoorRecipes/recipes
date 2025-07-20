@@ -529,7 +529,7 @@
     "Unit": "Unit",
     "UnitConversion": "Unit Conversion",
     "UnitConversionHelp": "Unit conversion allow you to convert individual units in general or only for a certain food.  You can for example convert 1 cup of flour into 125 grams. Tandoor can then automatically convert within the different weight or volume units, if the units have the correct base units.  Unit conversions are used for property calculations.",
-    "UnitHelp": "Units, together with foods and quantities make up ingredients. They can be named according to your personal preference and linked to standardized units for automatic conversion. Addionally they give context to quantities in many places like shopping lists, conversions and properties. ",
+    "UnitHelp": "Units, together with foods and quantities make up ingredients. They can be named according to your personal preference and linked to standardized units for automatic conversion. Additionally, they give context to quantities in many places like shopping lists, conversions and properties. ",
     "Unit_Alias": "Unit Alias",
     "Unit_Replace": "Unit Replace",
     "Units": "Units",
