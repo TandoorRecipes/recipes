@@ -132,9 +132,9 @@
     "Food_Alias": "Eten Alias",
     "Food_Replace": "Voedingsmiddelen Vervangen",
     "Foods": "Ingrediënten",
-    "Fulltext": "",
-    "FulltextHelp": "",
-    "Fuzzy": "",
+    "Fulltext": "Volledige tekst",
+    "FulltextHelp": "Velden voor volledige tekstzoekopdrachten.  Opmerking: de zoekmethoden ‘web’, ‘zin’ en ‘ruw’ werken alleen met volledige tekstvelden.",
+    "Fuzzy": "Fuzzy",
     "FuzzySearchHelp": "",
     "GroupBy": "Groepeer per",
     "Hide_Food": "Verberg Eten",
@@ -646,5 +646,6 @@
     "ConnectorConfig": "Connectoren",
     "ConnectorConfigHelp": "Met connectoren kun je automatisch gegevens synchroniseren van Tandoor met externe diensten. ",
     "Continue": "Doorgaan",
-    "ConversionsHelp": "Met conversies kun je de hoeveelheid van een voedingsmiddel in verschillende eenheden berekenen. Momenteel wordt dit alleen gebruikt voor het berekenen van eigenschappen, later kan het ook in andere onderdelen van Tandoor gebruikt worden. "
+    "ConversionsHelp": "Met conversies kun je de hoeveelheid van een voedingsmiddel in verschillende eenheden berekenen. Momenteel wordt dit alleen gebruikt voor het berekenen van eigenschappen, later kan het ook in andere onderdelen van Tandoor gebruikt worden. ",
+    "FoodHelp": "Voedingsmiddelen vormen de belangrijkste basis van Tandoor. Samen met eenheden en bijbehorende hoeveelheden vormen ze de ingrediënten voor een recept. Ze kunnen ook gebruikt worden voor boodschappen, eigenschappen en nog veel meer. "
 }
