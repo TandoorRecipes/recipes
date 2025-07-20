@@ -214,6 +214,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const core = require('@actions/core');
             const commits = JSON.parse(process.env.COMMITS_JSON || '[]');
             const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
             const branchName = process.env.BRANCH_NAME || '';
@@ -231,10 +232,8 @@ jobs:
               prBody += `- ${c.subject} ([${c.sha}](https://github.com/${owner}/${reponame}/commit/${c.sha}))\n`;
             }
             prBody += `\n---\n*This PR was automatically created from the fork after successful CI validation.*\n`;
-            return {
-              prTitle,
-              prBody
-            };
+            core.setOutput('prTitle', prTitle);
+            core.setOutput('prBody', prBody);
 
 
       - name: Print PR creation instructions
