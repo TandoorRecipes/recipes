@@ -214,7 +214,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const core = require('@actions/core');
             const commits = JSON.parse(process.env.COMMITS_JSON || '[]');
             const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
             const branchName = process.env.BRANCH_NAME || '';
