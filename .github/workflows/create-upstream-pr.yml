@@ -201,55 +201,6 @@ jobs:
           git push --set-upstream origin "$BRANCH_NAME"
           echo "✅ Branch pushed: $BRANCH_NAME"
 
-      - name: Get trigger PR info
-        if: steps.get_commits.outputs.has_changes == 'true'
-        id: get_trigger_pr
-        uses: actions/github-script@v7
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            let triggerPRTitle = 'Sync changes from fork';
-            let triggerPRUrl = '';
-            // Get owner and repo from environment
-            const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/');
-            const eventName = process.env.EVENT_NAME;
-            const workflowRunHeadSha = process.env.WORKFLOW_RUN_HEAD_SHA;
-            if (eventName === 'workflow_run' && workflowRunHeadSha) {
-              try {
-                const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  owner,
-                  repo,
-                  commit_sha: workflowRunHeadSha
-                });
-                const pr = prs.data.find(pr => pr.state === 'open' || pr.merged_at);
-                if (pr) {
-                  triggerPRTitle = pr.title;
-                  triggerPRUrl = pr.html_url;
-                } else {
-                  const commit = await github.rest.repos.getCommit({
-                    owner,
-                    repo,
-                    ref: workflowRunHeadSha
-                  });
-                  triggerPRTitle = commit.data.commit.message.split('\n')[0];
-                }
-              } catch (error) {
-                if (error.status === 404) {
-                  console.log(`Warning: Commit ${workflowRunHeadSha} not found`);
-                } else if (error.status === 403) {
-                  console.log(`Warning: Rate limited or permission denied: ${error.message}`);
-                } else {
-                  console.log(`Warning: Could not get trigger PR info: ${error.message}`);
-                }
-              }
-            }
-            return {
-              triggerPRTitle: triggerPRTitle || '',
-              triggerPRUrl: triggerPRUrl || ''
-            };
 
       - name: Build PR content
         if: steps.get_commits.outputs.has_changes == 'true'
@@ -257,37 +208,32 @@ jobs:
         uses: actions/github-script@v7
         env:
           COMMITS_JSON: ${{ steps.prepare_commits.outputs.commits_json }}
-          COMMIT_SUBJECTS: ${{ steps.prepare_commits.outputs.commit_subjects }}
-          INFRASTRUCTURE_FILES: ${{ steps.filter_files.outputs.infra_files }}
           CHANGES_SUMMARY: ${{ steps.summarize_changes.outputs.changes_summary }}
-          TRIGGER_PR_TITLE: ${{ steps.get_trigger_pr.outputs.triggerPRTitle }}
-          TRIGGER_PR_URL: ${{ steps.get_trigger_pr.outputs.triggerPRUrl }}
+          BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const commits = process.env.COMMITS_JSON || '[]';
-            const commitSubjects = process.env.COMMIT_SUBJECTS || '';
-            const infrastructureFiles = process.env.INFRASTRUCTURE_FILES || '[]';
+            const commits = JSON.parse(process.env.COMMITS_JSON || '[]');
             const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
-            const triggerPRTitle = process.env.TRIGGER_PR_TITLE || 'Sync changes from fork';
-            const triggerPRUrl = process.env.TRIGGER_PR_URL || '';
-            const commitsArray = JSON.parse(commits);
-            const infrastructureArray = JSON.parse(infrastructureFiles);
-            const prTitle = triggerPRTitle ||
-              `Upstream PR: ${commitsArray.length} commit${commitsArray.length !== 1 ? 's' : ''} from fork`;
-            let prBody = `## 🔄 Automated Fork → Upstream PR\n\nThis PR contains changes from the fork that are ready for upstream inclusion.\n\n`;
-            if (triggerPRUrl) {
-              prBody += `**Source PR:** ${triggerPRUrl}\n\n`;
+            const branchName = process.env.BRANCH_NAME || '';
+            const repo = process.env.GITHUB_REPOSITORY || '';
+            const [owner, reponame] = repo.split('/');
+            const nCommits = commits.length;
+            let prTitle = 'Sync ' + nCommits + ' commit' + (nCommits !== 1 ? 's' : '') + ' from fork:';
+            if (nCommits > 0) {
+              prTitle += ' ' + commits[0].subject;
             }
-            prBody += `**Changes Summary:**\n${changesSummary}\n\n**Commits Included:** ${commitsArray.length}\n${commitSubjects}\n\n`;
-            if (infrastructureArray.length > 0) {
-              prBody += `**⚠️ Infrastructure Files Modified:**\n${infrastructureArray.map(file => `- ${file}`).join('\n')}\n\nThese changes have been reviewed and are safe for upstream inclusion.\n\n`;
+            let prBody = `This PR syncs ${nCommits} commit${nCommits !== 1 ? 's' : ''} from branch ${branchName}.\n\n`;
+            prBody += `**Changes Summary:**\n${changesSummary}\n\n`;
+            prBody += `Commits included:\n`;
+            for (const c of commits) {
+              prBody += `- ${c.subject} ([${c.sha}](https://github.com/${owner}/${reponame}/commit/${c.sha}))\n`;
             }
             prBody += `\n---\n*This PR was automatically created from the fork after successful CI validation.*\n`;
             return {
-              prTitle: prTitle || '',
-              prBody: prBody || '',
-              triggerPRUrl: triggerPRUrl || ''
+              prTitle,
+              prBody
             };
 
 
