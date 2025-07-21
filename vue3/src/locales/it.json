@@ -777,7 +777,7 @@
     "WarnPageLeave": "Ci sono modifiche non salvate che andranno perse. Vuoi comunque abbandonare la pagina?",
     "searchFilterCreatedByHelp": "Ricette create dall'utente selezionato.",
     "searchFilterObjectsAndNotHelp": "Escludi le ricette con tutti i {type} selezionati",
-    "SupermarketCategoryHelp": "Le categorie descrivono le aree dei supermercati (ad esempio, frutta, gastronomia, ...). Possono essere collegate agli alimenti e ai supermercati per la selezione/filtraggio automatici.",
+    "SupermarketCategoryHelp": "Le categorie descrivono le aree dei supermercati (ad esempio, frutta, gastronomia, ...). Possono essere collegate agli alimenti e ai supermercati per la selezione e per il filtraggio automatici.",
     "Apply": "Applica",
     "IgnoreAccents": "Ignora accenti",
     "PartialMatch": "Corrispondenza parziale",
@@ -794,5 +794,7 @@
     "Fuzzy": "Fuzzy",
     "PrecisionSearchHelp": "Preimpostazione che restituisce solo voci con ortografia corretta. ",
     "SearchSettingsWarning": "Di solito non è necessario modificare le impostazioni di ricerca. Queste impostazioni sono disponibili solo per utenti esperti con esigenze specifiche. ",
-    "TrigramThreshold": "Soglia del trigramma"
+    "TrigramThreshold": "Soglia del trigramma",
+    "Comment": "Commento",
+    "Source": "Fonte"
 }
