@@ -794,5 +794,7 @@
     "IgnoreAccentsHelp": "Pri iskanju v danih poljih prezri naglas. ",
     "PrecisionSearchHelp": "Prednastavitev, ki vrne samo vnose s pravilnim črkovanjem. ",
     "SearchSettingsWarning": "Spreminjanje nastavitev iskanja običajno ni potrebno. Te nastavitve so na voljo le strokovnjakom s posebnimi potrebami. ",
-    "TrigramThreshold": "Trigramski prag"
+    "TrigramThreshold": "Trigramski prag",
+    "Comment": "Komentar",
+    "Source": "Vir"
 }
