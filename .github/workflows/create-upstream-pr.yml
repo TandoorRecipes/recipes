@@ -1,4 +1,4 @@
-name: Create Upstream PR #trivial update
+name: Create Upstream PR
 
 on:
   workflow_run:
@@ -8,10 +8,10 @@ on:
     branches: [working]
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
-  actions: write
+# permissions:
+#   contents: write
+#   pull-requests: write
+#   actions: write
 
 jobs:
   create-upstream-pr:
