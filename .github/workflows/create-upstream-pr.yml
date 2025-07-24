@@ -103,39 +103,24 @@ jobs:
           printf "%s\n" "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Filter code and infrastructure files
+      - name: Filter code files only
         id: filter_files
         run: |
-          is_infrastructure_file() {
-            local file="$1"
-            case "$file" in
-              .github|.github/*|cookbook/version*.py|.gitattributes) return 0 ;;
-              *) return 1 ;;
-            esac
-          }
           CODE_FILES=()
-          INFRASTRUCTURE_FILES=()
           while IFS= read -r file; do
-            if is_infrastructure_file "$file"; then
-              INFRASTRUCTURE_FILES+=("$file")
-            else
-              CODE_FILES+=("$file")
-            fi
+            case "$file" in
+              .github|.github/*|cookbook/version*.py|.gitattributes) continue ;;
+              *) CODE_FILES+=("$file") ;;
+            esac
           done <<< "${{ steps.get_files.outputs.changed_files }}"
           echo "code_files=$(printf '%s\n' "${CODE_FILES[@]}" | jq -R . | jq -sc .)" >> $GITHUB_OUTPUT
-          echo "infra_files=$(printf '%s\n' "${INFRASTRUCTURE_FILES[@]}" | jq -R . | jq -sc .)" >> $GITHUB_OUTPUT
           echo "code_count=${#CODE_FILES[@]}" >> $GITHUB_OUTPUT
-          echo "infra_count=${#INFRASTRUCTURE_FILES[@]}" >> $GITHUB_OUTPUT
 
       - name: Summarize changes
         id: summarize_changes
         run: |
           CODE_COUNT=${{ steps.filter_files.outputs.code_count }}
-          INFRA_COUNT=${{ steps.filter_files.outputs.infra_count }}
           CHANGES_SUMMARY="Modified $CODE_COUNT code files"
-          if [ "$INFRA_COUNT" -gt 0 ]; then
-            CHANGES_SUMMARY="$CHANGES_SUMMARY and $INFRA_COUNT infrastructure files"
-          fi
           echo "changes_summary=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
 
       - name: Prepare commit subjects and JSON
@@ -145,29 +130,14 @@ jobs:
           CODE_FILES=( $(echo "${{ steps.filter_files.outputs.code_files }}") )
           FILTERED_COMMITS_JSON="[]"
           COMMIT_SUBJECTS_ARRAY=()
-          is_infrastructure_file() {
-            local file="$1"
-            case "$file" in
-              .github|.github/*|cookbook/version*.py|.gitattributes) return 0 ;;
-              *) return 1 ;;
-            esac
-          }
           while IFS= read -r commit_line; do
             if [ -z "$commit_line" ]; then continue; fi
             COMMIT_SHA=$(echo "$commit_line" | cut -d' ' -f1)
             COMMIT_SUBJECT=$(echo "$commit_line" | cut -d' ' -f2-)
             COMMIT_SUBJECTS_ARRAY+=("- $COMMIT_SUBJECT")
             mapfile -t COMMIT_FILES < <(git diff-tree --no-commit-id --name-only -r "$COMMIT_SHA")
-            HAS_CODE_CHANGES=false
-            NON_INFRA_FILES=()
-            for commit_file in "${COMMIT_FILES[@]}"; do
-              if ! is_infrastructure_file "$commit_file"; then
-                HAS_CODE_CHANGES=true
-                NON_INFRA_FILES+=("$commit_file")
-              fi
-            done
-            if [ "$HAS_CODE_CHANGES" = "true" ]; then
-              FILES_JSON=$(printf '%s\n' "${NON_INFRA_FILES[@]}" | jq -R . | jq -s .)
+            if [ ${#COMMIT_FILES[@]} -gt 0 ]; then
+              FILES_JSON=$(printf '%s\n' "${COMMIT_FILES[@]}" | jq -R . | jq -s .)
               COMMIT_JSON=$(jq -n --arg sha "$COMMIT_SHA" --arg subject "$COMMIT_SUBJECT" --argjson files "$FILES_JSON" '{sha: $sha, subject: $subject, files: $files}')
               FILTERED_COMMITS_JSON=$(echo "$FILTERED_COMMITS_JSON" | jq --argjson item "$COMMIT_JSON" '. + [$item]')
             fi
@@ -179,19 +149,19 @@ jobs:
           printf '%s\n' "${COMMIT_SUBJECTS_ARRAY[@]}" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
-      - name: Remove infrastructure files before push
+      - name: Reset infrastructure files to upstream before push
         if: steps.get_commits.outputs.has_changes == 'true'
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
           git checkout "$BRANCH_NAME"
-          git rm -rf .github || echo "No .github to remove"
-          git rm -f cookbook/version_info.py || echo "No version_info.py to remove"
-          git rm -f .gitattributes || echo "No .gitattributes to remove"
+          git checkout upstream/tandoor-1 -- .github/ || echo "No .github to restore"
+          git checkout upstream/tandoor-1 -- cookbook/version_info.py || echo "No version_info.py to restore"
+          git checkout upstream/tandoor-1 -- .gitattributes || echo "No .gitattributes to restore"
           git add .
           if ! git diff --cached --quiet; then
-            git commit -m "Remove infrastructure files before pushing to fork"
+            git commit -m "Reset infrastructure files to upstream before push"
           else
-            echo "No infrastructure files to remove before push."
+            echo "No infrastructure files to reset before push."
           fi
 
       - name: Push branch to fork
@@ -230,7 +200,7 @@ jobs:
             for (const c of commits) {
               prBody += `- ${c.subject} ([${c.sha}](https://github.com/${owner}/${reponame}/commit/${c.sha}))\n`;
             }
-            prBody += `\n---\n*This PR was automatically created from the fork after successful CI validation.*\n`;
+            prBody += `\n---\n`;
             core.setOutput('prTitle', prTitle);
             core.setOutput('prBody', prBody);
 
