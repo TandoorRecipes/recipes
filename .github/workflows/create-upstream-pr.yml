@@ -11,8 +11,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  actions: read
-  workflows: write
+  actions: write
 
 jobs:
   create-upstream-pr:
