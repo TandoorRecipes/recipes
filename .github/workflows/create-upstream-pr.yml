@@ -21,11 +21,18 @@ jobs:
       cancel-in-progress: true
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     steps:
+      - name: Generate GitHub App token (for branch push)
+        id: generate_token_push
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - name: Checkout fork
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token_push.outputs.token }}
 
       - name: Setup git user
         run: |
@@ -66,13 +73,6 @@ jobs:
           else
             echo "ℹ️ No infrastructure changes to commit."
           fi
-
-      - name: Generate GitHub App token (for branch push)
-        id: generate_token_push
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.BOT_APP_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: Push branch to fork (after infra commit)
         env:
@@ -185,7 +185,7 @@ jobs:
           BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ steps.generate_token_push.outputs.token }}
           script: |
             const commits = JSON.parse(process.env.COMMITS_JSON || '[]');
             const changesSummary = process.env.CHANGES_SUMMARY || 'Changes from fork';
