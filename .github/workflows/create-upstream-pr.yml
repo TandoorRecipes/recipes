@@ -1,4 +1,24 @@
+
+# Workflow: Create Upstream PR
+#
+# - Creates a branch from the fork's default branch
+# - Preemptively restores infra files from upstream and commits them
+# - Pushes branch to fork
+# - Merges upstream/tandoor-1 into the branch
+# - Pushes again if merge creates a commit
+# - Prepares PR content and prints instructions
+#
+# Secure: All pushes use a GitHub App token
+# Maintainer-friendly: Clear step names, comments, and error handling
+
 name: Create Upstream PR
+      # Early fail if required secrets are missing
+      - name: Check required secrets
+        run: |
+          if [ -z "${{ secrets.BOT_APP_ID }}" ] || [ -z "${{ secrets.BOT_PRIVATE_KEY }}" ]; then
+            echo "❌ BOT_APP_ID and BOT_PRIVATE_KEY secrets are required." >&2
+            exit 1
+          fi
 
 on:
   workflow_run:
@@ -43,8 +63,6 @@ jobs:
             sudo apt-get update && sudo apt-get install -y jq
           fi
 
-
-
       - name: Create upstream PR branch
         id: create_branch
         run: |
@@ -53,37 +71,6 @@ jobs:
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "✅ Created branch: $BRANCH_NAME"
 
-      - name: Generate GitHub App token (for branch push)
-        id: generate_token_push
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.BOT_APP_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
-
-      - name: Push new branch to fork (so it exists remotely)
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token_push.outputs.token }}
-        run: |
-          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          echo "Pushing new branch $BRANCH_NAME to fork."
-          git push --set-upstream https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
-          echo "✅ Branch pushed: $BRANCH_NAME (initial push)"
-
-
-      # Merge upstream branch after branch is created and pushed
-      - name: Merge upstream branch
-        id: merge_upstream
-        run: |
-          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          git checkout "$BRANCH_NAME"
-          if git merge --no-edit upstream/tandoor-1; then
-            echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
-          else
-            echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually." >&2
-            exit 1
-          fi
-
-      # Restore infra files from upstream after merge
       - name: Restore upstream infrastructure files
         id: restore_infra
         run: |
@@ -100,15 +87,50 @@ jobs:
             echo "ℹ️ No infrastructure changes to commit."
           fi
 
-      # Push branch after infra file changes
-      - name: Push branch to fork (infra files)
+      - name: Generate GitHub App token (for branch push)
+        id: generate_token_push
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Push branch to fork (after infra commit)
         env:
           GITHUB_TOKEN: ${{ steps.generate_token_push.outputs.token }}
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
           echo "Pushing branch $BRANCH_NAME after infra file restore."
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
+          git push --set-upstream https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
           echo "✅ Branch pushed: $BRANCH_NAME (infra files)"
+
+
+      - name: Merge upstream branch
+        id: merge_upstream
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          git checkout "$BRANCH_NAME"
+          if git merge --no-edit upstream/tandoor-1; then
+            echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
+            if ! git diff --cached --quiet || [ -n "$(git log origin/$BRANCH_NAME..$BRANCH_NAME --oneline)" ]; then
+              echo "merge_commit=true" >> $GITHUB_OUTPUT
+            else
+              echo "merge_commit=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually." >&2
+            exit 1
+          fi
+
+      # Push branch after merge if merge created a commit
+      - name: Push branch to fork (after merge)
+        if: steps.merge_upstream.outputs.merge_commit == 'true'
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token_push.outputs.token }}
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          echo "Pushing branch $BRANCH_NAME after merge."
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
+          echo "✅ Branch pushed: $BRANCH_NAME (after merge)"
 
 
 
@@ -127,6 +149,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
           echo "has_changes=true" >> $GITHUB_OUTPUT
 
+
       - name: Get changed files
         id: get_files
         run: |
@@ -135,24 +158,13 @@ jobs:
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           printf "%s\n" "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Filter code files only
-        id: filter_files
-        run: |
-          CODE_FILES=()
-          while IFS= read -r file; do
-            case "$file" in
-              .github|.github/*|cookbook/version*.py|.gitattributes) continue ;;
-              *) CODE_FILES+=("$file") ;;
-            esac
-          done <<< "${{ steps.get_files.outputs.changed_files }}"
-          echo "code_files=$(printf '%s\n' "${CODE_FILES[@]}" | jq -R . | jq -sc .)" >> $GITHUB_OUTPUT
-          echo "code_count=${#CODE_FILES[@]}" >> $GITHUB_OUTPUT
+          CODE_COUNT=$(echo "$CHANGED_FILES" | grep -c '^' || true)
+          echo "code_count=$CODE_COUNT" >> $GITHUB_OUTPUT
 
       - name: Summarize changes
         id: summarize_changes
         run: |
-          CODE_COUNT=${{ steps.filter_files.outputs.code_count }}
+          CODE_COUNT=${{ steps.get_files.outputs.code_count }}
           CHANGES_SUMMARY="Modified $CODE_COUNT code files"
           echo "changes_summary=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
 
@@ -160,7 +172,7 @@ jobs:
         id: prepare_commits
         run: |
           COMMITS_RAW="${{ steps.get_commits.outputs.commits_raw }}"
-          CODE_FILES=( $(echo "${{ steps.filter_files.outputs.code_files }}") )
+          CODE_FILES=( $(echo "${{ steps.get_files.outputs.changed_files }}") )
           FILTERED_COMMITS_JSON="[]"
           COMMIT_SUBJECTS_ARRAY=()
           while IFS= read -r commit_line; do
@@ -181,11 +193,6 @@ jobs:
           echo "commit_subjects<<EOF" >> $GITHUB_OUTPUT
           printf '%s\n' "${COMMIT_SUBJECTS_ARRAY[@]}" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
-
-
-
-
-
 
 
       - name: Build PR content
