@@ -43,6 +43,8 @@ jobs:
             sudo apt-get update && sudo apt-get install -y jq
           fi
 
+
+
       - name: Create upstream PR branch
         id: create_branch
         run: |
@@ -51,6 +53,37 @@ jobs:
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           echo "✅ Created branch: $BRANCH_NAME"
 
+      - name: Generate GitHub App token (for branch push)
+        id: generate_token_push
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Push new branch to fork (so it exists remotely)
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token_push.outputs.token }}
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          echo "Pushing new branch $BRANCH_NAME to fork."
+          git push --set-upstream https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
+          echo "✅ Branch pushed: $BRANCH_NAME (initial push)"
+
+
+      # Merge upstream branch after branch is created and pushed
+      - name: Merge upstream branch
+        id: merge_upstream
+        run: |
+          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          git checkout "$BRANCH_NAME"
+          if git merge --no-edit upstream/tandoor-1; then
+            echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
+          else
+            echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually." >&2
+            exit 1
+          fi
+
+      # Restore infra files from upstream after merge
       - name: Restore upstream infrastructure files
         id: restore_infra
         run: |
@@ -67,17 +100,17 @@ jobs:
             echo "ℹ️ No infrastructure changes to commit."
           fi
 
-      - name: Merge upstream branch
-        id: merge_upstream
+      # Push branch after infra file changes
+      - name: Push branch to fork (infra files)
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token_push.outputs.token }}
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          git checkout "$BRANCH_NAME"
-          if git merge --no-edit upstream/tandoor-1; then
-            echo "✅ Merged upstream/tandoor-1 into $BRANCH_NAME"
-          else
-            echo "❌ Merge conflict detected during merge with upstream/tandoor-1. Please resolve conflicts manually." >&2
-            exit 1
-          fi
+          echo "Pushing branch $BRANCH_NAME after infra file restore."
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
+          echo "✅ Branch pushed: $BRANCH_NAME (infra files)"
+
+
 
       - name: Get commit list
         id: get_commits
@@ -149,45 +182,10 @@ jobs:
           printf '%s\n' "${COMMIT_SUBJECTS_ARRAY[@]}" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
-      - name: Reset infrastructure files to upstream before push
-        if: steps.get_commits.outputs.has_changes == 'true'
-        run: |
-          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          git checkout "$BRANCH_NAME"
-          git checkout upstream/tandoor-1 -- .github/ || echo "No .github to restore"
-          git checkout upstream/tandoor-1 -- cookbook/version_info.py || echo "No version_info.py to restore"
-          git checkout upstream/tandoor-1 -- .gitattributes || echo "No .gitattributes to restore"
-          git add .
-          if ! git diff --cached --quiet; then
-            git commit -m "Reset infrastructure files to upstream before push"
-          else
-            echo "No infrastructure files to reset before push."
-          fi
 
 
-      - name: Generate GitHub App token
-        if: steps.get_commits.outputs.has_changes == 'true'
-        id: generate_token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.BOT_APP_ID }}
-          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
 
-      - name: Push branch to fork
-        if: steps.get_commits.outputs.has_changes == 'true'
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-        run: |
-          BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          echo "Push URL: https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          echo "Branch name: $BRANCH_NAME"
-          echo "Active git branch(s):"
-          git branch
-          echo "Files staged for commit:"
-          git status
-          git diff --cached --name-status
-          git push --set-upstream https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
-          echo "✅ Branch pushed: $BRANCH_NAME"
+
 
 
       - name: Build PR content
