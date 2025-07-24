@@ -1,24 +1,4 @@
-
-# Workflow: Create Upstream PR
-#
-# - Creates a branch from the fork's default branch
-# - Preemptively restores infra files from upstream and commits them
-# - Pushes branch to fork
-# - Merges upstream/tandoor-1 into the branch
-# - Pushes again if merge creates a commit
-# - Prepares PR content and prints instructions
-#
-# Secure: All pushes use a GitHub App token
-# Maintainer-friendly: Clear step names, comments, and error handling
-
 name: Create Upstream PR
-      # Early fail if required secrets are missing
-      - name: Check required secrets
-        run: |
-          if [ -z "${{ secrets.BOT_APP_ID }}" ] || [ -z "${{ secrets.BOT_PRIVATE_KEY }}" ]; then
-            echo "❌ BOT_APP_ID and BOT_PRIVATE_KEY secrets are required." >&2
-            exit 1
-          fi
 
 on:
   workflow_run:
