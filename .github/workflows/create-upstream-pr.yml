@@ -179,6 +179,13 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
+          echo "Push URL: https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          echo "Branch name: $BRANCH_NAME"
+          echo "Active git branch(s):"
+          git branch
+          echo "Files staged for commit:"
+          git status
+          git diff --cached --name-status
           git push --set-upstream https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
           echo "✅ Branch pushed: $BRANCH_NAME"
 
