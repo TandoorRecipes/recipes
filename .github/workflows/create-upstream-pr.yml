@@ -164,11 +164,22 @@ jobs:
             echo "No infrastructure files to reset before push."
           fi
 
+
+      - name: Generate GitHub App token
+        if: steps.get_commits.outputs.has_changes == 'true'
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - name: Push branch to fork
         if: steps.get_commits.outputs.has_changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          git push --set-upstream origin "$BRANCH_NAME"
+          git push --set-upstream https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
           echo "✅ Branch pushed: $BRANCH_NAME"
 
 
