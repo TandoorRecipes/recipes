@@ -1,4 +1,4 @@
-name: Create Upstream PR
+name: Create Upstream PR #trivial update
 
 on:
   workflow_run:
