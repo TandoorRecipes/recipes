@@ -1,0 +1,20 @@
+name: Make Docs
+on:
+  # the 1st condition
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    branches: [master]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: github.repository_owner == 'TandoorRecipes' && ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs-material mkdocs-include-markdown-plugin
+      - run: mkdocs gh-deploy --force

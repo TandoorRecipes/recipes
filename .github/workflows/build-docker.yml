@@ -1,0 +1,83 @@
+name: Build Docker Container
+
+on:
+  push:
+    branches: [tandoor-1]
+
+jobs:
+  build-container:
+    name: Build ${{ matrix.name }} Container
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'TandoorRecipes'
+    continue-on-error: ${{ matrix.continue-on-error }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          # Standard build config
+          - name: Standard
+            dockerfile: Dockerfile
+            platforms: linux/amd64,linux/arm64,linux/arm/v7
+            suffix: ""
+            continue-on-error: false
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build Vue frontend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+          cache-dependency-path: vue/yarn.lock
+      - name: Install dependencies
+        working-directory: ./vue
+        run: yarn install --frozen-lockfile
+      - name: Build dependencies
+        working-directory: ./vue
+        run: yarn build
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: github.secret_source == 'Actions'
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        if: github.secret_source == 'Actions'
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            vabene1111/recipes
+            ghcr.io/TandoorRecipes/recipes
+          flavor: |
+            latest=false
+            suffix=${{ matrix.suffix }}
+          tags: |
+            type=raw,value=tandoor-v1-{{date 'YYYYMMDD'}}
+            type=raw,value=tandoor-v1
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          pull: true
+          push: ${{ github.secret_source == 'Actions' }}
+          platforms: ${{ matrix.platforms }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
