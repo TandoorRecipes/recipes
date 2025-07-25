@@ -242,7 +242,7 @@ jobs:
             const prBody = process.env.PR_BODY || '';
             const repo = process.env.GITHUB_REPOSITORY || '';
             const [owner, reponame] = repo.split('/');
-            const prLink = `https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${owner}:${branch}?expand=1&title=${encodeURIComponent(prTitle)}`;
+            const prLink = `https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${owner}:${branch}?expand=1&title=${encodeURIComponent(prTitle)}&body=${encodeURIComponent(prBody)}`;
             const issueTitle = `Manual Upstream PR Checklist: ${branch}`;
             const issueBody = [
               `A new branch is ready for upstream PR submission.`,
