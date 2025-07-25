@@ -8,10 +8,9 @@ on:
     branches: [working]
   workflow_dispatch:
 
-# permissions:
-#   contents: write
-#   pull-requests: write
-#   actions: write
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   create-upstream-pr:
@@ -101,7 +100,6 @@ jobs:
             exit 1
           fi
 
-      # Push branch after merge if merge created a commit
       - name: Push branch to fork (after merge)
         if: steps.merge_upstream.outputs.merge_commit == 'true'
         env:
@@ -111,7 +109,6 @@ jobs:
           echo "Pushing branch $BRANCH_NAME after merge."
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$BRANCH_NAME"
           echo "✅ Branch pushed: $BRANCH_NAME (after merge)"
-
 
 
       - name: Get commit list
@@ -155,13 +152,24 @@ jobs:
           CODE_FILES=( $(echo "${{ steps.get_files.outputs.changed_files }}") )
           FILTERED_COMMITS_JSON="[]"
           COMMIT_SUBJECTS_ARRAY=()
+          INFRA_PATTERNS='^\.github/|^cookbook/version_info\.py$|^\.gitattributes$'
           while IFS= read -r commit_line; do
             if [ -z "$commit_line" ]; then continue; fi
             COMMIT_SHA=$(echo "$commit_line" | cut -d' ' -f1)
             COMMIT_SUBJECT=$(echo "$commit_line" | cut -d' ' -f2-)
-            COMMIT_SUBJECTS_ARRAY+=("- $COMMIT_SUBJECT")
-            mapfile -t COMMIT_FILES < <(git diff-tree --no-commit-id --name-only -r "$COMMIT_SHA")
-            if [ ${#COMMIT_FILES[@]} -gt 0 ]; then
+            mapfile -t COMMIT_FILES < <(git diff-tree --no-commit-id --name-only -r "$COMMIT_SHA" | grep -Ev "$INFRA_PATTERNS")
+            # Only include commit if it touches at least one non-infra file that is still different
+            INCLUDE_COMMIT=false
+            for file in "${COMMIT_FILES[@]}"; do
+              for code_file in "${CODE_FILES[@]}"; do
+                if [ "$file" = "$code_file" ]; then
+                  INCLUDE_COMMIT=true
+                  break 2
+                fi
+              done
+            done
+            if [ "$INCLUDE_COMMIT" = true ]; then
+              COMMIT_SUBJECTS_ARRAY+=("- $COMMIT_SUBJECT")
               FILES_JSON=$(printf '%s\n' "${COMMIT_FILES[@]}" | jq -R . | jq -s .)
               COMMIT_JSON=$(jq -n --arg sha "$COMMIT_SHA" --arg subject "$COMMIT_SUBJECT" --argjson files "$FILES_JSON" '{sha: $sha, subject: $subject, files: $files}')
               FILTERED_COMMITS_JSON=$(echo "$FILTERED_COMMITS_JSON" | jq --argjson item "$COMMIT_JSON" '. + [$item]')
