@@ -1,4 +1,4 @@
-name: Create Upstream PR
+name: Stage Branch for PR
 
 on:
   workflow_run:
@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   create-upstream-pr:
@@ -225,25 +226,43 @@ jobs:
             core.setOutput('prBody', prBody);
 
 
-      - name: Print PR creation instructions
-        if: steps.get_commits.outputs.has_changes == 'true'
+      - name: Open issue for PR checklist
+        if: steps.get_files.outputs.code_count != '0' && steps.prepare_commits.outputs.commit_subjects != ''
+        uses: actions/github-script@v7
         env:
           BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
           PR_TITLE: ${{ steps.build_pr_content.outputs.prTitle }}
           PR_BODY: ${{ steps.build_pr_content.outputs.prBody }}
-        run: |
-          if [ "${{ steps.get_files.outputs.code_count }}" -eq 0 ] || [ "${{ steps.prepare_commits.outputs.commit_subjects }}" = "" ]; then
-            echo "ℹ️ No code changes or commits to contribute. No PR required."
-            exit 0
-          fi
-          ENCODED_TITLE=$(python3 -c "import urllib.parse,os; print(urllib.parse.quote(os.environ['PR_TITLE']))")
-          echo "✅ Branch pushed: $BRANCH_NAME"
-          echo
-          echo "To create a pull request, open:"
-          echo "https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${{ github.repository_owner }}:$BRANCH_NAME?expand=1&title=$ENCODED_TITLE"
-          echo
-          echo "Suggested PR title:"
-          echo "$PR_TITLE"
-          echo
-          echo "Suggested PR body:"
-          echo "$PR_BODY"
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = process.env.BRANCH_NAME || '';
+            const prTitle = process.env.PR_TITLE || '';
+            const prBody = process.env.PR_BODY || '';
+            const repo = process.env.GITHUB_REPOSITORY || '';
+            const [owner, reponame] = repo.split('/');
+            const prLink = `https://github.com/${owner}/${reponame}/compare/tandoor-1...${owner}:${branch}?expand=1&title=${encodeURIComponent(prTitle)}`;
+            const issueTitle = `Manual Upstream PR Checklist: ${branch}`;
+            const issueBody = [
+              `A new branch is ready for upstream PR submission.`,
+              '',
+              `- [ ] Submit PR: [Create PR](${prLink})`,
+              '- [ ] PR merged',
+              '- [ ] Branch deleted',
+              '',
+              '**Suggested PR title:**',
+              '```',
+              prTitle,
+              '```',
+              '**Suggested PR body:**',
+              '```',
+              prBody,
+              '```',
+            ].join('\n');
+            await github.rest.issues.create({
+              owner,
+              repo: reponame,
+              title: issueTitle,
+              body: issueBody
+            });
