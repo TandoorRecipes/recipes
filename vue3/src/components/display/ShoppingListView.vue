@@ -378,5 +378,21 @@ function loadSupermarkets() {
 </script>
 
 <style scoped>
+/* Force dark mode styling for dropdowns */
+.theme-dark select,
+.theme-dark .dropdown,
+.theme-dark .v-select,
+.theme-dark .v-input,
+.theme-dark .v-menu__content {
+  background-color: #2b2b2b !important;
+  color: #f0f0f0 !important;
+  border: 1px solid #444;
+}
 
+/* Optional: hover and focus styling */
+.theme-dark select:focus,
+.theme-dark .v-select:focus {
+  outline: none;
+  border-color: #888;
+}
 </style>
