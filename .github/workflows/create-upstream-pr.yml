@@ -148,7 +148,9 @@ jobs:
             CHANGES_SUMMARY+=$'\nFiles changed:'
             CHANGES_SUMMARY+=$'\n'$(echo "$CHANGED_FILES" | sed '/^$/d; s/^/- /')
           fi
-          echo "changes_summary=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
+          echo "changes_summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Prepare commit subjects and JSON
         id: prepare_commits
