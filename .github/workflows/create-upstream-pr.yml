@@ -142,7 +142,12 @@ jobs:
         id: summarize_changes
         run: |
           CODE_COUNT=${{ steps.get_files.outputs.code_count }}
+          CHANGED_FILES="${{ steps.get_files.outputs.changed_files }}"
           CHANGES_SUMMARY="Modified $CODE_COUNT code files"
+          if [ "$CODE_COUNT" -gt 0 ]; then
+            CHANGES_SUMMARY+=$'\nFiles changed:'
+            CHANGES_SUMMARY+=$'\n'$(echo "$CHANGED_FILES" | sed '/^$/d; s/^/- /')
+          fi
           echo "changes_summary=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
 
       - name: Prepare commit subjects and JSON
@@ -211,7 +216,6 @@ jobs:
             for (const c of commits) {
               prBody += `- ${c.subject} ([${c.sha}](https://github.com/${owner}/${reponame}/commit/${c.sha}))\n`;
             }
-            prBody += `\n---\n`;
             core.setOutput('prTitle', prTitle);
             core.setOutput('prBody', prBody);
 
