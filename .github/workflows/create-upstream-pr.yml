@@ -131,7 +131,8 @@ jobs:
         id: get_files
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          CHANGED_FILES=$(git diff upstream/tandoor-1..$BRANCH_NAME --name-only)
+          INFRA_PATTERNS='^\.github/|^cookbook/version_info\.py$|^\.gitattributes$'
+          CHANGED_FILES=$(git diff upstream/tandoor-1..$BRANCH_NAME --name-only | grep -Ev "$INFRA_PATTERNS" || true)
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           printf "%s\n" "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -143,8 +144,10 @@ jobs:
         run: |
           CODE_COUNT=${{ steps.get_files.outputs.code_count }}
           CHANGED_FILES="${{ steps.get_files.outputs.changed_files }}"
-          CHANGES_SUMMARY="Modified $CODE_COUNT code files"
-          if [ "$CODE_COUNT" -gt 0 ]; then
+          if [ "$CODE_COUNT" -eq 0 ]; then
+            CHANGES_SUMMARY="No code files changed. No PR required."
+          else
+            CHANGES_SUMMARY="Modified $CODE_COUNT code files"
             CHANGES_SUMMARY+=$'\nFiles changed:'
             CHANGES_SUMMARY+=$'\n'$(echo "$CHANGED_FILES" | sed '/^$/d; s/^/- /')
           fi
@@ -229,10 +232,15 @@ jobs:
           PR_TITLE: ${{ steps.build_pr_content.outputs.prTitle }}
           PR_BODY: ${{ steps.build_pr_content.outputs.prBody }}
         run: |
+          if [ "${{ steps.get_files.outputs.code_count }}" -eq 0 ] || [ "${{ steps.prepare_commits.outputs.commit_subjects }}" = "" ]; then
+            echo "ℹ️ No code changes or commits to contribute. No PR required."
+            exit 0
+          fi
+          ENCODED_TITLE=$(python3 -c "import urllib.parse,os; print(urllib.parse.quote(os.environ['PR_TITLE']))")
           echo "✅ Branch pushed: $BRANCH_NAME"
           echo
           echo "To create a pull request, open:"
-          echo "https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${{ github.repository_owner }}:$BRANCH_NAME?expand=1"
+          echo "https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${{ github.repository_owner }}:$BRANCH_NAME?expand=1&title=$ENCODED_TITLE"
           echo
           echo "Suggested PR title:"
           echo "$PR_TITLE"
