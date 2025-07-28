@@ -19,7 +19,7 @@ export default defineConfig({
             registerType: 'autoUpdate',
             strategies: 'injectManifest',
             srcDir: 'src',
-            filename: 'sw.ts',
+            filename: 'service-worker.ts',
             injectManifest: {
                 swDest: "../cookbook/templates/sw.js",
                 injectionPoint: undefined
