@@ -43,6 +43,7 @@ COPY . ./
 # delete default nginx config and link it to tandoors config
 RUN rm -rf /etc/nginx/http.d
 RUN ln -s /opt/recipes/nginx/conf.d /etc/nginx/http.d
+RUN nginx
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
