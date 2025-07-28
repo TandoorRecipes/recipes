@@ -62,9 +62,14 @@ class FoodPropertyHelper:
                                         computed_properties[pt.id]['food_values'] = self.add_or_create(
                                             computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
-                        if i.amount == 0 or i.no_amount:  # don't count ingredients without an amount as missing
-                            computed_properties[pt.id]['missing_value'] = computed_properties[pt.id]['missing_value'] or False  # don't override if another food was already missing
+                        # if no amount and food does not exist yet add it but don't count as missing
+                        if i.amount == 0 or i.no_amount and i.food.id not in computed_properties[pt.id]['food_values']:
                             computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
+                        # if amount is present but unit is missing indicate it in the result
+                        elif i.unit is None:
+                            if i.food.id not in computed_properties[pt.id]['food_values']:
+                                computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
+                            computed_properties[pt.id]['food_values'][i.food.id]['missing_unit'] = True
                         else:
                             computed_properties[pt.id]['missing_value'] = True
                             computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}

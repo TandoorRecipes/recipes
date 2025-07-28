@@ -36,7 +36,7 @@
     </v-card>
 
     <v-dialog max-width="900px" v-model="dialog">
-        <v-card v-if="dialogProperty">
+        <v-card v-if="dialogProperty" :loading="loading">
             <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${dialogProperty.unit} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
                                    v-model="dialog"></v-closable-card-title>
             <v-card-text>
@@ -60,8 +60,11 @@
                                 <model-edit-dialog model="UnitConversion" @create="refreshRecipe()"
                                                    :item-defaults="{baseAmount: 1, baseUnit: fv.missing_conversion.base_unit,  convertedUnit: fv.missing_conversion.converted_unit, food: fv.food}"></model-edit-dialog>
                             </v-chip>
+                            <v-chip color="warning" prepend-icon="$edit" class="cursor-pointer" :to="{name: 'ModelEditPage', params: {model: 'Recipe', id: recipe.id}}" v-else-if="fv.missing_unit">
+                                {{ $t('NoUnit') }}
+                            </v-chip>
                             <v-chip color="error" prepend-icon="$edit" class="cursor-pointer" v-else>
-                                {{ $t('Edit') }}
+                                {{ $t('MissingProperties') }}
                                 <model-edit-dialog model="Food" :item-id="fv.food.id" @update:model-value="refreshRecipe()"></model-edit-dialog>
                             </v-chip>
                         </template>
@@ -182,6 +185,8 @@ const sourceSelectedToShow = ref<'recipe' | 'food'>("food")
 const dialog = ref(false)
 const dialogProperty = ref<undefined | PropertyWrapper>(undefined)
 
+const loading = ref(false)
+
 onMounted(() => {
     if (!hasFoodProperties) {
         sourceSelectedToShow.value = "recipe"
@@ -193,6 +198,7 @@ onMounted(() => {
  */
 function refreshRecipe() {
     let api = new ApiApi()
+    loading.value = true
 
     api.apiRecipeRetrieve({id: recipe.value.id!}).then(r => {
         recipe.value = r
@@ -205,6 +211,8 @@ function refreshRecipe() {
                     }
                 })
             }
+
+            loading.value = false
         })
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
