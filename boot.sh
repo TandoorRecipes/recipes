@@ -92,3 +92,5 @@ if [ "$ipv6_disable" -eq 0 ]; then
 else
     exec gunicorn -b ":$TANDOOR_PORT" --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
 fi
+
+exec nginx
