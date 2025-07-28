@@ -25,10 +25,6 @@ def get_theming_values(request):
             space = Space.objects.filter(id=FORCE_THEME_FROM_SPACE).first()
 
     themes = {
-        UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
-        UserPreference.FLATLY: 'themes/flatly.min.css',
-        UserPreference.DARKLY: 'themes/darkly.min.css',
-        UserPreference.SUPERHERO: 'themes/superhero.min.css',
         UserPreference.TANDOOR: 'themes/tandoor.min.css',
         UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
     }
