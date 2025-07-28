@@ -86,11 +86,12 @@ chmod -R 755 /opt/recipes/mediafiles
 
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
+# start nginx
+sh nginx
+
 # Check if IPv6 is enabled, only then run gunicorn with ipv6 support
 if [ "$ipv6_disable" -eq 0 ]; then
     exec gunicorn -b "[::]:$TANDOOR_PORT" --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
 else
     exec gunicorn -b ":$TANDOOR_PORT" --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
 fi
-
-exec nginx
