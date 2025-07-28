@@ -792,7 +792,7 @@
     "Fulltext": "Fulltext",
     "FuzzySearchHelp": "Utilizza la ricerca fuzzy per trovare voci anche quando ci sono differenze nel modo in cui la parola è scritta.",
     "Fuzzy": "Fuzzy",
-    "PrecisionSearchHelp": "Preimpostazione che restituisce solo voci con ortografia corretta. ",
+    "PrecisionSearchHelp": "Preimpostazione che restituisce solo voci con ortografia precisa. ",
     "SearchSettingsWarning": "Di solito non è necessario modificare le impostazioni di ricerca. Queste impostazioni sono disponibili solo per utenti esperti con esigenze specifiche. ",
     "TrigramThreshold": "Soglia del trigramma",
     "Comment": "Commento",
