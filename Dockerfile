@@ -41,7 +41,7 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 COPY . ./
 
 # delete default nginx config and link it to tandoors config
-#RUN rm -rf /etc/nginx/conf.d
+RUN rm -rf /etc/nginx/http.d
 RUN ln -s /opt/recipes/nginx/conf.d /etc/nginx/http.d
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
