@@ -54,6 +54,8 @@ let routes = [
     {path: '/property-editor', component: () => import("@/pages/PropertyEditorPage.vue"), name: 'PropertyEditorPage'},
 
     {path: '/space-setup', component: () => import("@/pages/SpaceSetupPage.vue"), name: 'SpaceSetupPage'},
+
+    {path: '/:pathMatch(.*)*', component: () => import("@/pages/404Page.vue"), name: '404Page'},
 ]
 
 // load plugin routes into routing table

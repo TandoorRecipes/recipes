@@ -195,7 +195,7 @@ onMounted(() => {
     }
 
     .cv-day.today {
-        background-color: var(--primary) !important;
+        background-color: rgba(185, 135, 102, 0.2) !important;
     }
 
     .cv-day.outsideOfMonth {
@@ -208,12 +208,6 @@ onMounted(() => {
 
     .d01 .cv-day-number {
         background-color: #b98766 !important;
-    }
-
-    /* vueform/multiselect */
-
-    .multiselect-dropdown {
-        background: #212121 !important;
     }
 }
 
