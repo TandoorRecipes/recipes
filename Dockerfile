@@ -1,7 +1,7 @@
 FROM python:3.13-alpine3.21
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DOCKER true
 
 #This port will be used by gunicorn.
-EXPOSE 8080
+EXPOSE 80 8080
 
 #Create app dir and install requirements.
 RUN mkdir /opt/recipes
@@ -39,6 +39,10 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 
 #Copy project and execute it.
 COPY . ./
+
+# delete default nginx config and link it to tandoors config
+RUN rm -r /etc/nginx/conf.d
+RUN ln -s /opt/recipes/nginx/conf.d /etc/nginx/conf.d
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
