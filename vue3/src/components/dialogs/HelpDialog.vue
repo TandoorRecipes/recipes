@@ -22,8 +22,15 @@
                                 <v-text-field density="compact" variant="outlined" class="pt-2 pb-2" :label="$t('Search')" hide-details clearable></v-text-field>
                             </v-list-item>
                             <v-divider></v-divider>
-                            <v-list-item link title="Start" @click="window = 'start'"></v-list-item>
-                            <v-list-item link title="Space" @click="window = 'space'"></v-list-item>
+                            <v-list-item link title="Start" @click="window = 'start'" prepend-icon="fa-solid fa-house"></v-list-item>
+                            <v-list-item link title="Space" @click="window = 'space'" prepend-icon="fa-solid fa-database"></v-list-item>
+                            <v-list-item link :title="$t('Recipes')" @click="window = 'recipes'" prepend-icon="$recipes"></v-list-item>
+                            <v-list-item link :title="$t('Import')" @click="window = 'import'" prepend-icon="$import"></v-list-item>
+                            <v-list-item link :title="$t('Unit')" @click="window = 'unit'" prepend-icon="fa-solid fa-scale-balanced"></v-list-item>
+                            <v-list-item link :title="$t('Food')" @click="window = 'food'" prepend-icon="fa-solid fa-carrot"></v-list-item>
+                            <v-list-item link :title="$t('Keyword')" @click="window = 'keyword'" prepend-icon="fa-solid fa-tags"></v-list-item>
+                            <v-list-item link title="Recipe Structure" @click="window = 'recipe_structure'" prepend-icon="fa-solid fa-diagram-project"></v-list-item>
+                            <v-list-item link :title="$t('Property')" @click="window = 'properties'" prepend-icon="fa-solid fa-database"></v-list-item>
                         </v-list>
 
                     </v-navigation-drawer>
@@ -58,7 +65,8 @@
                                     <p class="mt-3">All your data is stored in a Space where you can invite other people to collaborate on your recipe database. Typcially the members of a space
                                         belong to one family/household/organization.</p>
 
-                                    <p class="mt-3">While everyone can access all recipes by default, Books, Shopping Lists and Mealplans are not shared by default. You can share them with other members of your space
+                                    <p class="mt-3">While everyone can access all recipes by default, Books, Shopping Lists and Mealplans are not shared by default. You can share them with other
+                                        members of your space
                                         using the settings.
                                     </p>
                                     <p class="mt-3">You can create and be a member of multiple spaces. Switch between them freely using the navigation or space settings. Depending
@@ -68,6 +76,130 @@
                                     <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-database" class="me-2" :to="{name: 'UserSpaceSettings'}">{{ $t('YourSpaces') }}</v-btn>
                                     <v-btn color="primary" variant="tonal" prepend-icon="$settings" class="me-2" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
                                     <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-users" class="me-2" :to="{name: 'SpaceMemberSettings'}">{{ $t('Invites') }}</v-btn>
+
+                                </v-window-item>
+                                <v-window-item value="recipes">
+                                    <p class="mt-3">Recipes are the foundation of your Tandoor space. A Recipe has one or more steps that contain ingredients, instructions and other information.
+                                        Ingredients in turn consist of an amount, a unit and a food, allowing recipes to be scaled, nutrition's to be calculated and shopping to be organized.
+                                    </p>
+
+                                    <p class="mt-3">Besides manually creating them you can also import them from various different places.
+                                    </p>
+                                    <p class="mt-3">Recipes, by default, are visible to all members of your space. Setting them to private means only you can see it. After setting it to private you
+                                        can manually specify the people who should be able to view the recipe.
+                                        You can also create a share link for the recipe to share it with everyone that has access to the link.
+                                    </p>
+                                    <p class="mt-3"></p>
+
+                                    <v-btn color="primary" variant="tonal" prepend-icon="$create" class="me-2" :to="{name: 'ModelEditPage', params: {model: 'Recipe'}}">{{ $t('Create') }}</v-btn>
+                                    <v-btn color="primary" variant="tonal" prepend-icon="$search" class="me-2" :to="{name: 'SearchPage'}">{{ $t('Search') }}</v-btn>
+
+                                </v-window-item>
+                                <v-window-item value="import">
+                                    <p class="mt-3">The Recipe importer is one of the most powerful features of Tandoor and allows you to quickly add recipes in multiple different ways.
+                                    </p>
+
+                                    <p class="mt-3">The easiest is to import from a URL. If that is not enough you can also import from an Image or PDF file using AI.
+                                    </p>
+                                    <p class="mt-3">If you already have an existing Recipe database in another format there is also a good chance Tandoor will have an
+                                        importer for that program.
+                                    </p>
+                                    <p class="mt-3"></p>
+
+                                    <v-btn color="primary" variant="tonal" prepend-icon="$import" class="me-2" :to="{name: 'RecipeImportPage'}">{{ $t('Import') }}</v-btn>
+
+                                </v-window-item>
+                                <v-window-item value="unit">
+                                    <p class="mt-3">Units allow you to measure how much of something you need in a recipe or on a shopping list.
+                                        They are also essential for the calculation of Properties.
+                                    </p>
+
+                                    <p class="mt-3">Setting a base unit allows you to name your Unit however you want (e.g. grams, g, G, gram) while allowing Tandoor
+                                        to automatically convert between the units in the same system (weight/volume, e.g. from g to kg or from cup to pint).
+                                    </p>
+                                    <p class="mt-3">Additionally you can use custom unit conversion to convert between volume and weight trough the specific density
+                                        of a food (e.g. 1 cup of flour = 120 g). These conversions are used to calculate the Properties for a Recipe
+                                        and might allow cosmetic display changes later.
+                                    </p>
+
+
+                                    <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-scale-balanced" class="me-2" :to="{name: 'ModelListPage', params: {model: 'Unit'}}">
+                                        {{ $t('Unit') }}
+                                    </v-btn>
+                                    <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-exchange-alt" class="me-2" :to="{name: 'ModelListPage', params: {model: 'UnitConversion'}}">
+                                        {{ $t('Conversion') }}
+                                    </v-btn>
+
+                                </v-window-item>
+                                <v-window-item value="food">
+                                    <p class="mt-3">Foods have multiple uses in Tandoor. Their most important task is to be part of recipe ingredients together with an amount and
+                                        a unit.
+                                    </p>
+
+                                    <p class="mt-3">Using the Food editor you can also add properties to a food or link the food to another recipe or external URL.
+                                    </p>
+                                    <p class="mt-3">Foods are also used or created when adding entries to the shopping list.
+                                    </p>
+
+
+                                    <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-carrot" class="me-2" :to="{name: 'ModelListPage', params: {model: 'Food'}}">
+                                        {{ $t('Food') }}
+                                    </v-btn>
+
+                                </v-window-item>
+                                <v-window-item value="keyword">
+                                    <p class="mt-3">Keywords are a very flexible Tool to help you organize your recipe collection.
+                                        Keywords can quickly be created when editing a Recipe by just typing into the Keywords field or they can
+                                        be created trough the Keyword Editor.
+                                    </p>
+
+                                    <p class="mt-3">Typical keywords include meal types (breakfast, lunch, dinner, ...), couise (american, italian, ...) or diet (vegan, vegetarian, ..).
+
+                                    </p>
+                                    <p class="mt-3">Tip: Using Emojis in Keywords makes them easy to recognize.
+                                    </p>
+
+
+                                    <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-tags" class="me-2" :to="{name: 'ModelListPage', params: {model: 'Keyword'}}">
+                                        {{ $t('Keyword') }}
+                                    </v-btn>
+
+                                </v-window-item>
+                                <v-window-item value="recipe_structure">
+                                    <p class="mt-3">A Recipe consists of multiple Steps.
+                                    </p>
+
+                                    <p class="mt-3">Each Step has Ingreditens (which are at least a Food but typically consist of amount,
+                                        Unit and Food). A Step can also contain instuctions, times, files or link to another Recipe.
+                                    </p>
+                                    <p class="mt-3">Additionally a Recipe can have Properties, Comments, Keywords and more.
+                                    </p>
+                                    <!-- TODO diagram -->
+
+                                </v-window-item>
+
+                                <v-window-item value="properties">
+                                    <p class="mt-3">The Properties system allows you to add additional data to your Foods and Recipes in the respective editors.
+                                        Most commonly you would use this to add nutrition facts but the system can also be used to track prices,
+                                        dietary points or any other kind of property.
+                                    </p>
+
+                                    <p class="mt-3">You first need to create the Property Types that you need (e.g. Carbohydrates, Sugar, Price, Points, ..).
+                                        Setting the FDC ID for a Property Type allows Tandoor to connect your custom Property Type to a property in the FDC database.
+                                        You can then go to a Food, set its FDC ID and Tandoor can automatically pull the properties you want from the FDC database.
+                                    </p>
+                                    <p class="mt-3">When adding a Property to the Recipe it will just be staticly displayed in the Recipe view.
+                                        Adding properties to a Foods will allow Tandoor to calculate the properties for all the Ingredients in a Recipe based
+                                        on the Foods and their respective Units and Amounts.
+                                    </p>
+
+                                    <p class="mt-3">Food Properties are entered based on a certain amount of food (often 100 g). Unit Conversions allow Tandoor to
+                                        calculate the property amount if a Food is given in a different unit (e.g. 1kg or 1 cup).
+                                    </p>
+
+                                      <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-database" class="me-2" :to="{name: 'ModelListPage', params: {model: 'PropertyType'}}">
+                                        {{ $t('Property') }}
+                                    </v-btn>
 
                                 </v-window-item>
                             </v-window>
