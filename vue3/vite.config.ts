@@ -16,14 +16,10 @@ export default defineConfig({
             autoImport: true,
         }),
         VitePWA({
-            registerType: 'autoUpdate',
+            //registerType: 'autoUpdate',
             strategies: 'injectManifest',
             srcDir: 'src',
             filename: 'service-worker.ts',
-            injectManifest: {
-                swDest: "../cookbook/templates/sw.js",
-                injectionPoint: undefined
-            }
         })
     ],
     resolve: {

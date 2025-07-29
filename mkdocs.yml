@@ -13,6 +13,8 @@ theme:
   favicon: logo_color.svg
   palette:
     scheme: slate
+    primary: custom
+    accent: custom
 
 
 
