@@ -1,7 +1,7 @@
 FROM python:3.13-alpine3.21
 
 #Install all dependencies.
-    RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
@@ -42,7 +42,7 @@ COPY . ./
 
 # delete default nginx config and link it to tandoors config
 RUN rm -rf /etc/nginx/http.d
-RUN ln -s /opt/recipes/nginx/conf.d /etc/nginx/http.d
+RUN ln -s /opt/recipes/http.d /etc/nginx/http.d
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
