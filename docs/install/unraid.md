@@ -1,6 +1,9 @@
 !!! info "Community Contributed"
     This guide was contributed by the community and is neither officially supported, nor updated or tested.
 
+!!! danger "Tandoor 2 Compatibility"
+    This guide has not been verified/tested for Tandoor 2, which now integrates a nginx service inside the default docker container and exposes its service on port 80 instead of 8080.
+
 [Unraid](https://unraid.net/) is an operating system that allows you to easily install and setup applications.
 
 Thanks to [CorneliousJD](https://github.com/CorneliousJD) this application can easily be installed using unraid.

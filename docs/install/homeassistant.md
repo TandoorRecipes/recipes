@@ -3,6 +3,9 @@
     Many thanks to [alexbelgium](https://github.com/alexbelgium) for making implementing everything required to have 
     Tandoor run in HA.
 
+!!! danger "Tandoor 2 Compatibility"
+    This guide has not been verified/tested for Tandoor 2, which now integrates a nginx service inside the default docker container and exposes its service on port 80 instead of 8080.
+
 ![Addon version](https://img.shields.io/badge/dynamic/json?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Ftandoor_recipes%2Fconfig.json) ![Last update](https://img.shields.io/badge/dynamic/json?label=Updated&query=%24.last_update&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Ftandoor_recipes%2Fupdater.json) ![aarch64][aarch64-badge] ![amd64][amd64-badge] ![armv7][armv7-badge]
 
 ### Introduction

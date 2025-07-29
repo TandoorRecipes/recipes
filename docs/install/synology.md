@@ -1,6 +1,9 @@
 !!! info "Community Contributed"
     This guide was contributed by the community and is neither officially supported, nor updated or tested. Since I cannot test it myself, feedback and improvements are always very welcome.
 
+!!! danger "Tandoor 2 Compatibility"
+    This guide has not been verified/tested for Tandoor 2, which now integrates a nginx service inside the default docker container and exposes its service on port 80 instead of 8080.
+
 ## **Instructions**
 
 Basic guide to setup `vabenee1111/recipes` docker container on Synology NAS.

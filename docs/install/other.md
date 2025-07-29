@@ -3,6 +3,8 @@
     This page especially contains some setups that might help you if you really want to go down a certain path but none
     of the examples are supported (as I simply am not able to give you support for them).
 
+!!! danger "Tandoor 2 Compatibility"
+    This guide has not been verified/tested for Tandoor 2, which now integrates a nginx service inside the default docker container and exposes its service on port 80 instead of 8080.
 
 ## Apache + Traefik + Sub-Path
 
