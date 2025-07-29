@@ -89,3 +89,5 @@ venv/
 .idea/easy-i18n.xml
 cookbook/static/vue3
 vue3/node_modules
+cookbook/tests/other/docs/reports/tests/tests.html
+cookbook/tests/other/docs/reports/tests/pytest.xml

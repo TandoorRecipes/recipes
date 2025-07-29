@@ -120,7 +120,7 @@ urlpatterns = [
     path('api-token-auth/', CustomAuthToken.as_view()),
 
     path('offline/', views.offline, name='view_offline'),
-    #path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
+    path('service-worker.js', views.service_worker, name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
 
 ]

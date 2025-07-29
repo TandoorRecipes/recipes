@@ -39,6 +39,11 @@
                         <model-select :label="$t('Unit')" v-model="editingObj.convertedUnit" model="Unit"></model-select>
                     </v-col>
                 </v-row>
+                <v-row>
+                    <v-col>
+                        <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
+                    </v-col>
+                </v-row>
             </v-form>
         </v-card-text>
     </model-editor-base>

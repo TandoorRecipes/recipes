@@ -38,7 +38,7 @@
                         </v-list-item>
                         <v-divider></v-divider>
 
-                        <component :is="item.component" :="item" v-for="item in useNavigation().getUserNavigation()"></component>
+                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -79,7 +79,7 @@
                     <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
                 </v-list-item>
                 <v-divider></v-divider>
-                <component :is="item.component" :="item" v-for="item in useNavigation().NAVIGATION_DRAWER"></component>
+                <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
 
                 <navigation-drawer-context-menu></navigation-drawer-context-menu>
             </v-list>
@@ -113,7 +113,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <component :is="item.component" :="item" v-for="item in useNavigation().BOTTOM_NAVIGATION"></component>
+                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>
@@ -195,7 +195,7 @@ onMounted(() => {
     }
 
     .cv-day.today {
-        background-color: var(--primary) !important;
+        background-color: rgba(185, 135, 102, 0.2) !important;
     }
 
     .cv-day.outsideOfMonth {
@@ -208,12 +208,6 @@ onMounted(() => {
 
     .d01 .cv-day-number {
         background-color: #b98766 !important;
-    }
-
-    /* vueform/multiselect */
-
-    .multiselect-dropdown {
-        background: #212121 !important;
     }
 }
 

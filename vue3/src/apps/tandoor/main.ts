@@ -12,7 +12,7 @@ import { createRulesPlugin } from 'vuetify/labs/rules'
 
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
-import {TandoorPlugin} from "@/types/Plugins.ts";
+import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
@@ -54,13 +54,13 @@ let routes = [
     {path: '/property-editor', component: () => import("@/pages/PropertyEditorPage.vue"), name: 'PropertyEditorPage'},
 
     {path: '/space-setup', component: () => import("@/pages/SpaceSetupPage.vue"), name: 'SpaceSetupPage'},
+
+    {path: '/:pathMatch(.*)*', component: () => import("@/pages/404Page.vue"), name: '404Page'},
 ]
 
-const pluginModules = import.meta.glob('@/plugins/*/plugin.ts', { eager: true })
-const tandoorPlugins = [] as TandoorPlugin[]
-Object.values(pluginModules).forEach(module => {
-    tandoorPlugins.push(module.plugin)
-    routes = routes.concat(module.plugin.routes)
+// load plugin routes into routing table
+TANDOOR_PLUGINS.forEach(plugin => {
+    routes = routes.concat(plugin.routes)
 })
 
 const router = createRouter({

@@ -4,11 +4,17 @@ import {registerRoute, setCatchHandler} from 'workbox-routing';
 import {CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate} from 'workbox-strategies';
 import {ExpirationPlugin} from 'workbox-expiration';
 import {BackgroundSyncPlugin, Queue} from "workbox-background-sync";
+import { clientsClaim } from 'workbox-core'
+
+
 
 cleanupOutdatedCaches()
 
 declare let self: ServiceWorkerGlobalScope
 precacheAndRoute(self.__WB_MANIFEST)
+
+self.skipWaiting()
+clientsClaim()
 
 const OFFLINE_CACHE_NAME = 'offline-html';
 let script_name = typeof window !== 'undefined' ? localStorage.getItem('SCRIPT_NAME') : '/'

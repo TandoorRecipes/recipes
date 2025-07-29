@@ -1,9 +1,5 @@
 <template>
     <v-container>
-        <v-breadcrumbs density="compact">
-            <v-breadcrumbs-item :to="{name: 'DatabasePage'}">{{ $t('Database') }}</v-breadcrumbs-item>
-        </v-breadcrumbs>
-
         <v-row>
             <v-col>
                 <v-card prepend-icon="fa-solid fa-folder-tree" :title="$t('Database')">

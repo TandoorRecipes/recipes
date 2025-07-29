@@ -5,7 +5,6 @@ TANDOOR_PORT="${TANDOOR_PORT:-8080}"
 GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 GUNICORN_THREADS="${GUNICORN_THREADS:-2}"
 GUNICORN_LOG_LEVEL="${GUNICORN_LOG_LEVEL:-'info'}"
-NGINX_CONF_FILE=/opt/recipes/nginx/conf.d/Recipes.conf
 
 display_warning() {
     echo "[WARNING]"
@@ -13,11 +12,6 @@ display_warning() {
 }
 
 echo "Checking configuration..."
-
-# Nginx config file must exist if gunicorn is not active
-if [ ! -f "$NGINX_CONF_FILE" ] && [ $GUNICORN_MEDIA -eq 0 ]; then
-    display_warning "Nginx configuration file could not be found at the default location!\nPath: ${NGINX_CONF_FILE}"
-fi
 
 # SECRET_KEY (or a valid file at SECRET_KEY_FILE) must be set in .env file
 
@@ -92,6 +86,11 @@ chmod -R 755 /opt/recipes/mediafiles
 
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
+# start nginx
+echo "Starting nginx"
+nginx
+
+echo "Starting gunicorn"
 # Check if IPv6 is enabled, only then run gunicorn with ipv6 support
 if [ "$ipv6_disable" -eq 0 ]; then
     exec gunicorn -b "[::]:$TANDOOR_PORT" --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi

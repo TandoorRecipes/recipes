@@ -1,15 +1,15 @@
-:root {
-    --md-primary-fg-color: #ffcb76;
-    --md-accent-fg-color: #FF6F00;
+:root > * {
+    --md-primary-fg-color: #ddbf86;
+    --md-accent-fg-color: #b55e4f;
 
-    --md-primary-fg-color--light: #ffcb76;
+    --md-primary-fg-color--light: #ddbf86;
 
     /* not working part, has no effect */
-    --md-primary-bg-color: #272727;
-    --md-default-bg-color: #272727;
-    --md-default-bg-color--light: #272727;
-    --md-default-bg-color--lighter: #272727;
-    --md-default-bg-color--lightest: #272727;
+    --md-primary-bg-color: #121212;
+    --md-default-bg-color: #121212;
+    --md-default-bg-color--light: #f5efea;
+    --md-default-bg-color--lighter: #f5efea;
+    --md-default-bg-color--lightest: #f5efea;
 }
 
 /*

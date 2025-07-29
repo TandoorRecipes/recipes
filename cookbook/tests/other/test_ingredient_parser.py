@@ -1,3 +1,4 @@
+import pytest
 from django.contrib import auth
 from django.test import RequestFactory
 from django_scopes import scope
@@ -5,7 +6,11 @@ from django_scopes import scope
 from cookbook.helper.ingredient_parser import IngredientParser
 
 
-def test_ingredient_parser(u1_s1):
+@pytest.mark.parametrize("arg", [
+    [True],
+    [False],
+])
+def test_ingredient_parser(arg, u1_s1):
     expectations = {
         "2¼ l Wasser": (2.25, "l", "Wasser", ""),
         "3¼l Wasser": (3.25, "l", "Wasser", ""),
@@ -67,7 +72,8 @@ def test_ingredient_parser(u1_s1):
         "1 Porreestange(n) , ca. 200 g": (1.0, None, 'Porreestange(n)', 'ca. 200 g'),  # leading space before comma
         # test for over long food entries to get properly split into the note field
         "1 Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l": (
-            1.0, 'Lorem', 'ipsum', 'dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l'),
+            1.0, 'Lorem', 'ipsum',
+            'dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l'),
         "1 LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl": (
             1.0, None, 'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingeli',
             'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl'),
@@ -86,7 +92,7 @@ def test_ingredient_parser(u1_s1):
     request = RequestFactory()
     request.user = user
     request.space = space
-    ingredient_parser = IngredientParser(request, False, ignore_automations=True)
+    ingredient_parser = IngredientParser(request, False, ignore_automations=arg[0])
 
     count = 0
     with scope(space=space):

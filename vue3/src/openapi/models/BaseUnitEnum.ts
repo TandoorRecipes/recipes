@@ -14,43 +14,47 @@
 
 
 /**
- * * `G` - g
- * * `KG` - kg
- * * `ML` - ml
- * * `L` - l
- * * `OUNCE` - ounce
- * * `POUND` - pound
- * * `FLUID_OUNCE` - fluid_ounce
- * * `TSP` - tsp
- * * `TBSP` - tbsp
- * * `CUP` - cup
- * * `PINT` - pint
- * * `QUART` - quart
- * * `GALLON` - gallon
- * * `IMPERIAL_FLUID_OUNCE` - imperial fluid ounce
- * * `IMPERIAL_PINT` - imperial pint
- * * `IMPERIAL_QUART` - imperial quart
- * * `IMPERIAL_GALLON` - imperial gallon
+ * * `g` - g
+ * * `kg` - kg
+ * * `ounce` - ounce
+ * * `pound` - pound
+ * * `ml` - ml
+ * * `l` - l
+ * * `fluid_ounce` - fluid_ounce
+ * * `pint` - pint
+ * * `quart` - quart
+ * * `gallon` - gallon
+ * * `tbsp` - tbsp
+ * * `tsp` - tsp
+ * * `us_cup` - US Cup
+ * * `imperial_fluid_ounce` - imperial fluid ounce
+ * * `imperial_pint` - imperial pint
+ * * `imperial_quart` - imperial quart
+ * * `imperial_gallon` - imperial gallon
+ * * `imperial_tbsp` - imperial tbsp
+ * * `imperial_tsp` - imperial tsp
  * @export
  */
 export const BaseUnitEnum = {
-    G: 'G',
-    Kg: 'KG',
-    Ml: 'ML',
-    L: 'L',
-    Ounce: 'OUNCE',
-    Pound: 'POUND',
-    FluidOunce: 'FLUID_OUNCE',
-    Tsp: 'TSP',
-    Tbsp: 'TBSP',
-    Cup: 'CUP',
-    Pint: 'PINT',
-    Quart: 'QUART',
-    Gallon: 'GALLON',
-    ImperialFluidOunce: 'IMPERIAL_FLUID_OUNCE',
-    ImperialPint: 'IMPERIAL_PINT',
-    ImperialQuart: 'IMPERIAL_QUART',
-    ImperialGallon: 'IMPERIAL_GALLON'
+    G: 'g',
+    Kg: 'kg',
+    Ounce: 'ounce',
+    Pound: 'pound',
+    Ml: 'ml',
+    L: 'l',
+    FluidOunce: 'fluid_ounce',
+    Pint: 'pint',
+    Quart: 'quart',
+    Gallon: 'gallon',
+    Tbsp: 'tbsp',
+    Tsp: 'tsp',
+    UsCup: 'us_cup',
+    ImperialFluidOunce: 'imperial_fluid_ounce',
+    ImperialPint: 'imperial_pint',
+    ImperialQuart: 'imperial_quart',
+    ImperialGallon: 'imperial_gallon',
+    ImperialTbsp: 'imperial_tbsp',
+    ImperialTsp: 'imperial_tsp'
 } as const;
 export type BaseUnitEnum = typeof BaseUnitEnum[keyof typeof BaseUnitEnum];
 

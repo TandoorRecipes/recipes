@@ -16,7 +16,7 @@ from django.core.cache import caches
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.db import models
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
@@ -31,7 +31,7 @@ from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin,
 from cookbook.models import InviteLink, ShareLink, Space, UserSpace
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
-from recipes.settings import PLUGINS
+from recipes.settings import PLUGINS, BASE_DIR
 
 
 def index(request, path=None, resource=None):
@@ -41,7 +41,7 @@ def index(request, path=None, resource=None):
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
-    if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share') :
+    if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
         return render(request, 'frontend/tandoor.html', {})
     else:
         return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
@@ -134,14 +134,15 @@ def no_perm(request):
         return HttpResponseRedirect(reverse('account_login') + '?next=' + request.GET.get('next', '/search/'))
     return render(request, 'no_perm_info.html')
 
+
 def recipe_pdf_viewer(request, pk):
     with scopes_disabled():
         recipe = get_object_or_404(Recipe, pk=pk)
         if share_link_valid(recipe, request.GET.get('share', None)) or (has_group_permission(
                 request.user, ['guest']) and recipe.space == request.space):
-
             return render(request, 'pdf_viewer.html', {'recipe_id': pk, 'share': request.GET.get('share', None)})
         return HttpResponseRedirect(reverse('index'))
+
 
 def system(request):
     if not request.user.is_superuser:
@@ -451,6 +452,13 @@ def offline(request):
     return render(request, 'offline.html', {})
 
 
+def service_worker(request):
+    with open(os.path.join(BASE_DIR, 'cookbook', 'static', 'vue3', 'service-worker.js'), 'rb') as service_worker_file:
+        response = HttpResponse(content=service_worker_file)
+        response['Content-Type'] = 'text/javascript'
+        return response
+
+
 def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
@@ -516,4 +524,3 @@ def get_orphan_files(delete_orphans=False):
         orphans = find_orphans()
 
     return [img[1] for img in orphans]
-

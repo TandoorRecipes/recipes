@@ -7,6 +7,7 @@ import type {
 
 import {createI18n} from "vue-i18n";
 import en from "../../vue3/src/locales/en.json";
+import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
 
 /**
  * lazy loading of translation, resources:
@@ -31,9 +32,16 @@ export function setupI18n() {
         locale: 'en',
         fallbackLocale: 'en',
         messages: {
-            en
+            en,
         },
     }) as I18n
+
+    // async load plugin default locales
+    TANDOOR_PLUGINS.forEach(plugin => {
+        plugin.defaultLocale.then(pluginMessages => {
+            i18n.global.mergeLocaleMessage('en', pluginMessages)
+        })
+    })
 
     // async load user locale into existing i18n instance
     loadLocaleMessages(i18n, locale).then()
@@ -48,9 +56,10 @@ export function setupI18n() {
  */
 export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
     // load locale messages
-    const messages = await import(`./locales/${locale}.json`).then(
-        (r: any) => r.default || r
-    )
+    let messages = en
+    if (locale != 'en') {
+        messages = await import(`./locales/${locale}.json`).then((r: any) => r.default || r)
+    }
 
     // remove empty strings
     Object.entries(messages).forEach(([key, value]) => {
@@ -62,6 +71,25 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
     // set messages for locale
     i18n.global.setLocaleMessage(locale, messages)
 
+    // async load and merge messages from plugins
+    TANDOOR_PLUGINS.forEach(plugin => {
+        let pluginLocales = getSupportedLocales(plugin.localeFiles)
+        if (pluginLocales.includes(locale)) {
+            import(`@/plugins/${plugin.basePath}/locales/${locale}.json`).then((r: any) => {
+                let pluginMessages = r.default || r
+
+                // remove empty strings
+                Object.entries(pluginMessages).forEach(([key, value]) => {
+                    if (value === '') {
+                        delete pluginMessages[key]
+                    }
+                })
+
+                i18n.global.mergeLocaleMessage(locale, pluginMessages)
+            })
+        }
+    })
+
     // switch to given locale
     setLocale(i18n, locale)
 }
@@ -69,10 +97,11 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
 /**
  * loop trough translation files to determine for which locales a translation is available
  * @return string[] of supported locales
+ * @param localeFiles module import of locale files to loop trough
  */
-function getSupportedLocales() {
+function getSupportedLocales(localeFiles = import.meta.glob('@/locales/*.json')) {
     let supportedLocales: string[] = []
-    let localeFiles = import.meta.glob('@/locales/*.json');
+
     for (const path in localeFiles) {
         supportedLocales.push(path.split('/').slice(-1)[0].split('.')[0]);
     }

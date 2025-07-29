@@ -5,6 +5,9 @@ These instructions are inspired from a standard django/gunicorn/postgresql instr
 !!! warning
     Make sure to use at least Python 3.10 (although 3.12 is preferred) or higher, and ensure that `pip` is associated with Python 3. Depending on your system configuration, using `python` or `pip` might default to Python 2. Make sure your machine has at least 2048 MB of memory; otherwise, the `yarn build` process may fail with the error: `FATAL ERROR: Reached heap limit - Allocation failed: JavaScript heap out of memory`.
 
+!!! warning
+    These instructions are **not** regularly reviewed and might be outdated.
+
 ## Prerequisites
 
 Setup user: `sudo useradd recipes`
