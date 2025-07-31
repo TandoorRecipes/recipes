@@ -6,6 +6,11 @@ GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 GUNICORN_THREADS="${GUNICORN_THREADS:-2}"
 GUNICORN_LOG_LEVEL="${GUNICORN_LOG_LEVEL:-'info'}"
 
+if [ "${TANDOOR_PORT}" -eq 80 ]; then
+    echo "TANDOOR_PORT set to 8080 because 80 is now taken by the integrated nginx"
+    TANDOOR_PORT=8080
+fi
+
 display_warning() {
     echo "[WARNING]"
     echo -e "$1"
