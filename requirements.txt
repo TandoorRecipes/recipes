@@ -1,6 +1,6 @@
 aiohttp==3.12.14
 beautifulsoup4==4.13.4
-boto3==1.39.10
+boto3==1.39.14
 bleach==6.2.0
 cryptography===45.0.5
 crispy-bootstrap4==2025.6
@@ -27,7 +27,7 @@ gunicorn==23.0.0
 icalendar==6.3.1
 inflection==0.5.1
 Jinja2==3.1.6
-lxml==5.4.0
+lxml==6.0.0
 Markdown==3.8.2
 microdata==0.8.0
 mock==5.2.0
@@ -39,7 +39,7 @@ python-dotenv==1.1.1
 python-ldap==3.4.4
 python3-openid==3.2.0
 python3-saml==1.16.0
-pytubefix==9.3.0
+pytubefix==9.4.1
 pyyaml==6.0.2
 recipe-scrapers==15.8.0
 redis==6.2.0
