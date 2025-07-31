@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-05 10:58+0000\n"
+"PO-Revision-Date: 2025-07-21 09:43+0000\n"
 "Last-Translator: Aija Kozlovska <kozlovska.aija@gmail.com>\n"
 "Language-Team: Latvian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/lv/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -83,8 +83,8 @@ msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
-"Atstājiet tukšu Dropbox un ievadiet tikai Nextcloud bāzes URL (<kods> /"
-"remote.php/webdav/ </code> tiek pievienots automātiski)"
+"Atstājiet tukšu Dropbox un ievadiet tikai Nextcloud bāzes URL (<code> /remote"
+".php/webdav/ </code> tiek pievienots automātiski)"
 
 #: .\cookbook\forms.py:188
 msgid ""
@@ -147,48 +147,65 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Nosaka cik precīza ir meklēšana gadījumā, ja tiek izmantota trigram līdzība ("
+"jo zemāka vērtība, jo vairāk rakstīšanas kļūdas tiek ignorētas)."
 
 #: .\cookbook\forms.py:340
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Izvēlies meklēšanas veidu. Spied <a href=\"/docs/search/\">šeit</a>, lai "
+"apskatītu visas iespējas."
 
 #: .\cookbook\forms.py:341
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Izmanto aptuveno meklēšanu vienībām, atslēgas vārdiem un sastāvdaļām "
+"importējot un labojot receptes."
 
 #: .\cookbook\forms.py:342
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Lauki, kurus meklējot ignorēt akcentus.  Šī varianta izvēlēšanās var uzlabot "
+"vai pasliktināt meklēšanas kvalitāti atkarībā no valodas"
 
 #: .\cookbook\forms.py:343
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Lauki, kuros meklēt aptuveno līdzību. (piem. meklējot vārdu 'Kūka' tiks "
+"atrasts arī 'kūka' un 'ābolkūka')"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Lauki, kuros meklēt vārdu līdzības sākumu. (piem meklējot 'la' atradīt "
+"'lapas' un 'laims')"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Lauki, kuriem izmantot aptuveno meklēšanu. (piem. meklējot 'recpte' tiks "
+"atrasts 'recepte'.)  Piezīme: šis variants konfliktēs ar 'web' un 'raw' "
+"meklēšanas metodēm."
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Lauki priekš pilnās teksta meklēšanas.  Piezīme: 'web', 'phrase' un 'raw' "
+"meklēšanas metodes darbojās tikai ar pilno teksta meklēšanu."
 
 #: .\cookbook\forms.py:350
 #, fuzzy
@@ -198,11 +215,11 @@ msgstr "Meklēt"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Aptuvenā meklēšana"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorēt akcentus"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
@@ -745,8 +762,8 @@ msgid ""
 "            ."
 msgstr ""
 "Lūdzu apstipriniet, ka\n"
-"            <a href=\"mailto:%(email)s\">%(email)s</a> ir lietotāja "
-"%(user_display) e-pasta adrese\n"
+"            <a href=\"mailto:%(email)s\">%(email)s</a> ir e-pasta adrese "
+"lietotājam %(user_display)\n"
 "            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
@@ -1331,7 +1348,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line in between."
-msgstr "vai atstājot tukšu rindu starp  ."
+msgstr "vai atstājot tukšu rindu starp."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
@@ -1443,7 +1460,7 @@ msgstr "Nav Tiesību"
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr "Jūs neesat nevienā grupā un tādēļ nevarat izmantot šo lietotni!"
+msgstr "Jūs neesat nevienā grupā un tādēļ nevarat izmantot šo lietotni."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
@@ -1460,7 +1477,7 @@ msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
 msgstr ""
-"Jums nav nepieciešamo atļauju, lai skatītu šo vietni vai veiktu šo darbību!"
+"Jums nav nepieciešamo atļauju, lai skatītu šo vietni vai veiktu šo darbību."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
@@ -1548,6 +1565,16 @@ msgid ""
 "html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
 "            "
 msgstr ""
+" \n"
+"            Pilnā teksta meklēšanas mēģinājums vienkāršot dotos vārdus, lai "
+"tie sakristu ar tipiskajiem variantiem.  Piemēram: 'griezt', 'griezšana', "
+"'griezums' tiks vienkāršots uz 'griez'.\n"
+"            Lai kontrolētu meklētāja darbību ievadot vairākus meklējamos "
+"vārdus, ir pieejamas vairākas zemāk aprakstītās metodes.\n"
+"            Pilno tehnisko informāciju par tām var apskatīt <a "
+"href=https://www.postgresql.org/docs/current/textsearch-controls.html"
+"#TEXTSEARCH-PARSING-QUERIES>Postgresql mājas lapā.</a>\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:29
 msgid ""
@@ -2547,22 +2574,12 @@ msgid "Unable to determine PostgreSQL version."
 msgstr ""
 
 #: .\cookbook\views\views.py:317
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"             Šī lietojumprogramma nedarbojas, izmantojot Postgres datubāzi. "
-"Tas ir labi, bet nav ieteicams, jo dažas\n"
-"             funkcijas darbojas tikai ar Postgres datu bāzēm.\n"
-"        "
+"Šī lietojumprogramma nedarbojas, izmantojot Postgres datubāzi. Tas ir labi, "
+"bet nav ieteicams, jo dažas funkcijas darbojas tikai ar Postgres datu bāzēm."
 
 #: .\cookbook\views\views.py:360
 #, fuzzy

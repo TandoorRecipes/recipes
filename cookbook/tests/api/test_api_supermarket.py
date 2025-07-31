@@ -32,30 +32,30 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 2
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
     obj_1.space = space_2
     obj_1.save()
 
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
-    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 1
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
 
 
 def test_list_filter(obj_1, obj_2, u1_s1):
     r = u1_s1.get(reverse(LIST_URL))
     assert r.status_code == 200
     response = json.loads(r.content)
-    assert len(response) == 2
+    assert response['count'] == 2
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?limit=1').content)
-    assert len(response) == 1
+    assert response['count'] == 1
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=chicken').content)
-    assert len(response) == 0
+    assert response['count'] == 0
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[4:]}').content)
-    assert len(response) == 1
+    assert response['count'] == 1
 
 
 @pytest.mark.parametrize("arg", [

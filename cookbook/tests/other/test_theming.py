@@ -42,7 +42,7 @@ def test_theming_function(space_1, u1_s1):
     assert get_theming_values(request)['sticky_nav'] == ''
     assert get_theming_values(request)['app_name'] == 'Tandoor Recipes'
 
-    space_1.space_theme = Space.BOOTSTRAP
+    space_1.space_theme = Space.TANDOOR
     space_1.nav_bg_color = '#000000'
     space_1.nav_text_color = UserPreference.DARK
     space_1.app_name = 'test_app_name'
@@ -53,7 +53,7 @@ def test_theming_function(space_1, u1_s1):
     request.space = space_1
 
     # space settings apply when set
-    assert get_theming_values(request)['theme'] == static('themes/bootstrap.min.css')
+    assert get_theming_values(request)['theme'] == static('themes/tandoor.min.css')
     assert get_theming_values(request)['nav_bg_color'] == '#000000'
     assert get_theming_values(request)['nav_text_class'] == 'navbar-light'
     assert get_theming_values(request)['app_name'] == 'test_app_name'

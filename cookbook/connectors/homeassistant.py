@@ -5,15 +5,13 @@ from urllib.parse import urljoin
 
 from aiohttp import request, ClientResponseError
 
-from cookbook.connectors.connector import Connector
-from cookbook.models import ShoppingListEntry, ConnectorConfig, Space
+from cookbook.connectors.connector import Connector, ShoppingListEntryDTO
+from cookbook.models import ConnectorConfig
 
 
 class HomeAssistant(Connector):
     _config: ConnectorConfig
     _logger: Logger
-
-    _required_foreign_keys = ("food", "unit", "created_by")
 
     def __init__(self, config: ConnectorConfig):
         if not config.token or not config.url or not config.todo_entity:
@@ -34,7 +32,7 @@ class HomeAssistant(Connector):
             response.raise_for_status()
             return await response.json()
 
-    async def on_shopping_list_entry_created(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
+    async def on_shopping_list_entry_created(self, shopping_list_entry: ShoppingListEntryDTO) -> None:
         if not self._config.on_shopping_list_entry_created_enabled:
             return
 
@@ -55,18 +53,13 @@ class HomeAssistant(Connector):
         except ClientResponseError as err:
             self._logger.warning(f"received an exception from the api: {err.request_info.url=}, {err.request_info.method=}, {err.status=}, {err.message=}, {type(err)=}")
 
-    async def on_shopping_list_entry_updated(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
+    async def on_shopping_list_entry_updated(self, shopping_list_entry: ShoppingListEntryDTO) -> None:
         if not self._config.on_shopping_list_entry_updated_enabled:
             return
         pass
 
-    async def on_shopping_list_entry_deleted(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
+    async def on_shopping_list_entry_deleted(self, shopping_list_entry: ShoppingListEntryDTO) -> None:
         if not self._config.on_shopping_list_entry_deleted_enabled:
-            return
-
-        if not all(k in shopping_list_entry._state.fields_cache for k in self._required_foreign_keys):
-            # Sometimes the food foreign key is not loaded, and we cant load it from an async process
-            self._logger.debug("required property was not present in ShoppingListEntry")
             return
 
         item, _ = _format_shopping_list_entry(shopping_list_entry)
@@ -88,19 +81,19 @@ class HomeAssistant(Connector):
         pass
 
 
-def _format_shopping_list_entry(shopping_list_entry: ShoppingListEntry) -> Tuple[str, str]:
-    item = shopping_list_entry.food.name
-    if shopping_list_entry.amount > 0:
+def _format_shopping_list_entry(shopping_list_entry: ShoppingListEntryDTO) -> Tuple[str, str]:
+    item = shopping_list_entry.food_name
+    if shopping_list_entry.amount:
         item += f" ({shopping_list_entry.amount:.2f}".rstrip('0').rstrip('.')
-        if shopping_list_entry.unit and shopping_list_entry.unit.base_unit and len(shopping_list_entry.unit.base_unit) > 0:
-            item += f" {shopping_list_entry.unit.base_unit})"
-        elif shopping_list_entry.unit and shopping_list_entry.unit.name and len(shopping_list_entry.unit.name) > 0:
-            item += f" {shopping_list_entry.unit.name})"
+        if shopping_list_entry.base_unit:
+            item += f" {shopping_list_entry.base_unit})"
+        elif shopping_list_entry.unit_name:
+            item += f" {shopping_list_entry.unit_name})"
         else:
             item += ")"
 
     description = "From TandoorRecipes"
-    if shopping_list_entry.created_by.first_name and len(shopping_list_entry.created_by.first_name) > 0:
+    if shopping_list_entry.created_by.first_name:
         description += f", by {shopping_list_entry.created_by.first_name}"
     else:
         description += f", by {shopping_list_entry.created_by.username}"

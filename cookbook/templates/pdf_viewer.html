@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" height="100%">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrollbars on the body itself */
+        }
+
+        iframe {
+            display: block; /* Prevents potential extra space below the iframe */
+            width: 100%;
+            height: 100%;
+            border: none; /* Remove default iframe border */
+        }
+    </style>
+
+</head>
+<body>
+
+{% if share %}
+    <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'api_get_recipe_file' recipe_id %}?share={{ share }}"></iframe>
+{% else %}
+    <iframe src="{% static 'pdfjs/web/viewer.html' %}?file={% url 'api_get_recipe_file' recipe_id %}"></iframe>
+{% endif %}
+
+</body>
+</html>

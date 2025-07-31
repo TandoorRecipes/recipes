@@ -44,13 +44,17 @@ class FoodPropertyHelper:
             if i.food is not None:
                 conversions = uch.get_conversions(i)
                 for pt in property_types:
+                    # if a property could be calculated with an actual value
                     found_property = False
-                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:  # if food is configured incorrectly
-                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
+                    # if food has a value for the given property type (no matter if conversion is possible)
+                    has_property_value = False
+                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None and not (i.amount == 0 or i.no_amount):  # if food is configured incorrectly
+                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
                         computed_properties[pt.id]['missing_value'] = True
                     else:
                         for p in i.food.properties.all():
                             if p.property_type == pt and p.property_amount is not None:
+                                has_property_value = True
                                 for c in conversions:
                                     if c.unit == i.food.properties_food_unit:
                                         found_property = True
@@ -58,12 +62,19 @@ class FoodPropertyHelper:
                                         computed_properties[pt.id]['food_values'] = self.add_or_create(
                                             computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
-                        if i.amount == 0:  # don't count ingredients without an amount as missing
-                            computed_properties[pt.id]['missing_value'] = computed_properties[pt.id]['missing_value'] or False  # don't override if another food was already missing
-                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+                        # if no amount and food does not exist yet add it but don't count as missing
+                        if i.amount == 0 or i.no_amount and i.food.id not in computed_properties[pt.id]['food_values']:
+                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
+                        # if amount is present but unit is missing indicate it in the result
+                        elif i.unit is None:
+                            if i.food.id not in computed_properties[pt.id]['food_values']:
+                                computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
+                            computed_properties[pt.id]['food_values'][i.food.id]['missing_unit'] = True
                         else:
                             computed_properties[pt.id]['missing_value'] = True
-                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
+                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
+                            if has_property_value and i.unit is not None:
+                                computed_properties[pt.id]['food_values'][i.food.id]['missing_conversion'] = {'base_unit': {'id': i.unit.id, 'name': i.unit.name}, 'converted_unit': {'id': i.food.properties_food_unit.id, 'name': i.food.properties_food_unit.name}}
 
         return computed_properties
 
@@ -74,5 +85,5 @@ class FoodPropertyHelper:
         if key in d and d[key]['value']:
             d[key]['value'] += value
         else:
-            d[key] = {'id': food.id, 'food': food.name, 'value': value}
+            d[key] = {'id': food.id, 'food': {'id': food.id, 'name': food.name}, 'value': value}
         return d

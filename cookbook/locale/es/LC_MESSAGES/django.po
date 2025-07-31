@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-01-29 13:44+0000\n"
+"PO-Revision-Date: 2025-06-23 08:28+0000\n"
 "Last-Translator: Ángel <1024mb@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
@@ -284,14 +284,12 @@ msgid "You have more users than allowed in your space."
 msgstr "Tenés mas usuarios que los permitidos en tu espacio"
 
 #: .\cookbook\helper\recipe_url_import.py:310
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Usar fracciones"
+msgstr "rotación inversa"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "rotación cuidadosa"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
@@ -398,8 +396,9 @@ msgid "Section"
 msgstr "Sección"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
+#, fuzzy
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Corrige alimentos con "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -436,16 +435,14 @@ msgid "Other"
 msgstr "Otro"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
-msgstr "Grasas"
+msgstr "Grasa"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "gr."
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
@@ -468,6 +465,8 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Almacenamiento máximo de archivos para el espacio en MB. 0 para ilimitado, -"
+"1 para desactivar la carga de archivos."
 
 #: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
@@ -498,18 +497,16 @@ msgid "Nutrition"
 msgstr "Información Nutricional"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Combinar"
+msgstr "Alérgeno"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Precio"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Objetivo"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -532,54 +529,40 @@ msgid "Food Alias"
 msgstr "Alias de la Comida"
 
 #: .\cookbook\models.py:1468
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Unidades"
+msgstr "Alias de unidad"
 
 #: .\cookbook\models.py:1469
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Palabras clave"
+msgstr "Alias de palabra clave"
 
 #: .\cookbook\models.py:1470
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Descripción"
+msgstr "Reemplazo de descripción"
 
 #: .\cookbook\models.py:1471
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Instrucciones"
+msgstr "Reemplazo de instrucciones"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Nueva Unidad"
+msgstr "Unidad prohibida"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Transponer palabras"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Alias de la Comida"
+msgstr "Reemplazo de alimento"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description"
 msgid "Unit Replace"
-msgstr "Descripción"
+msgstr "Reemplazo de unidad"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Reemplazo de nombre"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -587,10 +570,8 @@ msgid "Recipe"
 msgstr "Receta"
 
 #: .\cookbook\models.py:1504
-#, fuzzy
-#| msgid "Food"
 msgid "Food"
-msgstr "Comida"
+msgstr "Alimento"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -648,22 +629,26 @@ msgstr "Invitación para Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1426
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Lista de compras existente para actualizar"
 
 #: .\cookbook\serializer.py:1428
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Lista de IDs de ingredientes de la receta para agregar; si no se "
+"proporciona, se agregarán todos los ingredientes."
 
 #: .\cookbook\serializer.py:1430
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Proporcionar un ID list_recipe y porciones igual a 0 eliminará esa lista de "
+"compras."
 
 #: .\cookbook\serializer.py:1439
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Cantidad de alimento a agregar a la lista de compras"
 
 #: .\cookbook\serializer.py:1441
 msgid "ID of unit to use for the shopping list"

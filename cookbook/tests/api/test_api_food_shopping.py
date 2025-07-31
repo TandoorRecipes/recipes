@@ -37,12 +37,12 @@ def test_shopping_forbidden_methods(food, u1_s1):
     ['u1_s2', 404],
     ['a1_s1', 204],
 ])
-def test_shopping_food_create(request, arg, food):
+def test_shopping_food_create(request, arg, food, ids=lambda arg: arg[0]):
     c = request.getfixturevalue(arg[0])
     r = c.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
     assert r.status_code == arg[1]
     if r.status_code == 204:
-        assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)) == 1
+        assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 1
 
 
 @pytest.mark.parametrize("arg", [
@@ -52,7 +52,7 @@ def test_shopping_food_create(request, arg, food):
     ['u1_s2', 404],
     ['a1_s1', 204],
 ])
-def test_shopping_food_delete(request, arg, food):
+def test_shopping_food_delete(request, arg, food, ids=lambda arg: arg[0]):
     c = request.getfixturevalue(arg[0])
     r = c.put(
         reverse(SHOPPING_FOOD_URL, args={food.id}),
@@ -61,7 +61,7 @@ def test_shopping_food_delete(request, arg, food):
     )
     assert r.status_code == arg[1]
     if r.status_code == 204:
-        assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)) == 0
+        assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 0
 
 
 def test_shopping_food_share(u1_s1, u2_s1, food, space_1):
@@ -71,8 +71,8 @@ def test_shopping_food_share(u1_s1, u2_s1, food, space_1):
         food2 = FoodFactory(space=space_1)
     u1_s1.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
     u2_s1.put(reverse(SHOPPING_FOOD_URL, args={food2.id}))
-    sl_1 = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
-    sl_2 = json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)
+    sl_1 = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)['results']
+    sl_2 = json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)['results']
     assert len(sl_1) == 1
     assert len(sl_2) == 1
     sl_1[0]['created_by']['id'] == user1.id
@@ -81,5 +81,5 @@ def test_shopping_food_share(u1_s1, u2_s1, food, space_1):
     with scopes_disabled():
         user1.userpreference.shopping_share.add(user2)
         user1.userpreference.save()
-    assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 1
-    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 2
+    assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 1
+    assert len(json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 2

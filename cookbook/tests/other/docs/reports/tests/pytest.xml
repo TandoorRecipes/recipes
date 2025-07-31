@@ -1,1 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="30.686" timestamp="2024-08-20T11:34:55.376500" hostname="DESKTOP-RM10LP5"><testcase classname="cookbook.tests.other.test_helpers" name="test_url_validator" time="21.551" /></testsuite></testsuites>

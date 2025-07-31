@@ -7,10 +7,11 @@ You can simply register an account and then follow these steps to add translatio
 3. Select Tandoor and on the top-right hand corner, select `Watch project Tandoor` (click on `Not watching`).
 4. Go back to the dashboard. It now shows you the relevant translations for your languages. Click on the pencil icon to get started.
 
+<!-- prettier-ignore -->
 !!! info "Creating a new language"
-To create a new language you must first select Tandoor (the project) and then a component.
-Here you will have the option to add the language. Afterwards you can also simply add it to the other components as well.
-Once a new language is (partially) finished let me know on GitHub so I can add it to the language-switcher in Tandoor itself.
+     To create a new language you must first select Tandoor (the project) and then a component.
+     Here you will have the option to add the language. Afterwards you can also simply add it to the other components as well.
+     Once a new language is (partially) finished let me know on GitHub so I can add it to the language-switcher in Tandoor itself.
 
 There is also [a lot of documentation](https://docs.weblate.org/en/latest/user/translating.html) available from Weblate directly.
 

@@ -7,7 +7,7 @@ ALLRECIPES = {
     "servings_text": "serving(s)",
     "working_time": 15,
     "waiting_time": 25,
-    "image": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https://images.media-allrecipes.com/userphotos/8145402.jpg",
+    "image_url": "https://imagesvc.meredithcorp.io/v3/mm/image?url=https://images.media-allrecipes.com/userphotos/8145402.jpg",
     "source_url": "https://www.allrecipes.com/recipe/24010/easy-chicken-marsala/",
     "keywords": [
         {
@@ -130,7 +130,7 @@ AMERICAS_TEST_KITCHEN = {
     "servings_text": "Serves",
     "working_time": 0,
     "waiting_time": 0,
-    "image": "https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_150/33255_sfs-pasta-with-chicken-broccoli-sun-dried-tomatoes-15",
+    "image_url": "https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_150/33255_sfs-pasta-with-chicken-broccoli-sun-dried-tomatoes-15",
     "source_url": "http://www.americastestkitchen.com/recipes/1771-pasta-with-chicken-broccoli-and-sun-dried-tomatoes?extcode=MCSAD10L0&ref=new_search_experience_1",
     "keywords": [
         {
@@ -333,7 +333,7 @@ CHEF_KOCH = {
     "servings_text": "serving(s)",
     "working_time": 15,
     "waiting_time": 25,
-    "image": "https://img.chefkoch-cdn.de/rezepte/1913681311847861/bilder/374151/crop-960x540/couscous-und-garnelen-im-pergament.jpg",
+    "image_url": "https://img.chefkoch-cdn.de/rezepte/1913681311847861/bilder/374151/crop-960x540/couscous-und-garnelen-im-pergament.jpg",
     "source_url": "https://www.chefkoch.de/rezepte/1913681311847861/Couscous-und-Garnelen-im-Pergament.html",
     "keywords": [
         {
@@ -555,7 +555,7 @@ CHEF_KOCH2 = {
     "servings_text": "serving(s)",
     "working_time": 25,
     "waiting_time": 0,
-    "image": "https://img.chefkoch-cdn.de/rezepte/804871184310070/bilder/1045695/crop-960x540/brokkoli-bratlinge.jpg",
+    "image_url": "https://img.chefkoch-cdn.de/rezepte/804871184310070/bilder/1045695/crop-960x540/brokkoli-bratlinge.jpg",
     "source_url": "https://www.chefkoch.de/rezepte/804871184310070/Brokkoli-Bratlinge.html",
     "keywords": [
         {
@@ -720,7 +720,7 @@ COOKPAD = {
     "servings_text": "serving(s)",
     "working_time": 0,
     "waiting_time": 0,
-    "image": "https://img-global.cpcdn.com/recipes/53658f5fc0aa6c30/400x400cq70/photo.jpg",
+    "image_url": "https://img-global.cpcdn.com/recipes/53658f5fc0aa6c30/400x400cq70/photo.jpg",
     "source_url": "https://cookpad.com/us/recipes/14815875-chicken-and-moringa-drumsticks-soup",
     "keywords": [
         {
@@ -838,7 +838,7 @@ COOKS_COUNTRY = {
     "servings_text": "Serves",
     "working_time": 0,
     "waiting_time": 0,
-    "image": "https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_150/35585_sfs-shrimp-picatta-pasta-012",
+    "image_url": "https://res.cloudinary.com/hksqkdlah/image/upload/ar_1:1,c_fill,dpr_2.0,f_auto,fl_lossy.progressive.strip_profile,g_faces:auto,q_auto:low,w_150/35585_sfs-shrimp-picatta-pasta-012",
     "source_url": "http://www.cookscountry.com/recipes/2202-shrimp-piccata-pasta?extcode=MCSKD10L0&ref=new_search_experience_2",
     "keywords": [
         {
@@ -1011,7 +1011,7 @@ DELISH = {
     "servings_text": "serving(s)",
     "working_time": 10,
     "waiting_time": 0,
-    "image": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/delish-cheesy-asparagus-horizontal-7-1536094595.png",
+    "image_url": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/delish-cheesy-asparagus-horizontal-7-1536094595.png",
     "source_url": "https://www.delish.com/cooking/recipe-ideas/recipes/a52405/cheesy-baked-asparagus-recipe/",
     "keywords": [
         {
@@ -1180,7 +1180,7 @@ FOOD_NETWORK = {
     "servings_text": "serving(s)",
     "working_time": 15,
     "waiting_time": 35,
-    "image": "https://food.fnr.sndimg.com/content/dam/images/food/editorial/homepage/fn-feature.jpg.rend.hgtvcom.406.229.suffix/1474463768097.jpeg",
+    "image_url": "https://food.fnr.sndimg.com/content/dam/images/food/editorial/homepage/fn-feature.jpg.rend.hgtvcom.406.229.suffix/1474463768097.jpeg",
     "source_url": "https://www.foodnetwork.com/recipes/bobby-flay/cast-iron-home-fries-recipe-1945083",
     "keywords": [
         {
@@ -1347,7 +1347,7 @@ GIALLOZAFFERANO = {
     "servings_text": "serving(s)",
     "working_time": 30,
     "waiting_time": 15,
-    "image": "https://www.giallozafferano.it/images/226-22634/Strangolapreti-alla-trentina_650x433_wm.jpg",
+    "image_url": "https://www.giallozafferano.it/images/226-22634/Strangolapreti-alla-trentina_650x433_wm.jpg",
     "source_url": "https://ricette.giallozafferano.it/Strangolapreti-alla-trentina.html",
     "keywords": [
         {
@@ -1567,7 +1567,7 @@ JOURNAL_DES_FEMMES = {
     "servings_text": "serving(s)",
     "working_time": 20,
     "waiting_time": 60,
-    "image": "https://img-3.journaldesfemmes.fr/s_p2VOy0cZy2NWbrxc73Pk-hWoY=/748x499/smart/4693908c8adc4f8f872c9191b4ca2f09/recipe-jdf/10026679.jpg",
+    "image_url": "https://img-3.journaldesfemmes.fr/s_p2VOy0cZy2NWbrxc73Pk-hWoY=/748x499/smart/4693908c8adc4f8f872c9191b4ca2f09/recipe-jdf/10026679.jpg",
     "source_url": "https://cuisine.journaldesfemmes.fr/recette/317747-ratatouille",
     "keywords": [
         {
@@ -1749,7 +1749,7 @@ MADAME_DESSERT = {
     "servings_text": "serving(s)",
     "working_time": 0,
     "waiting_time": 20,
-    "image": "https://assets.madamedessert.de/wp-content/uploads/2020/02/25163328/Madame-Dessert_Schokopudding-Schokoladenpudding-mit-echter-Schokolade-0238-scaled.jpg",
+    "image_url": "https://assets.madamedessert.de/wp-content/uploads/2020/02/25163328/Madame-Dessert_Schokopudding-Schokoladenpudding-mit-echter-Schokolade-0238-scaled.jpg",
     "keywords": [
         {
             "label": "schokopudding",
@@ -1882,7 +1882,7 @@ MARMITON = {
     "servings_text": "serving(s)",
     "working_time": 10,
     "waiting_time": 45,
-    "image": "https://assets.afcdn.com/recipe/20120503/1360_w1024h1024c1cx1181cy1771.webp",
+    "image_url": "https://assets.afcdn.com/recipe/20120503/1360_w1024h1024c1cx1181cy1771.webp",
     "source_url": "https://www.marmiton.org/recettes/recette_fricassee-d-agneau-a-l-oseille_22719.aspx",
     "keywords": [
         {
@@ -2065,7 +2065,7 @@ TASTE_OF_HOME = {
     "servings_text": "serving(s)",
     "working_time": 35,
     "waiting_time": 15,
-    "image": "https://tmbidigitalassetsazure.blob.core.windows.net/rms3-prod/attachments/37/1200x1200/Rhubarb-Tart_EXPS_THN17_207631_C06_15_6b.jpg",
+    "image_url": "https://tmbidigitalassetsazure.blob.core.windows.net/rms3-prod/attachments/37/1200x1200/Rhubarb-Tart_EXPS_THN17_207631_C06_15_6b.jpg",
     "source_url": "https://www.tasteofhome.com/recipes/rhubarb-tart/",
     "keywords": [
         {
@@ -2232,7 +2232,7 @@ THE_SPRUCE_EATS = {
     "servings_text": "servings",
     "working_time": 20,
     "waiting_time": 35,
-    "image": "https://www.thespruceeats.com/thmb/X_emapo3nNw6ASJctdNpYycYFtM=/940x0/filters:no_upscale():max_bytes(150000):strip_icc()/creamy-potato-soup-with-ham-3059797-stovetop-step-12-99dc3bf1962c4e26a2d225ee3c25ecad.jpg",
+    "image_url": "https://www.thespruceeats.com/thmb/X_emapo3nNw6ASJctdNpYycYFtM=/940x0/filters:no_upscale():max_bytes(150000):strip_icc()/creamy-potato-soup-with-ham-3059797-stovetop-step-12-99dc3bf1962c4e26a2d225ee3c25ecad.jpg",
     "source_url": "https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
     "keywords": [
         {
@@ -2469,7 +2469,7 @@ TUDOGOSTOSO = {
     "servings_text": 4,
     "working_time": 40,
     "waiting_time": 0,
-    "image": "https://img.itdg.com.br/tdg/images/recipes/000/146/568/92699/92699_original.jpg",
+    "image_url": "https://img.itdg.com.br/tdg/images/recipes/000/146/568/92699/92699_original.jpg",
     "source_url": "https://www.tudogostoso.com.br/receita/146568-arroz-com-bacalhau-tomate-e-ervas.html",
     "keywords": [
         {

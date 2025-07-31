@@ -24,7 +24,7 @@
       "console": "integratedTerminal",
       "env": {
         // coverage and pytest can't both be running at the same time
-        "PYTEST_ADDOPTS": "--no-cov"
+        "PYTEST_ADDOPTS": "--no-cov -n 0"
       },
       "django": true,
       "justMyCode": true

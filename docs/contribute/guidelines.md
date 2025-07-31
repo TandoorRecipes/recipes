@@ -1,10 +1,12 @@
 If you want to contribute bug fixes or small tweaks then your pull requests are always welcome!
 
+<!-- prettier-ignore-start -->
 !!! danger "Discuss First!"
-If you want to contribute larger features that introduce more complexity to the project please
-make sure to **first submit a technical description** outlining what and how you want to do it.
-This allows me and the community to give feedback and manage the complexity of the overall
-application. If you don't do this please don't be mad if I reject your PR.
+     If you want to contribute larger features that introduce more complexity to the project please
+     make sure to **first submit a technical description** outlining what and how you want to do it.
+     This allows me and the community to give feedback and manage the complexity of the overall
+     application. If you don't do this please don't be mad if I reject your PR.
+<!-- prettier-ignore-end -->
 
 ## License
 
@@ -20,23 +22,29 @@ To contribute to the project you are required to use the following packages with
 - isort
 - prettier
 
+<!-- prettier-ignore -->
 !!! tip "Manual Formatting"
-    It is possible to run formatting manually, but it is recommended to setup your IDE to format on save.
-    ``` bash
-    flake8 file.py --ignore=E501 | isort -q file.py | yapf -i file.py
-    prettier --write file.vue
+     It is possible to run formatting manually, but it is recommended to setup your IDE to format on save.
+     ``` bash
+     flake8 file.py --ignore=E501 | isort -q file.py | yapf -i file.py
+     prettier --write file.vue
     ```
 
 ## Testing
-Django uses pytest-django to implement a full suite of testing.  If you make any functional changes, please implment the appropriate
+
+Django uses pytest-django to implement a full suite of testing. If you make any functional changes, please implment the appropriate
 tests.
 
-Tandoor is also actively soliciting contribors willing to setup vue3 testing.  If you have knowledge in this area it would be greatly appreciated.
+Tandoor is also actively soliciting contribors willing to setup vue3 testing. If you have knowledge in this area it would be greatly appreciated.
 
 ## API Client
 
-Tandoor uses [django-rest-framework](https://www.django-rest-framework.org/) for API implementation.  Making contributions that impact the API requires an understanding of
-Viewsets and Serializers.  
+<!-- prettier-ignore -->
+!!! note "JAVA required"
+     The OpenAPI Generator is a Java project. You must have the java binary executable available on your PATH for this to work.
+
+Tandoor uses [django-rest-framework](https://www.django-rest-framework.org/) for API implementation. Making contributions that impact the API requires an understanding of
+Viewsets and Serializers.
 
 Also double check that your changes are actively reflected in the schema so that client apis are generated accurately.
 
@@ -59,5 +67,5 @@ Generate the schema using `openapi-generator-cli generate -g typescript-fetch -i
 
 ## Install and Configuration
 
-Instructions for [VSCode](/contribute/vscode)
-Instructions for [PyCharm](/contribute/pycharm)
+Instructions for [VSCode](/docs/contribute/vscode)
+Instructions for [PyCharm](/docs/contribute/pycharm)

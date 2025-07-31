@@ -9,14 +9,13 @@ jobs:
         strategy:
             max-parallel: 4
             matrix:
-                python-version: ["3.10"]
-                node-version: ["18"]
-
+                python-version: ["3.12"]
+                node-version: ["22"]
         steps:
             - uses: actions/checkout@v4
             - uses: awalsh128/cache-apt-pkgs-action@v1.4.3
               with:
-                  packages: libsasl2-dev python3-dev libxml2-dev libxmlsec1-dev libxslt-dev libxmlsec1-openssl libldap2-dev libssl-dev gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
+                  packages: libsasl2-dev python3-dev libxml2-dev libxmlsec1-dev libxslt-dev libxmlsec1-openssl libxslt-dev libldap2-dev libssl-dev gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
                   version: 1.0
 
             # Setup python & dependencies
@@ -37,10 +36,9 @@ jobs:
               with:
                   path: |
                       ./cookbook/static
-                      ./vue/webpack-stats.json
                       ./staticfiles
                   key: |
-                      ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
+                      ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue3/src/*') }}
 
             # Build Vue frontend & Dependencies
             - name: Set up Node ${{ matrix.node-version }}
@@ -49,30 +47,28 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "yarn"
-                  cache-dependency-path: ./vue/yarn.lock
+                  cache-dependency-path: ./vue3/yarn.lock
 
             - name: Install Vue dependencies
               if: steps.django_cache.outputs.cache-hit != 'true'
-              working-directory: ./vue
+              working-directory: ./vue3
               run: yarn install
 
             - name: Build Vue dependencies
               if: steps.django_cache.outputs.cache-hit != 'true'
-              working-directory: ./vue
+              working-directory: ./vue3
               run: yarn build
 
             - name: Compile Django StaticFiles
               if: steps.django_cache.outputs.cache-hit != 'true'
               run: |
                   python3 manage.py collectstatic --noinput
-                  python3 manage.py collectstatic_js_reverse
 
             - uses: actions/cache/save@v4
               if: steps.django_cache.outputs.cache-hit != 'true'
               with:
                   path: |
                       ./cookbook/static
-                      ./vue/webpack-stats.json
                       ./staticfiles
                   key: |
                       ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}

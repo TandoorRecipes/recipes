@@ -38,14 +38,14 @@ def test_list_permission(arg, request):
 
 
 def test_list_space(obj_1, obj_2, a1_s1, a1_s2, space_2):
-    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 2
-    assert len(json.loads(a1_s2.get(reverse(LIST_URL)).content)) == 0
+    assert json.loads(a1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(a1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
     obj_1.space = space_2
     obj_1.save()
 
-    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 1
-    assert len(json.loads(a1_s2.get(reverse(LIST_URL)).content)) == 1
+    assert json.loads(a1_s1.get(reverse(LIST_URL)).content)['count'] == 1
+    assert json.loads(a1_s2.get(reverse(LIST_URL)).content)['count'] == 1
 
 
 @pytest.mark.parametrize("arg", [

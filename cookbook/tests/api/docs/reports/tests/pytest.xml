@@ -1,1 +1,65 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="5" time="35.973" timestamp="2024-08-18T14:19:20.591136" hostname="vabene-pc"><testcase classname="cookbook.tests.api.test_api_space" name="test_list_permission[arg0]" time="27.231" /><testcase classname="cookbook.tests.api.test_api_space" name="test_list_permission[arg1]" time="27.784" /><testcase classname="cookbook.tests.api.test_api_space" name="test_list_permission[arg3]" time="28.126" /><testcase classname="cookbook.tests.api.test_api_space" name="test_list_permission[arg4]" time="28.153" /><testcase classname="cookbook.tests.api.test_api_space" name="test_list_permission[arg2]" time="28.177" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="7" time="38.652" timestamp="2025-06-05T16:18:49.224969" hostname="DESKTOP-RM10LP5"><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg5]" time="27.576" /><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg2]" time="27.642" /><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg4]" time="28.101" /><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg0]" time="27.737" /><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg6]" time="28.213" /><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg3]" time="28.308"><failure message="TypeError: SyncViewSet.perform_update() missing 1 required positional argument: 'pk'">arg = ['a1_s1', 200]
+request = &lt;FixtureRequest for &lt;Function test_update[arg3]&gt;&gt;
+obj_1 = &lt;Sync: path&gt;
+
+    @pytest.mark.parametrize("arg", [
+        ['a_u', 403],
+        ['g1_s1', 403],
+        ['u1_s1', 403],
+        ['a1_s1', 200],
+        ['g1_s2', 403],
+        ['u1_s2', 403],
+        ['a1_s2', 404],
+    ])
+    def test_update(arg, request, obj_1):
+        c = request.getfixturevalue(arg[0])
+&gt;       print(reverse(DETAIL_URL, args={obj_1.id}))
+
+test_api_sync.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\venv\Lib\site-packages\django\test\client.py:1054: in patch
+    response = super().patch(
+..\..\..\venv\Lib\site-packages\django\test\client.py:553: in patch
+    return self.generic(
+..\..\..\venv\Lib\site-packages\django\test\client.py:609: in generic
+    return self.request(**r)
+..\..\..\venv\Lib\site-packages\django\test\client.py:891: in request
+    self.check_exception(response)
+..\..\..\venv\Lib\site-packages\django\test\client.py:738: in check_exception
+    raise exc_value
+..\..\..\venv\Lib\site-packages\django\core\handlers\exception.py:55: in inner
+    response = get_response(request)
+..\..\..\venv\Lib\site-packages\django\core\handlers\base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+..\..\..\venv\Lib\site-packages\django\views\decorators\csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+..\..\..\venv\Lib\site-packages\rest_framework\viewsets.py:124: in view
+    return self.dispatch(request, *args, **kwargs)
+..\..\..\venv\Lib\site-packages\rest_framework\views.py:509: in dispatch
+    response = self.handle_exception(exc)
+..\..\..\venv\Lib\site-packages\rest_framework\views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+..\..\..\venv\Lib\site-packages\rest_framework\views.py:480: in raise_uncaught_exception
+    raise exc
+..\..\..\venv\Lib\site-packages\rest_framework\views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+..\..\..\venv\Lib\site-packages\rest_framework\mixins.py:82: in partial_update
+    return self.update(request, *args, **kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;cookbook.views.api.SyncViewSet object at 0x000001E5B35EDF70&gt;
+request = &lt;rest_framework.request.Request: PATCH '/api/sync/1/'&gt;, args = ()
+kwargs = {'pk': '1'}, partial = True, instance = &lt;Sync: path&gt;
+serializer = SyncSerializer(&lt;Sync: path&gt;, context={'request': &lt;rest_framework.request.Request: PATCH '/api/sync/1/'&gt;, 'format': Non...ull=True, required=False)
+    created_at = DateTimeField(read_only=True)
+    updated_at = DateTimeField(read_only=True)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+&gt;       self.perform_update(serializer)
+E       TypeError: SyncViewSet.perform_update() missing 1 required positional argument: 'pk'
+
+..\..\..\venv\Lib\site-packages\rest_framework\mixins.py:68: TypeError</failure></testcase><testcase classname="cookbook.tests.api.test_api_sync" name="test_update[arg1]" time="28.216" /></testsuite></testsuites>

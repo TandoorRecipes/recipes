@@ -20,6 +20,10 @@
 				"ms-python.python"
 			]
 		}
+	},
+
+	"containerEnv": {
+		"CSRF_TRUSTED_ORIGINS": "http://localhost:8000,http://localhost:8080"
 	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.

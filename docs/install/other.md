@@ -3,6 +3,8 @@
     This page especially contains some setups that might help you if you really want to go down a certain path but none
     of the examples are supported (as I simply am not able to give you support for them).
 
+!!! danger "Tandoor 2 Compatibility"
+    This guide has not been verified/tested for Tandoor 2, which now integrates a nginx service inside the default docker container and exposes its service on port 80 instead of 8080.
 
 ## Apache + Traefik + Sub-Path
 
@@ -35,7 +37,6 @@ docker-compose:
     environment:
       # all the other env
       - SCRIPT_NAME=/<sub path>
-      - JS_REVERSE_SCRIPT_PREFIX=/<sub path>/
       - STATIC_URL=/<www path>/static/
       - MEDIA_URL=/<www path>/media/
     labels:
@@ -100,7 +101,6 @@ and the relevant section from the docker-compose.yml:
      image: vabene1111/recipes
      environment:
        - SCRIPT_NAME=/tandoor
-       - JS_REVERSE_SCRIPT_PREFIX=/tandoor
        - STATIC_URL=/tandoor/static/
        - MEDIA_URL=/tandoor/media/
        - GUNICORN_MEDIA=0

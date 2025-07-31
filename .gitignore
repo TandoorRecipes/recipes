@@ -75,8 +75,10 @@ cookbook/static/vue
 vue/webpack-stats.json
 /docker-compose.override.yml
 vue/node_modules
-plugins
-vue3/node_modules
+/recipes/plugins
+vetur.config.js
+cookbook/static/vue
+vue/webpack-stats.json
 cookbook/templates/sw.js
 vue/.yarn
 vue3/.vite
@@ -86,3 +88,6 @@ vetur.config.js
 venv/
 .idea/easy-i18n.xml
 cookbook/static/vue3
+vue3/node_modules
+cookbook/tests/other/docs/reports/tests/tests.html
+cookbook/tests/other/docs/reports/tests/pytest.xml

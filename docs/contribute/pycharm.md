@@ -13,14 +13,14 @@ PyCharm can be configured to format and lint on save. Doing so requires some man
 2. Click the '+' to add a new watcher.
 3. Configure the watcher as below.
 
-    ![flake8_watcher](assets/flake8_watcher.png)
+   ![flake8_watcher](assets/flake8_watcher.png)
 
 4. Navigate to File -> Settings -> Editor -> Inspections -> File watcher problems
 5. Under Severity select 'Edit Severities'
 6. Click the '+' to add a severity calling it 'Linting Error'
 7. Configure a background and effect as below.
 
-    ![linting error](assets/linting_error.png)
+   ![linting error](assets/linting_error.png)
 
 ## Setup isort
 
@@ -28,7 +28,7 @@ PyCharm can be configured to format and lint on save. Doing so requires some man
 2. Click the '+' to add a new watcher.
 3. Configure the watcher as below.
 
-    ![yapf_watcher](assets/isort_watcher.png)
+   ![yapf_watcher](assets/isort_watcher.png)
 
 ## Setup yapf
 
@@ -36,11 +36,15 @@ PyCharm can be configured to format and lint on save. Doing so requires some man
 2. Click the '+' to add a new watcher.
 3. Configure the watcher as below.
 
-    ![yapf_watcher](assets/yapf_watcher.png)
+   ![yapf_watcher](assets/yapf_watcher.png)
 
 <!-- prettier-ignore -->
 !!! hint
     Adding a comma at the end of a list will trigger yapf to put each element of the list on a new line
+
+<!-- prettier-ignore -->
+!!! note
+     In order to debug vue yarn and vite servers must be started before starting the django server.
 
 ## Setup prettier
 
@@ -50,13 +54,11 @@ PyCharm can be configured to format and lint on save. Doing so requires some man
 4. Click the three dots next to 'Scope' to create a custom scope.
 5. Click '+' to add a new scope
 
--   Name: prettier
--   Pattern: `file:vue/src//*||file:vue3/src//*||file:docs//*`
+- Name: prettier
+- Pattern: `file:vue/src//*||file:vue3/src//*||file:docs//*`
 
 6. Configure the watcher as below.
 
-    ![perttier_watcher](assets/prettier_watcher.png)
+   ![perttier_watcher](assets/prettier_watcher.png)
 
--   Arguments: `--cwd $ProjectFileDir$\vue prettier -w --config $ProjectFileDir$\.prettierrc $FilePath$`
-
-## Setup Volar??
+- Arguments: `--cwd $ProjectFileDir$\vue prettier -w --config $ProjectFileDir$\.prettierrc $FilePath$`

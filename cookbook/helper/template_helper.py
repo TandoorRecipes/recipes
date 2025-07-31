@@ -70,7 +70,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     parsed_md = md.markdown(
         instructions,
         extensions=[
-            'markdown.extensions.fenced_code', TableExtension(),
+            'markdown.extensions.fenced_code', 'markdown.extensions.sane_lists', 'markdown.extensions.nl2br', TableExtension(),
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )

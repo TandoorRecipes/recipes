@@ -37,7 +37,7 @@ def get_filetype(name):
 
 def is_file_type_allowed(filename, image_only=False):
     is_file_allowed = False
-    allowed_file_types = ['.pdf','.docx', '.xlsx']
+    allowed_file_types = ['.pdf', '.docx', '.xlsx', '.css']
     allowed_image_types = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
     check_list = allowed_image_types
     if not image_only:
@@ -49,6 +49,19 @@ def is_file_type_allowed(filename, image_only=False):
 
     return is_file_allowed
 
+
+def strip_image_meta(image_object, file_format):
+    image_object = Image.open(image_object)
+
+    data = list(image_object.getdata())
+    image_without_exif = Image.new(image_object.mode, image_object.size)
+    image_without_exif.putdata(data)
+
+    im_io = BytesIO()
+    image_without_exif.save(im_io, file_format)
+    return im_io
+
+
 # TODO this whole file needs proper documentation, refactoring, and testing
 # TODO also add env variable to define which images sizes should be compressed
 # filetype argument can not be optional, otherwise this function will treat all images as if they were a jpeg
@@ -59,9 +72,19 @@ def handle_image(request, image_object, filetype):
     except Exception:
         return None
 
+    file_format = None
+    if filetype == '.jpeg' or filetype == '.jpg':
+        file_format = 'JPEG'
+    if filetype == '.png':
+        file_format = 'PNG'
+
     if (image_object.size / 1000) > 500:  # if larger than 500 kb compress
         if filetype == '.jpeg' or filetype == '.jpg':
             return rescale_image_jpeg(image_object)
         if filetype == '.png':
             return rescale_image_png(image_object)
+    else:
+        return strip_image_meta(image_object, file_format)
+
+    # TODO webp and gifs bypass the scaling and metadata checks, fix
     return image_object

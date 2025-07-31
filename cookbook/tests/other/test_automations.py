@@ -91,7 +91,8 @@ def test_never_unit_automation(u1_s1, arg):
 
     with scope(space=space):
         Automation.objects.get_or_create(name='never unit test', type=Automation.NEVER_UNIT, param_1='egg', param_2=arg[1], created_by=user, space=space)
-        assert automation.apply_never_unit_automation(arg[0]) == arg[2]
+        tokens, automation_applied = automation.apply_never_unit_automation(arg[0])
+        assert tokens == arg[2]
 
 
 @pytest.mark.parametrize("source", [

@@ -49,7 +49,11 @@ class RecipeSearch():
             self._search_prefs = SearchPreference()
         self._string = self._params.get('query').strip(
         ) if self._params.get('query', None) else None
+
         self._rating = self._params.get('rating', None)
+        self._rating_gte = self._params.get('rating_gte', None)
+        self._rating_lte = self._params.get('rating_lte', None)
+
         self._keywords = {
             'or': self._params.get('keywords_or', None) or self._params.get('keywords', None),
             'and': self._params.get('keywords_and', None),
@@ -70,20 +74,36 @@ class RecipeSearch():
         }
         self._steps = self._params.get('steps', None)
         self._units = self._params.get('units', None)
-        # TODO add created by
-        # TODO image exists
-        self._sort_order = self._params.get('sort_order', None)
         self._internal = str2bool(self._params.get('internal', None))
-        self._random = str2bool(self._params.get('random', False))
+        self._sort_order = self._params.get('sort_order', None)
+        if self._sort_order == 'random':
+            self._random = True
+            self.sort_order = None
+        else:
+            self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
         self._num_recent = int(self._params.get('num_recent', 0))
         self._include_children = str2bool(
             self._params.get('include_children', None))
         self._timescooked = self._params.get('timescooked', None)
-        self._cookedon = self._params.get('cookedon', None)
+        self._timescooked_gte = self._params.get('timescooked_gte', None)
+        self._timescooked_lte = self._params.get('timescooked_lte', None)
+
         self._createdon = self._params.get('createdon', None)
+        self._createdon_gte = self._params.get('createdon_gte', None)
+        self._createdon_lte = self._params.get('createdon_lte', None)
+
         self._updatedon = self._params.get('updatedon', None)
-        self._viewedon = self._params.get('viewedon', None)
+        self._updatedon_gte = self._params.get('updatedon_gte', None)
+        self._updatedon_lte = self._params.get('updatedon_lte', None)
+
+        self._viewedon_gte = self._params.get('viewedon_gte', None)
+        self._viewedon_lte = self._params.get('viewedon_lte', None)
+
+        self._cookedon_gte = self._params.get('cookedon_gte', None)
+        self._cookedon_lte = self._params.get('cookedon_lte', None)
+
+        self._createdby = self._params.get('createdby', None)
         self._makenow = self._params.get('makenow', None)
         # this supports hidden feature to find recipes missing X ingredients
         if isinstance(self._makenow, bool) and self._makenow == True:
@@ -130,16 +150,19 @@ class RecipeSearch():
 
         self._build_sort_order()
         self._recently_viewed(num_recent=self._num_recent)
-        self._cooked_on_filter(cooked_date=self._cookedon)
-        self._created_on_filter(created_date=self._createdon)
-        self._updated_on_filter(updated_date=self._updatedon)
-        self._viewed_on_filter(viewed_date=self._viewedon)
-        self._favorite_recipes(times_cooked=self._timescooked)
+
+        self._cooked_on_filter()
+        self._created_on_filter()
+        self._updated_on_filter()
+        self._viewed_on_filter()
+
+        self._created_by_filter(created_by_user_id=self._createdby)
+        self._favorite_recipes()
         self._new_recipes()
         self.keyword_filters(**self._keywords)
         self.food_filters(**self._foods)
         self.book_filters(**self._books)
-        self.rating_filter(rating=self._rating)
+        self.rating_filter()
         self.internal_filter(internal=self._internal)
         self.step_filters(steps=self._steps)
         self.unit_filters(units=self._units)
@@ -186,9 +209,9 @@ class RecipeSearch():
             else:
                 order += default_order
             order[:] = [Lower('name').asc() if x ==
-                        'name' else x for x in order]
+                                               'name' else x for x in order]
             order[:] = [Lower('name').desc() if x ==
-                        '-name' else x for x in order]
+                                                '-name' else x for x in order]
             self.orderby = order
 
     def string_filters(self, string=None):
@@ -227,9 +250,9 @@ class RecipeSearch():
                 query_filter |= Q(**{"%s" % f: self._string})
             self._queryset = self._queryset.filter(query_filter).distinct()
 
-    def _cooked_on_filter(self, cooked_date=None):
-        if self._sort_includes('lastcooked') or cooked_date:
-            lessthan = self._sort_includes('-lastcooked') or '-' in (cooked_date or [])[:1]
+    def _cooked_on_filter(self):
+        if self._sort_includes('lastcooked') or self._cookedon_gte or self._cookedon_lte:
+            lessthan = self._sort_includes('-lastcooked') or self._cookedon_lte
             if lessthan:
                 default = timezone.now() - timedelta(days=100000)
             else:
@@ -237,51 +260,44 @@ class RecipeSearch():
             self._queryset = self._queryset.annotate(
                 lastcooked=Coalesce(Max(Case(When(cooklog__created_by=self._request.user, cooklog__space=self._request.space, then='cooklog__created_at'))), Value(default))
             )
-        if cooked_date is None:
-            return
 
-        cooked_date = date(*[int(x)for x in cooked_date.split('-') if x != ''])
-
-        if lessthan:
-            self._queryset = self._queryset.filter(lastcooked__date__lte=cooked_date).exclude(lastcooked=default)
-        else:
-            self._queryset = self._queryset.filter(lastcooked__date__gte=cooked_date).exclude(lastcooked=default)
-
-    def _created_on_filter(self, created_date=None):
-        if created_date is None:
-            return
-        lessthan = '-' in created_date[:1]
-        created_date = date(*[int(x) for x in created_date.split('-') if x != ''])
-        if lessthan:
-            self._queryset = self._queryset.filter(created_at__date__lte=created_date)
-        else:
-            self._queryset = self._queryset.filter(created_at__date__gte=created_date)
-
-    def _updated_on_filter(self, updated_date=None):
-        if updated_date is None:
-            return
-        lessthan = '-' in updated_date[:1]
-        updated_date = date(*[int(x)for x in updated_date.split('-') if x != ''])
-        if lessthan:
-            self._queryset = self._queryset.filter(updated_at__date__lte=updated_date)
-        else:
-            self._queryset = self._queryset.filter(updated_at__date__gte=updated_date)
+        if self._cookedon_lte:
+            self._queryset = self._queryset.filter(lastcooked__date__lte=self._cookedon_lte).exclude(lastcooked=default)
+        elif self._cookedon_gte:
+            self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte).exclude(lastcooked=default)
 
     def _viewed_on_filter(self, viewed_date=None):
-        if self._sort_includes('lastviewed') or viewed_date:
+        if self._sort_includes('lastviewed') or self._viewedon_gte or self._viewedon_lte:
             longTimeAgo = timezone.now() - timedelta(days=100000)
             self._queryset = self._queryset.annotate(
                 lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__created_at'))), Value(longTimeAgo))
             )
-        if viewed_date is None:
-            return
-        lessthan = '-' in viewed_date[:1]
-        viewed_date = date(*[int(x)for x in viewed_date.split('-') if x != ''])
 
-        if lessthan:
-            self._queryset = self._queryset.filter(lastviewed__date__lte=viewed_date).exclude(lastviewed=longTimeAgo)
-        else:
-            self._queryset = self._queryset.filter(lastviewed__date__gte=viewed_date).exclude(lastviewed=longTimeAgo)
+        if self._viewedon_lte:
+            self._queryset = self._queryset.filter(lastviewed__date__lte=self._viewedon_lte).exclude(lastviewed=longTimeAgo)
+        elif self._viewedon_gte:
+            self._queryset = self._queryset.filter(lastviewed__date__gte=self._viewedon_gte).exclude(lastviewed=longTimeAgo)
+
+    def _created_on_filter(self):
+        if self._createdon:
+            self._queryset = self._queryset.filter(created_at__date=self._createdon)
+        elif self._createdon_lte:
+            self._queryset = self._queryset.filter(created_at__date__lte=self._createdon_lte)
+        elif self._createdon_gte:
+            self._queryset = self._queryset.filter(created_at__date__gte=self._createdon_gte)
+
+    def _updated_on_filter(self):
+        if self._updatedon:
+            self._queryset = self._queryset.filter(updated_at__date__date=self._updatedon)
+        elif self._updatedon_lte:
+            self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
+        elif self._updatedon_gte:
+            self._queryset = self._queryset.filter(updated_at__date__gte=self._updatedon_gte)
+
+    def _created_by_filter(self, created_by_user_id=None):
+        if created_by_user_id is None:
+            return
+        self._queryset = self._queryset.filter(created_by__id=created_by_user_id)
 
     def _new_recipes(self, new_days=7):
         # TODO make new days a user-setting
@@ -307,9 +323,9 @@ class RecipeSearch():
         )
         self._queryset = self._queryset.annotate(recent=Coalesce(Max(Case(When(pk__in=num_recent_recipes.values('recipe'), then='viewlog__pk'))), Value(0)))
 
-    def _favorite_recipes(self, times_cooked=None):
-        if self._sort_includes('favorite') or times_cooked:
-            less_than = '-' in (str(times_cooked) or []) and not self._sort_includes('-favorite')
+    def _favorite_recipes(self):
+        if self._sort_includes('favorite') or self._timescooked or self._timescooked_gte or self._timescooked_lte:
+            less_than = self._timescooked_lte and not self._sort_includes('-favorite')
             if less_than:
                 default = 1000
             else:
@@ -321,15 +337,13 @@ class RecipeSearch():
                 .values('count')
             )
             self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), default))
-        if times_cooked is None:
-            return
 
-        if times_cooked == '0':
+        if self._timescooked:
             self._queryset = self._queryset.filter(favorite=0)
-        elif less_than:
-            self._queryset = self._queryset.filter(favorite__lte=int(times_cooked.replace('-', ''))).exclude(favorite=0)
-        else:
-            self._queryset = self._queryset.filter(favorite__gte=int(times_cooked))
+        elif self._timescooked_lte:
+            self._queryset = self._queryset.filter(favorite__lte=int(self._timescooked_lte)).exclude(favorite=0)
+        elif self._timescooked_gte:
+            self._queryset = self._queryset.filter(favorite__gte=int(self._timescooked_gte))
 
     def keyword_filters(self, **kwargs):
         if all([kwargs[x] is None for x in kwargs]):
@@ -407,25 +421,16 @@ class RecipeSearch():
             units = [units]
         self._queryset = self._queryset.filter(steps__ingredients__unit__in=units)
 
-    def rating_filter(self, rating=None):
-        if rating or self._sort_includes('rating'):
-            lessthan = '-' in (rating or [])
-            reverse = 'rating' in (self._sort_order or []) and '-rating' not in (self._sort_order or [])
-            if lessthan or reverse:
-                default = 100
-            else:
-                default = 0
-            # TODO make ratings a settings user-only vs all-users
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
-        if rating is None:
-            return
+    def rating_filter(self):
+        if self._rating or self._rating_lte or self._rating_gte or self._sort_includes('rating'):
+            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=0))))
 
-        if rating == '0':
-            self._queryset = self._queryset.filter(rating=0)
-        elif lessthan:
-            self._queryset = self._queryset.filter(rating__lte=int(rating[1:])).exclude(rating=0)
-        else:
-            self._queryset = self._queryset.filter(rating__gte=int(rating))
+        if self._rating:
+            self._queryset = self._queryset.filter(rating=round(int(self._rating)))
+        elif self._rating_gte:
+            self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
+        elif self._rating_lte:
+            self._queryset = self._queryset.filter(rating__gte=int(self._rating_lte)).exclude(rating=0)
 
     def internal_filter(self, internal=None):
         if not internal:
@@ -535,11 +540,11 @@ class RecipeSearch():
         shopping_users = [*self._request.user.get_shopping_share(), self._request.user]
 
         onhand_filter = (
-            Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
-            # or substitute food onhand
-            | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
-            | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
-            | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
+                Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
+                # or substitute food onhand
+                | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
+                | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
+                | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
         )
         makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__isnull=False), distinct=True),
