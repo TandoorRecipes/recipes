@@ -63,7 +63,6 @@ spec:
           source venv/bin/activate
           echo "Updating database"
           python manage.py migrate
-          python manage.py collectstatic_js_reverse
           python manage.py collectstatic --noinput
           echo "Setting media file attributes"
           chown -R 65534:65534 /opt/recipes/mediafiles
