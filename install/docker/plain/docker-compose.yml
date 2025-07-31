@@ -1,0 +1,22 @@
+services:
+  db_recipes:
+    restart: always
+    image: postgres:16-alpine
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+
+  web_recipes:
+    restart: always
+    image: vabene1111/recipes
+    env_file:
+      - ./.env
+    volumes:
+      - staticfiles:/opt/recipes/staticfiles
+      - ./mediafiles:/opt/recipes/mediafiles
+    depends_on:
+      - db_recipes
+
+volumes:
+  staticfiles:
