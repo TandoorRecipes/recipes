@@ -6,6 +6,7 @@ import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
 import {useTheme} from "vuetify";
+import {useRouter} from "vue-router";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
@@ -44,7 +45,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     let isAuthenticated = ref(false)
 
-    let theme = useTheme()
+    const theme = useTheme()
+    const router = useRouter()
 
     /**
      * holds the active user space if there is one or null if not
@@ -159,7 +161,9 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
         api.apiSwitchActiveSpaceRetrieve({spaceId: space.id!}).then(r => {
             loadActiveSpace()
-            location.reload()
+            router.push({name: 'StartPage'}).then(() => {
+                location.reload()
+            })
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
