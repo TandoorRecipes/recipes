@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-04 10:29+0000\n"
-"Last-Translator: Johnny Ip <ip.iohnny@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <http://translate.tandoor.dev/projects/"
-"tandoor/recipes-backend/zh_Hant/>\n"
+"PO-Revision-Date: 2025-08-01 16:49+0000\n"
+"Last-Translator: TC Kuo <tckuo7@gmail.com>\n"
+"Language-Team: Chinese (Traditional Han script) <http://translate.tandoor."
+"dev/projects/tandoor/recipes-backend/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -241,7 +241,7 @@ msgstr "你沒有必要的權限來查看這個頁面！"
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "你不能與此對象交互，因為它不屬於你！"
+msgstr "你不能與此對象互動，因為它不屬於你！"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
@@ -320,7 +320,7 @@ msgstr "導入了%s菜譜。"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr "菜譜來源："
+msgstr "食譜來源："
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
