@@ -12,6 +12,7 @@
 
         <template class="d-block d-lg-none">
 
+            <!-- mobile layout -->
             <v-card class="rounded-0">
                 <recipe-image
                     max-height="25vh"
@@ -27,7 +28,8 @@
                     </span>
                         <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </v-sheet>
-                    <keywords-component variant="flat" class="ms-1 mb-2" :keywords="recipe.keywords"></keywords-component>
+                    <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
+                    <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" readonly></v-rating>
                     <v-sheet class="ps-2 text-disabled">
                         {{ recipe.description }}
                     </v-sheet>
@@ -60,6 +62,7 @@
                 </v-card>
             </template>
         </template>
+        <!-- Desktop horizontal layout -->
         <template class="d-none d-lg-block">
             <v-row dense>
                 <v-col cols="8">
@@ -83,6 +86,8 @@
                             <p>
                                 <i>{{ recipe.description }}</i>
                             </p>
+
+                            <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" readonly></v-rating>
 
                             <keywords-component variant="flat" class="mt-4" :keywords="recipe.keywords"></keywords-component>
 
