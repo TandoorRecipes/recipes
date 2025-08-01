@@ -107,7 +107,7 @@ jobs:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
+        uses: Ilshidur/action-discord@0.4.0
         with:
           args: '🚀 Version {{ VERSION }} of tandoor has been released 🥳 Check it out https://github.com/vabene1111/recipes/releases/tag/{{ VERSION }}'
 
@@ -121,6 +121,6 @@ jobs:
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_BETA_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
+        uses: Ilshidur/action-discord@0.4.0
         with:
           args: '🚀 The Tandoor 2 Image has been updated! 🥳'
