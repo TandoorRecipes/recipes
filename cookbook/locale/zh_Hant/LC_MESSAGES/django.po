@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-08-01 16:51+0000\n"
+"PO-Revision-Date: 2025-08-01 17:23+0000\n"
 "Last-Translator: TC Kuo <tckuo7@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <http://translate.tandoor."
 "dev/projects/tandoor/recipes-backend/zh_Hant/>\n"
@@ -31,7 +31,7 @@ msgstr "名字"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
-msgstr "關鍵詞"
+msgstr "關鍵字"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
@@ -51,7 +51,7 @@ msgstr "存儲ID"
 
 #: .\cookbook\forms.py:93
 msgid "Default"
-msgstr "默認"
+msgstr "預設"
 
 #: .\cookbook\forms.py:121
 msgid ""
