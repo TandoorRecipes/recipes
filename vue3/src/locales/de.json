@@ -76,7 +76,7 @@
     "Completed": "Fertig",
     "Confirm": "Bestätigen",
     "ConnectorConfig": "Konnektoren",
-    "ConnectorConfigHelp": "Mit Konnektoren können Daten in Tandoor automatisch mit anderen Anwendungen synchronisiert werden.",
+    "ConnectorConfigHelp": "Mit Konnektoren können Daten in Tandoor automatisch mit anderen Anwendungen synchronisiert werden. ",
     "Continue": "Weiter",
     "Conversion": "Umrechnung",
     "ConversionsHelp": "Mit Umrechnungen kann die Menge einens Lebensmittels in verschiedenen Einheiten ausgerechnet werden. Aktuell wird dies nur zur berechnung von Eigenschaften verwendet, später jedoch sollen auch andere Funktionen von Tandoor davon profitieren.",
