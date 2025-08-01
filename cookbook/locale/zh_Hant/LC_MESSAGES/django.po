@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-08-01 16:49+0000\n"
+"PO-Revision-Date: 2025-08-01 16:51+0000\n"
 "Last-Translator: TC Kuo <tckuo7@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <http://translate.tandoor."
 "dev/projects/tandoor/recipes-backend/zh_Hant/>\n"
@@ -311,12 +311,12 @@ msgstr "在導入過程中發生了一個意外的錯誤。請確認你上傳的
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr "以下菜譜被忽略了，因為它們已經存在了："
+msgstr "以下食譜被忽略了，因為它們已經存在了："
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
 msgid "Imported %s recipes."
-msgstr "導入了%s菜譜。"
+msgstr "導入了%s食譜。"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -328,7 +328,7 @@ msgstr "說明"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr "營養信息"
+msgstr "營養資訊"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
