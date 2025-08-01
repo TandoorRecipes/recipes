@@ -615,5 +615,12 @@
     "Book": "書籍",
     "BookmarkletHelp1": "將以下按鈕拖到您的書籤欄中",
     "BookmarkletHelp2": "打開您想要導入的頁面",
-    "BookmarkletHelp3": "點擊書籤以執行導入。"
+    "BookmarkletHelp3": "點擊書籤以執行導入。",
+    "Comment": "意見",
+    "Confirm": "確認",
+    "ConnectorConfig": "連接器",
+    "ConnectorConfigHelp": "使用連接器，您可以將 Tandoor 中的數據自動同步到外部服務。 ",
+    "Continue": "繼續",
+    "BookmarkletImportSubtitle": "使用書籤小工具從非公開頁面導入。",
+    "Cards": "卡片"
 }
