@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-08-01 17:23+0000\n"
+"PO-Revision-Date: 2025-08-02 03:59+0000\n"
 "Last-Translator: TC Kuo <tckuo7@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <http://translate.tandoor."
 "dev/projects/tandoor/recipes-backend/zh_Hant/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
-msgstr "這兩個字段都是可選的。如果沒有輸入,將顯示用戶名"
+msgstr "這兩個欄位都是可選的。如果沒有輸入,將顯示用戶名"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
@@ -57,8 +57,7 @@ msgstr "預設"
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
-msgstr ""
-"為防止重復，忽略與現有同名的菜譜。選中此框可導入所有內容（包括同名菜譜）。"
+msgstr "為防止重複，忽略與現有同名的食譜。選中此框可導入所有內容（包括同名食譜）。"
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
@@ -645,7 +644,7 @@ msgstr "電子郵件地址"
 #: .\cookbook\templates\socialaccount\connections.html:10
 #: .\cookbook\templates\user_settings.html:8
 msgid "Settings"
-msgstr "設置"
+msgstr "設定"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
@@ -1878,7 +1877,7 @@ msgstr "你可以被邀請加入現有空間或創建自己的空間。"
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr "所有者"
+msgstr "擁有者"
 
 #: .\cookbook\templates\space_overview.html:57
 msgid "Leave Space"
