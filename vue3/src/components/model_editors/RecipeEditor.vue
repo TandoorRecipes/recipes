@@ -77,14 +77,11 @@
                         </v-row>
                         <v-row>
                             <v-col class="text-center">
-                                <!-- <v-btn-group density="compact">
+                                <v-btn-group density="compact">
                                     <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
                                     <v-btn color="warning" @click="dialogStepManager = true">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
-                                </v-btn-group> -->
-                                <v-btn-group>
-                                    <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()"><span v-if="!mobile">{{ $t('Auto_Sort') }}</span></v-btn>
                                     <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
                                     <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
@@ -143,7 +140,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, shallowRef, watch} from "vue";
-import {useMessageStore} from "@/stores/MessageStore";
+import {MessageType, useMessageStore} from "@/stores/MessageStore";
 import {Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -260,7 +257,7 @@ function splitStepObject(step: Step, split_character: string) {
  */
 function splitAllSteps(split_character: string) {
     let steps: Step[] = []
-    if (editingObj.value.recipe) {
+    if (editingObj.value.steps) {
         editingObj.value.steps.forEach(step => {
             steps = steps.concat(splitStepObject(step, split_character))
         })
@@ -290,9 +287,9 @@ function splitStep(step: Step, split_character: string) {
  * Merge all steps of a given recipe_json into one
  */
 function mergeAllSteps() {
-    let step = {instruction: '', ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as SourceImportStep
+    let step = {instruction: '', ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as Step
     if (editingObj.value.steps.length > 0) {
-        editingObj.value.steps.steps.forEach(s => {
+        editingObj.value.steps.forEach(s => {
             step.instruction += s.instruction + '\n'
             step.ingredients = step.ingredients.concat(s.ingredients)
         })
