@@ -77,11 +77,16 @@
                         </v-row>
                         <v-row>
                             <v-col class="text-center">
-                                <v-btn-group density="compact">
+                                <!-- <v-btn-group density="compact">
                                     <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
                                     <v-btn color="warning" @click="dialogStepManager = true">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
+                                </v-btn-group> -->
+                                <v-btn-group>
+                                    <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()"><span v-if="!mobile">{{ $t('Auto_Sort') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
                             </v-col>
                         </v-row>
@@ -138,6 +143,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, shallowRef, watch} from "vue";
+import {useMessageStore} from "@/stores/MessageStore";
 import {Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -230,6 +236,70 @@ function addStep() {
         time: 0,
         showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients
     } as Step)
+}
+
+/**
+ * utility function used by splitAllSteps and splitStep to split a single step object into multiple step objects
+ * @param step step to split
+ * @param split_character character to use as a delimiter between steps
+ */
+function splitStepObject(step: Step, split_character: string) {
+    let steps: Step[] = []
+    step.instruction.split(split_character).forEach(part => {
+        if (part.trim() !== '') {
+            steps.push({instruction: part, ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!})
+        }
+    })
+    steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
+    return steps
+}
+
+/**
+ * Splits all steps of a given recipe_json at the split character (e.g. \n or \n\n)
+ * @param split_character character to split steps at
+ */
+function splitAllSteps(split_character: string) {
+    let steps: Step[] = []
+    if (editingObj.value.recipe) {
+        editingObj.value.steps.forEach(step => {
+            steps = steps.concat(splitStepObject(step, split_character))
+        })
+        editingObj.value.steps = steps
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
+
+}
+
+/**
+ * Splits the given step at the split character (e.g. \n or \n\n)
+ * @param step step to split
+ * @param split_character character to use as a delimiter between steps
+ */
+function splitStep(step: Step, split_character: string) {
+    if (editingObj.value.recipe) {
+        let old_index = editingObj.value.steps.findIndex(x => x === step)
+        let new_steps = splitStepObject(step, split_character)
+        editingObj.value.steps.splice(old_index, 1, ...new_steps)
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
+}
+
+/**
+ * Merge all steps of a given recipe_json into one
+ */
+function mergeAllSteps() {
+    let step = {instruction: '', ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as SourceImportStep
+    if (editingObj.value.steps.length > 0) {
+        editingObj.value.steps.steps.forEach(s => {
+            step.instruction += s.instruction + '\n'
+            step.ingredients = step.ingredients.concat(s.ingredients)
+        })
+        editingObj.value.steps = [step]
+    } else {
+        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+    }
 }
 
 /**
