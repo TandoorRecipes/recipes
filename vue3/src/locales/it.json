@@ -698,7 +698,7 @@
     "Url": "URL",
     "UrlImportSubtitle": "Importa le ricette da migliaia di pagine supportate.",
     "UrlList": "Elenco di URL",
-    "UrlListSubtitle": "Importa automaticamente un elenco di URL",
+    "UrlListSubtitle": "Importa automaticamente un elenco di URL.",
     "UserFileHelp": "File caricati nello spazio. ",
     "UserHelp": "Gli utenti sono i membri del tuo spazio. ",
     "Viewed": "Visualizzata",
@@ -796,5 +796,7 @@
     "SearchSettingsWarning": "Di solito non è necessario modificare le impostazioni di ricerca. Queste impostazioni sono disponibili solo per utenti esperti con esigenze specifiche. ",
     "TrigramThreshold": "Soglia del trigramma",
     "Comment": "Commento",
-    "Source": "Fonte"
+    "Source": "Fonte",
+    "MissingProperties": "Proprietà mancanti",
+    "NoUnit": "Nessuna unità"
 }
