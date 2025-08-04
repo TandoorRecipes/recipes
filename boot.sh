@@ -87,7 +87,7 @@ python manage.py collectstatic --noinput
 
 echo "Done"
 
-chmod -R 755 /opt/recipes/mediafiles
+chmod -R 755 ${MEDIA_ROOT:-/opt/recipes/mediafiles}
 
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
