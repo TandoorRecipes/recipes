@@ -82,8 +82,8 @@
                                     <v-btn color="warning" @click="dialogStepManager = true">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
-                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
                             </v-col>
                         </v-row>
@@ -153,6 +153,7 @@ import {VFileUpload} from 'vuetify/labs/VFileUpload'
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
+import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import SpaceSettings from "@/components/settings/SpaceSettings.vue";
 
@@ -236,70 +237,6 @@ function addStep() {
 }
 
 /**
- * utility function used by splitAllSteps and splitStep to split a single step object into multiple step objects
- * @param step step to split
- * @param split_character character to use as a delimiter between steps
- */
-function splitStepObject(step: Step, split_character: string) {
-    let steps: Step[] = []
-    step.instruction.split(split_character).forEach(part => {
-        if (part.trim() !== '') {
-            steps.push({instruction: part, ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!})
-        }
-    })
-    steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
-    return steps
-}
-
-/**
- * Splits all steps of a given recipe_json at the split character (e.g. \n or \n\n)
- * @param split_character character to split steps at
- */
-function splitAllSteps(split_character: string) {
-    let steps: Step[] = []
-    if (editingObj.value.steps) {
-        editingObj.value.steps.forEach(step => {
-            steps = steps.concat(splitStepObject(step, split_character))
-        })
-        editingObj.value.steps = steps
-    } else {
-        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
-    }
-
-}
-
-/**
- * Splits the given step at the split character (e.g. \n or \n\n)
- * @param step step to split
- * @param split_character character to use as a delimiter between steps
- */
-function splitStep(step: Step, split_character: string) {
-    if (editingObj.value.recipe) {
-        let old_index = editingObj.value.steps.findIndex(x => x === step)
-        let new_steps = splitStepObject(step, split_character)
-        editingObj.value.steps.splice(old_index, 1, ...new_steps)
-    } else {
-        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
-    }
-}
-
-/**
- * Merge all steps of a given recipe_json into one
- */
-function mergeAllSteps() {
-    let step = {instruction: '', ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as Step
-    if (editingObj.value.steps.length > 0) {
-        editingObj.value.steps.forEach(s => {
-            step.instruction += s.instruction + '\n'
-            step.ingredients = step.ingredients.concat(s.ingredients)
-        })
-        editingObj.value.steps = [step]
-    } else {
-        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
-    }
-}
-
-/**
  * called by draggable in step manager dialog when steps are sorted
  */
 function sortSteps() {
@@ -314,6 +251,18 @@ function sortSteps() {
  */
 function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
+}
+
+function handleMergeAllSteps(): void {
+    if (editingObj.value.steps){
+        mergeAllSteps(editingObj.value.steps)
+    }
+}
+
+function handleSplitAllSteps(): void {
+    if (editingObj.value.steps){
+        splitAllSteps(editingObj.value.steps, '\n')
+    }
 }
 
 </script>
