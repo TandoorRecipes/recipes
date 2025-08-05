@@ -1,7 +1,7 @@
 FROM python:3.13-alpine3.21
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
@@ -57,4 +57,4 @@ RUN /opt/recipes/venv/bin/python version.py
 RUN find . -type d -name ".git" | xargs rm -rf
 
 RUN chmod +x boot.sh
-ENTRYPOINT ["/opt/recipes/boot.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]
