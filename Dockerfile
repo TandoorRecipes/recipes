@@ -33,8 +33,11 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 COPY . ./
 
 # delete default nginx config and link it to tandoors config
-RUN rm -rf /etc/nginx/http.d
-RUN ln -s /opt/recipes/http.d /etc/nginx/http.d
+# create symlinks to access and error log to show them on stdout
+RUN rm -rf /etc/nginx/http.d && \
+    ln -s /opt/recipes/http.d /etc/nginx/http.d && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
