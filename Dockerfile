@@ -17,11 +17,6 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN \
-    if [ `apk --print-arch` = "armv7" ]; then \
-    printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" > /etc/pip.conf ; \
-    fi
-
 # remove Development dependencies from requirements.txt
 RUN sed -i '/# Development/,$d' requirements.txt
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
