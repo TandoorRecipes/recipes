@@ -4,9 +4,8 @@ FROM python:3.13-alpine3.21
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst
 
 #Print all logs without buffering it.
-ENV PYTHONUNBUFFERED 1
-
-ENV DOCKER true
+ENV PYTHONUNBUFFERED=1 \
+    DOCKER=true
 
 #This port will be used by gunicorn.
 EXPOSE 80 8080
