@@ -588,5 +588,6 @@
     "view_recipe": "Visa recept",
     "warning_duplicate_filter": "Varning: På grund av tekniska begränsningar kan flera filter av samma kombination (och/eller/inte) ge oväntade resultat.",
     "warning_feature_beta": "Den här funktionen är för närvarande i ett BETA-läge (testning). Förvänta dig buggar och eventuellt större ändringar i framtiden (möjligtvis framtida data kan gå förlorad) när du använder den här funktionen.",
-    "warning_space_delete": "Du kan ta bort ditt utrymme inklusive alla recept, inköpslistor, måltidsplaner och allt annat du har skapat. Detta kan inte ångras! Är du säker på att du vill göra detta?"
+    "warning_space_delete": "Du kan ta bort ditt utrymme inklusive alla recept, inköpslistor, måltidsplaner och allt annat du har skapat. Detta kan inte ångras! Är du säker på att du vill göra detta?",
+    "AIImportSubtitle": "Använd AI för att importera bilder av recept."
 }
