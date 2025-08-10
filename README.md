@@ -23,6 +23,7 @@
 <a href="https://docs.tandoor.dev/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
 <a href="https://docs.tandoor.dev/" target="_blank" rel="noopener noreferrer">Docs</a> •
 <a href="https://app.tandoor.dev/accounts/login/?demo" target="_blank" rel="noopener noreferrer">Demo</a> •
+<a href="https://community.tandoor.dev" target="_blank" rel="noopener noreferrer">Community</a> •
 <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer">Discord</a>
 </p>
 
@@ -81,13 +82,13 @@ Share some information on how you use Tandoor to help me improve the application
 
 <table>
   <tr>
-    <td><a href="https://discord.gg/RhzBrfWgtp">Discord</a></td>
-    <td>We have a public Discord server that anyone can join. This is where all our developers and contributors hang out and where we make announcements</td>
+    <td><a href="https://community.tandoor.dev">Community</a></td>
+    <td>Get support, share best practices, discuss feature ideas, and meet other Tandoor users.</td>
   </tr>
 
   <tr>
-    <td><a href="https://twitter.com/TandoorRecipes">Twitter</a></td>
-    <td>You can follow our Twitter account to get updates on new features or releases</td>
+    <td><a href="https://discord.gg/RhzBrfWgtp">Discord</a></td>
+    <td>We have a public Discord server that anyone can join. This is where all our developers and contributors hang out and where we make announcements</td>
   </tr>
 </table>
 
