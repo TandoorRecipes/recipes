@@ -351,8 +351,8 @@
     "Title_or_Recipe_Required": "Sélection du titre ou de la recette requise",
     "Toggle": "Basculer",
     "Transpose_Words": "Transposer les mots",
-    "TrigramThreshold": "",
-    "TrigramThresholdHelp": "",
+    "TrigramThreshold": "Seuil du trigramme",
+    "TrigramThresholdHelp": "Contrôle le nombre de fautes d'orthographe ignorées lors de la recherche approximative. Les valeurs faibles ignorent davantage de différences.",
     "Type": "Type",
     "Unchanged": "Inchangé",
     "Undefined": "Indéfini",
@@ -730,5 +730,16 @@
     "SupermarketHelp": "Avec les supermarchés, vous pouvez lier des catégories pour trier et filtrer automatiquement les listes de courses. ",
     "SupportsDescriptionField": "Supporte le champ Description",
     "Preview": "Aperçu",
-    "Reusable": "Réutilisable"
+    "Reusable": "Réutilisable",
+    "System": "Système",
+    "SyncedPathHelp": "Dossiers sur des emplacements de stockage externes qui sont surveillés. ",
+    "Table": "Tableau",
+    "ThankYou": "Merci",
+    "ThanksTextHosted": "Pour soutenir l'open source en utilisant le serveur officiel Tandoor.",
+    "ThanksTextSelfhosted": "Pour utiliser Tandoor, si vous souhaitez soutenir le développement futur, pensez à sponsoriser le projet via GitHub.",
+    "Thursday": "Jeudi",
+    "Today": "Aujoud'hui",
+    "Tuesday": "Mardi",
+    "UnitConversion": "Conversion d'unités",
+    "UnitConversionHelp": "La conversion d'unités vous permet de convertir des unités unique, de manière générale ou pour un aliment spécifique. Vous pouvez par exemple convertir 1 tasse de farine en 125 grammes. Tandoor effectue ensuite automatiquement la conversion dans les différentes unités de poids ou de volume, si celles-ci ont les bonnes unités de base. Les conversions d'unités sont utilisées pour les calculs de propriétés."
 }
