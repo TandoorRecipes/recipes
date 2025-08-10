@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-07 08:58+0000\n"
-"Last-Translator: Mattias G <mattias.granlund@gmail.com>\n"
+"PO-Revision-Date: 2025-08-10 11:36+0000\n"
+"Last-Translator: Elias Sjögreen <eliassjogreen1@gmail.com>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -641,6 +641,8 @@ msgstr "ID eller enhet att använda för inköpslistan"
 #: .\cookbook\serializer.py:1443
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Om det här alternativet är aktiverat kommer alla matvaror att raderas från "
+"de aktiva inköpslistorna."
 
 #: .\cookbook\tables.py:69 .\cookbook\tables.py:83
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -723,10 +725,13 @@ msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Just nu har du inga e-post adresser konfigurerade. Du borde verkligen lägga "
+"till en e-post adress så att du kan får notiser, återställa ditt lösenord, "
+"mm."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Lägg till en e-post adress"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
@@ -734,12 +739,12 @@ msgstr "Lägg till email"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Vill du verkligen ta bort den valda e-postadressen?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Bekräfta e-postadress"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -749,6 +754,10 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
+"Vänligen bekräfra att\n"
+"            <a href=\"mailto:%(email)s\">%(email)s</a> är e-postadressen för "
+"användaren %(user_display)s\n"
+"            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
@@ -762,6 +771,9 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
+"Denna e-post bekräftelselänk är utgången eller felaktig. Vänligen\n"
+"            <a href=\"%(email_url)s\">skapa en ny "
+"e-postbekräftelsebegäran</a>."
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
@@ -785,19 +797,17 @@ msgstr "Logga in"
 #: .\cookbook\templates\account\password_reset_done.html:33
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign Up"
-msgstr "Logga in"
+msgstr "Registrera dig"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
-msgstr ""
+msgstr "Glömt ditt lösenord?"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "Återställ mitt lösenord"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
@@ -824,10 +834,8 @@ msgstr "Är du säker på att du vill logga ut?"
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Change Password"
-msgstr "Ändringar sparade!"
+msgstr "Ändra lösenord"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
@@ -850,18 +858,20 @@ msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Glömt ditt lösenord? Ange din e-postadress nedanför så skickar vi ett "
+"återställningmail."
 
 #: .\cookbook\templates\account\password_reset.html:32
-#, fuzzy
-#| msgid "Password reset is not implemented for the time being!"
 msgid "Password reset is disabled on this instance."
-msgstr "Återställning av lösenord har ännu inte lagts till!"
+msgstr "Återställning av lösenord är avaktiverat på denna instans."
 
 #: .\cookbook\templates\account\password_reset_done.html:25
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Vi har skickat ett e-postmeddelande till dig. Om du inte har fått det inom "
+"några minuter, vänligen kontakta oss."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 #, fuzzy
