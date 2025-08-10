@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-08-05 09:38+0000\n"
-"Last-Translator: PierreB <pouley@bellemainp.fr>\n"
+"PO-Revision-Date: 2025-08-10 11:36+0000\n"
+"Last-Translator: Enzo La Rafale <enzo.chaussivert@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -442,8 +442,6 @@ msgid "Other"
 msgstr "Autre"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
 msgstr "Matières grasses"
 
@@ -562,10 +560,8 @@ msgid "Transpose Words"
 msgstr "Transposer les mots"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Aliment équivalent"
+msgstr "Aliment alternatif"
 
 #: .\cookbook\models.py:1475
 msgid "Unit Replace"
@@ -2458,8 +2454,11 @@ msgstr ""
 "les livre."
 
 #: .\cookbook\views\api.py:925
+#, fuzzy
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"Identifiants de livres : répéter pour plusieurs. Exclure les recettes de "
+"l'un des livres."
 
 #: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
