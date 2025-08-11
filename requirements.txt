@@ -1,8 +1,8 @@
 aiohttp==3.12.15
 beautifulsoup4==4.13.4
-boto3==1.40.0
+boto3==1.40.5
 bleach==6.2.0
-cryptography===45.0.5
+cryptography===45.0.6
 crispy-bootstrap4==2025.6
 Django==4.2.23
 django-allauth==65.10.0
@@ -20,7 +20,7 @@ django-storages==1.14.6
 django-tables2==2.7.5
 django-treebeard==4.7.1
 django-webpack-loader==3.2.1
-djangorestframework==3.16.0
+djangorestframework==3.16.1
 drf-writable-nested==0.7.2
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 gunicorn==23.0.0
