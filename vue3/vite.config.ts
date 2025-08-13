@@ -7,7 +7,7 @@ import {VitePWA} from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: '/static/vue3/',
+    base: './',
     plugins: [
         vue({
             template: {transformAssetUrls}

@@ -63,8 +63,12 @@ TANDOOR_PLUGINS.forEach(plugin => {
     routes = routes.concat(plugin.routes)
 })
 
+const basePath = localStorage.getItem("BASE_PATH")
+const pathname = basePath?.startsWith("http") ? new URL(basePath).pathname : undefined
+const base = pathname === "/" ? undefined : pathname
+
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(base),
     routes,
 })
 
