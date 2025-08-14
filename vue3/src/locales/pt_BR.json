@@ -649,5 +649,15 @@
     "IngredientHelp": "Ingredientes normalmente são compostos por uma quantidade, uma unidade de medida e um alimento, quantidade e unidade são opcionais. Também pode conter uma anotação, ou ser utilizado como cabeçalho. ",
     "InstructionsEditHelp": "Clique aqui para adicionar instruções. ",
     "Comment": "Comentário",
-    "Apply": "Aplicar"
+    "Apply": "Aplicar",
+    "ManageSubscription": "Gerenciar a inscrição",
+    "MealPlanShoppingHelp": "Itens na sua lista de compras podem ser vinculados a um Plano de Refeições para organizar sua lista ou atualizar/excluir todos de uma só vez. Ao criar um Plano de Refeições com uma Receita, os ingredientes correspondentes podem ser adicionados automaticamente à Lista de Compras (configurações). ",
+    "Headline": "Título",
+    "KeywordHelp": "Palavras-chave podem ser utilizadas para organizar sua coleção de receitas.",
+    "Logout": "Sair",
+    "MealPlanHelp": "O Plano de Refeição é um calendário usado para planejar refeições. Ele deve conter uma receita ou título e pode ser vinculado à listas de compras. ",
+    "Last": "Último",
+    "Load": "Carregar",
+    "InviteLinkHelp": "Links para convidar pessoas ao seu espaço. ",
+    "Invite_Link": "Link de convite"
 }
