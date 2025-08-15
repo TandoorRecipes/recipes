@@ -1,6 +1,6 @@
 aiohttp==3.12.15
 beautifulsoup4==4.13.4
-boto3==1.40.6
+boto3==1.40.7
 bleach==6.2.0
 cryptography===45.0.6
 crispy-bootstrap4==2025.6
@@ -42,7 +42,7 @@ python3-saml==1.16.0
 pytubefix==9.4.1
 pyyaml==6.0.2
 recipe-scrapers==15.9.0
-redis==6.3.0
+redis==6.4.0
 requests==2.32.4
 requests-oauthlib==2.0.0
 six==1.17.0
