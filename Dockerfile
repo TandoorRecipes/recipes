@@ -1,44 +1,93 @@
-FROM python:3.13-alpine3.21
+FROM node:20.19-alpine AS node-deps
+WORKDIR /src/vue3
 
-#Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
+COPY --link ./vue3/package.json ./vue3/yarn.lock ./
 
-#Print all logs without buffering it.
-ENV PYTHONUNBUFFERED 1
+# TODO: use --frozen-lockfile
+# RUN yarn install --frozen-lockfile
+RUN yarn install
 
-ENV DOCKER true
+COPY --link ./vue3 ../vue3
 
-#This port will be used by gunicorn.
-EXPOSE 80 8080
+FROM node-deps AS node-builder
 
-#Create app dir and install requirements.
-RUN mkdir /opt/recipes
+RUN yarn build
+
+FROM python:3.13-alpine3.21 AS base
 WORKDIR /opt/recipes
 
-COPY requirements.txt ./
+# Print all logs without buffering: https://stackoverflow.com/a/59812588
+ENV PYTHONUNBUFFERED=1
 
-RUN \
-    if [ `apk --print-arch` = "armv7" ]; then \
-    printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" > /etc/pip.conf ; \
-    fi
+# Install all dependencies.
+RUN apk add --no-cache \
+  gettext \
+  git \
+  libgcc \
+  libjpeg \
+  libstdc++ \
+  libwebp \
+  libxml2-dev \
+  libxslt-dev \
+  nginx \
+  openldap \
+  postgresql-client \
+  postgresql-libs \
+  zlib
 
-# remove Development dependencies from requirements.txt
-RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl && \
-    echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
-    python -m venv venv && \
-    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip debug -v && \
-    venv/bin/pip install wheel==0.45.1 && \
-    venv/bin/pip install setuptools_rust==1.10.2 && \
-    if [ `apk --print-arch` = "aarch64" ]; then \
-    curl https://sh.rustup.rs -sSf | sh -s -- -y; \
-    fi &&\
-    venv/bin/pip install -r requirements.txt --no-cache-dir &&\
-    apk --purge del .build-deps
+FROM base AS deps
 
-#Copy project and execute it.
-COPY . ./
+ENV DOCKER=true
+
+COPY --link requirements.txt ./
+
+RUN <<EOF
+  if [ $(apk --print-arch) = "armv7" ]; then
+    printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" >/etc/pip.conf
+  fi
+
+  # remove Development dependencies from requirements.txt
+  sed -i '/# Development/,$d' requirements.txt
+
+  apk add --no-cache --virtual .build-deps \
+    build-base \
+    cargo \
+    curl \
+    g++ \
+    gcc \
+    jpeg-dev \
+    libffi-dev \
+    libwebp-dev \
+    musl-dev \
+    openldap-dev \
+    openssl-dev \
+    postgresql-dev \
+    python3-dev \
+    xmlsec \
+    xmlsec-dev \
+    zlib-dev
+
+  echo -n "INPUT ( libldap.so )" >/usr/lib/libldap_r.so
+
+  python -m venv venv
+  /opt/recipes/venv/bin/python -m pip install --upgrade pip
+  venv/bin/pip debug -v
+  venv/bin/pip install wheel==0.45.1
+  venv/bin/pip install setuptools_rust==1.10.2
+
+  if [ $(apk --print-arch) = "aarch64" ]; then
+    curl https://sh.rustup.rs -sSf | sh -s -- -y
+  fi
+
+  venv/bin/pip install -r requirements.txt --no-cache-dir
+
+  apk --purge del .build-deps
+EOF
+
+FROM deps AS builder
+# Copy project and execute it.
+COPY --link . ./
+COPY --link --chmod=755 boot.sh ./
 
 # delete default nginx config and link it to tandoors config
 RUN rm -rf /etc/nginx/http.d
@@ -52,9 +101,24 @@ RUN ln -s /opt/recipes/http.d /etc/nginx/http.d
 #            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
 
 # collect information from git repositories
-RUN /opt/recipes/venv/bin/python version.py
-# delete git repositories to reduce image size
-RUN find . -type d -name ".git" | xargs rm -rf
+RUN <<EOF
+  /opt/recipes/venv/bin/python version.py
+  # delete git repositories to reduce image size
+  find . -type d -name ".git" | xargs rm -rf
+EOF
 
-RUN chmod +x boot.sh
+FROM base AS runner
+
+RUN <<EOF
+addgroup -g 1000 tandoor
+adduser -u 1000 -G tandoor -H -D tandoor
+EOF
+
+COPY --link --chown=1000:1000 --from=builder /opt/recipes/ ./
+COPY --link --chown=1000:1000 --from=node-builder /src/cookbook/static/vue3 ./cookbook/static/vue3/
+
+# This port will be used by gunicorn.
+EXPOSE 80 8080
+USER 1000:1000
+
 ENTRYPOINT ["/opt/recipes/boot.sh"]
