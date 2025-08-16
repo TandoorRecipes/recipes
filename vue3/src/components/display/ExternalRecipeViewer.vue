@@ -29,8 +29,8 @@ const {getDjangoUrl} = useDjangoUrls()
 const panelState = ref('')
 
 onMounted(() => {
-    // open panel by default if recipe has not been converted to internal yet
-    if (!props.recipe.internal) {
+    // open panel by default if recipe has not been converted to internal yet or if it does not have any steps
+    if (!props.recipe.internal || props.recipe.steps.length == 0) {
         panelState.value = 'show'
     }
 })
