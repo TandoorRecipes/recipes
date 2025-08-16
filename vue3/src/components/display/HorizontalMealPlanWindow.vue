@@ -1,31 +1,30 @@
 <template>
-<!--    <v-row justify="space-between">-->
-<!--        <v-col>-->
-<!--            <h2><i class="fas fa-calendar-week fa-fw"></i> Meal Plans</h2>-->
-<!--        </v-col>-->
-<!--    </v-row>-->
+    <!--    <v-row justify="space-between">-->
+    <!--        <v-col>-->
+    <!--            <h2><i class="fas fa-calendar-week fa-fw"></i> Meal Plans</h2>-->
+    <!--        </v-col>-->
+    <!--    </v-row>-->
 
     <v-row class="mt-0" v-if="mealPlanWindows.length > 0">
         <v-col>
-            <v-window show-arrows>
-                <v-window-item v-for="w in mealPlanWindows" class="pt-1 pb-1">
+            <v-window v-model="currentWindowIndex">
+                <v-window-item v-for="(w, i) in mealPlanWindows" :value="i" class="pt-1 pb-1">
                     <v-row>
                         <v-col v-for="mealPlanGridItem in w">
                             <v-list density="compact" class="pt-0 pb-0">
-                                <v-list-item>
-
-                                    <div class="d-flex justify-space-between">
-                                        <div class="align-self-center">
+                                <v-list-item class="text-center">
+                                    <div class="d-flex ">
+                                        <div class="flex-col align-self-start">
+                                            <v-btn @click="currentWindowIndex--" v-if="currentWindowIndex != 0" icon="fa-solid fa-chevron-left" size="small"></v-btn>
+                                        </div>
+                                        <div class="flex-col flex-grow-1 mt-auto mb-auto">
                                             {{ mealPlanGridItem.date_label }}
                                         </div>
-                                        <div class="align-self-center">
-                                            <v-btn variant="flat" icon="">
-                                                <i class="fas fa-plus"></i>
-                                                <model-edit-dialog model="MealPlan" :item-defaults="{fromDate: mealPlanGridItem.date.toJSDate()}" :close-after-create="false" :close-after-save="false"></model-edit-dialog>
-                                            </v-btn>
+                                        <div class="flex-col align-self-end">
+                                            <v-btn @click="currentWindowIndex++" v-if="currentWindowIndex + 1 < mealPlanWindows.length" icon="fa-solid fa-chevron-right"
+                                                   size="small"></v-btn>
                                         </div>
                                     </div>
-
                                 </v-list-item>
                                 <v-divider v-if="mealPlanGridItem.plan_entries.length > 0"></v-divider>
                                 <v-list-item v-for="p in mealPlanGridItem.plan_entries" :key="p.id" @click="clickMealPlan(p)" link>
@@ -47,7 +46,7 @@
                                             <v-menu activator="parent">
                                                 <v-list>
                                                     <v-list-item prepend-icon="$edit" link>
-                                                        {{$t('Edit')}}
+                                                        {{ $t('Edit') }}
                                                         <model-edit-dialog model="MealPlan" :item="p"></model-edit-dialog>
                                                     </v-list-item>
                                                 </v-list>
@@ -55,7 +54,11 @@
                                         </v-btn>
                                     </template>
                                 </v-list-item>
-
+                                <v-list-item class="text-center cursor-pointer" variant="tonal">
+                                    <model-edit-dialog model="MealPlan" :item-defaults="{fromDate: mealPlanGridItem.date.toJSDate()}" :close-after-create="false"
+                                                       :close-after-save="false"></model-edit-dialog>
+                                    <v-icon icon="$create" size="small"></v-icon>
+                                </v-list-item>
                             </v-list>
                         </v-col>
                     </v-row>
@@ -79,7 +82,9 @@ import {useRouter} from "vue-router";
 
 const router = useRouter()
 const {name} = useDisplay()
+
 const loading = ref(false)
+const currentWindowIndex = ref(0)
 
 let numberOfCols = computed(() => {
     return homePageCols(name.value)
@@ -100,7 +105,12 @@ const meal_plan_grid = computed(() => {
         grid.push({
             date: grid_day_date,
             create_default_date: grid_day_date.toISODate(), // improve meal plan edit modal to do formatting itself and accept dates
-            date_label: grid_day_date.toLocaleString(DateTime.DATE_MED),
+            date_label: grid_day_date.toLocaleString({
+                weekday: 'short',
+                month: '2-digit',
+                day: '2-digit',
+                year: '2-digit',
+            }),
             plan_entries: useMealPlanStore().planList.filter((m: MealPlan) => ((DateTime.fromJSDate(m.fromDate).startOf('day') <= grid_day_date.startOf('day')) && (DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate).startOf('day') >= grid_day_date.startOf('day')))),
         } as MealPlanGridItem)
     }
@@ -134,9 +144,9 @@ onMounted(() => {
     })
 })
 
-function clickMealPlan(plan: MealPlan){
-    if(plan.recipe){
-        router.push( {name: 'RecipeViewPage', params: {id: plan.recipe.id}})
+function clickMealPlan(plan: MealPlan) {
+    if (plan.recipe) {
+        router.push({name: 'RecipeViewPage', params: {id: plan.recipe.id}})
     }
 }
 
