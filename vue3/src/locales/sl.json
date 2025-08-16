@@ -169,6 +169,7 @@
   "Export_Supported": "Izvoz podprt",
   "Export_To_ICal": "Izvoz.ics",
   "External": "Zunanje",
+  "ExternalRecipe": "",
   "ExternalRecipeImport": "Uvoz zunanjih receptov",
   "ExternalRecipeImportHelp": "Datoteke v sinhroniziranih mapah na zunanjih shrambah se ne uvozijo neposredno, temveč se začasno shranijo kot recepti za zunanji uvoz. Tukaj si lahko hitro ogledate in uredite novo najdene datoteke, preden jih premaknete v glavno zbirko. ",
   "ExternalStorage": "Zunanji pomnilnik",

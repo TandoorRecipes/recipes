@@ -170,6 +170,7 @@
   "Export_Supported": "Exportieren wird unterstützt",
   "Export_To_ICal": "Export als .ics",
   "External": "Extern",
+  "ExternalRecipe": "Externes Rezept",
   "ExternalRecipeImport": "Externer Rezeptimport",
   "ExternalRecipeImportHelp": "Dateien die in überwachten Ordnern auf externen Speichern gefunden werden, werden nicht sofort als Rezept importiert, sondern zunächst als Rezeptimport zwischengespeichert. Hier können gefundene Rezepte schnell und einfach editiert werden, bevor Sie in die Sammlung aufgenommen werden ",
   "ExternalStorage": "Externer Speicher",

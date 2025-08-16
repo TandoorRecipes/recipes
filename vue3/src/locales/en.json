@@ -168,6 +168,7 @@
   "Export_Supported": "Export supported",
   "Export_To_ICal": "Export .ics",
   "External": "External",
+  "ExternalRecipe": "External Recipe",
   "ExternalRecipeImport": "External recipe import",
   "ExternalRecipeImportHelp": "Files in synced folders on external storages are not imported directly but temporarily saved as external import recipes. Here you can quickly view and edit newly found files before they are moved to the main collection. ",
   "ExternalStorage": "External storage",

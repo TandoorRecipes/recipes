@@ -479,6 +479,7 @@ export interface ApiAccessTokenUpdateRequest {
 export interface ApiAiImportCreateRequest {
     file: string | null;
     text: string | null;
+    recipeId: string | null;
 }
 
 export interface ApiAutoPlanCreateRequest {
@@ -741,6 +742,7 @@ export interface ApiGroupRetrieveRequest {
 export interface ApiImportCreateRequest {
     file: string | null;
     text: string | null;
+    recipeId: string | null;
 }
 
 export interface ApiImportLogCreateRequest {
@@ -2087,6 +2089,13 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['recipeId'] == null) {
+            throw new runtime.RequiredError(
+                'recipeId',
+                'Required parameter "recipeId" was null or undefined when calling apiAiImportCreate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -2115,6 +2124,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['text'] != null) {
             formParams.append('text', requestParameters['text'] as any);
+        }
+
+        if (requestParameters['recipeId'] != null) {
+            formParams.append('recipe_id', requestParameters['recipeId'] as any);
         }
 
         const response = await this.request({
@@ -4425,6 +4438,13 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['recipeId'] == null) {
+            throw new runtime.RequiredError(
+                'recipeId',
+                'Required parameter "recipeId" was null or undefined when calling apiImportCreate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -4453,6 +4473,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['text'] != null) {
             formParams.append('text', requestParameters['text'] as any);
+        }
+
+        if (requestParameters['recipeId'] != null) {
+            formParams.append('recipe_id', requestParameters['recipeId'] as any);
         }
 
         const response = await this.request({

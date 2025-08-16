@@ -166,6 +166,7 @@
   "Export_Supported": "Exportación soportada",
   "Export_To_ICal": "Exportar .ics",
   "External": "Externo",
+  "ExternalRecipe": "",
   "ExternalRecipeImport": "Importación externa de recetas",
   "ExternalRecipeImportHelp": "Los archivos en carpetas sincronizadas en almacenamientos externos no se importan directamente, en su lugar son guardados temporalmente como recetas de importación externa. Aquí puedes ver y editar rápidamente los archivos recién encontrados antes de que se muevan a la colección principal. ",
   "ExternalStorage": "Almacenamiento externo",

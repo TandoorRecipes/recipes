@@ -169,6 +169,7 @@
   "Export_Supported": "Exportation prise en charge",
   "Export_To_ICal": "Exporter .ics",
   "External": "Externe",
+  "ExternalRecipe": "",
   "ExternalRecipeImport": "Importation d'une recette externe",
   "ExternalRecipeImportHelp": "Les fichiers des dossiers synchronisés sur des stockages externes ne sont pas importés directement, mais enregistrés temporairement comme recettes d'importation externe. Vous pouvez ainsi visualiser et modifier rapidement les fichiers nouvellement trouvés avant leur transfert vers la collection principale. ",
   "ExternalStorage": "Stockage externe",
