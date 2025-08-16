@@ -84,8 +84,9 @@ export function useFileApi() {
      * uploads the given file to the image recognition endpoint
      * @param file file object to upload
      * @param text text to import
+     * @param recipeId id of a recipe to use as import base (for external recipes
      */
-    function doAiImport(file: File | null, text: string = '') {
+    function doAiImport(file: File | null, text: string = '', recipeId: string = '') {
         let formData = new FormData()
 
         if (file != null) {
@@ -94,6 +95,8 @@ export function useFileApi() {
             formData.append('file', '')
         }
         formData.append('text', text)
+        formData.append('recipe_id', recipeId)
+        fileApiLoading.value = true
 
         return fetch(getDjangoUrl(`api/ai-import/`), {
             method: 'POST',

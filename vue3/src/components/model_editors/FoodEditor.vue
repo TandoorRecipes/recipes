@@ -51,6 +51,9 @@
                         <model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></model-select>
 
                         <properties-editor v-model="editingObj.properties" :amount-for="propertiesAmountFor"></properties-editor>
+
+                        <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 60px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
 
@@ -101,6 +104,8 @@
 
                         </v-card>
                     </v-form>
+                    <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 60px;"></v-spacer>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="misc">

@@ -8,22 +8,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-04 10:29+0000\n"
-"Last-Translator: Johnny Ip <ip.iohnny@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <http://translate.tandoor.dev/projects/"
-"tandoor/recipes-backend/zh_Hant/>\n"
+"PO-Revision-Date: 2025-08-02 07:49+0000\n"
+"Last-Translator: TC Kuo <tckuo7@gmail.com>\n"
+"Language-Team: Chinese (Traditional Han script) <http://translate.tandoor."
+"dev/projects/tandoor/recipes-backend/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
-msgstr "這兩個字段都是可選的。如果沒有輸入,將顯示用戶名"
+msgstr "這兩個欄位都是可選的。如果沒有輸入,將顯示用戶名"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
@@ -31,7 +31,7 @@ msgstr "名字"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
-msgstr "關鍵詞"
+msgstr "關鍵字"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
@@ -51,14 +51,13 @@ msgstr "存儲ID"
 
 #: .\cookbook\forms.py:93
 msgid "Default"
-msgstr "默認"
+msgstr "預設"
 
 #: .\cookbook\forms.py:121
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
-msgstr ""
-"為防止重復，忽略與現有同名的菜譜。選中此框可導入所有內容（包括同名菜譜）。"
+msgstr "為防止重複，忽略與現有同名的食譜。選中此框可導入所有內容（包括同名食譜）。"
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
@@ -241,7 +240,7 @@ msgstr "你沒有必要的權限來查看這個頁面！"
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "你不能與此對象交互，因為它不屬於你！"
+msgstr "你不能與此對象互動，因為它不屬於你！"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
@@ -311,16 +310,16 @@ msgstr "在導入過程中發生了一個意外的錯誤。請確認你上傳的
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr "以下菜譜被忽略了，因為它們已經存在了："
+msgstr "以下食譜被忽略了，因為它們已經存在了："
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
 msgid "Imported %s recipes."
-msgstr "導入了%s菜譜。"
+msgstr "導入了%s食譜。"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr "菜譜來源："
+msgstr "食譜來源："
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -328,7 +327,7 @@ msgstr "說明"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr "營養信息"
+msgstr "營養資訊"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
@@ -645,7 +644,7 @@ msgstr "電子郵件地址"
 #: .\cookbook\templates\socialaccount\connections.html:10
 #: .\cookbook\templates\user_settings.html:8
 msgid "Settings"
-msgstr "設置"
+msgstr "設定"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
@@ -1878,7 +1877,7 @@ msgstr "你可以被邀請加入現有空間或創建自己的空間。"
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr "所有者"
+msgstr "擁有者"
 
 #: .\cookbook\templates\space_overview.html:57
 msgid "Leave Space"

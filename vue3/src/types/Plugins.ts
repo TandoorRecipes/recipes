@@ -10,10 +10,14 @@ export type TandoorPlugin = {
     navigationDrawer: any[],
     bottomNavigation: any[],
     userNavigation: any[],
+
+    disabled?: boolean
 }
 
 const pluginModules = import.meta.glob('@/plugins/*/plugin.ts', { eager: true })
 export let TANDOOR_PLUGINS = [] as TandoorPlugin[]
 Object.values(pluginModules).forEach(module => {
-    TANDOOR_PLUGINS.push(module.plugin)
+    if(!module.plugin.disabled){
+        TANDOOR_PLUGINS.push(module.plugin)
+    }
 })

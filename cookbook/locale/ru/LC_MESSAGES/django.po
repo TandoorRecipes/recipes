@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-12 17:58+0000\n"
-"Last-Translator: Владислав <vlad@kelonmyosa.ru>\n"
+"PO-Revision-Date: 2025-08-01 08:40+0000\n"
+"Last-Translator: Aleksey <streltsov3@gmail.com>\n"
 "Language-Team: Russian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ru/>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -90,22 +90,24 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Длительный токен доступа</a> для вашей установки HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Что-то вроде http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "Например, http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
-msgstr ""
+msgstr "Хранилище"
 
 #: .\cookbook\forms.py:222
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 #: .\cookbook\forms.py:226
 msgid "Search String"
@@ -125,16 +127,12 @@ msgid "Email address already taken!"
 msgstr "Этот email уже используется!"
 
 #: .\cookbook\forms.py:275
-#, fuzzy
-#| msgid ""
-#| "An email address is not required but if present the invite link will be "
-#| "send to the user."
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
-"email не требуется, но если он присутствует, пользователю будет отправлена "
-"ссылка для приглашения."
+"Адрес электронной почты не обязателен, но если он указан, ссылка-приглашение "
+"будет отправлена пользователю."
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
@@ -149,6 +147,9 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Определяет степень нечёткости поиска при использовании сопоставления по "
+"триграммам (например, низкие значения означают, что больше опечаток "
+"игнорируется)."
 
 #: .\cookbook\forms.py:340
 #, fuzzy
@@ -183,24 +184,33 @@ msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Поля для поиска по частичному совпадению. (например, поиск по слову «Pie» "
+"вернёт «pie», «piece» и «soapie»)"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Поля для поиска по совпадению начала слова. (например, поиск по «sa» вернёт "
+"«salad» и «sandwich»)"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Поля для нечёткого поиска. (например, поиск по слову «recpie» найдёт "
+"«recipe»).  Примечание: эта опция конфликтует с методами поиска «web» и "
+"«raw»."
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Поля для полнотекстового поиска.  Примечание: методы поиска «web», «phrase» "
+"и «raw» работают только с полнотекстовыми полями."
 
 #: .\cookbook\forms.py:350
 msgid "Search Method"
@@ -208,38 +218,40 @@ msgstr "Способ поиска"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Нечёткое сопоставление"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Игнорировать акценты"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
-msgstr ""
+msgstr "Частичное совпадение"
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
-msgstr ""
+msgstr "Начинается с"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Неточный поиск"
 
 #: .\cookbook\forms.py:351
 msgid "Full Text"
-msgstr ""
+msgstr "Полный текст"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Во избежание спама запрошенное электронное письмо не было отправлено. "
+"Подождите несколько минут и попробуйте снова."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Вы не вошли в систему и поэтому не можете просматривать эту страницу!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:174
@@ -252,7 +264,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:341 .\cookbook\views\data.py:35
 #: .\cookbook\views\views.py:127 .\cookbook\views\views.py:131
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "У вас нет необходимых разрешений для просмотра этой страницы!"
 
 #: .\cookbook\helper\permission_helper.py:192
 #: .\cookbook\helper\permission_helper.py:215
@@ -260,102 +272,108 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
+"Вы не можете взаимодействовать с этим объектом, так как он не принадлежит "
+"вам!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Вы достигли максимального количества рецептов для вашего пространства."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "У вас больше пользователей, чем разрешено в вашем пространстве."
 
 #: .\cookbook\helper\recipe_url_import.py:310
 msgid "reverse rotation"
-msgstr ""
+msgstr "обратное вращение"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "осторожное вращение"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
-msgstr ""
+msgstr "замесить"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
-msgstr ""
+msgstr "загустить"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "warm up"
-msgstr ""
+msgstr "разогреть"
 
 #: .\cookbook\helper\recipe_url_import.py:315
 msgid "ferment"
-msgstr ""
+msgstr "ферментировать"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
-msgstr ""
+msgstr "су-вид"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "Вы должны указать размер порции"
 
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Не удалось разобрать код шаблона."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Избранное"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Я это сделал"
 
 #: .\cookbook\integration\integration.py:209
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"Импортер требует файл .zip. Вы выбрали правильный тип импортера для ваших "
+"данных?"
 
 #: .\cookbook\integration\integration.py:212
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Во время импорта произошла непредвиденная ошибка. Пожалуйста, убедитесь, что "
+"вы загрузили корректный файл."
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Следующие рецепты были проигнорированы, так как уже существуют:"
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "Импортировано %s рецептов."
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr ""
+msgstr "Источник рецепта:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
-msgstr ""
+msgstr "Заметки"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr ""
+msgstr "Пищевая ценность"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
-msgstr ""
+msgstr "Источник"
 
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr ""
+msgstr "Импортировано из"
 
 #: .\cookbook\integration\saffron.py:23
 #, fuzzy
@@ -364,92 +382,96 @@ msgstr "Порции"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "Время ожидания"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "Время подготовки"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr ""
+msgstr "Книга рецептов"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "Раздел"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Исправляет продукты с "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Перестраивает полнотекстовый индекс поиска для рецептов"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"Полнотекстовый поиск используется только в базах данных Postgresql, индекс "
+"перестраивать не нужно"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "Перестройка индекса рецептов завершена."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Перестройка индекса рецептов не удалась."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "Завтрак"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "Обед"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "Ужин"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:919
 msgid "Other"
-msgstr ""
+msgstr "Другое"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "Толстый"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "г"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Углеводы"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "Протеины"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Калории"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "ккал"
 
 #: .\cookbook\models.py:325
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Максимальный объем файлового хранилища в МБ. 0 — без ограничений, -1 — чтобы "
+"отключить загрузку файлов."
 
 #: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
 #: .\cookbook\templates\meal_plan.html:7
@@ -468,27 +490,27 @@ msgstr "Покупки"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " является частью шага рецепта и не может быть удален"
 
 #: .\cookbook\models.py:918
 msgid "Nutrition"
-msgstr ""
+msgstr "Питательная ценность"
 
 #: .\cookbook\models.py:918
 msgid "Allergen"
-msgstr ""
+msgstr "Аллерген"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Цена"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Цель"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Простой"
 
 #: .\cookbook\models.py:1409 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
@@ -496,19 +518,19 @@ msgstr ""
 
 #: .\cookbook\models.py:1410 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Веб"
 
 #: .\cookbook\models.py:1411 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Необработанный"
 
 #: .\cookbook\models.py:1467
 msgid "Food Alias"
-msgstr ""
+msgstr "Синоним продукта"
 
 #: .\cookbook\models.py:1468
 msgid "Unit Alias"
-msgstr ""
+msgstr "Синоним единицы измерения"
 
 #: .\cookbook\models.py:1469
 #, fuzzy
@@ -518,149 +540,154 @@ msgstr "Ключевые слова"
 
 #: .\cookbook\models.py:1470
 msgid "Description Replace"
-msgstr ""
+msgstr "Замена описания"
 
 #: .\cookbook\models.py:1471
 msgid "Instruction Replace"
-msgstr ""
+msgstr "Замена инструкции"
 
 #: .\cookbook\models.py:1472
 #, fuzzy
 #| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Новый юнит"
+msgstr "Без единицы"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Транспонировать слова"
 
 #: .\cookbook\models.py:1474
 msgid "Food Replace"
-msgstr ""
+msgstr "Замена продукта"
 
 #: .\cookbook\models.py:1475
 msgid "Unit Replace"
-msgstr ""
+msgstr "Замена единицы измерения"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Замена названия"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
 msgid "Recipe"
-msgstr ""
+msgstr "Рецепт"
 
 #: .\cookbook\models.py:1504
-#, fuzzy
-#| msgid "New Food"
 msgid "Food"
-msgstr "Новый продукт"
+msgstr "Продукт"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
-msgstr ""
+msgstr "Ключевое слово"
 
 #: .\cookbook\serializer.py:222
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Загрузка файлов не разрешена для этого пространства."
 
 #: .\cookbook\serializer.py:233
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Вы достигли лимита загрузки файлов."
 
 #: .\cookbook\serializer.py:328
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Нельзя изменить разрешения владельца пространства."
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
-msgstr ""
+msgstr "Привет"
 
 #: .\cookbook\serializer.py:1270
 msgid "You have been invited by "
-msgstr ""
+msgstr "Вас пригласил "
 
 #: .\cookbook\serializer.py:1272
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " присоединиться к их пространству рецептов Tandoor "
 
 #: .\cookbook\serializer.py:1274
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Нажмите на следующую ссылку, чтобы активировать аккаунт: "
 
 #: .\cookbook\serializer.py:1276
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Если ссылка не работает, используйте следующий код для ручного присоединения "
+"к пространству: "
 
 #: .\cookbook\serializer.py:1278
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "Приглашение действительно до "
 
 #: .\cookbook\serializer.py:1280
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recipes — это открытый менеджер рецептов. Посмотрите его на GitHub "
 
 #: .\cookbook\serializer.py:1283
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Приглашение в Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1426
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Существующий список покупок для обновления"
 
 #: .\cookbook\serializer.py:1428
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Список ID ингредиентов из рецепта для добавления, если не указано — будут "
+"добавлены все."
 
 #: .\cookbook\serializer.py:1430
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Если указать ID списка рецептов и порции 0 — этот список покупок будет "
+"удалён."
 
 #: .\cookbook\serializer.py:1439
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Количество продукта для добавления в список покупок"
 
 #: .\cookbook\serializer.py:1441
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID единицы измерения для списка покупок"
 
 #: .\cookbook\serializer.py:1443
 msgid "When set to true will delete all food from active shopping lists."
-msgstr ""
+msgstr "Если включено, удалит все продукты из активных списков покупок."
 
 #: .\cookbook\tables.py:69 .\cookbook\tables.py:83
 #: .\cookbook\templates\generic\delete_template.html:7
 #: .\cookbook\templates\generic\delete_template.html:15
 #: .\cookbook\templates\generic\edit_template.html:28
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "Ошибка 404"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr ""
+msgstr "Страница, которую вы ищете, не найдена."
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "На главную"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "Сообщить об ошибке"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "Электронные адреса"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -670,68 +697,70 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:10
 #: .\cookbook\templates\user_settings.html:8
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "Электронная почта"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "Следующие электронные адреса связаны с вашим аккаунтом:"
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "Подтверждён"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "Не подтверждён"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "Основной"
 
 #: .\cookbook\templates\account\email.html:47
 msgid "Make Primary"
-msgstr ""
+msgstr "Сделать основным"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Отправить подтверждение повторно"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\generic\delete_template.html:57
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "Внимание:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"У вас пока не добавлен ни один электронный адрес. Рекомендуется добавить "
+"адрес для получения уведомлений, сброса пароля и т.д."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Добавить электронный адрес"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "Добавить e-mail"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Вы действительно хотите удалить выбранный электронный адрес?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Подтвердить электронный адрес"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -745,7 +774,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
-msgstr ""
+msgstr "Подтвердить"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -758,7 +787,7 @@ msgstr ""
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr ""
+msgstr "Логин"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -770,7 +799,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "Войти"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:41
@@ -778,34 +807,35 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "Зарегистрироваться"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
-msgstr ""
+msgstr "Забыли пароль?"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "Сбросить мой пароль"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
-msgstr ""
+msgstr "Вход через соцсети"
 
 #: .\cookbook\templates\account\login.html:51
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "Для входа вы можете использовать любой из следующих сервисов."
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
+#, fuzzy
 msgid "Sign Out"
-msgstr ""
+msgstr "Выйти"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Вы действительно хотите выйти?"
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
@@ -815,43 +845,48 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
 msgid "Change Password"
-msgstr ""
+msgstr "Изменить пароль"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: .\cookbook\templates\account\password_change.html:22
+#, fuzzy
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Забыли пароль?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:18
 msgid "Password Reset"
-msgstr ""
+msgstr "Сброс пароля"
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Забыли пароль? Введите свой электронный адрес ниже, и мы отправим вам письмо "
+"для сброса пароля."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr ""
+msgstr "Сброс пароля отключён для этого экземпляра."
 
 #: .\cookbook\templates\account\password_reset_done.html:25
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Мы отправили вам электронное письмо. Пожалуйста, свяжитесь с нами, если не "
+"получите его в течение нескольких минут."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
-msgstr ""
+msgstr "Неверный токен"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -861,71 +896,76 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Ссылка для сброса пароля недействительна, возможно, она уже была "
+"использована.\n"
+"­­­­­­           Пожалуйста, запросите <a href=\"%(passwd_reset_url)s\">новую "
+"ссылку для сброса пароля</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr ""
+msgstr "изменить пароль"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Ваш пароль изменён."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "Установить пароль"
 
 #: .\cookbook\templates\account\signup.html:6
+#, fuzzy
 msgid "Register"
-msgstr ""
+msgstr "Зарегистрироваться"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "Создать аккаунт"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Я принимаю следующие"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Условия и положения"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "и"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Политику конфиденциальности"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "Создать пользователя"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "Уже есть аккаунт?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Регистрация закрыта"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "К сожалению, регистрация сейчас закрыта."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:378
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr ""
+msgstr "Документация API"
 
 #: .\cookbook\templates\base.html:110 .\cookbook\templates\index.html:87
 msgid "Recipes"
@@ -933,36 +973,38 @@ msgstr "Рецепты"
 
 #: .\cookbook\templates\base.html:161 .\cookbook\views\lists.py:120
 msgid "Foods"
-msgstr ""
+msgstr "Продукты"
 
 #: .\cookbook\templates\base.html:173 .\cookbook\views\lists.py:137
+#, fuzzy
 msgid "Units"
-msgstr ""
+msgstr "Единицы измерения"
 
 #: .\cookbook\templates\base.html:187
 msgid "Supermarket"
-msgstr ""
+msgstr "Супермаркет"
 
 #: .\cookbook\templates\base.html:199
 msgid "Supermarket Category"
-msgstr ""
+msgstr "Категория супермаркета"
 
 #: .\cookbook\templates\base.html:211 .\cookbook\views\lists.py:186
+#, fuzzy
 msgid "Automations"
-msgstr ""
+msgstr "Автоматизация"
 
 #: .\cookbook\templates\base.html:225 .\cookbook\views\lists.py:222
 msgid "Files"
-msgstr ""
+msgstr "Файлы"
 
 #: .\cookbook\templates\base.html:237
 msgid "Batch Edit"
-msgstr ""
+msgstr "Пакетное редактирование"
 
 #: .\cookbook\templates\base.html:249 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr ""
+msgstr "История"
 
 #: .\cookbook\templates\base.html:263
 #: .\cookbook\templates\ingredient_editor.html:7
@@ -976,58 +1018,58 @@ msgstr "Ингредиенты"
 #: .\cookbook\templates\export_response.html:7
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr ""
+msgstr "Экспортировать"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Свойства"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 msgid "Unit Conversions"
-msgstr ""
+msgstr "Конвертация единиц"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
-msgstr ""
+msgstr "Импортировать рецепт"
 
 #: .\cookbook\templates\base.html:320
 msgid "Create"
-msgstr ""
+msgstr "Создать"
 
 #: .\cookbook\templates\base.html:333
 #: .\cookbook\templates\generic\list_template.html:14
 msgid "External Recipes"
-msgstr ""
+msgstr "Внешние рецепты"
 
 #: .\cookbook\templates\base.html:336 .\cookbook\templates\space_manage.html:15
 msgid "Space Settings"
-msgstr ""
+msgstr "Настройки пространства"
 
 #: .\cookbook\templates\base.html:340
 msgid "External Connectors"
-msgstr ""
+msgstr "Внешние соединения"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr ""
+msgstr "Система"
 
 #: .\cookbook\templates\base.html:347
 msgid "Admin"
-msgstr ""
+msgstr "Администрирование"
 
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
 msgid "Your Spaces"
-msgstr ""
+msgstr "Ваши пространства"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Обзор"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Руководство по Markdown"
 
 #: .\cookbook\templates\base.html:374
 msgid "GitHub"
@@ -1035,53 +1077,55 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:376
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Перевести Tandoor"
 
 #: .\cookbook\templates\base.html:380
 msgid "API Browser"
-msgstr ""
+msgstr "Браузер API"
 
 #: .\cookbook\templates\base.html:383
 msgid "Log out"
-msgstr ""
+msgstr "Выйти"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Вы используете бесплатную версию Tandor"
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Обновить сейчас"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr ""
+msgstr "Пакетное редактирование категорий"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr ""
+msgstr "Пакетное редактирование рецептов"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
-msgstr ""
+msgstr "Добавить указанные ключевые слова ко всем рецептам, содержащим слово"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:75
 msgid "Sync"
-msgstr ""
+msgstr "Синхронизировать"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr ""
+msgstr "Управлять отслеживаемыми папками"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"На этой странице вы можете управлять всеми папками для хранения, которые "
+"нужно отслеживать и синхронизировать."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr ""
+msgstr "Путь должен быть в следующем формате"
 
 #: .\cookbook\templates\batch\monitor.html:20
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
@@ -1089,128 +1133,131 @@ msgstr ""
 #: .\cookbook\templates\generic\new_template.html:23
 #: .\cookbook\templates\settings.html:57
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
-msgstr ""
+msgstr "Управлять внешним хранилищем"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
-msgstr ""
+msgstr "Синхронизировать сейчас!"
 
 #: .\cookbook\templates\batch\monitor.html:29
 msgid "Show Recipes"
-msgstr ""
+msgstr "Показать рецепты"
 
 #: .\cookbook\templates\batch\monitor.html:30
 msgid "Show Log"
-msgstr ""
+msgstr "Показать журнал"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr ""
+msgstr "Импорт рецептов"
 
 #: .\cookbook\templates\batch\waiting.html:28
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
+"Это может занять несколько минут, в зависимости от количества рецептов в "
+"синхронизации. Пожалуйста, подождите."
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
-msgstr ""
+msgstr "Кулинарные книги"
 
 #: .\cookbook\templates\export.html:7 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr ""
+msgstr "Экспорт рецептов"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr ""
+msgstr "Импорт новых рецептов"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
-msgstr ""
+msgstr "Редактировать рецепт"
 
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr ""
+msgstr "Вы уверены, что хотите удалить %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Это действие необратимо!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
-msgstr ""
+msgstr "Защищённый"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
-msgstr ""
+msgstr "Каскад"
 
 #: .\cookbook\templates\generic\delete_template.html:73
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr ""
+msgstr "Редактировать"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr ""
+msgstr "Просмотреть"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr ""
+msgstr "Удалить оригинальный файл"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
 msgid "List"
-msgstr ""
+msgstr "Список"
 
 #: .\cookbook\templates\generic\list_template.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Фильтр"
 
 #: .\cookbook\templates\generic\list_template.html:41
 msgid "Import all"
-msgstr ""
+msgstr "Импортировать всё"
 
 #: .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr ""
+msgstr "Новый"
 
 #: .\cookbook\templates\generic\table_template.html:76
 msgid "previous"
-msgstr ""
+msgstr "предыдущий"
 
 #: .\cookbook\templates\generic\table_template.html:98
 msgid "next"
-msgstr ""
+msgstr "следующий"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Просмотреть журнал"
 
 #: .\cookbook\templates\history.html:24
+#, fuzzy
 msgid "Cook Log"
-msgstr ""
+msgstr "Журнал приготовления"
 
 #: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:90
 #: .\cookbook\views\edit.py:174
 msgid "Import"
-msgstr ""
+msgstr "Импортировать"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Предупреждение о безопасности"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1227,32 +1274,32 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr ""
+msgstr "Поиск рецепта ..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Новый рецепт"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr ""
+msgstr "Расширенный поиск"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr ""
+msgstr "Сбросить поиск"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr ""
+msgstr "Недавно просмотренные"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Войдите, чтобы просмотреть рецепты"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr ""
+msgstr "Информация о Markdown"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""

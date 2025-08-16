@@ -176,7 +176,6 @@ class IngredientParser:
         # if something like this is detected move it to the beginning so the parser can handle it
         if len(ingredient) < 1000 and re.search(r'^([^\W\d_])+(.)*[1-9](\d)*\s*([^\W\d_])+', ingredient):
             match = re.search(r'[1-9](\d)*\s*([^\W\d_])+', ingredient)
-            print(f'reording from {ingredient} to {ingredient[match.start():match.end()] + " " + ingredient.replace(ingredient[match.start():match.end()], "")}')
             ingredient = ingredient[match.start():match.end()] + ' ' + ingredient.replace(ingredient[match.start():match.end()], '')
 
         # if the string contains parenthesis early on remove it and place it at the end
@@ -283,7 +282,5 @@ class IngredientParser:
 
         if len(food.strip()) == 0:
             raise ValueError(f'Error parsing string {ingredient}, food cannot be empty')
-
-        print(f'parsed {ingredient} to {amount} - {unit} - {food} - {note}')
 
         return amount, unit, food, note[:Ingredient._meta.get_field('note').max_length].strip()

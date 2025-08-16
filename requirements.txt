@@ -14,7 +14,7 @@ bleach==6.2.0
 gunicorn==23.0.0
 lxml==5.3.1
 Markdown==3.7
-Pillow==11.1.0
+Pillow==11.3.0
 psycopg2-binary==2.9.10
 python-dotenv==1.0.0
 requests==2.32.4
@@ -26,10 +26,10 @@ pyyaml==6.0.2
 uritemplate==4.1.1
 beautifulsoup4==4.12.3
 microdata==0.8.0
-mock==5.1.0
+mock==5.2.0
 Jinja2==3.1.6
 django-allauth[mfa,socialaccount]==65.9.0
-recipe-scrapers==15.6.0
+recipe-scrapers==15.8.0
 django-scopes==2.0.0
 django-treebeard==4.7.1
 django-cors-headers==4.6.0
@@ -41,9 +41,9 @@ python-ldap==3.4.4
 django-auth-ldap==4.6.0
 pyppeteer==2.0.0
 pytubefix==9.2.2
-aiohttp==3.12.14
+aiohttp==3.12.15
 inflection==0.5.1
-redis==5.2.1
+redis==6.2.0
 hiredis==3.2.1
 requests-oauthlib==2.0.0
 pyjwt==2.10.1

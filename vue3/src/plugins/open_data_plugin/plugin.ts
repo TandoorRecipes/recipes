@@ -16,6 +16,8 @@ export const plugin: TandoorPlugin = {
     userNavigation: [
         {component: VListItem, prependIcon: 'fa-solid fa-folder-tree', title: 'OpenData', to: {name: 'OpenDataPage', params: {}}},
     ],
+
+    disabled: true,
 } as TandoorPlugin
 
 

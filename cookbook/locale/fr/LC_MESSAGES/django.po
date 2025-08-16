@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-16 14:58+0000\n"
-"Last-Translator: Elvis Gosselin <elvis.gosselin@tutanota.com>\n"
+"PO-Revision-Date: 2025-08-10 11:36+0000\n"
+"Last-Translator: Enzo La Rafale <enzo.chaussivert@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -405,7 +405,7 @@ msgstr "Rubrique"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Corriger les aliments avec "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -442,8 +442,6 @@ msgid "Other"
 msgstr "Autre"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
 msgstr "Matières grasses"
 
@@ -451,7 +449,7 @@ msgstr "Matières grasses"
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
@@ -467,7 +465,7 @@ msgstr "Calories"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -554,30 +552,24 @@ msgid "Instruction Replace"
 msgstr "Remplacer l'instruction"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Nouvelle unité"
+msgstr "Aucune unité"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Transposer les mots"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Aliment équivalent"
+msgstr "Aliment alternatif"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description Replace"
 msgid "Unit Replace"
-msgstr "Remplacer la Description"
+msgstr "Remplacer l'unité"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Remplacer le nom"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -1040,10 +1032,8 @@ msgid "Properties"
 msgstr "Propriétés"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "Comptes connectés"
+msgstr "Conversions d'unités"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1063,10 +1053,8 @@ msgid "Space Settings"
 msgstr "Paramètres de groupe"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "Recettes externes"
+msgstr "Connecteurs externes"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1530,10 +1518,8 @@ msgid "Back"
 msgstr "Retour"
 
 #: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredient Editor"
 msgid "Property Editor"
-msgstr "Éditeur d’ingrédients"
+msgstr "Éditeur de propriété"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -2011,10 +1997,8 @@ msgid "Sign in using"
 msgstr "Se connecter avec"
 
 #: .\cookbook\templates\space_manage.html:7
-#, fuzzy
-#| msgid "Space Membership"
 msgid "Space Management"
-msgstr "Adhésion à l'espace"
+msgstr "Gestion de l'espace"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -2227,10 +2211,8 @@ msgid "Info"
 msgstr "Info"
 
 #: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Utiliser les fractions"
+msgstr "Migrations"
 
 #: .\cookbook\templates\system.html:116
 msgid ""
@@ -2265,10 +2247,8 @@ msgid "Hide"
 msgstr "Cacher"
 
 #: .\cookbook\templates\system.html:210
-#, fuzzy
-#| msgid "Show Log"
 msgid "Show"
-msgstr "Afficher le journal"
+msgstr "Afficher"
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
@@ -2353,11 +2333,9 @@ msgstr ""
 "MM-DD."
 
 #: .\cookbook\views\api.py:744
-#, fuzzy
-#| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
-"Identifiant de la recette dont fait partie une étape. Pour plusieurs "
+"Filtrer le planning des repas avec l'identifiant MealType. Pour plusieurs "
 "paramètres de répétition."
 
 #: .\cookbook\views\api.py:872
@@ -2460,18 +2438,27 @@ msgstr ""
 #: .\cookbook\views\api.py:922
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
+"ID du livre dans lequel une recette doit se trouver. Pour plusieurs "
+"paramètres de répétition."
 
 #: .\cookbook\views\api.py:923
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
+"IDs de livre, répéter pour plusieurs livres. Renvoie les recettes dans "
+"n'importe quel livre."
 
 #: .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
+"IDs de livre, répéter pour plusieurs livres. Renvoie les recettes dans tous "
+"les livre."
 
 #: .\cookbook\views\api.py:925
+#, fuzzy
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"Identifiants de livres : répéter pour plusieurs. Exclure les recettes de "
+"l'un des livres."
 
 #: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."

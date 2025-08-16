@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/luxon": "^3.6.2",
+    "@types/luxon": "^3.7.1",
     "@vueform/multiselect": "^2.6.11",
-    "@vueuse/core": "^13.1.0",
-    "@vueuse/router": "^13.1.0",
-    "luxon": "^3.6.1",
+    "@vueuse/core": "^13.6.0",
+    "@vueuse/router": "^13.6.0",
+    "luxon": "^3.7.1",
     "mavon-editor": "^3.0.1",
     "pinia": "^3.0.2",
     "vue": "^3.5.13",
@@ -23,7 +23,7 @@
     "vue-simple-calendar": "7.1.0",
     "vuedraggable": "^4.1.0",
     "@types/sortablejs": "^1.15.8",
-    "vuetify": "^3.9.0"
+    "vuetify": "^3.9.3"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -35,7 +35,7 @@
     "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
     "vite": "6.3.5",
-    "vite-plugin-pwa": "^1.0.1",
+    "vite-plugin-pwa": "^1.0.2",
     "workbox-core": "^7.3.0",
     "workbox-build": "^7.3.0",
     "workbox-window": "^7.3.0",

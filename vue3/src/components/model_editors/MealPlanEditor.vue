@@ -28,7 +28,7 @@
                                              @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></ModelSelect>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
-                                <recipe-card :recipe="editingObj.recipe" v-if="editingObj && editingObj.recipe"></recipe-card>
+                                <recipe-card :recipe="editingObj.recipe" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
                                 <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate()">
                                     {{$t('Add')}}
                                     <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj" @created="loadShoppingListEntries(); editingObj.shopping = true;"></add-to-shopping-dialog>
@@ -47,6 +47,7 @@
                                     multiple="range"
                                     prepend-icon=""
                                     prepend-inner-icon="$calendar"
+                                    hide-details
                                 ></v-date-input>
 
                                 <v-input>
@@ -77,7 +78,7 @@
                 <v-tabs-window-item value="shopping">
                     <closable-help-alert class="mb-2" :text="$t('MealPlanShoppingHelp')"></closable-help-alert>
 
-                    <v-row v-if="isUpdate()" dense style="max-height: 75vh" class="overflow-y-scroll">
+                    <v-row v-if="isUpdate()" dense style="max-height: 75vh; min-height: 30vh" class="overflow-y-scroll">
                         <v-col>
                             <shopping-list-entry-input :loading="useShoppingStore().currentlyUpdating" :meal-plan="editingObj"></shopping-list-entry-input>
                             <v-list v-if="editingObj.id">
