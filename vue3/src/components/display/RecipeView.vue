@@ -252,7 +252,8 @@ function aiConvertRecipe() {
             recipe.value.servingsText = r.recipe.servingsText
             recipe.value.workingTime = r.recipe.workingTime
             recipe.value.waitingTime = r.recipe.waitingTime
-
+            
+            servings.value = r.recipe.servings
             loading.value = true
 
             api.apiRecipeUpdate({id: recipe.value.id!, recipe: recipe.value}).then(r => {
