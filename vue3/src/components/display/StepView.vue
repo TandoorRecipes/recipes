@@ -35,11 +35,11 @@
             </v-card-text>
 
             <template v-if="step.stepRecipe">
-                <v-card-text>
-                    <v-card class="mt-1" v-for="(subRecipeStep, subRecipeStepIndex) in step.stepRecipeData.steps" :key="subRecipeStep.id">
+                <v-card  class="ma-2 border-md" prepend-icon="$recipes" :title="step.stepRecipeData.name">
+                    <v-card-text class="mt-1" v-for="(subRecipeStep, subRecipeStepIndex) in step.stepRecipeData.steps" :key="subRecipeStep.id">
                         <step-view v-model="step.stepRecipeData.steps[subRecipeStepIndex]" :step-number="subRecipeStepIndex+1" :ingredientFactor="ingredientFactor"></step-view>
-                    </v-card>
-                </v-card-text>
+                    </v-card-text>
+                </v-card>
             </template>
             <template v-if="step.file">
                 <v-img :src="step.file.preview" v-if="step.file.preview"></v-img>
