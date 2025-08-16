@@ -1654,7 +1654,8 @@ class AutomationViewSet(LoggingMixin, StandardFilterModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='internal_note', description=_('Text field to store data that gets carried over to the UserSpace created from the InviteLink'), type=str)
+    OpenApiParameter(name='internal_note', description=_('Text field to store data that gets carried over to the UserSpace created from the InviteLink'), type=str),
+    OpenApiParameter(name='unused', description=_('Only return InviteLinks that have not been used yet.'), type=bool),
 ]))
 class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = InviteLink.objects
@@ -1666,6 +1667,10 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
         internal_note = self.request.query_params.get('internal_note', None)
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
+
+        unused = self.request.query_params.get('unused', False)
+        if unused:
+            self.queryset = self.queryset.filter(used_by=None)
 
         if is_space_owner(self.request.user, self.request.space):
             self.queryset = self.queryset.filter(space=self.request.space).all()

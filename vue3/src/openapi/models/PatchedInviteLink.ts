@@ -61,7 +61,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    usedBy?: number;
+    readonly usedBy?: number;
     /**
      * 
      * @type {boolean}
@@ -118,7 +118,7 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'createdBy'|'createdAt'> | null): any {
+export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
@@ -128,7 +128,6 @@ export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'
         'email': value['email'],
         'group': GroupToJSON(value['group']),
         'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),
-        'used_by': value['usedBy'],
         'reusable': value['reusable'],
         'internal_note': value['internalNote'],
     };
