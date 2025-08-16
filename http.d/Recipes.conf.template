@@ -7,20 +7,19 @@ server {
 
   # serve media files
   location /media {
-    alias /opt/recipes/mediafiles;
+    alias ${MEDIA_ROOT};
     add_header Content-Disposition 'attachment; filename="$args"';
   }
 
   # serve service worker under main path
   location = /service-worker.js {
-    alias /opt/recipes/staticfiles/vue3/service-worker.js;
+    alias ${STATIC_ROOT}/vue3/service-worker.js;
   }
 
   # pass requests for dynamic content to gunicorn
   location / {
     proxy_set_header Host $http_host;
-    proxy_pass http://localhost:8080;
-    
+    proxy_pass http://localhost:${TANDOOR_PORT};
     error_page 502 /errors/http502.html;
   }
 
