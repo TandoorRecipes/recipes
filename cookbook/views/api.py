@@ -1891,6 +1891,12 @@ class AiImportView(APIView):
 
             messages = []
             uploaded_file = serializer.validated_data['file']
+
+            if serializer.validated_data['recipe_id']:
+                if recipe := Recipe.objects.filter(id=serializer.validated_data['recipe_id']).first():
+                    if recipe.file_path:
+                        uploaded_file = get_recipe_provider(recipe).get_file(recipe)
+
             if uploaded_file:
                 base64type = None
                 try:

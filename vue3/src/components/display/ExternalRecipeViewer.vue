@@ -1,17 +1,23 @@
 <template>
-    <v-card class="mt-1 h-100">
-        <iframe width="100%" height="700px" :src="externalUrl" v-if="isPdf"></iframe>
 
-        <v-img :src="externalUrl" v-if="isImage"></v-img>
-    </v-card>
+    <v-expansion-panels v-model="panelState">
+        <v-expansion-panel value="show">
+            <v-expansion-panel-title>{{ $t('ExternalRecipe') }}</v-expansion-panel-title>
+            <v-expansion-panel-text>
+                <v-card class="mt-1 h-100">
+                    <iframe width="100%" height="700px" :src="externalUrl" v-if="isPdf"></iframe>
+                    <v-img :src="externalUrl" v-if="isImage"></v-img>
+                </v-card>
+            </v-expansion-panel-text>
+        </v-expansion-panel>
+    </v-expansion-panels>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from "vue";
+import {computed, onMounted, PropType, ref} from "vue";
 import {Recipe} from "@/openapi";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {useUrlSearchParams} from "@vueuse/core";
-
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe>, required: true}
@@ -19,6 +25,15 @@ const props = defineProps({
 
 const params = useUrlSearchParams('history')
 const {getDjangoUrl} = useDjangoUrls()
+
+const panelState = ref('')
+
+onMounted(() => {
+    // open panel by default if recipe has not been converted to internal yet
+    if (!props.recipe.internal) {
+        panelState.value = 'show'
+    }
+})
 
 /**
  * determines if the file is a PDF based on the path

@@ -168,6 +168,7 @@
   "Export_Supported": "支援匯出",
   "Export_To_ICal": "匯出到 iCal",
   "External": "外部",
+  "ExternalRecipe": "",
   "ExternalRecipeImport": "外部食譜匯入",
   "ExternalRecipeImportHelp": "外部儲存同步資料夾中的檔案不會直接匯入，而是暫時儲存為外部匯入食譜。在這裡您可以快速檢視和編輯新發現的檔案，然後再將它們移至主要收藏。 ",
   "ExternalStorage": "外部儲存",

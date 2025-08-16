@@ -170,6 +170,7 @@
   "Export_Supported": "Export ondersteund",
   "Export_To_ICal": "Exporteer .ics",
   "External": "Externe",
+  "ExternalRecipe": "",
   "ExternalRecipeImport": "Externe receptimport",
   "ExternalRecipeImportHelp": "Bestanden in gesynchroniseerde mappen op externe opslag worden niet direct geïmporteerd, maar tijdelijk opgeslagen als externe receptimport. Hier kun je snel nieuw gevonden bestanden bekijken en bewerken voordat ze naar de hoofdcollectie worden verplaatst. ",
   "ExternalStorage": "Externe opslag",

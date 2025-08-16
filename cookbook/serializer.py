@@ -1768,7 +1768,7 @@ class RecipeFromSourceResponseSerializer(serializers.Serializer):
 class AiImportSerializer(serializers.Serializer):
     file = serializers.FileField(allow_null=True)
     text = serializers.CharField(allow_null=True, allow_blank=True)
-
+    recipe_id = serializers.CharField(allow_null=True, allow_blank=True)
 
 class ExportRequestSerializer(serializers.Serializer):
     type = serializers.CharField()

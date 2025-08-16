@@ -17,8 +17,7 @@
                 <recipe-image
                     max-height="25vh"
                     :recipe="recipe"
-                    v-if="recipe.internal"
-                >
+                    v-if="recipe.image != undefined">
                 </recipe-image>
 
                 <v-card>
@@ -36,31 +35,30 @@
                 </v-card>
             </v-card>
 
-            <template v-if="recipe.internal">
-                <v-card class="mt-1">
-                    <v-container>
-                        <v-row class="text-center text-body-2">
-                            <v-col class="pt-1 pb-1">
-                                <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br/>
-                                <div class="text-grey">{{ $t('WorkingTime') }}</div>
-                            </v-col>
-                            <v-col class="pt-1 pb-1">
-                                <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
-                                <div class="text-grey">{{ $t('WaitingTime') }}</div>
-                            </v-col>
-                            <v-col class="pt-1 pb-1">
+            <!-- only display values if not all are default (e.g. for external recipes) -->
+            <v-card class="mt-1" v-if="recipe.workingTime != 0 || recipe.waitingTime != 0 || recipe.servings != 1">
+                <v-container>
+                    <v-row class="text-center text-body-2">
+                        <v-col class="pt-1 pb-1">
+                            <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br/>
+                            <div class="text-grey">{{ $t('WorkingTime') }}</div>
+                        </v-col>
+                        <v-col class="pt-1 pb-1">
+                            <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
+                            <div class="text-grey">{{ $t('WaitingTime') }}</div>
+                        </v-col>
+                        <v-col class="pt-1 pb-1">
 
-                                <div class="cursor-pointer">
-                                    <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
-                                    <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                                    <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                                    </number-scaler-dialog>
-                                </div>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-card>
-            </template>
+                            <div class="cursor-pointer">
+                                <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
+                                <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
+                                <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                                </number-scaler-dialog>
+                            </div>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card>
         </template>
         <!-- Desktop horizontal layout -->
         <template class="d-none d-lg-block">
@@ -69,8 +67,7 @@
                     <recipe-image
                         :rounded="true"
                         max-height="40vh"
-                        :recipe="recipe"
-                        v-if="recipe.internal">
+                        :recipe="recipe">
                     </recipe-image>
                 </v-col>
                 <v-col cols="4">
@@ -78,7 +75,8 @@
                         <v-card-text class="flex-grow-1">
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated" class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
+                                <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"
+                                                     class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
                             </div>
                             <p>
                                 {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
@@ -118,20 +116,27 @@
             </v-row>
         </template>
 
-        <template v-if="!recipe.internal">
-            <external-recipe-viewer :recipe="recipe"></external-recipe-viewer>
-        </template>
-        <template v-else>
-            <v-card class="mt-1" v-if="recipe.steps.length > 1 && recipe.showIngredientOverview">
-                <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
-            </v-card>
+        <template v-if="recipe.filePath">
+            <external-recipe-viewer class="mt-2" :recipe="recipe"></external-recipe-viewer>
 
-            <v-card class="mt-1" v-for="(step, index) in recipe.steps" :key="step.id">
-                <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
+            <v-card :title="$t('AI')" prepend-icon="$ai" @click="aiConvertRecipe()" :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading"
+                    v-if="!recipe.internal">
+                <v-card-text>
+                    Convert the recipe using AI
+
+                </v-card-text>
             </v-card>
         </template>
 
-        <property-view v-model="recipe" :servings="servings" v-if="recipe.internal"></property-view>
+        <v-card class="mt-1" v-if="recipe.steps.length > 1 && recipe.showIngredientOverview">
+            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
+        </v-card>
+
+        <v-card class="mt-1" v-for="(step, index) in recipe.steps" :key="step.id">
+            <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
+        </v-card>
+
+        <property-view v-model="recipe" :servings="servings"></property-view>
 
         <v-card class="mt-2">
             <v-card-text>
@@ -181,7 +186,7 @@
 <script setup lang="ts">
 
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
-import {Recipe} from "@/openapi"
+import {ApiApi, Recipe} from "@/openapi"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import StepsOverview from "@/components/display/StepsOverview.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
@@ -189,23 +194,33 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
-import {useMediaQuery, useWakeLock} from "@vueuse/core";
+import {useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
 import {DateTime} from "luxon";
 import PropertyView from "@/components/display/PropertyView.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {useFileApi} from "@/composables/useFileApi.ts";
 
 const {request, release} = useWakeLock()
+const {doAiImport, fileApiLoading} = useFileApi()
 
+const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
 
 const servings = ref(1)
 const showFullRecipeName = ref(false)
 
+/**
+ * factor for multiplying ingredient amounts based on recipe base servings and user selected servings
+ */
 const ingredientFactor = computed(() => {
     return servings.value / ((recipe.value.servings != undefined) ? recipe.value.servings : 1)
 })
 
+/**
+ * change servings when recipe servings are changed
+ */
 watch(() => recipe.value.servings, () => {
     if (recipe.value.servings) {
         servings.value = recipe.value.servings
@@ -221,6 +236,42 @@ onBeforeUnmount(() => {
     // allow screen to turn off after leaving the recipe page
     release()
 })
+
+/**
+ * converts the recipe into an internal recipe using AI
+ */
+function aiConvertRecipe() {
+    let api = new ApiApi()
+
+    doAiImport(null, '', recipe.value.id!).then(r => {
+        if (r.recipe) {
+            recipe.value.internal = true
+            recipe.value.steps = r.recipe.steps
+            recipe.value.keywords = r.recipe.keywords
+            recipe.value.servings = r.recipe.servings
+            recipe.value.servingsText = r.recipe.servingsText
+            recipe.value.workingTime = r.recipe.workingTime
+            recipe.value.waitingTime = r.recipe.waitingTime
+
+            loading.value = true
+
+            api.apiRecipeUpdate({id: recipe.value.id!, recipe: recipe.value}).then(r => {
+                recipe.value = r
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+            }).finally(() => {
+                loading.value = false
+            })
+
+        } else {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        }
+
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+
+}
 
 </script>
 
