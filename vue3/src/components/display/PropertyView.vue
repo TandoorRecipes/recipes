@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mt-2">
+    <v-card class="mt-2" v-if="hasFoodProperties || hasRecipeProperties">
         <v-card-title>
             <v-icon icon="$properties"></v-icon>
             {{ $t('Properties') }}
