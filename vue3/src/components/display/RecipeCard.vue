@@ -1,14 +1,14 @@
 <template>
     <template v-if="!props.loading">
 
-        <router-link :to="{name: 'RecipeViewPage', params: {id: props.recipe.id}}">
+        <router-link :to="{name: 'RecipeViewPage', params: {id: props.recipe.id}}" :target="linkTarget">
             <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
 
             </recipe-image>
         </router-link>
         <div class="ml-3">
             <div class="d-flex ">
-                <div class="flex-grow-1 cursor-pointer" @click="router.push({name: 'RecipeViewPage', params: {id: props.recipe.id}})">
+                <div class="flex-grow-1 cursor-pointer" @click="openRecipe()">
                     <p class="font-weight-bold mt-2">{{ props.recipe.name }}</p>
                 </div>
                 <div class="mt-1">
@@ -107,9 +107,22 @@ const props = defineProps({
     show_keywords: {type: Boolean, required: false},
     show_description: {type: Boolean, required: false},
     height: {type: String, required: false, default: '15vh'},
+    linkTarget: {type: String, required: false, default: ''}
 })
 
 const router = useRouter()
+
+/**
+ * open the recipe either in the same tab or in a new tab depending on the link target prop
+ */
+function openRecipe() {
+    if (props.linkTarget != '') {
+        const routeData = router.resolve({name: 'RecipeViewPage', params: {id: props.recipe.id}});
+        window.open(routeData.href, props.linkTarget);
+    } else {
+        router.push({name: 'RecipeViewPage', params: {id: props.recipe.id}})
+    }
+}
 
 </script>
 
