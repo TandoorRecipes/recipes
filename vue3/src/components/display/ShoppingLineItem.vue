@@ -1,5 +1,5 @@
 <template>
-    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()"
+    <v-list-item class="swipe-container border-t-sm" :id="itemContainerId" @touchend="handleSwipe()"
                  v-if="isShoppingListFoodVisible(props.shoppingListFood, useUserPreferenceStore().deviceSettings)"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->

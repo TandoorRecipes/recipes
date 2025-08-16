@@ -23,7 +23,6 @@
         valueProp="id"
         label="name"
         :delay="300"
-        append-to-body
         :searchable="true"
         :strict="false"
         :classes="{
@@ -68,9 +67,7 @@ function addIngredient(amount: number, unit: Unit|null, food: Food|null) {
         food: food,
     } as ShoppingListEntry
 
-    console.log('adding SLR ? ', props.mealPlan)
     if (props.mealPlan) {
-        console.log('yes')
         sle.mealplanId = props.mealPlan.id
     }
 
@@ -133,7 +130,6 @@ function search(query: string) {
 }
 
 </script>
-
 
 <style src="@vueform/multiselect/themes/default.css"></style>
 <!-- style can't be scoped (for whatever reason) -->

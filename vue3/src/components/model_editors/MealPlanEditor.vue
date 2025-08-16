@@ -78,7 +78,7 @@
                 <v-tabs-window-item value="shopping">
                     <closable-help-alert class="mb-2" :text="$t('MealPlanShoppingHelp')"></closable-help-alert>
 
-                    <v-row v-if="isUpdate()" dense style="max-height: 75vh" class="overflow-y-scroll">
+                    <v-row v-if="isUpdate()" dense style="max-height: 75vh; min-height: 30vh" class="overflow-y-scroll">
                         <v-col>
                             <shopping-list-entry-input :loading="useShoppingStore().currentlyUpdating" :meal-plan="editingObj"></shopping-list-entry-input>
                             <v-list v-if="editingObj.id">
