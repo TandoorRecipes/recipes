@@ -16,6 +16,11 @@
                 <v-date-input :label="$t('Valid Until')" v-model="editingObj.validUntil"></v-date-input>
                 <v-textarea :label="$t('Note')" v-model="editingObj.internalNote"></v-textarea>
                 <v-checkbox :label="$t('Reusable')" v-model="editingObj.reusable"></v-checkbox>
+                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)">
+                    <template #append-inner>
+                        <btn-copy variant="plain" color="undefined" :copy-value="inviteLinkUrl(editingObj)"></btn-copy>
+                    </template>
+                </v-text-field>
             </v-form>
         </v-card-text>
     </model-editor-base>
@@ -31,6 +36,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import BtnCopy from "@/components/buttons/BtnCopy.vue";
 
 
 const props = defineProps({
@@ -79,6 +85,16 @@ function initializeEditor(){
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 }
+
+/**
+ * returns url for invite link
+ * @param inviteLink InviteLink object to create url for
+ */
+function inviteLinkUrl(inviteLink: InviteLink) {
+    return `${location.protocol}//${location.host}/invite/${inviteLink.uuid}`
+}
+
+
 </script>
 
 <style scoped>

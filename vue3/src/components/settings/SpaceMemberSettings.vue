@@ -27,6 +27,11 @@
         <v-divider class="mb-3"></v-divider>
 
         <v-data-table :items="spaceInviteLinks" :headers="inviteTableHeaders" density="compact" :hide-default-footer="spaceInviteLinks.length < 10">
+             <template #item.reusable="{item}">
+                <v-icon icon="fa-solid fa-check" color="success" v-if="item.reusable"></v-icon>
+                <v-icon icon="fa-solid fa-times" color="error" v-if="!item.reusable"></v-icon>
+            </template>
+
             <template #item.edit="{item}">
                 <btn-copy size="small" :copy-value="inviteLinkUrl(item)" class="me-1"></btn-copy>
                 <v-btn color="edit" size="small">
@@ -65,6 +70,7 @@ const inviteTableHeaders = [
     {title: 'ID', key: 'id'},
     {title: t('Email'), key: 'email'},
     {title: t('Role'), key: 'group.name'},
+    {title: t('Reusable'), key: 'reusable'},
     {title: t('Edit'), key: 'edit', align: 'end'},
 ]
 
@@ -77,7 +83,7 @@ onMounted(() => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 
-    api.apiInviteLinkList().then(r => {
+    api.apiInviteLinkList({unused: true}).then(r => {
         spaceInviteLinks.value = r.results
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

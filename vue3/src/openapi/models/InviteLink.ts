@@ -61,7 +61,7 @@ export interface InviteLink {
      * @type {number}
      * @memberof InviteLink
      */
-    usedBy?: number;
+    readonly usedBy: number | null;
     /**
      * 
      * @type {boolean}
@@ -94,6 +94,7 @@ export interface InviteLink {
 export function instanceOfInviteLink(value: object): value is InviteLink {
     if (!('uuid' in value) || value['uuid'] === undefined) return false;
     if (!('group' in value) || value['group'] === undefined) return false;
+    if (!('usedBy' in value) || value['usedBy'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
@@ -114,7 +115,7 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'email': json['email'] == null ? undefined : json['email'],
         'group': GroupFromJSON(json['group']),
         'validUntil': json['valid_until'] == null ? undefined : (new Date(json['valid_until'])),
-        'usedBy': json['used_by'] == null ? undefined : json['used_by'],
+        'usedBy': json['used_by'],
         'reusable': json['reusable'] == null ? undefined : json['reusable'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'createdBy': json['created_by'],
@@ -122,7 +123,7 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'createdBy'|'createdAt'> | null): any {
+export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
@@ -132,7 +133,6 @@ export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'createdBy'|'cr
         'email': value['email'],
         'group': GroupToJSON(value['group']),
         'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),
-        'used_by': value['usedBy'],
         'reusable': value['reusable'],
         'internal_note': value['internalNote'],
     };
