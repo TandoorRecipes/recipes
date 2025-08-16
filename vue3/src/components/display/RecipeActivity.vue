@@ -9,7 +9,7 @@
                         <v-avatar color="primary">V</v-avatar>
                     </template>
                     <v-list-item-title class="font-weight-bold">{{ c.createdBy.displayName }}
-                        <v-rating density="comfortable" size="x-small" color="tandoor" class="float-right" v-model="c.rating"></v-rating>
+                        <v-rating density="comfortable" size="x-small" color="tandoor" class="float-right" v-model="c.rating" readonly v-if="c.rating != undefined"></v-rating>
                     </v-list-item-title>
 
                     {{ c.comment }}
