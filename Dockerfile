@@ -19,7 +19,6 @@ COPY requirements.txt ./
 # remove Development dependencies from requirements.txt
 RUN sed -i '/# Development/,$d' requirements.txt
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
-    echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip debug -v && \
