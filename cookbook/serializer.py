@@ -1480,7 +1480,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
             'created_at',)
-        read_only_fields = ('id', 'uuid', 'created_by', 'created_at',)
+        read_only_fields = ('id', 'uuid', 'used_by' ,'created_by', 'created_at',)
 
 
 # CORS, REST and Scopes aren't currently working
