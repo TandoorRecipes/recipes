@@ -5,6 +5,7 @@ import {useI18n} from "vue-i18n";
 import {ResponseError} from "@/openapi";
 import {getNestedProperty} from "@/utils/utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {useTitle} from "@vueuse/core";
 
 // TODO type emit parameter (https://mokkapps.de/vue-tips/emit-event-from-composable)
 // TODO alternatively there seems to be a getContext method to get the calling context (good practice?)
@@ -18,6 +19,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     const editingObjChanged = ref(false)
 
     const {t} = useI18n()
+    const title = useTitle()
 
     /**
      * watch editing object to detect changes
@@ -108,12 +110,14 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
             newItemFunction()
 
             loading.value = false
+            title.value = editingObjName()
             return Promise.resolve(editingObj.value)
         } else if (item !== null) {
             // item is given so return that
             editingObj.value = item
             existingItemFunction()
             loading.value = false
+            title.value = editingObjName()
             return Promise.resolve(editingObj.value)
         } else if (itemId !== undefined && itemId != '') {
             // itemId is given => fetch from server and return item
@@ -126,6 +130,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
             return modelClass.value.retrieve(itemId).then((r: T) => {
                 editingObj.value = r
                 existingItemFunction()
+                title.value = editingObjName()
                 return editingObj.value
             }).catch((err: any) => {
                 if (err instanceof ResponseError && err.response.status == 404) {
