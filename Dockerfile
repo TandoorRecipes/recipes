@@ -1,12 +1,11 @@
-FROM python:3.13-alpine3.21
+FROM python:3.13-alpine3.22
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst
 
 #Print all logs without buffering it.
-ENV PYTHONUNBUFFERED 1
-
-ENV DOCKER true
+ENV PYTHONUNBUFFERED=1 \
+    DOCKER=true
 
 #This port will be used by gunicorn.
 EXPOSE 80 8080
@@ -17,23 +16,14 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN \
-    if [ `apk --print-arch` = "armv7" ]; then \
-    printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" > /etc/pip.conf ; \
-    fi
-
 # remove Development dependencies from requirements.txt
 RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl && \
-    echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip debug -v && \
     venv/bin/pip install wheel==0.45.1 && \
     venv/bin/pip install setuptools_rust==1.10.2 && \
-    if [ `apk --print-arch` = "aarch64" ]; then \
-    curl https://sh.rustup.rs -sSf | sh -s -- -y; \
-    fi &&\
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 
@@ -41,8 +31,11 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 COPY . ./
 
 # delete default nginx config and link it to tandoors config
-RUN rm -rf /etc/nginx/http.d
-RUN ln -s /opt/recipes/http.d /etc/nginx/http.d
+# create symlinks to access and error log to show them on stdout
+RUN rm -rf /etc/nginx/http.d && \
+    ln -s /opt/recipes/http.d /etc/nginx/http.d && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
@@ -57,4 +50,4 @@ RUN /opt/recipes/venv/bin/python version.py
 RUN find . -type d -name ".git" | xargs rm -rf
 
 RUN chmod +x boot.sh
-ENTRYPOINT ["/opt/recipes/boot.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]

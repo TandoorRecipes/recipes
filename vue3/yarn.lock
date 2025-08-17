@@ -1213,10 +1213,10 @@
     "@types/tough-cookie" "*"
     parse5 "^7.0.0"
 
-"@types/luxon@^3.6.2":
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.6.2.tgz#be6536931801f437eafcb9c0f6d6781f72308041"
-  integrity sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==
+"@types/luxon@^3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.7.1.tgz#ef51b960ff86801e4e2de80c68813a96e529d531"
+  integrity sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==
 
 "@types/node@*", "@types/node@^24.0.8":
   version "24.0.8"
@@ -1429,31 +1429,31 @@
   dependencies:
     upath "^2.0.1"
 
-"@vueuse/core@^13.1.0":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-13.4.0.tgz#c9b3c21e2e284797e9d899ca2ae01b143d1e901e"
-  integrity sha512-OnK7zW3bTq/QclEk17+vDFN3tuAm8ONb9zQUIHrYQkkFesu3WeGUx/3YzpEp+ly53IfDAT9rsYXgGW6piNZC5w==
+"@vueuse/core@^13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-13.6.0.tgz#4137f63dc4cef2ff8ae74ee146d6b6070d707878"
+  integrity sha512-DJbD5fV86muVmBgS9QQPddVX7d9hWYswzlf4bIyUD2dj8GC46R1uNClZhVAmsdVts4xb2jwp1PbpuiA50Qee1A==
   dependencies:
     "@types/web-bluetooth" "^0.0.21"
-    "@vueuse/metadata" "13.4.0"
-    "@vueuse/shared" "13.4.0"
+    "@vueuse/metadata" "13.6.0"
+    "@vueuse/shared" "13.6.0"
 
-"@vueuse/metadata@13.4.0":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-13.4.0.tgz#c65ca82dc920548d655307f6f3a3344fe3b28a44"
-  integrity sha512-CPDQ/IgOeWbqItg1c/pS+Ulum63MNbpJ4eecjFJqgD/JUCJ822zLfpw6M9HzSvL6wbzMieOtIAW/H8deQASKHg==
+"@vueuse/metadata@13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-13.6.0.tgz#49196025c96c7daeb591c20a54b61cc336af99b6"
+  integrity sha512-rnIH7JvU7NjrpexTsl2Iwv0V0yAx9cw7+clymjKuLSXG0QMcLD0LDgdNmXic+qL0SGvgSVPEpM9IDO/wqo1vkQ==
 
-"@vueuse/router@^13.1.0":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/router/-/router-13.4.0.tgz#cdebb6b76488b34333a548f33171c138e7c29646"
-  integrity sha512-3NL9RFgTiWN4SVp6CUFK/9db10BnoLU3iX+TRgcG4HEuR7GC1g+yMqxe33L6kjUTv8Dc9WeaER714vGBc9Xyjg==
+"@vueuse/router@^13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/router/-/router-13.6.0.tgz#29456dab42eb75a0dc5fe4c62f59dd3f7c21a6ab"
+  integrity sha512-iXRwR4K7nz4PReW0QudhnM9NtYGvN4KrskFgF9G7NouM43big3bpSNRRocJKFWK7iu97ww5y82B3QA2zz3S/vw==
   dependencies:
-    "@vueuse/shared" "13.4.0"
+    "@vueuse/shared" "13.6.0"
 
-"@vueuse/shared@13.4.0":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-13.4.0.tgz#0bc48d961bc8154b2fb96c26de869659ead55b71"
-  integrity sha512-+AxuKbw8R1gYy5T21V5yhadeNM7rJqb4cPaRI9DdGnnNl3uqXh+unvQ3uCaA2DjYLbNr1+l7ht/B4qEsRegX6A==
+"@vueuse/shared@13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-13.6.0.tgz#872fdbd725fb4e3a12bd5aab85af9a5db0b1e481"
+  integrity sha512-pDykCSoS2T3fsQrYqf9SyF0QXWHmcGPQ+qiOVjlYSzlWd9dgppB2bFSM1GgKKkt7uzn0BBMV3IbJsUfHG2+BCg==
 
 acorn@^8.14.0:
   version "8.15.0"
@@ -2531,10 +2531,10 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-luxon@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.6.1.tgz#d283ffc4c0076cb0db7885ec6da1c49ba97e47b0"
-  integrity sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==
+luxon@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.7.1.tgz#9bd09aa84a56afb00c57ea78a8ec5bd16eb24ec0"
+  integrity sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==
 
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.9"
@@ -3317,10 +3317,10 @@ update-browserslist-db@^1.1.3:
     escalade "^3.2.0"
     picocolors "^1.1.1"
 
-vite-plugin-pwa@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/vite-plugin-pwa/-/vite-plugin-pwa-1.0.1.tgz#fec0cc65ffd592bb9ca8374176bd9a2aeaafe97b"
-  integrity sha512-STyUomQbydj7vGamtgQYIJI0YsUZ3T4pJLGBQDQPhzMse6aGSncmEN21OV35PrFsmCvmtiH+Nu1JS1ke4RqBjQ==
+vite-plugin-pwa@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/vite-plugin-pwa/-/vite-plugin-pwa-1.0.2.tgz#ad70181256633c56ce7aa85c66377d916b9e8296"
+  integrity sha512-O3UwjsCnoDclgJANoOgzzqW7SFgwXE/th2OmUP/ILxHKwzWxxKDBu+B/Xa9Cv4IgSVSnj2HgRVIJ7F15+vQFkA==
   dependencies:
     debug "^4.3.6"
     pretty-bytes "^6.1.1"
@@ -3412,10 +3412,10 @@ vuedraggable@^4.1.0:
   dependencies:
     sortablejs "1.14.0"
 
-vuetify@^3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.9.0.tgz#e9412e9ba662fcd4b9946c589a984d157460943a"
-  integrity sha512-vjqyHP5gBFH4x0BAjdRAcS3FXY5OfHaKnC6Hhgln8tePZtKc3AUhF7BEJtcrD3l6XwL8gaYx/wMt+UP7X5EZJw==
+vuetify@^3.9.3:
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-3.9.3.tgz#b97dab322132e82fb247c469f674d5610bd19396"
+  integrity sha512-0eruHdmRoAMBo/08RLDkTdtdu1vfkx+/PurUIDW2tz/k2GCp51e7KwgCn4uVyzH88KRgf2PKiz5UI5f93Xn05w==
 
 w3c-xmlserializer@^5.0.0:
   version "5.0.0"

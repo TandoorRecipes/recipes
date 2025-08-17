@@ -23,7 +23,7 @@
             <timer :seconds="step.time != undefined ? step.time*60 : 0" @stop="timerRunning = false" v-if="timerRunning"></timer>
             <v-card-text v-if="step.ingredients.length > 0 || step.instruction != ''">
                 <v-row>
-                    <v-col cols="12" md="6" v-if="step.ingredients.length > 0">
+                    <v-col cols="12" md="6" v-if="step.ingredients.length > 0 && step.showIngredientsTable">
                         <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"></ingredients-table>
                     </v-col>
                     <v-col cols="12" md="6" class="markdown-body">
@@ -35,11 +35,11 @@
             </v-card-text>
 
             <template v-if="step.stepRecipe">
-                <v-card-text>
-                    <v-card class="mt-1" v-for="(subRecipeStep, subRecipeStepIndex) in step.stepRecipeData.steps" :key="subRecipeStep.id">
+                <v-card  class="ma-2 border-md" prepend-icon="$recipes" :title="step.stepRecipeData.name">
+                    <v-card-text class="mt-1" v-for="(subRecipeStep, subRecipeStepIndex) in step.stepRecipeData.steps" :key="subRecipeStep.id">
                         <step-view v-model="step.stepRecipeData.steps[subRecipeStepIndex]" :step-number="subRecipeStepIndex+1" :ingredientFactor="ingredientFactor"></step-view>
-                    </v-card>
-                </v-card-text>
+                    </v-card-text>
+                </v-card>
             </template>
             <template v-if="step.file">
                 <v-img :src="step.file.preview" v-if="step.file.preview"></v-img>

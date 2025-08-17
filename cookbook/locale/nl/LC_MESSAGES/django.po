@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-02-16 14:58+0000\n"
-"Last-Translator: Cots Partier <cots.pastier.34@icloud.com>\n"
+"PO-Revision-Date: 2025-07-31 19:14+0000\n"
+"Last-Translator: Justin Straver <justin.straver@gmail.com>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
 "Language: nl\n"
@@ -46,7 +46,7 @@ msgstr "Voorbereidingstijd in minuten"
 
 #: .\cookbook\forms.py:62
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr "Wacht tijd in minuten (koken en bakken)"
+msgstr "Wachttijd in minuten (koken en bakken)"
 
 #: .\cookbook\forms.py:63 .\cookbook\forms.py:222 .\cookbook\forms.py:246
 msgid "Path"
