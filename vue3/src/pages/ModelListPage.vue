@@ -101,10 +101,12 @@ import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
 import {ApiApi, RecipeImport} from "@/openapi";
+import {useTitle} from "@vueuse/core";
 
 const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
+const title = useTitle()
 
 const props = defineProps({
     model: {
@@ -159,6 +161,8 @@ onBeforeMount(() => {
         console.error('Invalid model passed to ModelListPage, loading Food instead')
         genericModel.value = getGenericModelFromString('Food', t)
     }
+
+    title.value = t(genericModel.value.model.localizationKey)
 
     if (typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
         tablePage.value = parseInt(route.query.page)

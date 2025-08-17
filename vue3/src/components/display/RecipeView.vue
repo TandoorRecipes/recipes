@@ -265,7 +265,7 @@ function aiConvertRecipe() {
             })
 
         } else {
-            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, [r.error, r.msg])
         }
 
     }).catch(err => {

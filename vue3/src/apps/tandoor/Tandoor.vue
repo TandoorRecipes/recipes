@@ -137,20 +137,39 @@ import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
-import {onMounted} from "vue";
+import {nextTick, onMounted} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
-import {useMediaQuery} from "@vueuse/core";
+import {useMediaQuery, useTitle} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {NAVIGATION_DRAWER} from "@/utils/navigation.ts";
 import {useNavigation} from "@/composables/useNavigation.ts";
+import {useRouter} from "vue-router";
+import {useI18n} from "vue-i18n";
 
 const {lgAndUp} = useDisplay()
 const {getDjangoUrl} = useDjangoUrls()
+const {t} = useI18n()
+
+const title = useTitle()
+const router = useRouter()
 
 const isPrintMode = useMediaQuery('print')
 
 onMounted(() => {
     useUserPreferenceStore()
+})
+
+/**
+ * global title update handler, might be overridden by page specific handlers
+ */
+router.afterEach((to, from) => {
+    nextTick(() => {
+        if (to.meta.title) {
+            title.value = t(to.meta.title)
+        } else {
+            title.value = 'Tandoor'
+        }
+    })
 })
 
 </script>
