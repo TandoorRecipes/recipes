@@ -128,7 +128,7 @@
             </v-card>
         </template>
 
-        <v-card class="mt-1" v-if="recipe.steps.length > 1 && recipe.showIngredientOverview">
+        <v-card class="mt-1" v-if="(recipe.steps.length > 1 || (recipe.steps.length == 1 && !recipe.steps[0].showIngredientsTable)) && recipe.showIngredientOverview">
             <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
         </v-card>
 
