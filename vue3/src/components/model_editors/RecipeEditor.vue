@@ -24,7 +24,7 @@
 
                     <v-form :disabled="loading || fileApiLoading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2" auto-grow></v-textarea>
+                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" maxlength="512" rows="2" auto-grow></v-textarea>
 
                         <v-row>
                             <v-col cols="12" md="6">
