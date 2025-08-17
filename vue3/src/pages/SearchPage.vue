@@ -244,9 +244,10 @@ function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
 
+    page.value = options.page
     let searchParameters = {
         query: query.value,
-        page: page.value,
+        page: options.page,
         pageSize: pageSize.value,
     } as ApiRecipeListRequest
 
@@ -268,7 +269,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
 }
 
 /**
- * reset all search parameters and perform emtpy searchj
+ * reset all search parameters and perform emtpy search
  */
 function reset() {
     page.value = 1
