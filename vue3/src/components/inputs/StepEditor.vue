@@ -47,7 +47,8 @@
                     <v-number-input :label="$t('Time')" v-model="step.time" :min="0" :step="5" control-variant="split"></v-number-input>
                 </v-col>
                 <v-col cols="12" md="6" v-if="showRecipe || step.stepRecipe != null">
-                    <model-select model="Recipe" v-model="step.stepRecipeData" @update:modelValue="step.stepRecipe = (step.stepRecipeData != null) ? step.stepRecipeData.id! : null"></model-select>
+                    <model-select model="Recipe" v-model="step.stepRecipeData"
+                                  @update:modelValue="step.stepRecipe = (step.stepRecipeData != null) ? step.stepRecipeData.id! : null"></model-select>
                 </v-col>
                 <v-col cols="12" md="6" v-if="showFile || step.file != null">
                     <model-select model="UserFile" v-model="step.file"></model-select>
@@ -60,6 +61,10 @@
                     <div v-if="!mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" :empty-insert-threshold="25" group="ingredients">
                             <v-row v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" dense>
+                                <v-col cols="12" class="pa-0 ma-0 text-center text-disabled">
+                                    <v-icon icon="$import" size="x-small"></v-icon>
+                                    {{ ingredient.originalText }}
+                                </v-col>
                                 <v-col cols="2" v-if="!ingredient.isHeader">
                                     <v-input hide-details>
                                         <template #prepend>
@@ -99,26 +104,22 @@
                                                 <v-list-item link>
                                                     <v-switch v-model="step.ingredients[index].noAmount" :label="$t('Disable_Amount')" hide-details></v-switch>
                                                 </v-list-item>
-                                                <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{
-                                                        $t('Move')
-                                                    }}
-                                                </v-list-item>
-                                                <v-list-item v-if="ingredient.originalText" prepend-icon="$import">
-                                                    <v-list-item-title>{{ $t('Original_Text') }}</v-list-item-title>
-                                                    <v-list-item-subtitle>{{ ingredient.originalText }}</v-list-item-subtitle>
+                                                <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">
+                                                    {{ $t('Move') }}
                                                 </v-list-item>
                                             </v-list>
                                         </v-menu>
                                     </v-btn>
-
                                 </v-col>
+
                             </v-row>
                         </vue-draggable>
                     </div>
 
                     <v-list v-if="mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" group="ingredients" empty-insert-threshold="25">
-                            <v-list-item v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" border @click="editingIngredientIndex = index; dialogIngredientEditor = true">
+                            <v-list-item v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" border
+                                         @click="editingIngredientIndex = index; dialogIngredientEditor = true">
                                 <ingredient-string :ingredient="ingredient"></ingredient-string>
                                 <template #append>
                                     <v-icon icon="$dragHandle" class="drag-handle"></v-icon>
