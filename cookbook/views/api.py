@@ -1654,7 +1654,8 @@ class AutomationViewSet(LoggingMixin, StandardFilterModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='internal_note', description=_('Text field to store data that gets carried over to the UserSpace created from the InviteLink'), type=str)
+    OpenApiParameter(name='internal_note', description=_('Text field to store data that gets carried over to the UserSpace created from the InviteLink'), type=str),
+    OpenApiParameter(name='unused', description=_('Only return InviteLinks that have not been used yet.'), type=bool),
 ]))
 class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = InviteLink.objects
@@ -1666,6 +1667,10 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
         internal_note = self.request.query_params.get('internal_note', None)
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
+
+        unused = self.request.query_params.get('unused', False)
+        if unused:
+            self.queryset = self.queryset.filter(used_by=None)
 
         if is_space_owner(self.request.user, self.request.space):
             self.queryset = self.queryset.filter(space=self.request.space).all()
@@ -1789,9 +1794,9 @@ class RecipeUrlImportView(APIView):
                         return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
 
                 tandoor_url = None
-                if re.match('^(.)*/recipe/[0-9]+/?share=[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
+                if re.match(r'^(.)*/recipe/[0-9]+/\?share=[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     tandoor_url = url.replace('/recipe/', '/api/recipe/')
-                elif re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
+                elif re.match(r'^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     tandoor_url = (url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1], '') + '?share=' +
                                    re.split('/recipe/[0-9]+', url)[1].replace('/', ''))
                 if tandoor_url and validate_import_url(tandoor_url):
@@ -1886,6 +1891,12 @@ class AiImportView(APIView):
 
             messages = []
             uploaded_file = serializer.validated_data['file']
+
+            if serializer.validated_data['recipe_id']:
+                if recipe := Recipe.objects.filter(id=serializer.validated_data['recipe_id']).first():
+                    if recipe.file_path:
+                        uploaded_file = get_recipe_provider(recipe).get_file(recipe)
+
             if uploaded_file:
                 base64type = None
                 try:

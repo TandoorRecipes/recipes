@@ -10,7 +10,7 @@ import {onMounted, ref, watch} from 'vue'
 import {ApiApi, ApiRecipeRetrieveRequest, Recipe, ViewLog} from "@/openapi";
 import RecipeView from "@/components/display/RecipeView.vue";
 import {useDisplay} from "vuetify";
-import {useUrlSearchParams} from "@vueuse/core";
+import {useTitle, useUrlSearchParams} from "@vueuse/core";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
@@ -20,6 +20,7 @@ const props = defineProps({
 
 const params = useUrlSearchParams('history')
 const {mobile} = useDisplay()
+const title = useTitle()
 
 const recipe = ref({} as Recipe)
 
@@ -42,6 +43,7 @@ function refreshData(recipeId: string) {
 
     api.apiRecipeRetrieve(requestParameters).then(r => {
         recipe.value = r
+        title.value = recipe.value.name
 
         if (useUserPreferenceStore().isAuthenticated) {
             api.apiViewLogCreate({viewLog: {recipe: Number(recipeId)} as ViewLog})

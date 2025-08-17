@@ -24,7 +24,7 @@
 
                     <v-form :disabled="loading || fileApiLoading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2" auto-grow></v-textarea>
+                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" maxlength="512" rows="2" auto-grow></v-textarea>
 
                         <v-row>
                             <v-col cols="12" md="6">
@@ -50,13 +50,13 @@
                         <model-select mode="tags" v-model="editingObj.keywords" model="Keyword" allow-create></model-select>
                         <v-row dense>
                             <v-col cols="12" md="6">
-                                <v-text-field :label="$t('WaitingTime')" v-model="editingObj.waitingTime"></v-text-field>
+                                <v-number-input :label="$t('WaitingTime')" v-model="editingObj.waitingTime" :step="5"></v-number-input>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-text-field :label="$t('WorkingTime')" v-model="editingObj.workingTime"></v-text-field>
+                                <v-number-input :label="$t('WorkingTime')" v-model="editingObj.workingTime" :step="5"></v-number-input>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-text-field :label="$t('Servings')" v-model="editingObj.servings"></v-text-field>
+                                <v-number-input :label="$t('Servings')" v-model="editingObj.servings"></v-number-input>
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText"></v-text-field>

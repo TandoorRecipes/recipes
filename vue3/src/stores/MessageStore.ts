@@ -16,10 +16,10 @@ export enum MessageType {
 
 /** @enum {string} pre defined error messages */
 export enum ErrorMessageType {
-    FETCH_ERROR = 'Fehler beim Laden',
-    UPDATE_ERROR = 'Fehler beim Aktualisieren',
-    DELETE_ERROR = 'Fehler beim Löschen',
-    CREATE_ERROR = 'Fehler beim Erstellen',
+    FETCH_ERROR = 'FETCH_ERROR',
+    UPDATE_ERROR = 'UPDATE_ERROR',
+    DELETE_ERROR = 'DELETE_ERROR',
+    CREATE_ERROR = 'CREATE_ERROR',
 }
 
 /** @enum {MessageType} prepared messages */
@@ -117,18 +117,18 @@ export const useMessageStore = defineStore('message_store', () => {
                         messageText += `    - ${key}: ${flatResponseJson[key]}\n`
                     }
                     addMessage(MessageType.ERROR, {
-                        title: `${errorType} - ${data.response.statusText} (${data.response.status})`,
+                        title: `${t(errorType)} - ${data.response.statusText} (${data.response.status})`,
                         text: messageText
                     } as StructuredMessage, 5000 + Object.keys(responseJson).length * 1500, responseJson)
                 }).catch(() => {
                     // if response does not contain parsable JSON or parsing fails for some other reason show generic error
-                    addMessage(MessageType.ERROR, {title: errorType, text: ''} as StructuredMessage, 7000, data)
+                    addMessage(MessageType.ERROR, {title: t(errorType), text: ''} as StructuredMessage, 7000, data)
                 })
             } catch (e) {
-                addMessage(MessageType.ERROR, {title: errorType, text: ''} as StructuredMessage, 7000, data)
+                addMessage(MessageType.ERROR, {title: t(errorType), text: ''} as StructuredMessage, 7000, data)
             }
         } else {
-            addMessage(MessageType.ERROR, {title: errorType, text: ''} as StructuredMessage, 7000, data)
+            addMessage(MessageType.ERROR, {title: t(errorType), text: ''} as StructuredMessage, 7000, data)
         }
     }
 
