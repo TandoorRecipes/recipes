@@ -4,9 +4,9 @@
         <v-divider class="mb-3"></v-divider>
 
         <v-row>
-            <database-link-col prepend-icon="fa-solid fa-terminal" :href="useDjangoUrls().getDjangoUrl('api')" :lg="6" :title="$t('API Browser')"></database-link-col>
+            <database-link-col prepend-icon="fa-solid fa-terminal" :href="useDjangoUrls().getDjangoUrl('api')" :lg="6" :title="$t('API_Browser')"></database-link-col>
             <database-link-col prepend-icon="fa-solid fa-laptop-code" :href="useDjangoUrls().getDjangoUrl('/docs/api/')" :lg="6"
-                               :title="$t('API Dokumentation')"></database-link-col>
+                               :title="$t('API_Documentation')"></database-link-col>
         </v-row>
 
         <v-row>

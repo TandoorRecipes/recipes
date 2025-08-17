@@ -2,6 +2,8 @@
   "AI": "Umetna inteligenca",
   "AIImportSubtitle": "Uporabite umetno inteligenco za uvoz slik receptov.",
   "API": "API",
+  "API_Browser": "",
+  "API_Documentation": "",
   "AccessTokenHelp": "Dostopni ključi za REST API.",
   "Access_Token": "Dostopni žeton",
   "Account": "Račun",

@@ -1,5 +1,7 @@
 {
   "API": "API",
+  "API_Browser": "",
+  "API_Documentation": "",
   "AccessTokenHelp": "Klucze dostępu do REST API.",
   "Access_Token": "Token Dostępu",
   "Account": "Konto",

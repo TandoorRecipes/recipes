@@ -1,6 +1,8 @@
 {
   "AIImportSubtitle": "Använd AI för att importera bilder av recept.",
   "API": "API",
+  "API_Browser": "",
+  "API_Documentation": "",
   "AccessTokenHelp": "Nycklar för tillgång till REST API:t.",
   "Access_Token": "Åtkomstnyckel",
   "Account": "Konto",
