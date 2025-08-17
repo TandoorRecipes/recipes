@@ -2,6 +2,8 @@
   "AI": "AI",
   "AIImportSubtitle": "Verwende AI um Fotos von Rezepten zu importieren.",
   "API": "API",
+  "API_Browser": "API Browser",
+  "API_Documentation": "API Dokumentation",
   "AccessTokenHelp": "Zugriffsschlüssel für die REST Schnittstelle.",
   "Access_Token": "Zugriffstoken",
   "Account": "Konto",

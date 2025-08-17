@@ -2,6 +2,8 @@
   "AI": "IA",
   "AIImportSubtitle": "Use IA para importar imagens das receitas.",
   "API": "API",
+  "API_Browser": "",
+  "API_Documentation": "",
   "AccessTokenHelp": "Chaves de acesso para a REST API.",
   "Access_Token": "Token de acesso",
   "Account": "Conta",
