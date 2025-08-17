@@ -1,9 +1,11 @@
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+
 /**
  * round to the number of decimals specified in user preferences
  * @param num number to round
  */
 export function roundDecimals(num: number) {
-    let decimals = 2 //TODO get user preference
+    let decimals = useUserPreferenceStore().userSettings.ingredientDecimals
     return Number(num.toFixed(decimals))
 }
 
