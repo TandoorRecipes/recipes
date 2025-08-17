@@ -22,8 +22,8 @@
                 <tbody>
                 <tr v-for="p in propertyList" :key="p.id">
                     <td>{{ p.name }}</td>
-                    <td>{{ $n(p.propertyAmountPerServing) }} {{ p.unit }}</td>
-                    <td>{{ $n(p.propertyAmountTotal) }} {{ p.unit }}</td>
+                    <td>{{ $n(roundDecimals(p.propertyAmountPerServing)) }} {{ p.unit }}</td>
+                    <td>{{ $n(roundDecimals(p.propertyAmountTotal)) }} {{ p.unit }}</td>
                     <td v-if="sourceSelectedToShow == 'food'">
                         <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small" class="d-print-none"
                                v-if="p.missingValue"></v-btn>
@@ -86,6 +86,7 @@ import {ApiApi, PropertyType, Recipe} from "@/openapi";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {roundDecimals} from "@/utils/number_utils.ts";
 
 type PropertyWrapper = {
     id: number,
