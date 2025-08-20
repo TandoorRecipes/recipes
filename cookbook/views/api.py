@@ -110,7 +110,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -1358,6 +1358,29 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                 Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()
 
         return Response(self.serializer_class(qs, many=True).data)
+
+    @decorators.action(detail=False, methods=['PUT'], serializer_class=RecipeBatchUpdateSerializer)
+    def batch_update(self, request):
+        serializer = self.serializer_class(data=request.data, partial=True)
+
+        if serializer.is_valid():
+            recipes = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space)
+            safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).values_list('id', flat=True)
+
+            if 'keywords_add' in serializer.validated_data:
+                keyword_relations = []
+                for r in recipes:
+                    for k in serializer.validated_data['keywords_add']:
+                        keyword_relations.append(Recipe.keywords.through(recipe_id=r.pk, keyword_id=k))
+                Recipe.keywords.through.objects.bulk_create(keyword_relations, ignore_conflicts=True, unique_fields=('recipe_id', 'keyword_id',))
+
+            if 'keywords_remove' in serializer.validated_data:
+                for k in serializer.validated_data['keywords_remove']:
+                    Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids,keyword_id=k).delete()
+
+            return Response({}, 200)
+
+        return Response(serializer.errors, 400)
 
 
 @extend_schema_view(list=extend_schema(
