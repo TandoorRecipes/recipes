@@ -82,6 +82,8 @@
                                     <v-btn color="warning" @click="dialogStepManager = true">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
                             </v-col>
                         </v-row>
@@ -138,6 +140,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, shallowRef, watch} from "vue";
+import {MessageType, useMessageStore} from "@/stores/MessageStore";
 import {Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -150,6 +153,7 @@ import {VFileUpload} from 'vuetify/labs/VFileUpload'
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
+import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import SpaceSettings from "@/components/settings/SpaceSettings.vue";
 
@@ -247,6 +251,18 @@ function sortSteps() {
  */
 function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
+}
+
+function handleMergeAllSteps(): void {
+    if (editingObj.value.steps){
+        mergeAllSteps(editingObj.value.steps)
+    }
+}
+
+function handleSplitAllSteps(): void {
+    if (editingObj.value.steps){
+        splitAllSteps(editingObj.value.steps, '\n')
+    }
 }
 
 </script>
