@@ -125,10 +125,6 @@ urlpatterns = [
 
 ]
 
-if DEBUG:
-    urlpatterns.append(path('test/', views.test, name='view_test'))
-    urlpatterns.append(path('test2/', views.test2, name='view_test2'))
-
 # catchall view for new frontend
 urlpatterns += [
     path('', views.index, name='index'),

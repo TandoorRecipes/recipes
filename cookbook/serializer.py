@@ -1112,6 +1112,12 @@ class RecipeImportSerializer(SpacedModelSerializer):
         fields = '__all__'
 
 
+class RecipeBatchUpdateSerializer(serializers.Serializer):
+    recipes = serializers.ListField(child=serializers.IntegerField())
+    keywords_add = serializers.ListField(child=serializers.IntegerField())
+    keywords_remove = serializers.ListField(child=serializers.IntegerField())
+
+
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
 
@@ -1480,7 +1486,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
             'created_at',)
-        read_only_fields = ('id', 'uuid', 'used_by' ,'created_by', 'created_at',)
+        read_only_fields = ('id', 'uuid', 'used_by', 'created_by', 'created_at',)
 
 
 # CORS, REST and Scopes aren't currently working
@@ -1769,6 +1775,7 @@ class AiImportSerializer(serializers.Serializer):
     file = serializers.FileField(allow_null=True)
     text = serializers.CharField(allow_null=True, allow_blank=True)
     recipe_id = serializers.CharField(allow_null=True, allow_blank=True)
+
 
 class ExportRequestSerializer(serializers.Serializer):
     type = serializers.CharField()

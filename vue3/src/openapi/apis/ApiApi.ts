@@ -63,13 +63,6 @@ import type {
   PaginatedKeywordList,
   PaginatedMealPlanList,
   PaginatedMealTypeList,
-  PaginatedOpenDataCategoryList,
-  PaginatedOpenDataConversionList,
-  PaginatedOpenDataFoodList,
-  PaginatedOpenDataPropertyList,
-  PaginatedOpenDataStoreList,
-  PaginatedOpenDataUnitList,
-  PaginatedOpenDataVersionList,
   PaginatedPropertyList,
   PaginatedPropertyTypeList,
   PaginatedRecipeBookEntryList,
@@ -139,6 +132,7 @@ import type {
   Property,
   PropertyType,
   Recipe,
+  RecipeBatchUpdate,
   RecipeBook,
   RecipeBookEntry,
   RecipeFlat,
@@ -269,20 +263,6 @@ import {
     PaginatedMealPlanListToJSON,
     PaginatedMealTypeListFromJSON,
     PaginatedMealTypeListToJSON,
-    PaginatedOpenDataCategoryListFromJSON,
-    PaginatedOpenDataCategoryListToJSON,
-    PaginatedOpenDataConversionListFromJSON,
-    PaginatedOpenDataConversionListToJSON,
-    PaginatedOpenDataFoodListFromJSON,
-    PaginatedOpenDataFoodListToJSON,
-    PaginatedOpenDataPropertyListFromJSON,
-    PaginatedOpenDataPropertyListToJSON,
-    PaginatedOpenDataStoreListFromJSON,
-    PaginatedOpenDataStoreListToJSON,
-    PaginatedOpenDataUnitListFromJSON,
-    PaginatedOpenDataUnitListToJSON,
-    PaginatedOpenDataVersionListFromJSON,
-    PaginatedOpenDataVersionListToJSON,
     PaginatedPropertyListFromJSON,
     PaginatedPropertyListToJSON,
     PaginatedPropertyTypeListFromJSON,
@@ -421,6 +401,8 @@ import {
     PropertyTypeToJSON,
     RecipeFromJSON,
     RecipeToJSON,
+    RecipeBatchUpdateFromJSON,
+    RecipeBatchUpdateToJSON,
     RecipeBookFromJSON,
     RecipeBookToJSON,
     RecipeBookEntryFromJSON,
@@ -736,6 +718,10 @@ export interface ApiEnterpriseSocialKeywordRetrieveRequest {
 export interface ApiEnterpriseSocialKeywordUpdateRequest {
     id: number;
     keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest {
+    recipeBatchUpdate: RecipeBatchUpdate;
 }
 
 export interface ApiEnterpriseSocialRecipeCreateRequest {
@@ -1151,11 +1137,6 @@ export interface ApiOpenDataCategoryDestroyRequest {
     id: number;
 }
 
-export interface ApiOpenDataCategoryListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
 export interface ApiOpenDataCategoryPartialUpdateRequest {
     id: number;
     patchedOpenDataCategory?: Omit<PatchedOpenDataCategory, 'createdBy'>;
@@ -1176,11 +1157,6 @@ export interface ApiOpenDataConversionCreateRequest {
 
 export interface ApiOpenDataConversionDestroyRequest {
     id: number;
-}
-
-export interface ApiOpenDataConversionListRequest {
-    page?: number;
-    pageSize?: number;
 }
 
 export interface ApiOpenDataConversionPartialUpdateRequest {
@@ -1209,16 +1185,6 @@ export interface ApiOpenDataFoodDestroyRequest {
     id: number;
 }
 
-export interface ApiOpenDataFoodFdcCreateRequest {
-    id: number;
-    openDataFood: Omit<OpenDataFood, 'createdBy'>;
-}
-
-export interface ApiOpenDataFoodListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
 export interface ApiOpenDataFoodPartialUpdateRequest {
     id: number;
     patchedOpenDataFood?: Omit<PatchedOpenDataFood, 'createdBy'>;
@@ -1239,11 +1205,6 @@ export interface ApiOpenDataPropertyCreateRequest {
 
 export interface ApiOpenDataPropertyDestroyRequest {
     id: number;
-}
-
-export interface ApiOpenDataPropertyListRequest {
-    page?: number;
-    pageSize?: number;
 }
 
 export interface ApiOpenDataPropertyPartialUpdateRequest {
@@ -1268,11 +1229,6 @@ export interface ApiOpenDataStoreDestroyRequest {
     id: number;
 }
 
-export interface ApiOpenDataStoreListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
 export interface ApiOpenDataStorePartialUpdateRequest {
     id: number;
     patchedOpenDataStore?: Omit<PatchedOpenDataStore, 'createdBy'>;
@@ -1295,11 +1251,6 @@ export interface ApiOpenDataUnitDestroyRequest {
     id: number;
 }
 
-export interface ApiOpenDataUnitListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
 export interface ApiOpenDataUnitPartialUpdateRequest {
     id: number;
     patchedOpenDataUnit?: Omit<PatchedOpenDataUnit, 'createdBy'>;
@@ -1320,11 +1271,6 @@ export interface ApiOpenDataVersionCreateRequest {
 
 export interface ApiOpenDataVersionDestroyRequest {
     id: number;
-}
-
-export interface ApiOpenDataVersionListRequest {
-    page?: number;
-    pageSize?: number;
 }
 
 export interface ApiOpenDataVersionPartialUpdateRequest {
@@ -1394,6 +1340,10 @@ export interface ApiPropertyTypeUpdateRequest {
 export interface ApiPropertyUpdateRequest {
     id: number;
     property: Property;
+}
+
+export interface ApiRecipeBatchUpdateUpdateRequest {
+    recipeBatchUpdate: RecipeBatchUpdate;
 }
 
 export interface ApiRecipeBookCreateRequest {
@@ -4273,6 +4223,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseSocialKeywordUpdate(requestParameters: ApiEnterpriseSocialKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiEnterpriseSocialKeywordUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeBatchUpdateUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBatchUpdate>> {
+        if (requestParameters['recipeBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'recipeBatchUpdate',
+                'Required parameter "recipeBatchUpdate" was null or undefined when calling apiEnterpriseSocialRecipeBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeBatchUpdateToJSON(requestParameters['recipeBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeBatchUpdateUpdate(requestParameters: ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBatchUpdate> {
+        const response = await this.apiEnterpriseSocialRecipeBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7778,16 +7768,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataCategoryListRaw(requestParameters: ApiOpenDataCategoryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataCategoryList>> {
+    async apiOpenDataCategoryListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataCategory>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -7802,13 +7784,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataCategoryListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataCategoryFromJSON));
     }
 
     /**
      */
-    async apiOpenDataCategoryList(requestParameters: ApiOpenDataCategoryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataCategoryList> {
-        const response = await this.apiOpenDataCategoryListRaw(requestParameters, initOverrides);
+    async apiOpenDataCategoryList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataCategory>> {
+        const response = await this.apiOpenDataCategoryListRaw(initOverrides);
         return await response.value();
     }
 
@@ -8004,16 +7986,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataConversionListRaw(requestParameters: ApiOpenDataConversionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataConversionList>> {
+    async apiOpenDataConversionListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataConversion>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -8028,13 +8002,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataConversionListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataConversionFromJSON));
     }
 
     /**
      */
-    async apiOpenDataConversionList(requestParameters: ApiOpenDataConversionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataConversionList> {
-        const response = await this.apiOpenDataConversionListRaw(requestParameters, initOverrides);
+    async apiOpenDataConversionList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataConversion>> {
+        const response = await this.apiOpenDataConversionListRaw(initOverrides);
         return await response.value();
     }
 
@@ -8263,64 +8237,9 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
      */
-    async apiOpenDataFoodFdcCreateRaw(requestParameters: ApiOpenDataFoodFdcCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataFood>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiOpenDataFoodFdcCreate().'
-            );
-        }
-
-        if (requestParameters['openDataFood'] == null) {
-            throw new runtime.RequiredError(
-                'openDataFood',
-                'Required parameter "openDataFood" was null or undefined when calling apiOpenDataFoodFdcCreate().'
-            );
-        }
-
+    async apiOpenDataFoodListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataFood>>> {
         const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/open-data-food/{id}/fdc/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: OpenDataFoodToJSON(requestParameters['openDataFood']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataFoodFromJSON(jsonValue));
-    }
-
-    /**
-     * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
-     */
-    async apiOpenDataFoodFdcCreate(requestParameters: ApiOpenDataFoodFdcCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataFood> {
-        const response = await this.apiOpenDataFoodFdcCreateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiOpenDataFoodListRaw(requestParameters: ApiOpenDataFoodListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataFoodList>> {
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -8335,13 +8254,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataFoodListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataFoodFromJSON));
     }
 
     /**
      */
-    async apiOpenDataFoodList(requestParameters: ApiOpenDataFoodListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataFoodList> {
-        const response = await this.apiOpenDataFoodListRaw(requestParameters, initOverrides);
+    async apiOpenDataFoodList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataFood>> {
+        const response = await this.apiOpenDataFoodListRaw(initOverrides);
         return await response.value();
     }
 
@@ -8537,16 +8456,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataPropertyListRaw(requestParameters: ApiOpenDataPropertyListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataPropertyList>> {
+    async apiOpenDataPropertyListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataProperty>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -8561,13 +8472,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataPropertyListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataPropertyFromJSON));
     }
 
     /**
      */
-    async apiOpenDataPropertyList(requestParameters: ApiOpenDataPropertyListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataPropertyList> {
-        const response = await this.apiOpenDataPropertyListRaw(requestParameters, initOverrides);
+    async apiOpenDataPropertyList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataProperty>> {
+        const response = await this.apiOpenDataPropertyListRaw(initOverrides);
         return await response.value();
     }
 
@@ -8790,16 +8701,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataStoreListRaw(requestParameters: ApiOpenDataStoreListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataStoreList>> {
+    async apiOpenDataStoreListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataStore>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -8814,13 +8717,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataStoreListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataStoreFromJSON));
     }
 
     /**
      */
-    async apiOpenDataStoreList(requestParameters: ApiOpenDataStoreListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataStoreList> {
-        const response = await this.apiOpenDataStoreListRaw(requestParameters, initOverrides);
+    async apiOpenDataStoreList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataStore>> {
+        const response = await this.apiOpenDataStoreListRaw(initOverrides);
         return await response.value();
     }
 
@@ -9016,16 +8919,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataUnitListRaw(requestParameters: ApiOpenDataUnitListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataUnitList>> {
+    async apiOpenDataUnitListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataUnit>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -9040,13 +8935,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataUnitListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataUnitFromJSON));
     }
 
     /**
      */
-    async apiOpenDataUnitList(requestParameters: ApiOpenDataUnitListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataUnitList> {
-        const response = await this.apiOpenDataUnitListRaw(requestParameters, initOverrides);
+    async apiOpenDataUnitList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataUnit>> {
+        const response = await this.apiOpenDataUnitListRaw(initOverrides);
         return await response.value();
     }
 
@@ -9242,16 +9137,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataVersionListRaw(requestParameters: ApiOpenDataVersionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataVersionList>> {
+    async apiOpenDataVersionListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataVersion>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -9266,13 +9153,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataVersionListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataVersionFromJSON));
     }
 
     /**
      */
-    async apiOpenDataVersionList(requestParameters: ApiOpenDataVersionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataVersionList> {
-        const response = await this.apiOpenDataVersionListRaw(requestParameters, initOverrides);
+    async apiOpenDataVersionList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataVersion>> {
+        const response = await this.apiOpenDataVersionListRaw(initOverrides);
         return await response.value();
     }
 
@@ -9871,6 +9758,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiPropertyUpdate(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeBatchUpdateUpdateRaw(requestParameters: ApiRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBatchUpdate>> {
+        if (requestParameters['recipeBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'recipeBatchUpdate',
+                'Required parameter "recipeBatchUpdate" was null or undefined when calling apiRecipeBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeBatchUpdateToJSON(requestParameters['recipeBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeBatchUpdateUpdate(requestParameters: ApiRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBatchUpdate> {
+        const response = await this.apiRecipeBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

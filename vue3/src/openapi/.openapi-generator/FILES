@@ -71,13 +71,6 @@ models/PaginatedInviteLinkList.ts
 models/PaginatedKeywordList.ts
 models/PaginatedMealPlanList.ts
 models/PaginatedMealTypeList.ts
-models/PaginatedOpenDataCategoryList.ts
-models/PaginatedOpenDataConversionList.ts
-models/PaginatedOpenDataFoodList.ts
-models/PaginatedOpenDataPropertyList.ts
-models/PaginatedOpenDataStoreList.ts
-models/PaginatedOpenDataUnitList.ts
-models/PaginatedOpenDataVersionList.ts
 models/PaginatedPropertyList.ts
 models/PaginatedPropertyTypeList.ts
 models/PaginatedRecipeBookEntryList.ts
@@ -147,6 +140,7 @@ models/PatchedViewLog.ts
 models/Property.ts
 models/PropertyType.ts
 models/Recipe.ts
+models/RecipeBatchUpdate.ts
 models/RecipeBook.ts
 models/RecipeBookEntry.ts
 models/RecipeFlat.ts
