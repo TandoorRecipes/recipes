@@ -57,7 +57,10 @@
                             <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact" class="pt-1 pb-1" activatable>
-                                    <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true">
+                                    <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" @click="batchMergeDialog = true" v-if="genericModel.model.isMerge">
+                                        {{ $t('Merge') }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true" v-if="!genericModel.model.disableDelete">
                                         {{ $t('Delete_All') }}
                                     </v-list-item>
                                 </v-list>
@@ -75,7 +78,7 @@
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
-                                        <model-merge-dialog :model="model" :source="item"
+                                        <model-merge-dialog :model="model" :source="[item]"
                                                             @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
@@ -103,6 +106,10 @@
 
         <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
                                                              @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></batch-delete-dialog>
+
+         <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
+                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
+
     </v-container>
 </template>
 
@@ -149,6 +156,7 @@ const tablePage = ref(1)
 const selectedItems = ref([] as EditorSupportedTypes[])
 
 const batchDeleteDialog = ref(false)
+const batchMergeDialog = ref(false)
 
 // data
 const loading = ref(false);
