@@ -13,17 +13,17 @@
                 {{ $t('BatchDeleteConfirm') }}
 
                 <v-list>
-                    <v-list-item border v-for="i in itemsToDelete">
-                        {{ genericModel.getLabel(i) }}
+                    <v-list-item border v-for="item in itemsToDelete">
+                        {{ genericModel.getLabel(item) }}
                         <template #append>
-                            <v-chip prepend-icon="fa-solid fa-xmark" color="error" v-if="deletedErrored.includes(i)">{{$t('Error')}}</v-chip>
-                            <v-chip prepend-icon="fa-solid fa-check" color="success" v-else-if="deletedItems.includes(i)">{{$t('Deleted')}}</v-chip>
-                            <v-chip prepend-icon="fa-solid  fa-circle-notch fa-spin" color="info" v-else-if="loading">{{$t('Waiting')}}</v-chip>
+                            <v-icon icon="fa-solid fa-xmark" color="error" variant="tonal" v-if="failedItems.includes(item)"></v-icon>
+                            <v-icon icon="fa-solid fa-check" color="success"  variant="tonal" v-else-if="updatedItems.includes(item)"></v-icon>
+                            <v-icon icon="fa-solid  fa-circle-notch fa-spin"  variant="tonal" color="info" v-else-if="loading"></v-icon>
 
-                            <v-btn icon="fa-solid fa-up-right-from-square" :to="{name: 'IngredientEditorPage', query: {food_id: i.id}}"
-                                                 v-if="genericModel.model.name == 'Food' && deletedErrored.includes(i)"  size="small"></v-btn>
-                            <v-btn icon="fa-solid fa-up-right-from-square" :to="{name: 'IngredientEditorPage', query: {unit_id: i.id}}"
-                                                 v-if="genericModel.model.name == 'Unit' && deletedErrored.includes(i)" size="small"></v-btn>
+                            <v-btn icon="fa-solid fa-up-right-from-square" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
+                                                 v-if="genericModel.model.name == 'Food' && failedItems.includes(item)"  size="small"></v-btn>
+                            <v-btn icon="fa-solid fa-up-right-from-square" :to="{name: 'IngredientEditorPage', query: {unit_id: item.id}}"
+                                                 v-if="genericModel.model.name == 'Unit' && failedItems.includes(item)" size="small"></v-btn>
                         </template>
                     </v-list-item>
                 </v-list>
@@ -48,7 +48,7 @@ const emit = defineEmits(['change'])
 
 const props = defineProps({
     model: {type: String as PropType<EditorSupportedModels>, required: true},
-    items: {type: [] as PropType<Array<EditorSupportedTypes>>, required: true},
+    items: {type: Array as PropType<Array<EditorSupportedTypes>>, required: true},
     activator: {type: String, default: 'parent'},
 })
 
@@ -60,8 +60,8 @@ const loading = ref(false)
 const genericModel = getGenericModelFromString(props.model, t)
 
 const itemsToDelete = ref<EditorSupportedTypes[]>([])
-const deletedItems = ref<EditorSupportedTypes[]>([])
-const deletedErrored = ref<EditorSupportedTypes[]>([])
+const failedItems = ref<EditorSupportedTypes[]>([])
+const updatedItems = ref<EditorSupportedTypes[]>([])
 
 watch(dialog, (newValue, oldValue) => {
     if(!oldValue && newValue){
@@ -78,9 +78,9 @@ function deleteAll() {
 
     itemsToDelete.value.forEach(item => {
         promises.push(genericModel.destroy(item.id!).then((r: any) => {
-            deletedItems.value.push(item)
+            updatedItems.value.push(item)
         }).catch((err: any) => {
-            deletedErrored.value.push(item)
+            failedItems.value.push(item)
         }))
     })
 
