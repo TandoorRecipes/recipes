@@ -10,8 +10,11 @@
                               @click:clear="query = ''"
                               clearable hide-details>
                     <template v-slot:append>
-                        <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon><i class="fa-solid fa-caret-down"></i></v-btn>
-                        <v-btn @click="panel ='' " v-if="panel == 'search'" color="primary" icon><i class="fa-solid fa-caret-up"></i></v-btn>
+                        <v-badge bordered :offset-x="5" :offset-y="5" color="secondary" v-model="hasFiltersApplied" >
+                            <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon>
+                                <i class="fa-solid fa-caret-down"></i></v-btn>
+                            <v-btn @click="panel ='' " v-if="panel == 'search'" color="primary" icon><i class="fa-solid fa-caret-up"></i></v-btn>
+                        </v-badge>
                     </template>
                 </v-text-field>
             </v-col>
@@ -121,7 +124,9 @@
                               @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
                               v-if="filters['sortOrder'].modelValue != 'random'"
                 ></v-pagination>
-                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes()">{{$t('Random Recipes')}}</v-btn>
+                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes()">
+                    {{ $t('Random Recipes') }}
+                </v-btn>
             </v-col>
         </v-row>
 
@@ -191,6 +196,7 @@ const loading = ref(false)
 const dialog = ref(false)
 const panel = ref('')
 const addFilterSelect = ref<string | null>(null)
+const hasFiltersApplied = ref(false)
 
 const tableHeaders = computed(() => {
     let headers = [
@@ -225,7 +231,7 @@ watch(() => query.value, () => {
 onMounted(() => {
     // load filters that were previously enabled
     useUserPreferenceStore().deviceSettings.search_visibleFilters.forEach(f => {
-        if(f in filters.value){
+        if (f in filters.value) {
             filters.value[f].enabled = true
         } else {
             useUserPreferenceStore().deviceSettings.search_visibleFilters.splice(useUserPreferenceStore().deviceSettings.search_visibleFilters.indexOf(f), 1)
@@ -243,6 +249,7 @@ onMounted(() => {
 function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
+    hasFiltersApplied.value = false
 
     page.value = options.page
     let searchParameters = {
@@ -254,6 +261,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
     Object.values(filters.value).forEach((filter) => {
         if (!isFilterDefaultValue(filter)) {
             searchParameters[filter.id] = filter.modelValue
+            hasFiltersApplied.value = true
         }
     })
 
