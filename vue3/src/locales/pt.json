@@ -470,5 +470,10 @@
     "view_recipe": "",
     "warning_duplicate_filter": "",
     "warning_feature_beta": "Este recurso está atualmente em BETA (sendo testado). Tenha em mente que podem existir bugs atualmente e haja mudanças drásticas no futuro (que podem causar perda de dados) quando utilizar este recurso.",
-    "warning_space_delete": "Pode eliminar o seu espaço incluindo todas as receitas, listas de compras, planos de refeição e tudo o que tenha criado. Isto não pode ser desfeito! Tem a certeza que quer fazer isto?"
+    "warning_space_delete": "Pode eliminar o seu espaço incluindo todas as receitas, listas de compras, planos de refeição e tudo o que tenha criado. Isto não pode ser desfeito! Tem a certeza que quer fazer isto?",
+    "AIImportSubtitle": "Use IA para importar imagens de receitas.",
+    "API": "API",
+    "AccessTokenHelp": "Chave de acesso para a API REST.",
+    "Access_Token": "Token de acesso",
+    "Account": "Conta"
 }
