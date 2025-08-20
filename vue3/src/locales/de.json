@@ -46,6 +46,8 @@
   "BaseUnit": "Basiseinheit",
   "BaseUnitHelp": "Optionale Standardeinheit zur automatischen Umrechnung",
   "Basics": "Grundlagen",
+  "BatchDeleteConfirm": "Möchtest du alle angezeigten Objekte löschen? Dies kann nicht rückgängig gemacht werden!",
+  "BatchDeleteHelp": "Wenn ein Objekt nicht gelöscht werden kann, wird es noch irgendwo verwendet. ",
   "Book": "Buch",
   "Bookmarklet": "Lesezeichen",
   "BookmarkletHelp1": "Schiebe den Knopf in deine Lesezeichenleiste",

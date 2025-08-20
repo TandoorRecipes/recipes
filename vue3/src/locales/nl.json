@@ -46,6 +46,8 @@
   "BaseUnit": "Basiseenheid",
   "BaseUnitHelp": "Standaardeenheid om automatische eenheden om te rekenen",
   "Basics": "Basisprincipes",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Boek",
   "Bookmarklet": "Bladwijzer",
   "BookmarkletHelp1": "Sleep de onderstaande knop naar je bladwijzerbalk",

@@ -44,6 +44,8 @@
   "BaseUnit": "基礎單位",
   "BaseUnitHelp": "自動單位轉換的標準單位",
   "Basics": "基礎",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "書籍",
   "Bookmarklet": "書籤小工具",
   "BookmarkletHelp1": "將以下按鈕拖到您的書籤欄中",

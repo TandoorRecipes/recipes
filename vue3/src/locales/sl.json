@@ -45,6 +45,8 @@
   "BaseUnit": "Osnovna enota",
   "BaseUnitHelp": "Standardna enota za samodejno pretvorbo enot",
   "Basics": "Osnove",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Knjiga",
   "Bookmarklet": "Zaznamek",
   "BookmarkletHelp1": "Povlecite naslednji gumb v vrstico z zaznamki",

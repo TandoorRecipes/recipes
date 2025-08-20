@@ -36,9 +36,10 @@
         <v-row>
             <v-col>
                 <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery" clearable></v-text-field>
-                
+
                 <v-data-table-server
                     v-model="selectedItems"
+                    return-object
                     @update:options="loadItems"
                     :items="items"
                     :items-length="itemCount"
@@ -46,14 +47,23 @@
                     :search="searchQuery"
                     :headers="genericModel.getTableHeaders()"
                     :items-per-page-options="itemsPerPageOptions"
-                    :show-select="tableShowSelect"
+                    :show-select="!genericModel.model.disableDelete || genericModel.model.isMerge"
                     :page="tablePage"
                     :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
                     disable-sort
                 >
-<!--                    <template v-slot:header.action v-if="selectedItems.length > 0">-->
-<!--                        <v-select density="compact" hide-details></v-select>-->
-<!--                    </template>-->
+                    <template v-slot:header.action v-if="selectedItems.length > 0">
+                        <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" color="info">
+                            <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
+                            <v-menu activator="parent" close-on-content-click>
+                                <v-list density="compact" class="pt-1 pb-1" activatable>
+                                    <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true">
+                                        {{ $t('Delete_All') }}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-btn>
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>
@@ -90,6 +100,9 @@
                 </v-data-table-server>
             </v-col>
         </v-row>
+
+        <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
+                                                             @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></batch-delete-dialog>
     </v-container>
 </template>
 
@@ -99,7 +112,7 @@
 import {onBeforeMount, PropType, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {EditorSupportedModels, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
+import {EditorSupportedModels, EditorSupportedTypes, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -108,6 +121,9 @@ import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
 import {ApiApi, RecipeImport} from "@/openapi";
 import {useTitle} from "@vueuse/core";
+import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
+import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
+import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -130,8 +146,9 @@ const itemsPerPageOptions = [
 
 const tablePage = ref(1)
 
-const tableShowSelect = ref(true)
-const selectedItems = ref([] as GenericModel[])
+const selectedItems = ref([] as EditorSupportedTypes[])
+
+const batchDeleteDialog = ref(false)
 
 // data
 const loading = ref(false);
@@ -185,6 +202,7 @@ onBeforeMount(() => {
 function loadItems(options: VDataTableUpdateOptions) {
 
     loading.value = true
+    selectedItems.value = []
     window.scrollTo({top: 0, behavior: 'smooth'})
 
     if (tablePage.value != options.page) {

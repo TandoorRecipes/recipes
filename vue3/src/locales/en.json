@@ -44,6 +44,8 @@
   "BaseUnit": "Base Unit",
   "BaseUnitHelp": "Standard unit for automatic unit conversion",
   "Basics": "Basics",
+  "BatchDeleteConfirm": "Do you want to delete all shown items? This cannot be undone!",
+  "BatchDeleteHelp": "If an item cannot be deleted it is used somewhere. ",
   "Book": "Book",
   "Bookmarklet": "Bookmarklet",
   "BookmarkletHelp1": "Drag the following button to your bookmarks bar",

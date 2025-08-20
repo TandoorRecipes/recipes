@@ -45,6 +45,8 @@
   "BaseUnit": "Базовая единица измерения",
   "BaseUnitHelp": "Стандартная единица для автоконвертации",
   "Basics": "Основные понятия",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Книга",
   "Bookmarklet": "Букмарклет",
   "BookmarkletHelp1": "Перетащите эту кнопку в панель закладок",
