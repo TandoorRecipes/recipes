@@ -3,7 +3,7 @@
         <slot name="prepend"></slot>
 
         <v-chip class="me-1 mb-1" :label="props.label" :color="props.color" :size="props.size" :variant="props.variant" v-for="k in keywords"
-                :to="{name: 'SearchPage', query: {keywords: k.id}}"> {{ k.label }}
+                :to="useUserPreferenceStore().isAuthenticated ? {name: 'SearchPage', query: {keywords: k.id}} : undefined"> {{ k.label }}
         </v-chip>
 
         <slot name="append"></slot>
@@ -15,6 +15,7 @@
 
 import {Keyword, KeywordLabel} from "@/openapi";
 import {computed, PropType} from "vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const props = defineProps({
     keywords: Array as PropType<Array<Keyword> | Array<KeywordLabel> | undefined>,

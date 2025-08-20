@@ -7,7 +7,6 @@ import {VitePWA} from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
 export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
-    console.log('MODE: ', mode)
     return {
         base: mode == 'development' ? '/static/vue3/' : './',
         plugins: [
@@ -30,6 +29,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
                 vue: fileURLToPath(new URL("./node_modules/vue/dist/vue.esm-bundler.js", import.meta.url)),
             },
             extensions: ['.js', '.json', '.jsx', '.mjs', '.ts', '.tsx', '.vue',],
+            preserveSymlinks: true
         },
         clearScreen: false,
         build: {

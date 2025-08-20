@@ -29,7 +29,7 @@
         </v-card-text>
     </v-card>
 
-    <v-card class="mt-1 d-print-none">
+    <v-card class="mt-1 d-print-none" v-if="useUserPreferenceStore().isAuthenticated">
         <v-card-text>
             <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment"></v-textarea>
             <v-row de>
@@ -62,6 +62,7 @@ import {ApiApi, CookLog, Recipe} from "@/openapi";
 import {DateTime} from "luxon";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {VDateInput} from 'vuetify/labs/VDateInput'
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const props = defineProps({
     recipe: {

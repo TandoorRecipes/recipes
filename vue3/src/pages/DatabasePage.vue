@@ -35,6 +35,10 @@
             <database-model-col model="MealType"></database-model-col>
         </v-row>
 
+        <template v-for="p in TANDOOR_PLUGINS" :key="p.name">
+            <component :is="p.databasePageComponent" v-if="p.databasePageComponent"></component>
+        </template>
+
         <v-row>
             <v-col>
                 <h2>{{ $t('Miscellaneous') }}</h2>
@@ -47,8 +51,8 @@
             <database-model-col model="CustomFilter"></database-model-col>
             <database-model-col model="CookLog"></database-model-col>
             <database-model-col model="ViewLog"></database-model-col>
-            
-             <database-link-col :to="{name: 'IngredientEditorPage'}"
+
+            <database-link-col :to="{name: 'IngredientEditorPage'}"
                                prepend-icon="fa-solid fa-table-list"
                                :title="$t('Ingredient Editor')"
                                :subtitle="$t('IngredientEditorHelp')">
@@ -77,6 +81,7 @@
 
 import DatabaseModelCol from "@/components/display/DatabaseModelCol.vue";
 import DatabaseLinkCol from "@/components/display/DatabaseLinkCol.vue";
+import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
 </script>
 
 
