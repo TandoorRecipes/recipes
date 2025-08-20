@@ -30,7 +30,7 @@
 
             </v-card-text>
             <v-card-actions>
-                <v-btn :disabled="loading">{{ $t('Cancel') }}</v-btn>
+                <v-btn :disabled="loading" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
                 <v-btn color="warning" @click="mergeModel()" :loading="loading" :disabled="!target">{{ $t('Merge') }}</v-btn>
             </v-card-actions>
         </v-card>

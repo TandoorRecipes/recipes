@@ -44,6 +44,8 @@
   "BaseUnit": "Unidade Base",
   "BaseUnitHelp": "Unidade padrão para conversão de unidades",
   "Basics": "Básicos",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Livro",
   "Bookmarklet": "Marcador",
   "BookmarkletHelp1": "Arraste o seguinte botão para sua barra de favoritos",

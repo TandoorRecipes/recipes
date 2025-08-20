@@ -43,6 +43,8 @@
   "BaseUnit": "Unidad base",
   "BaseUnitHelp": "Unidad estándar para la conversión automática de unidades",
   "Basics": "Básicos",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Libro",
   "Bookmarklet": "Marcador ejecutable",
   "BookmarkletHelp1": "Arrastra el siguiente botón a tu barra de marcadores",

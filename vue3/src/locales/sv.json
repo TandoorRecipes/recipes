@@ -44,6 +44,8 @@
   "BaseUnit": "Basenhet",
   "BaseUnitHelp": "Standardenhet för automatisk enhetsomvandling",
   "Basics": "Grunderna",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Bok",
   "Bookmarklet": "Bokmärke",
   "BookmarkletHelp1": "Dra följande knapp till ditt bokmärkesfält",

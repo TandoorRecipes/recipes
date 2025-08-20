@@ -45,6 +45,8 @@
   "BaseUnit": "Unité de base",
   "BaseUnitHelp": "Unité standard pour la conversion automatique des unités",
   "Basics": "Les bases",
+  "BatchDeleteConfirm": "",
+  "BatchDeleteHelp": "",
   "Book": "Livre",
   "Bookmarklet": "Signet",
   "BookmarkletHelp1": "Faites glisser le bouton suivant dans votre barre de signets",
