@@ -146,7 +146,8 @@
                             variant="outlined"
                             :title="$t('CreatedBy')"
                             :subtitle="recipe.createdBy.displayName"
-                            prepend-icon="fa-solid fa-user">
+                            prepend-icon="fa-solid fa-user"
+                            :to="{name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}">
                         </v-card>
                     </v-col>
                     <v-col cols="12" md="3">
@@ -154,7 +155,8 @@
                             variant="outlined"
                             :title="$t('Created')"
                             :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
-                            prepend-icon="$create">
+                            prepend-icon="$create"
+                            :to="{name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}}">
                         </v-card>
                     </v-col>
                     <v-col cols="12" md="3">
@@ -162,7 +164,8 @@
                             variant="outlined"
                             :title="$t('Updated')"
                             :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
-                            prepend-icon="$edit">
+                            prepend-icon="$edit"
+                            :to="{name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}">
                         </v-card>
                     </v-col>
                     <v-col cols="12" md="3" v-if="recipe.sourceUrl">
@@ -252,7 +255,7 @@ function aiConvertRecipe() {
             recipe.value.servingsText = r.recipe.servingsText
             recipe.value.workingTime = r.recipe.workingTime
             recipe.value.waitingTime = r.recipe.waitingTime
-            
+
             servings.value = r.recipe.servings
             loading.value = true
 
