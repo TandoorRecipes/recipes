@@ -9,6 +9,7 @@
                 </v-card>
             </v-col>
         </v-row>
+
         <v-row dense>
             <v-col>
                 <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)">
@@ -35,7 +36,9 @@
         <v-row>
             <v-col>
                 <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery" clearable></v-text-field>
+                
                 <v-data-table-server
+                    v-model="selectedItems"
                     @update:options="loadItems"
                     :items="items"
                     :items-length="itemCount"
@@ -48,6 +51,9 @@
                     :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
                     disable-sort
                 >
+<!--                    <template v-slot:header.action v-if="selectedItems.length > 0">-->
+<!--                        <v-select density="compact" hide-details></v-select>-->
+<!--                    </template>-->
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>
@@ -123,7 +129,9 @@ const itemsPerPageOptions = [
 ]
 
 const tablePage = ref(1)
-const tableShowSelect = ref(false) // TODO enable once mass edit functions are implemented
+
+const tableShowSelect = ref(true)
+const selectedItems = ref([] as GenericModel[])
 
 // data
 const loading = ref(false);
