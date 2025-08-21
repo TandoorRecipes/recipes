@@ -239,11 +239,12 @@ def system(request):
 
         for x in r.zrange('api:space-request-count', 0, 20, withscores=True, desc=True):
             s = x[0].decode('utf-8')
-            space_stats = [Space.objects.get(pk=s).name, x[1]]
-            for i in range(0, 6):
-                d = (date.today() - timedelta(days=i)).isoformat()
-                space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
-            api_space_stats.append(space_stats)
+            if space := Space.objects.filter(pk=s).first():
+                space_stats = [space.name, x[1]]
+                for i in range(0, 6):
+                    d = (date.today() - timedelta(days=i)).isoformat()
+                    space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
+                api_space_stats.append(space_stats)
 
     cache_response = caches['default'].get(f'system_view_test_cache_entry', None)
     if not cache_response:
