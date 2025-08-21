@@ -80,8 +80,9 @@ urlpatterns = [
     path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     path('no-perm/', views.no_perm, name='view_no_perm'),
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
-    path('system/', views.system, name='view_system'),
 
+    path('system/', views.system, name='view_system'),
+    path('plugin/update/', views.plugin_update, name='view_plugin_update'),
 
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 

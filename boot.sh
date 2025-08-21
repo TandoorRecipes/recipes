@@ -10,6 +10,8 @@ GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 GUNICORN_THREADS="${GUNICORN_THREADS:-2}"
 GUNICORN_LOG_LEVEL="${GUNICORN_LOG_LEVEL:-'info'}"
 
+PLUGINS_BUILD="${PLUGINS_BUILD:-0}"
+
 if [ "${TANDOOR_PORT}" -eq 80 ]; then
     echo "TANDOOR_PORT set to 8080 because 80 is now taken by the integrated nginx"
     TANDOOR_PORT=8080
@@ -82,8 +84,14 @@ echo "Database is ready"
 
 echo "Migrating database"
 
-
 python manage.py migrate
+
+if [ "${PLUGINS_BUILD}" -eq 1 ]; then
+    echo "Running yarn build at startup because PLUGINS_BUILD is enabled"
+    cd vue3
+    yarn build
+    cd ..
+fi
 
 echo "Collecting static files, this may take a while..."
 
