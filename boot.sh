@@ -90,6 +90,7 @@ if [ "${PLUGINS_BUILD}" -eq 1 ]; then
     echo "Running yarn build at startup because PLUGINS_BUILD is enabled"
     cd vue3
     npm install --global yarn
+    yarn install
     yarn build
     cd ..
 fi
