@@ -53,6 +53,17 @@
         {% endblocktrans %}
     {% endif %}
 
+    <h3 class="mt-5">{% trans 'Plugins' %}</h3>
+    Clone the plugin using git into the <code>recipe/plugin/</code> folder (Docker mount <code>/opt/recipe/recipes/plugins</code> to the host system and clone into it).
+    <table class="table table-bordered">
+        {% for p in plugins %}
+            <tr>
+                <td><a href="{{ p.github }}">{{ p.name }}</a> <br/>{{ p.base_path }}</td>
+                <td><a href="{% url 'view_plugin_update' %}?module={{ p.module }}" class="btn btn-primary">Git Pull</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
     <h4 class="mt-3">{% trans 'Media Serving' %} <span class="badge text-bg-{% if gunicorn_media %}danger{% else %}success{% endif %}">{% if gunicorn_media %}
         {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
     {% if gunicorn_media %}
