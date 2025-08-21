@@ -45,5 +45,5 @@ There are also a few other tasks specified in case you have specific development
 
 - `Run Dev Server` - Runs a django development server not connected to VSCode.
 - `Run all pytests` - Runs all the pytests outside of VSCode.
-- `Yarn Serve` - Runs development Vue.js server not connected to VSCode. Useful if you want to make Vue changes and see them in realtime.
+- `Yarn Dev` - Runs development Vue.js server not connected to VSCode. Useful if you want to make Vue changes and see them in realtime.
 - `Serve Documentation` - Runs a documentation server. Useful if you want to see how changes to documentation show up.
