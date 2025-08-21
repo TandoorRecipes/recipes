@@ -10,7 +10,7 @@
                               @click:clear="query = ''"
                               clearable hide-details>
                     <template v-slot:append>
-                        <v-badge bordered :offset-x="5" :offset-y="5" color="secondary" v-model="hasFiltersApplied" >
+                        <v-badge bordered :offset-x="5" :offset-y="5" color="secondary" v-model="hasFiltersApplied">
                             <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon>
                                 <i class="fa-solid fa-caret-down"></i></v-btn>
                             <v-btn @click="panel ='' " v-if="panel == 'search'" color="primary" icon><i class="fa-solid fa-caret-up"></i></v-btn>
@@ -78,6 +78,8 @@
             <v-col>
                 <v-card>
                     <v-data-table-server
+                        v-model="selectedItems"
+                        return-object
                         @update:options="searchRecipes"
                         :loading="loading"
                         :items="recipes"
@@ -87,9 +89,25 @@
                         :items-length="tableItemCount"
                         @click:row="handleRowClick"
                         disable-sort
-                        hide-default-header
+                        show-select
                         hide-default-footer
                     >
+                        <template v-slot:header.action v-if="selectedItems.length > 0">
+                            <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" color="info">
+                                <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
+                                <v-menu activator="parent" close-on-content-click>
+                                    <v-list density="compact" class="pt-1 pb-1" activatable>
+                                        <v-list-item prepend-icon="$edit" @click="batchEditDialog = true">
+                                            {{ $t('BatchEdit') }}
+                                        </v-list-item>
+                                        <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true">
+                                            {{ $t('Delete_All') }}
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+                            </v-btn>
+                        </template>
+
                         <template #item.image="{item}">
                             <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1" v-if="item.image"></v-avatar>
                             <v-avatar color="primary" variant="tonal" size="x-large" class="mt-1 mb-1" v-else>
@@ -142,6 +160,10 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <batch-delete-dialog :items="selectedItems" model="Recipe" v-model="batchDeleteDialog" activator="model" @change="searchRecipes({page: 1})"></batch-delete-dialog>
+        <batch-edit-recipe-dialog :items="selectedItems" v-model="batchEditDialog" activator="model" @change="searchRecipes({page: page})"></batch-edit-recipe-dialog>
+
     </v-container>
 </template>
 
@@ -166,6 +188,9 @@ import {routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/ut
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
+import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
+import {EditorSupportedTypes} from "@/types/Models.ts";
+import BatchEditRecipeDialog from "@/components/dialogs/BatchEditRecipeDialog.vue";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -217,6 +242,10 @@ const recipes = ref([] as RecipeOverview[])
 const selectedCustomFilter = ref<null | CustomFilter>(null)
 const newFilterName = ref('')
 
+const selectedItems = ref([] as EditorSupportedTypes[])
+const batchDeleteDialog = ref(false)
+const batchEditDialog = ref(false)
+
 /**
  * handle query updates when using the GlobalSearchDialog on the search page directly
  */
@@ -250,6 +279,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
     let api = new ApiApi()
     loading.value = true
     hasFiltersApplied.value = false
+    selectedItems.value = []
 
     page.value = options.page
     let searchParameters = {

@@ -37,6 +37,84 @@ export interface RecipeBatchUpdate {
      * @memberof RecipeBatchUpdate
      */
     keywordsRemove: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof RecipeBatchUpdate
+     */
+    keywordsSet: Array<number>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeBatchUpdate
+     */
+    keywordsRemoveAll?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBatchUpdate
+     */
+    workingTime?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBatchUpdate
+     */
+    waitingTime?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBatchUpdate
+     */
+    servings?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBatchUpdate
+     */
+    servingsText?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeBatchUpdate
+     */
+    _private?: boolean;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof RecipeBatchUpdate
+     */
+    sharedAdd: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof RecipeBatchUpdate
+     */
+    sharedRemove: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof RecipeBatchUpdate
+     */
+    sharedSet: Array<number>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeBatchUpdate
+     */
+    sharedRemoveAll?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeBatchUpdate
+     */
+    showIngredientOverview?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeBatchUpdate
+     */
+    clearDescription?: boolean;
 }
 
 /**
@@ -46,6 +124,10 @@ export function instanceOfRecipeBatchUpdate(value: object): value is RecipeBatch
     if (!('recipes' in value) || value['recipes'] === undefined) return false;
     if (!('keywordsAdd' in value) || value['keywordsAdd'] === undefined) return false;
     if (!('keywordsRemove' in value) || value['keywordsRemove'] === undefined) return false;
+    if (!('keywordsSet' in value) || value['keywordsSet'] === undefined) return false;
+    if (!('sharedAdd' in value) || value['sharedAdd'] === undefined) return false;
+    if (!('sharedRemove' in value) || value['sharedRemove'] === undefined) return false;
+    if (!('sharedSet' in value) || value['sharedSet'] === undefined) return false;
     return true;
 }
 
@@ -62,6 +144,19 @@ export function RecipeBatchUpdateFromJSONTyped(json: any, ignoreDiscriminator: b
         'recipes': json['recipes'],
         'keywordsAdd': json['keywords_add'],
         'keywordsRemove': json['keywords_remove'],
+        'keywordsSet': json['keywords_set'],
+        'keywordsRemoveAll': json['keywords_remove_all'] == null ? undefined : json['keywords_remove_all'],
+        'workingTime': json['working_time'] == null ? undefined : json['working_time'],
+        'waitingTime': json['waiting_time'] == null ? undefined : json['waiting_time'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
+        '_private': json['private'] == null ? undefined : json['private'],
+        'sharedAdd': json['shared_add'],
+        'sharedRemove': json['shared_remove'],
+        'sharedSet': json['shared_set'],
+        'sharedRemoveAll': json['shared_remove_all'] == null ? undefined : json['shared_remove_all'],
+        'showIngredientOverview': json['show_ingredient_overview'] == null ? undefined : json['show_ingredient_overview'],
+        'clearDescription': json['clear_description'] == null ? undefined : json['clear_description'],
     };
 }
 
@@ -74,6 +169,19 @@ export function RecipeBatchUpdateToJSON(value?: RecipeBatchUpdate | null): any {
         'recipes': value['recipes'],
         'keywords_add': value['keywordsAdd'],
         'keywords_remove': value['keywordsRemove'],
+        'keywords_set': value['keywordsSet'],
+        'keywords_remove_all': value['keywordsRemoveAll'],
+        'working_time': value['workingTime'],
+        'waiting_time': value['waitingTime'],
+        'servings': value['servings'],
+        'servings_text': value['servingsText'],
+        'private': value['_private'],
+        'shared_add': value['sharedAdd'],
+        'shared_remove': value['sharedRemove'],
+        'shared_set': value['sharedSet'],
+        'shared_remove_all': value['sharedRemoveAll'],
+        'show_ingredient_overview': value['showIngredientOverview'],
+        'clear_description': value['clearDescription'],
     };
 }
 

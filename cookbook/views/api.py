@@ -1376,7 +1376,61 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
             if 'keywords_remove' in serializer.validated_data:
                 for k in serializer.validated_data['keywords_remove']:
-                    Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids,keyword_id=k).delete()
+                    Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids, keyword_id=k).delete()
+
+            if 'keywords_set' in serializer.validated_data and len(serializer.validated_data['keywords_set']) > 0:
+                keyword_relations = []
+                Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                for r in recipes:
+                    for k in serializer.validated_data['keywords_set']:
+                        keyword_relations.append(Recipe.keywords.through(recipe_id=r.pk, keyword_id=k))
+                Recipe.keywords.through.objects.bulk_create(keyword_relations, ignore_conflicts=True, unique_fields=('recipe_id', 'keyword_id',))
+
+            if 'keywords_remove_all' in serializer.validated_data and serializer.validated_data['keywords_remove_all']:
+                Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+
+            if 'working_time' in serializer.validated_data:
+                recipes.update(working_time=serializer.validated_data['working_time'])
+
+            if 'waiting_time' in serializer.validated_data:
+                recipes.update(waiting_time=serializer.validated_data['waiting_time'])
+
+            if 'servings' in serializer.validated_data:
+                recipes.update(servings=serializer.validated_data['servings'])
+
+            if 'servings_text' in serializer.validated_data:
+                recipes.update(servings_text=serializer.validated_data['servings_text'])
+
+            if 'private' in serializer.validated_data and serializer.validated_data['private'] is not None:
+                recipes.update(private=serializer.validated_data['private'])
+
+            if 'shared_add' in serializer.validated_data:
+                shared_relation = []
+                for r in recipes:
+                    for u in serializer.validated_data['shared_add']:
+                        shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
+
+            if 'shared_remove' in serializer.validated_data:
+                for s in serializer.validated_data['shared_remove']:
+                    Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids, user_id=s).delete()
+
+            if 'shared_set' in serializer.validated_data and len(serializer.validated_data['shared_set']) > 0:
+                shared_relation = []
+                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                for r in recipes:
+                    for u in serializer.validated_data['shared_set']:
+                        shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
+
+            if 'shared_remove_all' in serializer.validated_data and serializer.validated_data['shared_remove_all']:
+                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+
+            if 'clear_description' in serializer.validated_data and serializer.validated_data['clear_description']:
+                recipes.update(description='')
+
+            if 'show_ingredient_overview' in serializer.validated_data and serializer.validated_data['show_ingredient_overview'] is not None:
+                recipes.update(show_ingredient_overview=serializer.validated_data['show_ingredient_overview'])
 
             return Response({}, 200)
 
