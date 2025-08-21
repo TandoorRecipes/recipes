@@ -1116,6 +1116,22 @@ class RecipeBatchUpdateSerializer(serializers.Serializer):
     recipes = serializers.ListField(child=serializers.IntegerField())
     keywords_add = serializers.ListField(child=serializers.IntegerField())
     keywords_remove = serializers.ListField(child=serializers.IntegerField())
+    keywords_set = serializers.ListField(child=serializers.IntegerField())
+    keywords_remove_all = serializers.BooleanField(default=False)
+
+    working_time = serializers.IntegerField(required=False, allow_null=True)
+    waiting_time = serializers.IntegerField(required=False, allow_null=True)
+    servings = serializers.IntegerField(required=False, allow_null=True)
+    servings_text = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
+    private = serializers.BooleanField(required=False, allow_null=True)
+    shared_add = serializers.ListField(child=serializers.IntegerField())
+    shared_remove = serializers.ListField(child=serializers.IntegerField())
+    shared_set = serializers.ListField(child=serializers.IntegerField())
+    shared_remove_all = serializers.BooleanField(default=False)
+
+    show_ingredient_overview = serializers.BooleanField(required=False, allow_null=True)
+    clear_description = serializers.BooleanField(required=False, allow_null=True)
 
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
