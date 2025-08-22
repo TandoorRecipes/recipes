@@ -15,6 +15,7 @@
                 <v-tab value="food">{{ $t('Food') }}</v-tab>
                 <v-tab value="properties">{{ $t('Properties') }}</v-tab>
                 <v-tab value="conversions">{{ $t('Conversion') }}</v-tab>
+                <v-tab value="hierarchy">{{ $t('Hierarchy') }}</v-tab>
                 <v-tab value="misc">{{ $t('Miscellaneous') }}</v-tab>
             </v-tabs>
         </v-card-text>
@@ -83,7 +84,7 @@
                                     </v-col>
                                     <v-col md="6">
                                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                                        <model-select  v-model="uc.baseUnit" model="Unit" hide-details></model-select>
+                                        <model-select v-model="uc.baseUnit" model="Unit" hide-details></model-select>
                                     </v-col>
                                 </v-row>
                                 <v-row dense>
@@ -97,7 +98,7 @@
                                     </v-col>
                                     <v-col md="6">
                                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                                        <model-select  v-model="uc.convertedUnit" model="Unit"></model-select>
+                                        <model-select v-model="uc.convertedUnit" model="Unit"></model-select>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
@@ -105,7 +106,19 @@
                         </v-card>
                     </v-form>
                     <!-- TODO remove once append to body for model select is working properly -->
-                        <v-spacer style="margin-top: 60px;"></v-spacer>
+                    <v-spacer style="margin-top: 60px;"></v-spacer>
+                </v-tabs-window-item>
+
+                <v-tabs-window-item value="hierarchy">
+                    <hierarchy-editor v-model="editingObj" :model="modelClass.model.name"></hierarchy-editor>
+
+                    <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
+                    <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
+
+                    <ModelSelect model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')"
+                                 mode="tags"></ModelSelect>
+                    <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
+                                 mode="tags"></ModelSelect>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="misc">
@@ -116,14 +129,6 @@
                         <v-checkbox :label="$t('Ignore_Shopping')" :hint="$t('ignore_shopping_help')" v-model="editingObj.ignoreShopping" persistent-hint></v-checkbox>
                         <v-divider class="mt-2 mb-2"></v-divider>
                         <ModelSelect model="Food" v-model="editingObj.substitute" :label="$t('Substitutes')" :hint="$t('substitute_help')" mode="tags"></ModelSelect>
-
-                        <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
-                        <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
-
-                        <ModelSelect model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')"
-                                     mode="tags"></ModelSelect>
-                        <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
-                                     mode="tags"></ModelSelect>
 
                         <!-- TODO re-add reset inheritance button/api call /function (previously annotated field on food -->
                         <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
@@ -154,6 +159,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 import {openFdcPage} from "@/utils/fdc.ts";
 import {DateTime} from "luxon";
+import HierarchyEditor from "@/components/inputs/HierarchyEditor.vue";
 
 
 const props = defineProps({
@@ -212,7 +218,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.propertiesFoodAmount = 100

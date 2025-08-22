@@ -411,6 +411,7 @@ class MergeMixin(ViewSetMixin):
                          description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.',
                          type=int),
         OpenApiParameter(name='tree', description='Return all self and children of {obj} with ID [int].', type=int),
+        OpenApiParameter(name='root_tree', description='Return all items belonging to the tree of the given {obj} id', type=int),
     ]),
     move=extend_schema(parameters=[
         OpenApiParameter(name="parent", description='The ID of the desired parent of the {obj}.', type=OpenApiTypes.INT,
@@ -423,6 +424,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
     def get_queryset(self):
         root = self.request.query_params.get('root', None)
         tree = self.request.query_params.get('tree', None)
+        root_tree = self.request.query_params.get('root_tree', None)
 
         if root:
             if root.isnumeric():
@@ -441,10 +443,23 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                     self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self()
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
+        elif root_tree:
+            if root_tree.isnumeric():
+                try:
+                    self.queryset = self.model.objects.get(id=int(root_tree)).get_root().get_descendants_and_self()
+                except self.model.DoesNotExist:
+                    self.queryset = self.model.objects.none()
+
         else:
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request,
                                         serializer=self.serializer_class, tree=True)
-        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
+
+
+        self.queryset = self.queryset.filter(space=self.request.space)
+        # only order if not root_tree or tree mde because in these modes the sorting is relevant for the client
+        if not root_tree and not tree:
+            self.queryset = self.queryset.order_by(Lower('name').asc())
+
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class,
                                     tree=True)

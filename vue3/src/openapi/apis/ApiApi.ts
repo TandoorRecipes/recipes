@@ -23,6 +23,7 @@ import type {
   CookLog,
   CustomFilter,
   EnterpriseSocialEmbed,
+  EnterpriseSpace,
   ExportLog,
   ExportRequest,
   FdcQuery,
@@ -55,6 +56,7 @@ import type {
   PaginatedCustomFilterList,
   PaginatedEnterpriseSocialEmbedList,
   PaginatedEnterpriseSocialRecipeSearchList,
+  PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedImportLogList,
@@ -99,6 +101,7 @@ import type {
   PatchedCookLog,
   PatchedCustomFilter,
   PatchedEnterpriseSocialEmbed,
+  PatchedEnterpriseSpace,
   PatchedExportLog,
   PatchedFood,
   PatchedImportLog,
@@ -190,6 +193,8 @@ import {
     CustomFilterToJSON,
     EnterpriseSocialEmbedFromJSON,
     EnterpriseSocialEmbedToJSON,
+    EnterpriseSpaceFromJSON,
+    EnterpriseSpaceToJSON,
     ExportLogFromJSON,
     ExportLogToJSON,
     ExportRequestFromJSON,
@@ -254,6 +259,8 @@ import {
     PaginatedEnterpriseSocialEmbedListToJSON,
     PaginatedEnterpriseSocialRecipeSearchListFromJSON,
     PaginatedEnterpriseSocialRecipeSearchListToJSON,
+    PaginatedEnterpriseSpaceListFromJSON,
+    PaginatedEnterpriseSpaceListToJSON,
     PaginatedExportLogListFromJSON,
     PaginatedExportLogListToJSON,
     PaginatedFoodListFromJSON,
@@ -342,6 +349,8 @@ import {
     PatchedCustomFilterToJSON,
     PatchedEnterpriseSocialEmbedFromJSON,
     PatchedEnterpriseSocialEmbedToJSON,
+    PatchedEnterpriseSpaceFromJSON,
+    PatchedEnterpriseSpaceToJSON,
     PatchedExportLogFromJSON,
     PatchedExportLogToJSON,
     PatchedFoodFromJSON,
@@ -711,6 +720,7 @@ export interface ApiEnterpriseSocialKeywordListRequest {
     query?: string;
     random?: string;
     root?: number;
+    rootTree?: number;
     tree?: number;
     updatedAt?: string;
 }
@@ -832,6 +842,33 @@ export interface ApiEnterpriseSocialRecipeUpdateRequest {
     recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
 }
 
+export interface ApiEnterpriseSpaceCreateRequest {
+    enterpriseSpace: EnterpriseSpace;
+}
+
+export interface ApiEnterpriseSpaceDestroyRequest {
+    space: number;
+}
+
+export interface ApiEnterpriseSpaceListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSpacePartialUpdateRequest {
+    space: number;
+    patchedEnterpriseSpace?: PatchedEnterpriseSpace;
+}
+
+export interface ApiEnterpriseSpaceRetrieveRequest {
+    space: number;
+}
+
+export interface ApiEnterpriseSpaceUpdateRequest {
+    space: number;
+    enterpriseSpace: EnterpriseSpace;
+}
+
 export interface ApiExportCreateRequest {
     exportRequest: ExportRequest;
 }
@@ -892,6 +929,7 @@ export interface ApiFoodListRequest {
     query?: string;
     random?: string;
     root?: number;
+    rootTree?: number;
     tree?: number;
     updatedAt?: string;
 }
@@ -1057,6 +1095,7 @@ export interface ApiKeywordListRequest {
     query?: string;
     random?: string;
     root?: number;
+    rootTree?: number;
     tree?: number;
     updatedAt?: string;
 }
@@ -4023,6 +4062,10 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['root'] = requestParameters['root'];
         }
 
+        if (requestParameters['rootTree'] != null) {
+            queryParameters['root_tree'] = requestParameters['rootTree'];
+        }
+
         if (requestParameters['tree'] != null) {
             queryParameters['tree'] = requestParameters['tree'];
         }
@@ -4921,6 +4964,260 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiEnterpriseSpaceCreateRaw(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['enterpriseSpace'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseSpace',
+                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseSpaceToJSON(requestParameters['enterpriseSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCreate(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCurrentRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/current/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCurrentRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceCurrentRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceDestroyRaw(requestParameters: ApiEnterpriseSpaceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceDestroy(requestParameters: ApiEnterpriseSpaceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseSpaceDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceListRaw(requestParameters: ApiEnterpriseSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseSpaceList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseSpaceListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceList(requestParameters: ApiEnterpriseSpaceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseSpaceList> {
+        const response = await this.apiEnterpriseSpaceListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpacePartialUpdateRaw(requestParameters: ApiEnterpriseSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpacePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseSpaceToJSON(requestParameters['patchedEnterpriseSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpacePartialUpdate(requestParameters: ApiEnterpriseSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpacePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceRetrieveRaw(requestParameters: ApiEnterpriseSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceRetrieve(requestParameters: ApiEnterpriseSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceUpdateRaw(requestParameters: ApiEnterpriseSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseSpace'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseSpace',
+                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseSpaceToJSON(requestParameters['enterpriseSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceUpdate(requestParameters: ApiEnterpriseSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiExportCreateRaw(requestParameters: ApiExportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
         if (requestParameters['exportRequest'] == null) {
             throw new runtime.RequiredError(
@@ -5449,6 +5746,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['root'] != null) {
             queryParameters['root'] = requestParameters['root'];
+        }
+
+        if (requestParameters['rootTree'] != null) {
+            queryParameters['root_tree'] = requestParameters['rootTree'];
         }
 
         if (requestParameters['tree'] != null) {
@@ -6927,6 +7228,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['root'] != null) {
             queryParameters['root'] = requestParameters['root'];
+        }
+
+        if (requestParameters['rootTree'] != null) {
+            queryParameters['root_tree'] = requestParameters['rootTree'];
         }
 
         if (requestParameters['tree'] != null) {

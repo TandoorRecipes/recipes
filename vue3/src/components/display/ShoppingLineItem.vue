@@ -15,8 +15,8 @@
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
                             <i class="fas fa-clock-rotate-left text-info fa-fw" v-if="a.delayed"></i> <b>
                             <span :class="{'text-disabled': a.checked || a.delayed}" class="text-no-wrap">
-                                {{ $n(a.amount) }}
-                                <span v-if="a.unit">{{ a.unit.name }}</span>
+                                <span v-if="amounts.length > 1 || (amounts.length == 1 && a.amount != 1)">{{ $n(a.amount) }}</span>
+                                <span class="ms-1" v-if="a.unit">{{ a.unit.name }}</span>
                             </span>
 
                             </b>

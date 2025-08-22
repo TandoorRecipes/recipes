@@ -592,7 +592,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         fields = (
             'id', 'name', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
             'updated_at', 'full_name')
-        read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
+        read_only_fields = ('id', 'label', 'numchild', 'numrecipe', 'parent', 'image')
 
 
 class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin):

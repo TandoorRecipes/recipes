@@ -21,6 +21,7 @@ models/EnterpriseKeyword.ts
 models/EnterpriseSocialEmbed.ts
 models/EnterpriseSocialEmbedTypeEnum.ts
 models/EnterpriseSocialRecipeSearch.ts
+models/EnterpriseSpace.ts
 models/ExportLog.ts
 models/ExportRequest.ts
 models/FdcQuery.ts
@@ -63,6 +64,7 @@ models/PaginatedCookLogList.ts
 models/PaginatedCustomFilterList.ts
 models/PaginatedEnterpriseSocialEmbedList.ts
 models/PaginatedEnterpriseSocialRecipeSearchList.ts
+models/PaginatedEnterpriseSpaceList.ts
 models/PaginatedExportLogList.ts
 models/PaginatedFoodList.ts
 models/PaginatedImportLogList.ts
@@ -107,6 +109,7 @@ models/PatchedConnectorConfig.ts
 models/PatchedCookLog.ts
 models/PatchedCustomFilter.ts
 models/PatchedEnterpriseSocialEmbed.ts
+models/PatchedEnterpriseSpace.ts
 models/PatchedExportLog.ts
 models/PatchedFood.ts
 models/PatchedImportLog.ts
