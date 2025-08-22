@@ -24,7 +24,7 @@
 
                     <v-form :disabled="loading || fileApiLoading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" rows="2" auto-grow></v-textarea>
+                        <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" maxlength="512" rows="2" auto-grow></v-textarea>
 
                         <v-row>
                             <v-col cols="12" md="6">
@@ -100,8 +100,8 @@
                                     v-model="editingObj.showIngredientOverview"></v-checkbox>
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
-                        <v-checkbox :label="$t('Private_Recipe')" persistent-hint v-model="editingObj._private"></v-checkbox>
-                        <model-select mode="tags" model="User" :label="$t('Private_Recipe')" :hint="$t('Private_Recipe_Help')" persistent-hint v-model="editingObj.shared"
+                        <v-checkbox :label="$t('Private_Recipe')" persistent-hint :hint="$t('Private_Recipe_Help')" v-model="editingObj._private"></v-checkbox>
+                        <model-select mode="tags" model="User" :label="$t('Share')"  persistent-hint v-model="editingObj.shared"
                                       append-to-body v-if="editingObj._private"></model-select>
 
                     </v-form>

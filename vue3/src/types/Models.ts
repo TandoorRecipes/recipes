@@ -1,6 +1,6 @@
 import {
     AccessToken,
-    ApiApi, Automation, type AutomationTypeEnum, ConnectorConfig, CookLog, CustomFilter,
+    ApiApi, ApiKeywordMoveUpdateRequest, Automation, type AutomationTypeEnum, ConnectorConfig, CookLog, CustomFilter,
     Food,
     Ingredient,
     InviteLink, Keyword,
@@ -85,7 +85,7 @@ type ModelTableHeaders = {
  * custom type containing all attributes needed by the generic model system to properly handle all functions
  */
 export type Model = {
-    name: string,
+    name: EditorSupportedModels,
     localizationKey: string,
     localizationKeyDescription: string,
     icon: string,
@@ -191,6 +191,7 @@ export const TFood = {
 
     isPaginated: true,
     isMerge: true,
+    isTree: true,
     mergeAutomation: 'FOOD_ALIAS',
     toStringKeys: ['name'],
 
@@ -234,6 +235,7 @@ export const TKeyword = {
 
     isPaginated: true,
     isMerge: true,
+    isTree: true,
     mergeAutomation: 'KEYWORD_ALIAS',
     toStringKeys: ['name'],
 
@@ -946,6 +948,22 @@ export class GenericModel {
             mergeRequestParams[this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1)] = {}
 
             return this.api[`api${this.model.name}MergeUpdate`](mergeRequestParams)
+        }
+    }
+
+    /**
+     * move the given source object so that its parent is the given parentId.
+     * @param source object to change parent for
+     * @param parentId parent id to change the object to or 0 to remove parent
+     */
+    move(source: EditorSupportedTypes, parentId: number) {
+        if (!this.model.isTree) {
+            throw new Error('This model does not support trees!')
+        } else {
+            let moveRequestParams: any = {id: source.id, parent: parentId}
+            moveRequestParams[this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1)] = source
+
+            return this.api[`api${this.model.name}MoveUpdate`](moveRequestParams)
         }
     }
 

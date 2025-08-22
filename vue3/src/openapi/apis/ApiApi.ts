@@ -22,6 +22,8 @@ import type {
   ConnectorConfig,
   CookLog,
   CustomFilter,
+  EnterpriseSocialEmbed,
+  EnterpriseSpace,
   ExportLog,
   ExportRequest,
   FdcQuery,
@@ -52,6 +54,9 @@ import type {
   PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
+  PaginatedEnterpriseSocialEmbedList,
+  PaginatedEnterpriseSocialRecipeSearchList,
+  PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedImportLogList,
@@ -60,6 +65,13 @@ import type {
   PaginatedKeywordList,
   PaginatedMealPlanList,
   PaginatedMealTypeList,
+  PaginatedOpenDataCategoryList,
+  PaginatedOpenDataConversionList,
+  PaginatedOpenDataFoodList,
+  PaginatedOpenDataPropertyList,
+  PaginatedOpenDataStoreList,
+  PaginatedOpenDataUnitList,
+  PaginatedOpenDataVersionList,
   PaginatedPropertyList,
   PaginatedPropertyTypeList,
   PaginatedRecipeBookEntryList,
@@ -88,6 +100,8 @@ import type {
   PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
+  PatchedEnterpriseSocialEmbed,
+  PatchedEnterpriseSpace,
   PatchedExportLog,
   PatchedFood,
   PatchedImportLog,
@@ -128,6 +142,7 @@ import type {
   Property,
   PropertyType,
   Recipe,
+  RecipeBatchUpdate,
   RecipeBook,
   RecipeBookEntry,
   RecipeFlat,
@@ -176,6 +191,10 @@ import {
     CookLogToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
+    EnterpriseSocialEmbedFromJSON,
+    EnterpriseSocialEmbedToJSON,
+    EnterpriseSpaceFromJSON,
+    EnterpriseSpaceToJSON,
     ExportLogFromJSON,
     ExportLogToJSON,
     ExportRequestFromJSON,
@@ -236,6 +255,12 @@ import {
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
     PaginatedCustomFilterListToJSON,
+    PaginatedEnterpriseSocialEmbedListFromJSON,
+    PaginatedEnterpriseSocialEmbedListToJSON,
+    PaginatedEnterpriseSocialRecipeSearchListFromJSON,
+    PaginatedEnterpriseSocialRecipeSearchListToJSON,
+    PaginatedEnterpriseSpaceListFromJSON,
+    PaginatedEnterpriseSpaceListToJSON,
     PaginatedExportLogListFromJSON,
     PaginatedExportLogListToJSON,
     PaginatedFoodListFromJSON,
@@ -252,6 +277,20 @@ import {
     PaginatedMealPlanListToJSON,
     PaginatedMealTypeListFromJSON,
     PaginatedMealTypeListToJSON,
+    PaginatedOpenDataCategoryListFromJSON,
+    PaginatedOpenDataCategoryListToJSON,
+    PaginatedOpenDataConversionListFromJSON,
+    PaginatedOpenDataConversionListToJSON,
+    PaginatedOpenDataFoodListFromJSON,
+    PaginatedOpenDataFoodListToJSON,
+    PaginatedOpenDataPropertyListFromJSON,
+    PaginatedOpenDataPropertyListToJSON,
+    PaginatedOpenDataStoreListFromJSON,
+    PaginatedOpenDataStoreListToJSON,
+    PaginatedOpenDataUnitListFromJSON,
+    PaginatedOpenDataUnitListToJSON,
+    PaginatedOpenDataVersionListFromJSON,
+    PaginatedOpenDataVersionListToJSON,
     PaginatedPropertyListFromJSON,
     PaginatedPropertyListToJSON,
     PaginatedPropertyTypeListFromJSON,
@@ -308,6 +347,10 @@ import {
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
     PatchedCustomFilterToJSON,
+    PatchedEnterpriseSocialEmbedFromJSON,
+    PatchedEnterpriseSocialEmbedToJSON,
+    PatchedEnterpriseSpaceFromJSON,
+    PatchedEnterpriseSpaceToJSON,
     PatchedExportLogFromJSON,
     PatchedExportLogToJSON,
     PatchedFoodFromJSON,
@@ -388,6 +431,8 @@ import {
     PropertyTypeToJSON,
     RecipeFromJSON,
     RecipeToJSON,
+    RecipeBatchUpdateFromJSON,
+    RecipeBatchUpdateToJSON,
     RecipeBookFromJSON,
     RecipeBookToJSON,
     RecipeBookEntryFromJSON,
@@ -632,6 +677,198 @@ export interface ApiDownloadFileRetrieveRequest {
     fileId: number;
 }
 
+export interface ApiEnterpriseSocialEmbedCreateRequest {
+    enterpriseSocialEmbed: EnterpriseSocialEmbed;
+}
+
+export interface ApiEnterpriseSocialEmbedDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialEmbedListRequest {
+    page?: number;
+    pageSize?: number;
+    token?: string;
+}
+
+export interface ApiEnterpriseSocialEmbedPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseSocialEmbed?: PatchedEnterpriseSocialEmbed;
+}
+
+export interface ApiEnterpriseSocialEmbedRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialEmbedUpdateRequest {
+    id: number;
+    enterpriseSocialEmbed: EnterpriseSocialEmbed;
+}
+
+export interface ApiEnterpriseSocialKeywordCreateRequest {
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialKeywordListRequest {
+    limit?: string;
+    page?: number;
+    pageSize?: number;
+    query?: string;
+    random?: string;
+    root?: number;
+    rootTree?: number;
+    tree?: number;
+    updatedAt?: string;
+}
+
+export interface ApiEnterpriseSocialKeywordMergeUpdateRequest {
+    id: number;
+    target: number;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordMoveUpdateRequest {
+    id: number;
+    parent: number;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordPartialUpdateRequest {
+    id: number;
+    patchedKeyword?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialKeywordUpdateRequest {
+    id: number;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest {
+    recipeBatchUpdate: RecipeBatchUpdate;
+}
+
+export interface ApiEnterpriseSocialRecipeCreateRequest {
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSocialRecipeDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialRecipeImageUpdateRequest {
+    id: number;
+    image?: string;
+    imageUrl?: string;
+}
+
+export interface ApiEnterpriseSocialRecipeListRequest {
+    books?: Array<number>;
+    booksAnd?: Array<number>;
+    booksAndNot?: Array<number>;
+    booksOr?: Array<number>;
+    booksOrNot?: Array<number>;
+    cookedonGte?: Date;
+    cookedonLte?: Date;
+    createdby?: number;
+    createdon?: Date;
+    createdonGte?: Date;
+    createdonLte?: Date;
+    filter?: number;
+    foods?: Array<number>;
+    foodsAnd?: Array<number>;
+    foodsAndNot?: Array<number>;
+    foodsOr?: Array<number>;
+    foodsOrNot?: Array<number>;
+    internal?: boolean;
+    keyword?: number;
+    keywords?: Array<number>;
+    keywordsAnd?: Array<number>;
+    keywordsAndNot?: Array<number>;
+    keywordsOr?: Array<number>;
+    keywordsOrNot?: Array<number>;
+    makenow?: boolean;
+    _new?: boolean;
+    numRecent?: number;
+    page?: number;
+    pageSize?: number;
+    query?: string;
+    random?: boolean;
+    rating?: number;
+    ratingGte?: number;
+    ratingLte?: number;
+    sortOrder?: string;
+    timescooked?: number;
+    timescookedGte?: number;
+    timescookedLte?: number;
+    token?: string;
+    units?: number;
+    updatedon?: Date;
+    updatedonGte?: Date;
+    updatedonLte?: Date;
+    viewedonGte?: Date;
+    viewedonLte?: Date;
+}
+
+export interface ApiEnterpriseSocialRecipePartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSocialRecipeRelatedListRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialRecipeRetrieveRequest {
+    id: number;
+    share?: string;
+    token?: string;
+}
+
+export interface ApiEnterpriseSocialRecipeShoppingUpdateRequest {
+    id: number;
+    recipeShoppingUpdate: RecipeShoppingUpdate;
+}
+
+export interface ApiEnterpriseSocialRecipeUpdateRequest {
+    id: number;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSpaceCreateRequest {
+    enterpriseSpace: EnterpriseSpace;
+}
+
+export interface ApiEnterpriseSpaceDestroyRequest {
+    space: number;
+}
+
+export interface ApiEnterpriseSpaceListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSpacePartialUpdateRequest {
+    space: number;
+    patchedEnterpriseSpace?: PatchedEnterpriseSpace;
+}
+
+export interface ApiEnterpriseSpaceRetrieveRequest {
+    space: number;
+}
+
+export interface ApiEnterpriseSpaceUpdateRequest {
+    space: number;
+    enterpriseSpace: EnterpriseSpace;
+}
+
 export interface ApiExportCreateRequest {
     exportRequest: ExportRequest;
 }
@@ -692,6 +929,7 @@ export interface ApiFoodListRequest {
     query?: string;
     random?: string;
     root?: number;
+    rootTree?: number;
     tree?: number;
     updatedAt?: string;
 }
@@ -857,6 +1095,7 @@ export interface ApiKeywordListRequest {
     query?: string;
     random?: string;
     root?: number;
+    rootTree?: number;
     tree?: number;
     updatedAt?: string;
 }
@@ -958,6 +1197,11 @@ export interface ApiOpenDataCategoryDestroyRequest {
     id: number;
 }
 
+export interface ApiOpenDataCategoryListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiOpenDataCategoryPartialUpdateRequest {
     id: number;
     patchedOpenDataCategory?: Omit<PatchedOpenDataCategory, 'createdBy'>;
@@ -978,6 +1222,11 @@ export interface ApiOpenDataConversionCreateRequest {
 
 export interface ApiOpenDataConversionDestroyRequest {
     id: number;
+}
+
+export interface ApiOpenDataConversionListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiOpenDataConversionPartialUpdateRequest {
@@ -1006,6 +1255,16 @@ export interface ApiOpenDataFoodDestroyRequest {
     id: number;
 }
 
+export interface ApiOpenDataFoodFdcCreateRequest {
+    id: number;
+    openDataFood: Omit<OpenDataFood, 'createdBy'>;
+}
+
+export interface ApiOpenDataFoodListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiOpenDataFoodPartialUpdateRequest {
     id: number;
     patchedOpenDataFood?: Omit<PatchedOpenDataFood, 'createdBy'>;
@@ -1026,6 +1285,11 @@ export interface ApiOpenDataPropertyCreateRequest {
 
 export interface ApiOpenDataPropertyDestroyRequest {
     id: number;
+}
+
+export interface ApiOpenDataPropertyListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiOpenDataPropertyPartialUpdateRequest {
@@ -1050,6 +1314,11 @@ export interface ApiOpenDataStoreDestroyRequest {
     id: number;
 }
 
+export interface ApiOpenDataStoreListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiOpenDataStorePartialUpdateRequest {
     id: number;
     patchedOpenDataStore?: Omit<PatchedOpenDataStore, 'createdBy'>;
@@ -1072,6 +1341,11 @@ export interface ApiOpenDataUnitDestroyRequest {
     id: number;
 }
 
+export interface ApiOpenDataUnitListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiOpenDataUnitPartialUpdateRequest {
     id: number;
     patchedOpenDataUnit?: Omit<PatchedOpenDataUnit, 'createdBy'>;
@@ -1092,6 +1366,11 @@ export interface ApiOpenDataVersionCreateRequest {
 
 export interface ApiOpenDataVersionDestroyRequest {
     id: number;
+}
+
+export interface ApiOpenDataVersionListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiOpenDataVersionPartialUpdateRequest {
@@ -1161,6 +1440,10 @@ export interface ApiPropertyTypeUpdateRequest {
 export interface ApiPropertyUpdateRequest {
     id: number;
     property: Property;
+}
+
+export interface ApiRecipeBatchUpdateUpdateRequest {
+    recipeBatchUpdate: RecipeBatchUpdate;
 }
 
 export interface ApiRecipeBookCreateRequest {
@@ -3445,6 +3728,1496 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiEnterpriseSocialEmbedCreateRaw(requestParameters: ApiEnterpriseSocialEmbedCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSocialEmbed>> {
+        if (requestParameters['enterpriseSocialEmbed'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseSocialEmbed',
+                'Required parameter "enterpriseSocialEmbed" was null or undefined when calling apiEnterpriseSocialEmbedCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-embed/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseSocialEmbedToJSON(requestParameters['enterpriseSocialEmbed']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSocialEmbedFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedCreate(requestParameters: ApiEnterpriseSocialEmbedCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSocialEmbed> {
+        const response = await this.apiEnterpriseSocialEmbedCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedDestroyRaw(requestParameters: ApiEnterpriseSocialEmbedDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialEmbedDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedDestroy(requestParameters: ApiEnterpriseSocialEmbedDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseSocialEmbedDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedListRaw(requestParameters: ApiEnterpriseSocialEmbedListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseSocialEmbedList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['token'] != null) {
+            queryParameters['token'] = requestParameters['token'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-embed/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseSocialEmbedListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedList(requestParameters: ApiEnterpriseSocialEmbedListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseSocialEmbedList> {
+        const response = await this.apiEnterpriseSocialEmbedListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedPartialUpdateRaw(requestParameters: ApiEnterpriseSocialEmbedPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSocialEmbed>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialEmbedPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseSocialEmbedToJSON(requestParameters['patchedEnterpriseSocialEmbed']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSocialEmbedFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedPartialUpdate(requestParameters: ApiEnterpriseSocialEmbedPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSocialEmbed> {
+        const response = await this.apiEnterpriseSocialEmbedPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedRetrieveRaw(requestParameters: ApiEnterpriseSocialEmbedRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSocialEmbed>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialEmbedRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSocialEmbedFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedRetrieve(requestParameters: ApiEnterpriseSocialEmbedRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSocialEmbed> {
+        const response = await this.apiEnterpriseSocialEmbedRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedUpdateRaw(requestParameters: ApiEnterpriseSocialEmbedUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSocialEmbed>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialEmbedUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseSocialEmbed'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseSocialEmbed',
+                'Required parameter "enterpriseSocialEmbed" was null or undefined when calling apiEnterpriseSocialEmbedUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseSocialEmbedToJSON(requestParameters['enterpriseSocialEmbed']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSocialEmbedFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedUpdate(requestParameters: ApiEnterpriseSocialEmbedUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSocialEmbed> {
+        const response = await this.apiEnterpriseSocialEmbedUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordCreateRaw(requestParameters: ApiEnterpriseSocialKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
+        if (requestParameters['keyword'] == null) {
+            throw new runtime.RequiredError(
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiEnterpriseSocialKeywordCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: KeywordToJSON(requestParameters['keyword']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordCreate(requestParameters: ApiEnterpriseSocialKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
+        const response = await this.apiEnterpriseSocialKeywordCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordDestroyRaw(requestParameters: ApiEnterpriseSocialKeywordDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordDestroy(requestParameters: ApiEnterpriseSocialKeywordDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseSocialKeywordDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordListRaw(requestParameters: ApiEnterpriseSocialKeywordListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedKeywordList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
+        }
+
+        if (requestParameters['random'] != null) {
+            queryParameters['random'] = requestParameters['random'];
+        }
+
+        if (requestParameters['root'] != null) {
+            queryParameters['root'] = requestParameters['root'];
+        }
+
+        if (requestParameters['rootTree'] != null) {
+            queryParameters['root_tree'] = requestParameters['rootTree'];
+        }
+
+        if (requestParameters['tree'] != null) {
+            queryParameters['tree'] = requestParameters['tree'];
+        }
+
+        if (requestParameters['updatedAt'] != null) {
+            queryParameters['updated_at'] = requestParameters['updatedAt'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedKeywordListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordList(requestParameters: ApiEnterpriseSocialKeywordListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedKeywordList> {
+        const response = await this.apiEnterpriseSocialKeywordListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordMergeUpdateRaw(requestParameters: ApiEnterpriseSocialKeywordMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordMergeUpdate().'
+            );
+        }
+
+        if (requestParameters['target'] == null) {
+            throw new runtime.RequiredError(
+                'target',
+                'Required parameter "target" was null or undefined when calling apiEnterpriseSocialKeywordMergeUpdate().'
+            );
+        }
+
+        if (requestParameters['keyword'] == null) {
+            throw new runtime.RequiredError(
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiEnterpriseSocialKeywordMergeUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/merge/{target}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: KeywordToJSON(requestParameters['keyword']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordMergeUpdate(requestParameters: ApiEnterpriseSocialKeywordMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
+        const response = await this.apiEnterpriseSocialKeywordMergeUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordMoveUpdateRaw(requestParameters: ApiEnterpriseSocialKeywordMoveUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordMoveUpdate().'
+            );
+        }
+
+        if (requestParameters['parent'] == null) {
+            throw new runtime.RequiredError(
+                'parent',
+                'Required parameter "parent" was null or undefined when calling apiEnterpriseSocialKeywordMoveUpdate().'
+            );
+        }
+
+        if (requestParameters['keyword'] == null) {
+            throw new runtime.RequiredError(
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiEnterpriseSocialKeywordMoveUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/move/{parent}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: KeywordToJSON(requestParameters['keyword']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordMoveUpdate(requestParameters: ApiEnterpriseSocialKeywordMoveUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
+        const response = await this.apiEnterpriseSocialKeywordMoveUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordPartialUpdateRaw(requestParameters: ApiEnterpriseSocialKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedKeywordToJSON(requestParameters['patchedKeyword']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordPartialUpdate(requestParameters: ApiEnterpriseSocialKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
+        const response = await this.apiEnterpriseSocialKeywordPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordRetrieveRaw(requestParameters: ApiEnterpriseSocialKeywordRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordRetrieve(requestParameters: ApiEnterpriseSocialKeywordRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
+        const response = await this.apiEnterpriseSocialKeywordRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordUpdateRaw(requestParameters: ApiEnterpriseSocialKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordUpdate().'
+            );
+        }
+
+        if (requestParameters['keyword'] == null) {
+            throw new runtime.RequiredError(
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiEnterpriseSocialKeywordUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: KeywordToJSON(requestParameters['keyword']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialKeywordUpdate(requestParameters: ApiEnterpriseSocialKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
+        const response = await this.apiEnterpriseSocialKeywordUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeBatchUpdateUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBatchUpdate>> {
+        if (requestParameters['recipeBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'recipeBatchUpdate',
+                'Required parameter "recipeBatchUpdate" was null or undefined when calling apiEnterpriseSocialRecipeBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeBatchUpdateToJSON(requestParameters['recipeBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeBatchUpdateUpdate(requestParameters: ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBatchUpdate> {
+        const response = await this.apiEnterpriseSocialRecipeBatchUpdateUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeCreateRaw(requestParameters: ApiEnterpriseSocialRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['recipe'] == null) {
+            throw new runtime.RequiredError(
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiEnterpriseSocialRecipeCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeToJSON(requestParameters['recipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeCreate(requestParameters: ApiEnterpriseSocialRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipeCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeDestroyRaw(requestParameters: ApiEnterpriseSocialRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeDestroy(requestParameters: ApiEnterpriseSocialRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseSocialRecipeDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeFlatListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RecipeFlat>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/flat/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(RecipeFlatFromJSON));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeFlatList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<RecipeFlat>> {
+        const response = await this.apiEnterpriseSocialRecipeFlatListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeImageUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeImageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImage>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeImageUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['image'] != null) {
+            formParams.append('image', requestParameters['image'] as any);
+        }
+
+        if (requestParameters['imageUrl'] != null) {
+            formParams.append('image_url', requestParameters['imageUrl'] as any);
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/image/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeImageFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeImageUpdate(requestParameters: ApiEnterpriseSocialRecipeImageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImage> {
+        const response = await this.apiEnterpriseSocialRecipeImageUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeListRaw(requestParameters: ApiEnterpriseSocialRecipeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseSocialRecipeSearchList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['books'] != null) {
+            queryParameters['books'] = requestParameters['books'];
+        }
+
+        if (requestParameters['booksAnd'] != null) {
+            queryParameters['books_and'] = requestParameters['booksAnd'];
+        }
+
+        if (requestParameters['booksAndNot'] != null) {
+            queryParameters['books_and_not'] = requestParameters['booksAndNot'];
+        }
+
+        if (requestParameters['booksOr'] != null) {
+            queryParameters['books_or'] = requestParameters['booksOr'];
+        }
+
+        if (requestParameters['booksOrNot'] != null) {
+            queryParameters['books_or_not'] = requestParameters['booksOrNot'];
+        }
+
+        if (requestParameters['cookedonGte'] != null) {
+            queryParameters['cookedon_gte'] = (requestParameters['cookedonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['cookedonLte'] != null) {
+            queryParameters['cookedon_lte'] = (requestParameters['cookedonLte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['createdby'] != null) {
+            queryParameters['createdby'] = requestParameters['createdby'];
+        }
+
+        if (requestParameters['createdon'] != null) {
+            queryParameters['createdon'] = (requestParameters['createdon'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['createdonGte'] != null) {
+            queryParameters['createdon_gte'] = (requestParameters['createdonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['createdonLte'] != null) {
+            queryParameters['createdon_lte'] = (requestParameters['createdonLte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['filter'] != null) {
+            queryParameters['filter'] = requestParameters['filter'];
+        }
+
+        if (requestParameters['foods'] != null) {
+            queryParameters['foods'] = requestParameters['foods'];
+        }
+
+        if (requestParameters['foodsAnd'] != null) {
+            queryParameters['foods_and'] = requestParameters['foodsAnd'];
+        }
+
+        if (requestParameters['foodsAndNot'] != null) {
+            queryParameters['foods_and_not'] = requestParameters['foodsAndNot'];
+        }
+
+        if (requestParameters['foodsOr'] != null) {
+            queryParameters['foods_or'] = requestParameters['foodsOr'];
+        }
+
+        if (requestParameters['foodsOrNot'] != null) {
+            queryParameters['foods_or_not'] = requestParameters['foodsOrNot'];
+        }
+
+        if (requestParameters['internal'] != null) {
+            queryParameters['internal'] = requestParameters['internal'];
+        }
+
+        if (requestParameters['keyword'] != null) {
+            queryParameters['keyword'] = requestParameters['keyword'];
+        }
+
+        if (requestParameters['keywords'] != null) {
+            queryParameters['keywords'] = requestParameters['keywords'];
+        }
+
+        if (requestParameters['keywordsAnd'] != null) {
+            queryParameters['keywords_and'] = requestParameters['keywordsAnd'];
+        }
+
+        if (requestParameters['keywordsAndNot'] != null) {
+            queryParameters['keywords_and_not'] = requestParameters['keywordsAndNot'];
+        }
+
+        if (requestParameters['keywordsOr'] != null) {
+            queryParameters['keywords_or'] = requestParameters['keywordsOr'];
+        }
+
+        if (requestParameters['keywordsOrNot'] != null) {
+            queryParameters['keywords_or_not'] = requestParameters['keywordsOrNot'];
+        }
+
+        if (requestParameters['makenow'] != null) {
+            queryParameters['makenow'] = requestParameters['makenow'];
+        }
+
+        if (requestParameters['_new'] != null) {
+            queryParameters['new'] = requestParameters['_new'];
+        }
+
+        if (requestParameters['numRecent'] != null) {
+            queryParameters['num_recent'] = requestParameters['numRecent'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
+        }
+
+        if (requestParameters['random'] != null) {
+            queryParameters['random'] = requestParameters['random'];
+        }
+
+        if (requestParameters['rating'] != null) {
+            queryParameters['rating'] = requestParameters['rating'];
+        }
+
+        if (requestParameters['ratingGte'] != null) {
+            queryParameters['rating_gte'] = requestParameters['ratingGte'];
+        }
+
+        if (requestParameters['ratingLte'] != null) {
+            queryParameters['rating_lte'] = requestParameters['ratingLte'];
+        }
+
+        if (requestParameters['sortOrder'] != null) {
+            queryParameters['sort_order'] = requestParameters['sortOrder'];
+        }
+
+        if (requestParameters['timescooked'] != null) {
+            queryParameters['timescooked'] = requestParameters['timescooked'];
+        }
+
+        if (requestParameters['timescookedGte'] != null) {
+            queryParameters['timescooked_gte'] = requestParameters['timescookedGte'];
+        }
+
+        if (requestParameters['timescookedLte'] != null) {
+            queryParameters['timescooked_lte'] = requestParameters['timescookedLte'];
+        }
+
+        if (requestParameters['token'] != null) {
+            queryParameters['token'] = requestParameters['token'];
+        }
+
+        if (requestParameters['units'] != null) {
+            queryParameters['units'] = requestParameters['units'];
+        }
+
+        if (requestParameters['updatedon'] != null) {
+            queryParameters['updatedon'] = (requestParameters['updatedon'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['updatedonGte'] != null) {
+            queryParameters['updatedon_gte'] = (requestParameters['updatedonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['updatedonLte'] != null) {
+            queryParameters['updatedon_lte'] = (requestParameters['updatedonLte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['viewedonGte'] != null) {
+            queryParameters['viewedon_gte'] = (requestParameters['viewedonGte'] as any).toISOString().substring(0,10);
+        }
+
+        if (requestParameters['viewedonLte'] != null) {
+            queryParameters['viewedon_lte'] = (requestParameters['viewedonLte'] as any).toISOString().substring(0,10);
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseSocialRecipeSearchListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeList(requestParameters: ApiEnterpriseSocialRecipeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseSocialRecipeSearchList> {
+        const response = await this.apiEnterpriseSocialRecipeListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipePartialUpdateRaw(requestParameters: ApiEnterpriseSocialRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeToJSON(requestParameters['patchedRecipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipePartialUpdate(requestParameters: ApiEnterpriseSocialRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeRelatedListRaw(requestParameters: ApiEnterpriseSocialRecipeRelatedListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RecipeSimple>>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeRelatedList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/related/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(RecipeSimpleFromJSON));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeRelatedList(requestParameters: ApiEnterpriseSocialRecipeRelatedListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<RecipeSimple>> {
+        const response = await this.apiEnterpriseSocialRecipeRelatedListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeRetrieveRaw(requestParameters: ApiEnterpriseSocialRecipeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['share'] != null) {
+            queryParameters['share'] = requestParameters['share'];
+        }
+
+        if (requestParameters['token'] != null) {
+            queryParameters['token'] = requestParameters['token'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeRetrieve(requestParameters: ApiEnterpriseSocialRecipeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipeRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeShoppingUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeShoppingUpdate>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeShoppingUpdate().'
+            );
+        }
+
+        if (requestParameters['recipeShoppingUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'recipeShoppingUpdate',
+                'Required parameter "recipeShoppingUpdate" was null or undefined when calling apiEnterpriseSocialRecipeShoppingUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/shopping/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeShoppingUpdateToJSON(requestParameters['recipeShoppingUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeShoppingUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeShoppingUpdate(requestParameters: ApiEnterpriseSocialRecipeShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeShoppingUpdate> {
+        const response = await this.apiEnterpriseSocialRecipeShoppingUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeUpdate().'
+            );
+        }
+
+        if (requestParameters['recipe'] == null) {
+            throw new runtime.RequiredError(
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiEnterpriseSocialRecipeUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeToJSON(requestParameters['recipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeUpdate(requestParameters: ApiEnterpriseSocialRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipeUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCreateRaw(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['enterpriseSpace'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseSpace',
+                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseSpaceToJSON(requestParameters['enterpriseSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCreate(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCurrentRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/current/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceCurrentRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceCurrentRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceDestroyRaw(requestParameters: ApiEnterpriseSpaceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceDestroy(requestParameters: ApiEnterpriseSpaceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseSpaceDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceListRaw(requestParameters: ApiEnterpriseSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseSpaceList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseSpaceListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceList(requestParameters: ApiEnterpriseSpaceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseSpaceList> {
+        const response = await this.apiEnterpriseSpaceListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpacePartialUpdateRaw(requestParameters: ApiEnterpriseSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpacePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseSpaceToJSON(requestParameters['patchedEnterpriseSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpacePartialUpdate(requestParameters: ApiEnterpriseSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpacePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceRetrieveRaw(requestParameters: ApiEnterpriseSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceRetrieve(requestParameters: ApiEnterpriseSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceUpdateRaw(requestParameters: ApiEnterpriseSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
+        if (requestParameters['space'] == null) {
+            throw new runtime.RequiredError(
+                'space',
+                'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseSpace'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseSpace',
+                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseSpaceToJSON(requestParameters['enterpriseSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseSpaceUpdate(requestParameters: ApiEnterpriseSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+        const response = await this.apiEnterpriseSpaceUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiExportCreateRaw(requestParameters: ApiExportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
         if (requestParameters['exportRequest'] == null) {
             throw new runtime.RequiredError(
@@ -3973,6 +5746,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['root'] != null) {
             queryParameters['root'] = requestParameters['root'];
+        }
+
+        if (requestParameters['rootTree'] != null) {
+            queryParameters['root_tree'] = requestParameters['rootTree'];
         }
 
         if (requestParameters['tree'] != null) {
@@ -5453,6 +7230,10 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['root'] = requestParameters['root'];
         }
 
+        if (requestParameters['rootTree'] != null) {
+            queryParameters['root_tree'] = requestParameters['rootTree'];
+        }
+
         if (requestParameters['tree'] != null) {
             queryParameters['tree'] = requestParameters['tree'];
         }
@@ -6353,8 +8134,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataCategoryListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataCategory>>> {
+    async apiOpenDataCategoryListRaw(requestParameters: ApiOpenDataCategoryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataCategoryList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -6369,13 +8158,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataCategoryFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataCategoryListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataCategoryList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataCategory>> {
-        const response = await this.apiOpenDataCategoryListRaw(initOverrides);
+    async apiOpenDataCategoryList(requestParameters: ApiOpenDataCategoryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataCategoryList> {
+        const response = await this.apiOpenDataCategoryListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -6571,8 +8360,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataConversionListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataConversion>>> {
+    async apiOpenDataConversionListRaw(requestParameters: ApiOpenDataConversionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataConversionList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -6587,13 +8384,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataConversionFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataConversionListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataConversionList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataConversion>> {
-        const response = await this.apiOpenDataConversionListRaw(initOverrides);
+    async apiOpenDataConversionList(requestParameters: ApiOpenDataConversionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataConversionList> {
+        const response = await this.apiOpenDataConversionListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -6822,9 +8619,64 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
      */
-    async apiOpenDataFoodListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataFood>>> {
+    async apiOpenDataFoodFdcCreateRaw(requestParameters: ApiOpenDataFoodFdcCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataFood>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataFoodFdcCreate().'
+            );
+        }
+
+        if (requestParameters['openDataFood'] == null) {
+            throw new runtime.RequiredError(
+                'openDataFood',
+                'Required parameter "openDataFood" was null or undefined when calling apiOpenDataFoodFdcCreate().'
+            );
+        }
+
         const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/{id}/fdc/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataFoodToJSON(requestParameters['openDataFood']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataFoodFromJSON(jsonValue));
+    }
+
+    /**
+     * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
+     */
+    async apiOpenDataFoodFdcCreate(requestParameters: ApiOpenDataFoodFdcCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataFood> {
+        const response = await this.apiOpenDataFoodFdcCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataFoodListRaw(requestParameters: ApiOpenDataFoodListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataFoodList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -6839,13 +8691,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataFoodFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataFoodListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataFoodList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataFood>> {
-        const response = await this.apiOpenDataFoodListRaw(initOverrides);
+    async apiOpenDataFoodList(requestParameters: ApiOpenDataFoodListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataFoodList> {
+        const response = await this.apiOpenDataFoodListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7041,8 +8893,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataPropertyListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataProperty>>> {
+    async apiOpenDataPropertyListRaw(requestParameters: ApiOpenDataPropertyListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataPropertyList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -7057,13 +8917,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataPropertyFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataPropertyListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataPropertyList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataProperty>> {
-        const response = await this.apiOpenDataPropertyListRaw(initOverrides);
+    async apiOpenDataPropertyList(requestParameters: ApiOpenDataPropertyListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataPropertyList> {
+        const response = await this.apiOpenDataPropertyListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7286,8 +9146,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataStoreListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataStore>>> {
+    async apiOpenDataStoreListRaw(requestParameters: ApiOpenDataStoreListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataStoreList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -7302,13 +9170,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataStoreFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataStoreListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataStoreList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataStore>> {
-        const response = await this.apiOpenDataStoreListRaw(initOverrides);
+    async apiOpenDataStoreList(requestParameters: ApiOpenDataStoreListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataStoreList> {
+        const response = await this.apiOpenDataStoreListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7504,8 +9372,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataUnitListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataUnit>>> {
+    async apiOpenDataUnitListRaw(requestParameters: ApiOpenDataUnitListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataUnitList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -7520,13 +9396,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataUnitFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataUnitListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataUnitList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataUnit>> {
-        const response = await this.apiOpenDataUnitListRaw(initOverrides);
+    async apiOpenDataUnitList(requestParameters: ApiOpenDataUnitListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataUnitList> {
+        const response = await this.apiOpenDataUnitListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7722,8 +9598,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiOpenDataVersionListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataVersion>>> {
+    async apiOpenDataVersionListRaw(requestParameters: ApiOpenDataVersionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedOpenDataVersionList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -7738,13 +9622,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataVersionFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedOpenDataVersionListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiOpenDataVersionList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataVersion>> {
-        const response = await this.apiOpenDataVersionListRaw(initOverrides);
+    async apiOpenDataVersionList(requestParameters: ApiOpenDataVersionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedOpenDataVersionList> {
+        const response = await this.apiOpenDataVersionListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8343,6 +10227,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiPropertyUpdate(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeBatchUpdateUpdateRaw(requestParameters: ApiRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBatchUpdate>> {
+        if (requestParameters['recipeBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'recipeBatchUpdate',
+                'Required parameter "recipeBatchUpdate" was null or undefined when calling apiRecipeBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeBatchUpdateToJSON(requestParameters['recipeBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeBatchUpdateUpdate(requestParameters: ApiRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBatchUpdate> {
+        const response = await this.apiRecipeBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

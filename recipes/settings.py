@@ -221,10 +221,7 @@ try:
                             'module': f'recipes.plugins.{d}',
                             'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
                             'base_url': plugin_class.base_url,
-                            'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
                             'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
-                            'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
-                            'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
                         }
                         PLUGINS.append(plugin_config)
                         print(f'PLUGIN {d} loaded')
@@ -533,28 +530,6 @@ if REDIS_HOST:
 
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
-        'STATS_FILE': os.path.join(VUE_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-    },
-}
-
-for p in PLUGINS:
-    if p['bundle_name'] != '':
-        WEBPACK_LOADER[p['bundle_name']] = {
-            'CACHE': not DEBUG,
-            'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
-            'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
-            'POLL_INTERVAL': 0.1,
-            'TIMEOUT': None,
-            'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-        }
 
 DJANGO_VITE = {
     "default": {

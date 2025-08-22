@@ -9,13 +9,29 @@
         :is-changed="editingObjChanged"
         :model-class="modelClass"
         :object-name="editingObjName()">
+
+        <v-card-text class="pa-0">
+            <v-tabs v-model="tab" :disabled="loading" grow>
+                <v-tab value="keyword">{{ $t('Keyword') }}</v-tab>
+                <v-tab value="hierarchy">{{ $t('Hierarchy') }}</v-tab>
+            </v-tabs>
+        </v-card-text>
+
+
         <v-card-text>
-            <v-form :disabled="loading">
+            <v-tabs-window v-model="tab">
+                <v-tabs-window-item value="keyword">
+                    <v-form :disabled="loading">
 
-                <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
+                        <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
+                        <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
 
-            </v-form>
+                    </v-form>
+                </v-tabs-window-item>
+                <v-tabs-window-item value="hierarchy">
+                    <hierarchy-editor v-model="editingObj" :model="modelClass.model.name"></hierarchy-editor>
+                </v-tabs-window-item>
+            </v-tabs-window>
         </v-card-text>
     </model-editor-base>
 
@@ -23,10 +39,11 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, watch} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {Keyword} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import HierarchyEditor from "@/components/inputs/HierarchyEditor.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<Keyword>, required: false, default: null},
@@ -37,6 +54,8 @@ const props = defineProps({
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Keyword>('Keyword', emit)
+
+const tab = ref("keyword")
 
 /**
  * watch prop changes and re-initialize editor
@@ -55,7 +74,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 }
 

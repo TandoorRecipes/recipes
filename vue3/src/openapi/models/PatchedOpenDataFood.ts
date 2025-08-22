@@ -164,10 +164,10 @@ export interface PatchedOpenDataFood {
     propertiesSource?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedOpenDataFood
      */
-    fdcId?: string;
+    fdcId?: number;
     /**
      * 
      * @type {string}

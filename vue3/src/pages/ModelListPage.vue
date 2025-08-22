@@ -9,6 +9,7 @@
                 </v-card>
             </v-col>
         </v-row>
+
         <v-row dense>
             <v-col>
                 <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)">
@@ -35,7 +36,10 @@
         <v-row>
             <v-col>
                 <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery" clearable></v-text-field>
+
                 <v-data-table-server
+                    v-model="selectedItems"
+                    return-object
                     @update:options="loadItems"
                     :items="items"
                     :items-length="itemCount"
@@ -43,11 +47,26 @@
                     :search="searchQuery"
                     :headers="genericModel.getTableHeaders()"
                     :items-per-page-options="itemsPerPageOptions"
-                    :show-select="tableShowSelect"
+                    :show-select="!genericModel.model.disableDelete || genericModel.model.isMerge"
                     :page="tablePage"
                     :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
                     disable-sort
                 >
+                    <template v-slot:header.action v-if="selectedItems.length > 0">
+                        <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" color="info">
+                            <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
+                            <v-menu activator="parent" close-on-content-click>
+                                <v-list density="compact" class="pt-1 pb-1" activatable>
+                                    <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" @click="batchMergeDialog = true" v-if="genericModel.model.isMerge">
+                                        {{ $t('Merge') }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true" v-if="!genericModel.model.disableDelete">
+                                        {{ $t('Delete_All') }}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-btn>
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>
@@ -59,7 +78,7 @@
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
-                                        <model-merge-dialog :model="model" :source="item"
+                                        <model-merge-dialog :model="model" :source="[item]"
                                                             @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
@@ -84,6 +103,13 @@
                 </v-data-table-server>
             </v-col>
         </v-row>
+
+        <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
+                                                             @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></batch-delete-dialog>
+
+         <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
+                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
+
     </v-container>
 </template>
 
@@ -93,7 +119,7 @@
 import {onBeforeMount, PropType, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {EditorSupportedModels, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
+import {EditorSupportedModels, EditorSupportedTypes, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -101,10 +127,15 @@ import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
 import {ApiApi, RecipeImport} from "@/openapi";
+import {useTitle} from "@vueuse/core";
+import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
+import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
+import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
 
 const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
+const title = useTitle()
 
 const props = defineProps({
     model: {
@@ -121,7 +152,11 @@ const itemsPerPageOptions = [
 ]
 
 const tablePage = ref(1)
-const tableShowSelect = ref(false) // TODO enable once mass edit functions are implemented
+
+const selectedItems = ref([] as EditorSupportedTypes[])
+
+const batchDeleteDialog = ref(false)
+const batchMergeDialog = ref(false)
 
 // data
 const loading = ref(false);
@@ -160,6 +195,8 @@ onBeforeMount(() => {
         genericModel.value = getGenericModelFromString('Food', t)
     }
 
+    title.value = t(genericModel.value.model.localizationKey)
+
     if (typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
         tablePage.value = parseInt(route.query.page)
     }
@@ -173,6 +210,7 @@ onBeforeMount(() => {
 function loadItems(options: VDataTableUpdateOptions) {
 
     loading.value = true
+    selectedItems.value = []
     window.scrollTo({top: 0, behavior: 'smooth'})
 
     if (tablePage.value != options.page) {

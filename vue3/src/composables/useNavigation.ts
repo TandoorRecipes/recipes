@@ -25,7 +25,9 @@ export function useNavigation() {
         TANDOOR_PLUGINS.forEach(plugin => {
             plugin.navigationDrawer.forEach(navEntry => {
                 let navEntryCopy = Object.assign({}, navEntry)
-                navEntryCopy.title = t(navEntryCopy.title)
+                if ('title' in navEntryCopy) {
+                    navEntryCopy.title = t(navEntryCopy.title)
+                }
                 navigation.push(navEntryCopy)
             })
         })
@@ -44,7 +46,9 @@ export function useNavigation() {
         TANDOOR_PLUGINS.forEach(plugin => {
             plugin.bottomNavigation.forEach(navEntry => {
                 let navEntryCopy = Object.assign({}, navEntry)
-                navEntryCopy.title = t(navEntryCopy.title)
+                if ('title' in navEntryCopy) {
+                    navEntryCopy.title = t(navEntryCopy.title)
+                }
                 navigation.push(navEntryCopy)
             })
         })
@@ -80,7 +84,9 @@ export function useNavigation() {
         TANDOOR_PLUGINS.forEach(plugin => {
             plugin.userNavigation.forEach(navEntry => {
                 let navEntryCopy = Object.assign({}, navEntry)
-                navEntryCopy.title = t(navEntryCopy.title)
+                if ('title' in navEntryCopy) {
+                    navEntryCopy.title = t(navEntryCopy.title)
+                }
                 navigation.push(navEntryCopy)
             })
         })
