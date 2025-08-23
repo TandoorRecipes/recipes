@@ -110,7 +110,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -411,6 +411,7 @@ class MergeMixin(ViewSetMixin):
                          description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.',
                          type=int),
         OpenApiParameter(name='tree', description='Return all self and children of {obj} with ID [int].', type=int),
+        OpenApiParameter(name='root_tree', description='Return all items belonging to the tree of the given {obj} id', type=int),
     ]),
     move=extend_schema(parameters=[
         OpenApiParameter(name="parent", description='The ID of the desired parent of the {obj}.', type=OpenApiTypes.INT,
@@ -423,6 +424,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
     def get_queryset(self):
         root = self.request.query_params.get('root', None)
         tree = self.request.query_params.get('tree', None)
+        root_tree = self.request.query_params.get('root_tree', None)
 
         if root:
             if root.isnumeric():
@@ -441,10 +443,23 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
                     self.queryset = self.model.objects.get(id=int(tree)).get_descendants_and_self()
                 except self.model.DoesNotExist:
                     self.queryset = self.model.objects.none()
+        elif root_tree:
+            if root_tree.isnumeric():
+                try:
+                    self.queryset = self.model.objects.get(id=int(root_tree)).get_root().get_descendants_and_self()
+                except self.model.DoesNotExist:
+                    self.queryset = self.model.objects.none()
+
         else:
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request,
                                         serializer=self.serializer_class, tree=True)
-        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
+
+
+        self.queryset = self.queryset.filter(space=self.request.space)
+        # only order if not root_tree or tree mde because in these modes the sorting is relevant for the client
+        if not root_tree and not tree:
+            self.queryset = self.queryset.order_by(Lower('name').asc())
+
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class,
                                     tree=True)
@@ -1358,6 +1373,83 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                 Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()
 
         return Response(self.serializer_class(qs, many=True).data)
+
+    @decorators.action(detail=False, methods=['PUT'], serializer_class=RecipeBatchUpdateSerializer)
+    def batch_update(self, request):
+        serializer = self.serializer_class(data=request.data, partial=True)
+
+        if serializer.is_valid():
+            recipes = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space)
+            safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).values_list('id', flat=True)
+
+            if 'keywords_add' in serializer.validated_data:
+                keyword_relations = []
+                for r in recipes:
+                    for k in serializer.validated_data['keywords_add']:
+                        keyword_relations.append(Recipe.keywords.through(recipe_id=r.pk, keyword_id=k))
+                Recipe.keywords.through.objects.bulk_create(keyword_relations, ignore_conflicts=True, unique_fields=('recipe_id', 'keyword_id',))
+
+            if 'keywords_remove' in serializer.validated_data:
+                for k in serializer.validated_data['keywords_remove']:
+                    Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids, keyword_id=k).delete()
+
+            if 'keywords_set' in serializer.validated_data and len(serializer.validated_data['keywords_set']) > 0:
+                keyword_relations = []
+                Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                for r in recipes:
+                    for k in serializer.validated_data['keywords_set']:
+                        keyword_relations.append(Recipe.keywords.through(recipe_id=r.pk, keyword_id=k))
+                Recipe.keywords.through.objects.bulk_create(keyword_relations, ignore_conflicts=True, unique_fields=('recipe_id', 'keyword_id',))
+
+            if 'keywords_remove_all' in serializer.validated_data and serializer.validated_data['keywords_remove_all']:
+                Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+
+            if 'working_time' in serializer.validated_data:
+                recipes.update(working_time=serializer.validated_data['working_time'])
+
+            if 'waiting_time' in serializer.validated_data:
+                recipes.update(waiting_time=serializer.validated_data['waiting_time'])
+
+            if 'servings' in serializer.validated_data:
+                recipes.update(servings=serializer.validated_data['servings'])
+
+            if 'servings_text' in serializer.validated_data:
+                recipes.update(servings_text=serializer.validated_data['servings_text'])
+
+            if 'private' in serializer.validated_data and serializer.validated_data['private'] is not None:
+                recipes.update(private=serializer.validated_data['private'])
+
+            if 'shared_add' in serializer.validated_data:
+                shared_relation = []
+                for r in recipes:
+                    for u in serializer.validated_data['shared_add']:
+                        shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
+
+            if 'shared_remove' in serializer.validated_data:
+                for s in serializer.validated_data['shared_remove']:
+                    Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids, user_id=s).delete()
+
+            if 'shared_set' in serializer.validated_data and len(serializer.validated_data['shared_set']) > 0:
+                shared_relation = []
+                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                for r in recipes:
+                    for u in serializer.validated_data['shared_set']:
+                        shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
+
+            if 'shared_remove_all' in serializer.validated_data and serializer.validated_data['shared_remove_all']:
+                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+
+            if 'clear_description' in serializer.validated_data and serializer.validated_data['clear_description']:
+                recipes.update(description='')
+
+            if 'show_ingredient_overview' in serializer.validated_data and serializer.validated_data['show_ingredient_overview'] is not None:
+                recipes.update(show_ingredient_overview=serializer.validated_data['show_ingredient_overview'])
+
+            return Response({}, 200)
+
+        return Response(serializer.errors, 400)
 
 
 @extend_schema_view(list=extend_schema(

@@ -123,6 +123,8 @@
                             </template>
                         </v-list>
 
+                        <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 120px;"></v-spacer>
                     </v-col>
                 </v-row>
 
@@ -180,7 +182,8 @@
                                     <template #append>
                                         <v-btn icon="$create" color="create" :disabled="manualAddRecipe == undefined">
                                             <v-icon icon="$create"></v-icon>
-                                            <add-to-shopping-dialog :recipe="manualAddRecipe" v-if="manualAddRecipe != undefined" @created="useShoppingStore().refreshFromAPI(); manualAddRecipe = undefined"></add-to-shopping-dialog>
+                                            <add-to-shopping-dialog :recipe="manualAddRecipe" v-if="manualAddRecipe != undefined"
+                                                                    @created="useShoppingStore().refreshFromAPI(); manualAddRecipe = undefined"></add-to-shopping-dialog>
                                         </v-btn>
                                     </template>
                                 </ModelSelect>

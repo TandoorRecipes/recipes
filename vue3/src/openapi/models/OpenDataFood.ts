@@ -164,10 +164,10 @@ export interface OpenDataFood {
     propertiesSource?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof OpenDataFood
      */
-    fdcId: string;
+    fdcId?: number;
     /**
      * 
      * @type {string}
@@ -193,7 +193,6 @@ export function instanceOfOpenDataFood(value: object): value is OpenDataFood {
     if (!('storeCategory' in value) || value['storeCategory'] === undefined) return false;
     if (!('properties' in value) || value['properties'] === undefined) return false;
     if (!('propertiesFoodUnit' in value) || value['propertiesFoodUnit'] === undefined) return false;
-    if (!('fdcId' in value) || value['fdcId'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
@@ -222,7 +221,7 @@ export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'propertiesFoodAmount': json['properties_food_amount'] == null ? undefined : json['properties_food_amount'],
         'propertiesFoodUnit': OpenDataUnitFromJSON(json['properties_food_unit']),
         'propertiesSource': json['properties_source'] == null ? undefined : json['properties_source'],
-        'fdcId': json['fdc_id'],
+        'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
         'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': json['created_by'],
     };

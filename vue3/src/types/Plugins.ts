@@ -1,4 +1,5 @@
 import {RouteRecordRaw} from "vue-router";
+import {Component} from "vue";
 
 export type TandoorPlugin = {
     name: string,
@@ -10,6 +11,8 @@ export type TandoorPlugin = {
     navigationDrawer: any[],
     bottomNavigation: any[],
     userNavigation: any[],
+
+    databasePageComponent?: Component,
 
     disabled?: boolean
 }

@@ -1,5 +1,6 @@
 import os
 import re
+import subprocess
 from datetime import datetime, timedelta
 from io import StringIO
 from uuid import UUID
@@ -13,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.cache import caches
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied, BadRequest
 from django.core.management import call_command
 from django.db import models
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
@@ -238,11 +239,12 @@ def system(request):
 
         for x in r.zrange('api:space-request-count', 0, 20, withscores=True, desc=True):
             s = x[0].decode('utf-8')
-            space_stats = [Space.objects.get(pk=s).name, x[1]]
-            for i in range(0, 6):
-                d = (date.today() - timedelta(days=i)).isoformat()
-                space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
-            api_space_stats.append(space_stats)
+            if space := Space.objects.filter(pk=s).first():
+                space_stats = [space.name, x[1]]
+                for i in range(0, 6):
+                    d = (date.today() - timedelta(days=i)).isoformat()
+                    space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
+                api_space_stats.append(space_stats)
 
     cache_response = caches['default'].get(f'system_view_test_cache_entry', None)
     if not cache_response:
@@ -264,6 +266,22 @@ def system(request):
             'missing_migration': missing_migration,
             'cache_response': cache_response,
         })
+
+
+def plugin_update(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    if not 'module' in request.GET:
+        raise BadRequest
+
+    for p in PLUGINS:
+        if p['module'] == request.GET['module']:
+            update_response = subprocess.check_output(['git', 'pull'], cwd=p['base_path'])
+            print(update_response)
+            return HttpResponseRedirect(reverse('view_system'))
+
+    return HttpResponseRedirect(reverse('view_system'))
 
 
 def setup(request):
