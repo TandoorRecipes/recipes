@@ -14,13 +14,13 @@
     },
     {
       "label": "Setup Dev Server",
-      "dependsOn": ["Run Migrations", "Yarn Build"]
+      "dependsOn": ["Run Migrations"]
     },
     {
       "label": "Run Dev Server",
       "type": "shell", 
       "dependsOn": ["Setup Dev Server"],
-      "command": "python3 manage.py runserver"
+      "command": "DEBUG=1 python3 manage.py runserver"
     },
     {
       "label": "Yarn Install",
