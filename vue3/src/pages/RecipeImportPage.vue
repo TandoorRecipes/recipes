@@ -60,7 +60,7 @@
                                         </v-card>
                                     </v-col>
 
-                                    <v-col cols="12" md="6">
+                                    <v-col cols="12" md="6" v-if="useUserPreferenceStore().serverSettings.enableAiImport">
                                         <v-card
                                             :title="$t('AI')"
                                             :subtitle="$t('AIImportSubtitle')"
@@ -71,8 +71,6 @@
                                             @click="importType = 'ai'"
                                             :disabled="!useUserPreferenceStore().serverSettings.enableAiImport">
                                         </v-card>
-                                        <!-- TODO temporary until AI backend system is improved -->
-                                        <v-label class="font-italic" v-if="!useUserPreferenceStore().serverSettings.enableAiImport">Set AI_API_KEY on server to use AI</v-label>
                                     </v-col>
 
                                     <v-col cols="12" md="6">
