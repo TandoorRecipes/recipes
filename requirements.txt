@@ -5,7 +5,7 @@ bleach==6.2.0
 cryptography===45.0.6
 crispy-bootstrap4==2025.6
 Django==4.2.23
-django-allauth==65.10.0
+django-allauth==65.11.0
 django-annoying==0.10.8
 django-auth-ldap==5.2.0
 django-cleanup==9.0.0
