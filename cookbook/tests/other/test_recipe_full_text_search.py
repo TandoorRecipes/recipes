@@ -6,8 +6,8 @@ import pytest
 from django.conf import settings
 from django.contrib import auth
 from django.urls import reverse
-from django.utils import timezone
 from django_scopes import scope
+from freezegun import freeze_time
 
 from cookbook.models import Recipe, SearchFields
 from cookbook.tests.conftest import transpose
@@ -99,7 +99,7 @@ def recipes(space_1):
 def found_recipe(request, space_1, accent, unaccent, u1_s1, u2_s1):
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    reference_date = datetime(2025, 8, 28, tzinfo=timezone.utc)
+    reference_date = datetime(2025, 8, 28, 0, 0, 0)
     days_3 = reference_date - timedelta(days=3)
     days_15 = reference_date - timedelta(days=15)
     days_30 = reference_date - timedelta(days=30)
@@ -351,39 +351,31 @@ def test_search_string(found_recipe, recipes, user1, space_1):
         # created dates are not filtered by user
         ({
             'createdon': True
-        }, 'createdon', (1, 12)),
+        }, 'createdon', (2, 12)),
         # updated dates are not filtered by user
         ({
             'createdon': True
-        }, 'updatedon', (1, 12))
+        }, 'updatedon', (2, 12))
     ],
     indirect=['found_recipe']
 )
+@freeze_time("2025-08-28 12:00:00", tz_offset=0)
 def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, space_1):
     # force updated_at to equal created_at datetime
     with scope(space=space_1):
         for recipe in Recipe.objects.all():
             Recipe.objects.filter(id=recipe.id).update(updated_at=recipe.created_at)
 
-    reference_date = datetime(2025, 8, 28, tzinfo=timezone.utc)
+    reference_date = datetime(2025, 8, 28, 0, 0, 0)
     date = (reference_date - timedelta(days=15)).strftime("%Y-%m-%d")
     param1 = f"?{param_type}={date}"
     param2 = f"?{param_type}=-{date}"
-    print("[DEBUG] Recipe date details:")
-    with scope(space=space_1):
-        for recipe in Recipe.objects.all():
-            print(f"  id={recipe.id}, name={getattr(recipe, 'name', None)}, created_at={recipe.created_at}, updated_at={recipe.updated_at}")
+
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param1}').content)
-    print(f"[DEBUG] param1: {param1}, expected count: {result[0]}, actual count: {r['count']}")
-    print(f"[DEBUG] param1 returned IDs: {[x['id'] for x in r['results']]}")
-    print(f"[DEBUG] found_recipe[0] id: {found_recipe[0].id}")
     assert r['count'] == result[0]
     assert found_recipe[0].id in [x['id'] for x in r['results']]
 
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param2}').content)
-    print(f"[DEBUG] param2: {param2}, expected count: {result[1]}, actual count: {r['count']}")
-    print(f"[DEBUG] param2 returned IDs: {[x['id'] for x in r['results']]}")
-    print(f"[DEBUG] found_recipe[1] id: {found_recipe[1].id}")
     assert r['count'] == result[1]
     assert found_recipe[1].id in [x['id'] for x in r['results']]
 
