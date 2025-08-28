@@ -63,8 +63,8 @@
                             </v-col>
                         </v-row>
 
-<!--                        <closable-help-alert :text="$t('RecipeStepsHelp')" :action-text="$t('Steps')" @click="tab='steps'"></closable-help-alert>-->
-                        <v-btn @click="tab='steps'" class="float-right" variant="tonal" append-icon="fa-solid fa-arrow-right">{{$t('Steps')}} </v-btn>
+                        <!--                        <closable-help-alert :text="$t('RecipeStepsHelp')" :action-text="$t('Steps')" @click="tab='steps'"></closable-help-alert>-->
+                        <v-btn @click="tab='steps'" class="float-right" variant="tonal" append-icon="fa-solid fa-arrow-right">{{ $t('Steps') }}</v-btn>
                     </v-form>
 
                 </v-tabs-window-item>
@@ -77,12 +77,17 @@
                         </v-row>
                         <v-row>
                             <v-col class="text-center">
-                                <v-btn-group density="compact">
+                                <v-btn-group density="compact" divided border>
                                     <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
                                     <v-btn color="warning" @click="dialogStepManager = true">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
+
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
+
+
                             </v-col>
                         </v-row>
 
@@ -101,7 +106,7 @@
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
                         <v-checkbox :label="$t('Private_Recipe')" persistent-hint :hint="$t('Private_Recipe_Help')" v-model="editingObj._private"></v-checkbox>
-                        <model-select mode="tags" model="User" :label="$t('Share')"  persistent-hint v-model="editingObj.shared"
+                        <model-select mode="tags" model="User" :label="$t('Share')" persistent-hint v-model="editingObj.shared"
                                       append-to-body v-if="editingObj._private"></model-select>
 
                     </v-form>
@@ -110,7 +115,7 @@
         </v-card-text>
         <v-card-text v-if="isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
             <v-alert color="warning" icon="fa-solid fa-triangle-exclamation">
-                {{$t('SpaceLimitReached')}}
+                {{ $t('SpaceLimitReached') }}
                 <v-btn color="success" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
             </v-alert>
         </v-card-text>
@@ -152,6 +157,7 @@ import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import SpaceSettings from "@/components/settings/SpaceSettings.vue";
+import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
 
 
 const props = defineProps({
@@ -188,7 +194,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
@@ -247,6 +253,18 @@ function sortSteps() {
  */
 function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
+}
+
+function handleMergeAllSteps(): void {
+    if (editingObj.value.steps) {
+        mergeAllSteps(editingObj.value.steps)
+    }
+}
+
+function handleSplitAllSteps(): void {
+    if (editingObj.value.steps) {
+        splitAllSteps(editingObj.value.steps, '\n')
+    }
 }
 
 </script>
