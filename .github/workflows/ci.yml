@@ -99,7 +99,7 @@ jobs:
 
       # Testing
       - name: Django Testing
-        run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml --ignore-warnings
+        run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml --disable-warnings
 
       # Upload test results
       - name: Upload Test Results
