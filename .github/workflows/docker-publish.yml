@@ -10,8 +10,6 @@ jobs:
   build-container:
     concurrency:
       group: docker-build-${{ github.ref }}
-      cancel-in-progress: true
-
     name: Build Tandoor Container
     runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.continue-on-error }}

@@ -7,11 +7,8 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: orchestrator-${{ github.ref_name }}
-  cancel-in-progress: true
-
 jobs:
+
   detect-pr-merge:
     runs-on: ubuntu-latest
     permissions:

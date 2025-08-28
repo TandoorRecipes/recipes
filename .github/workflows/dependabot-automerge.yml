@@ -7,10 +7,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: automerge-runner
-  cancel-in-progress: false
-
 jobs:
   validate:
     if: contains(github.event.pull_request.labels.*.name, 'automerge') && github.event.pull_request.user.login != 'dependabot[bot]'
