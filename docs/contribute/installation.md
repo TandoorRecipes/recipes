@@ -1,7 +1,5 @@
-<!-- prettier-ignore-start -->
 !!! info "Development Setup"
     The dev setup is a little messy as this application combines the best (at least in my opinion) of both Django and Vue.js.
-<!-- prettier-ignore-end -->
 
 ### Devcontainer Setup
 
@@ -32,17 +30,15 @@ populated from default values.
 
 ### Vue.js
 
-<!-- prettier-ignore-start -->
-!!! warning "Feature Freeze"
-    With the exception of bug fixes, no changes will be accepted on the legacy `vue` front-end.
-<!-- prettier-ignore-end -->
+!!! danger "Development Setup"
+    The vite dev server **must** be started before the django runserver command is run or else django will **not** recognize it and try to fallback to the build files. 
 
-Most new frontend pages are build using [Vue.js](https://vuejs.org/).
+The frontend is build using [Vue.js](https://vuejs.org/).
 
 In order to work on these pages, you will have to install a Javascript package manager of your choice. The following examples use yarn.
 
-In the `vue` folder run `yarn install` followed by `yarn build` to install and build the legacy front-end.
-In the `vue3` folder run `yarn install` followed by `yarn build` to install and build the new front-end.
+1. go to the `vue3` and run `yarn install` to install the dependencies  
+2. run `yarn serve` to start the dev server that allows hot reloading and easy and quick development
 
-After that you can use `yarn serve` from the `vue3` folder to start the development server, and proceed to test your changes.
-If you do not wish to work on those pages, but instead want the application to work properly during development, run `yarn build` to build the frontend pages once.
+If you do not wish to work on those pages, but instead want the application to work properly during development, run `yarn build` to build the frontend pages once. After that you 
+might need to run `python manage.py collectstatic` to setup the static files.
