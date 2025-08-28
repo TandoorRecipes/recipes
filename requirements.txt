@@ -1,6 +1,6 @@
 aiohttp==3.12.15
-beautifulsoup4==4.13.4
-boto3==1.40.15
+beautifulsoup4==4.13.5
+boto3==1.40.16
 bleach==6.2.0
 cryptography===45.0.6
 crispy-bootstrap4==2025.6
@@ -27,7 +27,7 @@ gunicorn==23.0.0
 icalendar==6.3.1
 inflection==0.5.1
 Jinja2==3.1.6
-lxml==6.0.0
+lxml==6.0.1
 Markdown==3.8.2
 microdata==0.8.0
 mock==5.2.0
@@ -53,6 +53,7 @@ whitenoise==6.9.0
 # Development
 autopep8==2.3.2
 flake8==7.3.0
+freezegun==1.5.5
 pytest==8.4.1
 pytest-asyncio==1.1.0
 pytest-cov===6.2.1

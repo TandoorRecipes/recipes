@@ -1,13 +1,13 @@
 import itertools
 import json
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from django.conf import settings
 from django.contrib import auth
 from django.urls import reverse
-from django.utils import timezone
 from django_scopes import scope
+from freezegun import freeze_time
 
 from cookbook.models import Recipe, SearchFields
 from cookbook.tests.conftest import transpose
@@ -99,18 +99,18 @@ def recipes(space_1):
 def found_recipe(request, space_1, accent, unaccent, u1_s1, u2_s1):
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    days_3 = timezone.now() - timedelta(days=3)
-    days_15 = timezone.now() - timedelta(days=15)
-    days_30 = timezone.now() - timedelta(days=30)
+    reference_date = datetime(2025, 8, 28, 0, 0, 0)
+    days_3 = reference_date - timedelta(days=3)
+    days_15 = reference_date - timedelta(days=15)
+    days_30 = reference_date - timedelta(days=30)
     if request.param.get('createdon', None):
         recipe1 = RecipeFactory.create(space=space_1, created_at=days_3)
         recipe2 = RecipeFactory.create(space=space_1, created_at=days_30)
         recipe3 = RecipeFactory.create(space=space_1, created_at=days_15)
-
     else:
-        recipe1 = RecipeFactory.create(space=space_1)
-        recipe2 = RecipeFactory.create(space=space_1)
-        recipe3 = RecipeFactory.create(space=space_1)
+        recipe1 = RecipeFactory.create(space=space_1, created_at=reference_date)
+        recipe2 = RecipeFactory.create(space=space_1, created_at=reference_date)
+        recipe3 = RecipeFactory.create(space=space_1, created_at=reference_date)
     obj1 = None
     obj2 = None
 
@@ -351,23 +351,26 @@ def test_search_string(found_recipe, recipes, user1, space_1):
         # created dates are not filtered by user
         ({
             'createdon': True
-        }, 'createdon', (1, 12)),
+        }, 'createdon', (2, 12)),
         # updated dates are not filtered by user
         ({
             'createdon': True
-        }, 'updatedon', (1, 12))
+        }, 'updatedon', (2, 12))
     ],
     indirect=['found_recipe']
 )
+@freeze_time("2025-08-28 12:00:00", tz_offset=0)
 def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, space_1):
     # force updated_at to equal created_at datetime
     with scope(space=space_1):
         for recipe in Recipe.objects.all():
             Recipe.objects.filter(id=recipe.id).update(updated_at=recipe.created_at)
 
-    date = (timezone.now() - timedelta(days=15)).strftime("%Y-%m-%d")
+    reference_date = datetime(2025, 8, 28, 0, 0, 0)
+    date = (reference_date - timedelta(days=15)).strftime("%Y-%m-%d")
     param1 = f"?{param_type}={date}"
     param2 = f"?{param_type}=-{date}"
+
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param1}').content)
     assert r['count'] == result[0]
     assert found_recipe[0].id in [x['id'] for x in r['results']]
