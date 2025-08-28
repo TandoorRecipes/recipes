@@ -369,8 +369,9 @@ def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, sp
     param1 = f"?{param_type}={date}"
     param2 = f"?{param_type}=-{date}"
     print("[DEBUG] Recipe date details:")
-    for recipe in Recipe.objects.all():
-        print(f"  id={recipe.id}, name={getattr(recipe, 'name', None)}, created_at={recipe.created_at}, updated_at={recipe.updated_at}")
+    with scope(space=space_1):
+        for recipe in Recipe.objects.all():
+            print(f"  id={recipe.id}, name={getattr(recipe, 'name', None)}, created_at={recipe.created_at}, updated_at={recipe.updated_at}")
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param1}').content)
     print(f"[DEBUG] param1: {param1}, expected count: {result[0]}, actual count: {r['count']}")
     print(f"[DEBUG] param1 returned IDs: {[x['id'] for x in r['results']]}")
