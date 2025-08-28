@@ -4,7 +4,7 @@
         <v-card-title>{{ $t('Activity') }}</v-card-title>
         <v-card-text>
             <v-list>
-                <v-list-item v-for="c in cookLogs.sort((a,b) =>  a.createdAt! > b.createdAt! ? 1 : -1)" :key="c.id">
+                <v-list-item v-for="c in cookLogs" :key="c.id">
                     <template #prepend>
                         <v-avatar color="primary">V</v-avatar>
                     </template>
@@ -88,7 +88,7 @@ function refreshActivity() {
     api.apiCookLogList({recipe: props.recipe.id}).then(r => {
         // TODO pagination
         if (r.results) {
-            cookLogs.value = r.results
+            cookLogs.value = r.results.sort((a,b) =>  a.createdAt! > b.createdAt! ? 1 : -1)
         }
     })
 }
