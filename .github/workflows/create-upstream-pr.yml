@@ -1,4 +1,4 @@
-name: Stage Branch for PR
+name: Create Upstream PR
 
 on:
   workflow_run:
@@ -11,7 +11,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 jobs:
   create-upstream-pr:
@@ -132,8 +131,7 @@ jobs:
         id: get_files
         run: |
           BRANCH_NAME="${{ steps.create_branch.outputs.branch_name }}"
-          INFRA_PATTERNS='^\.github/|^cookbook/version_info\.py$|^\.gitattributes$'
-          CHANGED_FILES=$(git diff upstream/tandoor-1..$BRANCH_NAME --name-only | grep -Ev "$INFRA_PATTERNS" || true)
+          CHANGED_FILES=$(git diff upstream/tandoor-1..$BRANCH_NAME --name-only)
           echo "changed_files<<EOF" >> $GITHUB_OUTPUT
           printf "%s\n" "$CHANGED_FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -144,17 +142,8 @@ jobs:
         id: summarize_changes
         run: |
           CODE_COUNT=${{ steps.get_files.outputs.code_count }}
-          CHANGED_FILES="${{ steps.get_files.outputs.changed_files }}"
-          if [ "$CODE_COUNT" -eq 0 ]; then
-            CHANGES_SUMMARY="No code files changed. No PR required."
-          else
-            CHANGES_SUMMARY="Modified $CODE_COUNT code files"
-            CHANGES_SUMMARY+=$'\nFiles changed:'
-            CHANGES_SUMMARY+=$'\n'$(echo "$CHANGED_FILES" | sed '/^$/d; s/^/- /')
-          fi
-          echo "changes_summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          CHANGES_SUMMARY="Modified $CODE_COUNT code files"
+          echo "changes_summary=$CHANGES_SUMMARY" >> $GITHUB_OUTPUT
 
       - name: Prepare commit subjects and JSON
         id: prepare_commits
@@ -222,47 +211,25 @@ jobs:
             for (const c of commits) {
               prBody += `- ${c.subject} ([${c.sha}](https://github.com/${owner}/${reponame}/commit/${c.sha}))\n`;
             }
+            prBody += `\n---\n`;
             core.setOutput('prTitle', prTitle);
             core.setOutput('prBody', prBody);
 
 
-      - name: Open issue for PR checklist
-        if: steps.get_files.outputs.code_count != '0' && steps.prepare_commits.outputs.commit_subjects != ''
-        uses: actions/github-script@v7
+      - name: Print PR creation instructions
+        if: steps.get_commits.outputs.has_changes == 'true'
         env:
           BRANCH_NAME: ${{ steps.create_branch.outputs.branch_name }}
           PR_TITLE: ${{ steps.build_pr_content.outputs.prTitle }}
           PR_BODY: ${{ steps.build_pr_content.outputs.prBody }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const branch = process.env.BRANCH_NAME || '';
-            const prTitle = process.env.PR_TITLE || '';
-            const prBody = process.env.PR_BODY || '';
-            const repo = process.env.GITHUB_REPOSITORY || '';
-            const [owner, reponame] = repo.split('/');
-            const prLink = `https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${owner}:${branch}?expand=1&title=${encodeURIComponent(prTitle)}`;
-            const issueTitle = `Manual Upstream PR Checklist: ${branch}`;
-            const issueBody = [
-              `A new branch is ready for upstream PR submission.`,
-              '',
-              `- [ ] Submit PR: [Create PR](${prLink})`,
-              '- [ ] PR merged',
-              '- [ ] Branch deleted',
-              '',
-              '**Suggested PR title:**',
-              '```',
-              prTitle,
-              '```',
-              '**Suggested PR body:**',
-              '```',
-              prBody,
-              '```',
-            ].join('\n');
-            await github.rest.issues.create({
-              owner,
-              repo: reponame,
-              title: issueTitle,
-              body: issueBody
-            });
+        run: |
+          echo "✅ Branch pushed: $BRANCH_NAME"
+          echo
+          echo "To create a pull request, open:"
+          echo "https://github.com/TandoorRecipes/recipes/compare/tandoor-1...${{ github.repository_owner }}:$BRANCH_NAME?expand=1"
+          echo
+          echo "Suggested PR title:"
+          echo "$PR_TITLE"
+          echo
+          echo "Suggested PR body:"
+          echo "$PR_BODY"
