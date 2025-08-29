@@ -28,6 +28,7 @@
                         <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </v-sheet>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
+                    <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
                     <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" half-increments readonly></v-rating>
                     <v-sheet class="ps-2 text-disabled">
                         {{ recipe.description }}
@@ -84,6 +85,8 @@
                             <p>
                                 <i>{{ recipe.description }}</i>
                             </p>
+
+                           <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
 
                             <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" readonly></v-rating>
 
@@ -204,6 +207,7 @@ import PropertyView from "@/components/display/PropertyView.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useFileApi} from "@/composables/useFileApi.ts";
+import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()

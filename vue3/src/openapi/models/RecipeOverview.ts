@@ -100,6 +100,12 @@ export interface RecipeOverview {
     readonly internal: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof RecipeOverview
+     */
+    _private?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof RecipeOverview
      */
@@ -179,6 +185,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
         'internal': json['internal'],
+        '_private': json['private'] == null ? undefined : json['private'],
         'servings': json['servings'],
         'servingsText': json['servings_text'],
         'rating': json['rating'],
@@ -197,6 +204,7 @@ export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'keywo
         'id': value['id'],
         'name': value['name'],
         'description': value['description'],
+        'private': value['_private'],
     };
 }
 
