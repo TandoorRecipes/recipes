@@ -216,6 +216,10 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             theme.change('light')
         } else if (userSettings.value.theme == 'TANDOOR_DARK') {
             theme.change('dark')
+        } else if (userSettings.value.theme == 'TANDOOR_DRACULA') {
+            theme.change('dracula')
+        } else {
+            theme.change('light')
         }
     }
 

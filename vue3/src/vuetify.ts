@@ -72,6 +72,28 @@ export default createVuetify({
                     recipeImagePlaceholderBg: '#212121',
                 },
             },
+            dracula: {
+                dark: true,
+                colors: {
+                    background: '#282a36',
+                    surface: '#44475a',
+                    tandoor: '#bd93f9',
+                    primary: '#bd93f9',
+                    secondary: '#ff79c6',
+                    success: '#50fa7b',
+                    info: '#8be9fd',
+                    warning: '#ffb86c',
+                    error: '#ff5555',
+
+                    save: '#50fa7b',
+                    create: '#50fa7b',
+                    edit: '#8be9fd',
+                    delete: '#ff5555',
+                    cancel: '#ffb86c',
+
+                    recipeImagePlaceholderBg: '#44475a',
+                },
+            },
         },
     },
     icons: {

@@ -277,6 +277,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     BLANK = 'BLANK'
     TANDOOR = 'TANDOOR'
     TANDOOR_DARK = 'TANDOOR_DARK'
+    TANDOOR_DRACULA = 'TANDOOR_DRACULA'
     BOOTSTRAP = 'BOOTSTRAP'
     DARKLY = 'DARKLY'
     FLATLY = 'FLATLY'
@@ -290,6 +291,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         (FLATLY, 'Flatly'),
         (SUPERHERO, 'Superhero'),
         (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
+        (TANDOOR_DRACULA, 'Dracula'),
     )
 
     LIGHT = 'LIGHT'
@@ -426,6 +428,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     SUPERHERO = 'SUPERHERO'
     TANDOOR = 'TANDOOR'
     TANDOOR_DARK = 'TANDOOR_DARK'
+    TANDOOR_DRACULA = 'TANDOOR_DRACULA'
 
     THEMES = (
         (TANDOOR, 'Tandoor'),
@@ -434,6 +437,7 @@ class UserPreference(models.Model, PermissionModelMixin):
         (FLATLY, 'Flatly'),
         (SUPERHERO, 'Superhero'),
         (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
+        (TANDOOR_DRACULA, 'Dracula'),
     )
 
     # Nav colors

@@ -27,6 +27,7 @@ def get_theming_values(request):
     themes = {
         UserPreference.TANDOOR: 'themes/tandoor.min.css',
         UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
+        UserPreference.TANDOOR_DRACULA: 'themes/tandoor_dracula.min.css',
     }
     nav_text_type_mapping = {Space.DARK: 'navbar-light',
                              Space.LIGHT: 'navbar-dark'}  # inverted since navbar-dark means the background
