@@ -1,111 +1,86 @@
 name: Continuous Integration
 
-on:
-  workflow_dispatch:
-  workflow_call:
+on: 
+  push:
+    branches: [disabled]
   pull_request:
-    branches: [ "main", "master", "working" ]
+    branches: [disabled]
 
-# Cancel redundant runs
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    permissions:
-      contents: read
-      actions: read
+    build:
+        if: github.repository_owner == 'TandoorRecipes'
+        runs-on: ubuntu-latest
+        strategy:
+            max-parallel: 4
+            matrix:
+                python-version: ["3.10"]
+                node-version: ["18"]
 
-    strategy:
-      fail-fast: false
-      max-parallel: 4
-      matrix:
-        # 3.13 CI disabled due until https://github.com/TandoorRecipes/recipes/issues/3784 resolved
-        # python-version: ["3.12", "3.13"]
-        python-version: ["3.12"]
-        node-version: ["20"]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: awalsh128/cache-apt-pkgs-action@v1.4.3
+              with:
+                  packages: libsasl2-dev python3-dev libxml2-dev libxmlsec1-dev libxslt-dev libxmlsec1-openssl libldap2-dev libssl-dev gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
+                  version: 1.0
 
-    steps:
-      - uses: actions/checkout@v4
+            # Setup python & dependencies
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v5
+              with:
+                  python-version: ${{ matrix.python-version }}
+                  cache: "pip"
 
-      - uses: awalsh128/cache-apt-pkgs-action@5902b33ae29014e6ca012c5d8025d4346556bd40  # v1.4.3
-        with:
-          packages: libsasl2-dev python3-dev libxml2-dev libxmlsec1-dev libxslt-dev libxmlsec1-openssl libldap2-dev libssl-dev gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
-          version: 1.0
+            - name: Install Python Dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
 
-      # Setup python & dependencies
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
+            - name: Cache StaticFiles
+              uses: actions/cache@v4
+              id: django_cache
+              with:
+                  path: |
+                      ./cookbook/static
+                      ./vue/webpack-stats.json
+                      ./staticfiles
+                  key: |
+                      ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
 
-      - name: Install Python Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+            # Build Vue frontend & Dependencies
+            - name: Set up Node ${{ matrix.node-version }}
+              if: steps.django_cache.outputs.cache-hit != 'true'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "yarn"
+                  cache-dependency-path: ./vue/yarn.lock
 
-      - name: Cache StaticFiles
-        uses: actions/cache@v4
-        id: django_cache
-        with:
-          path: |
-            ./cookbook/static
-            ./vue/webpack-stats.json
-            ./staticfiles
-          key: |
-            ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
+            - name: Install Vue dependencies
+              if: steps.django_cache.outputs.cache-hit != 'true'
+              working-directory: ./vue
+              run: yarn install
 
-      # Build Vue frontend & Dependencies
-      - name: Set up Node ${{ matrix.node-version }}
-        if: steps.django_cache.outputs.cache-hit != 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-          cache-dependency-path: ./vue/yarn.lock
+            - name: Build Vue dependencies
+              if: steps.django_cache.outputs.cache-hit != 'true'
+              working-directory: ./vue
+              run: yarn build
 
-      - name: Install Vue dependencies
-        if: steps.django_cache.outputs.cache-hit != 'true'
-        working-directory: ./vue
-        run: yarn install
+            - name: Compile Django StaticFiles
+              if: steps.django_cache.outputs.cache-hit != 'true'
+              run: |
+                  python3 manage.py collectstatic --noinput
+                  python3 manage.py collectstatic_js_reverse
 
-      - name: Build Vue dependencies
-        if: steps.django_cache.outputs.cache-hit != 'true'
-        working-directory: ./vue
-        run: yarn build
+            - uses: actions/cache/save@v4
+              if: steps.django_cache.outputs.cache-hit != 'true'
+              with:
+                  path: |
+                      ./cookbook/static
+                      ./vue/webpack-stats.json
+                      ./staticfiles
+                  key: |
+                      ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
 
-      - name: Compile Django StaticFiles
-        if: steps.django_cache.outputs.cache-hit != 'true'
-        run: |
-          python3 manage.py collectstatic --noinput
-          python3 manage.py collectstatic_js_reverse
-
-      - uses: actions/cache/save@v4
-        if: steps.django_cache.outputs.cache-hit != 'true'
-        with:
-          path: |
-            ./cookbook/static
-            ./vue/webpack-stats.json
-            ./staticfiles
-          key: |
-            ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
-
-      # Testing
-      - name: Django Testing
-        run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml --disable-warnings
-
-      # Upload test results
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results-${{ matrix.python-version }}-${{ matrix.node-version }}
-          path: junit/test-results-*.xml
-          retention-days: 7
+            - name: Django Testing project
+              run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
