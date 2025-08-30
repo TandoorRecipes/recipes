@@ -4,6 +4,8 @@ import traceback
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+#TODO clean existing links for when plugins are uninstalled or not necessary because it will just be empty links?
+
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
 if os.path.isdir(PLUGINS_DIRECTORY):
     for d in os.listdir(PLUGINS_DIRECTORY):
