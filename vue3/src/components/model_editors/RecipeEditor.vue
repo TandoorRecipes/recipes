@@ -79,12 +79,12 @@
                             <v-col class="text-center">
                                 <v-btn-group density="compact" divided border>
                                     <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
-                                    <v-btn color="warning" @click="dialogStepManager = true">
+                                    <v-btn color="warning" @click="dialogStepManager = true" :disabled="editingObj.steps.length < 2">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
 
-                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
 
 

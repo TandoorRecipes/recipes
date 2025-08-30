@@ -43,6 +43,12 @@ export interface ParsedIngredient {
      * @memberof ParsedIngredient
      */
     note: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParsedIngredient
+     */
+    originalText: string;
 }
 
 /**
@@ -53,6 +59,7 @@ export function instanceOfParsedIngredient(value: object): value is ParsedIngred
     if (!('unit' in value) || value['unit'] === undefined) return false;
     if (!('food' in value) || value['food'] === undefined) return false;
     if (!('note' in value) || value['note'] === undefined) return false;
+    if (!('originalText' in value) || value['originalText'] === undefined) return false;
     return true;
 }
 
@@ -70,6 +77,7 @@ export function ParsedIngredientFromJSONTyped(json: any, ignoreDiscriminator: bo
         'unit': json['unit'],
         'food': json['food'],
         'note': json['note'],
+        'originalText': json['original_text'],
     };
 }
 
@@ -83,6 +91,7 @@ export function ParsedIngredientToJSON(value?: ParsedIngredient | null): any {
         'unit': value['unit'],
         'food': value['food'],
         'note': value['note'],
+        'original_text': value['originalText'],
     };
 }
 

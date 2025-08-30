@@ -2507,7 +2507,7 @@ def meal_plans_to_ical(queryset, filename):
     request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
     responses=inline_serializer(name="ParsedIngredientSerializer",
                                 fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(),
-                                        'note': CharField()})
+                                        'note': CharField(), 'original_text': CharField()})
 )
 @api_view(['POST'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
@@ -2517,7 +2517,7 @@ def ingredient_from_string(request):
     ingredient_parser = IngredientParser(request, False)
     amount, unit, food, note = ingredient_parser.parse(text)
 
-    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note}
+    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note, 'original_text': text}
     if food:
         food, created = Food.objects.get_or_create(space=request.space, name=food)
         ingredient['food'] = {'name': food.name, 'id': food.id}
