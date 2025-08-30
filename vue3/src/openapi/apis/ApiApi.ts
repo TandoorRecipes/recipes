@@ -1941,6 +1941,7 @@ export interface ApiUnitConversionListRequest {
     foodId?: number;
     page?: number;
     pageSize?: number;
+    query?: string;
 }
 
 export interface ApiUnitConversionPartialUpdateRequest {
@@ -14490,6 +14491,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

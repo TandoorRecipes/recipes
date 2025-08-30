@@ -1453,7 +1453,8 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(
-    parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int), ]))
+    parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int),
+                OpenApiParameter(name='query', description='query that looks into food, base unit or converted unit by name', type=str), ]))
 class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UnitConversion.objects
     serializer_class = UnitConversionSerializer
@@ -1464,6 +1465,10 @@ class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
         food_id = self.request.query_params.get('food_id', None)
         if food_id is not None:
             self.queryset = self.queryset.filter(food_id=food_id)
+
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            self.queryset = self.queryset.filter(Q(food__name__icontains=query) | Q(base_unit__name__icontains=query) | Q(converted_unit__name__icontains=query))
 
         return self.queryset.filter(space=self.request.space)
 
