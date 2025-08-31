@@ -10,7 +10,7 @@
 
     <v-row>
         <v-col>
-            <v-textarea :model-value="importLog.msg"></v-textarea>
+            <v-textarea :model-value="importLog.msg" max-rows="25" auto-grow></v-textarea>
         </v-col>
     </v-row>
 

@@ -581,10 +581,11 @@ export const TCookLog = {
     localizationKeyDescription: 'CookLogHelp',
     icon: 'fa-solid fa-table-list',
 
-    isPaginated: true,
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/CookLogEditor.vue`)),
+
     disableCreate: true,
-    disableUpdate: true,
-    disableDelete: true,
+
+    isPaginated: true,
     toStringKeys: ['recipe'],
 
     tableHeaders: [

@@ -32,10 +32,10 @@ To contribute to the project you are required to use the following packages with
 
 ## Testing
 
-Django uses pytest-django to implement a full suite of testing. If you make any functional changes, please implment the appropriate
+Django uses pytest-django to implement a full suite of testing. If you make any functional changes, please implement the appropriate
 tests.
 
-Tandoor is also actively soliciting contribors willing to setup vue3 testing. If you have knowledge in this area it would be greatly appreciated.
+Tandoor is also actively soliciting contributors willing to setup vue3 testing. If you have knowledge in this area it would be greatly appreciated.
 
 ## API Client
 
@@ -44,9 +44,7 @@ Tandoor is also actively soliciting contribors willing to setup vue3 testing. If
      The OpenAPI Generator is a Java project. You must have the java binary executable available on your PATH for this to work.
 
 Tandoor uses [django-rest-framework](https://www.django-rest-framework.org/) for API implementation. Making contributions that impact the API requires an understanding of
-Viewsets and Serializers.
-
-Also double check that your changes are actively reflected in the schema so that client apis are generated accurately.
+ViewSets and Serializers.
 
 The API Client is generated automatically from the OpenAPI interface provided by the Django REST framework.
 For this [openapi-generator](https://github.com/OpenAPITools/openapi-generator) is used.
@@ -55,17 +53,9 @@ Install it using your desired setup method. (For example, using `npm install @op
 
 ### Vue
 
-Navigate to `vue/src/utils/openapi`.
-
-Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/`. (Replace your dev server url if required.)
-
-### Vue3
-
-Navigate to `vue3/src/openapi`.
-
-Generate the schema using `openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/`. (Replace your dev server url if required.)
+Generate the schema using the `generate_api_client.py` script in the main directory. 
 
 ## Install and Configuration
 
-Instructions for [VSCode](/docs/contribute/vscode)
-Instructions for [PyCharm](/docs/contribute/pycharm)
+Instructions for [VSCode](/contribute/vscode)
+Instructions for [PyCharm](/contribute/pycharm)

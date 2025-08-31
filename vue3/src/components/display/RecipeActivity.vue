@@ -1,40 +1,11 @@
 <template>
-
-    <v-card class="mt-1" v-if="cookLogs.length > 0">
-        <v-card-title>{{ $t('Activity') }}</v-card-title>
-        <v-card-text>
-            <v-list>
-                <v-list-item v-for="c in cookLogs.sort((a,b) =>  a.createdAt! > b.createdAt! ? 1 : -1)" :key="c.id">
-                    <template #prepend>
-                        <v-avatar color="primary">V</v-avatar>
-                    </template>
-                    <v-list-item-title class="font-weight-bold">{{ c.createdBy.displayName }}
-                        <v-rating density="comfortable" size="x-small" color="tandoor" class="float-right" v-model="c.rating" readonly v-if="c.rating != undefined"></v-rating>
-                    </v-list-item-title>
-
-                    {{ c.comment }}
-
-                    <p v-if="c.servings != null && c.servings > 0">
-                        {{ c.servings }}
-                        <span v-if="recipe.servingsText != ''">{{ recipe.servingsText }}</span>
-                        <span v-else-if="c.servings == 1">{{ $t('Serving') }}</span>
-                        <span v-else>{{ $t('Servings') }}</span>
-                    </p>
-
-                    <p class="text-disabled">
-                        {{ DateTime.fromJSDate(c.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
-                    </p>
-                </v-list-item>
-            </v-list>
-        </v-card-text>
-    </v-card>
-
-    <v-card class="mt-1 d-print-none" v-if="useUserPreferenceStore().isAuthenticated">
+    <v-card class="mt-1 d-print-none" v-if="useUserPreferenceStore().isAuthenticated" :loading="loading">
         <v-card-text>
             <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment"></v-textarea>
-            <v-row de>
+            <v-row dense>
                 <v-col cols="12" md="4">
-                    <v-label>{{$t('Rating')}}</v-label><br/>
+                    <v-label>{{ $t('Rating') }}</v-label>
+                    <br/>
                     <v-rating v-model="newCookLog.rating" clearable hover density="compact"></v-rating>
                 </v-col>
                 <v-col cols="12" md="4">
@@ -52,6 +23,48 @@
         </v-card-actions>
     </v-card>
 
+    <v-card class="mt-1" v-if="cookLogs.length > 0" :loading="loading">
+        <v-card-title>{{ $t('Activity') }}</v-card-title>
+        <v-card-text>
+            <v-list>
+                <v-list-item class="border-t-sm" v-for="c in cookLogs" :key="c.id" :link="c.createdBy.id == useUserPreferenceStore().userSettings?.user.id">
+                    <template #prepend>
+                        <v-avatar color="primary">{{ c.createdBy.displayName.charAt(0) }}</v-avatar>
+                    </template>
+                    <v-list-item-title class="font-weight-bold">
+                        {{ c.createdBy.displayName }}
+
+                    </v-list-item-title>
+                    <v-list-item-subtitle>{{ c.comment }}</v-list-item-subtitle>
+
+                    <v-list-item-subtitle class="font-italic mt-1" v-if="c.servings != null && c.servings > 0">
+
+                        {{ c.servings }}
+                        <span v-if="recipe.servingsText != ''">{{ recipe.servingsText }}</span>
+                        <span v-else-if="c.servings == 1">{{ $t('Serving') }}</span>
+                        <span v-else>{{ $t('Servings') }}</span>
+
+                    </v-list-item-subtitle>
+
+                    <template #append>
+                        <v-list-item-action class="flex-column align-end">
+                            <v-rating density="comfortable" size="x-small" color="tandoor" v-model="c.rating" half-increments readonly
+                                      v-if="c.rating != undefined"></v-rating>
+                            <v-spacer></v-spacer>
+                            <v-tooltip location="top" :text="DateTime.fromJSDate(c.createdAt).toLocaleString(DateTime.DATETIME_MED)" v-if="c.createdAt != undefined">
+                                <template v-slot:activator="{ props }">
+                                    <span v-bind="props">{{ DateTime.fromJSDate(c.createdAt).toRelative({style: 'narrow'}) }}</span>
+                                </template>
+                            </v-tooltip>
+
+                        </v-list-item-action>
+                    </template>
+                    <model-edit-dialog model="CookLog" :item="c" v-if="c.createdBy.id == useUserPreferenceStore().userSettings?.user.id" @save="recLoadCookLog(props.recipe.id)" @delete="recLoadCookLog(props.recipe.id)"></model-edit-dialog>
+                </v-list-item>
+            </v-list>
+        </v-card-text>
+    </v-card>
+
 
 </template>
 
@@ -63,6 +76,7 @@ import {DateTime} from "luxon";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {VDateInput} from 'vuetify/labs/VDateInput'
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const props = defineProps({
     recipe: {
@@ -74,21 +88,31 @@ const props = defineProps({
 const newCookLog = ref({} as CookLog);
 
 const cookLogs = ref([] as CookLog[])
+const loading = ref(false)
 
 onMounted(() => {
-    refreshActivity()
+    recLoadCookLog(props.recipe.id)
     resetForm()
 })
 
 /**
- * load cook logs from database for given recipe
+ * recursively load cook logs from database for given recipe
  */
-function refreshActivity() {
+function recLoadCookLog(recipeId: number, page: number = 1) {
     const api = new ApiApi()
-    api.apiCookLogList({recipe: props.recipe.id}).then(r => {
-        // TODO pagination
+    loading.value = true
+    if(page == 1){
+        cookLogs.value = []
+    }
+    api.apiCookLogList({recipe: props.recipe.id, page: page}).then(r => {
         if (r.results) {
-            cookLogs.value = r.results
+            cookLogs.value = cookLogs.value.concat(r.results)
+            if (r.next) {
+                recLoadCookLog(recipeId, page + 1)
+            } else {
+                cookLogs.value = cookLogs.value.sort((a, b) => a.createdAt! > b.createdAt! ? 1 : -1)
+                loading.value = false
+            }
         }
     })
 }

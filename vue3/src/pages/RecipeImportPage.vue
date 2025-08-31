@@ -60,7 +60,7 @@
                                         </v-card>
                                     </v-col>
 
-                                    <v-col cols="12" md="6">
+                                    <v-col cols="12" md="6" v-if="useUserPreferenceStore().serverSettings.enableAiImport">
                                         <v-card
                                             :title="$t('AI')"
                                             :subtitle="$t('AIImportSubtitle')"
@@ -71,8 +71,6 @@
                                             @click="importType = 'ai'"
                                             :disabled="!useUserPreferenceStore().serverSettings.enableAiImport">
                                         </v-card>
-                                        <!-- TODO temporary until AI backend system is improved -->
-                                        <v-label class="font-italic" v-if="!useUserPreferenceStore().serverSettings.enableAiImport">Set AI_API_KEY on server to use AI</v-label>
                                     </v-col>
 
                                     <v-col cols="12" md="6">
@@ -274,8 +272,8 @@
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
                                             <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()"><span v-if="!mobile">{{ $t('Auto_Sort') }}</span></v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="splitAllSteps('\n')"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="mergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
@@ -568,6 +566,7 @@ import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import bookmarkletJs from '@/assets/bookmarklet_v3?url'
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
+import {mergeAllSteps, splitAllSteps, splitStep} from "@/utils/step_utils.ts";
 
 function doListImport() {
     urlList.value = urlListImportInput.value.split('\n')
@@ -811,67 +810,15 @@ function deleteStep(step: SourceImportStep) {
     }
 }
 
-/**
- * utility function used by splitAllSteps and splitStep to split a single step object into multiple step objects
- * @param step step to split
- * @param split_character character to use as a delimiter between steps
- */
-function splitStepObject(step: SourceImportStep, split_character: string) {
-    let steps: SourceImportStep[] = []
-    step.instruction.split(split_character).forEach(part => {
-        if (part.trim() !== '') {
-            steps.push({instruction: part, ingredients: [], showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!})
-        }
-    })
-    steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
-    return steps
-}
-
-/**
- * Splits all steps of a given recipe_json at the split character (e.g. \n or \n\n)
- * @param split_character character to split steps at
- */
-function splitAllSteps(split_character: string) {
-    let steps: SourceImportStep[] = []
-    if (importResponse.value.recipe) {
-        importResponse.value.recipe.steps.forEach(step => {
-            steps = steps.concat(splitStepObject(step, split_character))
-        })
-        importResponse.value.recipe.steps = steps
-    } else {
-        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
-    }
-
-}
-
-/**
- * Splits the given step at the split character (e.g. \n or \n\n)
- * @param step step to split
- * @param split_character character to use as a delimiter between steps
- */
-function splitStep(step: SourceImportStep, split_character: string) {
-    if (importResponse.value.recipe) {
-        let old_index = importResponse.value.recipe.steps.findIndex(x => x === step)
-        let new_steps = splitStepObject(step, split_character)
-        importResponse.value.recipe.steps.splice(old_index, 1, ...new_steps)
-    } else {
-        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+function handleMergeAllSteps(): void {
+    if (importResponse.value.recipe && importResponse.value.recipe.steps){
+        mergeAllSteps(importResponse.value.recipe.steps)
     }
 }
 
-/**
- * Merge all steps of a given recipe_json into one
- */
-function mergeAllSteps() {
-    let step = {instruction: '', ingredients: [], showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as SourceImportStep
-    if (importResponse.value.recipe) {
-        importResponse.value.recipe.steps.forEach(s => {
-            step.instruction += s.instruction + '\n'
-            step.ingredients = step.ingredients.concat(s.ingredients)
-        })
-        importResponse.value.recipe.steps = [step]
-    } else {
-        useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
+function handleSplitAllSteps(): void {
+    if (importResponse.value.recipe && importResponse.value.recipe.steps){
+        splitAllSteps(importResponse.value.recipe.steps, '\n')
     }
 }
 
