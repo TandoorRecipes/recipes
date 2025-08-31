@@ -454,12 +454,10 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request,
                                         serializer=self.serializer_class, tree=True)
 
-
         self.queryset = self.queryset.filter(space=self.request.space)
         # only order if not root_tree or tree mde because in these modes the sorting is relevant for the client
         if not root_tree and not tree:
             self.queryset = self.queryset.order_by(Lower('name').asc())
-
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class,
                                     tree=True)
@@ -2524,11 +2522,18 @@ def ingredient_from_string(request):
 
     ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note, 'original_text': text}
     if food:
-        food, created = Food.objects.get_or_create(space=request.space, name=food)
-        ingredient['food'] = {'name': food.name, 'id': food.id}
+        if food_obj := Food.objects.filter(space=request.space).filter(Q(name=food) | Q(plural_name=food)).first():
+            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
+        else:
+            food_obj = Food.objects.create(space=request.space, name=food)
+            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
 
     if unit:
-        unit, created = Unit.objects.get_or_create(space=request.space, name=unit)
+        if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
+            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
+        else:
+            unit_obj = Unit.objects.create(space=request.space, name=unit)
+            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
         ingredient['unit'] = {'name': unit.name, 'id': unit.id}
 
     return JsonResponse(ingredient, status=200)
