@@ -787,7 +787,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         if plural_name := validated_data.pop('plural_name', None):
             plural_name = plural_name.strip()
 
-        if food := Food.objects.filter(Q(name__iequals=name) | Q(plural_name__iequals=name)).first():
+        if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name)).first():
             return food
 
         space = validated_data.pop('space', self.context['request'].space)
