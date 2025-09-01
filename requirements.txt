@@ -33,7 +33,7 @@ recipe-scrapers==15.8.0
 django-scopes==2.0.0
 django-treebeard==4.7.1
 django-cors-headers==4.6.0
-django-storages==1.14.2
+django-storages==1.14.6
 boto3==1.28.75
 django-prometheus==2.3.1
 django-hCaptcha==0.2.0
