@@ -46,6 +46,6 @@
     "workbox-routing": "^7.3.0",
     "workbox-strategies": "^7.3.0",
     "vite-plugin-vuetify": "^2.1.1",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^3.0.6"
   }
 }
