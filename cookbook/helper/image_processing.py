@@ -77,6 +77,8 @@ def handle_image(request, image_object, filetype):
         file_format = 'JPEG'
     if filetype == '.png':
         file_format = 'PNG'
+    if filetype == '.webp':
+        file_format = 'WEBP'
 
     if (image_object.size / 1000) > 500:  # if larger than 500 kb compress
         if filetype == '.jpeg' or filetype == '.jpg':
