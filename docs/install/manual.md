@@ -196,6 +196,7 @@ server {
         proxy_set_header Host $http_host;
         proxy_pass http://unix:/var/www/recipes/recipes.sock;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $remote_addr;
     }
 }
 ```
