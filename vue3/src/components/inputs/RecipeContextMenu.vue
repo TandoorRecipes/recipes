@@ -6,9 +6,8 @@
                 <v-list-item :to="{ name: 'ModelEditPage', params: {model: 'recipe', id: recipe.id} }" prepend-icon="$edit">
                     {{ $t('Edit') }}
                 </v-list-item>
-                <v-list-item prepend-icon="$mealplan" link>
+                <v-list-item prepend-icon="$mealplan" @click="mealPlanDialog = true">
                     {{ $t('Add_to_Plan') }}
-                    <model-edit-dialog model="MealPlan" :itemDefaults="{recipe: recipe, servings: recipe.servings}"></model-edit-dialog>
                 </v-list-item>
                 <v-list-item prepend-icon="$shopping" link>
                     {{ $t('Add_to_Shopping') }}
@@ -30,11 +29,12 @@
         </v-menu>
     </v-btn>
 
+    <model-edit-dialog model="MealPlan" :itemDefaults="{recipe: recipe, servings: recipe.servings}" :close-after-create="false" :close-after-save="false" v-model="mealPlanDialog"></model-edit-dialog>
 
 </template>
 
 <script setup lang="ts">
-import {nextTick, PropType} from 'vue'
+import {nextTick, PropType, ref} from 'vue'
 import {Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
@@ -45,6 +45,8 @@ const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeOverview>, required: true},
     size: {type: String, default: 'medium'},
 })
+
+const mealPlanDialog = ref(false)
 
 function openPrintView() {
     print()
