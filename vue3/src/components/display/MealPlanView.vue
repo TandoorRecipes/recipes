@@ -131,9 +131,9 @@ function refreshVisiblePeriod(startDateUnknown: boolean) {
 
     // load backwards to as on initial
     if (startDateUnknown) {
-        useMealPlanStore().refreshFromAPI(DateTime.fromJSDate(calendarDate.value).minus({days: days}).toJSDate(), DateTime.now().plus({days: days}).toJSDate())
+        useMealPlanStore().refreshFromAPI(DateTime.fromJSDate(calendarDate.value).minus({days: days}).toJSDate(), DateTime.fromJSDate(calendarDate.value).plus({days: days}).toJSDate())
     } else {
-        useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.now().plus({days: days}).toJSDate())
+        useMealPlanStore().refreshFromAPI(calendarDate.value, DateTime.fromJSDate(calendarDate.value).plus({days: days}).toJSDate())
     }
 }
 

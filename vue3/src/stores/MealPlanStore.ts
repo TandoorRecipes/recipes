@@ -51,6 +51,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
 
     function refreshFromAPI(from_date: Date, to_date: Date) {
+        console.log('refresh from api', from_date, to_date)
         if (currently_updating.value[0] !== from_date || currently_updating.value[1] !== to_date) {
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
             loading.value = true
