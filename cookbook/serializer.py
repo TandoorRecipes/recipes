@@ -1245,8 +1245,8 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 
 class AutoMealPlanSerializer(serializers.Serializer):
-    start_date = serializers.DateField()
-    end_date = serializers.DateField()
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
     meal_type_id = serializers.IntegerField()
     keyword_ids = serializers.ListField()
     servings = CustomDecimalField()

@@ -16,6 +16,9 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     const loading = ref(false)
     let settings = ref({})
 
+    const lastStartDate = ref(new Date())
+    const lastEndDate = ref(new Date())
+
     const planList = computed(() => {
         let plan_list = [] as MealPlan[]
 
@@ -49,10 +52,18 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //     return this.settings
     // })
 
+    /**
+     * based on the last API refresh period, refresh the meal plan list
+     */
+    function refreshLastUpdatedPeriod() {
+        refreshFromAPI(lastStartDate.value, lastEndDate.value)
+    }
 
     function refreshFromAPI(from_date: Date, to_date: Date) {
-        console.log('refresh from api', from_date, to_date)
         if (currently_updating.value[0] !== from_date || currently_updating.value[1] !== to_date) {
+            lastStartDate.value = from_date
+            lastEndDate.value = to_date
+
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
             loading.value = true
             const api = new ApiApi()
@@ -148,7 +159,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //         return JSON.parse(s)
     //     }
     // }
-    return {plans, currently_updating, planList, loading, refreshFromAPI, createObject, updateObject, deleteObject, createOrUpdate}
+    return {plans, currently_updating, planList, loading, refreshFromAPI, createObject, updateObject, deleteObject, refreshLastUpdatedPeriod, createOrUpdate}
 })
 
 // enable hot reload for store
