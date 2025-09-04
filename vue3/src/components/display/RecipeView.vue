@@ -36,8 +36,7 @@
                 </v-card>
             </v-card>
 
-            <!-- only display values if not all are default (e.g. for external recipes) -->
-            <v-card class="mt-1" v-if="recipe.workingTime != 0 || recipe.waitingTime != 0 || recipe.servings != 1">
+            <v-card class="mt-1">
                 <v-container>
                     <v-row class="text-center text-body-2">
                         <v-col class="pt-1 pb-1">
