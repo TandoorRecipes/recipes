@@ -1449,6 +1449,22 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return Response(serializer.errors, 400)
 
+    @extend_schema(responses=RecipeSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
+    def delete_external(self, request, pk):
+        obj = self.get_object()
+        if obj.get_space() != request.space and has_group_permission(request.user, ['user']):
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+
+        if obj.storage:
+            get_recipe_provider(obj).delete_file(obj)
+            obj.storage = None
+            obj.file_path = ''
+            obj.file_uid = ''
+            obj.save()
+
+        return Response(self.serializer_class(obj, many=False, context={'request': request}).data)
+
 
 @extend_schema_view(list=extend_schema(
     parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int),

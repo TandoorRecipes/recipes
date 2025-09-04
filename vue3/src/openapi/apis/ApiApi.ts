@@ -759,6 +759,11 @@ export interface ApiEnterpriseSocialRecipeCreateRequest {
     recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
 }
 
+export interface ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
 export interface ApiEnterpriseSocialRecipeDestroyRequest {
     id: number;
 }
@@ -1510,6 +1515,11 @@ export interface ApiRecipeBookUpdateRequest {
 
 export interface ApiRecipeCreateRequest {
     recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiRecipeDeleteExternalPartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
 }
 
 export interface ApiRecipeDestroyRequest {
@@ -4408,6 +4418,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseSocialRecipeCreate(requestParameters: ApiEnterpriseSocialRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiEnterpriseSocialRecipeCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeDeleteExternalPartialUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeDeleteExternalPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/delete_external/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeToJSON(requestParameters['patchedRecipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeDeleteExternalPartialUpdate(requestParameters: ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipeDeleteExternalPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -10816,6 +10866,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiRecipeCreate(requestParameters: ApiRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipeCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeDeleteExternalPartialUpdateRaw(requestParameters: ApiRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeDeleteExternalPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/{id}/delete_external/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeToJSON(requestParameters['patchedRecipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeDeleteExternalPartialUpdate(requestParameters: ApiRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiRecipeDeleteExternalPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

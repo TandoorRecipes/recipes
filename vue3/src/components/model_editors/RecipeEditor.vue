@@ -83,8 +83,10 @@
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
 
-                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
+                                        v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
+                                        v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
 
 
@@ -108,6 +110,15 @@
                         <v-checkbox :label="$t('Private_Recipe')" persistent-hint :hint="$t('Private_Recipe_Help')" v-model="editingObj._private"></v-checkbox>
                         <model-select mode="tags" model="User" :label="$t('Share')" persistent-hint v-model="editingObj.shared"
                                       append-to-body v-if="editingObj._private"></model-select>
+
+                        <div class="mt-2" v-if="editingObj.filePath">
+                            {{ $t('ExternalRecipe') }}
+                            <v-text-field readonly v-model="editingObj.filePath"></v-text-field>
+
+                            <v-btn prepend-icon="$delete" color="error" :loading="loading">{{ $t('delete_title', {type: $t('ExternalRecipe')}) }}
+                                <delete-confirm-dialog :object-name="editingObj.filePath" :model-name="$t('ExternalRecipe')" @delete="deleteExternalFile()"></delete-confirm-dialog>
+                            </v-btn>
+                        </div>
 
                     </v-form>
                 </v-tabs-window-item>
@@ -143,7 +154,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, shallowRef, watch} from "vue";
-import {Ingredient, Recipe, Step} from "@/openapi";
+import {ApiApi, Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -156,8 +167,9 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import SpaceSettings from "@/components/settings/SpaceSettings.vue";
 import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
+import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 
 
 const props = defineProps({
@@ -265,6 +277,21 @@ function handleSplitAllSteps(): void {
     if (editingObj.value.steps) {
         splitAllSteps(editingObj.value.steps, '\n')
     }
+}
+
+/**
+ * deletes the external file for the recipe
+ */
+function deleteExternalFile() {
+    let api = new ApiApi()
+    loading.value = true
+    api.apiRecipeDeleteExternalPartialUpdate({id: editingObj.value.id!, patchedRecipe: editingObj.value}).then(r => {
+        editingObj.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+    }).finally(() => {
+        loading.value = false
+    })
 }
 
 </script>
