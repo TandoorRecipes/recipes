@@ -22,9 +22,9 @@
                         <v-btn class="float-right" icon="$create" color="create" v-if="!genericModel.model.disableCreate">
                             <i class="fa-solid fa-plus"></i>
                             <model-edit-dialog :close-after-create="false" :model="model"
-                                               @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"
-                                               @save="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"
-                                               @delete="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-edit-dialog>
+                                               @create="loadItems({page: page})"
+                                               @save="loadItems({page: page })"
+                                               @delete="loadItems({page: page})"></model-edit-dialog>
                         </v-btn>
                     </template>
                     <v-card-actions v-if="genericModel.model.name == 'RecipeImport'">
@@ -35,7 +35,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery" clearable></v-text-field>
+                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="query" clearable></v-text-field>
 
                 <v-data-table-server
                     v-model="selectedItems"
@@ -44,12 +44,12 @@
                     :items="items"
                     :items-length="itemCount"
                     :loading="loading"
-                    :search="searchQuery"
+                    :search="query"
                     :headers="genericModel.getTableHeaders()"
                     :items-per-page-options="itemsPerPageOptions"
                     :show-select="!genericModel.model.disableDelete || genericModel.model.isMerge"
-                    :page="tablePage"
-                    :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
+                    :page="page"
+                    :items-per-page="pageSize"
                     disable-sort
                 >
                     <template v-slot:header.action v-if="selectedItems.length > 0">
@@ -79,7 +79,7 @@
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
                                         <model-merge-dialog :model="model" :source="[item]"
-                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
+                                                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
                                                  v-if="genericModel.model.name == 'Food'">
@@ -105,10 +105,10 @@
         </v-row>
 
         <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
-                                                             @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></batch-delete-dialog>
+                                                             @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-delete-dialog>
 
          <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
-                                                            @change="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery})"></model-merge-dialog>
+                                                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
 
     </v-container>
 </template>
@@ -126,11 +126,12 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
-import {ApiApi, RecipeImport} from "@/openapi";
+import {ApiApi, ApiRecipeListRequest, RecipeImport} from "@/openapi";
 import {useTitle} from "@vueuse/core";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
+import {useRouteQuery} from "@vueuse/router";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -151,7 +152,9 @@ const itemsPerPageOptions = [
     {value: 50, title: '50'},
 ]
 
-const tablePage = ref(1)
+const query = useRouteQuery('query', "")
+const page = useRouteQuery('page', 1, {transform: Number})
+const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
 
 const selectedItems = ref([] as EditorSupportedTypes[])
 
@@ -162,25 +165,14 @@ const batchMergeDialog = ref(false)
 const loading = ref(false);
 const items = ref([] as Array<any>)
 const itemCount = ref(0)
-const searchQuery = ref('')
 
 const genericModel = ref({} as GenericModel)
-
-/**
- * watch route changes (trough navigation) and set table page accordingly
- */
-watch(() => route.query.page, () => {
-    if (!loading.value && typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
-        tablePage.value = parseInt(route.query.page)
-    }
-})
 
 // when navigating to ModelListPage from ModelListPage with a different model lifecycle hooks are not called so watch for change here
 watch(() => props.model, (newValue, oldValue) => {
     if (newValue != oldValue) {
         genericModel.value = getGenericModelFromString(props.model, t)
-        tablePage.value = 1
-        loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
+        loadItems({page: 1})
     }
 })
 
@@ -196,10 +188,6 @@ onBeforeMount(() => {
     }
 
     title.value = t(genericModel.value.model.localizationKey)
-
-    if (typeof route.query.page == "string" && !isNaN(parseInt(route.query.page))) {
-        tablePage.value = parseInt(route.query.page)
-    }
 })
 
 /**
@@ -208,23 +196,14 @@ onBeforeMount(() => {
  * @param options
  */
 function loadItems(options: VDataTableUpdateOptions) {
-
     loading.value = true
     selectedItems.value = []
     window.scrollTo({top: 0, behavior: 'smooth'})
 
-    if (tablePage.value != options.page) {
-        tablePage.value = options.page
-    }
-    if (route.query.page == undefined) {
-        router.replace({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
-    } else {
-        router.push({name: 'ModelListPage', params: {model: props.model}, query: {page: options.page}})
-    }
+    page.value = options.page
+    pageSize.value = options.itemsPerPage
 
-    useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = options.itemsPerPage
-
-    genericModel.value.list({page: options.page, pageSize: options.itemsPerPage, query: options.search}).then((r: any) => {
+    genericModel.value.list({ query: query.value, page: options.page, pageSize: pageSize.value }).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
@@ -232,16 +211,6 @@ function loadItems(options: VDataTableUpdateOptions) {
     }).finally(() => {
         loading.value = false
     })
-}
-
-/**
- * change models and reset page/scroll
- * @param m
- */
-function changeModel(m: Model) {
-    tablePage.value = 1
-    router.push({name: 'ModelListPage', params: {model: m.name.toLowerCase()}, query: {page: 1}})
-    window.scrollTo({top: 0, behavior: 'smooth'})
 }
 
 // model specific functions
@@ -253,7 +222,7 @@ function changeModel(m: Model) {
 function importRecipe(item: RecipeImport) {
     let api = new ApiApi()
     api.apiRecipeImportImportRecipeCreate({id: item.id!, recipeImport: item}).then(r => {
-        loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
+        loadItems({page: 1})
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })
@@ -266,7 +235,7 @@ function importAllRecipes() {
     let api = new ApiApi()
 
     api.apiRecipeImportImportAllCreate({recipeImport: {} as RecipeImport}).then(r => {
-        loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, search: searchQuery.value})
+        loadItems({page: 1})
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })

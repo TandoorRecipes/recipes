@@ -1,4 +1,4 @@
-import {Ingredient, Recipe} from "@/openapi";
+import {Food, Ingredient, Recipe, Unit} from "@/openapi";
 
 /**
  * returns a string representing an ingredient
@@ -34,17 +34,26 @@ export function ingredientToString(ingredient: Ingredient) {
  */
 export function ingredientToFoodString(ingredient: Ingredient, ingredientFactor: number) {
     if (ingredient.food) {
-        if (ingredient.food.pluralName == '' || ingredient.food.pluralName == undefined || ingredient.noAmount) {
-            return ingredient.food.name
-        } else {
-            if (ingredient.alwaysUsePluralFood || ingredient.amount * ingredientFactor > 1) {
-                return ingredient.food.pluralName
-            } else {
-                return ingredient.food.name
-            }
-        }
+        return pluralString(ingredient.food, ingredient.noAmount ? 0 : ingredient.amount * ingredientFactor, ingredient.alwaysUsePluralFood)
     } else {
         return ''
+    }
+}
+
+/**
+ * determines if food or unit should be shown as plural or not
+ * @param object object to show (food or unit)
+ * @param amount amount given in display
+ * @param alwaysUsePlural for printing of ingredients if always plural is enabled
+ */
+export function pluralString(object: Food | Unit, amount: number = 1, alwaysUsePlural: boolean = false) {
+    if (object.pluralName == '' || object.pluralName == undefined) {
+        return object.name
+    }
+    if (amount > 1) {
+        return object.pluralName
+    } else {
+        return object.name
     }
 }
 

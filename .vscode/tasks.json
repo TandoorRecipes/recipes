@@ -14,28 +14,16 @@
     },
     {
       "label": "Setup Dev Server",
-      "dependsOn": ["Run Migrations", "Yarn Build"]
+      "dependsOn": ["Run Migrations"]
     },
     {
       "label": "Run Dev Server",
-      "type": "shell",
+      "type": "shell", 
       "dependsOn": ["Setup Dev Server"],
-      "command": "python3 manage.py runserver"
+      "command": "DEBUG=1 python3 manage.py runserver"
     },
     {
       "label": "Yarn Install",
-      "dependsOn": ["Yarn Install - Vue", "Yarn Install - Vue3"]
-    },
-    {
-      "label": "Yarn Install - Vue",
-      "type": "shell",
-      "command": "yarn install --force",
-      "options": {
-        "cwd": "${workspaceFolder}/vue"
-      }
-    },
-    {
-      "label": "Yarn Install - Vue3",
       "type": "shell",
       "command": "yarn install --force",
       "options": {
@@ -44,18 +32,6 @@
     },
     {
       "label": "Generate API",
-      "dependsOn": ["Generate API - Vue", "Generate API - Vue3"]
-    },
-    {
-      "label": "Generate API - Vue",
-      "type": "shell",
-      "command": "openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/",
-      "options": {
-        "cwd": "${workspaceFolder}/vue/src/utils/openapi"
-      }
-    },
-    {
-      "label": "Generate API - Vue3",
       "type": "shell",
       "command": "openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/",
       "options": {
@@ -63,43 +39,19 @@
       }
     },
     {
-      "label": "Yarn Serve",
+      "label": "Yarn Dev",
       "type": "shell",
-      "command": "yarn serve",
-      "dependsOn": ["Yarn Install - Vue"],
-      "options": {
-        "cwd": "${workspaceFolder}/vue"
-      }
-    },
-    {
-      "label": "Vite Serve",
-      "type": "shell",
-      "command": "vite",
-      "dependsOn": ["Yarn Install - Vue3"],
+      "command": "yarn dev",
+      "dependsOn": ["Yarn Install"],
       "options": {
         "cwd": "${workspaceFolder}/vue3"
       }
     },
     {
       "label": "Yarn Build",
-      "dependsOn": ["Yarn Build - Vue", "Vite Build - Vue3"],
-      "group": "build"
-    },
-    {
-      "label": "Yarn Build - Vue",
       "type": "shell",
       "command": "yarn build",
-      "dependsOn": ["Yarn Install - Vue"],
-      "options": {
-        "cwd": "${workspaceFolder}/vue"
-      },
-      "group": "build"
-    },
-    {
-      "label": "Vite Build - Vue3",
-      "type": "shell",
-      "command": "vite build",
-      "dependsOn": ["Yarn Install - Vue3"],
+      "dependsOn": ["Yarn Install"],
       "options": {
         "cwd": "${workspaceFolder}/vue3"
       },

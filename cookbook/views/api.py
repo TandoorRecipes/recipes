@@ -454,12 +454,10 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request,
                                         serializer=self.serializer_class, tree=True)
 
-
         self.queryset = self.queryset.filter(space=self.request.space)
         # only order if not root_tree or tree mde because in these modes the sorting is relevant for the client
         if not root_tree and not tree:
             self.queryset = self.queryset.order_by(Lower('name').asc())
-
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class,
                                     tree=True)
@@ -1451,9 +1449,26 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return Response(serializer.errors, 400)
 
+    @extend_schema(responses=RecipeSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
+    def delete_external(self, request, pk):
+        obj = self.get_object()
+        if obj.get_space() != request.space and has_group_permission(request.user, ['user']):
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+
+        if obj.storage:
+            get_recipe_provider(obj).delete_file(obj)
+            obj.storage = None
+            obj.file_path = ''
+            obj.file_uid = ''
+            obj.save()
+
+        return Response(self.serializer_class(obj, many=False, context={'request': request}).data)
+
 
 @extend_schema_view(list=extend_schema(
-    parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int), ]))
+    parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int),
+                OpenApiParameter(name='query', description='query that looks into food, base unit or converted unit by name', type=str), ]))
 class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UnitConversion.objects
     serializer_class = UnitConversionSerializer
@@ -1464,6 +1479,10 @@ class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
         food_id = self.request.query_params.get('food_id', None)
         if food_id is not None:
             self.queryset = self.queryset.filter(food_id=food_id)
+
+        query = self.request.query_params.get('query', None)
+        if query is not None:
+            self.queryset = self.queryset.filter(Q(food__name__icontains=query) | Q(base_unit__name__icontains=query) | Q(converted_unit__name__icontains=query))
 
         return self.queryset.filter(space=self.request.space)
 
@@ -2507,7 +2526,7 @@ def meal_plans_to_ical(queryset, filename):
     request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
     responses=inline_serializer(name="ParsedIngredientSerializer",
                                 fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(),
-                                        'note': CharField()})
+                                        'note': CharField(), 'original_text': CharField()})
 )
 @api_view(['POST'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
@@ -2517,13 +2536,20 @@ def ingredient_from_string(request):
     ingredient_parser = IngredientParser(request, False)
     amount, unit, food, note = ingredient_parser.parse(text)
 
-    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note}
+    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note, 'original_text': text}
     if food:
-        food, created = Food.objects.get_or_create(space=request.space, name=food)
-        ingredient['food'] = {'name': food.name, 'id': food.id}
+        if food_obj := Food.objects.filter(space=request.space).filter(Q(name=food) | Q(plural_name=food)).first():
+            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
+        else:
+            food_obj = Food.objects.create(space=request.space, name=food)
+            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
 
     if unit:
-        unit, created = Unit.objects.get_or_create(space=request.space, name=unit)
+        if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
+            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
+        else:
+            unit_obj = Unit.objects.create(space=request.space, name=unit)
+            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
         ingredient['unit'] = {'name': unit.name, 'id': unit.id}
 
     return JsonResponse(ingredient, status=200)

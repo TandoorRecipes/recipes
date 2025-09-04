@@ -28,6 +28,7 @@
                         <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </v-sheet>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
+                    <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
                     <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" half-increments readonly></v-rating>
                     <v-sheet class="ps-2 text-disabled">
                         {{ recipe.description }}
@@ -35,8 +36,7 @@
                 </v-card>
             </v-card>
 
-            <!-- only display values if not all are default (e.g. for external recipes) -->
-            <v-card class="mt-1" v-if="recipe.workingTime != 0 || recipe.waitingTime != 0 || recipe.servings != 1">
+            <v-card class="mt-1">
                 <v-container>
                     <v-row class="text-center text-body-2">
                         <v-col class="pt-1 pb-1">
@@ -84,6 +84,8 @@
                             <p>
                                 <i>{{ recipe.description }}</i>
                             </p>
+
+                            <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
 
                             <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" readonly></v-rating>
 
@@ -147,7 +149,7 @@
                             :title="$t('CreatedBy')"
                             :subtitle="recipe.createdBy.displayName"
                             prepend-icon="fa-solid fa-user"
-                            :to="{name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}">
+                            :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}: undefined">
                         </v-card>
                     </v-col>
                     <v-col cols="12" md="3">
@@ -156,7 +158,7 @@
                             :title="$t('Created')"
                             :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
                             prepend-icon="$create"
-                            :to="{name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}}">
+                            :to="(useUserPreferenceStore().isAuthenticated) ? {name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}} : undefined">
                         </v-card>
                     </v-col>
                     <v-col cols="12" md="3">
@@ -165,7 +167,7 @@
                             :title="$t('Updated')"
                             :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
                             prepend-icon="$edit"
-                            :to="{name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}">
+                            :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}: undefined">
                         </v-card>
                     </v-col>
                     <v-col cols="12" md="3" v-if="recipe.sourceUrl">
@@ -204,6 +206,7 @@ import PropertyView from "@/components/display/PropertyView.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useFileApi} from "@/composables/useFileApi.ts";
+import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()

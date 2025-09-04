@@ -61,7 +61,7 @@
                     <div v-if="!mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" :empty-insert-threshold="25" group="ingredients">
                             <v-row v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" dense>
-                                <v-col cols="12" class="pa-0 ma-0 text-center text-disabled">
+                                <v-col cols="12" class="pa-0 ma-0 text-center text-disabled" v-if="ingredient.originalText">
                                     <v-icon icon="$import" size="x-small"></v-icon>
                                     {{ ingredient.originalText }}
                                 </v-col>
@@ -306,6 +306,7 @@ function parseAndInsertIngredients() {
         r.forEach(i => {
             console.log(i)
             step.value.ingredients.push({
+                originalText: i.value.originalText,
                 amount: i.value.amount,
                 food: i.value.food,
                 unit: i.value.unit,

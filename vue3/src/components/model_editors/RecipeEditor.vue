@@ -63,8 +63,8 @@
                             </v-col>
                         </v-row>
 
-<!--                        <closable-help-alert :text="$t('RecipeStepsHelp')" :action-text="$t('Steps')" @click="tab='steps'"></closable-help-alert>-->
-                        <v-btn @click="tab='steps'" class="float-right" variant="tonal" append-icon="fa-solid fa-arrow-right">{{$t('Steps')}} </v-btn>
+                        <!--                        <closable-help-alert :text="$t('RecipeStepsHelp')" :action-text="$t('Steps')" @click="tab='steps'"></closable-help-alert>-->
+                        <v-btn @click="tab='steps'" class="float-right" variant="tonal" append-icon="fa-solid fa-arrow-right">{{ $t('Steps') }}</v-btn>
                     </v-form>
 
                 </v-tabs-window-item>
@@ -77,12 +77,19 @@
                         </v-row>
                         <v-row>
                             <v-col class="text-center">
-                                <v-btn-group density="compact">
+                                <v-btn-group density="compact" divided border>
                                     <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
-                                    <v-btn color="warning" @click="dialogStepManager = true">
+                                    <v-btn color="warning" @click="dialogStepManager = true" :disabled="editingObj.steps.length < 2">
                                         <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
                                     </v-btn>
+
+                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
+                                        v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
+                                        v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
                                 </v-btn-group>
+
+
                             </v-col>
                         </v-row>
 
@@ -101,8 +108,17 @@
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
                         <v-checkbox :label="$t('Private_Recipe')" persistent-hint :hint="$t('Private_Recipe_Help')" v-model="editingObj._private"></v-checkbox>
-                        <model-select mode="tags" model="User" :label="$t('Share')"  persistent-hint v-model="editingObj.shared"
+                        <model-select mode="tags" model="User" :label="$t('Share')" persistent-hint v-model="editingObj.shared"
                                       append-to-body v-if="editingObj._private"></model-select>
+
+                        <div class="mt-2" v-if="editingObj.filePath">
+                            {{ $t('ExternalRecipe') }}
+                            <v-text-field readonly v-model="editingObj.filePath"></v-text-field>
+
+                            <v-btn prepend-icon="$delete" color="error" :loading="loading">{{ $t('delete_title', {type: $t('ExternalRecipe')}) }}
+                                <delete-confirm-dialog :object-name="editingObj.filePath" :model-name="$t('ExternalRecipe')" @delete="deleteExternalFile()"></delete-confirm-dialog>
+                            </v-btn>
+                        </div>
 
                     </v-form>
                 </v-tabs-window-item>
@@ -110,7 +126,7 @@
         </v-card-text>
         <v-card-text v-if="isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
             <v-alert color="warning" icon="fa-solid fa-triangle-exclamation">
-                {{$t('SpaceLimitReached')}}
+                {{ $t('SpaceLimitReached') }}
                 <v-btn color="success" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
             </v-alert>
         </v-card-text>
@@ -138,7 +154,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, shallowRef, watch} from "vue";
-import {Ingredient, Recipe, Step} from "@/openapi";
+import {ApiApi, Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -151,7 +167,9 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import SpaceSettings from "@/components/settings/SpaceSettings.vue";
+import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
+import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 
 
 const props = defineProps({
@@ -188,7 +206,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
@@ -247,6 +265,33 @@ function sortSteps() {
  */
 function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
+}
+
+function handleMergeAllSteps(): void {
+    if (editingObj.value.steps) {
+        mergeAllSteps(editingObj.value.steps)
+    }
+}
+
+function handleSplitAllSteps(): void {
+    if (editingObj.value.steps) {
+        splitAllSteps(editingObj.value.steps, '\n')
+    }
+}
+
+/**
+ * deletes the external file for the recipe
+ */
+function deleteExternalFile() {
+    let api = new ApiApi()
+    loading.value = true
+    api.apiRecipeDeleteExternalPartialUpdate({id: editingObj.value.id!, patchedRecipe: editingObj.value}).then(r => {
+        editingObj.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+    }).finally(() => {
+        loading.value = false
+    })
 }
 
 </script>

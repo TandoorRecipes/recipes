@@ -37,7 +37,7 @@ def get_filetype(name):
 
 def is_file_type_allowed(filename, image_only=False):
     is_file_allowed = False
-    allowed_file_types = ['.pdf', '.docx', '.xlsx', '.css']
+    allowed_file_types = ['.pdf', '.docx', '.xlsx', '.css', '.mp4', '.mov']
     allowed_image_types = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
     check_list = allowed_image_types
     if not image_only:
@@ -77,6 +77,8 @@ def handle_image(request, image_object, filetype):
         file_format = 'JPEG'
     if filetype == '.png':
         file_format = 'PNG'
+    if filetype == '.webp':
+        file_format = 'WEBP'
 
     if (image_object.size / 1000) > 500:  # if larger than 500 kb compress
         if filetype == '.jpeg' or filetype == '.jpg':
