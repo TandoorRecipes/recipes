@@ -17,6 +17,8 @@ export type DeviceSettings = {
     mealplan_startingDayOfWeek: number
     mealplan_displayWeekNumbers: boolean
 
+    recipe_mergeStepOverview: boolean,
+
     search_itemsPerPage: number,
     search_viewMode: 'table'|'grid',
     search_visibleFilters: String[],

@@ -292,6 +292,8 @@
   "Meal_Type_Required": "Meal type is required",
   "Meal_Types": "Meal types",
   "Merge": "Merge",
+  "Summary": "Summary",
+  "Structured": "Structured",
   "MergeAutomateHelp": "Create an automation that replaces future objects of this type with the selected object.",
   "Merge_Keyword": "Merge Keyword",
   "Message": "Message",
