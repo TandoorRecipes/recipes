@@ -2,7 +2,7 @@ aiohttp==3.12.15
 beautifulsoup4==4.13.5
 boto3==1.40.21
 bleach==6.2.0
-cryptography===45.0.6
+cryptography===45.0.7
 crispy-bootstrap4==2025.6
 Django==4.2.23
 django-allauth==65.11.1
