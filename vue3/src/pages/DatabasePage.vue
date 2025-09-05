@@ -35,6 +35,16 @@
             <database-model-col model="MealType"></database-model-col>
         </v-row>
 
+        <v-row>
+            <v-col>
+                <h2>{{ $t('Ai') }}</h2>
+            </v-col>
+        </v-row>
+        <v-row dense>
+            <database-model-col model="AiProvider"></database-model-col>
+            <database-model-col model="AiLog"></database-model-col>
+        </v-row>
+
         <template v-for="p in TANDOOR_PLUGINS" :key="p.name">
             <component :is="p.databasePageComponent" v-if="p.databasePageComponent"></component>
         </template>

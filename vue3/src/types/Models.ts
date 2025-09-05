@@ -1,5 +1,5 @@
 import {
-    AccessToken,
+    AccessToken, AiLog, AiProvider,
     ApiApi, ApiKeywordMoveUpdateRequest, Automation, type AutomationTypeEnum, ConnectorConfig, CookLog, CustomFilter,
     Food,
     Ingredient,
@@ -146,6 +146,8 @@ export type EditorSupportedModels =
     | 'ViewLog'
     | 'ConnectorConfig'
     | 'SearchFields'
+    | 'AiProvider'
+    | 'AiLog'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -180,6 +182,8 @@ export type EditorSupportedTypes =
     | ViewLog
     | ConnectorConfig
     | SearchFields
+    | AiProvider
+    | AiLog
 
 export const TFood = {
     name: 'Food',
@@ -787,6 +791,53 @@ export const TConnectorConfig = {
     ]
 } as Model
 registerModel(TConnectorConfig)
+
+export const TAiProvider = {
+    name: 'AiProvider',
+    localizationKey: 'AiProvider',
+    localizationKeyDescription: 'AiProviderHelp',
+    icon: 'fa-solid fa-wand-magic-sparkles',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/AiProviderEditor.vue`)),
+
+    disableListView: false,
+    toStringKeys: ['name'],
+    isPaginated: true,
+
+    disableCreate: false,
+    disableDelete: false,
+    disableUpdate: false,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TAiProvider)
+
+export const TAiLog = {
+    name: 'AiLog',
+    localizationKey: 'AiLog',
+    localizationKeyDescription: 'AiLogHelp',
+    icon: 'fa-solid fa-wand-magic-sparkles',
+
+    disableListView: false,
+    toStringKeys: ['aiProvider.name', 'function', 'created_at'],
+    isPaginated: true,
+
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'function'},
+        {title: 'AiProvider', key: 'aiProvider.name',},
+        {title: 'CreatedAt', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TAiLog)
 
 export const TFoodInheritField = {
     name: 'FoodInheritField',

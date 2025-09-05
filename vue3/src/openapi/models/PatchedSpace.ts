@@ -212,6 +212,24 @@ export interface PatchedSpace {
      * @memberof PatchedSpace
      */
     logoColorSvg?: UserFileView;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSpace
+     */
+    readonly aiCreditsMonthly?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSpace
+     */
+    readonly aiCreditsBalance?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSpace
+     */
+    readonly aiMonthlyCreditsUsed?: number;
 }
 
 /**
@@ -258,10 +276,13 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'logoColor192': json['logo_color_192'] == null ? undefined : UserFileViewFromJSON(json['logo_color_192']),
         'logoColor512': json['logo_color_512'] == null ? undefined : UserFileViewFromJSON(json['logo_color_512']),
         'logoColorSvg': json['logo_color_svg'] == null ? undefined : UserFileViewFromJSON(json['logo_color_svg']),
+        'aiCreditsMonthly': json['ai_credits_monthly'] == null ? undefined : json['ai_credits_monthly'],
+        'aiCreditsBalance': json['ai_credits_balance'] == null ? undefined : json['ai_credits_balance'],
+        'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'] == null ? undefined : json['ai_monthly_credits_used'],
     };
 }
 
-export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'> | null): any {
+export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiCreditsMonthly'|'aiCreditsBalance'|'aiMonthlyCreditsUsed'> | null): any {
     if (value == null) {
         return value;
     }

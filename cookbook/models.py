@@ -411,6 +411,8 @@ class AiProvider(models.Model):
 
 
 class AiLog(models.Model, PermissionModelMixin):
+    F_FILE_IMPORT = 'FILE_IMPORT'
+
     ai_provider = models.ForeignKey(AiProvider, on_delete=models.SET_NULL, null=True)
     function = models.CharField(max_length=64)
     credit_cost = models.DecimalField(max_digits=16, decimal_places=4)

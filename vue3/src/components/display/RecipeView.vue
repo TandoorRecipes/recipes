@@ -126,6 +126,7 @@
                 <v-card-text>
                     Convert the recipe using AI
 
+                    <model-select model="AiProvider" v-model="selectedAiProvider"></model-select>
                 </v-card-text>
             </v-card>
         </template>
@@ -191,7 +192,7 @@
 <script setup lang="ts">
 
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
-import {ApiApi, Recipe} from "@/openapi"
+import {AiProvider, ApiApi, Recipe} from "@/openapi"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import StepsOverview from "@/components/display/StepsOverview.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
@@ -207,6 +208,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()
@@ -216,6 +218,8 @@ const recipe = defineModel<Recipe>({required: true})
 
 const servings = ref(1)
 const showFullRecipeName = ref(false)
+
+const selectedAiProvider = ref<undefined | AiProvider>(undefined)
 
 /**
  * factor for multiplying ingredient amounts based on recipe base servings and user selected servings
@@ -249,7 +253,7 @@ onBeforeUnmount(() => {
 function aiConvertRecipe() {
     let api = new ApiApi()
 
-    doAiImport(null, '', recipe.value.id!).then(r => {
+    doAiImport(selectedAiProvider.value.id!,null, '', recipe.value.id!).then(r => {
         if (r.recipe) {
             recipe.value.internal = true
             recipe.value.steps = r.recipe.steps

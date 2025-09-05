@@ -3,6 +3,8 @@ apis/ApiTokenAuthApi.ts
 apis/index.ts
 index.ts
 models/AccessToken.ts
+models/AiLog.ts
+models/AiProvider.ts
 models/AlignmentEnum.ts
 models/AuthToken.ts
 models/AutoMealPlan.ts
@@ -57,6 +59,8 @@ models/OpenDataStoreCategory.ts
 models/OpenDataUnit.ts
 models/OpenDataUnitTypeEnum.ts
 models/OpenDataVersion.ts
+models/PaginatedAiLogList.ts
+models/PaginatedAiProviderList.ts
 models/PaginatedAutomationList.ts
 models/PaginatedBookmarkletImportListList.ts
 models/PaginatedConnectorConfigList.ts
@@ -103,6 +107,7 @@ models/PaginatedUserSpaceList.ts
 models/PaginatedViewLogList.ts
 models/ParsedIngredient.ts
 models/PatchedAccessToken.ts
+models/PatchedAiProvider.ts
 models/PatchedAutomation.ts
 models/PatchedBookmarkletImport.ts
 models/PatchedConnectorConfig.ts

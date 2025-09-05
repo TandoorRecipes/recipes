@@ -24,6 +24,7 @@ from rest_framework.fields import IntegerField
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.property_helper import FoodPropertyHelper
@@ -36,7 +37,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -353,7 +354,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
 
     @extend_schema_field(int)
     def get_ai_monthly_credits_used(self, obj):
-        return AiLog.objects.filter(space=obj, credits_from_balance=False).aggregate(Sum('credit_cost'))['credit_cost__sum']
+        return get_monthly_token_usage(obj)
 
     @extend_schema_field(float)
     def get_file_size_mb(self, obj):
@@ -400,6 +401,33 @@ class SpacedModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
+
+
+class AiProviderSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        if not self.context['request'].user.is_superuser:
+            validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = AiProvider
+        fields = ('id','name', 'description', 'api_key', 'model_name', 'url', 'space', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at',)
+
+        extra_kwargs = {
+            'api_key': {'write_only': True},
+        }
+
+
+class AiLogSerializer(serializers.ModelSerializer):
+    ai_provider = AiProviderSerializer(read_only=True)
+
+    class Meta:
+        model = AiLog
+        fields = ('id', 'ai_provider', 'function', 'credit_cost', 'credits_from_balance', 'input_tokens', 'output_tokens', 'start_time', 'end_time', 'created_by', 'created_at',
+                  'updated_at')
+        read_only_fields = ('__all__',)
 
 
 class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
@@ -1794,6 +1822,7 @@ class RecipeFromSourceResponseSerializer(serializers.Serializer):
 
 
 class AiImportSerializer(serializers.Serializer):
+    ai_provider_id = serializers.IntegerField()
     file = serializers.FileField(allow_null=True)
     text = serializers.CharField(allow_null=True, allow_blank=True)
     recipe_id = serializers.CharField(allow_null=True, allow_blank=True)
