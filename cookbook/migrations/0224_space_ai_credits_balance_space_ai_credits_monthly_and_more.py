@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('cookbook', '0222_alter_shoppinglistrecipe_created_by_and_more'),
+        ('cookbook', '0223_auto_20250831_1111'),
     ]
 
     operations = [
