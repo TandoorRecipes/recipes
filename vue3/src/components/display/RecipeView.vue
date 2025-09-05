@@ -30,57 +30,57 @@
         </v-card>
       </v-card>
 
-            <!-- only display values if not all are default (e.g. for external recipes) -->
-            <v-card class="mt-1 recipe__meta" v-if="recipe.workingTime != 0 || recipe.waitingTime != 0 || recipe.servings != 1">
-                <v-container>
-                    <v-row class="text-center text-body-2">
-                        <v-col class="pt-1 pb-1 recipe__worktime" :class="'worktime--' + String(recipe.workingTime)">
-                            <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br/>
-                            <div class="text-grey">{{ $t('WorkingTime') }}</div>
-                        </v-col>
-                        <v-col class="pt-1 pb-1 recipe__waittime" :class="'waittime--' + String(recipe.waitingTime)">
-                            <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
-                            <div class="text-grey">{{ $t('WaitingTime') }}</div>
-                        </v-col>
-                        <v-col class="pt-1 pb-1 recipe__servings" :class="'servings--' + String(recipe.servings)">
+      <!-- only display values if not all are default (e.g. for external recipes) -->
+      <v-card class="mt-1 recipe__meta" v-if="recipe.workingTime != 0 || recipe.waitingTime != 0 || recipe.servings != 1">
+        <v-container>
+          <v-row class="text-center text-body-2">
+            <v-col class="pt-1 pb-1 recipe__worktime" :class="'worktime--' + String(recipe.workingTime)">
+              <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br />
+              <div class="text-grey">{{ $t("WorkingTime") }}</div>
+            </v-col>
+            <v-col class="pt-1 pb-1 recipe__waittime" :class="'waittime--' + String(recipe.waitingTime)">
+              <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
+              <div class="text-grey">{{ $t("WaitingTime") }}</div>
+            </v-col>
+            <v-col class="pt-1 pb-1 recipe__servings" :class="'servings--' + String(recipe.servings)">
+              <div class="cursor-pointer">
+                <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br />
+                <div class="text-grey">
+                  <span v-if="recipe.servingsText">{{ recipe.servingsText }}</span
+                  ><span v-else>{{ $t("Servings") }}</span>
+                </div>
+                <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings"> </number-scaler-dialog>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card>
+    </template>
+    <!-- Desktop horizontal layout -->
+    <template class="d-none d-lg-block recipe__header header--desktop">
+      <v-row dense>
+        <v-col cols="8">
+          <recipe-image :rounded="true" class="recipe__image" :recipe="recipe"> </recipe-image>
+        </v-col>
+        <v-col cols="4">
+          <v-card class="h-100 d-flex flex-column recipe__frontmatter">
+            <v-card-text class="flex-grow-1">
+              <div class="d-flex recipe__title">
+                <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
+                <recipe-context-menu
+                  :recipe="recipe"
+                  v-if="useUserPreferenceStore().isAuthenticated"
+                  class="flex-column mb-auto mt-2 float-right recipe__actions"
+                ></recipe-context-menu>
+              </div>
+              <p class="recipe__byline">
+                {{ $t("created_by") }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
+              </p>
+              <p class="recipe__description">
+                <i>{{ recipe.description }}</i>
+              </p>
 
-                            <div class="cursor-pointer">
-                                <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
-                                <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                                <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                                </number-scaler-dialog>
-                            </div>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card>
-        </template>
-        <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block recipe__header header--desktop">
-            <v-row dense>
-                <v-col cols="8">
-                    <recipe-image
-                        :rounded="true"
-                        class="recipe__image"
-                        :recipe="recipe">
-                    </recipe-image>
-                </v-col>
-                <v-col cols="4">
-                    <v-card class="h-100 d-flex flex-column recipe__frontmatter">
-                        <v-card-text class="flex-grow-1">
-                            <div class="d-flex recipe__title">
-                                <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"
-                                                     class="flex-column mb-auto mt-2 float-right recipe__actions"></recipe-context-menu>
-                            </div>
-                            <p class="recipe__byline">
-                                {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
-                            </p>
-                            <p class="recipe__description">
-                                <i>{{ recipe.description }}</i>
-                            </p>
-
-                            <private-recipe-badge :users="recipe.shared" class="recipe__private" v-if="recipe._private"></private-recipe-badge>
+              <private-recipe-badge :users="recipe.shared" class="recipe__private" v-if="recipe._private"></private-recipe-badge>
 
               <v-rating v-model="recipe.rating" class="recipe__rating" size="x-small" v-if="recipe.rating" readonly></v-rating>
 
@@ -133,49 +133,49 @@
 
     <property-view v-model="recipe" :servings="servings"></property-view>
 
-        <v-card class="mt-2 recipe__footer recipe__history">
-            <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="3 class="recipe__createdby">
-                        <v-card
-                            variant="outlined"
-                            :title="$t('CreatedBy')"
-                            :subtitle="recipe.createdBy.displayName"
-                            prepend-icon="fa-solid fa-user"
-                            :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}: undefined">
-                        </v-card>
-                    </v-col>
-                    <v-col cols="12" md="3 class="recipe__createdon">
-                        <v-card
-                            variant="outlined"
-                            :title="$t('Created')"
-                            :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
-                            prepend-icon="$create"
-                            :to="(useUserPreferenceStore().isAuthenticated) ? {name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}} : undefined">
-                        </v-card>
-                    </v-col>
-                    <v-col cols="12" md="3" class="recipe__updatedon">
-                        <v-card
-                            variant="outlined"
-                            :title="$t('Updated')"
-                            :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
-                            prepend-icon="$edit"
-                            :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}: undefined">
-                        </v-card>
-                    </v-col>
-                    <v-col cols="12" md="3" class="recipe__importedfrom" v-if="recipe.sourceUrl">
-                        <v-card
-                            variant="outlined"
-                            :title="$t('Imported_From')"
-                            prepend-icon="$import">
-                            <template #subtitle>
-                                <a :href="recipe.sourceUrl" target="_blank">{{ recipe.sourceUrl }}</a>
-                            </template>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
+    <v-card class="mt-2 recipe__footer recipe__history">
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" md="3" class="recipe__createdby">
+            <v-card
+              variant="outlined"
+              :title="$t('CreatedBy')"
+              :subtitle="recipe.createdBy.displayName"
+              prepend-icon="fa-solid fa-user"
+              :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}: undefined"
+            >
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="3" class="recipe__createdon">
+            <v-card
+              variant="outlined"
+              :title="$t('Created')"
+              :subtitle="DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATETIME_MED)"
+              prepend-icon="$create"
+              :to="useUserPreferenceStore().isAuthenticated ? { name: 'SearchPage', query: { createdon: DateTime.fromJSDate(recipe.createdAt).toISODate() } } : undefined"
+            >
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="3" class="recipe__updatedon">
+            <v-card
+              variant="outlined"
+              :title="$t('Updated')"
+              :subtitle="DateTime.fromJSDate(recipe.updatedAt).toLocaleString(DateTime.DATETIME_MED)"
+              prepend-icon="$edit"
+              :to="useUserPreferenceStore().isAuthenticated ? { name: 'SearchPage', query: { updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate() } } : undefined"
+            >
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="3" class="recipe__importedfrom" v-if="recipe.sourceUrl">
+            <v-card variant="outlined" :title="$t('Imported_From')" prepend-icon="$import">
+              <template #subtitle>
+                <a :href="recipe.sourceUrl" target="_blank">{{ recipe.sourceUrl }}</a>
+              </template>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
 
     <recipe-activity :recipe="recipe" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
   </template>
