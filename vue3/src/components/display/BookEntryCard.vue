@@ -1,13 +1,13 @@
 <template>
     <v-card :loading="loading">
-        <v-card-title>{{ props.recipeOverview.name }}</v-card-title>
-        <recipe-image height="25vh" :recipe="props.recipeOverview"></recipe-image>
-        <v-card-subtitle>{{ props.recipeOverview.description }}</v-card-subtitle>
-        <v-card-text>
+        <v-card-title class="recipe__title">{{ props.recipeOverview.name }}</v-card-title>
+        <recipe-image class="recipe__image" :recipe="props.recipeOverview"></recipe-image>
+        <v-card-subtitle class="recipe__description">{{ props.recipeOverview.description }}</v-card-subtitle>
+        <v-card-text class="recipe__keywords">
             <keywords-bar :keywords="props.recipeOverview.keywords"></keywords-bar>
         </v-card-text>
-        <ingredients-table :ingredient-factor="1" v-model="ingredients" :show-checkbox="false"></ingredients-table>
-        <v-card-actions>
+        <ingredients-table class="recipe__ingredients" :ingredient-factor="1" v-model="ingredients" :show-checkbox="false"></ingredients-table>
+        <v-card-actions class="recipe__actions">
             <v-btn :to="{name: 'RecipeViewPage', params: {id: props.recipeOverview.id}}">{{$t('Open')}}</v-btn>
         </v-card-actions>
     </v-card>
@@ -57,5 +57,9 @@ function loadRecipe() {
 
 
 <style scoped>
+
+.recipe__image {
+    height: 25vh;
+}
 
 </style>

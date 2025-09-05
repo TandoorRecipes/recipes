@@ -80,3 +80,9 @@ export const routeQueryDateTransformer = {
     get: (value: string | null | Date) => ((value == null) ? null : (new Date(value))),
     set: (value: string | null | Date) => ((value == null) ? null : (DateTime.fromJSDate(new Date(value)).toISODate()))
 }
+
+/* Replace spaces by dashes, then use DOM method to escape special characters. Use for dynamically generated CSS classes*/
+
+export function escapeCSS(classname: string): string {
+    return CSS.escape(classname.replace(/\s+/g, "-").toLowerCase())
+}
