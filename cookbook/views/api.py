@@ -2000,6 +2000,17 @@ class AiImportView(APIView):
         if serializer.is_valid():
             # TODO max file size check
 
+            def log_ai_request(kwargs, completion_response, start_time, end_time):
+                print(completion_response['usage']['completion_tokens'], completion_response['usage']['prompt_tokens'], start_time, end_time)
+                try:
+                    response_cost = kwargs.get("response_cost", 0)
+                    print("response_cost", response_cost)
+                except:
+                    print('could not get cost')
+                    traceback.print_exc()
+
+            litellm.success_callback = [log_ai_request]
+
             messages = []
             uploaded_file = serializer.validated_data['file']
 
