@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="import">
         <v-row>
             <v-col>
 
