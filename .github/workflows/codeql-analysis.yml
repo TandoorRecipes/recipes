@@ -53,7 +53,7 @@ jobs:
           # - security-and-quality: Security + code quality (slower)
           # - security-only: Fastest, security issues only
           queries:
-            - security-extended
+            - uses: security-extended
             
           # Optional: Disable specific queries that create noise
           # query-filters:
