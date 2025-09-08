@@ -54,7 +54,7 @@ whitenoise==6.9.0
 autopep8==2.3.2
 flake8==7.3.0
 freezegun==1.5.5
-pytest==8.4.1
+pytest==8.4.2
 pytest-asyncio==1.1.0
 pytest-cov===6.2.1
 pytest-django==4.11.1
