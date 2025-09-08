@@ -1,7 +1,7 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
+import {AiProvider, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
 
 
 /**
@@ -86,7 +86,7 @@ export function useFileApi() {
      * @param text text to import
      * @param recipeId id of a recipe to use as import base (for external recipes
      */
-    function doAiImport(file: File | null, text: string = '', recipeId: string = '') {
+    function doAiImport(providerId: number, file: File | null, text: string = '', recipeId: string = '') {
         let formData = new FormData()
 
         if (file != null) {
@@ -96,6 +96,7 @@ export function useFileApi() {
         }
         formData.append('text', text)
         formData.append('recipe_id', recipeId)
+        formData.append('ai_provider_id', providerId)
         fileApiLoading.value = true
 
         return fetch(getDjangoUrl(`api/ai-import/`), {

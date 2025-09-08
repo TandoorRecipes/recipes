@@ -97,7 +97,8 @@ def space_overview(request):
                                                      max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
                                                      max_users=settings.SPACE_DEFAULT_MAX_USERS,
                                                      allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
-                                                     )
+                                                     ai_enabled=settings.SPACE_AI_ENABLED,
+                                                     ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY,)
 
                 user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
                 user_space.groups.add(Group.objects.filter(name='admin').get())

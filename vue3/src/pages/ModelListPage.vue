@@ -27,9 +27,16 @@
                                                @delete="loadItems({page: page})"></model-edit-dialog>
                         </v-btn>
                     </template>
+
+                    <!-- TODO build customizable model component system -->
                     <v-card-actions v-if="genericModel.model.name == 'RecipeImport'">
                         <v-btn prepend-icon="fa-solid fa-rotate" color="success" @click="importAllRecipes()">{{ $t('ImportAll') }}</v-btn>
                     </v-card-actions>
+
+                    <v-card-text v-if="genericModel.model.name == 'AiLog'">
+                        {{$t('MonthlyCreditsUsed')}} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
+                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"></v-progress-linear>
+                    </v-card-text>
                 </v-card>
             </v-col>
         </v-row>

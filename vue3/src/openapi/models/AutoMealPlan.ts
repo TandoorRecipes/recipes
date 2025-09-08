@@ -109,8 +109,8 @@ export function AutoMealPlanToJSON(value?: AutoMealPlan | null): any {
     }
     return {
         
-        'start_date': ((value['startDate']).toISOString().substring(0,10)),
-        'end_date': ((value['endDate']).toISOString().substring(0,10)),
+        'start_date': ((value['startDate']).toISOString()),
+        'end_date': ((value['endDate']).toISOString()),
         'meal_type_id': value['mealTypeId'],
         'keyword_ids': value['keywordIds'],
         'servings': value['servings'],

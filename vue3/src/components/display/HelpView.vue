@@ -45,7 +45,7 @@
                         <v-btn class="mt-2 ms-2" color="info" href="https://github.com/TandoorRecipes/recipes" target="_blank" prepend-icon="fa-solid fa-code-branch">GitHub
                         </v-btn>
 
-                        <v-alert class="mt-3" border="start" variant="tonal" color="success">
+                        <v-alert class="mt-3" border="start" variant="tonal" color="success" v-if="(!useUserPreferenceStore().serverSettings.hosted && !useUserPreferenceStore().activeSpace.demo)">
                             <v-alert-title>Did you know?</v-alert-title>
                             Tandoor is Open Source and available to anyone for free to host on their own server. Thousands of hours have been spend
                             making Tandoor what it is today. You can help make Tandoor even better by contributing or helping financing the effort.
@@ -337,6 +337,7 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const drawer = defineModel()
 const window = ref('start')

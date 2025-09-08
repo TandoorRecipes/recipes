@@ -197,6 +197,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             mealplan_startingDayOfWeek: 1,
             mealplan_displayWeekNumbers: true,
 
+            recipe_mergeStepOverview: false,
+
             search_itemsPerPage: 50,
             search_viewMode: 'grid',
             search_visibleFilters: [],

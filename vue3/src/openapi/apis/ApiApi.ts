@@ -16,6 +16,8 @@
 import * as runtime from '../runtime';
 import type {
   AccessToken,
+  AiLog,
+  AiProvider,
   AutoMealPlan,
   Automation,
   BookmarkletImport,
@@ -49,6 +51,8 @@ import type {
   OpenDataStore,
   OpenDataUnit,
   OpenDataVersion,
+  PaginatedAiLogList,
+  PaginatedAiProviderList,
   PaginatedAutomationList,
   PaginatedBookmarkletImportListList,
   PaginatedConnectorConfigList,
@@ -95,6 +99,7 @@ import type {
   PaginatedViewLogList,
   ParsedIngredient,
   PatchedAccessToken,
+  PatchedAiProvider,
   PatchedAutomation,
   PatchedBookmarkletImport,
   PatchedConnectorConfig,
@@ -179,6 +184,10 @@ import type {
 import {
     AccessTokenFromJSON,
     AccessTokenToJSON,
+    AiLogFromJSON,
+    AiLogToJSON,
+    AiProviderFromJSON,
+    AiProviderToJSON,
     AutoMealPlanFromJSON,
     AutoMealPlanToJSON,
     AutomationFromJSON,
@@ -245,6 +254,10 @@ import {
     OpenDataUnitToJSON,
     OpenDataVersionFromJSON,
     OpenDataVersionToJSON,
+    PaginatedAiLogListFromJSON,
+    PaginatedAiLogListToJSON,
+    PaginatedAiProviderListFromJSON,
+    PaginatedAiProviderListToJSON,
     PaginatedAutomationListFromJSON,
     PaginatedAutomationListToJSON,
     PaginatedBookmarkletImportListListFromJSON,
@@ -337,6 +350,8 @@ import {
     ParsedIngredientToJSON,
     PatchedAccessTokenFromJSON,
     PatchedAccessTokenToJSON,
+    PatchedAiProviderFromJSON,
+    PatchedAiProviderToJSON,
     PatchedAutomationFromJSON,
     PatchedAutomationToJSON,
     PatchedBookmarkletImportFromJSON,
@@ -522,9 +537,46 @@ export interface ApiAccessTokenUpdateRequest {
 }
 
 export interface ApiAiImportCreateRequest {
+    aiProviderId: number;
     file: string | null;
     text: string | null;
     recipeId: string | null;
+}
+
+export interface ApiAiLogListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiAiLogRetrieveRequest {
+    id: number;
+}
+
+export interface ApiAiProviderCreateRequest {
+    aiProvider: Omit<AiProvider, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiAiProviderDestroyRequest {
+    id: number;
+}
+
+export interface ApiAiProviderListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiAiProviderPartialUpdateRequest {
+    id: number;
+    patchedAiProvider?: Omit<PatchedAiProvider, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiAiProviderRetrieveRequest {
+    id: number;
+}
+
+export interface ApiAiProviderUpdateRequest {
+    id: number;
+    aiProvider: Omit<AiProvider, 'createdAt'|'updatedAt'>;
 }
 
 export interface ApiAutoPlanCreateRequest {
@@ -759,6 +811,11 @@ export interface ApiEnterpriseSocialRecipeCreateRequest {
     recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
 }
 
+export interface ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
 export interface ApiEnterpriseSocialRecipeDestroyRequest {
     id: number;
 }
@@ -978,6 +1035,7 @@ export interface ApiGroupRetrieveRequest {
 }
 
 export interface ApiImportCreateRequest {
+    aiProviderId: number;
     file: string | null;
     text: string | null;
     recipeId: string | null;
@@ -1512,6 +1570,11 @@ export interface ApiRecipeCreateRequest {
     recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
 }
 
+export interface ApiRecipeDeleteExternalPartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
 export interface ApiRecipeDestroyRequest {
     id: number;
 }
@@ -1722,7 +1785,7 @@ export interface ApiSpaceListRequest {
 
 export interface ApiSpacePartialUpdateRequest {
     id: number;
-    patchedSpace?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'>;
+    patchedSpace?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiCreditsMonthly'|'aiCreditsBalance'|'aiMonthlyCreditsUsed'>;
 }
 
 export interface ApiSpaceRetrieveRequest {
@@ -2359,6 +2422,13 @@ export class ApiApi extends runtime.BaseAPI {
      * given an image or PDF file convert its content to a structured recipe using AI and the scraping system
      */
     async apiAiImportCreateRaw(requestParameters: ApiAiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
+        if (requestParameters['aiProviderId'] == null) {
+            throw new runtime.RequiredError(
+                'aiProviderId',
+                'Required parameter "aiProviderId" was null or undefined when calling apiAiImportCreate().'
+            );
+        }
+
         if (requestParameters['file'] == null) {
             throw new runtime.RequiredError(
                 'file',
@@ -2402,6 +2472,10 @@ export class ApiApi extends runtime.BaseAPI {
             formParams = new URLSearchParams();
         }
 
+        if (requestParameters['aiProviderId'] != null) {
+            formParams.append('ai_provider_id', requestParameters['aiProviderId'] as any);
+        }
+
         if (requestParameters['file'] != null) {
             formParams.append('file', requestParameters['file'] as any);
         }
@@ -2430,6 +2504,319 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiAiImportCreate(requestParameters: ApiAiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeFromSourceResponse> {
         const response = await this.apiAiImportCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiLogListRaw(requestParameters: ApiAiLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedAiLogList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-log/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedAiLogListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiLogList(requestParameters: ApiAiLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedAiLogList> {
+        const response = await this.apiAiLogListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiLogRetrieveRaw(requestParameters: ApiAiLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiLog>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiLogRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AiLogFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiLogRetrieve(requestParameters: ApiAiLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiLog> {
+        const response = await this.apiAiLogRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderCreateRaw(requestParameters: ApiAiProviderCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiProvider>> {
+        if (requestParameters['aiProvider'] == null) {
+            throw new runtime.RequiredError(
+                'aiProvider',
+                'Required parameter "aiProvider" was null or undefined when calling apiAiProviderCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AiProviderToJSON(requestParameters['aiProvider']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AiProviderFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderCreate(requestParameters: ApiAiProviderCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiProvider> {
+        const response = await this.apiAiProviderCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderDestroyRaw(requestParameters: ApiAiProviderDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderDestroy(requestParameters: ApiAiProviderDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiAiProviderDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderListRaw(requestParameters: ApiAiProviderListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedAiProviderList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedAiProviderListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderList(requestParameters: ApiAiProviderListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedAiProviderList> {
+        const response = await this.apiAiProviderListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderPartialUpdateRaw(requestParameters: ApiAiProviderPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiProvider>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedAiProviderToJSON(requestParameters['patchedAiProvider']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AiProviderFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderPartialUpdate(requestParameters: ApiAiProviderPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiProvider> {
+        const response = await this.apiAiProviderPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderRetrieveRaw(requestParameters: ApiAiProviderRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiProvider>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AiProviderFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderRetrieve(requestParameters: ApiAiProviderRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiProvider> {
+        const response = await this.apiAiProviderRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderUpdateRaw(requestParameters: ApiAiProviderUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiProvider>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderUpdate().'
+            );
+        }
+
+        if (requestParameters['aiProvider'] == null) {
+            throw new runtime.RequiredError(
+                'aiProvider',
+                'Required parameter "aiProvider" was null or undefined when calling apiAiProviderUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AiProviderToJSON(requestParameters['aiProvider']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AiProviderFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiAiProviderUpdate(requestParameters: ApiAiProviderUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiProvider> {
+        const response = await this.apiAiProviderUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -4414,6 +4801,46 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
+    async apiEnterpriseSocialRecipeDeleteExternalPartialUpdateRaw(requestParameters: ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeDeleteExternalPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/delete_external/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeToJSON(requestParameters['patchedRecipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeDeleteExternalPartialUpdate(requestParameters: ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipeDeleteExternalPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
     async apiEnterpriseSocialRecipeDestroyRaw(requestParameters: ApiEnterpriseSocialRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
@@ -6202,6 +6629,13 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiImportCreateRaw(requestParameters: ApiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
+        if (requestParameters['aiProviderId'] == null) {
+            throw new runtime.RequiredError(
+                'aiProviderId',
+                'Required parameter "aiProviderId" was null or undefined when calling apiImportCreate().'
+            );
+        }
+
         if (requestParameters['file'] == null) {
             throw new runtime.RequiredError(
                 'file',
@@ -6243,6 +6677,10 @@ export class ApiApi extends runtime.BaseAPI {
             formParams = new FormData();
         } else {
             formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['aiProviderId'] != null) {
+            formParams.append('ai_provider_id', requestParameters['aiProviderId'] as any);
         }
 
         if (requestParameters['file'] != null) {
@@ -10816,6 +11254,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiRecipeCreate(requestParameters: ApiRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipeCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeDeleteExternalPartialUpdateRaw(requestParameters: ApiRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeDeleteExternalPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/{id}/delete_external/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeToJSON(requestParameters['patchedRecipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeDeleteExternalPartialUpdate(requestParameters: ApiRecipeDeleteExternalPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiRecipeDeleteExternalPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

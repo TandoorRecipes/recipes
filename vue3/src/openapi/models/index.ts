@@ -1,6 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AccessToken';
+export * from './AiLog';
+export * from './AiProvider';
 export * from './AlignmentEnum';
 export * from './AuthToken';
 export * from './AutoMealPlan';
@@ -55,6 +57,8 @@ export * from './OpenDataStoreCategory';
 export * from './OpenDataUnit';
 export * from './OpenDataUnitTypeEnum';
 export * from './OpenDataVersion';
+export * from './PaginatedAiLogList';
+export * from './PaginatedAiProviderList';
 export * from './PaginatedAutomationList';
 export * from './PaginatedBookmarkletImportListList';
 export * from './PaginatedConnectorConfigList';
@@ -101,6 +105,7 @@ export * from './PaginatedUserSpaceList';
 export * from './PaginatedViewLogList';
 export * from './ParsedIngredient';
 export * from './PatchedAccessToken';
+export * from './PatchedAiProvider';
 export * from './PatchedAutomation';
 export * from './PatchedBookmarkletImport';
 export * from './PatchedConnectorConfig';

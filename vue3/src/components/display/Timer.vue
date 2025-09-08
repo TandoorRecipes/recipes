@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import {useI18n} from "vue-i18n";
+
 const emit = defineEmits(['stop'])
 
 import {computed, onMounted, ref} from "vue";
@@ -23,6 +25,8 @@ import {DateTime, Duration} from "luxon";
 const props = defineProps({
     seconds: {type: Number, required: true}
 })
+
+const {t} = useI18n()
 
 const initialDurationSeconds = ref(props.seconds)
 const durationSeconds = ref(initialDurationSeconds.value)

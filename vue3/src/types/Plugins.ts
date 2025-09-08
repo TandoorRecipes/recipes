@@ -12,9 +12,15 @@ export type TandoorPlugin = {
     bottomNavigation: any[],
     userNavigation: any[],
 
+    buildInputs?: string[],
+
     databasePageComponent?: Component,
 
     disabled?: boolean
+}
+
+export type PluginModule = {
+  plugin: TandoorPlugin
 }
 
 const pluginModules = import.meta.glob('@/plugins/*/plugin.ts', { eager: true })

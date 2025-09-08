@@ -65,6 +65,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
+from cookbook.helper.ai_helper import has_monthly_token
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -74,7 +75,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space
+                                               switch_user_active_space, CustomAiProviderPermission
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -85,7 +86,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -110,7 +111,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
+                                 AiProviderSerializer, AiLogSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -615,6 +617,29 @@ class SearchPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         with scopes_disabled():  # need to disable scopes as search preferences are not scoped
             return self.queryset.filter(user=self.request.user)
+
+
+class AiProviderViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = AiProvider.objects
+    serializer_class = AiProviderSerializer
+    permission_classes = [CustomAiProviderPermission & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        # read only access to all space and global AiProviders
+        with scopes_disabled():
+            return self.queryset.filter(Q(space=self.request.space) | Q(space__isnull=True))
+
+
+class AiLogViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = AiLog.objects
+    serializer_class = AiLogSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    http_method_names = ['get']
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
 
 
 class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -1449,6 +1474,22 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return Response(serializer.errors, 400)
 
+    @extend_schema(responses=RecipeSerializer(many=False))
+    @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
+    def delete_external(self, request, pk):
+        obj = self.get_object()
+        if obj.get_space() != request.space and has_group_permission(request.user, ['user']):
+            raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
+
+        if obj.storage:
+            get_recipe_provider(obj).delete_file(obj)
+            obj.storage = None
+            obj.file_path = ''
+            obj.file_uid = ''
+            obj.save()
+
+        return Response(self.serializer_class(obj, many=False, context={'request': request}).data)
+
 
 @extend_schema_view(list=extend_schema(
     parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int),
@@ -1984,6 +2025,42 @@ class AiImportView(APIView):
         if serializer.is_valid():
             # TODO max file size check
 
+            if 'ai_provider_id' not in serializer.validated_data:
+                response = {
+                    'error': True,
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            if not has_monthly_token(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI."),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            ai_provider = AiProvider.objects.filter(pk=serializer.validated_data['ai_provider_id']).filter(Q(space=request.space) | Q(space__isnull=True)).first()
+
+            def log_ai_request(kwargs, completion_response, start_time, end_time):
+                credit_cost = 0
+                if ai_provider.log_credit_cost:
+                    credit_cost = kwargs.get("response_cost", 0) * 100
+
+                AiLog.objects.create(
+                    created_by=request.user,
+                    space=request.space,
+                    ai_provider=ai_provider,
+                    start_time=start_time,
+                    end_time=end_time,
+                    input_tokens=completion_response['usage']['prompt_tokens'],
+                    output_tokens=completion_response['usage']['completion_tokens'],
+                    function=AiLog.F_FILE_IMPORT,
+                    credit_cost=credit_cost,
+                    credits_from_balance=False,  # TODO implement
+                )
+
+            litellm.success_callback = [log_ai_request]
+
             messages = []
             uploaded_file = serializer.validated_data['file']
 
@@ -2052,7 +2129,9 @@ class AiImportView(APIView):
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                ai_response = completion(api_key=AI_API_KEY, model=AI_MODEL_NAME, response_format={"type": "json_object"}, messages=messages, )
+                ai_response = completion(api_key=ai_provider.api_key,
+                                         model=ai_provider.model_name,
+                                         response_format={"type": "json_object"}, messages=messages, )
             except BadRequestError as err:
                 response = {
                     'error': True,
