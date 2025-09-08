@@ -38,7 +38,7 @@
     "vite": "6.3.5",
     "vite-plugin-pwa": "^1.0.2",
     "vite-plugin-vuetify": "^2.1.1",
-    "vue-tsc": "^2.2.8",
+    "vue-tsc": "^3.0.6",
     "workbox-background-sync": "^7.3.0",
     "workbox-build": "^7.3.0",
     "workbox-core": "^7.3.0",
