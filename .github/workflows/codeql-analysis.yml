@@ -36,31 +36,18 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         config: |
-          # Paths to exclude from analysis
           paths-ignore:
             - "vue/node_modules"
             - "cookbook/tests/other/test_data/"
             - "cookbook/tests/resources/websites/"
-            - "**/node_modules/**"           # Any node_modules directory
-            - "**/*.min.js"                  # Minified files
-            - "**/*.bundle.js"               # Bundled files
-            - "docs/**"                      # Documentation
-            - "*.log"                        # Log files
-            - "**/redoc*"                    # Redoc generated files
-          
-          # Query suite options:
-          # - security-extended: More thorough security analysis
-          # - security-and-quality: Security + code quality (slower)
-          # - security-only: Fastest, security issues only
+            - "**/node_modules/**"
+            - "**/*.min.js"
+            - "**/*.bundle.js"
+            - "docs/**"
+            - "*.log"
+            - "**/redoc*"
           queries:
-            - uses: security-extended
-            
-          # Optional: Disable specific queries that create noise
-          # query-filters:
-          #   - exclude:
-          #       id: js/unused-local-variable
-          #   - exclude:
-          #       id: py/unused-local-variable
+            - security-extended
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@b69421388d5449cc5a5e1ca344d71926bda69e07  # v3.28.0
