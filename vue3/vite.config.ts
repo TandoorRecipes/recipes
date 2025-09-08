@@ -62,28 +62,32 @@ export default defineConfig(async ({command, mode, isSsrBuild, isPreview}) => {
  * function to load plugin configs and find additional build inputs
  */
 async function collectBuildInputs() {
-    const pluginsDir = resolve(__dirname, "src/plugins")
-    const buildInputs: string[] = []
+    try {
+        const pluginsDir = resolve(__dirname, "src/plugins")
+        const buildInputs: string[] = []
 
-    for (const dir of readdirSync(pluginsDir, {withFileTypes: true})) {
-        if (!dir.isDirectory() && !dir.isSymbolicLink()) continue
+        for (const dir of readdirSync(pluginsDir, {withFileTypes: true})) {
+            if (!dir.isDirectory() && !dir.isSymbolicLink()) continue
 
-        const pluginPath = join(pluginsDir, dir.name, "plugin.ts")
-        try {
-            const code = readFileSync(pluginPath, "utf-8")
-            // Regex to capture buildInputs: [ ... ]
-            const match = code.match(/buildInputs\s*:\s*(\[[^\]]*\])/s)
-            if (match) {
-                const arr = [eval][0](match[1]) as string[]
-                buildInputs.push(...arr)
+            const pluginPath = join(pluginsDir, dir.name, "plugin.ts")
+            try {
+                const code = readFileSync(pluginPath, "utf-8")
+                // Regex to capture buildInputs: [ ... ]
+                const match = code.match(/buildInputs\s*:\s*(\[[^\]]*\])/s)
+                if (match) {
+                    const arr = [eval][0](match[1]) as string[]
+                    buildInputs.push(...arr)
+                }
+            } catch (err) {
+                console.warn(`Failed to parse plugin at ${pluginPath}:`, err)
             }
-        } catch (err) {
-            console.warn(`Failed to parse plugin at ${pluginPath}:`, err)
         }
-    }
 
-    console.log('Tandoor Plugin build inputs: ', buildInputs)
-    return buildInputs
+        console.log('Tandoor Plugin build inputs: ', buildInputs)
+        return buildInputs
+    } catch (err) {
+        return []
+    }
 }
 
 
