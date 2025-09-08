@@ -35,18 +35,7 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        # Query suite options:
-        # - security-extended: More thorough security analysis
-        # - security-and-quality: Security + code quality (slower)
-        # - security-only: Fastest, security issues only
         queries: security-extended
-          
-        # Optional: Disable specific queries that create noise
-        # query-filters:
-        #   - exclude:
-        #       id: js/unused-local-variable
-        #   - exclude:
-        #       id: py/unused-local-variable
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@b69421388d5449cc5a5e1ca344d71926bda69e07  # v3.28.0
+      uses: github/codeql-action/analyze@v3
