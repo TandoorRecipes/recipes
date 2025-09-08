@@ -1,10 +1,10 @@
 aiohttp==3.12.15
 beautifulsoup4==4.13.5
-boto3==1.40.21
+boto3==1.40.24
 bleach==6.2.0
 cryptography===45.0.7
 crispy-bootstrap4==2025.6
-Django==4.2.23
+Django==4.2.24
 django-allauth==65.11.1
 django-annoying==0.10.8
 django-auth-ldap==5.2.0
@@ -54,7 +54,7 @@ whitenoise==6.9.0
 autopep8==2.3.2
 flake8==7.3.0
 freezegun==1.5.5
-pytest==8.4.1
+pytest==8.4.2
 pytest-asyncio==1.1.0
 pytest-cov===6.2.1
 pytest-django==4.11.1
