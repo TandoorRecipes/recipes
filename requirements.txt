@@ -1,6 +1,6 @@
 aiohttp==3.12.15
 beautifulsoup4==4.13.5
-boto3==1.40.21
+boto3==1.40.24
 bleach==6.2.0
 cryptography===45.0.7
 crispy-bootstrap4==2025.6
