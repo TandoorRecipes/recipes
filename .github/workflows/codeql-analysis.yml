@@ -35,18 +35,7 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        config: |
-          paths-ignore:
-            - "vue/node_modules"
-            - "cookbook/tests/other/test_data/"
-            - "cookbook/tests/resources/websites/"
-            - "**/node_modules/**"
-            - "**/*.min.js"
-            - "**/*.bundle.js"
-            - "docs/**"
-            - "*.log"
-            - "**/redoc*"
-          queries: 
-            - security-extended
+        queries: security-extended
+
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@b69421388d5449cc5a5e1ca344d71926bda69e07  # v3.28.0
+      uses: github/codeql-action/analyze@v3
