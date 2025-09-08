@@ -230,6 +230,12 @@ export interface PatchedSpace {
      * @memberof PatchedSpace
      */
     readonly aiMonthlyCreditsUsed?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedSpace
+     */
+    aiEnabled?: boolean;
 }
 
 /**
@@ -279,6 +285,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'aiCreditsMonthly': json['ai_credits_monthly'] == null ? undefined : json['ai_credits_monthly'],
         'aiCreditsBalance': json['ai_credits_balance'] == null ? undefined : json['ai_credits_balance'],
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'] == null ? undefined : json['ai_monthly_credits_used'],
+        'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
     };
 }
 
@@ -305,6 +312,7 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'creat
         'logo_color_192': UserFileViewToJSON(value['logoColor192']),
         'logo_color_512': UserFileViewToJSON(value['logoColor512']),
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
+        'ai_enabled': value['aiEnabled'],
     };
 }
 

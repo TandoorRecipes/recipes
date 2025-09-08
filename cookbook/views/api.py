@@ -65,6 +65,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
+from cookbook.helper.ai_helper import has_monthly_token
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -2027,13 +2028,24 @@ class AiImportView(APIView):
             if 'ai_provider_id' not in serializer.validated_data:
                 response = {
                     'error': True,
-                    'msg': 'You must select an AI provider to perform your request',
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            if not has_monthly_token(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI."),
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             ai_provider = AiProvider.objects.filter(pk=serializer.validated_data['ai_provider_id']).filter(Q(space=request.space) | Q(space__isnull=True)).first()
 
             def log_ai_request(kwargs, completion_response, start_time, end_time):
+                credit_cost = 0
+                if ai_provider.log_credit_cost:
+                    credit_cost = kwargs.get("response_cost", 0) * 100
+
                 AiLog.objects.create(
                     created_by=request.user,
                     space=request.space,
@@ -2043,7 +2055,7 @@ class AiImportView(APIView):
                     input_tokens=completion_response['usage']['prompt_tokens'],
                     output_tokens=completion_response['usage']['completion_tokens'],
                     function=AiLog.F_FILE_IMPORT,
-                    credit_cost=kwargs.get("response_cost", 0) * 100,
+                    credit_cost=credit_cost,
                     credits_from_balance=False,  # TODO implement
                 )
 

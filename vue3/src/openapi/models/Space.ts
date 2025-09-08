@@ -230,6 +230,12 @@ export interface Space {
      * @memberof Space
      */
     readonly aiMonthlyCreditsUsed: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    aiEnabled?: boolean;
 }
 
 /**
@@ -293,6 +299,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'aiCreditsMonthly': json['ai_credits_monthly'],
         'aiCreditsBalance': json['ai_credits_balance'],
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'],
+        'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
     };
 }
 
@@ -319,6 +326,7 @@ export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxReci
         'logo_color_192': UserFileViewToJSON(value['logoColor192']),
         'logo_color_512': UserFileViewToJSON(value['logoColor512']),
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
+        'ai_enabled': value['aiEnabled'],
     };
 }
 

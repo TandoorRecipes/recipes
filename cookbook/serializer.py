@@ -373,7 +373,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_credits_monthly', 'ai_credits_balance', 'ai_monthly_credits_used')
@@ -412,7 +412,7 @@ class AiProviderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AiProvider
-        fields = ('id','name', 'description', 'api_key', 'model_name', 'url', 'space', 'created_at', 'updated_at')
+        fields = ('id', 'name', 'description', 'api_key', 'model_name', 'url', 'log_credit_cost', 'space', 'created_at', 'updated_at')
         read_only_fields = ('created_at', 'updated_at',)
 
         extra_kwargs = {

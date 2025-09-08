@@ -831,8 +831,9 @@ export const TAiLog = {
     disableUpdate: true,
 
     tableHeaders: [
-        {title: 'Name', key: 'function'},
+        {title: 'Type', key: '_function'},
         {title: 'AiProvider', key: 'aiProvider.name',},
+        {title: 'Credits', key: 'creditCost',},
         {title: 'CreatedAt', key: 'createdAt'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]

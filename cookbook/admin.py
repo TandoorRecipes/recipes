@@ -17,7 +17,7 @@ from .models import (BookmarkletImport, Comment, CookLog, CustomFilter, Food, Im
                      ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
                      TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                     ViewLog, ConnectorConfig)
+                     ViewLog, ConnectorConfig, AiProvider, AiLog)
 
 admin.site.login = secure_admin_login(admin.site.login)
 
@@ -88,6 +88,20 @@ class SearchPreferenceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(SearchPreference, SearchPreferenceAdmin)
+
+
+class AiProviderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space', 'model',)
+    search_fields = ('name', 'space', 'model',)
+
+
+admin.site.register(AiProvider, AiProviderAdmin)
+
+
+class AiLogAdmin(admin.ModelAdmin):
+    list_display = ('ai_provider', 'function', 'credit_cost', 'created_by', 'created_at',)
+
+admin.site.register(AiLog, AiLogAdmin)
 
 
 class StorageAdmin(admin.ModelAdmin):

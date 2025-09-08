@@ -329,7 +329,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
 
-    ai_credits_monthly = models.IntegerField(default=0)
+    ai_enabled = models.BooleanField(default=True)
+    ai_credits_monthly = models.IntegerField(default=100)
     ai_credits_balance = models.IntegerField(default=0)
 
     internal_note = models.TextField(blank=True, null=True)
@@ -405,6 +406,7 @@ class AiProvider(models.Model):
     api_key = models.CharField(max_length=2048)
     model_name = models.CharField(max_length=256)
     url = models.CharField(max_length=2048, blank=True, null=True)
+    log_credit_cost = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

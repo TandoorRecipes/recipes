@@ -57,6 +57,12 @@ export interface AiProvider {
     url?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof AiProvider
+     */
+    logCreditCost?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof AiProvider
      */
@@ -103,6 +109,7 @@ export function AiProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'apiKey': json['api_key'],
         'modelName': json['model_name'],
         'url': json['url'] == null ? undefined : json['url'],
+        'logCreditCost': json['log_credit_cost'] == null ? undefined : json['log_credit_cost'],
         'space': json['space'] == null ? undefined : json['space'],
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
@@ -121,6 +128,7 @@ export function AiProviderToJSON(value?: Omit<AiProvider, 'createdAt'|'updatedAt
         'api_key': value['apiKey'],
         'model_name': value['modelName'],
         'url': value['url'],
+        'log_credit_cost': value['logCreditCost'],
         'space': value['space'],
     };
 }

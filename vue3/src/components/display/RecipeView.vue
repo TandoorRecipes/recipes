@@ -121,12 +121,16 @@
         <template v-if="recipe.filePath">
             <external-recipe-viewer class="mt-2" :recipe="recipe"></external-recipe-viewer>
 
-            <v-card :title="$t('AI')" prepend-icon="$ai" @click="aiConvertRecipe()" :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading"
+            <v-card :title="$t('AI')" prepend-icon="$ai"  :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading || !useUserPreferenceStore().activeSpace.aiEnabled"
                     v-if="!recipe.internal">
                 <v-card-text>
-                    Convert the recipe using AI
+                    {{$t('ConvertUsingAI')}}
 
-                    <model-select model="AiProvider" v-model="selectedAiProvider"></model-select>
+                    <model-select model="AiProvider" v-model="selectedAiProvider">
+                        <template #append>
+                            <v-btn @click="aiConvertRecipe()" icon="fa-solid fa-person-running" color="success"></v-btn>
+                        </template>
+                    </model-select>
                 </v-card-text>
             </v-card>
         </template>

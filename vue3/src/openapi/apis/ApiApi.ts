@@ -537,6 +537,7 @@ export interface ApiAccessTokenUpdateRequest {
 }
 
 export interface ApiAiImportCreateRequest {
+    aiProviderId: number;
     file: string | null;
     text: string | null;
     recipeId: string | null;
@@ -1034,6 +1035,7 @@ export interface ApiGroupRetrieveRequest {
 }
 
 export interface ApiImportCreateRequest {
+    aiProviderId: number;
     file: string | null;
     text: string | null;
     recipeId: string | null;
@@ -2420,6 +2422,13 @@ export class ApiApi extends runtime.BaseAPI {
      * given an image or PDF file convert its content to a structured recipe using AI and the scraping system
      */
     async apiAiImportCreateRaw(requestParameters: ApiAiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
+        if (requestParameters['aiProviderId'] == null) {
+            throw new runtime.RequiredError(
+                'aiProviderId',
+                'Required parameter "aiProviderId" was null or undefined when calling apiAiImportCreate().'
+            );
+        }
+
         if (requestParameters['file'] == null) {
             throw new runtime.RequiredError(
                 'file',
@@ -2461,6 +2470,10 @@ export class ApiApi extends runtime.BaseAPI {
             formParams = new FormData();
         } else {
             formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['aiProviderId'] != null) {
+            formParams.append('ai_provider_id', requestParameters['aiProviderId'] as any);
         }
 
         if (requestParameters['file'] != null) {
@@ -6616,6 +6629,13 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiImportCreateRaw(requestParameters: ApiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
+        if (requestParameters['aiProviderId'] == null) {
+            throw new runtime.RequiredError(
+                'aiProviderId',
+                'Required parameter "aiProviderId" was null or undefined when calling apiImportCreate().'
+            );
+        }
+
         if (requestParameters['file'] == null) {
             throw new runtime.RequiredError(
                 'file',
@@ -6657,6 +6677,10 @@ export class ApiApi extends runtime.BaseAPI {
             formParams = new FormData();
         } else {
             formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['aiProviderId'] != null) {
+            formParams.append('ai_provider_id', requestParameters['aiProviderId'] as any);
         }
 
         if (requestParameters['file'] != null) {

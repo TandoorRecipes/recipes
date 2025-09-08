@@ -14,8 +14,7 @@
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                 <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
 
-                <!-- TODO localize -->
-                <v-checkbox :label="$t('Global')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser"></v-checkbox>
+                <v-checkbox :label="$t('Global')" :hint="$t('GlobalHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint class="mb-2"></v-checkbox>
 
                 <v-text-field :label="$t('APIKey')" v-model="editingObj.apiKey"></v-text-field>
 
@@ -23,10 +22,9 @@
 
                 </v-combobox>
 
-                <p class="mt-2 mb-2">You can use any model that <a href="https://docs.litellm.ai/docs/providers" target="_blank">LiteLLM supports</a>, the list just contains some
-                    of the most
-                    commonly used models.</p>
+                <p class="mt-2 mb-2">{{$t('AiModelHelp')}} <a href="https://docs.litellm.ai/docs/providers" target="_blank">LiteLLM</a></p>
 
+                <v-checkbox :label="$t('LogCredits')" :hint="$t('LogCreditsHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint class="mb-2"></v-checkbox>
                 <v-text-field :label="$t('Url')" v-model="editingObj.url"></v-text-field>
 
             </v-form>

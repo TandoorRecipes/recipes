@@ -57,6 +57,12 @@ export interface PatchedAiProvider {
     url?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof PatchedAiProvider
+     */
+    logCreditCost?: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedAiProvider
      */
@@ -98,6 +104,7 @@ export function PatchedAiProviderFromJSONTyped(json: any, ignoreDiscriminator: b
         'apiKey': json['api_key'] == null ? undefined : json['api_key'],
         'modelName': json['model_name'] == null ? undefined : json['model_name'],
         'url': json['url'] == null ? undefined : json['url'],
+        'logCreditCost': json['log_credit_cost'] == null ? undefined : json['log_credit_cost'],
         'space': json['space'] == null ? undefined : json['space'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
@@ -116,6 +123,7 @@ export function PatchedAiProviderToJSON(value?: Omit<PatchedAiProvider, 'created
         'api_key': value['apiKey'],
         'model_name': value['modelName'],
         'url': value['url'],
+        'log_credit_cost': value['logCreditCost'],
         'space': value['space'],
     };
 }
