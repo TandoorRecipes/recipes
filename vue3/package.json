@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/luxon": "^3.7.1",
+    "@types/sortablejs": "^1.15.8",
     "@vueform/multiselect": "^2.6.11",
     "@vueuse/core": "^13.6.0",
     "@vueuse/router": "^13.6.0",
@@ -22,7 +23,6 @@
     "vue-router": "^4.5.0",
     "vue-simple-calendar": "7.1.0",
     "vuedraggable": "^4.1.0",
-    "@types/sortablejs": "^1.15.8",
     "vuetify": "^3.9.3"
   },
   "devDependencies": {
@@ -32,20 +32,21 @@
     "@types/node": "^24.0.8",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.7.0",
+    "esbuild-register": "^3.6.0",
     "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
     "vite": "6.3.5",
     "vite-plugin-pwa": "^1.0.2",
-    "workbox-core": "^7.3.0",
-    "workbox-build": "^7.3.0",
-    "workbox-window": "^7.3.0",
+    "vite-plugin-vuetify": "^2.1.1",
+    "vue-tsc": "^2.2.8",
     "workbox-background-sync": "^7.3.0",
+    "workbox-build": "^7.3.0",
+    "workbox-core": "^7.3.0",
     "workbox-expiration": "^7.3.0",
     "workbox-navigation-preload": "^7.3.0",
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
     "workbox-strategies": "^7.3.0",
-    "vite-plugin-vuetify": "^2.1.1",
-    "vue-tsc": "^2.2.8"
+    "workbox-window": "^7.3.0"
   }
 }
