@@ -16,7 +16,7 @@
                 <v-date-input :label="$t('Valid Until')" v-model="editingObj.validUntil"></v-date-input>
                 <v-textarea :label="$t('Note')" v-model="editingObj.internalNote"></v-textarea>
                 <v-checkbox :label="$t('Reusable')" v-model="editingObj.reusable"></v-checkbox>
-                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)">
+                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)" v-if="!isUpdate">
                     <template #append-inner>
                         <btn-copy variant="plain" color="undefined" :copy-value="inviteLinkUrl(editingObj)"></btn-copy>
                     </template>

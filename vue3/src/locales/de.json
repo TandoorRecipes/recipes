@@ -218,7 +218,7 @@
   "FuzzySearchHelp": "Verwende unscharfe Suche um Einträge auch bei Unterschieden in der Schreibweise zu finden.",
   "GettingStarted": "Erste Schritte",
   "Global": "Global",
-  "GlobalHelp": "Globale AI Anbieter können von Nutzern aller Spaces verwendet werden. ",
+  "GlobalHelp": "Globale AI Anbieter können von Nutzern aller Spaces verwendet werden. Sie können nur dich Instanz Admins (Superusers) erstellt und bearbeitet werden.",
   "GroupBy": "Gruppieren nach",
   "HeaderWarning": "Achtung: Durch ändern auf Überschrift werden Menge/Einheit/Lebensmittel gelöscht",
   "Headline": "Überschrift",

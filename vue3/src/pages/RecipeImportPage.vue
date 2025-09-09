@@ -60,7 +60,7 @@
                                         </v-card>
                                     </v-col>
 
-                                    <v-col cols="12" md="6" v-if="useUserPreferenceStore().serverSettings.enableAiImport">
+                                    <v-col cols="12" md="6" v-if="useUserPreferenceStore().activeSpace.aiEnabled">
                                         <v-card
                                             :title="$t('AI')"
                                             :subtitle="$t('AIImportSubtitle')"
@@ -69,7 +69,7 @@
                                             :color="(importType == 'ai') ? 'primary' : ''"
                                             elevation="1"
                                             @click="importType = 'ai'"
-                                            :disabled="!useUserPreferenceStore().serverSettings.enableAiImport">
+                                            :disabled="!useUserPreferenceStore().activeSpace.aiEnabled">
                                         </v-card>
                                     </v-col>
 
@@ -142,7 +142,11 @@
                                 <div v-if="importType == 'ai'">
                                     <v-row>
                                         <v-col md="6">
-                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider"></ModelSelect>
+                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider">
+                                                <template #append>
+                                                    <v-btn icon="$settings" :to="{name:'ModelListPage', params: {model: 'AiProvider'}}" color="success"></v-btn>
+                                                </template>
+                                            </ModelSelect>
                                         </v-col>
                                         <v-col md="6">
                                             <v-btn-toggle class="mb-2" border divided v-model="aiMode">
@@ -735,12 +739,12 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
 function loadRecipeFromAiImport() {
     let request = null
 
-    if(selectedAiProvider.value == undefined) {
+    if (selectedAiProvider.value == undefined) {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, "No AI Provider selected")
     }
 
     if (image.value != null && aiMode.value == 'file') {
-        request = doAiImport(selectedAiProvider.value.id!,image.value)
+        request = doAiImport(selectedAiProvider.value.id!, image.value)
     } else if (sourceImportText.value != '' && aiMode.value == 'text') {
         request = doAiImport(selectedAiProvider.value.id!, null, sourceImportText.value)
     }

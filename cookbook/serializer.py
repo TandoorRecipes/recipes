@@ -404,20 +404,32 @@ class SpacedModelSerializer(serializers.ModelSerializer):
 
 
 class AiProviderSerializer(serializers.ModelSerializer):
+    api_key = serializers.CharField(required=False, write_only=True)
 
     def create(self, validated_data):
-        if not self.context['request'].user.is_superuser:
-            validated_data['space'] = self.context['request'].space
+        validated_data = self.handle_global_space_logic(validated_data)
+
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = self.handle_global_space_logic(validated_data)
+        return super().update(instance, validated_data)
+
+    def handle_global_space_logic(self, validated_data):
+        """
+        allow superusers to create AI providers without a space but make sure everyone else only uses their own space
+        """
+        if ('space' not in validated_data or not validated_data['space']) and self.context['request'].user.is_superuser:
+            validated_data['space'] = None
+        else:
+            validated_data['space'] = self.context['request'].space
+
+        return validated_data
 
     class Meta:
         model = AiProvider
         fields = ('id', 'name', 'description', 'api_key', 'model_name', 'url', 'log_credit_cost', 'space', 'created_at', 'updated_at')
         read_only_fields = ('created_at', 'updated_at',)
-
-        extra_kwargs = {
-            'api_key': {'write_only': True},
-        }
 
 
 class AiLogSerializer(serializers.ModelSerializer):

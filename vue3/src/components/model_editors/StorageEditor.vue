@@ -20,9 +20,9 @@
                 <v-text-field :label="$t('Username')" v-model="editingObj.username" v-if="editingObj.method == 'NEXTCLOUD' || editingObj.method == 'DB'"></v-text-field>
 
                 <v-text-field :label="$t('Password')" :hint="$t('StoragePasswordTokenHelp')" persistent-hint v-model="editingObj.password" v-if="editingObj.method == 'NEXTCLOUD'"></v-text-field>
-                <v-text-field :label="$t('Access_Token')" :hint="$t('StoragePasswordTokenHelp')" persistent-hint  v-model="editingObj.token" v-if="editingObj.method == 'DB'"></v-text-field>
+                <v-text-field :label="$t('Access_Token')" :hint="$t('StoragePasswordTokenHelp')" persistent-hint v-model="editingObj.token" v-if="editingObj.method == 'DB'"></v-text-field>
 
-                  <v-text-field :label="$t('Path')" v-model="editingObj.path"></v-text-field>
+                <v-text-field :label="$t('Path')" v-model="editingObj.path"></v-text-field>
 
             </v-form>
         </v-card-text>
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, watch} from "vue";
-import { Storage } from "@/openapi";
+import {Storage} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 
@@ -64,7 +64,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 }
 
