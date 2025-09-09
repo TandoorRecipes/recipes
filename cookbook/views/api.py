@@ -2615,10 +2615,9 @@ def ingredient_from_string(request):
 
     if unit:
         if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
-            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
+            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
         else:
             unit_obj = Unit.objects.create(space=request.space, name=unit)
-            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
-        ingredient['unit'] = {'name': unit.name, 'id': unit.id}
+            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
 
     return JsonResponse(ingredient, status=200)
