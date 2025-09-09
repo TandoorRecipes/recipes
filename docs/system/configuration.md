@@ -484,6 +484,11 @@ Sets the monthly default credit limit for AI usage
 SPACE_AI_CREDITS_MONTHLY=100
 ```
 
+Ratelimit for AI API
+```
+AI_RATELIMIT=60/hour
+```
+
 #### FDC Api
 
 The FDC Api is used to automatically load nutrition information from

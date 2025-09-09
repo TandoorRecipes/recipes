@@ -31,6 +31,12 @@ import {
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
 } from './SpaceNavTextColorEnum';
+import type { AiProvider } from './AiProvider';
+import {
+    AiProviderFromJSON,
+    AiProviderFromJSONTyped,
+    AiProviderToJSON,
+} from './AiProvider';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
@@ -217,13 +223,13 @@ export interface PatchedSpace {
      * @type {number}
      * @memberof PatchedSpace
      */
-    readonly aiCreditsMonthly?: number;
+    aiCreditsMonthly?: number;
     /**
      * 
      * @type {number}
      * @memberof PatchedSpace
      */
-    readonly aiCreditsBalance?: number;
+    aiCreditsBalance?: number;
     /**
      * 
      * @type {number}
@@ -236,6 +242,12 @@ export interface PatchedSpace {
      * @memberof PatchedSpace
      */
     aiEnabled?: boolean;
+    /**
+     * 
+     * @type {AiProvider}
+     * @memberof PatchedSpace
+     */
+    aiDefaultProvider?: AiProvider;
 }
 
 /**
@@ -286,10 +298,11 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'aiCreditsBalance': json['ai_credits_balance'] == null ? undefined : json['ai_credits_balance'],
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'] == null ? undefined : json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
+        'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
     };
 }
 
-export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiCreditsMonthly'|'aiCreditsBalance'|'aiMonthlyCreditsUsed'> | null): any {
+export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'> | null): any {
     if (value == null) {
         return value;
     }
@@ -312,7 +325,10 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'creat
         'logo_color_192': UserFileViewToJSON(value['logoColor192']),
         'logo_color_512': UserFileViewToJSON(value['logoColor512']),
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
+        'ai_credits_monthly': value['aiCreditsMonthly'],
+        'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
+        'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
     };
 }
 

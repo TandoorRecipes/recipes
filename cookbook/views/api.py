@@ -65,7 +65,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
-from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request
+from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request, AiCallbackHandler
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -117,7 +117,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_API_KEY, AI_MODEL_NAME
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -2041,25 +2041,7 @@ class AiImportView(APIView):
 
             ai_provider = AiProvider.objects.filter(pk=serializer.validated_data['ai_provider_id']).filter(Q(space=request.space) | Q(space__isnull=True)).first()
 
-            def log_ai_request(kwargs, completion_response, start_time, end_time):
-                credit_cost = 0
-                if ai_provider.log_credit_cost:
-                    credit_cost = kwargs.get("response_cost", 0) * 100
-
-                AiLog.objects.create(
-                    created_by=request.user,
-                    space=request.space,
-                    ai_provider=ai_provider,
-                    start_time=start_time,
-                    end_time=end_time,
-                    input_tokens=completion_response['usage']['prompt_tokens'],
-                    output_tokens=completion_response['usage']['completion_tokens'],
-                    function=AiLog.F_FILE_IMPORT,
-                    credit_cost=credit_cost,
-                    credits_from_balance=False,  # TODO implement
-                )
-
-            litellm.success_callback = [log_ai_request]
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider)]
 
             messages = []
             uploaded_file = serializer.validated_data['file']
@@ -2442,7 +2424,6 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         # Attention: No login required, do not return sensitive data
         s['shopping_min_autosync_interval'] = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
         s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT
-        s['enable_ai_import'] = settings.AI_API_KEY != ''
         s['disable_external_connectors'] = settings.DISABLE_EXTERNAL_CONNECTORS
         s['terms_url'] = settings.TERMS_URL
         s['privacy_url'] = settings.PRIVACY_URL

@@ -834,6 +834,7 @@ export const TAiLog = {
         {title: 'Type', key: '_function'},
         {title: 'AiProvider', key: 'aiProvider.name',},
         {title: 'Credits', key: 'creditCost',},
+        {title: 'FromBalance', key: 'creditsFromBalance',},
         {title: 'CreatedAt', key: 'createdAt'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]

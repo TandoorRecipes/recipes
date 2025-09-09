@@ -661,7 +661,7 @@ const appImportDuplicates = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
 const aiMode = ref<'file' | 'text'>('file')
-const selectedAiProvider = ref<undefined | AiProvider>(undefined)
+const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
 const editAfterImport = ref(false)
 
 const bookmarkletToken = ref("")

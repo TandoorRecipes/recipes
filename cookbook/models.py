@@ -331,7 +331,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
 
     ai_enabled = models.BooleanField(default=True)
     ai_credits_monthly = models.IntegerField(default=100)
-    ai_credits_balance = models.IntegerField(default=0)
+    ai_credits_balance = models.DecimalField(default=0, max_digits=16, decimal_places=4)
+    ai_default_provider = models.ForeignKey("AiProvider", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_ai_default_provider')
 
     internal_note = models.TextField(blank=True, null=True)
 

@@ -78,19 +78,38 @@
 
 
         <v-textarea v-model="space.message" :label="$t('Message')"></v-textarea>
+        <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
 
-        <!--        <model-select v-model="space.foodInherit" model="FoodInheritField" mode="tags"></model-select>-->
+        <p class="text-h6 mt-2">{{ $t('AI') }}</p>
+        <v-divider class="mb-2"></v-divider>
+        <p class="text-disabled font-italic text-body-2">
+            <span v-if="useUserPreferenceStore().serverSettings.hosted">
+                {{ $t('AISettingsHostedHelp') }}
+            </span>
+            <span v-else>
+                {{ $t('SettingsOnlySuperuser') }}
+            </span>
+        </p>
 
+        <v-checkbox v-model="space.aiEnabled" :label="$t('Enabled')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser" hide-details></v-checkbox>
+
+        <template v-if="space.aiEnabled">
+            <model-select model="AiProvider" :label="$t('Default')" v-model="space.aiDefaultProvider"></model-select>
+
+            <v-number-input v-model="space.aiCreditsMonthly" :label="$t('MonthlyCredits')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
+            <v-number-input v-model="space.aiCreditsBalance" :label="$t('AiCreditsBalance')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
+
+        </template>
         <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
 
         <v-divider class="mt-4 mb-2"></v-divider>
-        <h2>{{$t('Cosmetic')}}</h2>
-        <span>{{$t('Space_Cosmetic_Settings')}}</span>
+        <h2>{{ $t('Cosmetic') }}</h2>
+        <span>{{ $t('Space_Cosmetic_Settings') }}</span>
 
         <v-label class="mt-4">{{ $t('Nav_Color') }}</v-label>
         <v-color-picker v-model="space.navBgColor" class="mb-4" mode="hex" :modes="['hex']" show-swatches
                         :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
-        <v-btn class="mb-4" @click="space.navBgColor = ''">{{$t('Reset')}}</v-btn>
+        <v-btn class="mb-4" @click="space.navBgColor = ''">{{ $t('Reset') }}</v-btn>
 
         <user-file-field v-model="space.navLogo" :label="$t('Logo')" :hint="$t('CustomNavLogoHelp')" persistent-hint></user-file-field>
 

@@ -326,83 +326,6 @@ class UserFileViewSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'file', 'file_download', 'file_size_kb', 'preview', 'created_by', 'created_at')
 
 
-class SpaceSerializer(WritableNestedModelSerializer):
-    created_by = UserSerializer(read_only=True)
-    user_count = serializers.SerializerMethodField('get_user_count')
-    recipe_count = serializers.SerializerMethodField('get_recipe_count')
-    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
-    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used')
-    food_inherit = FoodInheritFieldSerializer(many=True)
-    image = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    custom_space_theme = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_32 = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_128 = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_144 = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_180 = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_192 = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_512 = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    logo_color_svg = UserFileViewSerializer(required=False, many=False, allow_null=True)
-
-    @extend_schema_field(int)
-    def get_user_count(self, obj):
-        return UserSpace.objects.filter(space=obj).count()
-
-    @extend_schema_field(int)
-    def get_recipe_count(self, obj):
-        return Recipe.objects.filter(space=obj).count()
-
-    @extend_schema_field(int)
-    def get_ai_monthly_credits_used(self, obj):
-        return get_monthly_token_usage(obj)
-
-    @extend_schema_field(float)
-    def get_file_size_mb(self, obj):
-        try:
-            return UserFile.objects.filter(space=obj).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
-        except TypeError:
-            return 0
-
-    def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
-
-    class Meta:
-        model = Space
-        fields = (
-            'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-            'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
-            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
-            'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled')
-        read_only_fields = (
-            'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
-            'demo', 'ai_credits_monthly', 'ai_credits_balance', 'ai_monthly_credits_used')
-
-
-class UserSpaceSerializer(WritableNestedModelSerializer):
-    user = UserSerializer(read_only=True)
-    groups = GroupSerializer(many=True)
-
-    def validate(self, data):
-        if self.instance.user == self.context['request'].space.created_by:  # can't change space owner permission
-            raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
-        return super().validate(data)
-
-    def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
-
-    class Meta:
-        model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
-
-
-class SpacedModelSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
-
-
 class AiProviderSerializer(serializers.ModelSerializer):
     api_key = serializers.CharField(required=False, write_only=True)
 
@@ -440,6 +363,96 @@ class AiLogSerializer(serializers.ModelSerializer):
         fields = ('id', 'ai_provider', 'function', 'credit_cost', 'credits_from_balance', 'input_tokens', 'output_tokens', 'start_time', 'end_time', 'created_by', 'created_at',
                   'updated_at')
         read_only_fields = ('__all__',)
+
+
+class SpaceSerializer(WritableNestedModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    user_count = serializers.SerializerMethodField('get_user_count')
+    recipe_count = serializers.SerializerMethodField('get_recipe_count')
+    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
+    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used')
+    ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
+    food_inherit = FoodInheritFieldSerializer(many=True)
+    image = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    custom_space_theme = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_32 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_128 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_144 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_180 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_192 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_512 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_svg = UserFileViewSerializer(required=False, many=False, allow_null=True)
+
+    @extend_schema_field(int)
+    def get_user_count(self, obj):
+        return UserSpace.objects.filter(space=obj).count()
+
+    @extend_schema_field(int)
+    def get_recipe_count(self, obj):
+        return Recipe.objects.filter(space=obj).count()
+
+    @extend_schema_field(int)
+    def get_ai_monthly_credits_used(self, obj):
+        return get_monthly_token_usage(obj)
+
+    @extend_schema_field(float)
+    def get_file_size_mb(self, obj):
+        try:
+            return UserFile.objects.filter(space=obj).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+        except TypeError:
+            return 0
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        if 'ai_enabled' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['ai_enabled']
+
+        if 'ai_credits_monthly' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['ai_credits_monthly']
+
+        if 'ai_credits_balance' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['ai_credits_balance']
+
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = Space
+        fields = (
+            'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
+            'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
+            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
+            'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider')
+        read_only_fields = (
+            'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
+            'demo', 'ai_monthly_credits_used')
+
+
+class UserSpaceSerializer(WritableNestedModelSerializer):
+    user = UserSerializer(read_only=True)
+    groups = GroupSerializer(many=True)
+
+    def validate(self, data):
+        if self.instance.user == self.context['request'].space.created_by:  # can't change space owner permission
+            raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
+        return super().validate(data)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = UserSpace
+        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
+
+
+class SpacedModelSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
 
 
 class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
@@ -1610,7 +1623,6 @@ class ServerSettingsSerializer(serializers.Serializer):
     # TODO add all other relevant settings including path/url related ones?
     shopping_min_autosync_interval = serializers.CharField()
     enable_pdf_export = serializers.BooleanField()
-    enable_ai_import = serializers.BooleanField()
     disable_external_connectors = serializers.BooleanField()
     terms_url = serializers.CharField()
     privacy_url = serializers.CharField()

@@ -223,7 +223,7 @@ const recipe = defineModel<Recipe>({required: true})
 const servings = ref(1)
 const showFullRecipeName = ref(false)
 
-const selectedAiProvider = ref<undefined | AiProvider>(undefined)
+const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
 
 /**
  * factor for multiplying ingredient amounts based on recipe base servings and user selected servings
