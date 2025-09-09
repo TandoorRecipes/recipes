@@ -333,6 +333,9 @@ class CustomRecipePermission(permissions.BasePermission):
 class CustomAiProviderPermission(permissions.BasePermission):
     """
     Custom permission class for the AiProvider api endpoint
+    users: can read all
+    admins: can read and write
+    superusers: can read and write + write providers without a space
     """
     message = _('You do not have the required permissions to view this page!')
 

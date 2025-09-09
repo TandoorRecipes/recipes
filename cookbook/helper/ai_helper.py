@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.utils import timezone
 from django.db.models import Sum
 from litellm import CustomLogger
@@ -55,19 +57,15 @@ class AiCallbackHandler(CustomLogger):
         if self.ai_provider.log_credit_cost:
             credit_cost = kwargs.get("response_cost", 0) * 100
 
-        print(not has_monthly_token(self.space) , self.space.ai_credits_balance > 0, not has_monthly_token(self.space) and self.space.ai_credits_balance > 0)
         if (not has_monthly_token(self.space)) and self.space.ai_credits_balance > 0:
-            print('taking credits from balance')
-            self.space.ai_credits_balance = max(0, self.space.ai_credits_balance - credit_cost)
-            print('setting from balance to true')
-            credits_from_balance = True
-            print('saving space')
-            self.space.save()
-            print('done')
-        else:
-            print('not taking credits from balance')
+            remaining_balance = self.space.ai_credits_balance - Decimal(str(credit_cost))
+            if remaining_balance < 0:
+                remaining_balance = 0
 
-        print('creating AI log with credit cost ', credit_cost , ' from balance: ', credits_from_balance)
+            self.space.ai_credits_balance = remaining_balance
+            credits_from_balance = True
+            self.space.save()
+
         AiLog.objects.create(
             created_by=self.user,
             space=self.space,

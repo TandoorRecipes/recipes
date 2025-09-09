@@ -35,7 +35,8 @@
 
                     <v-card-text v-if="genericModel.model.name == 'AiLog'">
                         {{$t('MonthlyCreditsUsed')}} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
-                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"></v-progress-linear>
+                        {{$t('AiCreditsBalance')}} : {{useUserPreferenceStore().activeSpace.aiCreditsBalance}}
+                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed" :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"></v-progress-linear>
                     </v-card-text>
                 </v-card>
             </v-col>

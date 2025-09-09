@@ -96,8 +96,8 @@
         <template v-if="space.aiEnabled">
             <model-select model="AiProvider" :label="$t('Default')" v-model="space.aiDefaultProvider"></model-select>
 
-            <v-number-input v-model="space.aiCreditsMonthly" :label="$t('MonthlyCredits')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
-            <v-number-input v-model="space.aiCreditsBalance" :label="$t('AiCreditsBalance')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
+            <v-number-input v-model="space.aiCreditsMonthly" :precision="2" :label="$t('MonthlyCredits')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
+            <v-number-input v-model="space.aiCreditsBalance" :precision="4" :label="$t('AiCreditsBalance')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
 
         </template>
         <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>

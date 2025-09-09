@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='space',
             name='ai_credits_monthly',
-            field=models.IntegerField(default=100),
+            field=models.IntegerField(default=10000),
         ),
     ]
