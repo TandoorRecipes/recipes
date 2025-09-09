@@ -1193,6 +1193,12 @@ class RecipeBatchUpdateSerializer(serializers.Serializer):
     clear_description = serializers.BooleanField(required=False, allow_null=True)
 
 
+class FoodBatchUpdateSerializer(serializers.Serializer):
+    foods = serializers.ListField(child=serializers.IntegerField())
+
+    category = serializers.IntegerField(required=False, allow_null=True)
+
+
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
 

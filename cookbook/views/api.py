@@ -112,7 +112,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -939,6 +939,21 @@ class FoodViewSet(LoggingMixin, TreeMixin):
         except ProtectedError as e:
             content = {'error': True, 'msg': e.args[0]}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    @decorators.action(detail=False, methods=['PUT'], serializer_class=FoodBatchUpdateSerializer)
+    def batch_update(self, request):
+        serializer = self.serializer_class(data=request.data, partial=True)
+
+        if serializer.is_valid():
+            foods = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space)
+            # safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
+
+            if 'category' in serializer.validated_data:
+                foods.update(category_id=serializer.validated_data['category'])
+
+            return Response({}, 200)
+
+        return Response(serializer.errors, 400)
 
 
 @extend_schema_view(list=extend_schema(parameters=[
