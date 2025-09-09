@@ -216,7 +216,7 @@
   "FuzzySearchHelp": "Use fuzzy search to find entries even when there are differences in how the word is written.",
   "GettingStarted": "Getting Started",
   "Global": "Global",
-  "GlobalHelp": "Global AI Providers can be used by users of all spaces. ",
+  "GlobalHelp": "Global AI Providers can be used by users of all spaces. They can only be created and edited by superusers. ",
   "GroupBy": "Group By",
   "HeaderWarning": "Warning: Changing to a Heading deletes the Amount/Unit/Food",
   "Headline": "Headline",

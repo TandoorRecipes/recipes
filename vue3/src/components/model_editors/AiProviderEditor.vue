@@ -14,7 +14,6 @@
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                 <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
 
-                <v-checkbox :label="$t('Global')" :hint="$t('GlobalHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint class="mb-2"></v-checkbox>
 
                 <v-text-field :label="$t('APIKey')" v-model="editingObj.apiKey"></v-text-field>
 
@@ -22,10 +21,14 @@
 
                 </v-combobox>
 
-                <p class="mt-2 mb-2">{{$t('AiModelHelp')}} <a href="https://docs.litellm.ai/docs/providers" target="_blank">LiteLLM</a></p>
+                <p class="mt-2 mb-2">{{ $t('AiModelHelp') }} <a href="https://docs.litellm.ai/docs/providers" target="_blank">LiteLLM</a></p>
 
-                <v-checkbox :label="$t('LogCredits')" :hint="$t('LogCreditsHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint class="mb-2"></v-checkbox>
+                <v-checkbox :label="$t('LogCredits')" :hint="$t('LogCreditsHelp')" v-model="editingObj.logCreditCost" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint
+                            class="mb-2"></v-checkbox>
                 <v-text-field :label="$t('Url')" v-model="editingObj.url"></v-text-field>
+
+                <v-checkbox :label="$t('Global')" :hint="$t('GlobalHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint
+                            class="mb-2"></v-checkbox>
 
             </v-form>
         </v-card-text>
@@ -41,6 +44,7 @@ import {AiProvider} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import editor from "mavon-editor";
 
 
 const props = defineProps({
@@ -66,8 +70,8 @@ const aiModels = ref(['gemini/gemini-2.5-pro', 'gemini/gemini-2.5-flash', 'gemin
 
 const globalProvider = ref(false)
 
-watch(() =>  globalProvider, () => {
-    if(globalProvider.value){
+watch(() => globalProvider.value, () => {
+    if (globalProvider.value) {
         editingObj.value.space = undefined
     } else {
         editingObj.value.space = useUserPreferenceStore().activeSpace.id!
@@ -83,7 +87,11 @@ onMounted(() => {
  */
 function initializeEditor() {
     setupState(props.item, props.itemId, {
-        itemDefaults: props.itemDefaults
+        itemDefaults: props.itemDefaults,
+        newItemFunction: () => {
+            editingObj.value.logCreditCost = true
+            editingObj.value.space = useUserPreferenceStore().activeSpace.id!
+        },
     }).then(() => {
         globalProvider.value = editingObj.value.space == undefined
     })

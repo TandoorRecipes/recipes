@@ -8,7 +8,10 @@ def get_monthly_token_usage(space):
     """
     returns the number of credits the space has used in the current month
     """
-    return AiLog.objects.filter(space=space, credits_from_balance=False, created_at__month=timezone.now().month).aggregate(Sum('credit_cost'))['credit_cost__sum']
+    token_usage = AiLog.objects.filter(space=space, credits_from_balance=False, created_at__month=timezone.now().month).aggregate(Sum('credit_cost'))['credit_cost__sum']
+    if token_usage is None:
+        token_usage = 0
+    return token_usage
 
 
 def has_monthly_token(space):
@@ -16,3 +19,7 @@ def has_monthly_token(space):
     checks if the monthly credit limit has been exceeded
     """
     return get_monthly_token_usage(space) < space.ai_credits_monthly
+
+
+def can_perform_ai_request(space):
+    return has_monthly_token(space) and space.ai_enabled

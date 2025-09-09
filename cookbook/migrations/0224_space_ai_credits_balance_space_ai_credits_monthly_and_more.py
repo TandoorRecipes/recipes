@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='space',
             name='ai_credits_monthly',
-            field=models.IntegerField(default=0),
+            field=models.IntegerField(default=100),
         ),
         migrations.CreateModel(
             name='AiProvider',

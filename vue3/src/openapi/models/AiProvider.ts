@@ -42,7 +42,7 @@ export interface AiProvider {
      * @type {string}
      * @memberof AiProvider
      */
-    apiKey: string;
+    apiKey?: string;
     /**
      * 
      * @type {string}
@@ -86,7 +86,6 @@ export interface AiProvider {
  */
 export function instanceOfAiProvider(value: object): value is AiProvider {
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('apiKey' in value) || value['apiKey'] === undefined) return false;
     if (!('modelName' in value) || value['modelName'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
@@ -106,7 +105,7 @@ export function AiProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
-        'apiKey': json['api_key'],
+        'apiKey': json['api_key'] == null ? undefined : json['api_key'],
         'modelName': json['model_name'],
         'url': json['url'] == null ? undefined : json['url'],
         'logCreditCost': json['log_credit_cost'] == null ? undefined : json['log_credit_cost'],

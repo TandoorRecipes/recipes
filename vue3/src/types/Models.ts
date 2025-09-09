@@ -810,7 +810,7 @@ export const TAiProvider = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-
+        {title: 'Global', key: 'space'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model

@@ -51,11 +51,6 @@
                                     {#                                    {% endif %}#}
                                     <p class="card-text"><small
                                             class="text-muted">{% trans 'Owner' %}: {{ us.space.created_by }}</small>
-                                        {% if us.space.created_by != us.user %}
-                                            <p class="card-text"><small
-                                                class="text-muted"><a
-                                                href="{% url 'delete_user_space' us.pk %}">{% trans 'Leave Space' %}</a></small>
-                                        {% endif %}
                                         <!--TODO add direct link to management page -->
                                         </p>
                                 </div>

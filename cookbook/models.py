@@ -345,6 +345,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         BookmarkletImport.objects.filter(space=self).delete()
         CustomFilter.objects.filter(space=self).delete()
 
+        AiLog.objects.filter(space=self).delete()
+        AiProvider.objects.filter(space=self).delete()
+
         Property.objects.filter(space=self).delete()
         PropertyType.objects.filter(space=self).delete()
 

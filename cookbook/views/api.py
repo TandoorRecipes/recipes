@@ -65,7 +65,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
-from cookbook.helper.ai_helper import has_monthly_token
+from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -2032,10 +2032,10 @@ class AiImportView(APIView):
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
-            if not has_monthly_token(request.space):
+            if not can_perform_ai_request(request.space):
                 response = {
                     'error': True,
-                    'msg': _("You don't have any credits remaining to use AI."),
+                    'msg': _("You don't have any credits remaining to use AI or AI features are not enabled for your space."),
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
@@ -2129,9 +2129,15 @@ class AiImportView(APIView):
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                ai_response = completion(api_key=ai_provider.api_key,
-                                         model=ai_provider.model_name,
-                                         response_format={"type": "json_object"}, messages=messages, )
+                ai_request = {
+                    'api_key': ai_provider.api_key,
+                    'model': ai_provider.model_name,
+                    'response_format': {"type": "json_object"},
+                    'messages': messages,
+                }
+                if ai_provider.url:
+                    ai_request['api_base'] = ai_provider.url
+                ai_response = completion(**ai_request)
             except BadRequestError as err:
                 response = {
                     'error': True,

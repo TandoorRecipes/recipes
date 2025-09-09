@@ -74,6 +74,10 @@
                             </v-menu>
                         </v-btn>
                     </template>
+                    <template v-slot:item.space="{ item }" v-if="genericModel.model.name == 'AiProvider'">
+                        <v-chip label v-if="item.space == null" color="success">{{$t('Global')}}</v-chip>
+                        <v-chip label v-else color="info">{{$t('Space')}}</v-chip>
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>

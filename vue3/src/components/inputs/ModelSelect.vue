@@ -58,7 +58,6 @@
             <template v-if="hasMoreItems && !loading" #afterlist>
                 <span class="text-disabled font-italic text-caption ms-3">{{ $t('ModelSelectResultsHelp') }}</span>
             </template>
-
         </Multiselect>
 
         <template #append v-if="$slots.append">
