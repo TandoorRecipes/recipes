@@ -29,6 +29,7 @@ models/ExportRequest.ts
 models/FdcQuery.ts
 models/FdcQueryFoods.ts
 models/Food.ts
+models/FoodBatchUpdate.ts
 models/FoodInheritField.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts

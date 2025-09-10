@@ -30,6 +30,7 @@ import type {
   ExportRequest,
   FdcQuery,
   Food,
+  FoodBatchUpdate,
   FoodInheritField,
   FoodShoppingUpdate,
   Group,
@@ -212,6 +213,8 @@ import {
     FdcQueryToJSON,
     FoodFromJSON,
     FoodToJSON,
+    FoodBatchUpdateFromJSON,
+    FoodBatchUpdateToJSON,
     FoodInheritFieldFromJSON,
     FoodInheritFieldToJSON,
     FoodShoppingUpdateFromJSON,
@@ -960,6 +963,10 @@ export interface ApiExportLogUpdateRequest {
 export interface ApiFdcSearchRetrieveRequest {
     dataType?: Array<string>;
     query?: string;
+}
+
+export interface ApiFoodBatchUpdateUpdateRequest {
+    foodBatchUpdate: FoodBatchUpdate;
 }
 
 export interface ApiFoodCreateRequest {
@@ -5953,6 +5960,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiFdcSearchRetrieve(requestParameters: ApiFdcSearchRetrieveRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FdcQuery> {
         const response = await this.apiFdcSearchRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodBatchUpdateUpdateRaw(requestParameters: ApiFoodBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FoodBatchUpdate>> {
+        if (requestParameters['foodBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'foodBatchUpdate',
+                'Required parameter "foodBatchUpdate" was null or undefined when calling apiFoodBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: FoodBatchUpdateToJSON(requestParameters['foodBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FoodBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodBatchUpdateUpdate(requestParameters: ApiFoodBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodBatchUpdate> {
+        const response = await this.apiFoodBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

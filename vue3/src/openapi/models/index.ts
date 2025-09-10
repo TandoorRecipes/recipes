@@ -27,6 +27,7 @@ export * from './ExportRequest';
 export * from './FdcQuery';
 export * from './FdcQueryFoods';
 export * from './Food';
+export * from './FoodBatchUpdate';
 export * from './FoodInheritField';
 export * from './FoodShoppingUpdate';
 export * from './FoodSimple';

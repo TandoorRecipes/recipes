@@ -1198,6 +1198,26 @@ class FoodBatchUpdateSerializer(serializers.Serializer):
 
     category = serializers.IntegerField(required=False, allow_null=True)
 
+    substitute_add = serializers.ListField(child=serializers.IntegerField())
+    substitute_remove = serializers.ListField(child=serializers.IntegerField())
+    substitute_set = serializers.ListField(child=serializers.IntegerField())
+    substitute_remove_all = serializers.BooleanField(default=False)
+
+    inherit_fields_add = serializers.ListField(child=serializers.IntegerField())
+    inherit_fields_remove = serializers.ListField(child=serializers.IntegerField())
+    inherit_fields_set = serializers.ListField(child=serializers.IntegerField())
+    inherit_fields_remove_all = serializers.BooleanField(default=False)
+
+    child_inherit_fields_add = serializers.ListField(child=serializers.IntegerField())
+    child_inherit_fields_remove = serializers.ListField(child=serializers.IntegerField())
+    child_inherit_fields_set = serializers.ListField(child=serializers.IntegerField())
+    child_inherit_fields_remove_all = serializers.BooleanField(default=False)
+
+    substitute_children = serializers.BooleanField(required=False, allow_null=True)
+    substitute_siblings = serializers.BooleanField(required=False, allow_null=True)
+    ignore_shopping = serializers.BooleanField(required=False, allow_null=True)
+    on_hand = serializers.BooleanField(required=False, allow_null=True)
+
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)

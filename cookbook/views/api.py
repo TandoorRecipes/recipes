@@ -946,10 +946,50 @@ class FoodViewSet(LoggingMixin, TreeMixin):
 
         if serializer.is_valid():
             foods = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space)
-            # safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
+            safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
 
             if 'category' in serializer.validated_data:
-                foods.update(category_id=serializer.validated_data['category'])
+                foods.update(supermarket_category_id=serializer.validated_data['category'])
+
+
+            if 'ignore_shopping' in serializer.validated_data and serializer.validated_data['ignore_shopping'] is not None:
+                foods.update(ignore_shopping=serializer.validated_data['ignore_shopping'])
+
+            if 'on_hand' in serializer.validated_data and serializer.validated_data['on_hand'] is not None:
+                if serializer.validated_data['on_hand']:
+                    user_relation = []
+                    for f in safe_food_ids:
+                        user_relation.append(Food.onhand_users.through(food_id=f, user_id=request.user.id))
+                    Food.onhand_users.through.objects.bulk_create(user_relation, ignore_conflicts=True, unique_fields=('food_id', 'user_id',))
+                else:
+                    Food.onhand_users.through.objects.filter(food_id__in=safe_food_ids, user_id=request.user.id).delete()
+
+            if 'substitutes_add' in serializer.validated_data:
+                substitute_relation = []
+                for f in safe_food_ids:
+                    for s in serializer.validated_data['substitutes_add']:
+                        substitute_relation.append(Food.substitute.through(from_food_id=f, to_food_id=s))
+                Food.substitute.through.objects.bulk_create(substitute_relation, ignore_conflicts=True, unique_fields=('from_food_id', 'to_food_id',))
+
+            if 'substitute_remove' in serializer.validated_data:
+                for s in serializer.validated_data['substitute_remove']:
+                    Food.substitute.through.objects.filter(from_food_id=safe_food_ids, to_food_id=s).delete()
+
+            if 'substitute_set' in serializer.validated_data and len(serializer.validated_data['substitute_set']) > 0:
+                substitute_relation = []
+                Food.substitute.through.objects.filter(from_food_id=safe_food_ids).delete()
+                for f in safe_food_ids:
+                    for s in serializer.validated_data['substitute_set']:
+                        substitute_relation.append(Food.substitute.through(from_food_id=f, to_food_id=s))
+                Food.substitute.through.objects.bulk_create(substitute_relation, ignore_conflicts=True, unique_fields=('from_food_id', 'to_food_id',))
+
+            if 'substitute_remove_all' in serializer.validated_data and serializer.validated_data['substitute_remove_all']:
+                Food.substitute.through.objects.filter(from_food_id=safe_food_ids).delete()
+
+
+            def add_substitute(relation_model, base_field, base_ids, related_field_name, related_ids ):
+                pass
+
 
             return Response({}, 200)
 

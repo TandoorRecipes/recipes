@@ -34,8 +34,8 @@
                     </v-card-actions>
 
                     <v-card-text v-if="genericModel.model.name == 'AiLog'">
-                        {{$t('MonthlyCreditsUsed')}} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
-                        {{$t('AiCreditsBalance')}} : {{useUserPreferenceStore().activeSpace.aiCreditsBalance}}
+                        {{ $t('MonthlyCreditsUsed') }} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
+                        {{ $t('AiCreditsBalance') }} : {{ useUserPreferenceStore().activeSpace.aiCreditsBalance }}
                         <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed" :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"></v-progress-linear>
                     </v-card-text>
                 </v-card>
@@ -65,6 +65,9 @@
                             <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact" class="pt-1 pb-1" activatable>
+                                    <v-list-item prepend-icon="fa-solid fa-list-check" @click="batchEditDialog = true" v-if="genericModel.model.name == 'Food'">
+                                        {{ $t('BatchEdit') }}
+                                    </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" @click="batchMergeDialog = true" v-if="genericModel.model.isMerge">
                                         {{ $t('Merge') }}
                                     </v-list-item>
@@ -76,8 +79,8 @@
                         </v-btn>
                     </template>
                     <template v-slot:item.space="{ item }" v-if="genericModel.model.name == 'AiProvider'">
-                        <v-chip label v-if="item.space == null" color="success">{{$t('Global')}}</v-chip>
-                        <v-chip label v-else color="info">{{$t('Space')}}</v-chip>
+                        <v-chip label v-if="item.space == null" color="success">{{ $t('Global') }}</v-chip>
+                        <v-chip label v-else color="info">{{ $t('Space') }}</v-chip>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
@@ -117,10 +120,13 @@
         </v-row>
 
         <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
-                                                             @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-delete-dialog>
+                             @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-delete-dialog>
 
-         <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
-                                                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
+        <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
+                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
+
+        <batch-edit-food-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'Food'" activator="model"
+                                @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-edit-food-dialog>
 
     </v-container>
 </template>
@@ -144,6 +150,7 @@ import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
 import {useRouteQuery} from "@vueuse/router";
+import BatchEditFoodDialog from "@/components/dialogs/BatchEditFoodDialog.vue";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -172,6 +179,7 @@ const selectedItems = ref([] as EditorSupportedTypes[])
 
 const batchDeleteDialog = ref(false)
 const batchMergeDialog = ref(false)
+const batchEditDialog = ref(false)
 
 // data
 const loading = ref(false);
@@ -215,7 +223,7 @@ function loadItems(options: VDataTableUpdateOptions) {
     page.value = options.page
     pageSize.value = options.itemsPerPage
 
-    genericModel.value.list({ query: query.value, page: options.page, pageSize: pageSize.value }).then((r: any) => {
+    genericModel.value.list({query: query.value, page: options.page, pageSize: pageSize.value}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
