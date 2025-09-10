@@ -329,6 +329,11 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
 
+    ai_enabled = models.BooleanField(default=True)
+    ai_credits_monthly = models.IntegerField(default=100)
+    ai_credits_balance = models.DecimalField(default=0, max_digits=16, decimal_places=4)
+    ai_default_provider = models.ForeignKey("AiProvider", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_ai_default_provider')
+
     internal_note = models.TextField(blank=True, null=True)
 
     def safe_delete(self):
@@ -340,6 +345,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         ImportLog.objects.filter(space=self).delete()
         BookmarkletImport.objects.filter(space=self).delete()
         CustomFilter.objects.filter(space=self).delete()
+
+        AiLog.objects.filter(space=self).delete()
+        AiProvider.objects.filter(space=self).delete()
 
         Property.objects.filter(space=self).delete()
         PropertyType.objects.filter(space=self).delete()
@@ -391,6 +399,41 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AiProvider(models.Model):
+    name = models.CharField(max_length=128)
+    description = models.TextField(blank=True)
+    # AiProviders can be global, so space=null is allowed (configurable by superusers)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
+
+    api_key = models.CharField(max_length=2048)
+    model_name = models.CharField(max_length=256)
+    url = models.CharField(max_length=2048, blank=True, null=True)
+    log_credit_cost = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class AiLog(models.Model, PermissionModelMixin):
+    F_FILE_IMPORT = 'FILE_IMPORT'
+
+    ai_provider = models.ForeignKey(AiProvider, on_delete=models.SET_NULL, null=True)
+    function = models.CharField(max_length=64)
+    credit_cost = models.DecimalField(max_digits=16, decimal_places=4)
+    # if credits from balance were used, else its from monthly quota
+    credits_from_balance = models.BooleanField(default=False)
+
+    input_tokens = models.IntegerField(default=0)
+    output_tokens = models.IntegerField(default=0)
+    start_time = models.DateTimeField(null=True)
+    end_time = models.DateTimeField(null=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class ConnectorConfig(models.Model, PermissionModelMixin):

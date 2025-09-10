@@ -65,6 +65,8 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
+from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request, AiCallbackHandler
+from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -74,7 +76,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space
+                                               switch_user_active_space, CustomAiProviderPermission
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -85,7 +87,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -110,12 +112,13 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
-                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer
+                                 RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_API_KEY, AI_MODEL_NAME
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -617,6 +620,29 @@ class SearchPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user)
 
 
+class AiProviderViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = AiProvider.objects
+    serializer_class = AiProviderSerializer
+    permission_classes = [CustomAiProviderPermission & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        # read only access to all space and global AiProviders
+        with scopes_disabled():
+            return self.queryset.filter(Q(space=self.request.space) | Q(space__isnull=True))
+
+
+class AiLogViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = AiLog.objects
+    serializer_class = AiLogSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    http_method_names = ['get']
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
 class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
@@ -914,6 +940,94 @@ class FoodViewSet(LoggingMixin, TreeMixin):
         except ProtectedError as e:
             content = {'error': True, 'msg': e.args[0]}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    @decorators.action(detail=False, methods=['PUT'], serializer_class=FoodBatchUpdateSerializer)
+    def batch_update(self, request):
+        serializer = self.serializer_class(data=request.data, partial=True)
+
+        if serializer.is_valid():
+            foods = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space)
+            safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
+
+            if 'category' in serializer.validated_data:
+                foods.update(supermarket_category_id=serializer.validated_data['category'])
+
+            if 'ignore_shopping' in serializer.validated_data and serializer.validated_data['ignore_shopping'] is not None:
+                foods.update(ignore_shopping=serializer.validated_data['ignore_shopping'])
+
+            if 'on_hand' in serializer.validated_data and serializer.validated_data['on_hand'] is not None:
+                if serializer.validated_data['on_hand']:
+                    user_relation = []
+                    for f in safe_food_ids:
+                        user_relation.append(Food.onhand_users.through(food_id=f, user_id=request.user.id))
+                    Food.onhand_users.through.objects.bulk_create(user_relation, ignore_conflicts=True, unique_fields=('food_id', 'user_id',))
+                else:
+                    Food.onhand_users.through.objects.filter(food_id__in=safe_food_ids, user_id=request.user.id).delete()
+
+            if 'substitute_children' in serializer.validated_data and serializer.validated_data['substitute_children'] is not None:
+                foods.update(substitute_children=serializer.validated_data['substitute_children'])
+
+            if 'substitute_siblings' in serializer.validated_data and serializer.validated_data['substitute_siblings'] is not None:
+                foods.update(substitute_siblings=serializer.validated_data['substitute_siblings'])
+
+            # ---------- substitutes -------------
+            if 'substitute_add' in serializer.validated_data:
+                add_to_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_add'])
+
+            if 'substitute_remove' in serializer.validated_data:
+                remove_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_remove'])
+
+            if 'substitute_set' in serializer.validated_data and len(serializer.validated_data['substitute_set']) > 0:
+                set_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_set'])
+
+            if 'substitute_remove_all' in serializer.validated_data and serializer.validated_data['substitute_remove_all']:
+                remove_all_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids)
+
+            # ----------  inherit fields -------------
+            if 'inherit_fields_add' in serializer.validated_data:
+                add_to_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_add'])
+
+            if 'inherit_fields_remove' in serializer.validated_data:
+                remove_from_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_remove'])
+
+            if 'inherit_fields_set' in serializer.validated_data and len(serializer.validated_data['inherit_fields_set']) > 0:
+                set_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_set'])
+
+            if 'inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['inherit_fields_remove_all']:
+                remove_all_from_relation(Food.inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ---------- child inherit fields -------------
+            if 'child_inherit_fields_add' in serializer.validated_data:
+                add_to_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_add'])
+
+            if 'child_inherit_fields_remove' in serializer.validated_data:
+                remove_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_remove'])
+
+            if 'child_inherit_fields_set' in serializer.validated_data and len(serializer.validated_data['child_inherit_fields_set']) > 0:
+                set_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_set'])
+
+            if 'child_inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['child_inherit_fields_remove_all']:
+                remove_all_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ------- parent --------
+            if self.model.node_order_by:
+                node_location = 'sorted'
+            else:
+                node_location = 'last'
+
+            if 'parent_remove' in serializer.validated_data and serializer.validated_data['parent_remove']:
+                for f in foods:
+                    f.move(Food.get_first_root_node(), f'{node_location}-sibling')
+
+            if 'parent_set' in serializer.validated_data:
+                parent_food = Food.objects.filter(space=request.space, id=serializer.validated_data['parent_set']).first()
+                if parent_food:
+                    for f in foods:
+                        f.move(parent_food, f'{node_location}-child')
+
+            return Response({}, 200)
+
+        return Response(serializer.errors, 400)
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -2000,6 +2114,24 @@ class AiImportView(APIView):
         if serializer.is_valid():
             # TODO max file size check
 
+            if 'ai_provider_id' not in serializer.validated_data:
+                response = {
+                    'error': True,
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            if not can_perform_ai_request(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI or AI features are not enabled for your space."),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            ai_provider = AiProvider.objects.filter(pk=serializer.validated_data['ai_provider_id']).filter(Q(space=request.space) | Q(space__isnull=True)).first()
+
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider)]
+
             messages = []
             uploaded_file = serializer.validated_data['file']
 
@@ -2068,7 +2200,15 @@ class AiImportView(APIView):
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                ai_response = completion(api_key=AI_API_KEY, model=AI_MODEL_NAME, response_format={"type": "json_object"}, messages=messages, )
+                ai_request = {
+                    'api_key': ai_provider.api_key,
+                    'model': ai_provider.model_name,
+                    'response_format': {"type": "json_object"},
+                    'messages': messages,
+                }
+                if ai_provider.url:
+                    ai_request['api_base'] = ai_provider.url
+                ai_response = completion(**ai_request)
             except BadRequestError as err:
                 response = {
                     'error': True,
@@ -2373,7 +2513,6 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         # Attention: No login required, do not return sensitive data
         s['shopping_min_autosync_interval'] = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
         s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT
-        s['enable_ai_import'] = settings.AI_API_KEY != ''
         s['disable_external_connectors'] = settings.DISABLE_EXTERNAL_CONNECTORS
         s['terms_url'] = settings.TERMS_URL
         s['privacy_url'] = settings.PRIVACY_URL
@@ -2546,10 +2685,9 @@ def ingredient_from_string(request):
 
     if unit:
         if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
-            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
+            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
         else:
             unit_obj = Unit.objects.create(space=request.space, name=unit)
-            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
-        ingredient['unit'] = {'name': unit.name, 'id': unit.id}
+            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
 
     return JsonResponse(ingredient, status=200)

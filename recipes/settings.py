@@ -59,6 +59,8 @@ SPACE_DEFAULT_MAX_RECIPES = int(os.getenv('SPACE_DEFAULT_MAX_RECIPES', 0))
 SPACE_DEFAULT_MAX_USERS = int(os.getenv('SPACE_DEFAULT_MAX_USERS', 0))
 SPACE_DEFAULT_MAX_FILES = int(os.getenv('SPACE_DEFAULT_MAX_FILES', 0))
 SPACE_DEFAULT_ALLOW_SHARING = extract_bool('SPACE_DEFAULT_ALLOW_SHARING', True)
+SPACE_AI_ENABLED = extract_bool('SPACE_AI_ENABLED', True)
+SPACE_AI_CREDITS_MONTHLY = int(os.getenv('SPACE_AI_CREDITS_MONTHLY', 10000))
 
 INTERNAL_IPS = extract_comma_list('INTERNAL_IPS', '127.0.0.1')
 
@@ -137,8 +139,6 @@ HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
 FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
 
-AI_API_KEY = os.getenv('AI_API_KEY', '')
-AI_MODEL_NAME = os.getenv('AI_MODEL_NAME', 'gemini/gemini-2.0-flash')
 AI_RATELIMIT = os.getenv('AI_RATELIMIT', '60/hour')
 
 SHARING_ABUSE = extract_bool('SHARING_ABUSE', False)

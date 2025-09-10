@@ -24,6 +24,7 @@ from rest_framework.fields import IntegerField
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.property_helper import FoodPropertyHelper
@@ -36,7 +37,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -325,11 +326,52 @@ class UserFileViewSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'file', 'file_download', 'file_size_kb', 'preview', 'created_by', 'created_at')
 
 
+class AiProviderSerializer(serializers.ModelSerializer):
+    api_key = serializers.CharField(required=False, write_only=True)
+
+    def create(self, validated_data):
+        validated_data = self.handle_global_space_logic(validated_data)
+
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data = self.handle_global_space_logic(validated_data)
+        return super().update(instance, validated_data)
+
+    def handle_global_space_logic(self, validated_data):
+        """
+        allow superusers to create AI providers without a space but make sure everyone else only uses their own space
+        """
+        if ('space' not in validated_data or not validated_data['space']) and self.context['request'].user.is_superuser:
+            validated_data['space'] = None
+        else:
+            validated_data['space'] = self.context['request'].space
+
+        return validated_data
+
+    class Meta:
+        model = AiProvider
+        fields = ('id', 'name', 'description', 'api_key', 'model_name', 'url', 'log_credit_cost', 'space', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at',)
+
+
+class AiLogSerializer(serializers.ModelSerializer):
+    ai_provider = AiProviderSerializer(read_only=True)
+
+    class Meta:
+        model = AiLog
+        fields = ('id', 'ai_provider', 'function', 'credit_cost', 'credits_from_balance', 'input_tokens', 'output_tokens', 'start_time', 'end_time', 'created_by', 'created_at',
+                  'updated_at')
+        read_only_fields = ('__all__',)
+
+
 class SpaceSerializer(WritableNestedModelSerializer):
     created_by = UserSerializer(read_only=True)
     user_count = serializers.SerializerMethodField('get_user_count')
     recipe_count = serializers.SerializerMethodField('get_recipe_count')
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
+    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used')
+    ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
     food_inherit = FoodInheritFieldSerializer(many=True)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -350,6 +392,10 @@ class SpaceSerializer(WritableNestedModelSerializer):
     def get_recipe_count(self, obj):
         return Recipe.objects.filter(space=obj).count()
 
+    @extend_schema_field(int)
+    def get_ai_monthly_credits_used(self, obj):
+        return get_monthly_token_usage(obj)
+
     @extend_schema_field(float)
     def get_file_size_mb(self, obj):
         try:
@@ -360,16 +406,29 @@ class SpaceSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
 
+    def update(self, instance, validated_data):
+        if 'ai_enabled' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['ai_enabled']
+
+        if 'ai_credits_monthly' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['ai_credits_monthly']
+
+        if 'ai_credits_balance' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['ai_credits_balance']
+
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Space
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
-            'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg',)
+            'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
-            'demo',)
+            'demo', 'ai_monthly_credits_used')
 
 
 class UserSpaceSerializer(WritableNestedModelSerializer):
@@ -1038,7 +1097,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'private','servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
+            'internal', 'private', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
         # TODO having these readonly fields makes "RecipeOverview.ts" (API Client) not generate the RecipeOverviewToJSON second else block which leads to errors when using the api
         # TODO find a solution (custom schema?) to have these fields readonly (to save performance) and generate a proper client (two serializers would probably do the trick)
@@ -1132,6 +1191,35 @@ class RecipeBatchUpdateSerializer(serializers.Serializer):
 
     show_ingredient_overview = serializers.BooleanField(required=False, allow_null=True)
     clear_description = serializers.BooleanField(required=False, allow_null=True)
+
+
+class FoodBatchUpdateSerializer(serializers.Serializer):
+    foods = serializers.ListField(child=serializers.IntegerField())
+
+    category = serializers.IntegerField(required=False, allow_null=True)
+
+    substitute_add = serializers.ListField(child=serializers.IntegerField())
+    substitute_remove = serializers.ListField(child=serializers.IntegerField())
+    substitute_set = serializers.ListField(child=serializers.IntegerField())
+    substitute_remove_all = serializers.BooleanField(default=False)
+
+    inherit_fields_add = serializers.ListField(child=serializers.IntegerField())
+    inherit_fields_remove = serializers.ListField(child=serializers.IntegerField())
+    inherit_fields_set = serializers.ListField(child=serializers.IntegerField())
+    inherit_fields_remove_all = serializers.BooleanField(default=False)
+
+    child_inherit_fields_add = serializers.ListField(child=serializers.IntegerField())
+    child_inherit_fields_remove = serializers.ListField(child=serializers.IntegerField())
+    child_inherit_fields_set = serializers.ListField(child=serializers.IntegerField())
+    child_inherit_fields_remove_all = serializers.BooleanField(default=False)
+
+    substitute_children = serializers.BooleanField(required=False, allow_null=True)
+    substitute_siblings = serializers.BooleanField(required=False, allow_null=True)
+    ignore_shopping = serializers.BooleanField(required=False, allow_null=True)
+    on_hand = serializers.BooleanField(required=False, allow_null=True)
+
+    parent_remove = serializers.BooleanField(required=False, allow_null=True)
+    parent_set = serializers.IntegerField(required=False, allow_null=True)
 
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
@@ -1564,7 +1652,6 @@ class ServerSettingsSerializer(serializers.Serializer):
     # TODO add all other relevant settings including path/url related ones?
     shopping_min_autosync_interval = serializers.CharField()
     enable_pdf_export = serializers.BooleanField()
-    enable_ai_import = serializers.BooleanField()
     disable_external_connectors = serializers.BooleanField()
     terms_url = serializers.CharField()
     privacy_url = serializers.CharField()
@@ -1788,6 +1875,7 @@ class RecipeFromSourceResponseSerializer(serializers.Serializer):
 
 
 class AiImportSerializer(serializers.Serializer):
+    ai_provider_id = serializers.IntegerField()
     file = serializers.FileField(allow_null=True)
     text = serializers.CharField(allow_null=True, allow_blank=True)
     recipe_id = serializers.CharField(allow_null=True, allow_blank=True)

@@ -330,6 +330,24 @@ class CustomRecipePermission(permissions.BasePermission):
                 return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
                         or has_group_permission(request.user, ['user'])) and obj.space == request.space
 
+class CustomAiProviderPermission(permissions.BasePermission):
+    """
+    Custom permission class for the AiProvider api endpoint
+    users: can read all
+    admins: can read and write
+    superusers: can read and write + write providers without a space
+    """
+    message = _('You do not have the required permissions to view this page!')
+
+    def has_permission(self, request, view):  # user is either at least a user and the request is safe
+        return (has_group_permission(request.user, ['user']) and request.method in SAFE_METHODS) or (has_group_permission(request.user, ['admin']) or request.user.is_superuser)
+
+    # editing of global providers allowed for superusers, space providers by admins and users can read only access
+    def has_object_permission(self, request, view, obj):
+        return ((obj.space is None and request.user.is_superuser)
+                or (obj.space == request.space and has_group_permission(request.user, ['admin']))
+                or (obj.space == request.space and has_group_permission(request.user, ['user']) and request.method in SAFE_METHODS))
+
 
 class CustomUserPermission(permissions.BasePermission):
     """

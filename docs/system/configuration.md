@@ -472,15 +472,20 @@ S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/Tandoor
 
 #### AI Integration
 
-To use AI to perform different tasks you need to configure an API key and the AI provider. [LiteLLM](https://www.litellm.ai/) is used
-to make a standardized request to different AI providers of your liking. 
+Most AI features are configured trough the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
 
-Configuring this via environment parameters is a temporary solution. In the future I plan on adding support for multiple AI providers per Tandoor instance
-with the option to select them for various tasks. For now only gemini 2.0 flash has been tested but feel free to try out other models. 
-
+Enables AI features for spaces by default
 ```
-AI_API_KEY=
-AI_MODEL_NAME=gemini/gemini-2.0-flash
+SPACE_AI_ENABLED=1
+```
+
+Sets the monthly default credit limit for AI usage
+```
+SPACE_AI_CREDITS_MONTHLY=100
+```
+
+Ratelimit for AI API
+```
 AI_RATELIMIT=60/hour
 ```
 

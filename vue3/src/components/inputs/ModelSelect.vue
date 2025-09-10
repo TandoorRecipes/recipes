@@ -58,7 +58,6 @@
             <template v-if="hasMoreItems && !loading" #afterlist>
                 <span class="text-disabled font-italic text-caption ms-3">{{ $t('ModelSelectResultsHelp') }}</span>
             </template>
-
         </Multiselect>
 
         <template #append v-if="$slots.append">
@@ -73,7 +72,7 @@
 import {computed, onBeforeMount, onMounted, PropType, ref, useTemplateRef} from "vue"
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
-import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
@@ -171,7 +170,7 @@ function search(query: string) {
  */
 async function createObject(object: any, select$: Multiselect) {
     return await modelClass.value.create({name: object[itemLabel.value]}).then((createdObj: any) => {
-        useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
+        useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS, createdObj)
         emit('create', object)
         return createdObj
     }).catch((err: any) => {

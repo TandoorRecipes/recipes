@@ -66,33 +66,34 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
             loading.value = true
-            const api = new ApiApi()
-            return api.apiMealPlanList({
-                fromDate: DateTime.fromJSDate(from_date).toISODate() as string,
-                toDate: DateTime.fromJSDate(to_date).toISODate() as string,
-                pageSize: 100
-            }).then(r => {
-                let foundIds: number[] = []
-                r.results.forEach((p) => {
-                    plans.value.set(p.id!, p)
-                    foundIds.push(p.id!)
-                })
-
-                // delete entries that no longer exist
-                plans.value.forEach(p => {
-                    if (!foundIds.includes(p.id!)) {
-                        plans.value.delete(p.id!)
-                    }
-                })
-
-                currently_updating.value = [new Date(0), new Date(0)]
-            }).catch((err) => {
-                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-            }).finally(() => {
-                loading.value = false
-            })
+            plans.value = new Map<number, MealPlan>()
+            return recLoadMealPlans(from_date, to_date)
         }
         return new Promise(() => {
+        })
+    }
+
+    function recLoadMealPlans(from_date: Date, to_date: Date, page: number = 1): Promise<any> {
+        const api = new ApiApi()
+        return api.apiMealPlanList({
+            fromDate: DateTime.fromJSDate(from_date).toISODate() as string,
+            toDate: DateTime.fromJSDate(to_date).toISODate() as string,
+            pageSize: 100,
+            page: page
+        }).then(r => {
+            r.results.forEach((p) => {
+                plans.value.set(p.id!, p)
+            })
+
+            if (r.next) {
+                return recLoadMealPlans(from_date, to_date, page + 1)
+            } else {
+                loading.value = false
+                currently_updating.value = [new Date(0), new Date(0)]
+            }
+
+        }).catch((err) => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
 

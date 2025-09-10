@@ -54,7 +54,7 @@
                         <properties-editor v-model="editingObj.properties" :amount-for="propertiesAmountFor"></properties-editor>
 
                         <!-- TODO remove once append to body for model select is working properly -->
-                        <v-spacer style="margin-top: 60px;"></v-spacer>
+                        <v-spacer style="margin-top: 80px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
 
@@ -106,7 +106,7 @@
                         </v-card>
                     </v-form>
                     <!-- TODO remove once append to body for model select is working properly -->
-                    <v-spacer style="margin-top: 60px;"></v-spacer>
+                        <v-spacer style="margin-top: 80px;"></v-spacer>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="hierarchy">
@@ -119,6 +119,9 @@
                                  mode="tags"></ModelSelect>
                     <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
                                  mode="tags"></ModelSelect>
+
+                    <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 100px;"></v-spacer>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="misc">

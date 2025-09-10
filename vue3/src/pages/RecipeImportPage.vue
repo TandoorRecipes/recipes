@@ -60,7 +60,7 @@
                                         </v-card>
                                     </v-col>
 
-                                    <v-col cols="12" md="6" v-if="useUserPreferenceStore().serverSettings.enableAiImport">
+                                    <v-col cols="12" md="6" v-if="useUserPreferenceStore().activeSpace.aiEnabled">
                                         <v-card
                                             :title="$t('AI')"
                                             :subtitle="$t('AIImportSubtitle')"
@@ -69,7 +69,7 @@
                                             :color="(importType == 'ai') ? 'primary' : ''"
                                             elevation="1"
                                             @click="importType = 'ai'"
-                                            :disabled="!useUserPreferenceStore().serverSettings.enableAiImport">
+                                            :disabled="!useUserPreferenceStore().activeSpace.aiEnabled">
                                         </v-card>
                                     </v-col>
 
@@ -140,10 +140,22 @@
                                               @keydown.enter="loadRecipeFromUrl({url: importUrl})"></v-text-field>
 
                                 <div v-if="importType == 'ai'">
-                                    <v-btn-toggle v-model="aiMode">
-                                        <v-btn value="file">{{ $t('File') }}</v-btn>
-                                        <v-btn value="text">{{ $t('Text') }}</v-btn>
-                                    </v-btn-toggle>
+                                    <v-row>
+                                        <v-col md="6">
+                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider">
+                                                <template #append>
+                                                    <v-btn icon="$settings" :to="{name:'ModelListPage', params: {model: 'AiProvider'}}" color="success"></v-btn>
+                                                </template>
+                                            </ModelSelect>
+                                        </v-col>
+                                        <v-col md="6">
+                                            <v-btn-toggle class="mb-2" border divided v-model="aiMode">
+                                                <v-btn value="file">{{ $t('File') }}</v-btn>
+                                                <v-btn value="text">{{ $t('Text') }}</v-btn>
+                                            </v-btn-toggle>
+                                        </v-col>
+                                    </v-row>
+
 
                                     <v-file-upload v-model="image" v-if="aiMode == 'file'" :loading="loading" clearable>
                                         <template #icon>
@@ -540,6 +552,7 @@ import {useI18n} from "vue-i18n";
 import {computed, onMounted, ref} from "vue";
 import {
     AccessToken,
+    AiProvider,
     ApiApi,
     ImportLog,
     Recipe,
@@ -648,6 +661,7 @@ const appImportDuplicates = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
 const aiMode = ref<'file' | 'text'>('file')
+const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
 const editAfterImport = ref(false)
 
 const bookmarkletToken = ref("")
@@ -724,12 +738,15 @@ function loadRecipeFromUrl(recipeFromSourceRequest: RecipeFromSource) {
  */
 function loadRecipeFromAiImport() {
     let request = null
+
+    if (selectedAiProvider.value == undefined) {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, "No AI Provider selected")
+    }
+
     if (image.value != null && aiMode.value == 'file') {
-        console.log('file import')
-        request = doAiImport(image.value)
+        request = doAiImport(selectedAiProvider.value.id!, image.value)
     } else if (sourceImportText.value != '' && aiMode.value == 'text') {
-        console.log('text import')
-        request = doAiImport(null, sourceImportText.value)
+        request = doAiImport(selectedAiProvider.value.id!, null, sourceImportText.value)
     }
 
     if (request != null) {
@@ -811,13 +828,13 @@ function deleteStep(step: SourceImportStep) {
 }
 
 function handleMergeAllSteps(): void {
-    if (importResponse.value.recipe && importResponse.value.recipe.steps){
+    if (importResponse.value.recipe && importResponse.value.recipe.steps) {
         mergeAllSteps(importResponse.value.recipe.steps)
     }
 }
 
 function handleSplitAllSteps(): void {
-    if (importResponse.value.recipe && importResponse.value.recipe.steps){
+    if (importResponse.value.recipe && importResponse.value.recipe.steps) {
         splitAllSteps(importResponse.value.recipe.steps, '\n')
     }
 }

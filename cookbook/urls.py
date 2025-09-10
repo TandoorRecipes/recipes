@@ -61,6 +61,8 @@ router.register(r'search-preference', api.SearchPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
+router.register(r'ai-provider', api.AiProviderViewSet)
+router.register(r'ai-log', api.AiLogViewSet)
 
 router.register(r'localization', api.LocalizationViewSet, basename='localization')
 router.register(r'server-settings', api.ServerSettingsViewSet, basename='server-settings')
