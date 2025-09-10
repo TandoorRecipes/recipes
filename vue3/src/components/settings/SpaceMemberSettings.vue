@@ -54,6 +54,7 @@ import {useI18n} from "vue-i18n";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 
 const {t} = useI18n()
 
@@ -111,7 +112,7 @@ function deleteInviteLink(inviteLink: InviteLink) {
  * @param inviteLink InviteLink object to create url for
  */
 function inviteLinkUrl(inviteLink: InviteLink) {
-    return `${location.protocol}//${location.host}/invite/${inviteLink.uuid}`
+    return useDjangoUrls().getDjangoUrl(`/invite/${inviteLink.uuid}`)
 }
 
 </script>

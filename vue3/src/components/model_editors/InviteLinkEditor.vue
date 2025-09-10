@@ -16,7 +16,7 @@
                 <v-date-input :label="$t('Valid Until')" v-model="editingObj.validUntil"></v-date-input>
                 <v-textarea :label="$t('Note')" v-model="editingObj.internalNote"></v-textarea>
                 <v-checkbox :label="$t('Reusable')" v-model="editingObj.reusable"></v-checkbox>
-                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)" v-if="!isUpdate">
+                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)" v-if="isUpdate()">
                     <template #append-inner>
                         <btn-copy variant="plain" color="undefined" :copy-value="inviteLinkUrl(editingObj)"></btn-copy>
                     </template>
@@ -37,6 +37,7 @@ import {DateTime} from "luxon";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
+import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 
 
 const props = defineProps({
@@ -91,7 +92,7 @@ function initializeEditor(){
  * @param inviteLink InviteLink object to create url for
  */
 function inviteLinkUrl(inviteLink: InviteLink) {
-    return `${location.protocol}//${location.host}/invite/${inviteLink.uuid}`
+    return useDjangoUrls().getDjangoUrl(`/invite/${inviteLink.uuid}`)
 }
 
 
