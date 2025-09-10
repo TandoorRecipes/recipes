@@ -38,6 +38,9 @@ import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeWindo
 import HorizontalMealPlanWindow from "@/components/display/HorizontalMealPlanWindow.vue"
 import SearchPage from "@/pages/SearchPage.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 const totalRecipes = ref(-1)
 
@@ -47,6 +50,10 @@ onMounted(() => {
     api.apiRecipeList({pageSize: 1}).then((r) => {
         totalRecipes.value = r.count
     })
+
+    if (!useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
+        router.push({name: 'WelcomePage'})
+    }
 })
 </script>
 

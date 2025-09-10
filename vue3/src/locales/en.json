@@ -508,6 +508,7 @@
   "SpaceMemberHelp": "Add users to your space by creating an Invite Link and sending it to the person you want to add.",
   "SpaceMembers": "Space Members",
   "SpaceMembersHelp": "Users and their permissions in a space. ",
+  "SpaceName": "Space Name",
   "SpaceSettings": "Space Settings",
   "Space_Cosmetic_Settings": "Some cosmetic settings can be changed by space administrators and will override client settings for that space.",
   "Split": "Split",

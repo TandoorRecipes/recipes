@@ -490,6 +490,7 @@
   "SpaceMemberHelp": "Agrega usuarios a tu espacio creando un enlace de invitación y enviándolo a la persona que quieras agregar.",
   "SpaceMembers": "Miembros del espacio",
   "SpaceMembersHelp": "Usuarios y sus permisos en un espacio. ",
+  "SpaceName": "",
   "SpaceSettings": "Ajustes del espacio",
   "Space_Cosmetic_Settings": "Algunos ajustes de apariencia pueden ser cambiados por los administradores del espacio y anularán los ajustes del cliente para ese espacio.",
   "Split": "Dividir",

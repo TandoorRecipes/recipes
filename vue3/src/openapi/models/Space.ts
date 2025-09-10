@@ -248,6 +248,12 @@ export interface Space {
      * @memberof Space
      */
     aiDefaultProvider?: AiProvider;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    spaceSetupCompleted?: boolean;
 }
 
 /**
@@ -311,6 +317,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
     };
 }
 
@@ -341,6 +348,7 @@ export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxReci
         'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
         'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'space_setup_completed': value['spaceSetupCompleted'],
     };
 }
 

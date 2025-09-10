@@ -74,6 +74,8 @@
         <p class="text-h6 mt-2">{{ $t('Settings') }}</p>
         <v-divider class="mb-2"></v-divider>
 
+        <v-text-field v-model="space.name" :label="$t('Name')"></v-text-field>
+
         <user-file-field v-model="space.image" :label="$t('Image')" :hint="$t('CustomImageHelp')" persistent-hint></user-file-field>
 
 
@@ -96,8 +98,10 @@
         <template v-if="space.aiEnabled">
             <model-select model="AiProvider" :label="$t('Default')" v-model="space.aiDefaultProvider"></model-select>
 
-            <v-number-input v-model="space.aiCreditsMonthly" :precision="2" :label="$t('MonthlyCredits')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
-            <v-number-input v-model="space.aiCreditsBalance" :precision="4" :label="$t('AiCreditsBalance')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
+            <v-number-input v-model="space.aiCreditsMonthly" :precision="2" :label="$t('MonthlyCredits')"
+                            :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
+            <v-number-input v-model="space.aiCreditsBalance" :precision="4" :label="$t('AiCreditsBalance')"
+                            :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
 
         </template>
         <v-btn color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
@@ -141,13 +145,18 @@ import {isSpaceAboveRecipeLimit, isSpaceAboveStorageLimit, isSpaceAboveUserLimit
 const space = ref({} as Space)
 
 onMounted(() => {
+    loadSpace()
+})
+
+function loadSpace() {
     let api = new ApiApi()
+
     api.apiSpaceCurrentRetrieve().then(r => {
         space.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
-})
+}
 
 function updateSpace() {
     let api = new ApiApi()

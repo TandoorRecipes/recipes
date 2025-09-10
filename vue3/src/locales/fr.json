@@ -505,6 +505,7 @@
   "SpaceMemberHelp": "Ajoutez des utilisateurs à votre espace en créant un lien d'invitation et en l'envoyant à la personne que vous souhaitez ajouter.",
   "SpaceMembers": "Membres du groupe",
   "SpaceMembersHelp": "Utilisateurs et permissions dans un groupe. ",
+  "SpaceName": "",
   "SpaceSettings": "Paramètres du groupe",
   "Space_Cosmetic_Settings": "Certains paramètres cosmétiques peuvent être modifiés par un administrateur de l'espace et seront prioritaires sur les paramètres des utilisateurs pour cet espace.",
   "Split": "Diviser",

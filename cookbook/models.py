@@ -329,6 +329,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
 
+    space_setup_completed = models.BooleanField(default=True)
+
     ai_enabled = models.BooleanField(default=True)
     ai_credits_monthly = models.IntegerField(default=100)
     ai_credits_balance = models.DecimalField(default=0, max_digits=16, decimal_places=4)

@@ -248,6 +248,12 @@ export interface PatchedSpace {
      * @memberof PatchedSpace
      */
     aiDefaultProvider?: AiProvider;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedSpace
+     */
+    spaceSetupCompleted?: boolean;
 }
 
 /**
@@ -299,6 +305,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'] == null ? undefined : json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
     };
 }
 
@@ -329,6 +336,7 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'creat
         'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
         'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'space_setup_completed': value['spaceSetupCompleted'],
     };
 }
 

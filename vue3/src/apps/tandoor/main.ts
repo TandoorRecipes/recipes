@@ -18,6 +18,7 @@ let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage' },
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
+    {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
     {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage', meta: {title: 'Help'}},
     {
         path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',

@@ -507,6 +507,7 @@
   "SpaceMemberHelp": "Aggiungi utenti al tuo spazio creando un collegamento di invito e inviandolo alla persona che desideri aggiungere.",
   "SpaceMembers": "Membri dello spazio",
   "SpaceMembersHelp": "Utenti e relativi permessi in uno spazio. ",
+  "SpaceName": "",
   "SpaceSettings": "Impostazioni spazio",
   "Space_Cosmetic_Settings": "Alcune impostazioni cosmetiche possono essere modificate dagli amministratori dell'istanza e sovrascriveranno le impostazioni client per quell'istanza.",
   "Split": "Dividi",
