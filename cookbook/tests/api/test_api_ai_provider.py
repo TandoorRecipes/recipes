@@ -48,8 +48,8 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     ['u1_s1', 403],
     ['a1_s1', 200],
     ['g1_s2', 403],
-    ['u1_s2', 404],
-    ['a1_s2', 403],
+    ['u1_s2', 403],
+    ['a1_s2', 404],
 ])
 def test_update(arg, request, obj_1):
     c = request.getfixturevalue(arg[0])
