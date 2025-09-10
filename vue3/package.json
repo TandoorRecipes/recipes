@@ -35,7 +35,7 @@
     "esbuild-register": "^3.6.0",
     "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
-    "vite": "6.3.5",
+    "vite": "6.3.6",
     "vite-plugin-pwa": "^1.0.2",
     "vite-plugin-vuetify": "^2.1.1",
     "vue-tsc": "^2.2.8",
