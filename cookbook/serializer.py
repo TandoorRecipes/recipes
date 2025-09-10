@@ -1218,6 +1218,9 @@ class FoodBatchUpdateSerializer(serializers.Serializer):
     ignore_shopping = serializers.BooleanField(required=False, allow_null=True)
     on_hand = serializers.BooleanField(required=False, allow_null=True)
 
+    parent_remove = serializers.BooleanField(required=False, allow_null=True)
+    parent_set = serializers.IntegerField(required=False, allow_null=True)
+
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)

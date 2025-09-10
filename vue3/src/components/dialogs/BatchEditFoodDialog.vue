@@ -42,6 +42,9 @@
                                     <v-checkbox :label="$t('RemoveAllType', {type: $t('Substitutes')})" hide-details
                                                 v-model="batchUpdateRequest.foodBatchUpdate.substituteRemoveAll"></v-checkbox>
 
+                                    <v-select :items="boolUpdateOptions" :label="$t('substitute_siblings')" clearable v-model="batchUpdateRequest.foodBatchUpdate.substituteChildren"></v-select>
+                                    <v-select :items="boolUpdateOptions" :label="$t('substitute_children')" clearable v-model="batchUpdateRequest.foodBatchUpdate.substituteSiblings"></v-select>
+
 
                                 </v-card-text>
                             </v-card>
@@ -50,8 +53,13 @@
                         <v-col cols="12" md="6">
                             <v-card :title="$t('Hierarchy')" prepend-icon="fa-solid fa-folder-tree" variant="flat">
                                 <v-card-text>
-                                    <v-select :items="boolUpdateOptions" :label="$t('substitute_siblings')" clearable v-model="batchUpdateRequest.foodBatchUpdate.substituteChildren"></v-select>
-                                    <v-select :items="boolUpdateOptions" :label="$t('substitute_children')" clearable v-model="batchUpdateRequest.foodBatchUpdate.substituteSiblings"></v-select>
+                                    <model-select model="Food" :label="$t('Parent')" :object="false" allow-create clearable v-model="batchUpdateRequest.foodBatchUpdate.parentSet">
+                                        <template #prepend>
+                                            <v-icon icon="fa-solid fa-equals"></v-icon>
+                                        </template>
+                                    </model-select>
+
+                                    <v-select :items="boolUpdateOptions" :label="$t('RemoveParent')" clearable v-model="batchUpdateRequest.foodBatchUpdate.parentRemove"></v-select>
 
                                     <v-spacer></v-spacer>
 

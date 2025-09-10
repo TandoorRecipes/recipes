@@ -127,6 +127,18 @@ export interface FoodBatchUpdate {
      * @memberof FoodBatchUpdate
      */
     onHand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FoodBatchUpdate
+     */
+    parentRemove?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodBatchUpdate
+     */
+    parentSet?: number;
 }
 
 /**
@@ -174,6 +186,8 @@ export function FoodBatchUpdateFromJSONTyped(json: any, ignoreDiscriminator: boo
         'substituteSiblings': json['substitute_siblings'] == null ? undefined : json['substitute_siblings'],
         'ignoreShopping': json['ignore_shopping'] == null ? undefined : json['ignore_shopping'],
         'onHand': json['on_hand'] == null ? undefined : json['on_hand'],
+        'parentRemove': json['parent_remove'] == null ? undefined : json['parent_remove'],
+        'parentSet': json['parent_set'] == null ? undefined : json['parent_set'],
     };
 }
 
@@ -201,6 +215,8 @@ export function FoodBatchUpdateToJSON(value?: FoodBatchUpdate | null): any {
         'substitute_siblings': value['substituteSiblings'],
         'ignore_shopping': value['ignoreShopping'],
         'on_hand': value['onHand'],
+        'parent_remove': value['parentRemove'],
+        'parent_set': value['parentSet'],
     };
 }
 

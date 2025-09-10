@@ -66,6 +66,7 @@ from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
 from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request, AiCallbackHandler
+from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -951,7 +952,6 @@ class FoodViewSet(LoggingMixin, TreeMixin):
             if 'category' in serializer.validated_data:
                 foods.update(supermarket_category_id=serializer.validated_data['category'])
 
-
             if 'ignore_shopping' in serializer.validated_data and serializer.validated_data['ignore_shopping'] is not None:
                 foods.update(ignore_shopping=serializer.validated_data['ignore_shopping'])
 
@@ -964,32 +964,66 @@ class FoodViewSet(LoggingMixin, TreeMixin):
                 else:
                     Food.onhand_users.through.objects.filter(food_id__in=safe_food_ids, user_id=request.user.id).delete()
 
-            if 'substitutes_add' in serializer.validated_data:
-                substitute_relation = []
-                for f in safe_food_ids:
-                    for s in serializer.validated_data['substitutes_add']:
-                        substitute_relation.append(Food.substitute.through(from_food_id=f, to_food_id=s))
-                Food.substitute.through.objects.bulk_create(substitute_relation, ignore_conflicts=True, unique_fields=('from_food_id', 'to_food_id',))
+            if 'substitute_children' in serializer.validated_data and serializer.validated_data['substitute_children'] is not None:
+                foods.update(substitute_children=serializer.validated_data['substitute_children'])
+
+            if 'substitute_siblings' in serializer.validated_data and serializer.validated_data['substitute_siblings'] is not None:
+                foods.update(substitute_siblings=serializer.validated_data['substitute_siblings'])
+
+            # ---------- substitutes -------------
+            if 'substitute_add' in serializer.validated_data:
+                add_to_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_add'])
 
             if 'substitute_remove' in serializer.validated_data:
-                for s in serializer.validated_data['substitute_remove']:
-                    Food.substitute.through.objects.filter(from_food_id=safe_food_ids, to_food_id=s).delete()
+                remove_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_remove'])
 
             if 'substitute_set' in serializer.validated_data and len(serializer.validated_data['substitute_set']) > 0:
-                substitute_relation = []
-                Food.substitute.through.objects.filter(from_food_id=safe_food_ids).delete()
-                for f in safe_food_ids:
-                    for s in serializer.validated_data['substitute_set']:
-                        substitute_relation.append(Food.substitute.through(from_food_id=f, to_food_id=s))
-                Food.substitute.through.objects.bulk_create(substitute_relation, ignore_conflicts=True, unique_fields=('from_food_id', 'to_food_id',))
+                set_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_set'])
 
             if 'substitute_remove_all' in serializer.validated_data and serializer.validated_data['substitute_remove_all']:
-                Food.substitute.through.objects.filter(from_food_id=safe_food_ids).delete()
+                remove_all_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids)
 
+            # ----------  inherit fields -------------
+            if 'inherit_fields_add' in serializer.validated_data:
+                add_to_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_add'])
 
-            def add_substitute(relation_model, base_field, base_ids, related_field_name, related_ids ):
-                pass
+            if 'inherit_fields_remove' in serializer.validated_data:
+                remove_from_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_remove'])
 
+            if 'inherit_fields_set' in serializer.validated_data and len(serializer.validated_data['inherit_fields_set']) > 0:
+                set_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_set'])
+
+            if 'inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['inherit_fields_remove_all']:
+                remove_all_from_relation(Food.inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ---------- child inherit fields -------------
+            if 'child_inherit_fields_add' in serializer.validated_data:
+                add_to_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_add'])
+
+            if 'child_inherit_fields_remove' in serializer.validated_data:
+                remove_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_remove'])
+
+            if 'child_inherit_fields_set' in serializer.validated_data and len(serializer.validated_data['child_inherit_fields_set']) > 0:
+                set_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_set'])
+
+            if 'child_inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['child_inherit_fields_remove_all']:
+                remove_all_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ------- parent --------
+            if self.model.node_order_by:
+                node_location = 'sorted'
+            else:
+                node_location = 'last'
+
+            if 'parent_remove' in serializer.validated_data and serializer.validated_data['parent_remove']:
+                for f in foods:
+                    f.move(Food.get_first_root_node(), f'{node_location}-sibling')
+
+            if 'parent_set' in serializer.validated_data:
+                parent_food = Food.objects.filter(space=request.space, id=serializer.validated_data['parent_set']).first()
+                if parent_food:
+                    for f in foods:
+                        f.move(parent_food, f'{node_location}-child')
 
             return Response({}, 200)
 
