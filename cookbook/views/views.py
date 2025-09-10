@@ -21,7 +21,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
-from django.utils.datetime_safe import date
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
@@ -223,7 +223,7 @@ def system(request):
         total_stats = ['All', int(r.get('api:request-count'))]
 
         for i in range(0, 6):
-            d = (date.today() - timedelta(days=i)).isoformat()
+            d = (timezone.now() - timedelta(days=i)).isoformat()
             api_stats[0].append(d)
             api_space_stats[0].append(d)
             total_stats.append(int(r.get(f'api:request-count:{d}')) if r.get(f'api:request-count:{d}') else 0)
@@ -234,7 +234,7 @@ def system(request):
             endpoint = x[0].decode('utf-8')
             endpoint_stats = [endpoint, x[1]]
             for i in range(0, 6):
-                d = (date.today() - timedelta(days=i)).isoformat()
+                d = (timezone.now() - timedelta(days=i)).isoformat()
                 endpoint_stats.append(r.zscore(f'api:endpoint-request-count:{d}', endpoint))
             api_stats.append(endpoint_stats)
 
@@ -243,7 +243,7 @@ def system(request):
             if space := Space.objects.filter(pk=s).first():
                 space_stats = [space.name, x[1]]
                 for i in range(0, 6):
-                    d = (date.today() - timedelta(days=i)).isoformat()
+                    d = (timezone.now() - timedelta(days=i)).isoformat()
                     space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
                 api_space_stats.append(space_stats)
 

@@ -565,8 +565,6 @@ else:
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 LANGUAGES = [
@@ -594,8 +592,18 @@ LANGUAGES = [
 
 AWS_ENABLED = True if os.getenv('S3_ACCESS_KEY', False) else False
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    # Serve static files with gzip
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 if os.getenv('S3_ACCESS_KEY', ''):
-    DEFAULT_FILE_STORAGE = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
+    STORAGES['default']['BACKEND'] = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
 
     AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
     AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
@@ -610,14 +618,9 @@ if os.getenv('S3_ACCESS_KEY', ''):
     if os.getenv('S3_CUSTOM_DOMAIN', ''):
         AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
 
-    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
-else:
-    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
-# Serve static files with gzip
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet

@@ -35,7 +35,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
@@ -134,7 +133,7 @@ class LoggingMixin(object):
 
         if settings.REDIS_HOST:
             try:
-                d = date.today().isoformat()
+                d = timezone.now().isoformat()
                 space = request.space
                 endpoint = request.resolver_match.url_name
 
