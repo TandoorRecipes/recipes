@@ -13,7 +13,7 @@ jobs:
                 node-version: ["22"]
         steps:
             - uses: actions/checkout@v5
-            - uses: awalsh128/cache-apt-pkgs-action@v1.5.1
+            - uses: awalsh128/cache-apt-pkgs-action@v1.5.3
               with:
                   packages: libsasl2-dev python3-dev libxml2-dev libxmlsec1-dev libxslt-dev libxmlsec1-openssl libxslt-dev libldap2-dev libssl-dev gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
                   version: 1.0
