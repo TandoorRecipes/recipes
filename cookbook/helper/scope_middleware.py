@@ -81,6 +81,10 @@ def create_space_for_user(user, name=None):
     with scopes_disabled():
         if not name:
             name = f"{user.username}'s Space"
+
+        if Space.objects.filter(name=name).exists():
+            name = f'{name} #{random.randrange(1, 10 ** 5)}'
+
         created_space = Space(name=name,
                               created_by=user,
                               max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
@@ -90,12 +94,9 @@ def create_space_for_user(user, name=None):
                               ai_enabled=settings.SPACE_AI_ENABLED,
                               ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY,
                               space_setup_completed=False, )
-        try:
-            created_space.save()
-        except UniqueViolation:
-            created_space.name = f'{name} #{random.randrange(1, 10 ** 5)}'
-            created_space.save()
+        created_space.save()
 
+        UserSpace.objects.filter(user=user).update(active=False)
         user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
         user_space.groups.add(Group.objects.filter(name='admin').get())
 

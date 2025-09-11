@@ -4,7 +4,7 @@
         <v-col>
             <p class="text-h6">
                 {{ $t('YourSpaces') }}
-                <v-btn color="create" prepend-icon="$add" class="float-right" size="small" :href="getDjangoUrl('space-overview')">{{$t('New')}}</v-btn>
+                <v-btn color="create" prepend-icon="$add" class="float-right" size="small" @click="createNewSpace()">{{ $t('New') }}</v-btn>
             </p>
             <v-divider></v-divider>
         </v-col>
@@ -27,7 +27,7 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import {ApiApi, Space} from "@/openapi";
+import {ApiApi, type FoodInheritField, Space} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import recipeDefaultImage from '../../assets/recipe_no_image.svg'
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -38,6 +38,10 @@ const {getDjangoUrl} = useDjangoUrls()
 const spaces = ref([] as Space[])
 
 onMounted(() => {
+    loadSpaces()
+})
+
+function loadSpaces() {
     const api = new ApiApi()
 
     api.apiSpaceList().then(r => {
@@ -45,7 +49,16 @@ onMounted(() => {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
-})
+}
+
+function createNewSpace() {
+    let api = new ApiApi()
+    api.apiSpaceCreate({space: {} as Space}).then(r => {
+        spaces.value.push(r)
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+}
 </script>
 
 <style scoped>

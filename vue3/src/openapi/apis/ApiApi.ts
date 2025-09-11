@@ -1785,6 +1785,10 @@ export interface ApiShoppingListRecipeUpdateRequest {
     shoppingListRecipe: Omit<ShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'>;
 }
 
+export interface ApiSpaceCreateRequest {
+    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+}
+
 export interface ApiSpaceListRequest {
     page?: number;
     pageSize?: number;
@@ -13080,6 +13084,39 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiShoppingListRecipeUpdate(requestParameters: ApiShoppingListRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipeUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceCreateRaw(requestParameters: ApiSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/space/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SpaceToJSON(requestParameters['space']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceCreate(requestParameters: ApiSpaceCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
+        const response = await this.apiSpaceCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

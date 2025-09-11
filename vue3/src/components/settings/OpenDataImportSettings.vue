@@ -1,10 +1,9 @@
 <template>
-    <p class="text-h6">{{ $t('Open_Data_Import') }}</p>
+    <p class="text-h4">{{ $t('Open_Data_Import') }}</p>
     <v-divider></v-divider>
-    <p class="text-subtitle-2">{{ $t('Data_Import_Info') }}</p>
-    <v-btn href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{ $t('Learn_More') }}</v-btn>
+    <p class="text-subtitle-1">{{ $t('Data_Import_Info') }} <a href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{ $t('Learn_More') }}</a></p>
 
-    <v-select :items="metadata.versions" :label="$t('Language')" class="mt-2" v-model="requestData.selectedVersion" :loading="loading"></v-select>
+    <v-select :items="metadata.versions" :label="$t('Language')" class="mt-4" v-model="requestData.selectedVersion" :loading="loading"></v-select>
 
     <v-row v-if="requestData.selectedVersion">
         <v-col>
@@ -29,10 +28,10 @@
                     <td>{{ metadata[requestData.selectedVersion][d] }}</td>
                     <td>
                         <template v-if="responseData[d]">
-                            <i class="fas fa-plus-circle"></i> {{ responseData[d].totalCreated }} {{ $t('Created') }} <br/>
-                            <i class="fas fa-pencil-alt"></i> {{ responseData[d].totalUpdated }} {{ $t('Updated') }} <br/>
-                            <i class="fas fa-forward"></i> {{ responseData[d].totalUntouched}} {{ $t('Unchanged') }} <br/>
-                            <i class="fas fa-exclamation-circle"></i> {{ responseData[d].totalErrored }} {{ $t('Error') }}
+                            <p v-if="responseData[d].totalCreated > 0" ><i class="fas fa-plus-circle"></i> {{ responseData[d].totalCreated }} {{ $t('Created') }}</p>
+                            <p v-if="responseData[d].totalUpdated > 0"><i class="fas fa-pencil-alt"></i> {{ responseData[d].totalUpdated }} {{ $t('Updated') }}</p>
+                            <p v-if="responseData[d].totalUntouched > 0"><i class="fas fa-forward"></i> {{ responseData[d].totalUntouched }} {{ $t('Unchanged') }}</p>
+                            <p v-if="responseData[d].totalErrored > 0"><i class="fas fa-exclamation-circle"></i> {{ responseData[d].totalErrored }} {{ $t('Error') }}</p>
                         </template>
                     </td>
                 </tr>
@@ -102,7 +101,6 @@ function importOpenData() {
     })
 
     api.apiImportOpenDataCreate({importOpenData: requestData.value}).then(r => {
-        console.log(r)
         responseData.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

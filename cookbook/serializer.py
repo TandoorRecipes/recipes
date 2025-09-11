@@ -28,6 +28,7 @@ from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.property_helper import FoodPropertyHelper
+from cookbook.helper.scope_middleware import create_space_for_user
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
@@ -372,7 +373,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
     ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used')
     ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
-    food_inherit = FoodInheritFieldSerializer(many=True)
+    food_inherit = FoodInheritFieldSerializer(many=True, required=False)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
     custom_space_theme = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -404,7 +405,11 @@ class SpaceSerializer(WritableNestedModelSerializer):
             return 0
 
     def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
+        name = None
+        if 'name' in validated_data:
+            name = validated_data['name']
+        space = create_space_for_user(self.context['request'].user, name)
+        return space
 
     def update(self, instance, validated_data):
         if 'ai_enabled' in validated_data and not self.context['request'].user.is_superuser:
@@ -415,6 +420,9 @@ class SpaceSerializer(WritableNestedModelSerializer):
 
         if 'ai_credits_balance' in validated_data and not self.context['request'].user.is_superuser:
             del validated_data['ai_credits_balance']
+
+        if Space.objects.filter(Q(name=validated_data['name']), ~Q(pk=instance.pk)).exists():
+            raise ValidationError(_('Space Name must be unique.'))
 
         return super().update(instance, validated_data)
 
