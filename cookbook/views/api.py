@@ -181,7 +181,10 @@ class StandardFilterModelViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         query = self.request.query_params.get('query', None)
         if query is not None:
-            queryset = queryset.filter(name__icontains=query)
+            try:
+                queryset = queryset.filter(name__icontains=query)
+            except FieldError:
+                pass
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
@@ -1892,8 +1895,8 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        unused = self.request.query_params.get('unused', False)
-        if unused:
+        used = self.request.query_params.get('used', False)
+        if not used:
             self.queryset = self.queryset.filter(used_by=None)
 
         if is_space_owner(self.request.user, self.request.space):

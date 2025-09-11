@@ -40,6 +40,9 @@ class ScopeMiddleware:
             if request.path.startswith(prefix + '/switch-space/'):
                 return self.get_response(request)
 
+            if request.path.startswith(prefix + '/invite/'):
+                return self.get_response(request)
+
             # get active user space, if for some reason more than one space is active select first (group permission checks will fail, this is not intended at this point)
             user_space = request.user.userspace_set.filter(active=True).first()
 
@@ -49,6 +52,9 @@ class ScopeMiddleware:
                     user_space = request.user.userspace_set.filter(active=True).first()
                     user_space.active = True
                     user_space.save()
+                elif 'signup_token' in request.session:
+                    # if user is authenticated, has no space but a signup token (InviteLink) is present, redirect to invite link logic
+                    return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
                 else:
                     # if user does not yet have a space create one for him
                     user_space = create_space_for_user(request.user)

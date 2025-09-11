@@ -17,7 +17,7 @@
             <v-stepper-window>
                 <v-stepper-window-item value="1">
                     <v-card flat>
-                        <v-card-title class="text-h4">{{ $t('WelcometoTandoor') }}</v-card-title>
+                        <v-card-title class="text-h4">{{ $t('WelcometoTandoor') }} <span class="text-tandoor">{{useUserPreferenceStore().userSettings.user.displayName}}</span></v-card-title>
                         <v-card-text v-if="space">
                             <p class="text-subtitle-1 mb-4">{{ $t('WelcomeSettingsHelp') }}</p>
 

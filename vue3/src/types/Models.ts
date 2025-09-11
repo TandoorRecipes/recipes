@@ -1,13 +1,13 @@
 import {
     AccessToken, AiLog, AiProvider,
     ApiApi, ApiKeywordMoveUpdateRequest, Automation, type AutomationTypeEnum, ConnectorConfig, CookLog, CustomFilter,
-    Food,
+    Food, FoodInheritField,
     Ingredient,
     InviteLink, Keyword,
     MealPlan,
     MealType,
     Property, PropertyType,
-    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingListEntry,
+    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingListEntry, Space,
     Step,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
@@ -101,6 +101,7 @@ export type Model = {
     disableCreate?: boolean | undefined,
     disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
+    disableSearch?: boolean | undefined,
     // disable showing this model as an option in the ModelListPage
     disableListView?: boolean | undefined,
 
@@ -148,6 +149,8 @@ export type EditorSupportedModels =
     | 'SearchFields'
     | 'AiProvider'
     | 'AiLog'
+    | 'Space'
+    | 'FoodInheritField'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -184,6 +187,8 @@ export type EditorSupportedTypes =
     | SearchFields
     | AiProvider
     | AiLog
+    | Space
+    | FoodInheritField
 
 export const TFood = {
     name: 'Food',
@@ -655,7 +660,8 @@ export const TUserSpace = {
     disableCreate: true,
 
     tableHeaders: [
-        {title: 'User', key: 'user'},
+        {title: 'User', key: 'user.displayName'},
+        {title: 'Group', key: 'groups'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
@@ -669,18 +675,38 @@ export const TInviteLink = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/InviteLinkEditor.vue`)),
 
-    disableListView: true,
+    disableSearch: true,
     isPaginated: true,
     toStringKeys: ['email', 'role'],
 
     tableHeaders: [
         {title: 'Email', key: 'email'},
-        {title: 'Role', key: 'group'},
+        {title: 'Role', key: 'group.name'},
         {title: 'Valid Until', key: 'validUntil'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
 registerModel(TInviteLink)
+
+export const TSpace = {
+    name: 'Space',
+    localizationKey: 'Space',
+    localizationKeyDescription: 'SpaceHelp',
+    icon: 'fa-solid fa-hard-drive',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SpaceEditor.vue`)),
+
+    disableDelete: true,
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Owner', key: 'createdBy.displayName'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TSpace)
 
 export const TStorage = {
     name: 'Storage',

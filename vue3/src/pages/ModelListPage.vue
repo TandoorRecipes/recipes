@@ -43,7 +43,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="query" clearable></v-text-field>
+                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="query" v-if="!genericModel.model.disableSearch" clearable></v-text-field>
 
                 <v-data-table-server
                     v-model="selectedItems"
@@ -82,13 +82,16 @@
                         <v-chip label v-if="item.space == null" color="success">{{ $t('Global') }}</v-chip>
                         <v-chip label v-else color="info">{{ $t('Space') }}</v-chip>
                     </template>
+                    <template v-slot:item.groups="{ item }" v-if="genericModel.model.name == 'UserSpace'">
+                        {{item.groups.flatMap((x: Group) => x.name).join(', ')}}
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact">
                                     <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}"
-                                                 v-if="!genericModel.model.disableCreate && !genericModel.model.disableUpdate && !genericModel.model.disableDelete">
+                                                 v-if="!(genericModel.model.disableCreate && genericModel.model.disableUpdate && genericModel.model.disableDelete)">
                                         {{ $t('Edit') }}
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
@@ -144,7 +147,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
-import {ApiApi, ApiRecipeListRequest, RecipeImport} from "@/openapi";
+import {ApiApi, ApiRecipeListRequest, Group, RecipeImport} from "@/openapi";
 import {useTitle} from "@vueuse/core";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
