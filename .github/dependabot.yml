@@ -22,7 +22,7 @@ updates:
       pip-pytest:
         patterns: ["pytest*"]
         update-types: ["minor", "patch"]
-    
+
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -41,6 +41,8 @@ updates:
       semver-patch-days: 3
     directory: "vue"
     ignore:
+      - dependency-name: "*vue"
+        update-types: ["version-update:semver-major"]
       - dependency-name: "*vue*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "pinia*"
