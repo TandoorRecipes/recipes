@@ -41,11 +41,11 @@ updates:
       semver-patch-days: 3
     directory: "vue"
     ignore:
-      - dependency-name: "*vue"
+      - dependency-name: "vue"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "*vue*"
+      - dependency-name: "vue*"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "pinia*"
+      - dependency-name: "pinia"
         update-types: ["version-update:semver-major"]
     groups:
       npm-patches:
