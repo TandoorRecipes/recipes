@@ -319,10 +319,10 @@ def clean_instruction_string(instruction):
         .replace("", _('reverse rotation')) \
         .replace("", _('careful rotation')) \
         .replace("", _('knead')) \
-        .replace("Andicken ", _('thicken')) \
-        .replace("Erwärmen ", _('warm up')) \
-        .replace("Fermentieren ", _('ferment')) \
-        .replace("Sous-vide ", _("sous-vide"))
+        .replace("", _('thicken')) \
+        .replace("", _('warm up')) \
+        .replace("", _('ferment')) \
+        .replace("", _("sous-vide"))
 
 
 def parse_instructions(instructions):
