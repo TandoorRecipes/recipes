@@ -75,7 +75,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space, CustomAiProviderPermission
+                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -546,7 +546,7 @@ class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
 class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest) | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     http_method_names = ['get', 'post', 'put', 'patch']
 
@@ -567,7 +567,7 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
@@ -581,10 +581,23 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        if is_space_owner(self.request.user, self.request.space):
+        # starting with users you can SEE all other users in a space, guests only see themselves
+        if has_group_permission(self.request.user, ['user']):
             return self.queryset.filter(space=self.request.space)
         else:
-            return self.queryset.filter(user=self.request.user, space=self.request.space)
+            return self.queryset.filter(space=self.request.space, user=self.request.user)
+
+    @extend_schema(responses=UserSpaceSerializer(many=True))
+    @decorators.action(detail=False, pagination_class=DefaultPagination, methods=['GET'], serializer_class=UserSpaceSerializer, )
+    def all_personal(self, request):
+        """
+        return all userspaces for the user requesting the endpoint
+        :param request:
+        :return:
+        """
+        with scopes_disabled():
+            self.queryset = self.queryset.filter(user=self.request.user)
+            return Response(self.serializer_class(self.queryset.all(), many=True, context={'request': self.request}).data)
 
 
 class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):

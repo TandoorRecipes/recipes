@@ -46,13 +46,15 @@ class ScopeMiddleware:
             # get active user space, if for some reason more than one space is active select first (group permission checks will fail, this is not intended at this point)
             user_space = request.user.userspace_set.filter(active=True).first()
 
-            if not user_space:
-                if request.user.userspace_set.count() > 0:
-                    # if the users has a userspace but nothing is active, activate the first one
-                    user_space = request.user.userspace_set.filter(active=True).first()
+            if not user_space and request.user.userspace_set.count() > 0:
+                # if the users has a userspace but nothing is active, activate the first one
+                user_space = request.user.userspace_set.first()
+                if user_space:
                     user_space.active = True
                     user_space.save()
-                elif 'signup_token' in request.session:
+
+            if not user_space:
+                if 'signup_token' in request.session:
                     # if user is authenticated, has no space but a signup token (InviteLink) is present, redirect to invite link logic
                     return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
                 else:

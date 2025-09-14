@@ -98,7 +98,7 @@
 <script setup lang="ts">
 
 import {ApiApi, UserFile, UserFileFromJSON} from "@/openapi";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {DateTime} from "luxon";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {getCookie} from "@/utils/cookie";
@@ -131,8 +131,13 @@ const tableHeaders = ref([
 ])
 
 onMounted(() => {
-    //TODO move to open function of file tab
-    loadFiles()
+
+})
+
+watch(() => dialog.value, (value, oldValue) => {
+    if (value && !oldValue) {
+        loadFiles()
+    }
 })
 
 function loadFiles() {

@@ -163,7 +163,7 @@ onMounted(() => {
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
-    if(to.name != 'WelcomePage' && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
+    if(to.name == 'StartPage' && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
         router.push({name: 'WelcomePage'})
     }
     nextTick(() => {

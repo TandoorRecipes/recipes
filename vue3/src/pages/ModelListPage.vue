@@ -34,9 +34,12 @@
                     </v-card-actions>
 
                     <v-card-text v-if="genericModel.model.name == 'AiLog'">
-                        {{ $t('MonthlyCreditsUsed') }} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
+                        {{ $t('MonthlyCreditsUsed') }} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{
+                            useUserPreferenceStore().activeSpace.aiCreditsMonthly
+                        }})
                         {{ $t('AiCreditsBalance') }} : {{ useUserPreferenceStore().activeSpace.aiCreditsBalance }}
-                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed" :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"></v-progress-linear>
+                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"
+                                           :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"></v-progress-linear>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -83,7 +86,7 @@
                         <v-chip label v-else color="info">{{ $t('Space') }}</v-chip>
                     </template>
                     <template v-slot:item.groups="{ item }" v-if="genericModel.model.name == 'UserSpace'">
-                        {{item.groups.flatMap((x: Group) => x.name).join(', ')}}
+                        {{ item.groups.flatMap((x: Group) => x.name).join(', ') }}
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
@@ -113,6 +116,11 @@
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'RecipeImport'" @click="importRecipe(item)">
                                         {{ $t('Import') }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="fa-solid fa-arrow-right-from-bracket"
+                                                 v-if="genericModel.model.name == 'Space'  && item.createdBy.id != useUserPreferenceStore().userSettings.user.id!"
+                                                 @click="leaveSpace(item)">
+                                        {{ $t('LeaveSpace') }}
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -147,7 +155,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
-import {ApiApi, ApiRecipeListRequest, Group, RecipeImport} from "@/openapi";
+import {ApiApi, ApiRecipeListRequest, Group, RecipeImport, Space, UserSpace} from "@/openapi";
 import {useTitle} from "@vueuse/core";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
@@ -261,6 +269,26 @@ function importAllRecipes() {
         loadItems({page: 1})
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+}
+
+/**
+ * leave the selected space as a user
+ * @param space to leave
+ */
+function leaveSpace(space: Space) {
+    let api = new ApiApi()
+    useUserPreferenceStore().userSpaces.forEach((us: UserSpace) => {
+        if (us.space == space.id!) {
+            loading.value = true
+            api.apiUserSpaceDestroy({id: us.id!}).then(r => {
+
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+            }).finally(() => {
+                loading.value = false
+            })
+        }
     })
 }
 

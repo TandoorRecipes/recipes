@@ -455,3 +455,9 @@ class IsReadOnlyDRF(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS
+
+class IsCreateDRF(permissions.BasePermission):
+    message = 'You cannot interact with this object, you can only create'
+
+    def has_permission(self, request, view):
+        return request.method == 'POST'

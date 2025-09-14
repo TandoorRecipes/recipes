@@ -29,7 +29,7 @@
 
                         <v-textarea v-model="editingObj.message" :label="$t('Message')" clearable></v-textarea>
 
-                        <space-limits-info :space="editingObj" :show-thank-you="false"></space-limits-info>
+                        <space-limits-info :space="editingObj" :show-thank-you="false" v-if="isUpdate()"></space-limits-info>
 
                     </v-form>
                 </v-tabs-window-item>
