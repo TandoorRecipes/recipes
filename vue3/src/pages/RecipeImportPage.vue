@@ -141,14 +141,14 @@
 
                                 <div v-if="importType == 'ai'">
                                     <v-row>
-                                        <v-col md="6">
-                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider">
+                                        <v-col cols="12" md="6">
+                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider" hide-details>
                                                 <template #append>
                                                     <v-btn icon="$settings" :to="{name:'ModelListPage', params: {model: 'AiProvider'}}" color="success"></v-btn>
                                                 </template>
                                             </ModelSelect>
                                         </v-col>
-                                        <v-col md="6">
+                                        <v-col cols="12" md="6">
                                             <v-btn-toggle class="mb-2" border divided v-model="aiMode">
                                                 <v-btn value="file">{{ $t('File') }}</v-btn>
                                                 <v-btn value="text">{{ $t('Text') }}</v-btn>
