@@ -8,6 +8,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 import random
 
+from cookbook.helper.permission_helper import create_space_for_user
 from cookbook.models import Space, UserSpace
 from cookbook.views import views
 from recipes import settings
@@ -83,29 +84,3 @@ class ScopeMiddleware:
             with scopes_disabled():
                 request.space = None
                 return self.get_response(request)
-
-
-def create_space_for_user(user, name=None):
-    with scopes_disabled():
-        if not name:
-            name = f"{user.username}'s Space"
-
-        if Space.objects.filter(name=name).exists():
-            name = f'{name} #{random.randrange(1, 10 ** 5)}'
-
-        created_space = Space(name=name,
-                              created_by=user,
-                              max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
-                              max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
-                              max_users=settings.SPACE_DEFAULT_MAX_USERS,
-                              allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
-                              ai_enabled=settings.SPACE_AI_ENABLED,
-                              ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY,
-                              space_setup_completed=False, )
-        created_space.save()
-
-        UserSpace.objects.filter(user=user).update(active=False)
-        user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
-        user_space.groups.add(Group.objects.filter(name='admin').get())
-
-        return user_space

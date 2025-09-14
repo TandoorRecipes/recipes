@@ -18,8 +18,6 @@ import litellm
 import redis
 import requests
 from PIL import UnidentifiedImageError
-from PIL.ImImagePlugin import number
-from PIL.features import check
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
