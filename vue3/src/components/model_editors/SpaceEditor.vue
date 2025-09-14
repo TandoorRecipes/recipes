@@ -27,7 +27,9 @@
 
                         <user-file-field v-model="editingObj.image" :label="$t('Image')" :hint="$t('CustomImageHelp')" persistent-hint></user-file-field>
 
-                        <v-textarea v-model="editingObj.message" :label="$t('Message')"></v-textarea>
+                        <v-textarea v-model="editingObj.message" :label="$t('Message')" clearable></v-textarea>
+
+                        <space-limits-info :space="editingObj" :show-thank-you="false"></space-limits-info>
 
                     </v-form>
                 </v-tabs-window-item>
@@ -81,13 +83,14 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, ref, watch} from "vue";
-import {ConnectorConfig, Space} from "@/openapi";
+import {ApiApi, ConnectorConfig, Space} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import UserFileField from "@/components/inputs/UserFileField.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import editor from "mavon-editor";
+import SpaceLimitsInfo from "@/components/display/SpaceLimitsInfo.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<Space>, required: false, default: null},

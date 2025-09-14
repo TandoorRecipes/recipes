@@ -39,6 +39,7 @@
                             <v-spacer></v-spacer>
                         </template>
                         <template #next>
+                            <v-btn @click="finishWelcome()" color="warning" class="me-2" :loading="loading">{{ $t('Skip') }}</v-btn>
                             <v-btn @click="updateSpaceAndUserSettings()" :loading="loading" color="success">{{ $t('Next') }}</v-btn>
                         </template>
                     </v-stepper-actions>
@@ -194,8 +195,10 @@ onMounted(() => {
 function finishWelcome(target: RouteLocationRaw = {name: 'StartPage'}) {
     if (space.value) {
         space.value.spaceSetupCompleted = true
+        loading.value = true
         updateSpace().then(() => {
             router.push(target)
+            loading.value = false
         })
     } else {
         useMessageStore().addMessage(MessageType.ERROR, "Space not loaded yet", 5000)

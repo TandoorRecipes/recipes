@@ -484,6 +484,7 @@
   "Show_as_header": "Mostrar como encabezado",
   "Single": "Simple",
   "Size": "Tamaño",
+  "Skip": "",
   "Social_Authentication": "Autenticación Social",
   "Sort_by_new": "Ordenar por novedades",
   "SourceImportHelp": "Importar JSON en formato schema.org/recipe o páginas HTML con recetas en formato JSON+LD o microdatos.",

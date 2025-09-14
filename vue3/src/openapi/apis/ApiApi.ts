@@ -1803,6 +1803,11 @@ export interface ApiSpaceRetrieveRequest {
     id: number;
 }
 
+export interface ApiSpaceUpdateRequest {
+    id: number;
+    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+}
+
 export interface ApiStepCreateRequest {
     step: Omit<Step, 'instructionsMarkdown'|'stepRecipeData'|'numrecipe'>;
 }
@@ -13262,6 +13267,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSpaceRetrieve(requestParameters: ApiSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
         const response = await this.apiSpaceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceUpdateRaw(requestParameters: ApiSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSpaceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SpaceToJSON(requestParameters['space']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceUpdate(requestParameters: ApiSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
+        const response = await this.apiSpaceUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

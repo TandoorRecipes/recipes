@@ -548,7 +548,7 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     serializer_class = SpaceSerializer
     permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
-    http_method_names = ['get', 'post', 'patch']
+    http_method_names = ['get', 'post', 'put', 'patch']
 
     def get_queryset(self):
         return self.queryset.filter(

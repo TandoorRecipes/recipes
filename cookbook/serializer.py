@@ -368,10 +368,10 @@ class AiLogSerializer(serializers.ModelSerializer):
 
 class SpaceSerializer(WritableNestedModelSerializer):
     created_by = UserSerializer(read_only=True)
-    user_count = serializers.SerializerMethodField('get_user_count')
-    recipe_count = serializers.SerializerMethodField('get_recipe_count')
-    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
-    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used')
+    user_count = serializers.SerializerMethodField('get_user_count', read_only=True)
+    recipe_count = serializers.SerializerMethodField('get_recipe_count', read_only=True)
+    file_size_mb = serializers.SerializerMethodField('get_file_size_mb', read_only=True)
+    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used', read_only=True)
     ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
     food_inherit = FoodInheritFieldSerializer(many=True, required=False)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -413,8 +413,8 @@ class SpaceSerializer(WritableNestedModelSerializer):
         name = None
         if 'name' in validated_data:
             name = validated_data['name']
-        space = create_space_for_user(self.context['request'].user, name)
-        return space
+        user_space = create_space_for_user(self.context['request'].user, name)
+        return user_space.space
 
     def update(self, instance, validated_data):
         if 'ai_enabled' in validated_data and not self.context['request'].user.is_superuser:
