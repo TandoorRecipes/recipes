@@ -11,7 +11,7 @@ from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Keyword, Recipe, Step, Food, Unit, SupermarketCategory, PropertyType, Property, MealType, MealPlan
+from cookbook.models import Ingredient, Keyword, Recipe, Step, Food, Unit, SupermarketCategory, PropertyType, Property, MealType, MealPlan, CookLog
 
 
 class Mealie1(Integration):
@@ -195,6 +195,28 @@ class Mealie1(Integration):
                 property_types_dict[pT].delete()
             except:
                 pass
+
+        cook_log_list = []
+        for c in mealie_database['recipe_comments']:
+            cook_log_list.append(CookLog(
+                recipe_id=recipes_dict[c['recipe_id']],
+                comment=c['text'],
+                created_at=c['created_at'],
+                created_by=self.request.user,
+                space=self.request.space,
+            ))
+
+        for c in mealie_database['recipe_timeline_events']:
+            if c['event_type'] == 'comment':
+                cook_log_list.append(CookLog(
+                    recipe_id=recipes_dict[c['recipe_id']],
+                    comment=c['message'],
+                    created_at=c['created_at'],
+                    created_by=self.request.user,
+                    space=self.request.space,
+                ))
+
+        CookLog.objects.bulk_create(cook_log_list)
 
         meal_types_dict = {}
         meal_plans = []
