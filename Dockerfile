@@ -35,8 +35,16 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 
-#Copy project and execute it.
-COPY . ./
+# Copy minimal parts of project to run
+COPY --link ./recipes/ /opt/recipes/recipes
+COPY --link ./cookbook/ /opt/recipes/cookbook
+COPY --link ./http.d/ /opt/recipes/http.d
+COPY --link \
+    ./boot.sh \
+    ./manage.py \
+    /opt/recipes
+
+# Add compiled frontend
 COPY --link --from=build \
     /opt/recipes/cookbook/static/vue3/ \
     /opt/recipes/cookbook/static/vue3/
