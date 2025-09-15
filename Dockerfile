@@ -1,3 +1,11 @@
+# Build frontend
+FROM node:22-alpine AS build
+COPY --link ./vue3 /opt/recipes/vue3
+WORKDIR /opt/recipes/vue3
+RUN yarn install --frozen-lockfile && \
+    yarn build
+
+# Main app image
 FROM python:3.13-alpine3.22
 
 #Install all dependencies.
@@ -29,6 +37,9 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 
 #Copy project and execute it.
 COPY . ./
+COPY --link --from=build \
+    /opt/recipes/cookbook/static/vue3/ \
+    /opt/recipes/cookbook/static/vue3/
 
 # delete default nginx config and link it to tandoors config
 # create symlinks to access and error log to show them on stdout
