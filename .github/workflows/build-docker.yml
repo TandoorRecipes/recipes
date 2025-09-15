@@ -34,6 +34,11 @@ jobs:
             echo VERSION=develop >> $GITHUB_OUTPUT
           fi
 
+      - name: Setup python
+        uses: actions/setup-python@v6
+      - name: Generate version.py
+        run: python version.py
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Buildx

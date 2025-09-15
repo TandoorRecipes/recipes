@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile && \
 FROM python:3.13-alpine3.22
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap libgcc libstdc++ nginx tini envsubst nodejs npm
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED=1 \
@@ -54,11 +54,6 @@ RUN rm -rf /etc/nginx/http.d && \
 #            --start-period=10s \
 #            --retries=3 \
 #            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
-
-# collect information from git repositories
-RUN /opt/recipes/venv/bin/python version.py
-# delete git repositories to reduce image size
-RUN find . -type d -name ".git" | xargs rm -rf
 
 RUN chmod +x boot.sh
 ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]
