@@ -1,5 +1,5 @@
 <template>
-    <v-list-item class="swipe-container border-t-sm" :id="itemContainerId" @touchend="handleSwipe()"
+    <v-list-item class="swipe-container border-t-sm" :id="itemContainerId" @touchend="handleSwipe()"  @click="dialog = true;"
                  v-if="isShoppingListFoodVisible(props.shoppingListFood, useUserPreferenceStore().deviceSettings)"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
@@ -7,7 +7,7 @@
         <!--        </div>-->
 
 
-        <div class="flex-grow-1 p-2" @click="dialog = true;">
+        <div class="flex-grow-1 p-2">
             <div class="d-flex">
                 <div class="d-flex flex-column pr-2">
                     <span v-for="a in amounts" v-bind:key="a.key">
@@ -15,7 +15,7 @@
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
                             <i class="fas fa-clock-rotate-left text-info fa-fw" v-if="a.delayed"></i> <b>
                             <span :class="{'text-disabled': a.checked || a.delayed}" class="text-no-wrap">
-                                <span v-if="amounts.length > 1 || (amounts.length == 1 && a.amount != 1)">{{ $n(a.amount) }}</span>
+                                <span v-if="amounts.length > 1 || (amounts.length == 1 && a.amount != 1) || a.unit">{{ $n(a.amount) }}</span>
                                 <span class="ms-1" v-if="a.unit">{{ pluralString(a.unit, a.amount) }}</span>
                             </span>
                             </b>
