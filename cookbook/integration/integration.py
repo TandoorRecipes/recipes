@@ -166,20 +166,28 @@ class Integration:
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 
-                        for z in file_list:
-                            try:
-                                if not hasattr(z, 'filename') or isinstance(z, Tag):
-                                    recipe = self.get_recipe_from_file(z)
-                                else:
-                                    recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
-                                recipe.keywords.add(self.keyword)
-                                il.msg += self.get_recipe_processed_msg(recipe)
-                                self.handle_duplicates(recipe, import_duplicates)
+                        if isinstance(self, cookbook.integration.mealie1.Mealie1):
+                            # since the mealie 1.0 export is a backup and not a classic recipe export we treat it a bit differently
+                            recipes = self.get_recipe_from_file(import_zip)
+                            for r in recipes:
+                                self.handle_duplicates(r, import_duplicates)
                                 il.imported_recipes += 1
-                                il.save()
-                            except Exception as e:
-                                traceback.print_exc()
-                                self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
+                            il.save()
+                        else:
+                            for z in file_list:
+                                try:
+                                    if not hasattr(z, 'filename') or isinstance(z, Tag):
+                                        recipe = self.get_recipe_from_file(z)
+                                    else:
+                                        recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                    recipe.keywords.add(self.keyword)
+                                    il.msg += self.get_recipe_processed_msg(recipe)
+                                    self.handle_duplicates(recipe, import_duplicates)
+                                    il.imported_recipes += 1
+                                    il.save()
+                                except Exception as e:
+                                    traceback.print_exc()
+                                    self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     elif '.json' in f['name'] or '.xml' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name']:
                         data_list = self.split_recipe_file(f['file'])

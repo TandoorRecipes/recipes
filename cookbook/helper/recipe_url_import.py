@@ -403,6 +403,8 @@ def parse_servings_text(servings):
 
 
 def parse_time(recipe_time):
+    if not recipe_time:
+        return 0
     if type(recipe_time) not in [int, float]:
         try:
             recipe_time = float(re.search(r'\d+', recipe_time).group())

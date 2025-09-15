@@ -26,6 +26,7 @@ class ImportExportBase(forms.Form):
     PAPRIKA = 'PAPRIKA'
     NEXTCLOUD = 'NEXTCLOUD'
     MEALIE = 'MEALIE'
+    MEALIE1 = 'MEALIE1'
     CHOWDOWN = 'CHOWDOWN'
     SAFFRON = 'SAFFRON'
     CHEFTAP = 'CHEFTAP'
@@ -46,7 +47,7 @@ class ImportExportBase(forms.Form):
     PDF = 'PDF'
     GOURMET = 'GOURMET'
 
-    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'),
+    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (MEALIE1, 'Mealie1'), (CHOWDOWN, 'Chowdown'),
                                       (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'), (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'),
                                       (DOMESTICA, 'Domestica'), (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
                                       (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
