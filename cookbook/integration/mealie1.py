@@ -85,6 +85,7 @@ class Mealie1(Integration):
                 units_dict[u['id']] = unit.pk
 
         recipes_dict = {}
+        recipe_property_factor_dict = {}
         recipes = []
         recipe_keyword_relation = []
         for r in mealie_database['recipes']:
@@ -101,6 +102,9 @@ class Mealie1(Integration):
                 space=self.request.space,
                 created_by=self.request.user,
             )
+
+            if not self.nutrition_per_servings:
+                recipe_property_factor_dict[r['id']] = recipe.servings
 
             self.handle_duplicates(recipe, self.import_duplicates)
             self.import_log.msg += self.get_recipe_processed_msg(recipe)
@@ -211,10 +215,11 @@ class Mealie1(Integration):
             for r in mealie_database['recipe_nutrition']:
                 for key in property_types_dict:
                     if r[key]:
-                        # the mealie UI does not communicate to the user if nutrition's are per serving or recipe, expect per serving by default
-                        # TODO add option for user to choose between recipe and serving properties (use recipe_property_factor_dict with pre-calculated property factors)
                         properties_relation.append(
-                            Property(property_type_id=property_types_dict[key].pk, property_amount=r[key], open_data_food_slug=r['recipe_id'], space=self.request.space))
+                            Property(property_type_id=property_types_dict[key].pk,
+                                     property_amount=r[key] * recipe_property_factor_dict[r['recipe_id']] if r['recipe_id'] in recipe_property_factor_dict else 1,
+                                     open_data_food_slug=r['recipe_id'],
+                                     space=self.request.space))
             properties = Property.objects.bulk_create(properties_relation)
             property_ids = []
             for p in properties:
@@ -255,54 +260,56 @@ class Mealie1(Integration):
 
         CookLog.objects.bulk_create(cook_log_list)
 
-        self.import_log.msg += f"Importing {len(mealie_database["group_meal_plans"])} meal plans...\n"
-        self.import_log.save()
+        if self.import_meal_plans:
+            self.import_log.msg += f"Importing {len(mealie_database["group_meal_plans"])} meal plans...\n"
+            self.import_log.save()
 
-        meal_types_dict = {}
-        meal_plans = []
-        for m in mealie_database['group_meal_plans']:
-            if not m['entry_type'] in meal_types_dict:
-                meal_type = MealType.objects.get_or_create(name=m['entry_type'], created_by=self.request.user, space=self.request.space)[0]
-                meal_types_dict[m['entry_type']] = meal_type.pk
-            meal_plans.append(MealPlan(
-                recipe_id=recipes_dict[m['recipe_id']] if m['recipe_id'] else None,
-                title=m['title'] if m['title'] else "",
-                note=m['text'] if m['text'] else "",
-                from_date=m['date'],
-                to_date=m['date'],
-                meal_type_id=meal_types_dict[m['entry_type']],
-                created_by=self.request.user,
-                space=self.request.space,
-            ))
+            meal_types_dict = {}
+            meal_plans = []
+            for m in mealie_database['group_meal_plans']:
+                if not m['entry_type'] in meal_types_dict:
+                    meal_type = MealType.objects.get_or_create(name=m['entry_type'], created_by=self.request.user, space=self.request.space)[0]
+                    meal_types_dict[m['entry_type']] = meal_type.pk
+                meal_plans.append(MealPlan(
+                    recipe_id=recipes_dict[m['recipe_id']] if m['recipe_id'] else None,
+                    title=m['title'] if m['title'] else "",
+                    note=m['text'] if m['text'] else "",
+                    from_date=m['date'],
+                    to_date=m['date'],
+                    meal_type_id=meal_types_dict[m['entry_type']],
+                    created_by=self.request.user,
+                    space=self.request.space,
+                ))
 
-        MealPlan.objects.bulk_create(meal_plans)
+            MealPlan.objects.bulk_create(meal_plans)
 
-        self.import_log.msg += f"Importing {len(mealie_database["shopping_list_items"])} shopping list items...\n"
-        self.import_log.save()
+        if self.import_shopping_lists:
+            self.import_log.msg += f"Importing {len(mealie_database["shopping_list_items"])} shopping list items...\n"
+            self.import_log.save()
 
-        shopping_list_items = []
-        for sli in mealie_database['shopping_list_items']:
-            if not sli['checked']:
-                if sli['food_id']:
-                    shopping_list_items.append(ShoppingListEntry(
-                        amount=sli['quantity'],
-                        unit_id=units_dict[sli['unit_id']] if sli['unit_id'] else None,
-                        food_id=foods_dict[sli['food_id']] if sli['food_id'] else None,
-                        created_by=self.request.user,
-                        space=self.request.space,
-                    ))
-                elif not sli['food_id'] and sli['note'].strip():
-                    amount, unit, food, note = ingredient_parser.parse(sli['note'].strip())
-                    f = ingredient_parser.get_food(food)
-                    u = ingredient_parser.get_unit(unit)
-                    shopping_list_items.append(ShoppingListEntry(
-                        amount=amount,
-                        unit=u,
-                        food=f,
-                        created_by=self.request.user,
-                        space=self.request.space,
-                    ))
-        ShoppingListEntry.objects.bulk_create(shopping_list_items)
+            shopping_list_items = []
+            for sli in mealie_database['shopping_list_items']:
+                if not sli['checked']:
+                    if sli['food_id']:
+                        shopping_list_items.append(ShoppingListEntry(
+                            amount=sli['quantity'],
+                            unit_id=units_dict[sli['unit_id']] if sli['unit_id'] else None,
+                            food_id=foods_dict[sli['food_id']] if sli['food_id'] else None,
+                            created_by=self.request.user,
+                            space=self.request.space,
+                        ))
+                    elif not sli['food_id'] and sli['note'].strip():
+                        amount, unit, food, note = ingredient_parser.parse(sli['note'].strip())
+                        f = ingredient_parser.get_food(food)
+                        u = ingredient_parser.get_unit(unit)
+                        shopping_list_items.append(ShoppingListEntry(
+                            amount=amount,
+                            unit=u,
+                            food=f,
+                            created_by=self.request.user,
+                            space=self.request.space,
+                        ))
+            ShoppingListEntry.objects.bulk_create(shopping_list_items)
 
         return recipes
 

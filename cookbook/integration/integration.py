@@ -29,6 +29,10 @@ class Integration:
     import_log = None
     import_duplicates = False
 
+    import_meal_plans = True
+    import_shopping_lists = True
+    nutrition_per_servings = False
+
     def __init__(self, request, export_type):
         """
         Integration for importing and exporting recipes
@@ -60,7 +64,10 @@ class Integration:
                 space=request.space
             )
 
-    def do_export(self, recipes, el):
+    def do_export(self, recipes, el, meal_plans=True, shopping_lists=True, nutrition_per_servings=False):
+        self.import_meal_plans = meal_plans
+        self.import_shopping_lists = shopping_lists
+        self.nutrition_per_servings = nutrition_per_servings
 
         with scope(space=self.request.space):
             el.total_recipes = len(recipes)

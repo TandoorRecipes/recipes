@@ -658,6 +658,9 @@ const urlListImportedRecipes = ref([] as Recipe[])
 const sourceImportText = ref("")
 const appImportFiles = ref<File[]>([])
 const appImportDuplicates = ref(false)
+const appImportMealPlans = ref(true)
+const appImportShoppingLists = ref(true)
+const appImportNutritionsPerServing = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
 const aiMode = ref<'file' | 'text'>('file')
@@ -770,7 +773,7 @@ function loadRecipeFromAiImport() {
 }
 
 function appImport() {
-    doAppImport(appImportFiles.value, importApp.value, appImportDuplicates.value).then(r => {
+    doAppImport(appImportFiles.value, importApp.value, appImportDuplicates.value, appImportMealPlans.value, appImportShoppingLists.value, appImportNutritionsPerServing.value).then(r => {
         stepper.value = 'import_log'
         recLoadImportLog(r)
     })

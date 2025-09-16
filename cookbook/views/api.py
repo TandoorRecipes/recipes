@@ -2280,7 +2280,13 @@ class AppImportView(APIView):
                 files = []
                 for f in request.FILES.getlist('files'):
                     files.append({'file': io.BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
+                t = threading.Thread(target=integration.do_import,
+                                     args=[files, il, form.cleaned_data['duplicates']],
+                                     kwargs={'meal_plans': form.cleaned_data['meal_plans'],
+                                             'shopping_lists': form.cleaned_data['shopping_lists'],
+                                             'nutrition_per_serving': form.cleaned_data['nutrition_per_serving']
+                                             }
+                                     )
                 t.setDaemon(True)
                 t.start()
 
