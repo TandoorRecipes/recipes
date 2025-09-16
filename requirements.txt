@@ -55,7 +55,7 @@ autopep8==2.3.2
 flake8==7.3.0
 freezegun==1.5.5
 pytest==8.4.2
-pytest-asyncio==1.1.0
+pytest-asyncio==1.1.1
 pytest-cov===6.3.0
 pytest-django==4.11.1
 pytest-factoryboy==2.8.1
