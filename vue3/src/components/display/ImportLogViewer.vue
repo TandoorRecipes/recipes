@@ -1,6 +1,6 @@
 <template>
 
-    <v-row v-if=" props.importLog.importedRecipes != undefined && props.importLog.totalRecipes != undefined">
+    <v-row v-if="props.importLog.importedRecipes != undefined && props.importLog.totalRecipes != undefined">
         <v-col>
             <v-progress-linear :model-value="(props.importLog.importedRecipes/props.importLog.totalRecipes)*100" height="24" color="primary">
                 {{ props.importLog.importedRecipes }} / {{ props.importLog.totalRecipes }}
@@ -8,9 +8,9 @@
         </v-col>
     </v-row>
 
-    <v-row>
+    <v-row v-if="props.importLog.importedRecipes != undefined && props.importLog.totalRecipes != undefined">
         <v-col>
-            <v-textarea :model-value="importLog.msg" max-rows="25" auto-grow></v-textarea>
+            <v-textarea :model-value="importLog.msg" max-rows="25" :loading="importLog.running" auto-grow></v-textarea>
         </v-col>
     </v-row>
 

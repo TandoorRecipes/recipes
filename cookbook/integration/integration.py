@@ -26,6 +26,8 @@ class Integration:
     files = None
     export_type = None
     ignored_recipes = []
+    import_log = None
+    import_duplicates = False
 
     def __init__(self, request, export_type):
         """
@@ -111,7 +113,8 @@ class Integration:
         :return: HttpResponseRedirect to the recipe search showing all imported recipes
         """
         with scope(space=self.request.space):
-
+            self.import_log = il
+            self.import_duplicates = import_duplicates
             try:
                 self.files = files
                 for f in files:
@@ -169,10 +172,6 @@ class Integration:
                         if isinstance(self, cookbook.integration.mealie1.Mealie1):
                             # since the mealie 1.0 export is a backup and not a classic recipe export we treat it a bit differently
                             recipes = self.get_recipe_from_file(import_zip)
-                            for r in recipes:
-                                self.handle_duplicates(r, import_duplicates)
-                                il.imported_recipes += 1
-                            il.save()
                         else:
                             for z in file_list:
                                 try:
