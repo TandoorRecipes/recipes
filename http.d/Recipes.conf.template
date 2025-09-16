@@ -13,7 +13,7 @@ server {
 
   # serve service worker under main path
   location = /service-worker.js {
-    alias ${STATIC_ROOT}/vue3/service-worker.js;
+    alias /opt/recipes/staticfiles/vue3/service-worker.js;
   }
 
   # pass requests for dynamic content to gunicorn

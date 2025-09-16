@@ -4,7 +4,6 @@ source venv/bin/activate
 # these are envsubst in the nginx config, make sure they default to something sensible when unset
 export TANDOOR_PORT="${TANDOOR_PORT:-8080}"
 export MEDIA_ROOT=${MEDIA_ROOT:-/opt/recipes/mediafiles};
-export STATIC_ROOT=${STATIC_ROOT:-/opt/recipes/staticfiles};
 
 GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
 GUNICORN_THREADS="${GUNICORN_THREADS:-2}"
@@ -91,18 +90,12 @@ if [ "${PLUGINS_BUILD}" -eq 1 ]; then
     python plugin.py
 fi
 
-echo "Collecting static files, this may take a while..."
-
-python manage.py collectstatic --noinput
-
-echo "Done"
-
 chmod -R 755 ${MEDIA_ROOT:-/opt/recipes/mediafiles}
 
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
 # prepare nginx config
-envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
+envsubst '$MEDIA_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
 
 # start nginx
 echo "Starting nginx"

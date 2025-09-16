@@ -35,7 +35,9 @@ COPY . ./
 RUN rm -rf /etc/nginx/http.d && \
     ln -s /opt/recipes/http.d /etc/nginx/http.d && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log
+    ln -sf /dev/stderr /var/log/nginx/error.log && \
+    # collect staticfiles
+    venv/bin/python manage.py collectstatic --noinput
 
 # commented for now https://github.com/TandoorRecipes/recipes/issues/3478
 #HEALTHCHECK --interval=30s \
