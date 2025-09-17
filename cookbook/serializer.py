@@ -404,7 +404,6 @@ class SpaceSerializer(WritableNestedModelSerializer):
             return 0
 
     def create(self, validated_data):
-
         if Space.objects.filter(created_by=self.context['request'].user).count() >= self.context['request'].user.userpreference.max_owned_spaces:
             raise serializers.ValidationError(
                 _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({self.context['request'].user.userpreference.max_owned_spaces})')
@@ -416,6 +415,15 @@ class SpaceSerializer(WritableNestedModelSerializer):
         return user_space.space
 
     def update(self, instance, validated_data):
+        validated_data = self.filter_superuser_parameters(validated_data)
+
+        if 'name' in validated_data:
+            if Space.objects.filter(Q(name=validated_data['name']), ~Q(pk=instance.pk)).exists():
+                raise ValidationError(_('Space Name must be unique.'))
+
+        return super().update(instance, validated_data)
+
+    def filter_superuser_parameters(self, validated_data):
         if 'ai_enabled' in validated_data and not self.context['request'].user.is_superuser:
             del validated_data['ai_enabled']
 
@@ -425,10 +433,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
         if 'ai_credits_balance' in validated_data and not self.context['request'].user.is_superuser:
             del validated_data['ai_credits_balance']
 
-        if Space.objects.filter(Q(name=validated_data['name']), ~Q(pk=instance.pk)).exists():
-            raise ValidationError(_('Space Name must be unique.'))
-
-        return super().update(instance, validated_data)
+        return validated_data
 
     class Meta:
         model = Space

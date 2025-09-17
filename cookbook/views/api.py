@@ -579,8 +579,8 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        # starting with users you can SEE all other users in a space, guests only see themselves
-        if has_group_permission(self.request.user, ['user']):
+        # >= admins can see all users, guest/user can only see themselves
+        if has_group_permission(self.request.user, ['admin']):
             return self.queryset.filter(space=self.request.space)
         else:
             return self.queryset.filter(space=self.request.space, user=self.request.user)

@@ -7,6 +7,7 @@ from django.urls import reverse
 from django_scopes import scopes_disabled
 
 from cookbook.models import UserSpace
+from recipes import settings
 
 LIST_URL = 'api:space-list'
 DETAIL_URL = 'api:space-detail'
@@ -45,7 +46,6 @@ def test_list_multiple(u1_s1, space_1, space_2):
     assert u1_response['id'] == space_1.id
 
 
-
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
@@ -70,9 +70,9 @@ def test_update(arg, request, space_1, a1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],
-    ['u1_s1', 403],
-    ['a1_s1', 405],
+    ['g1_s1', 201],
+    ['u1_s1', 201],
+    ['a1_s1', 201],
 ])
 def test_add(arg, request, u1_s2):
     c = request.getfixturevalue(arg[0])
@@ -90,3 +90,59 @@ def test_delete(u1_s1, u1_s2, a1_s1, space_1):
     # event the space owner cannot delete his space over the api (this might change later but for now it's only available in the UI)
     r = a1_s1.delete(reverse(DETAIL_URL, args={space_1.id}))
     assert r.status_code == 405
+
+
+def test_superuser_parameters(space_1, a1_s1, s1_s1):
+    # ------- test as normal user -------
+    response = a1_s1.post(reverse(LIST_URL), {'name': 'test', 'ai_enabled': not settings.SPACE_AI_ENABLED, 'ai_credits_monthly': settings.SPACE_AI_CREDITS_MONTHLY + 100, 'ai_credits_balance': 100},
+                           content_type='application/json')
+
+    assert response.status_code == 201
+    response = json.loads(response.content)
+    assert response['ai_enabled'] == settings.SPACE_AI_ENABLED
+    assert response['ai_credits_monthly'] == settings.SPACE_AI_CREDITS_MONTHLY
+    assert response['ai_credits_balance'] == 0
+
+    space_1.created_by = auth.get_user(a1_s1)
+    space_1.ai_enabled = False
+    space_1.ai_credits_monthly = 0
+    space_1.ai_credits_balance = 0
+    space_1.save()
+
+    response = a1_s1.patch(reverse(DETAIL_URL, args={space_1.id}), {'ai_enabled': True, 'ai_credits_monthly': 100, 'ai_credits_balance': 100},
+                           content_type='application/json')
+
+    assert response.status_code == 200
+
+    space_1.refresh_from_db()
+    assert space_1.ai_enabled == False
+    assert space_1.ai_credits_monthly == 0
+    assert space_1.ai_credits_balance == 0
+
+    # ------- test as superuser -------
+
+    response = s1_s1.post(reverse(LIST_URL),
+                          {'name': 'test', 'ai_enabled': not settings.SPACE_AI_ENABLED, 'ai_credits_monthly': settings.SPACE_AI_CREDITS_MONTHLY + 100, 'ai_credits_balance': 100},
+                          content_type='application/json')
+
+    assert response.status_code == 201
+    response = json.loads(response.content)
+    assert response['ai_enabled'] == settings.SPACE_AI_ENABLED
+    assert response['ai_credits_monthly'] == settings.SPACE_AI_CREDITS_MONTHLY
+    assert response['ai_credits_balance'] == 0
+
+    space_1.created_by = auth.get_user(s1_s1)
+    space_1.ai_enabled = False
+    space_1.ai_credits_monthly = 0
+    space_1.ai_credits_balance = 0
+    space_1.save()
+
+    response = s1_s1.patch(reverse(DETAIL_URL, args={space_1.id}), {'ai_enabled': True, 'ai_credits_monthly': 100, 'ai_credits_balance': 100},
+                           content_type='application/json')
+
+    assert response.status_code == 200
+
+    space_1.refresh_from_db()
+    assert space_1.ai_enabled == True
+    assert space_1.ai_credits_monthly == 100
+    assert space_1.ai_credits_balance == 100
