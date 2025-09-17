@@ -103,6 +103,9 @@ ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
 # prepare nginx config
 envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
+if [ "$ipv6_disable" -eq 1 ]; then
+    sed -i '/listen \[::\]:80/d' /opt/recipes/http.d/Recipes.conf
+fi
 
 # start nginx
 echo "Starting nginx"
