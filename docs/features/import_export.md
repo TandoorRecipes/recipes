@@ -97,10 +97,17 @@ Follow these steps to import your recipes
 
 Mealie provides structured data similar to nextcloud.
 
+!!! WARNING "Versions"
+    There are two different versions of the Mealie importer. One for all backups created prior to Version 1.0 and one for all after. 
+
+!!! INFO "Versions"
+    The Mealie UI does not indicate weather or not nutrition information is stored per serving or per recipe. This choice is left to the user. During the import you will have to choose 
+    how Tandoor should treat your nutrition data.
+
 To migrate your recipes
 
-1. Go to your Mealie settings and create a new Backup.
-2. Download the backup by clicking on it and pressing download (this wasn't working for me, so I had to manually pull it from the server).
+1. Go to your Mealie admin settings and create a new backup.
+2. Download the backup.
 3. Upload the entire `.zip` file to the importer page and import everything.
 
 ## Chowdown
