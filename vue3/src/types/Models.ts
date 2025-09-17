@@ -703,6 +703,7 @@ export const TSpace = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Owner', key: 'createdBy.displayName'},
+        {title: 'Active', key: 'active'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model

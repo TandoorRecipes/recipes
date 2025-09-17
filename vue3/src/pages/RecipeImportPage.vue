@@ -434,6 +434,11 @@
                                         <v-checkbox v-model="appImportDuplicates"></v-checkbox>
                                     </template>
                                 </v-alert>
+                                <div v-if="importApp == 'MEALIE1'">
+                                    <v-checkbox v-model="appImportMealPlans" :label="$t('ImportMealPlans')" hide-details></v-checkbox>
+                                    <v-checkbox v-model="appImportShoppingLists" :label="$t('ImportShoppingList')" hide-details></v-checkbox>
+                                    <v-checkbox v-model="appImportNutritionsPerServing" :label="$t('NutritionsPerServing')" :hint="$t('NutritionsPerServingHelp')" persistent-hint></v-checkbox>
+                                </div>
 
                                 <v-stepper-actions>
                                     <template #prev>

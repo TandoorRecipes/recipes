@@ -1,5 +1,6 @@
 import json
 import re
+from decimal import Decimal
 from io import BytesIO
 from zipfile import ZipFile
 from gettext import gettext as _
@@ -89,33 +90,36 @@ class Mealie1(Integration):
         recipes = []
         recipe_keyword_relation = []
         for r in mealie_database['recipes']:
-            recipe = Recipe.objects.create(
-                waiting_time=parse_time(r['perform_time']),
-                working_time=parse_time(r['prep_time']),
-                description=r['description'][:512],
-                name=r['name'],
-                source_url=r['org_url'],
-                servings=r['recipe_servings'] if r['recipe_servings'] and r['recipe_servings'] != 0 else 1,
-                servings_text=r['recipe_yield'].strip() if r['recipe_yield'] else "",
-                internal=True,
-                created_at=r['created_at'],
-                space=self.request.space,
-                created_by=self.request.user,
-            )
+            if Recipe.objects.filter(space=self.request.space, name=r['name']).exists() and not self.import_duplicates:
+                self.import_log.msg += f"Ignoring {r['name']} because a recipe with this name already exists.\n"
+                self.import_log.save()
+            else:
+                recipe = Recipe.objects.create(
+                    waiting_time=parse_time(r['perform_time']),
+                    working_time=parse_time(r['prep_time']),
+                    description=r['description'][:512],
+                    name=r['name'],
+                    source_url=r['org_url'],
+                    servings=r['recipe_servings'] if r['recipe_servings'] and r['recipe_servings'] != 0 else 1,
+                    servings_text=r['recipe_yield'].strip() if r['recipe_yield'] else "",
+                    internal=True,
+                    created_at=r['created_at'],
+                    space=self.request.space,
+                    created_by=self.request.user,
+                )
 
-            if not self.nutrition_per_servings:
-                recipe_property_factor_dict[r['id']] = recipe.servings
+                if not self.nutrition_per_serving:
+                    recipe_property_factor_dict[r['id']] = recipe.servings
 
-            self.handle_duplicates(recipe, self.import_duplicates)
-            self.import_log.msg += self.get_recipe_processed_msg(recipe)
-            self.import_log.imported_recipes += 1
-            self.import_log.save()
+                self.import_log.msg += self.get_recipe_processed_msg(recipe)
+                self.import_log.imported_recipes += 1
+                self.import_log.save()
 
-            recipes.append(recipe)
-            recipes_dict[r['id']] = recipe.pk
-            recipe_keyword_relation.append(Recipe.keywords.through(recipe_id=recipe.pk, keyword_id=self.keyword.pk))
+                recipes.append(recipe)
+                recipes_dict[r['id']] = recipe.pk
+                recipe_keyword_relation.append(Recipe.keywords.through(recipe_id=recipe.pk, keyword_id=self.keyword.pk))
 
-        Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation)
+        Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation, ignore_conflicts=True)
 
         self.import_log.msg +=f"Importing {len(mealie_database["recipe_instructions"])} instructions...\n"
         self.import_log.save()
@@ -123,20 +127,22 @@ class Mealie1(Integration):
         steps_relation = []
         first_step_of_recipe_dict = {}
         for s in mealie_database['recipe_instructions']:
-            step = Step.objects.create(instruction=(s['text'] if s['text'] else "") + (f" \n {s['summary']}" if s['summary'] else ""),
-                                       order=s['position'],
-                                       name=s['title'],
-                                       space=self.request.space)
-            steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[s['recipe_id']], step_id=step.pk))
-            if s['recipe_id'] not in first_step_of_recipe_dict:
-                first_step_of_recipe_dict[s['recipe_id']] = step.pk
+            if s['recipe_id'] in recipes_dict:
+                step = Step.objects.create(instruction=(s['text'] if s['text'] else "") + (f" \n {s['summary']}" if s['summary'] else ""),
+                                           order=s['position'],
+                                           name=s['title'],
+                                           space=self.request.space)
+                steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[s['recipe_id']], step_id=step.pk))
+                if s['recipe_id'] not in first_step_of_recipe_dict:
+                    first_step_of_recipe_dict[s['recipe_id']] = step.pk
 
         for n in mealie_database['notes']:
-            step = Step.objects.create(instruction=n['text'],
-                                       name=n['title'],
-                                       order=100,
-                                       space=self.request.space)
-            steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[n['recipe_id']], step_id=step.pk))
+            if n['recipe_id'] in recipes_dict:
+                step = Step.objects.create(instruction=n['text'],
+                                           name=n['title'],
+                                           order=100,
+                                           space=self.request.space)
+                steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[n['recipe_id']], step_id=step.pk))
 
         Recipe.steps.through.objects.bulk_create(steps_relation)
 
@@ -147,37 +153,38 @@ class Mealie1(Integration):
 
         ingredients_relation = []
         for i in mealie_database['recipes_ingredients']:
-            if i['title']:
-                title_ingredient = Ingredient.objects.create(
-                    note=i['title'],
-                    is_header=True,
-                    space=self.request.space,
-                )
-                ingredients_relation.append(Step.ingredients.through(step_id=first_step_of_recipe_dict[i['recipe_id']], ingredient_id=title_ingredient.pk))
-            if i['food_id']:
-                ingredient = Ingredient.objects.create(
-                    food_id=foods_dict[i['food_id']] if i['food_id'] in foods_dict else None,
-                    unit_id=units_dict[i['unit_id']] if i['unit_id'] in units_dict else None,
-                    original_text=i['original_text'],
-                    order=i['position'],
-                    amount=i['quantity'],
-                    note=i['note'],
-                    space=self.request.space,
-                )
-                ingredients_relation.append(Step.ingredients.through(step_id=first_step_of_recipe_dict[i['recipe_id']], ingredient_id=ingredient.pk))
-            elif i['note'].strip():
-                amount, unit, food, note = ingredient_parser.parse(i['note'].strip())
-                f = ingredient_parser.get_food(food)
-                u = ingredient_parser.get_unit(unit)
-                ingredient = Ingredient.objects.create(
-                    food=f,
-                    unit=u,
-                    amount=amount,
-                    note=note,
-                    original_text=i['original_text'],
-                    space=self.request.space,
-                )
-                ingredients_relation.append(Step.ingredients.through(step_id=first_step_of_recipe_dict[i['recipe_id']], ingredient_id=ingredient.pk))
+            if i['recipe_id'] in recipes_dict:
+                if i['title']:
+                    title_ingredient = Ingredient.objects.create(
+                        note=i['title'],
+                        is_header=True,
+                        space=self.request.space,
+                    )
+                    ingredients_relation.append(Step.ingredients.through(step_id=first_step_of_recipe_dict[i['recipe_id']], ingredient_id=title_ingredient.pk))
+                if i['food_id']:
+                    ingredient = Ingredient.objects.create(
+                        food_id=foods_dict[i['food_id']] if i['food_id'] in foods_dict else None,
+                        unit_id=units_dict[i['unit_id']] if i['unit_id'] in units_dict else None,
+                        original_text=i['original_text'],
+                        order=i['position'],
+                        amount=i['quantity'],
+                        note=i['note'],
+                        space=self.request.space,
+                    )
+                    ingredients_relation.append(Step.ingredients.through(step_id=first_step_of_recipe_dict[i['recipe_id']], ingredient_id=ingredient.pk))
+                elif i['note'].strip():
+                    amount, unit, food, note = ingredient_parser.parse(i['note'].strip())
+                    f = ingredient_parser.get_food(food)
+                    u = ingredient_parser.get_unit(unit)
+                    ingredient = Ingredient.objects.create(
+                        food=f,
+                        unit=u,
+                        amount=amount,
+                        note=note,
+                        original_text=i['original_text'],
+                        space=self.request.space,
+                    )
+                    ingredients_relation.append(Step.ingredients.through(step_id=first_step_of_recipe_dict[i['recipe_id']], ingredient_id=ingredient.pk))
         Step.ingredients.through.objects.bulk_create(ingredients_relation)
 
         self.import_log.msg += f"Importing {len(mealie_database["recipes_to_categories"]) + len(mealie_database["recipes_to_tags"])} category and keyword relations...\n"
@@ -185,10 +192,12 @@ class Mealie1(Integration):
 
         recipe_keyword_relation = []
         for rC in mealie_database['recipes_to_categories']:
-            recipe_keyword_relation.append(Recipe.keywords.through(recipe_id=recipes_dict[rC['recipe_id']], keyword_id=keywords_categories_dict[rC['category_id']]))
+            if rC['recipe_id'] in recipes_dict:
+                recipe_keyword_relation.append(Recipe.keywords.through(recipe_id=recipes_dict[rC['recipe_id']], keyword_id=keywords_categories_dict[rC['category_id']]))
 
         for rT in mealie_database['recipes_to_tags']:
-            recipe_keyword_relation.append(Recipe.keywords.through(recipe_id=recipes_dict[rT['recipe_id']], keyword_id=keywords_tags_dict[rT['tag_id']]))
+            if rT['recipe_id'] in recipes_dict:
+                recipe_keyword_relation.append(Recipe.keywords.through(recipe_id=recipes_dict[rT['recipe_id']], keyword_id=keywords_tags_dict[rT['tag_id']]))
 
         Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation, ignore_conflicts=True)
 
@@ -213,13 +222,14 @@ class Mealie1(Integration):
             recipe_properties_relation = []
             properties_relation = []
             for r in mealie_database['recipe_nutrition']:
-                for key in property_types_dict:
-                    if r[key]:
-                        properties_relation.append(
-                            Property(property_type_id=property_types_dict[key].pk,
-                                     property_amount=r[key] * recipe_property_factor_dict[r['recipe_id']] if r['recipe_id'] in recipe_property_factor_dict else 1,
-                                     open_data_food_slug=r['recipe_id'],
-                                     space=self.request.space))
+                if r['recipe_id'] in recipes_dict:
+                    for key in property_types_dict:
+                        if r[key]:
+                            properties_relation.append(
+                                Property(property_type_id=property_types_dict[key].pk,
+                                         property_amount=Decimal(str(r[key])) / (Decimal(str(recipe_property_factor_dict[r['recipe_id']])) if r['recipe_id'] in recipe_property_factor_dict else 1),
+                                         open_data_food_slug=r['recipe_id'],
+                                         space=self.request.space))
             properties = Property.objects.bulk_create(properties_relation)
             property_ids = []
             for p in properties:
@@ -240,23 +250,25 @@ class Mealie1(Integration):
 
         cook_log_list = []
         for c in mealie_database['recipe_comments']:
-            cook_log_list.append(CookLog(
-                recipe_id=recipes_dict[c['recipe_id']],
-                comment=c['text'],
-                created_at=c['created_at'],
-                created_by=self.request.user,
-                space=self.request.space,
-            ))
-
-        for c in mealie_database['recipe_timeline_events']:
-            if c['event_type'] == 'comment':
+            if c['recipe_id'] in recipes_dict:
                 cook_log_list.append(CookLog(
                     recipe_id=recipes_dict[c['recipe_id']],
-                    comment=c['message'],
+                    comment=c['text'],
                     created_at=c['created_at'],
                     created_by=self.request.user,
                     space=self.request.space,
                 ))
+
+        for c in mealie_database['recipe_timeline_events']:
+            if c['recipe_id'] in recipes_dict:
+                if c['event_type'] == 'comment':
+                    cook_log_list.append(CookLog(
+                        recipe_id=recipes_dict[c['recipe_id']],
+                        comment=c['message'],
+                        created_at=c['created_at'],
+                        created_by=self.request.user,
+                        space=self.request.space,
+                    ))
 
         CookLog.objects.bulk_create(cook_log_list)
 
@@ -267,19 +279,20 @@ class Mealie1(Integration):
             meal_types_dict = {}
             meal_plans = []
             for m in mealie_database['group_meal_plans']:
-                if not m['entry_type'] in meal_types_dict:
-                    meal_type = MealType.objects.get_or_create(name=m['entry_type'], created_by=self.request.user, space=self.request.space)[0]
-                    meal_types_dict[m['entry_type']] = meal_type.pk
-                meal_plans.append(MealPlan(
-                    recipe_id=recipes_dict[m['recipe_id']] if m['recipe_id'] else None,
-                    title=m['title'] if m['title'] else "",
-                    note=m['text'] if m['text'] else "",
-                    from_date=m['date'],
-                    to_date=m['date'],
-                    meal_type_id=meal_types_dict[m['entry_type']],
-                    created_by=self.request.user,
-                    space=self.request.space,
-                ))
+                if m['recipe_id'] in recipes_dict:
+                    if not m['entry_type'] in meal_types_dict:
+                        meal_type = MealType.objects.get_or_create(name=m['entry_type'], created_by=self.request.user, space=self.request.space)[0]
+                        meal_types_dict[m['entry_type']] = meal_type.pk
+                    meal_plans.append(MealPlan(
+                        recipe_id=recipes_dict[m['recipe_id']] if m['recipe_id'] else None,
+                        title=m['title'] if m['title'] else "",
+                        note=m['text'] if m['text'] else "",
+                        from_date=m['date'],
+                        to_date=m['date'],
+                        meal_type_id=meal_types_dict[m['entry_type']],
+                        created_by=self.request.user,
+                        space=self.request.space,
+                    ))
 
             MealPlan.objects.bulk_create(meal_plans)
 

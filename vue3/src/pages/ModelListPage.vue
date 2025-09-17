@@ -88,6 +88,10 @@
                     <template v-slot:item.groups="{ item }" v-if="genericModel.model.name == 'UserSpace'">
                         {{ item.groups.flatMap((x: Group) => x.name).join(', ') }}
                     </template>
+                    <template v-slot:item.active="{ item }" v-if="genericModel.model.name == 'Space'">
+                        <v-chip label v-if="item.id == useUserPreferenceStore().activeSpace.id!" color="success">{{ $t('Active') }}</v-chip>
+                        <v-chip label v-else color="info" @click="useUserPreferenceStore().switchSpace(item)">{{ $t('Select') }}</v-chip>
+                    </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>

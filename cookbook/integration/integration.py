@@ -31,7 +31,7 @@ class Integration:
 
     import_meal_plans = True
     import_shopping_lists = True
-    nutrition_per_servings = False
+    nutrition_per_serving = False
 
     def __init__(self, request, export_type):
         """
@@ -64,10 +64,7 @@ class Integration:
                 space=request.space
             )
 
-    def do_export(self, recipes, el, meal_plans=True, shopping_lists=True, nutrition_per_servings=False):
-        self.import_meal_plans = meal_plans
-        self.import_shopping_lists = shopping_lists
-        self.nutrition_per_servings = nutrition_per_servings
+    def do_export(self, recipes, el):
 
         with scope(space=self.request.space):
             el.total_recipes = len(recipes)
@@ -111,7 +108,7 @@ class Integration:
         """
         return True
 
-    def do_import(self, files, il, import_duplicates):
+    def do_import(self, files, il, import_duplicates, meal_plans=True, shopping_lists=True, nutrition_per_serving=False):
         """
         Imports given files
         :param import_duplicates: if true duplicates are imported as well
@@ -122,6 +119,11 @@ class Integration:
         with scope(space=self.request.space):
             self.import_log = il
             self.import_duplicates = import_duplicates
+
+            self.import_meal_plans = meal_plans
+            self.import_shopping_lists = shopping_lists
+            self.nutrition_per_serving = nutrition_per_serving
+
             try:
                 self.files = files
                 for f in files:
