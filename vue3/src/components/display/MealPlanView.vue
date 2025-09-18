@@ -98,9 +98,9 @@ const planItems = computed(() => {
  */
 const calendarItemHeight = computed(() => {
     if (lgAndUp.value && useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'week') {
-        return '2.6rem'
+        return '3.5rem'
     } else {
-        return '1.3rem'
+        return '1.6rem'
     }
 })
 

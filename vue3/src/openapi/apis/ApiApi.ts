@@ -1785,6 +1785,10 @@ export interface ApiShoppingListRecipeUpdateRequest {
     shoppingListRecipe: Omit<ShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'>;
 }
 
+export interface ApiSpaceCreateRequest {
+    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+}
+
 export interface ApiSpaceListRequest {
     page?: number;
     pageSize?: number;
@@ -1797,6 +1801,11 @@ export interface ApiSpacePartialUpdateRequest {
 
 export interface ApiSpaceRetrieveRequest {
     id: number;
+}
+
+export interface ApiSpaceUpdateRequest {
+    id: number;
+    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
 }
 
 export interface ApiStepCreateRequest {
@@ -2137,6 +2146,11 @@ export interface ApiUserPreferenceRetrieveRequest {
 
 export interface ApiUserRetrieveRequest {
     id: number;
+}
+
+export interface ApiUserSpaceAllPersonalListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -13086,6 +13100,39 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
+    async apiSpaceCreateRaw(requestParameters: ApiSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/space/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SpaceToJSON(requestParameters['space']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceCreate(requestParameters: ApiSpaceCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
+        const response = await this.apiSpaceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
     async apiSpaceCurrentRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
         const queryParameters: any = {};
 
@@ -13225,6 +13272,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSpaceRetrieve(requestParameters: ApiSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
         const response = await this.apiSpaceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceUpdateRaw(requestParameters: ApiSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSpaceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SpaceToJSON(requestParameters['space']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiSpaceUpdate(requestParameters: ApiSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
+        const response = await this.apiSpaceUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -16149,6 +16236,44 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserRetrieve(requestParameters: ApiUserRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.apiUserRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * return all userspaces for the user requesting the endpoint :param request: :return:
+     */
+    async apiUserSpaceAllPersonalListRaw(requestParameters: ApiUserSpaceAllPersonalListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-space/all_personal/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUserSpaceListFromJSON(jsonValue));
+    }
+
+    /**
+     * return all userspaces for the user requesting the endpoint :param request: :return:
+     */
+    async apiUserSpaceAllPersonalList(requestParameters: ApiUserSpaceAllPersonalListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserSpaceList> {
+        const response = await this.apiUserSpaceAllPersonalListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

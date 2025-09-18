@@ -41,6 +41,12 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
 
+    obj_1.space = None
+    obj_1.save()
+
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
+
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],

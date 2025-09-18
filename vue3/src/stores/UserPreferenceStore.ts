@@ -67,7 +67,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function loadUserSettings() {
         console.log('loading user settings from DB')
         let api = new ApiApi()
-        api.apiUserPreferenceList().then(r => {
+        return api.apiUserPreferenceList().then(r => {
             if (r.length == 1) {
                 userSettings.value = r[0]
                 isAuthenticated.value = true
@@ -85,13 +85,15 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     /**
      * persist changes to user settings to DB
      */
-    function updateUserSettings() {
+    function updateUserSettings(silent: boolean = false) {
         let api = new ApiApi()
 
-        api.apiUserPreferencePartialUpdate({user: userSettings.value.user.id!, patchedUserPreference: userSettings.value}).then(r => {
+        return api.apiUserPreferencePartialUpdate({user: userSettings.value.user.id!, patchedUserPreference: userSettings.value}).then(r => {
             userSettings.value = r
             updateTheme()
-            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+            if (!silent) {
+                useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         })
@@ -102,7 +104,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     function loadServerSettings() {
         let api = new ApiApi()
-        api.apiServerSettingsCurrentRetrieve().then(r => {
+        return api.apiServerSettingsCurrentRetrieve().then(r => {
             serverSettings.value = r
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
@@ -114,7 +116,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     function loadActiveSpace() {
         let api = new ApiApi()
-        api.apiSpaceCurrentRetrieve().then(r => {
+        return api.apiSpaceCurrentRetrieve().then(r => {
             activeSpace.value = r
         }).catch(err => {
             if (err.response.status != 403) {
@@ -128,7 +130,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     function loadUserSpaces() {
         let api = new ApiApi()
-        api.apiUserSpaceList().then(r => {
+        return api.apiUserSpaceAllPersonalList().then(r => {
             userSpaces.value = r.results
         }).catch(err => {
             if (err.response.status != 403) {
@@ -144,7 +146,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function loadSpaces() {
         let api = new ApiApi()
 
-        api.apiSpaceList().then(r => {
+        return api.apiSpaceList().then(r => {
             spaces.value = r.results
         }).catch(err => {
             if (err.response.status != 403) {
@@ -160,9 +162,10 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         let api = new ApiApi()
 
         api.apiSwitchActiveSpaceRetrieve({spaceId: space.id!}).then(r => {
-            loadActiveSpace()
-            router.push({name: 'StartPage'}).then(() => {
-                location.reload()
+            loadActiveSpace().then(() => {
+                router.push({name: 'StartPage'}).then(() => {
+                    location.reload()
+                })
             })
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
@@ -221,15 +224,20 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         }
     }
 
-    // always load settings on first initialization of store
-    loadUserSettings()
-    loadServerSettings()
-    loadActiveSpace()
-    loadUserSpaces()
-    loadSpaces()
-    updateTheme()
+    function init() {
+        const promises = [] as Promise<any>[]
+        promises.push(loadUserSettings())
+        promises.push(loadServerSettings())
+        promises.push(loadActiveSpace())
+        promises.push(loadUserSpaces())
+        promises.push(loadSpaces())
+        updateTheme()
+
+        return Promise.allSettled(promises)
+    }
 
     return {
+        init,
         deviceSettings,
         userSettings,
         serverSettings,

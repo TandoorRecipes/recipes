@@ -13,9 +13,7 @@
                     <v-list-item :to="{name: 'SearchSettings'}" prepend-icon="$search">{{ $t('Search') }}</v-list-item>
                     <v-divider></v-divider>
                     <v-list-subheader>Space</v-list-subheader>
-                    <v-list-item :to="{name: 'UserSpaceSettings'}" prepend-icon="$spaces">{{ $t('YourSpaces') }}</v-list-item>
                     <v-list-item :to="{name: 'SpaceSettings'}" prepend-icon="$settings">{{ $t('SpaceSettings') }}</v-list-item>
-                    <v-list-item :to="{name: 'SpaceMemberSettings'}" prepend-icon="fa-solid fa-users">{{ $t('SpaceMembers') }}</v-list-item>
                     <v-list-item :to="{name: 'OpenDataImportSettings'}" prepend-icon="fa-solid fa-cloud-arrow-down">{{ $t('Open_Data_Import') }}</v-list-item>
                     <v-list-item :to="{name: 'ExportDataSettings'}" prepend-icon="fa-solid fa-file-export">{{ $t('Export') }}</v-list-item>
                     <v-divider></v-divider>

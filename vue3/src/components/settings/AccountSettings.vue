@@ -2,7 +2,10 @@
     <v-form>
         <p class="text-h6">{{ $t('Profile') }}</p>
         <v-divider class="mb-3"></v-divider>
-        <v-text-field :label="$t('Username')" v-model="user.username" disabled :hint="$t('theUsernameCannotBeChanged')" persistent-hint></v-text-field>
+
+        <thank-you-note></thank-you-note>
+
+        <v-text-field class="mt-3" :label="$t('Username')" v-model="user.username" disabled :hint="$t('theUsernameCannotBeChanged')" persistent-hint></v-text-field>
 
         <!--                    <v-label>Avatar</v-label><br/>-->
         <!--                    <v-avatar class="mt-3 mb-3" style="height: 10vh; width: 10vh" color="info">V</v-avatar> Feature coming in a future Version of Tandoor.-->
@@ -39,6 +42,7 @@ import {ApiApi, User} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
+import ThankYouNote from "@/components/display/ThankYouNote.vue";
 
 const {getDjangoUrl} = useDjangoUrls()
 

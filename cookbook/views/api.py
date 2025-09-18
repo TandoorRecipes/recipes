@@ -18,8 +18,6 @@ import litellm
 import redis
 import requests
 from PIL import UnidentifiedImageError
-from PIL.ImImagePlugin import number
-from PIL.features import check
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -35,7 +33,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
@@ -76,7 +73,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space, CustomAiProviderPermission
+                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -134,7 +131,7 @@ class LoggingMixin(object):
 
         if settings.REDIS_HOST:
             try:
-                d = date.today().isoformat()
+                d = timezone.now().isoformat()
                 space = request.space
                 endpoint = request.resolver_match.url_name
 
@@ -182,7 +179,10 @@ class StandardFilterModelViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         query = self.request.query_params.get('query', None)
         if query is not None:
-            queryset = queryset.filter(name__icontains=query)
+            try:
+                queryset = queryset.filter(name__icontains=query)
+            except FieldError:
+                pass
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
@@ -544,9 +544,9 @@ class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
 class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest) | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
-    http_method_names = ['get', 'patch']
+    http_method_names = ['get', 'post', 'put', 'patch']
 
     def get_queryset(self):
         return self.queryset.filter(
@@ -565,7 +565,7 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
@@ -579,10 +579,23 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        if is_space_owner(self.request.user, self.request.space):
+        # >= admins can see all users, guest/user can only see themselves
+        if has_group_permission(self.request.user, ['admin']):
             return self.queryset.filter(space=self.request.space)
         else:
-            return self.queryset.filter(user=self.request.user, space=self.request.space)
+            return self.queryset.filter(space=self.request.space, user=self.request.user)
+
+    @extend_schema(responses=UserSpaceSerializer(many=True))
+    @decorators.action(detail=False, pagination_class=DefaultPagination, methods=['GET'], serializer_class=UserSpaceSerializer, )
+    def all_personal(self, request):
+        """
+        return all userspaces for the user requesting the endpoint
+        :param request:
+        :return:
+        """
+        with scopes_disabled():
+            self.queryset = self.queryset.filter(user=self.request.user)
+            return Response(self.serializer_class(self.queryset.all(), many=True, context={'request': self.request}).data)
 
 
 class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -1222,7 +1235,19 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
-        queryset = self.queryset.filter(step__recipe__space=self.request.space)
+        queryset = self.queryset.prefetch_related('food',
+                                                  'food__properties',
+                                                  'food__properties__property_type',
+                                                  'food__inherit_fields',
+                                                  'food__supermarket_category',
+                                                  'food__onhand_users',
+                                                  'food__substitute',
+                                                  'food__child_inherit_fields',
+                                                  'unit',
+                                                  'unit__unit_conversion_base_relation',
+                                                  'unit__unit_conversion_base_relation__base_unit',
+                                                  'unit__unit_conversion_converted_relation',
+                                                  'unit__unit_conversion_converted_relation__converted_unit', ).filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
@@ -1893,8 +1918,8 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        unused = self.request.query_params.get('unused', False)
-        if unused:
+        used = self.request.query_params.get('used', False)
+        if not used:
             self.queryset = self.queryset.filter(used_by=None)
 
         if is_space_owner(self.request.user, self.request.space):
@@ -2267,7 +2292,13 @@ class AppImportView(APIView):
                 files = []
                 for f in request.FILES.getlist('files'):
                     files.append({'file': io.BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
+                t = threading.Thread(target=integration.do_import,
+                                     args=[files, il, form.cleaned_data['duplicates']],
+                                     kwargs={'meal_plans': form.cleaned_data['meal_plans'],
+                                             'shopping_lists': form.cleaned_data['shopping_lists'],
+                                             'nutrition_per_serving': form.cleaned_data['nutrition_per_serving']
+                                             }
+                                     )
                 t.setDaemon(True)
                 t.start()
 

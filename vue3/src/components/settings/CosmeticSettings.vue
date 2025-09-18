@@ -3,14 +3,7 @@
         <p class="text-h6">{{ $t('Cosmetic') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-        <v-select
-            :label="$t('Language')"
-            v-model="$i18n.locale"
-            :items="availableLocalizations"
-            item-title="language"
-            item-value="code"
-            @update:model-value="updateLanguage()"
-        ></v-select>
+        <language-select></language-select>
 
         <v-label>{{$t('Nav_Color')}}</v-label>
         <v-color-picker v-model="useUserPreferenceStore().userSettings.navBgColor" mode="hex" :modes="['hex']" show-swatches :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
@@ -54,10 +47,10 @@ import {ApiApi, Localization} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import LanguageSelect from "@/components/inputs/LanguageSelect.vue";
 
-const {locale, t} = useI18n()
+const {t} = useI18n()
 
-const availableLocalizations = ref([] as Localization[])
 const availableDefaultPages = ref([
     {page: 'SEARCH', label: t('Search')},
     {page: 'SHOPPING', label: t('Shopping_list')},
@@ -65,28 +58,9 @@ const availableDefaultPages = ref([
     {page: 'BOOKS', label: t('Books')},
 ])
 
-
 onMounted(() => {
-    const api = new ApiApi()
 
-    api.apiLocalizationList().then(r => {
-        availableLocalizations.value = r
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-    })
 })
-
-/**
- * update the django language cookie
- * this is used by django to inject the language into the template which in turn
- * sets the frontend language in i18n.ts when the frontend is initialized
- */
-function updateLanguage() {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (100 * 365 * 24 * 60 * 60 * 1000));
-    document.cookie = `django_language=${locale.value}; expires=${expires.toUTCString()}; path=/`;
-    location.reload()
-}
 
 </script>
 

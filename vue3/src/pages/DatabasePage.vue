@@ -35,6 +35,17 @@
             <database-model-col model="MealType"></database-model-col>
         </v-row>
 
+        <v-row>
+            <v-col>
+                <h2>{{ $t('Space') }}</h2>
+            </v-col>
+        </v-row>
+        <v-row dense>
+            <database-model-col model="Space"></database-model-col>
+            <database-model-col model="UserSpace"></database-model-col>
+            <database-model-col model="InviteLink"></database-model-col>
+        </v-row>
+
         <template v-if="useUserPreferenceStore().activeSpace.aiEnabled">
             <v-row>
                 <v-col>

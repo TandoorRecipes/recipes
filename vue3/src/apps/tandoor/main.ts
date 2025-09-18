@@ -18,6 +18,7 @@ let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage' },
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
+    {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
     {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage', meta: {title: 'Help'}},
     {
         path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',
@@ -28,8 +29,6 @@ let routes = [
             {path: 'meal-plan', component: () => import("@/components/settings/MealPlanSettings.vue"), name: 'MealPlanSettings', meta: {title: 'Settings'}},
             {path: 'search', component: () => import("@/components/settings/SearchSettings.vue"), name: 'SearchSettings', meta: {title: 'Settings'}},
             {path: 'space', component: () => import("@/components/settings/SpaceSettings.vue"), name: 'SpaceSettings', meta: {title: 'Settings'}},
-            {path: 'space-members', component: () => import("@/components/settings/SpaceMemberSettings.vue"), name: 'SpaceMemberSettings', meta: {title: 'Settings'}},
-            {path: 'user-space', component: () => import("@/components/settings/UserSpaceSettings.vue"), name: 'UserSpaceSettings', meta: {title: 'Settings'}},
             {path: 'open-data-import', component: () => import("@/components/settings/OpenDataImportSettings.vue"), name: 'OpenDataImportSettings', meta: {title: 'Settings'}},
             {path: 'export', component: () => import("@/components/settings/ExportDataSettings.vue"), name: 'ExportDataSettings', meta: {title: 'Settings'}},
             {path: 'api', component: () => import("@/components/settings/ApiSettings.vue"), name: 'ApiSettings', meta: {title: 'Settings'}},

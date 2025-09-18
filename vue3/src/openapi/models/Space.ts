@@ -121,7 +121,7 @@ export interface Space {
      * @type {Array<FoodInheritField>}
      * @memberof Space
      */
-    foodInherit: Array<FoodInheritField>;
+    foodInherit?: Array<FoodInheritField>;
     /**
      * 
      * @type {number}
@@ -248,6 +248,12 @@ export interface Space {
      * @memberof Space
      */
     aiDefaultProvider?: AiProvider;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    spaceSetupCompleted?: boolean;
 }
 
 /**
@@ -261,7 +267,6 @@ export function instanceOfSpace(value: object): value is Space {
     if (!('maxUsers' in value) || value['maxUsers'] === undefined) return false;
     if (!('allowSharing' in value) || value['allowSharing'] === undefined) return false;
     if (!('demo' in value) || value['demo'] === undefined) return false;
-    if (!('foodInherit' in value) || value['foodInherit'] === undefined) return false;
     if (!('userCount' in value) || value['userCount'] === undefined) return false;
     if (!('recipeCount' in value) || value['recipeCount'] === undefined) return false;
     if (!('fileSizeMb' in value) || value['fileSizeMb'] === undefined) return false;
@@ -289,7 +294,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'maxUsers': json['max_users'],
         'allowSharing': json['allow_sharing'],
         'demo': json['demo'],
-        'foodInherit': ((json['food_inherit'] as Array<any>).map(FoodInheritFieldFromJSON)),
+        'foodInherit': json['food_inherit'] == null ? undefined : ((json['food_inherit'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'userCount': json['user_count'],
         'recipeCount': json['recipe_count'],
         'fileSizeMb': json['file_size_mb'],
@@ -311,6 +316,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
     };
 }
 
@@ -323,7 +329,7 @@ export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxReci
         'id': value['id'],
         'name': value['name'],
         'message': value['message'],
-        'food_inherit': ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),
+        'food_inherit': value['foodInherit'] == null ? undefined : ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),
         'image': UserFileViewToJSON(value['image']),
         'nav_logo': UserFileViewToJSON(value['navLogo']),
         'space_theme': SpaceThemeEnumToJSON(value['spaceTheme']),
@@ -341,6 +347,7 @@ export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxReci
         'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
         'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'space_setup_completed': value['spaceSetupCompleted'],
     };
 }
 

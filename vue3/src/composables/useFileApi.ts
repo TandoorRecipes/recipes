@@ -2,6 +2,7 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
 import {AiProvider, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
+import {tr} from "vuetify/locale";
 
 
 /**
@@ -117,12 +118,18 @@ export function useFileApi() {
      * @param files array to import
      * @param app app to import
      * @param includeDuplicates if recipes that were found as duplicates should be imported as well
+     * @param mealPlans if meal plans should be imported
+     * @param shoppingLists if shopping lists should be imported
+     * @param nutritionPerServing if nutrition information should be treated as per serving (if false its treated as per recipe)
      * @returns Promise resolving to the import ID of the app import
      */
-    function doAppImport(files: File[], app: string, includeDuplicates: boolean) {
+    function doAppImport(files: File[], app: string, includeDuplicates: boolean, mealPlans: boolean = true, shoppingLists: boolean = true, nutritionPerServing: boolean = false,) {
         let formData = new FormData()
         formData.append('type', app);
         formData.append('duplicates', includeDuplicates ? 'true' : 'false')
+        formData.append('meal_plans', mealPlans ? 'true' : 'false')
+        formData.append('shopping_lists', shoppingLists ? 'true' : 'false')
+        formData.append('nutrition_per_serving', nutritionPerServing ? 'true' : 'false')
         files.forEach(file => {
             formData.append('files', file)
         })

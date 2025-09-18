@@ -120,6 +120,7 @@ const hasFoodProperties = computed(() => {
     let propertiesFound = false
     for (const [key, fp] of Object.entries(recipe.value.foodProperties)) {
         if (fp.total_value !== 0) {
+            console.log(fp, fp.total_value)
             propertiesFound = true
         }
     }
@@ -189,7 +190,7 @@ const dialogProperty = ref<undefined | PropertyWrapper>(undefined)
 const loading = ref(false)
 
 onMounted(() => {
-    if (!hasFoodProperties) {
+    if (!hasFoodProperties.value) {
         sourceSelectedToShow.value = "recipe"
     }
 })

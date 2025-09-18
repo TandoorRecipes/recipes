@@ -26,7 +26,7 @@ from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
-from cookbook.helper.permission_helper import above_space_limit
+from cookbook.helper.permission_helper import above_space_limit, create_space_for_user
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
@@ -367,12 +367,12 @@ class AiLogSerializer(serializers.ModelSerializer):
 
 class SpaceSerializer(WritableNestedModelSerializer):
     created_by = UserSerializer(read_only=True)
-    user_count = serializers.SerializerMethodField('get_user_count')
-    recipe_count = serializers.SerializerMethodField('get_recipe_count')
-    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
-    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used')
+    user_count = serializers.SerializerMethodField('get_user_count', read_only=True)
+    recipe_count = serializers.SerializerMethodField('get_recipe_count', read_only=True)
+    file_size_mb = serializers.SerializerMethodField('get_file_size_mb', read_only=True)
+    ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used', read_only=True)
     ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
-    food_inherit = FoodInheritFieldSerializer(many=True)
+    food_inherit = FoodInheritFieldSerializer(many=True, required=False)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
     custom_space_theme = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -404,9 +404,26 @@ class SpaceSerializer(WritableNestedModelSerializer):
             return 0
 
     def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
+        if Space.objects.filter(created_by=self.context['request'].user).count() >= self.context['request'].user.userpreference.max_owned_spaces:
+            raise serializers.ValidationError(
+                _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({self.context['request'].user.userpreference.max_owned_spaces})')
+
+        name = None
+        if 'name' in validated_data:
+            name = validated_data['name']
+        user_space = create_space_for_user(self.context['request'].user, name)
+        return user_space.space
 
     def update(self, instance, validated_data):
+        validated_data = self.filter_superuser_parameters(validated_data)
+
+        if 'name' in validated_data:
+            if Space.objects.filter(Q(name=validated_data['name']), ~Q(pk=instance.pk)).exists():
+                raise ValidationError(_('Space Name must be unique.'))
+
+        return super().update(instance, validated_data)
+
+    def filter_superuser_parameters(self, validated_data):
         if 'ai_enabled' in validated_data and not self.context['request'].user.is_superuser:
             del validated_data['ai_enabled']
 
@@ -416,7 +433,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
         if 'ai_credits_balance' in validated_data and not self.context['request'].user.is_superuser:
             del validated_data['ai_credits_balance']
 
-        return super().update(instance, validated_data)
+        return validated_data
 
     class Meta:
         model = Space
@@ -425,7 +442,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_monthly_credits_used')

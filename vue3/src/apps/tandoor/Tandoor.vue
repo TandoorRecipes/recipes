@@ -156,13 +156,16 @@ const router = useRouter()
 const isPrintMode = useMediaQuery('print')
 
 onMounted(() => {
-    useUserPreferenceStore()
+    useUserPreferenceStore().init()
 })
 
 /**
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
+    if(to.name == 'StartPage' && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined &&!useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
+        router.push({name: 'WelcomePage'})
+    }
     nextTick(() => {
         if (to.meta.title) {
             title.value = t(to.meta.title)

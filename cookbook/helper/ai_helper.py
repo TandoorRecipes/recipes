@@ -5,6 +5,7 @@ from django.db.models import Sum
 from litellm import CustomLogger
 
 from cookbook.models import AiLog
+from recipes import settings
 
 
 def get_monthly_token_usage(space):
@@ -61,6 +62,8 @@ class AiCallbackHandler(CustomLogger):
             remaining_balance = self.space.ai_credits_balance - Decimal(str(credit_cost))
             if remaining_balance < 0:
                 remaining_balance = 0
+                if settings.HOSTED:
+                    self.space.ai_enabled = False
 
             self.space.ai_credits_balance = remaining_balance
             credits_from_balance = True
