@@ -11,7 +11,7 @@
                     <recipe-image :height="itemHeight" :width="itemHeight" :recipe="mealPlan.recipe"></recipe-image>
                 </div>
                 <div class="flex-column flex-grow-0 pa-1">
-                    <span class="font-light" :class="{'two-line-text': detailedItems,'one-line-text': !detailedItems,}">
+                    <span class="font-light" :class="{'three-line-text': detailedItems,'one-line-text': !detailedItems,}">
                        <i class="fas fa-shopping-cart fa-xs float-left" v-if="mealPlan.shopping"/>
                         {{ itemTitle }}
                     </span>
@@ -77,6 +77,15 @@ const itemTitle = computed(() => {
 .one-line-text {
     display: -webkit-box;
     -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.three-line-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     width: 100%;
     overflow: hidden;

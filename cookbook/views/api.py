@@ -1235,7 +1235,19 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
-        queryset = self.queryset.filter(step__recipe__space=self.request.space)
+        queryset = self.queryset.prefetch_related('food',
+                                                  'food__properties',
+                                                  'food__properties__property_type',
+                                                  'food__inherit_fields',
+                                                  'food__supermarket_category',
+                                                  'food__onhand_users',
+                                                  'food__substitute',
+                                                  'food__child_inherit_fields',
+                                                  'unit',
+                                                  'unit__unit_conversion_base_relation',
+                                                  'unit__unit_conversion_base_relation__base_unit',
+                                                  'unit__unit_conversion_converted_relation',
+                                                  'unit__unit_conversion_converted_relation__converted_unit', ).filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)

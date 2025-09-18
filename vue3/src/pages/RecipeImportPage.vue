@@ -250,7 +250,7 @@
 
                                 <v-row>
                                     <v-col>
-                                        <model-select model="Keyword" v-model="keywordSelect">
+                                        <model-select model="Keyword" v-model="keywordSelect" allow-create>
                                             <template #append>
                                                 <v-btn icon="$add" color="success"
                                                        @click="keywordSelect.importKeyword = true; importResponse.recipe.keywords.push(keywordSelect); keywordSelect= null"
