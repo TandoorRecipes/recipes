@@ -19,12 +19,15 @@ import redis
 import requests
 from PIL import UnidentifiedImageError
 from django.contrib import messages
+from django.contrib.admin.utils import get_deleted_objects, NestedObjects
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
+from django.db import DEFAULT_DB_ALIAS
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models.deletion import Collector
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -110,7 +113,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -1647,6 +1650,27 @@ class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
         if category:
             self.queryset.filter(category__in=category)
         return self.queryset.filter(space=self.request.space)
+
+    @extend_schema(responses=GenericModelSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
+    # TODO actually implement pagination
+    def protecting(self, request, pk):
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+            collector.collect([obj])
+
+            protected_objects = []
+            for o in collector.protected:
+                protected_objects.append({
+                    'id': o.pk,
+                    'model': o.__class__.__name__,
+                    'name': str(o),
+                })
+
+            return Response(self.serializer_class(protected_objects, many=True, context={'request': request}).data)
+        else:
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
 
 class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
