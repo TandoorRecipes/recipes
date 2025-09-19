@@ -91,8 +91,8 @@ admin.site.register(SearchPreference, SearchPreferenceAdmin)
 
 
 class AiProviderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'space', 'model',)
-    search_fields = ('name', 'space', 'model',)
+    list_display = ('name', 'space', 'model_name',)
+    search_fields = ('name', 'space', 'model_name',)
 
 
 admin.site.register(AiProvider, AiProviderAdmin)
