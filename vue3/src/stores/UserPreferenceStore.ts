@@ -45,6 +45,11 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     let isAuthenticated = ref(false)
 
+    /**
+     * complete refresh of all data from server completed
+     */
+    const initCompleted = ref(false)
+
     const theme = useTheme()
     const router = useRouter()
 
@@ -233,7 +238,9 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         promises.push(loadSpaces())
         updateTheme()
 
-        return Promise.allSettled(promises)
+        return Promise.allSettled(promises).then(() => {
+            initCompleted.value = true
+        })
     }
 
     return {
@@ -246,6 +253,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         spaces,
         activeUserSpace,
         isAuthenticated,
+        initCompleted,
         loadUserSettings,
         loadServerSettings,
         updateUserSettings,
