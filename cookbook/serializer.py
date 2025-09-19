@@ -335,17 +335,23 @@ class AiProviderSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        validated_data = self.handle_global_space_logic(validated_data)
+        validated_data = self.handle_global_space_logic(validated_data, instance=instance)
         return super().update(instance, validated_data)
 
-    def handle_global_space_logic(self, validated_data):
+    def handle_global_space_logic(self, validated_data, instance=None):
         """
         allow superusers to create AI providers without a space but make sure everyone else only uses their own space
         """
         if ('space' not in validated_data or not validated_data['space']) and self.context['request'].user.is_superuser:
             validated_data['space'] = None
         else:
-            validated_data['space'] = self.context['request'].space
+            if instance:
+                validated_data['space'] = instance.space
+            else:
+                validated_data['space'] = self.context['request'].space
+
+        if 'log_credit_cost' in validated_data and not self.context['request'].user.is_superuser:
+            del validated_data['log_credit_cost']
 
         return validated_data
 
@@ -1708,6 +1714,11 @@ class FdcQuerySerializer(serializers.Serializer):
     totalPages = serializers.IntegerField()
     foods = FdcQueryFoodsSerializer(many=True)
 
+
+class GenericModelSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    model = serializers.CharField()
+    name = serializers.CharField()
 
 # Export/Import Serializers
 

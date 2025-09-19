@@ -62,7 +62,7 @@ class AiCallbackHandler(CustomLogger):
             remaining_balance = self.space.ai_credits_balance - Decimal(str(credit_cost))
             if remaining_balance < 0:
                 remaining_balance = 0
-                if settings.HOSTED:
+                if settings.HOSTED and self.space.ai_credits_monthly == 0:
                     self.space.ai_enabled = False
 
             self.space.ai_credits_balance = remaining_balance

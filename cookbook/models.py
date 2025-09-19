@@ -417,6 +417,9 @@ class AiProvider(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
 
 class AiLog(models.Model, PermissionModelMixin):
     F_FILE_IMPORT = 'FILE_IMPORT'
@@ -436,6 +439,9 @@ class AiLog(models.Model, PermissionModelMixin):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.function} {self.ai_provider.name} {self.created_at}"
 
 
 class ConnectorConfig(models.Model, PermissionModelMixin):
