@@ -156,14 +156,18 @@ const router = useRouter()
 const isPrintMode = useMediaQuery('print')
 
 onMounted(() => {
-    useUserPreferenceStore().init()
+    useUserPreferenceStore().init().then(() => {
+        if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
+            router.push({name: 'WelcomePage'})
+        }
+    })
 })
 
 /**
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
-    if(to.name == 'StartPage' && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined &&!useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
+    if(to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined &&!useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
         router.push({name: 'WelcomePage'})
     }
     nextTick(() => {
