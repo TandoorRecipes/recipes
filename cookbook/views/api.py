@@ -786,7 +786,6 @@ class KeywordViewSet(LoggingMixin, TreeMixin):
 
 
 def paginate(func):
-
     @wraps(func)
     def inner(self, *args, **kwargs):
         queryset = func(self, *args, **kwargs)
@@ -799,14 +798,37 @@ def paginate(func):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
     return inner
 
-class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
-    queryset = Unit.objects
-    model = Unit
-    serializer_class = UnitSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
-    pagination_class = DefaultPagination
+
+class DeleteRelationMixing:
+    # for units
+    # foodproperty_unit = PROTECT
+    # Ingredient = SET NULL
+    # UnitConversion = CASCADE
+
+    # print(collector.nested()) # nested seems to not include protecting but does include cascading
+
+    # protected: objects that raise Protected or Restricted error when deleting unit
+    # field_updates: fields that get updated when deleting the unit
+    # model objs: collects the objects that should be deleted together with the selected unit
+
+    collector = None
+
+    def collect(self, obj):
+        # TODO individual collector cache keys
+        # TODO does this even make sense with multiple workers because of cache misses?
+        
+        if c := caches['default'].get('DELETING_COLLECTOR_TEMP_CACHE_NAME', None):
+            print('collector from cache')
+            return c
+        collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+        collector.collect([obj])
+        self.collector = collector
+        caches['default'].set('DELETING_COLLECTOR_TEMP_CACHE_NAME', collector, 15)
+        print('new collector')
+        return collector
 
     @extend_schema(responses=GenericModelSerializer(many=True))
     @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
@@ -814,19 +836,48 @@ class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
     def protecting(self, request, pk):
         obj = self.queryset.filter(pk=pk, space=request.space).first()
         if obj:
-            collector = NestedObjects(using=DEFAULT_DB_ALIAS)
-            collector.collect([obj])
-            # TODO caching
-            # for units
-            # foodproperty_unit = PROTECT
-            # Ingredient = SET NULL
-            # UnitConversion = CASCADE
+            collector = self.collect(obj)
 
-            #print(collector.nested()) # nested seems to not include protecting but does include cascading
+            protected_objects = []
+            for o in collector.protected:
+                protected_objects.append({
+                    'id': o.pk,
+                    'model': o.__class__.__name__,
+                    'name': str(o),
+                })
 
-            # protected: objects that raise Protected or Restricted error when deleting unit
-            # field_updates: fields that get updated when deleting the unit
-            # model objs: collects the objects that should be deleted together with the selected unit
+            return protected_objects
+        else:
+            return []
+
+    @extend_schema(responses=GenericModelSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
+    @paginate
+    def cascading(self, request, pk):
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            collector = self.collect(obj)
+
+            cascading_objects = []
+            for model, objs in collector.model_objs.items():
+                for o in objs:
+                    cascading_objects.append({
+                        'id': o.pk,
+                        'model': o.__class__.__name__,
+                        'name': str(o),
+                    })
+
+            return cascading_objects
+        else:
+            return []
+
+    @extend_schema(responses=GenericModelSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
+    @paginate
+    def nulling(self, request, pk):
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            collector = self.collect(obj)
 
             updating_objects = []
             # field_updates is a dict of relations that will be updated and querysets of items affected
@@ -843,29 +894,18 @@ class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
                             }
                         )
 
-            cascading_objects = []
-            print(collector.model_objs)
-            for model, objs in collector.model_objs.items():
-                for o in objs:
-                    cascading_objects.append({
-                        'id': o.pk,
-                        'model': o.__class__.__name__,
-                        'name': str(o),
-                    })
-
-            # django admin only shows protected and CASCADING, SET_NULL is not shown/warned of
-
-            protected_objects = []
-            for o in collector.protected:
-                protected_objects.append({
-                    'id': o.pk,
-                    'model': o.__class__.__name__,
-                    'name': str(o),
-                })
-
-            return cascading_objects
+            return updating_objects
         else:
             return []
+
+
+class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
+    queryset = Unit.objects
+    model = Unit
+    serializer_class = UnitSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
 
 class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     queryset = FoodInheritField.objects
