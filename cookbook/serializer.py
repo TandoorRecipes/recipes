@@ -342,8 +342,11 @@ class AiProviderSerializer(serializers.ModelSerializer):
         """
         allow superusers to create AI providers without a space but make sure everyone else only uses their own space
         """
-        if ('space' not in validated_data or not validated_data['space']) and self.context['request'].user.is_superuser:
-            validated_data['space'] = None
+        if self.context['request'].user.is_superuser:
+            if ('space' not in validated_data or not validated_data['space']):
+                validated_data['space'] = None
+            else:
+                validated_data['space'] = self.context['request'].space
         else:
             if instance:
                 validated_data['space'] = instance.space
