@@ -47,6 +47,7 @@ let routes = [
 
     {path: '/list/:model?', component: () => import("@/pages/ModelListPage.vue"), props: true, name: 'ModelListPage'},
     {path: '/edit/:model/:id?', component: () => import("@/pages/ModelEditPage.vue"), props: true, name: 'ModelEditPage'},
+    {path: '/delete/:model/:id?', component: () => import("@/pages/ModelDeletePage.vue"), props: true, name: 'ModelDeletePage'},
     {path: '/database', component: () => import("@/pages/DatabasePage.vue"), props: true, name: 'DatabasePage', meta: {title: 'Database'}},
 
     {path: '/ingredient-editor', component: () => import("@/pages/IngredientEditorPage.vue"), name: 'IngredientEditorPage', meta: {title: 'Ingredient Editor'}},

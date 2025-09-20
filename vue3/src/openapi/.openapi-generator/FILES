@@ -33,6 +33,7 @@ models/FoodBatchUpdate.ts
 models/FoodInheritField.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
+models/GenericModel.ts
 models/Group.ts
 models/ImportLog.ts
 models/ImportOpenData.ts
@@ -72,6 +73,7 @@ models/PaginatedEnterpriseSocialRecipeSearchList.ts
 models/PaginatedEnterpriseSpaceList.ts
 models/PaginatedExportLogList.ts
 models/PaginatedFoodList.ts
+models/PaginatedGenericModelList.ts
 models/PaginatedImportLogList.ts
 models/PaginatedIngredientList.ts
 models/PaginatedInviteLinkList.ts

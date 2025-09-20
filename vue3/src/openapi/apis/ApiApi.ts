@@ -64,6 +64,7 @@ import type {
   PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
+  PaginatedGenericModelList,
   PaginatedImportLogList,
   PaginatedIngredientList,
   PaginatedInviteLinkList,
@@ -281,6 +282,8 @@ import {
     PaginatedExportLogListToJSON,
     PaginatedFoodListFromJSON,
     PaginatedFoodListToJSON,
+    PaginatedGenericModelListFromJSON,
+    PaginatedGenericModelListToJSON,
     PaginatedImportLogListFromJSON,
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
@@ -2063,6 +2066,12 @@ export interface ApiUnitMergeUpdateRequest {
 export interface ApiUnitPartialUpdateRequest {
     id: number;
     patchedUnit?: PatchedUnit;
+}
+
+export interface ApiUnitProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiUnitRetrieveRequest {
@@ -15478,6 +15487,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUnitPartialUpdate(requestParameters: ApiUnitPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUnitProtectingListRaw(requestParameters: ApiUnitProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUnitProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/unit/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUnitProtectingList(requestParameters: ApiUnitProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelList> {
+        const response = await this.apiUnitProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

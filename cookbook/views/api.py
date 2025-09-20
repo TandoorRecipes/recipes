@@ -9,6 +9,7 @@ import threading
 import traceback
 import uuid
 from collections import OrderedDict
+from functools import wraps
 from json import JSONDecodeError
 from urllib.parse import unquote
 from zipfile import ZipFile
@@ -26,7 +27,7 @@ from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db import DEFAULT_DB_ALIAS
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
 from django.db.models.deletion import Collector
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
@@ -784,6 +785,22 @@ class KeywordViewSet(LoggingMixin, TreeMixin):
     pagination_class = DefaultPagination
 
 
+def paginate(func):
+
+    @wraps(func)
+    def inner(self, *args, **kwargs):
+        queryset = func(self, *args, **kwargs)
+        assert isinstance(queryset, (list, QuerySet))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    return inner
+
 class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
     queryset = Unit.objects
     model = Unit
@@ -791,6 +808,64 @@ class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    @extend_schema(responses=GenericModelSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
+    @paginate
+    def protecting(self, request, pk):
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+            collector.collect([obj])
+            # TODO caching
+            # for units
+            # foodproperty_unit = PROTECT
+            # Ingredient = SET NULL
+            # UnitConversion = CASCADE
+
+            #print(collector.nested()) # nested seems to not include protecting but does include cascading
+
+            # protected: objects that raise Protected or Restricted error when deleting unit
+            # field_updates: fields that get updated when deleting the unit
+            # model objs: collects the objects that should be deleted together with the selected unit
+
+            updating_objects = []
+            # field_updates is a dict of relations that will be updated and querysets of items affected
+            for key, value in collector.field_updates.items():
+                # iterate over each queryset for relation
+                for qs in value:
+                    # itereate over each object in queryset of relation
+                    for o in qs:
+                        updating_objects.append(
+                            {
+                                'id': o.pk,
+                                'model': o.__class__.__name__,
+                                'name': str(o),
+                            }
+                        )
+
+            cascading_objects = []
+            print(collector.model_objs)
+            for model, objs in collector.model_objs.items():
+                for o in objs:
+                    cascading_objects.append({
+                        'id': o.pk,
+                        'model': o.__class__.__name__,
+                        'name': str(o),
+                    })
+
+            # django admin only shows protected and CASCADING, SET_NULL is not shown/warned of
+
+            protected_objects = []
+            for o in collector.protected:
+                protected_objects.append({
+                    'id': o.pk,
+                    'model': o.__class__.__name__,
+                    'name': str(o),
+                })
+
+            return cascading_objects
+        else:
+            return []
 
 class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     queryset = FoodInheritField.objects
@@ -1650,27 +1725,6 @@ class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
         if category:
             self.queryset.filter(category__in=category)
         return self.queryset.filter(space=self.request.space)
-
-    @extend_schema(responses=GenericModelSerializer(many=True))
-    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
-    # TODO actually implement pagination
-    def protecting(self, request, pk):
-        obj = self.queryset.filter(pk=pk, space=request.space).first()
-        if obj:
-            collector = NestedObjects(using=DEFAULT_DB_ALIAS)
-            collector.collect([obj])
-
-            protected_objects = []
-            for o in collector.protected:
-                protected_objects.append({
-                    'id': o.pk,
-                    'model': o.__class__.__name__,
-                    'name': str(o),
-                })
-
-            return Response(self.serializer_class(protected_objects, many=True, context={'request': request}).data)
-        else:
-            return Response({}, status=status.HTTP_404_NOT_FOUND)
 
 
 class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
