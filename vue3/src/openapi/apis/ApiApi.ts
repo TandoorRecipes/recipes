@@ -64,7 +64,7 @@ import type {
   PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
-  PaginatedGenericModelList,
+  PaginatedGenericModelReferenceList,
   PaginatedImportLogList,
   PaginatedIngredientList,
   PaginatedInviteLinkList,
@@ -282,8 +282,8 @@ import {
     PaginatedExportLogListToJSON,
     PaginatedFoodListFromJSON,
     PaginatedFoodListToJSON,
-    PaginatedGenericModelListFromJSON,
-    PaginatedGenericModelListToJSON,
+    PaginatedGenericModelReferenceListFromJSON,
+    PaginatedGenericModelReferenceListToJSON,
     PaginatedImportLogListFromJSON,
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
@@ -558,6 +558,12 @@ export interface ApiAiLogRetrieveRequest {
     id: number;
 }
 
+export interface ApiAiProviderCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiAiProviderCreateRequest {
     aiProvider: Omit<AiProvider, 'createdAt'|'updatedAt'>;
 }
@@ -571,9 +577,21 @@ export interface ApiAiProviderListRequest {
     pageSize?: number;
 }
 
+export interface ApiAiProviderNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiAiProviderPartialUpdateRequest {
     id: number;
     patchedAiProvider?: Omit<PatchedAiProvider, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiAiProviderProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiAiProviderRetrieveRequest {
@@ -644,6 +662,12 @@ export interface ApiBookmarkletImportUpdateRequest {
     bookmarkletImport: Omit<BookmarkletImport, 'createdBy'|'createdAt'>;
 }
 
+export interface ApiConnectorConfigCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiConnectorConfigCreateRequest {
     connectorConfig: Omit<ConnectorConfig, 'createdBy'>;
 }
@@ -657,9 +681,21 @@ export interface ApiConnectorConfigListRequest {
     pageSize?: number;
 }
 
+export interface ApiConnectorConfigNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiConnectorConfigPartialUpdateRequest {
     id: number;
     patchedConnectorConfig?: Omit<PatchedConnectorConfig, 'createdBy'>;
+}
+
+export interface ApiConnectorConfigProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiConnectorConfigRetrieveRequest {
@@ -763,6 +799,12 @@ export interface ApiEnterpriseSocialEmbedUpdateRequest {
     enterpriseSocialEmbed: EnterpriseSocialEmbed;
 }
 
+export interface ApiEnterpriseSocialKeywordCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiEnterpriseSocialKeywordCreateRequest {
     keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
 }
@@ -795,9 +837,21 @@ export interface ApiEnterpriseSocialKeywordMoveUpdateRequest {
     keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
 }
 
+export interface ApiEnterpriseSocialKeywordNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiEnterpriseSocialKeywordPartialUpdateRequest {
     id: number;
     patchedKeyword?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiEnterpriseSocialKeywordRetrieveRequest {
@@ -811,6 +865,12 @@ export interface ApiEnterpriseSocialKeywordUpdateRequest {
 
 export interface ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest {
     recipeBatchUpdate: RecipeBatchUpdate;
+}
+
+export interface ApiEnterpriseSocialRecipeCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiEnterpriseSocialRecipeCreateRequest {
@@ -880,9 +940,21 @@ export interface ApiEnterpriseSocialRecipeListRequest {
     viewedonLte?: Date;
 }
 
+export interface ApiEnterpriseSocialRecipeNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiEnterpriseSocialRecipePartialUpdateRequest {
     id: number;
     patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSocialRecipeProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiEnterpriseSocialRecipeRelatedListRequest {
@@ -972,6 +1044,12 @@ export interface ApiFoodBatchUpdateUpdateRequest {
     foodBatchUpdate: FoodBatchUpdate;
 }
 
+export interface ApiFoodCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiFoodCreateRequest {
     food: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'>;
 }
@@ -1013,9 +1091,21 @@ export interface ApiFoodMoveUpdateRequest {
     food: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'>;
 }
 
+export interface ApiFoodNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiFoodPartialUpdateRequest {
     id: number;
     patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'>;
+}
+
+export interface ApiFoodProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiFoodRetrieveRequest {
@@ -1148,6 +1238,12 @@ export interface ApiInviteLinkUpdateRequest {
     inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
 }
 
+export interface ApiKeywordCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiKeywordCreateRequest {
     keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
 }
@@ -1180,9 +1276,21 @@ export interface ApiKeywordMoveUpdateRequest {
     keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
 }
 
+export interface ApiKeywordNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiKeywordPartialUpdateRequest {
     id: number;
     patchedKeyword?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiKeywordProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiKeywordRetrieveRequest {
@@ -1230,6 +1338,12 @@ export interface ApiMealPlanUpdateRequest {
     mealPlan: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'>;
 }
 
+export interface ApiMealTypeCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiMealTypeCreateRequest {
     mealType: Omit<MealType, 'createdBy'>;
 }
@@ -1243,9 +1357,21 @@ export interface ApiMealTypeListRequest {
     pageSize?: number;
 }
 
+export interface ApiMealTypeNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiMealTypePartialUpdateRequest {
     id: number;
     patchedMealType?: Omit<PatchedMealType, 'createdBy'>;
+}
+
+export interface ApiMealTypeProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiMealTypeRetrieveRequest {
@@ -1477,6 +1603,12 @@ export interface ApiPropertyRetrieveRequest {
     id: number;
 }
 
+export interface ApiPropertyTypeCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiPropertyTypeCreateRequest {
     propertyType: PropertyType;
 }
@@ -1491,9 +1623,21 @@ export interface ApiPropertyTypeListRequest {
     pageSize?: number;
 }
 
+export interface ApiPropertyTypeNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiPropertyTypePartialUpdateRequest {
     id: number;
     patchedPropertyType?: PatchedPropertyType;
+}
+
+export interface ApiPropertyTypeProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiPropertyTypeRetrieveRequest {
@@ -1512,6 +1656,12 @@ export interface ApiPropertyUpdateRequest {
 
 export interface ApiRecipeBatchUpdateUpdateRequest {
     recipeBatchUpdate: RecipeBatchUpdate;
+}
+
+export interface ApiRecipeBookCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiRecipeBookCreateRequest {
@@ -1562,9 +1712,21 @@ export interface ApiRecipeBookListRequest {
     updatedAt?: string;
 }
 
+export interface ApiRecipeBookNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiRecipeBookPartialUpdateRequest {
     id: number;
     patchedRecipeBook?: Omit<PatchedRecipeBook, 'createdBy'>;
+}
+
+export interface ApiRecipeBookProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiRecipeBookRetrieveRequest {
@@ -1574,6 +1736,12 @@ export interface ApiRecipeBookRetrieveRequest {
 export interface ApiRecipeBookUpdateRequest {
     id: number;
     recipeBook: Omit<RecipeBook, 'createdBy'>;
+}
+
+export interface ApiRecipeCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiRecipeCreateRequest {
@@ -1681,9 +1849,21 @@ export interface ApiRecipeListRequest {
     viewedonLte?: Date;
 }
 
+export interface ApiRecipeNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiRecipePartialUpdateRequest {
     id: number;
     patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiRecipeProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiRecipeRelatedListRequest {
@@ -1840,6 +2020,12 @@ export interface ApiStepUpdateRequest {
     step: Omit<Step, 'instructionsMarkdown'|'stepRecipeData'|'numrecipe'>;
 }
 
+export interface ApiStorageCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiStorageCreateRequest {
     storage: Omit<Storage, 'createdBy'>;
 }
@@ -1853,9 +2039,21 @@ export interface ApiStorageListRequest {
     pageSize?: number;
 }
 
+export interface ApiStorageNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiStoragePartialUpdateRequest {
     id: number;
     patchedStorage?: Omit<PatchedStorage, 'createdBy'>;
+}
+
+export interface ApiStorageProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiStorageRetrieveRequest {
@@ -1865,6 +2063,18 @@ export interface ApiStorageRetrieveRequest {
 export interface ApiStorageUpdateRequest {
     id: number;
     storage: Omit<Storage, 'createdBy'>;
+}
+
+export interface ApiSupermarketCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiSupermarketCategoryCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSupermarketCategoryCreateRequest {
@@ -1890,9 +2100,21 @@ export interface ApiSupermarketCategoryMergeUpdateRequest {
     supermarketCategory: SupermarketCategory;
 }
 
+export interface ApiSupermarketCategoryNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiSupermarketCategoryPartialUpdateRequest {
     id: number;
     patchedSupermarketCategory?: PatchedSupermarketCategory;
+}
+
+export interface ApiSupermarketCategoryProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSupermarketCategoryRelationCreateRequest {
@@ -1952,9 +2174,21 @@ export interface ApiSupermarketListRequest {
     updatedAt?: string;
 }
 
+export interface ApiSupermarketNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiSupermarketPartialUpdateRequest {
     id: number;
     patchedSupermarket?: Omit<PatchedSupermarket, 'categoryToSupermarket'>;
+}
+
+export interface ApiSupermarketProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSupermarketRetrieveRequest {
@@ -1968,6 +2202,12 @@ export interface ApiSupermarketUpdateRequest {
 
 export interface ApiSwitchActiveSpaceRetrieveRequest {
     spaceId: number;
+}
+
+export interface ApiSyncCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSyncCreateRequest {
@@ -1992,9 +2232,21 @@ export interface ApiSyncLogRetrieveRequest {
     id: number;
 }
 
+export interface ApiSyncNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiSyncPartialUpdateRequest {
     id: number;
     patchedSync?: Omit<PatchedSync, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiSyncProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSyncQuerySyncedFolderCreateRequest {
@@ -2009,6 +2261,12 @@ export interface ApiSyncRetrieveRequest {
 export interface ApiSyncUpdateRequest {
     id: number;
     sync: Omit<Sync, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiUnitCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiUnitConversionCreateRequest {
@@ -2063,6 +2321,12 @@ export interface ApiUnitMergeUpdateRequest {
     unit: Unit;
 }
 
+export interface ApiUnitNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiUnitPartialUpdateRequest {
     id: number;
     patchedUnit?: PatchedUnit;
@@ -2081,6 +2345,12 @@ export interface ApiUnitRetrieveRequest {
 export interface ApiUnitUpdateRequest {
     id: number;
     unit: Unit;
+}
+
+export interface ApiUserFileCascadingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiUserFileCreateRequest {
@@ -2107,6 +2377,12 @@ export interface ApiUserFileListRequest {
     updatedAt?: string;
 }
 
+export interface ApiUserFileNullingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiUserFilePartialUpdateRequest {
     id: number;
     id2?: number;
@@ -2117,6 +2393,12 @@ export interface ApiUserFilePartialUpdateRequest {
     fileSizeKb?: number;
     createdBy?: User;
     createdAt?: Date;
+}
+
+export interface ApiUserFileProtectingListRequest {
+    id: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiUserFileRetrieveRequest {
@@ -2613,6 +2895,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiAiProviderCascadingListRaw(requestParameters: ApiAiProviderCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiAiProviderCascadingList(requestParameters: ApiAiProviderCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiAiProviderCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiAiProviderCreateRaw(requestParameters: ApiAiProviderCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiProvider>> {
@@ -2727,6 +3054,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiAiProviderNullingListRaw(requestParameters: ApiAiProviderNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiAiProviderNullingList(requestParameters: ApiAiProviderNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiAiProviderNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiAiProviderPartialUpdateRaw(requestParameters: ApiAiProviderPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AiProvider>> {
@@ -2763,6 +3135,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiAiProviderPartialUpdate(requestParameters: ApiAiProviderPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiProvider> {
         const response = await this.apiAiProviderPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiAiProviderProtectingListRaw(requestParameters: ApiAiProviderProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiAiProviderProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-provider/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiAiProviderProtectingList(requestParameters: ApiAiProviderProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiAiProviderProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -3371,6 +3788,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiConnectorConfigCascadingListRaw(requestParameters: ApiConnectorConfigCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiConnectorConfigCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiConnectorConfigCascadingList(requestParameters: ApiConnectorConfigCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiConnectorConfigCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigCreateRaw(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfig>> {
@@ -3485,6 +3947,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiConnectorConfigNullingListRaw(requestParameters: ApiConnectorConfigNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiConnectorConfigNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiConnectorConfigNullingList(requestParameters: ApiConnectorConfigNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiConnectorConfigNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigPartialUpdateRaw(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfig>> {
@@ -3521,6 +4028,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiConnectorConfigPartialUpdate(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfig> {
         const response = await this.apiConnectorConfigPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiConnectorConfigProtectingListRaw(requestParameters: ApiConnectorConfigProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiConnectorConfigProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiConnectorConfigProtectingList(requestParameters: ApiConnectorConfigProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiConnectorConfigProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -4375,6 +4927,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiEnterpriseSocialKeywordCascadingListRaw(requestParameters: ApiEnterpriseSocialKeywordCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiEnterpriseSocialKeywordCascadingList(requestParameters: ApiEnterpriseSocialKeywordCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiEnterpriseSocialKeywordCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiEnterpriseSocialKeywordCreateRaw(requestParameters: ApiEnterpriseSocialKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
@@ -4625,6 +5222,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiEnterpriseSocialKeywordNullingListRaw(requestParameters: ApiEnterpriseSocialKeywordNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiEnterpriseSocialKeywordNullingList(requestParameters: ApiEnterpriseSocialKeywordNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiEnterpriseSocialKeywordNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiEnterpriseSocialKeywordPartialUpdateRaw(requestParameters: ApiEnterpriseSocialKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
@@ -4661,6 +5303,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseSocialKeywordPartialUpdate(requestParameters: ApiEnterpriseSocialKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiEnterpriseSocialKeywordPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiEnterpriseSocialKeywordProtectingListRaw(requestParameters: ApiEnterpriseSocialKeywordProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialKeywordProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-keyword/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiEnterpriseSocialKeywordProtectingList(requestParameters: ApiEnterpriseSocialKeywordProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiEnterpriseSocialKeywordProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -4785,6 +5472,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseSocialRecipeBatchUpdateUpdate(requestParameters: ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBatchUpdate> {
         const response = await this.apiEnterpriseSocialRecipeBatchUpdateUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiEnterpriseSocialRecipeCascadingListRaw(requestParameters: ApiEnterpriseSocialRecipeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiEnterpriseSocialRecipeCascadingList(requestParameters: ApiEnterpriseSocialRecipeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiEnterpriseSocialRecipeCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -5205,6 +5937,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiEnterpriseSocialRecipeNullingListRaw(requestParameters: ApiEnterpriseSocialRecipeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiEnterpriseSocialRecipeNullingList(requestParameters: ApiEnterpriseSocialRecipeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiEnterpriseSocialRecipeNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiEnterpriseSocialRecipePartialUpdateRaw(requestParameters: ApiEnterpriseSocialRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
@@ -5241,6 +6018,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseSocialRecipePartialUpdate(requestParameters: ApiEnterpriseSocialRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiEnterpriseSocialRecipePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiEnterpriseSocialRecipeProtectingListRaw(requestParameters: ApiEnterpriseSocialRecipeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiEnterpriseSocialRecipeProtectingList(requestParameters: ApiEnterpriseSocialRecipeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiEnterpriseSocialRecipeProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -6027,6 +6849,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiFoodCascadingListRaw(requestParameters: ApiFoodCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFoodCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiFoodCascadingList(requestParameters: ApiFoodCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiFoodCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiFoodCreateRaw(requestParameters: ApiFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
@@ -6391,6 +7258,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiFoodNullingListRaw(requestParameters: ApiFoodNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFoodNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiFoodNullingList(requestParameters: ApiFoodNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiFoodNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiFoodPartialUpdateRaw(requestParameters: ApiFoodPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
@@ -6427,6 +7339,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiFoodPartialUpdate(requestParameters: ApiFoodPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiFoodProtectingListRaw(requestParameters: ApiFoodProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFoodProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiFoodProtectingList(requestParameters: ApiFoodProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiFoodProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7634,6 +8591,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiKeywordCascadingListRaw(requestParameters: ApiKeywordCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiKeywordCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/keyword/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiKeywordCascadingList(requestParameters: ApiKeywordCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiKeywordCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiKeywordCreateRaw(requestParameters: ApiKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
@@ -7884,6 +8886,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiKeywordNullingListRaw(requestParameters: ApiKeywordNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiKeywordNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/keyword/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiKeywordNullingList(requestParameters: ApiKeywordNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiKeywordNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiKeywordPartialUpdateRaw(requestParameters: ApiKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
@@ -7920,6 +8967,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiKeywordPartialUpdate(requestParameters: ApiKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiKeywordProtectingListRaw(requestParameters: ApiKeywordProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiKeywordProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/keyword/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiKeywordProtectingList(requestParameters: ApiKeywordProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiKeywordProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8332,6 +9424,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiMealTypeCascadingListRaw(requestParameters: ApiMealTypeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiMealTypeCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/meal-type/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiMealTypeCascadingList(requestParameters: ApiMealTypeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiMealTypeCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * returns list of meal types created by the requesting user ordered by the order field.
      */
     async apiMealTypeCreateRaw(requestParameters: ApiMealTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealType>> {
@@ -8446,6 +9583,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiMealTypeNullingListRaw(requestParameters: ApiMealTypeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiMealTypeNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/meal-type/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiMealTypeNullingList(requestParameters: ApiMealTypeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiMealTypeNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * returns list of meal types created by the requesting user ordered by the order field.
      */
     async apiMealTypePartialUpdateRaw(requestParameters: ApiMealTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealType>> {
@@ -8482,6 +9664,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiMealTypePartialUpdate(requestParameters: ApiMealTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealType> {
         const response = await this.apiMealTypePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiMealTypeProtectingListRaw(requestParameters: ApiMealTypeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiMealTypeProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/meal-type/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiMealTypeProtectingList(requestParameters: ApiMealTypeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiMealTypeProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -10451,6 +11678,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiPropertyTypeCascadingListRaw(requestParameters: ApiPropertyTypeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypeCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiPropertyTypeCascadingList(requestParameters: ApiPropertyTypeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiPropertyTypeCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeCreateRaw(requestParameters: ApiPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
@@ -10569,6 +11841,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiPropertyTypeNullingListRaw(requestParameters: ApiPropertyTypeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypeNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiPropertyTypeNullingList(requestParameters: ApiPropertyTypeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiPropertyTypeNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypePartialUpdateRaw(requestParameters: ApiPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
@@ -10605,6 +11922,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiPropertyTypePartialUpdate(requestParameters: ApiPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
         const response = await this.apiPropertyTypePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiPropertyTypeProtectingListRaw(requestParameters: ApiPropertyTypeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypeProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiPropertyTypeProtectingList(requestParameters: ApiPropertyTypeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiPropertyTypeProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -10776,6 +12138,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiRecipeBatchUpdateUpdate(requestParameters: ApiRecipeBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBatchUpdate> {
         const response = await this.apiRecipeBatchUpdateUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiRecipeBookCascadingListRaw(requestParameters: ApiRecipeBookCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeBookCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-book/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiRecipeBookCascadingList(requestParameters: ApiRecipeBookCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiRecipeBookCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -11164,6 +12571,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiRecipeBookNullingListRaw(requestParameters: ApiRecipeBookNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeBookNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-book/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiRecipeBookNullingList(requestParameters: ApiRecipeBookNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiRecipeBookNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookPartialUpdateRaw(requestParameters: ApiRecipeBookPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
@@ -11200,6 +12652,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiRecipeBookPartialUpdate(requestParameters: ApiRecipeBookPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBook> {
         const response = await this.apiRecipeBookPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiRecipeBookProtectingListRaw(requestParameters: ApiRecipeBookProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeBookProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-book/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiRecipeBookProtectingList(requestParameters: ApiRecipeBookProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiRecipeBookProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -11284,6 +12781,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiRecipeBookUpdate(requestParameters: ApiRecipeBookUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBook> {
         const response = await this.apiRecipeBookUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiRecipeCascadingListRaw(requestParameters: ApiRecipeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiRecipeCascadingList(requestParameters: ApiRecipeCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiRecipeCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -12054,6 +13596,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiRecipeNullingListRaw(requestParameters: ApiRecipeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiRecipeNullingList(requestParameters: ApiRecipeNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiRecipeNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiRecipePartialUpdateRaw(requestParameters: ApiRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
@@ -12090,6 +13677,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiRecipePartialUpdate(requestParameters: ApiRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiRecipeProtectingListRaw(requestParameters: ApiRecipeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiRecipeProtectingList(requestParameters: ApiRecipeProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiRecipeProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -13571,6 +15203,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiStorageCascadingListRaw(requestParameters: ApiStorageCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiStorageCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/storage/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiStorageCascadingList(requestParameters: ApiStorageCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiStorageCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiStorageCreateRaw(requestParameters: ApiStorageCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
@@ -13685,6 +15362,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiStorageNullingListRaw(requestParameters: ApiStorageNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiStorageNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/storage/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiStorageNullingList(requestParameters: ApiStorageNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiStorageNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiStoragePartialUpdateRaw(requestParameters: ApiStoragePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
@@ -13721,6 +15443,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiStoragePartialUpdate(requestParameters: ApiStoragePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Storage> {
         const response = await this.apiStoragePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiStorageProtectingListRaw(requestParameters: ApiStorageProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiStorageProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/storage/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiStorageProtectingList(requestParameters: ApiStorageProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiStorageProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -13805,6 +15572,96 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiStorageUpdate(requestParameters: ApiStorageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Storage> {
         const response = await this.apiStorageUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiSupermarketCascadingListRaw(requestParameters: ApiSupermarketCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSupermarketCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/supermarket/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiSupermarketCascadingList(requestParameters: ApiSupermarketCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSupermarketCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiSupermarketCategoryCascadingListRaw(requestParameters: ApiSupermarketCategoryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSupermarketCategoryCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/supermarket-category/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiSupermarketCategoryCascadingList(requestParameters: ApiSupermarketCategoryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSupermarketCategoryCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -13993,6 +15850,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiSupermarketCategoryNullingListRaw(requestParameters: ApiSupermarketCategoryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSupermarketCategoryNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/supermarket-category/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiSupermarketCategoryNullingList(requestParameters: ApiSupermarketCategoryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSupermarketCategoryNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryPartialUpdateRaw(requestParameters: ApiSupermarketCategoryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
@@ -14029,6 +15931,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSupermarketCategoryPartialUpdate(requestParameters: ApiSupermarketCategoryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategory> {
         const response = await this.apiSupermarketCategoryPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiSupermarketCategoryProtectingListRaw(requestParameters: ApiSupermarketCategoryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSupermarketCategoryProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/supermarket-category/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiSupermarketCategoryProtectingList(requestParameters: ApiSupermarketCategoryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSupermarketCategoryProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -14501,6 +16448,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiSupermarketNullingListRaw(requestParameters: ApiSupermarketNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSupermarketNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/supermarket/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiSupermarketNullingList(requestParameters: ApiSupermarketNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSupermarketNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiSupermarketPartialUpdateRaw(requestParameters: ApiSupermarketPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Supermarket>> {
@@ -14537,6 +16529,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSupermarketPartialUpdate(requestParameters: ApiSupermarketPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Supermarket> {
         const response = await this.apiSupermarketPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiSupermarketProtectingListRaw(requestParameters: ApiSupermarketProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSupermarketProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/supermarket/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiSupermarketProtectingList(requestParameters: ApiSupermarketProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSupermarketProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -14658,6 +16695,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSwitchActiveSpaceRetrieve(requestParameters: ApiSwitchActiveSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiSwitchActiveSpaceRetrieveRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiSyncCascadingListRaw(requestParameters: ApiSyncCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSyncCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/sync/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiSyncCascadingList(requestParameters: ApiSyncCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSyncCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -14850,6 +16932,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiSyncNullingListRaw(requestParameters: ApiSyncNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSyncNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/sync/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiSyncNullingList(requestParameters: ApiSyncNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSyncNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiSyncPartialUpdateRaw(requestParameters: ApiSyncPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sync>> {
@@ -14886,6 +17013,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSyncPartialUpdate(requestParameters: ApiSyncPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiSyncProtectingListRaw(requestParameters: ApiSyncProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiSyncProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/sync/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiSyncProtectingList(requestParameters: ApiSyncProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiSyncProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -15017,6 +17189,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiSyncUpdate(requestParameters: ApiSyncUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiUnitCascadingListRaw(requestParameters: ApiUnitCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUnitCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/unit/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiUnitCascadingList(requestParameters: ApiUnitCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiUnitCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -15451,6 +17668,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiUnitNullingListRaw(requestParameters: ApiUnitNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUnitNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/unit/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiUnitNullingList(requestParameters: ApiUnitNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiUnitNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiUnitPartialUpdateRaw(requestParameters: ApiUnitPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
@@ -15491,9 +17753,9 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * get a paginated list of objects that are protecting the selected object form being deleted
      */
-    async apiUnitProtectingListRaw(requestParameters: ApiUnitProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelList>> {
+    async apiUnitProtectingListRaw(requestParameters: ApiUnitProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -15524,13 +17786,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * get a paginated list of objects that are protecting the selected object form being deleted
      */
-    async apiUnitProtectingList(requestParameters: ApiUnitProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelList> {
+    async apiUnitProtectingList(requestParameters: ApiUnitProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
         const response = await this.apiUnitProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -15616,6 +17878,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUnitUpdate(requestParameters: ApiUnitUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiUserFileCascadingListRaw(requestParameters: ApiUserFileCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUserFileCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-file/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiUserFileCascadingList(requestParameters: ApiUserFileCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiUserFileCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -15829,6 +18136,51 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiUserFileNullingListRaw(requestParameters: ApiUserFileNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUserFileNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-file/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiUserFileNullingList(requestParameters: ApiUserFileNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiUserFileNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiUserFilePartialUpdateRaw(requestParameters: ApiUserFilePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserFile>> {
@@ -15909,6 +18261,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserFilePartialUpdate(requestParameters: ApiUserFilePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserFile> {
         const response = await this.apiUserFilePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiUserFileProtectingListRaw(requestParameters: ApiUserFileProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUserFileProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-file/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiUserFileProtectingList(requestParameters: ApiUserFileProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiUserFileProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

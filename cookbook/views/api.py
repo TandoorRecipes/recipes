@@ -114,7 +114,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -515,6 +515,134 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
+def paginate(func):
+    """
+    pagination decorator for custom ViewSet actions
+    """
+
+    @wraps(func)
+    def inner(self, *args, **kwargs):
+        queryset = func(self, *args, **kwargs)
+        assert isinstance(queryset, (list, QuerySet))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    return inner
+
+
+class DeleteRelationMixing:
+    """
+    mixin to add custom API function for model delete dependency checking
+    """
+
+    @staticmethod
+    def collect(obj):
+        # collector.nested() nested seems to not include protecting but does include cascading
+        # collector.protected: objects that raise Protected or Restricted error when deleting unit
+        # collector.field_updates: fields that get updated when deleting the unit
+        # collector.model_objs: collects the objects that should be deleted together with the selected unit
+
+        collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+        collector.collect([obj])
+        return collector
+
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
+    @paginate
+    def protecting(self, request, pk):
+        """
+        get a paginated list of objects that are protecting the selected object form being deleted
+        """
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_PROTECTING_{obj.__class__.__name__}_{obj.pk}'
+            if c := caches['default'].get(CACHE_KEY, None):
+                return c
+
+            collector = self.collect(obj)
+
+            protected_objects = []
+            for o in collector.protected:
+                protected_objects.append({
+                    'id': o.pk,
+                    'model': o.__class__.__name__,
+                    'name': str(o),
+                })
+
+            caches['default'].set(CACHE_KEY, protected_objects, 60)
+            return protected_objects
+        else:
+            return []
+
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
+    @paginate
+    def cascading(self, request, pk):
+        """
+        get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+        """
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_CASCADING_{obj.__class__.__name__}_{obj.pk}'
+            if c := caches['default'].get(CACHE_KEY, None):
+                return c
+
+            collector = self.collect(obj)
+
+            cascading_objects = []
+            for model, objs in collector.model_objs.items():
+                for o in objs:
+                    cascading_objects.append({
+                        'id': o.pk,
+                        'model': o.__class__.__name__,
+                        'name': str(o),
+                    })
+            caches['default'].set(CACHE_KEY, cascading_objects, 60)
+            return cascading_objects
+        else:
+            return []
+
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True))
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
+    @paginate
+    def nulling(self, request, pk):
+        """
+        get a paginated list of objects where the selected object will be removed whe its deleted
+        """
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_NULLING_{obj.__class__.__name__}_{obj.pk}'
+            if c := caches['default'].get(CACHE_KEY, None):
+                return c
+
+            collector = self.collect(obj)
+
+            nulling_objects = []
+            # field_updates is a dict of relations that will be updated and querysets of items affected
+            for key, value in collector.field_updates.items():
+                # iterate over each queryset for relation
+                for qs in value:
+                    # itereate over each object in queryset of relation
+                    for o in qs:
+                        nulling_objects.append(
+                            {
+                                'id': o.pk,
+                                'model': o.__class__.__name__,
+                                'name': str(o),
+                            }
+                        )
+            caches['default'].set(CACHE_KEY, nulling_objects, 60)
+            return nulling_objects
+        else:
+            return []
+
+
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str, many=True),
 ]))
@@ -637,7 +765,7 @@ class SearchPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user)
 
 
-class AiProviderViewSet(LoggingMixin, viewsets.ModelViewSet):
+class AiProviderViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = AiProvider.objects
     serializer_class = AiProviderSerializer
     permission_classes = [CustomAiProviderPermission & CustomTokenHasReadWriteScope]
@@ -660,7 +788,7 @@ class AiLogViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
+class StorageViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
@@ -671,7 +799,7 @@ class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class SyncViewSet(LoggingMixin, viewsets.ModelViewSet):
+class SyncViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Sync.objects
     serializer_class = SyncSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -732,7 +860,7 @@ class RecipeImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 
 
-class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
+class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = ConnectorConfig.objects
     serializer_class = ConnectorConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -742,7 +870,7 @@ class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet):
+class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -754,7 +882,7 @@ class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet):
 
 
 # TODO does supermarket category have settings to support fuzzy filtering and/or merge?
-class SupermarketCategoryViewSet(LoggingMixin, FuzzyFilterMixin, MergeMixin):
+class SupermarketCategoryViewSet(LoggingMixin, FuzzyFilterMixin, MergeMixin, DeleteRelationMixing):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
@@ -777,126 +905,12 @@ class SupermarketCategoryRelationViewSet(LoggingMixin, StandardFilterModelViewSe
         return super().get_queryset()
 
 
-class KeywordViewSet(LoggingMixin, TreeMixin):
+class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
     permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
-
-
-def paginate(func):
-    @wraps(func)
-    def inner(self, *args, **kwargs):
-        queryset = func(self, *args, **kwargs)
-        assert isinstance(queryset, (list, QuerySet))
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-    return inner
-
-
-class DeleteRelationMixing:
-    # for units
-    # foodproperty_unit = PROTECT
-    # Ingredient = SET NULL
-    # UnitConversion = CASCADE
-
-    # print(collector.nested()) # nested seems to not include protecting but does include cascading
-
-    # protected: objects that raise Protected or Restricted error when deleting unit
-    # field_updates: fields that get updated when deleting the unit
-    # model objs: collects the objects that should be deleted together with the selected unit
-
-    collector = None
-
-    def collect(self, obj):
-        # TODO individual collector cache keys
-        # TODO does this even make sense with multiple workers because of cache misses?
-        
-        if c := caches['default'].get('DELETING_COLLECTOR_TEMP_CACHE_NAME', None):
-            print('collector from cache')
-            return c
-        collector = NestedObjects(using=DEFAULT_DB_ALIAS)
-        collector.collect([obj])
-        self.collector = collector
-        caches['default'].set('DELETING_COLLECTOR_TEMP_CACHE_NAME', collector, 15)
-        print('new collector')
-        return collector
-
-    @extend_schema(responses=GenericModelSerializer(many=True))
-    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
-    @paginate
-    def protecting(self, request, pk):
-        obj = self.queryset.filter(pk=pk, space=request.space).first()
-        if obj:
-            collector = self.collect(obj)
-
-            protected_objects = []
-            for o in collector.protected:
-                protected_objects.append({
-                    'id': o.pk,
-                    'model': o.__class__.__name__,
-                    'name': str(o),
-                })
-
-            return protected_objects
-        else:
-            return []
-
-    @extend_schema(responses=GenericModelSerializer(many=True))
-    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
-    @paginate
-    def cascading(self, request, pk):
-        obj = self.queryset.filter(pk=pk, space=request.space).first()
-        if obj:
-            collector = self.collect(obj)
-
-            cascading_objects = []
-            for model, objs in collector.model_objs.items():
-                for o in objs:
-                    cascading_objects.append({
-                        'id': o.pk,
-                        'model': o.__class__.__name__,
-                        'name': str(o),
-                    })
-
-            return cascading_objects
-        else:
-            return []
-
-    @extend_schema(responses=GenericModelSerializer(many=True))
-    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelSerializer, pagination_class=DefaultPagination)
-    @paginate
-    def nulling(self, request, pk):
-        obj = self.queryset.filter(pk=pk, space=request.space).first()
-        if obj:
-            collector = self.collect(obj)
-
-            updating_objects = []
-            # field_updates is a dict of relations that will be updated and querysets of items affected
-            for key, value in collector.field_updates.items():
-                # iterate over each queryset for relation
-                for qs in value:
-                    # itereate over each object in queryset of relation
-                    for o in qs:
-                        updating_objects.append(
-                            {
-                                'id': o.pk,
-                                'model': o.__class__.__name__,
-                                'name': str(o),
-                            }
-                        )
-
-            return updating_objects
-        else:
-            return []
 
 
 class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
@@ -919,7 +933,7 @@ class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
-class FoodViewSet(LoggingMixin, TreeMixin):
+class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
@@ -1167,7 +1181,7 @@ class FoodViewSet(LoggingMixin, TreeMixin):
     OpenApiParameter(name='order_direction', description='Order ascending or descending', type=str,
                      enum=['asc', 'desc']),
 ]))
-class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet):
+class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -1321,7 +1335,7 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
         return Response(serializer.errors, 400)
 
 
-class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     """
     returns list of meal types created by the
     requesting user ordered by the order field.
@@ -1471,7 +1485,7 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='filter', description=_('ID of a custom filter. Returns all recipes matched by that filter.'), type=int),
     OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
 ]))
-class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
@@ -1753,7 +1767,7 @@ class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
         enum=[m[0] for m in PropertyType.CHOICES])
     ]
 ))
-class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1984,7 +1998,7 @@ class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
-class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet):
+class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]

@@ -1718,7 +1718,7 @@ class FdcQuerySerializer(serializers.Serializer):
     foods = FdcQueryFoodsSerializer(many=True)
 
 
-class GenericModelSerializer(serializers.Serializer):
+class GenericModelReferenceSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     model = serializers.CharField()
     name = serializers.CharField()

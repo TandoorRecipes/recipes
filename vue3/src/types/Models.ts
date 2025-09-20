@@ -68,6 +68,15 @@ type GenericListRequestParameter = {
 }
 
 /**
+ * common list parameters shared by all generic models
+ */
+type DeleteRelationRequestParameter = {
+    page: number,
+    pageSize: number,
+    id: number,
+}
+
+/**
  * if a model is shown in a table, these are the table headers
  * structure similar to the VDataTableHeaders but simplified and
  * extended by a "hidden" attribute to allow custom table configuration for users
@@ -948,7 +957,7 @@ export class GenericModel {
         } else {
             return this.api[`api${this.model.name}List`](genericListRequestParameter)
         }
-    };
+    }
 
     /**
      * create a new instance of the given model
@@ -1047,6 +1056,33 @@ export class GenericModel {
             return this.api[`api${this.model.name}MoveUpdate`](moveRequestParams)
         }
     }
+
+    /**
+     * query the protecting list endpoint
+     * @param deleteRelationRequestParameter parameters
+     * @return promise of request
+     */
+    getDeleteProtecting(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
+        return this.api[`api${this.model.name}ProtectingList`](deleteRelationRequestParameter)
+    };
+
+    /**
+     * query the cascading list endpoint
+     * @param deleteRelationRequestParameter parameters
+     * @return promise of request
+     */
+    getDeleteCascading(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
+        return this.api[`api${this.model.name}CascadingList`](deleteRelationRequestParameter)
+    };
+
+    /**
+     * query the nulling list endpoint
+     * @param deleteRelationRequestParameter parameters
+     * @return promise of request
+     */
+    getDeleteNulling(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
+        return this.api[`api${this.model.name}NullingList`](deleteRelationRequestParameter)
+    };
 
     /**
      * gets a label for a specific object instance using the model toStringKeys property
