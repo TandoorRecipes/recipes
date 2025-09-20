@@ -420,6 +420,9 @@ class AiProvider(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('id',)
+
 
 class AiLog(models.Model, PermissionModelMixin):
     F_FILE_IMPORT = 'FILE_IMPORT'
@@ -442,6 +445,9 @@ class AiLog(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f"{self.function} {self.ai_provider.name} {self.created_at}"
+
+    class Meta:
+        ordering = ('id',)
 
 
 class ConnectorConfig(models.Model, PermissionModelMixin):
