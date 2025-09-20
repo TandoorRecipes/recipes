@@ -72,7 +72,7 @@
                     <v-form :disabled="loading || fileApiLoading">
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
                             <v-col>
-                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)"></step-editor>
+                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -139,7 +139,9 @@
                 <vue-draggable handle=".drag-handle" v-model="editingObj.steps" :on-sort="sortSteps">
                     <v-list-item v-for="(s,i) in editingObj.steps" :key="s.id">
                         <v-chip color="primary">{{ i + 1 }}</v-chip>
-                        {{ s.name }}
+                        <span class="ms-2" v-if="s.name"> {{ s.name }}</span>
+                        <span class="ms-2" v-else>{{ $t('Step') }} {{ i + 1 }}</span>
+
                         <template #append>
                             <v-icon class="drag-handle" icon="$dragHandle"></v-icon>
                         </template>

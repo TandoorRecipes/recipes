@@ -1,7 +1,5 @@
 <template>
 
-    <!--TODO  name, time, recipe, file(s), ingredients, quick add ingredients -->
-
     <v-card variant="outlined">
         <template #title>
             <v-card-title>
@@ -28,6 +26,9 @@
                         <v-list-item link>
                             <v-switch v-model="step.showAsHeader" :label="$t('Show_as_header')" hide-details></v-switch>
                         </v-list-item>
+                        <v-list-item @click="emit('move')" prepend-icon="fa-solid fa-sort">
+                                                    {{ $t('Move') }}
+                                                </v-list-item>
 
                         <v-list-item prepend-icon="$delete" @click="emit('delete')">{{ $t('Delete') }}</v-list-item>
                     </v-list>
@@ -240,7 +241,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {ingredientToString} from "@/utils/model_utils";
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
 
-const emit = defineEmits(['delete'])
+const emit = defineEmits(['delete','move'])
 
 const step = defineModel<Step>({required: true})
 const recipe = defineModel<Recipe>('recipe', {required: true})
