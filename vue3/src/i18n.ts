@@ -103,7 +103,8 @@ function getSupportedLocales(localeFiles = import.meta.glob('@/locales/*.json'))
     let supportedLocales: string[] = []
 
     for (const path in localeFiles) {
-        supportedLocales.push(path.split('/').slice(-1)[0].split('.')[0]);
+        let locale = path.split('/').slice(-1)[0].split('.')[0].replace('_', '-')
+        supportedLocales.push(locale);
     }
     return supportedLocales
 }
