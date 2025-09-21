@@ -14,9 +14,14 @@
         </slot>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate && !modelClass.model.disableDelete" :disabled="loading">{{ $t('Delete') }}
+            <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate && !modelClass.model.disableDelete && !modelClass.model.isAdvancedDelete" :disabled="loading">
+                {{ $t('Delete') }}
                 <delete-confirm-dialog :object-name="objectName" :model-name="$t(modelClass.model.localizationKey)" @delete="emit('delete')"></delete-confirm-dialog>
             </v-btn>
+            <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate && !modelClass.model.disableDelete && modelClass.model.isAdvancedDelete"
+                   :to="{name: 'ModelDeletePage', params: {model: modelClass.model.name, id: props.editingObject.id!}}" :disabled="loading">{{ $t('Delete') }}
+            </v-btn>
+
             <v-btn color="save" prepend-icon="$create" @click="emit('save')" v-if="!isUpdate && !modelClass.model.disableCreate" :loading="loading">{{ $t('Create') }}</v-btn>
             <v-btn color="save" prepend-icon="$save" @click="emit('save')" v-if="isUpdate && !modelClass.model.disableUpdate" :loading="loading"> {{ $t('Save') }}</v-btn>
         </v-card-actions>
@@ -41,10 +46,10 @@
 <script setup lang="ts">
 
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
-import {GenericModel} from "@/types/Models";
+import {EditorSupportedTypes, GenericModel} from "@/types/Models";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {onBeforeRouteLeave, RouteLocationNormalized} from "vue-router";
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, PropType, ref} from "vue";
 
 const emit = defineEmits(['save', 'delete', 'close'])
 
@@ -53,6 +58,7 @@ const props = defineProps({
     dialog: {type: Boolean, default: false},
     objectName: {type: String, default: ''},
     modelClass: {type: GenericModel, default: null},
+    editingObject: {type: {} as PropType<EditorSupportedTypes>, default: null},
     isUpdate: {type: Boolean, default: false},
     isChanged: {type: Boolean, default: false},
 })

@@ -552,7 +552,9 @@ class DeleteRelationMixing:
         collector.collect([obj])
         return collector
 
-    @extend_schema(responses=GenericModelReferenceSerializer(many=True))
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True), parameters=[
+        OpenApiParameter(name='cache', description='If results can be cached or not', type=bool, default=True),
+    ])
     @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
     @paginate
     def protecting(self, request, pk):
@@ -562,11 +564,11 @@ class DeleteRelationMixing:
         obj = self.queryset.filter(pk=pk, space=request.space).first()
         if obj:
             CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_PROTECTING_{obj.__class__.__name__}_{obj.pk}'
-            if c := caches['default'].get(CACHE_KEY, None):
-                return c
+            cache = self.request.query_params.get('cache', "true") == "true"
+            if caches['default'].has_key(CACHE_KEY) and cache:
+                return caches['default'].get(CACHE_KEY)
 
             collector = self.collect(obj)
-
             protected_objects = []
             for o in collector.protected:
                 protected_objects.append({
@@ -580,7 +582,9 @@ class DeleteRelationMixing:
         else:
             return []
 
-    @extend_schema(responses=GenericModelReferenceSerializer(many=True))
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True), parameters=[
+        OpenApiParameter(name='cache', description='If results can be cached or not', type=bool, default=True),
+    ])
     @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
     @paginate
     def cascading(self, request, pk):
@@ -590,25 +594,29 @@ class DeleteRelationMixing:
         obj = self.queryset.filter(pk=pk, space=request.space).first()
         if obj:
             CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_CASCADING_{obj.__class__.__name__}_{obj.pk}'
-            if c := caches['default'].get(CACHE_KEY, None):
-                return c
+            cache = self.request.query_params.get('cache', "true") == "true"
+            if caches['default'].has_key(CACHE_KEY) and cache:
+                return caches['default'].get(CACHE_KEY)
 
             collector = self.collect(obj)
 
             cascading_objects = []
             for model, objs in collector.model_objs.items():
                 for o in objs:
-                    cascading_objects.append({
-                        'id': o.pk,
-                        'model': o.__class__.__name__,
-                        'name': str(o),
-                    })
+                    if o.pk != pk and o.__class__.__name__ != obj.__class__.__name__:
+                        cascading_objects.append({
+                            'id': o.pk,
+                            'model': o.__class__.__name__,
+                            'name': str(o),
+                        })
             caches['default'].set(CACHE_KEY, cascading_objects, 60)
             return cascading_objects
         else:
             return []
 
-    @extend_schema(responses=GenericModelReferenceSerializer(many=True))
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True), parameters=[
+        OpenApiParameter(name='cache', description='If results can be cached or not', type=bool, default=True),
+    ])
     @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
     @paginate
     def nulling(self, request, pk):
@@ -618,8 +626,9 @@ class DeleteRelationMixing:
         obj = self.queryset.filter(pk=pk, space=request.space).first()
         if obj:
             CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_NULLING_{obj.__class__.__name__}_{obj.pk}'
-            if c := caches['default'].get(CACHE_KEY, None):
-                return c
+            cache = self.request.query_params.get('cache', "true") == "true"
+            if caches['default'].has_key(CACHE_KEY) and cache:
+                return caches['default'].get(CACHE_KEY)
 
             collector = self.collect(obj)
 

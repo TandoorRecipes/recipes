@@ -560,6 +560,7 @@ export interface ApiAiLogRetrieveRequest {
 
 export interface ApiAiProviderCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -579,6 +580,7 @@ export interface ApiAiProviderListRequest {
 
 export interface ApiAiProviderNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -590,6 +592,7 @@ export interface ApiAiProviderPartialUpdateRequest {
 
 export interface ApiAiProviderProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -664,6 +667,7 @@ export interface ApiBookmarkletImportUpdateRequest {
 
 export interface ApiConnectorConfigCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -683,6 +687,7 @@ export interface ApiConnectorConfigListRequest {
 
 export interface ApiConnectorConfigNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -694,6 +699,7 @@ export interface ApiConnectorConfigPartialUpdateRequest {
 
 export interface ApiConnectorConfigProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -801,6 +807,7 @@ export interface ApiEnterpriseSocialEmbedUpdateRequest {
 
 export interface ApiEnterpriseSocialKeywordCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -839,6 +846,7 @@ export interface ApiEnterpriseSocialKeywordMoveUpdateRequest {
 
 export interface ApiEnterpriseSocialKeywordNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -850,6 +858,7 @@ export interface ApiEnterpriseSocialKeywordPartialUpdateRequest {
 
 export interface ApiEnterpriseSocialKeywordProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -869,6 +878,7 @@ export interface ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest {
 
 export interface ApiEnterpriseSocialRecipeCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -942,6 +952,7 @@ export interface ApiEnterpriseSocialRecipeListRequest {
 
 export interface ApiEnterpriseSocialRecipeNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -953,6 +964,7 @@ export interface ApiEnterpriseSocialRecipePartialUpdateRequest {
 
 export interface ApiEnterpriseSocialRecipeProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1046,6 +1058,7 @@ export interface ApiFoodBatchUpdateUpdateRequest {
 
 export interface ApiFoodCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1093,6 +1106,7 @@ export interface ApiFoodMoveUpdateRequest {
 
 export interface ApiFoodNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1104,6 +1118,7 @@ export interface ApiFoodPartialUpdateRequest {
 
 export interface ApiFoodProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1240,6 +1255,7 @@ export interface ApiInviteLinkUpdateRequest {
 
 export interface ApiKeywordCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1278,6 +1294,7 @@ export interface ApiKeywordMoveUpdateRequest {
 
 export interface ApiKeywordNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1289,6 +1306,7 @@ export interface ApiKeywordPartialUpdateRequest {
 
 export interface ApiKeywordProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1340,6 +1358,7 @@ export interface ApiMealPlanUpdateRequest {
 
 export interface ApiMealTypeCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1359,6 +1378,7 @@ export interface ApiMealTypeListRequest {
 
 export interface ApiMealTypeNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1370,6 +1390,7 @@ export interface ApiMealTypePartialUpdateRequest {
 
 export interface ApiMealTypeProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1605,6 +1626,7 @@ export interface ApiPropertyRetrieveRequest {
 
 export interface ApiPropertyTypeCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1625,6 +1647,7 @@ export interface ApiPropertyTypeListRequest {
 
 export interface ApiPropertyTypeNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1636,6 +1659,7 @@ export interface ApiPropertyTypePartialUpdateRequest {
 
 export interface ApiPropertyTypeProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1660,6 +1684,7 @@ export interface ApiRecipeBatchUpdateUpdateRequest {
 
 export interface ApiRecipeBookCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1714,6 +1739,7 @@ export interface ApiRecipeBookListRequest {
 
 export interface ApiRecipeBookNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1725,6 +1751,7 @@ export interface ApiRecipeBookPartialUpdateRequest {
 
 export interface ApiRecipeBookProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1740,6 +1767,7 @@ export interface ApiRecipeBookUpdateRequest {
 
 export interface ApiRecipeCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1851,6 +1879,7 @@ export interface ApiRecipeListRequest {
 
 export interface ApiRecipeNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -1862,6 +1891,7 @@ export interface ApiRecipePartialUpdateRequest {
 
 export interface ApiRecipeProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2022,6 +2052,7 @@ export interface ApiStepUpdateRequest {
 
 export interface ApiStorageCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2041,6 +2072,7 @@ export interface ApiStorageListRequest {
 
 export interface ApiStorageNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2052,6 +2084,7 @@ export interface ApiStoragePartialUpdateRequest {
 
 export interface ApiStorageProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2067,12 +2100,14 @@ export interface ApiStorageUpdateRequest {
 
 export interface ApiSupermarketCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
 
 export interface ApiSupermarketCategoryCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2102,6 +2137,7 @@ export interface ApiSupermarketCategoryMergeUpdateRequest {
 
 export interface ApiSupermarketCategoryNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2113,6 +2149,7 @@ export interface ApiSupermarketCategoryPartialUpdateRequest {
 
 export interface ApiSupermarketCategoryProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2176,6 +2213,7 @@ export interface ApiSupermarketListRequest {
 
 export interface ApiSupermarketNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2187,6 +2225,7 @@ export interface ApiSupermarketPartialUpdateRequest {
 
 export interface ApiSupermarketProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2206,6 +2245,7 @@ export interface ApiSwitchActiveSpaceRetrieveRequest {
 
 export interface ApiSyncCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2234,6 +2274,7 @@ export interface ApiSyncLogRetrieveRequest {
 
 export interface ApiSyncNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2245,6 +2286,7 @@ export interface ApiSyncPartialUpdateRequest {
 
 export interface ApiSyncProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2265,6 +2307,7 @@ export interface ApiSyncUpdateRequest {
 
 export interface ApiUnitCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2323,6 +2366,7 @@ export interface ApiUnitMergeUpdateRequest {
 
 export interface ApiUnitNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2334,6 +2378,7 @@ export interface ApiUnitPartialUpdateRequest {
 
 export interface ApiUnitProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2349,6 +2394,7 @@ export interface ApiUnitUpdateRequest {
 
 export interface ApiUserFileCascadingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2379,6 +2425,7 @@ export interface ApiUserFileListRequest {
 
 export interface ApiUserFileNullingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2397,6 +2444,7 @@ export interface ApiUserFilePartialUpdateRequest {
 
 export interface ApiUserFileProtectingListRequest {
     id: number;
+    cache?: boolean;
     page?: number;
     pageSize?: number;
 }
@@ -2907,6 +2955,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -3066,6 +3118,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -3150,6 +3206,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -3800,6 +3860,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -3959,6 +4023,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -4043,6 +4111,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -4939,6 +5011,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -5234,6 +5310,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -5318,6 +5398,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -5487,6 +5571,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -5949,6 +6037,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -6033,6 +6125,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -6861,6 +6957,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -7270,6 +7370,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -7354,6 +7458,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -8603,6 +8711,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -8898,6 +9010,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -8982,6 +9098,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -9436,6 +9556,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -9595,6 +9719,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -9679,6 +9807,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -11690,6 +11822,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -11853,6 +11989,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -11937,6 +12077,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -12153,6 +12297,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -12583,6 +12731,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -12667,6 +12819,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -12796,6 +12952,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -13608,6 +13768,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -13692,6 +13856,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -15215,6 +15383,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -15374,6 +15546,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -15458,6 +15634,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -15588,6 +15768,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -15632,6 +15816,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -15862,6 +16050,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -15946,6 +16138,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -16460,6 +16656,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -16544,6 +16744,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -16709,6 +16913,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -16944,6 +17152,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -17028,6 +17240,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -17204,6 +17420,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -17680,6 +17900,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -17764,6 +17988,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -17893,6 +18121,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -18148,6 +18380,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const queryParameters: any = {};
 
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
@@ -18276,6 +18512,10 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];

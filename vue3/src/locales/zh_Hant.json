@@ -320,6 +320,7 @@
   "Meal_Types": "餐飲類型",
   "Merge": "合併",
   "MergeAutomateHelp": "建立一個自動化程序，將此類型的未來物件替換為選定的物件。",
+  "MergeInsteadOfDelete": "",
   "Merge_Keyword": "合併關鍵字",
   "Message": "訊息",
   "Messages": "訊息",

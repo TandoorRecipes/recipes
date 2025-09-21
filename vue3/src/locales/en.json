@@ -321,6 +321,7 @@
   "Meal_Types": "Meal types",
   "Merge": "Merge",
   "MergeAutomateHelp": "Create an automation that replaces future objects of this type with the selected object.",
+  "MergeInsteadOfDelete": "Instead of deleting this {type}, you can merge it into another existing {type}.",
   "Merge_Keyword": "Merge Keyword",
   "Message": "Message",
   "Messages": "Messages",

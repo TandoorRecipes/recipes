@@ -29,11 +29,11 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * @param t translation function from calling context
  * @return instance of GenericModel
  */
-export function getGenericModelFromString(modelName: EditorSupportedModels, t: any) {
+export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false|GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
         return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
-        throw Error(`Model ${modelName} not in SUPPORTED_MODELS`)
+        return false
     }
 }
 
@@ -74,6 +74,7 @@ type DeleteRelationRequestParameter = {
     page: number,
     pageSize: number,
     id: number,
+    cache: boolean,
 }
 
 /**
@@ -111,9 +112,9 @@ export type Model = {
     disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
     disableSearch?: boolean | undefined,
-    // disable showing this model as an option in the ModelListPage
     disableListView?: boolean | undefined,
 
+    isAdvancedDelete: boolean | undefined,
     isPaginated: boolean | undefined,
     isMerge?: boolean | undefined,
     mergeAutomation?: string | AutomationTypeEnum,
@@ -208,6 +209,7 @@ export const TFood = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/FoodEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     isTree: true,
     mergeAutomation: 'FOOD_ALIAS',
@@ -231,6 +233,7 @@ export const TUnit = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/UnitEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     mergeAutomation: 'UNIT_ALIAS',
     toStringKeys: ['name'],
@@ -252,6 +255,7 @@ export const TKeyword = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/KeywordEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     isTree: true,
     mergeAutomation: 'KEYWORD_ALIAS',
@@ -273,6 +277,7 @@ export const TRecipe = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/RecipeEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     disableListView: true,
@@ -329,6 +334,7 @@ export const TMealType = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/MealTypeEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -368,6 +374,7 @@ export const TRecipeBook = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/RecipeBookEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     disableListView: true,
@@ -447,6 +454,7 @@ export const TSupermarket = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SupermarketEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -465,6 +473,7 @@ export const TSupermarketCategory = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SupermarketCategoryEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     toStringKeys: ['name'],
 
@@ -505,6 +514,7 @@ export const TPropertyType = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/PropertyTypeEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -565,6 +575,7 @@ export const TUserFile = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/UserFileEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -729,6 +740,7 @@ export const TStorage = {
     disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -748,6 +760,7 @@ export const TSync = {
     disableListView: false,
     toStringKeys: ['path'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     tableHeaders: [
         {title: 'SyncedPath', key: 'path'},
@@ -815,6 +828,7 @@ export const TConnectorConfig = {
     disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     disableCreate: false,
     disableDelete: false,
@@ -839,6 +853,7 @@ export const TAiProvider = {
     disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     disableCreate: false,
     disableDelete: false,

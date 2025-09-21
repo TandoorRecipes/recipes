@@ -8,7 +8,8 @@
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
-        :object-name="editingObjName()">
+        :object-name="editingObjName()"
+        :editing-object="editingObj">
 
         <v-card-text class="pa-0">
             <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>

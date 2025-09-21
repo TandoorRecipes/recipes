@@ -312,6 +312,7 @@
   "Meal_Types": "Tipos de comida",
   "Merge": "Unificar",
   "MergeAutomateHelp": "Crea una automatización que reemplaza los futuros objetos de este tipo con el objeto seleccionado.",
+  "MergeInsteadOfDelete": "",
   "Merge_Keyword": "Fusionar palabra clave",
   "Message": "Mensaje",
   "Messages": "Mensajes",

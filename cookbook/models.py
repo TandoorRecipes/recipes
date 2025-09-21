@@ -805,14 +805,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         self.delete()
         return target
 
-    def delete(self):
-        if self.ingredient_set.all().exclude(step=None).count() > 0:
-            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
-        else:
-            return super().delete()
-
     # MP_Tree move uses raw SQL to execute move, override behavior to force a save triggering post_save signal
-
     def move(self, *args, **kwargs):
         super().move(*args, **kwargs)
         # treebeard bypasses ORM, need to explicity save to trigger post save signals retrieve the object again to avoid writing previous state back to disk
