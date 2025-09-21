@@ -22,23 +22,23 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row dense v-if="protectingObjectsCount > 0 || cascadingObjectsCount > 0 || nullingObjectsCount > 0">
             <v-col>
                 <v-card>
                     <v-tabs v-model="tab" grow>
-                        <v-tab value="protecting">
+                        <v-tab value="protecting" v-if="protectingObjectsCount > 0">
                             {{ $t('Blocking') }}
                             <template #append>
                                 <v-chip size="small">{{ protectingObjectsCount }}</v-chip>
                             </template>
                         </v-tab>
-                        <v-tab value="cascading">
+                        <v-tab value="cascading" v-if="cascadingObjectsCount > 0">
                             {{ $t('Cascading') }}
                             <template #append>
                                 <v-chip size="small">{{ cascadingObjectsCount }}</v-chip>
                             </template>
                         </v-tab>
-                        <v-tab value="nulling">
+                        <v-tab value="nulling" v-if="nullingObjectsCount > 0">
                             {{ $t('Changing') }}
                             <template #append>
                                 <v-chip size="small">{{ nullingObjectsCount }}</v-chip>
