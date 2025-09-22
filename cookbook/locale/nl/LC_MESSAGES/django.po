@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-07-31 19:14+0000\n"
+"PO-Revision-Date: 2025-09-23 19:45+0000\n"
 "Last-Translator: Justin Straver <justin.straver@gmail.com>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
@@ -22,14 +22,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.1\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Beide velden zijn optioneel. Indien niks is opgegeven wordt de "
+"Beide velden zijn optioneel. Indien niets is opgegeven wordt de "
 "gebruikersnaam weergegeven"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
@@ -771,7 +771,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
-msgstr "Bevestigen"
+msgstr "Bevestig"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -1052,7 +1052,7 @@ msgstr "Beheer"
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
 msgid "Your Spaces"
-msgstr "Jouw Spaces"
+msgstr "Jouw Ruimtes"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
@@ -1996,12 +1996,12 @@ msgstr "Eigenaar"
 
 #: .\cookbook\templates\space_overview.html:57
 msgid "Leave Space"
-msgstr "Verlaat Space"
+msgstr "Verlaat Ruimte"
 
 #: .\cookbook\templates\space_overview.html:78
 #: .\cookbook\templates\space_overview.html:88
 msgid "Join Space"
-msgstr "Sluit aan bij ruimte"
+msgstr "Sluit aan bij Ruimte"
 
 #: .\cookbook\templates\space_overview.html:81
 msgid "Join an existing space."
@@ -2237,7 +2237,7 @@ msgstr "Er bestaat geen {self.basename} met id {target}"
 
 #: .\cookbook\views\api.py:250 .\cookbook\views\api.py:251
 msgid "Cannot merge with child object!"
-msgstr "Kan niet met kindobject samenvoegen!"
+msgstr "Kan niet met sub object samenvoegen!"
 
 #: .\cookbook\views\api.py:288 .\cookbook\views\api.py:289
 #, python-brace-format
@@ -2592,7 +2592,7 @@ msgstr "Uitnodigingslink"
 
 #: .\cookbook\views\delete.py:168
 msgid "Space Membership"
-msgstr "Space Lidmaatschap"
+msgstr "Ruimte Lidmaatschap"
 
 #: .\cookbook\views\edit.py:84
 msgid "You cannot edit this storage!"
