@@ -71,6 +71,7 @@ You need to set up firewall rules in order for the `recipes_web` container to be
 
 - Control Panel -> Security -> Firewall -> Edit Rules -> Create
 	-  Ports: All
+ 		-  if you only want to allow the database port 5432, you'll need to create 2 rules to allow ingoing and outgoing port (and eventually also specify ip more restrictive)
 	-  Source IP: Specific IP -> Select -> Subnet
 		- insert docker network ip (can be found in the docker application, network tab)
 		- Example: IP address: 172.18.0.0 and Subnet mask/Prefix length: 255.255.255.0
