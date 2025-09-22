@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-05-18 10:58+0000\n"
+"PO-Revision-Date: 2025-09-22 10:02+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -21,14 +21,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.1\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
-"Entrambi i campi sono facoltativi. Se non viene fornito, verrà visualizzato "
+"Entrambi i campi sono facoltativi. Se non viene fornito, sarà visualizzato "
 "il nome utente"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
@@ -74,19 +74,19 @@ msgstr "Aggiungi il tuo commento: "
 #: .\cookbook\forms.py:151
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
-"Lascia vuoto per dropbox e inserisci la password dell'applicazione per "
+"Lascia vuoto per dropbox e digita la password dell'applicazione per "
 "nextcloud."
 
 #: .\cookbook\forms.py:154
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr "Lascia vuoto per nextcloud e inserisci l'api token per dropbox."
+msgstr "Lascia vuoto per nextcloud e digita il token api per dropbox."
 
 #: .\cookbook\forms.py:160
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
-"Lascia vuoto per dropbox e inserisci solo l'url base per nextcloud (<code>/"
+"Lascia vuoto per dropbox e dkgita solo l'url base per nextcloud (<code>/"
 "remote.php/webdav/</code> è aggiunto automaticamente)"
 
 #: .\cookbook\forms.py:188
@@ -135,7 +135,7 @@ msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
-"Non è obbligatorio specificare l'indirizzo email, ma se presente verrà "
+"Non è obbligatorio specificare l'indirizzo email, ma se presente sarà "
 "utilizzato per inviare all'utente un collegamento di invito."
 
 #: .\cookbook\forms.py:287
@@ -245,7 +245,7 @@ msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
-"Per evitare spam, la mail non è stata inviata. Aspetta qualche minuto e "
+"Per evitare spam, il messaggio non è stato inviato. Aspetta qualche minuto e "
 "riprova."
 
 #: .\cookbook\helper\permission_helper.py:164
@@ -272,7 +272,7 @@ msgstr "Non hai i permessi necessari per visualizzare questa pagina!"
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "Non puoi interagire con questo oggetto perché non ne hai i diritti!"
+msgstr "Non puoi interagire con questo oggetto perché non sei il proprietario!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
@@ -280,7 +280,7 @@ msgstr "Hai raggiunto il numero massimo di ricette nella tua istanza."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
-msgstr "Hai più utenti di quanti permessi nella tua istanza."
+msgstr "Hai più utenti di quanto consentito nella tua istanza."
 
 #: .\cookbook\helper\recipe_url_import.py:310
 msgid "reverse rotation"
@@ -2326,7 +2326,7 @@ msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
-"Stringa di query corrispondente (vaga) al nome della ricetta. In futuro "
+"Stringa di ricerca corrispondente (vaga) al nome della ricetta. In futuro "
 "anche ricerca fulltext."
 
 #: .\cookbook\views\api.py:910
