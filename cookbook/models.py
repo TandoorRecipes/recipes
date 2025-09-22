@@ -427,6 +427,7 @@ class AiProvider(models.Model):
 class AiLog(models.Model, PermissionModelMixin):
     F_FILE_IMPORT = 'FILE_IMPORT'
     F_STEP_SORT = 'STEP_SORT'
+    F_FOOD_PROPERTIES = 'FOOD_PROPERTIES'
 
     ai_provider = models.ForeignKey(AiProvider, on_delete=models.SET_NULL, null=True)
     function = models.CharField(max_length=64)

@@ -1057,6 +1057,12 @@ export interface ApiFdcSearchRetrieveRequest {
     query?: string;
 }
 
+export interface ApiFoodAipropertiesCreateRequest {
+    id: number;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'>;
+    provider?: number;
+}
+
 export interface ApiFoodBatchUpdateUpdateRequest {
     foodBatchUpdate: FoodBatchUpdate;
 }
@@ -6950,6 +6956,57 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiFdcSearchRetrieve(requestParameters: ApiFdcSearchRetrieveRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FdcQuery> {
         const response = await this.apiFdcSearchRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodAipropertiesCreateRaw(requestParameters: ApiFoodAipropertiesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFoodAipropertiesCreate().'
+            );
+        }
+
+        if (requestParameters['food'] == null) {
+            throw new runtime.RequiredError(
+                'food',
+                'Required parameter "food" was null or undefined when calling apiFoodAipropertiesCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['provider'] != null) {
+            queryParameters['provider'] = requestParameters['provider'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/{id}/aiproperties/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: FoodToJSON(requestParameters['food']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodAipropertiesCreate(requestParameters: ApiFoodAipropertiesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
+        const response = await this.apiFoodAipropertiesCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

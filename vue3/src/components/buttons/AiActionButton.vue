@@ -1,10 +1,15 @@
 <template>
 
-    <v-btn v-bind="props" :color="props.color" :variant="props.variant" :density="props.density" :icon="props.icon" :prepend-icon="props.prependIcon" :loading="props.loading">
+    <v-btn v-bind="props"
+           :color="props.color"
+           :variant="props.variant"
+           :density="props.density"
+           :icon="props.icon"
+           :prepend-icon="props.prependIcon"
+           :loading="props.loading"
+           v-if="useUserPreferenceStore().activeSpace.aiEnabled">
         {{ props.text }}
-
         <v-menu activator="parent">
-
             <v-list>
                 <v-list-item
                     v-for="provider in aiProviders"
@@ -27,6 +32,7 @@
 import {AiProvider, ApiApi} from "@/openapi";
 import {onMounted, PropType, ref} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 
 const emit = defineEmits(['selected'])
