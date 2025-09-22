@@ -2296,7 +2296,7 @@ class AiImportView(APIView):
 
             ai_provider = AiProvider.objects.filter(pk=serializer.validated_data['ai_provider_id']).filter(Q(space=request.space) | Q(space__isnull=True)).first()
 
-            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider)]
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider, AiLog.F_FILE_IMPORT)]
 
             messages = []
             uploaded_file = serializer.validated_data['file']
@@ -2411,6 +2411,80 @@ class AiImportView(APIView):
                 'msg': "Error parsing input:\n\n" + str(serializer.errors)
             }
             return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+
+class AiStepSortView(APIView):
+    throttle_classes = [AiEndpointThrottle]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    @extend_schema(request=RecipeSerializer(many=False), responses=RecipeSerializer(many=False),
+                   parameters=[
+                       OpenApiParameter(name='provider', description='ID of the AI provider that should be used for this AI request', type=int),
+                   ])
+    def post(self, request, *args, **kwargs):
+        """
+        given an image or PDF file convert its content to a structured recipe using AI and the scraping system
+        """
+        serializer = RecipeSerializer(data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+
+            if not request.query_params.get('provider', None) or not re.match(r'^(\d)+$', request.query_params.get('provider', None)):
+                response = {
+                    'error': True,
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            if not can_perform_ai_request(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI or AI features are not enabled for your space."),
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+
+            ai_provider = AiProvider.objects.filter(pk=request.query_params.get('provider')).filter(Q(space=request.space) | Q(space__isnull=True)).first()
+
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider, AiLog.F_STEP_SORT)]
+
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "You are given data for a recipe formatted as json. You cannot under any circumstance change the value of any of the fields. You are only allowed to split the instructions into multiple steps and to sort the ingredients to their appropriate step. Your goal is to properly structure the recipe by splitting large instructions into multiple coherent steps and putting the ingredients that belong to this step into the ingredients list. Generally an ingredient of a cooking recipe should occur in the first step where its needed. Please sort the ingredients to the appropriate steps without changing any of the actual field values. Return the recipe in the same format you were given as json. Do not change any field value like strings or numbers, or change the sorting, also do not change the language."
+
+                        },
+                        {
+                            "type": "text",
+                            "text": json.dumps(request.data)
+                        },
+
+                    ]
+                },
+            ]
+
+            try:
+                ai_request = {
+                    'api_key': ai_provider.api_key,
+                    'model': ai_provider.model_name,
+                    'response_format': {"type": "json_object"},
+                    'messages': messages,
+                }
+                if ai_provider.url:
+                    ai_request['api_base'] = ai_provider.url
+                ai_response = completion(**ai_request)
+
+                response_text = ai_response.choices[0].message.content
+                # TODO validate by loading/dumping using serializer ?
+
+                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except BadRequestError as err:
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AppImportView(APIView):

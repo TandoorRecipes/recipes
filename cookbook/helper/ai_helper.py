@@ -33,12 +33,14 @@ class AiCallbackHandler(CustomLogger):
     space = None
     user = None
     ai_provider = None
+    function = None
 
-    def __init__(self, space, user, ai_provider):
+    def __init__(self, space, user, ai_provider, function):
         super().__init__()
         self.space = space
         self.user = user
         self.ai_provider = ai_provider
+        self.function = function
 
     def log_pre_api_call(self, model, messages, kwargs):
         pass
@@ -77,7 +79,7 @@ class AiCallbackHandler(CustomLogger):
             end_time=end_time,
             input_tokens=response_obj['usage']['prompt_tokens'],
             output_tokens=response_obj['usage']['completion_tokens'],
-            function=AiLog.F_FILE_IMPORT,
+            function=self.function,
             credit_cost=credit_cost,
             credits_from_balance=credits_from_balance,
         )

@@ -151,19 +151,22 @@ class CustomOnHandField(serializers.Field):
         return instance
 
     def to_representation(self, obj):
-        if not self.context["request"].user.is_authenticated:
+        try:
+            if not self.context["request"].user.is_authenticated:
+                return []
+            shared_users = []
+            if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+                shared_users = c
+            else:
+                try:
+                    shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+                    caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5 * 60)
+                    # TODO ugly hack that improves API performance significantly, should be done properly
+                except AttributeError:  # Anonymous users (using share links) don't have shared users
+                    pass
+            return obj.onhand_users.filter(id__in=shared_users).exists()
+        except AttributeError:
             return []
-        shared_users = []
-        if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
-            shared_users = c
-        else:
-            try:
-                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
-                caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5 * 60)
-                # TODO ugly hack that improves API performance significantly, should be done properly
-            except AttributeError:  # Anonymous users (using share links) don't have shared users
-                pass
-        return obj.onhand_users.filter(id__in=shared_users).exists()
 
     def to_internal_value(self, data):
         return data
@@ -843,28 +846,31 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     @extend_schema_field(bool)
     def get_substitute_onhand(self, obj):
-        if not self.context["request"].user.is_authenticated:
+        try:
+            if not self.context["request"].user.is_authenticated:
+                return []
+            shared_users = []
+            if c := caches['default'].get(
+                    f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+                shared_users = c
+            else:
+                try:
+                    shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
+                        self.context['request'].user.id]
+                    caches['default'].set(
+                        f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
+                        shared_users, timeout=5 * 60)
+                    # TODO ugly hack that improves API performance significantly, should be done properly
+                except AttributeError:  # Anonymous users (using share links) don't have shared users
+                    pass
+            filter = Q(id__in=obj.substitute.all())
+            if obj.substitute_siblings:
+                filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
+            if obj.substitute_children:
+                filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
+            return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
+        except AttributeError:
             return []
-        shared_users = []
-        if c := caches['default'].get(
-                f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
-            shared_users = c
-        else:
-            try:
-                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
-                    self.context['request'].user.id]
-                caches['default'].set(
-                    f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
-                    shared_users, timeout=5 * 60)
-                # TODO ugly hack that improves API performance significantly, should be done properly
-            except AttributeError:  # Anonymous users (using share links) don't have shared users
-                pass
-        filter = Q(id__in=obj.substitute.all())
-        if obj.substitute_siblings:
-            filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
-        if obj.substitute_children:
-            filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
-        return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
 
     def create(self, validated_data):
         name = validated_data['name'].strip()

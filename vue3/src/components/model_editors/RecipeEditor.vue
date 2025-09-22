@@ -88,6 +88,7 @@
                                         v-if="!mobile">{{ $t('Split') }}</span></v-btn>
                                     <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
                                         v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                     <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"></ai-action-button>
                                 </v-btn-group>
 
 
@@ -173,6 +174,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import AiActionButton from "@/components/buttons/AiActionButton.vue";
 
 
 const props = defineProps({
@@ -201,6 +203,8 @@ const dialogStepManager = ref(false)
 
 const {fileApiLoading, updateRecipeImage} = useFileApi()
 const file = shallowRef<File | null>(null)
+
+const aiStepSortLoading = ref(false)
 
 onMounted(() => {
     initializeEditor()
@@ -294,6 +298,22 @@ function deleteExternalFile() {
         useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
     }).finally(() => {
         loading.value = false
+    })
+}
+
+/**
+ * sort steps and ingredients using UI and update recipe with result
+ * @param providerId provider to use for request
+ */
+function aiStepSort(providerId: number){
+    let api = new ApiApi()
+    aiStepSortLoading.value = true
+    api.apiAiStepSortCreate({recipe: editingObj.value, provider: providerId}).then(r => {
+        editingObj.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        aiStepSortLoading.value = false
     })
 }
 

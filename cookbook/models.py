@@ -426,6 +426,7 @@ class AiProvider(models.Model):
 
 class AiLog(models.Model, PermissionModelMixin):
     F_FILE_IMPORT = 'FILE_IMPORT'
+    F_STEP_SORT = 'STEP_SORT'
 
     ai_provider = models.ForeignKey(AiProvider, on_delete=models.SET_NULL, null=True)
     function = models.CharField(max_length=64)
@@ -447,7 +448,7 @@ class AiLog(models.Model, PermissionModelMixin):
         return f"{self.function} {self.ai_provider.name} {self.created_at}"
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('-created_at',)
 
 
 class ConnectorConfig(models.Model, PermissionModelMixin):

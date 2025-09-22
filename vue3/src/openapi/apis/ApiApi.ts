@@ -606,6 +606,11 @@ export interface ApiAiProviderUpdateRequest {
     aiProvider: Omit<AiProvider, 'createdAt'|'updatedAt'>;
 }
 
+export interface ApiAiStepSortCreateRequest {
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    provider?: number;
+}
+
 export interface ApiAutoPlanCreateRequest {
     autoMealPlan: AutoMealPlan;
 }
@@ -3324,6 +3329,50 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiAiProviderUpdate(requestParameters: ApiAiProviderUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AiProvider> {
         const response = await this.apiAiProviderUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * given an image or PDF file convert its content to a structured recipe using AI and the scraping system
+     */
+    async apiAiStepSortCreateRaw(requestParameters: ApiAiStepSortCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['recipe'] == null) {
+            throw new runtime.RequiredError(
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiAiStepSortCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['provider'] != null) {
+            queryParameters['provider'] = requestParameters['provider'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ai-step-sort/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeToJSON(requestParameters['recipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * given an image or PDF file convert its content to a structured recipe using AI and the scraping system
+     */
+    async apiAiStepSortCreate(requestParameters: ApiAiStepSortCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiAiStepSortCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

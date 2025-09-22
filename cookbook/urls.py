@@ -104,6 +104,7 @@ urlpatterns = [
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/ai-import/', api.AiImportView.as_view(), name='api_ai_import'),
+    path('api/ai-step-sort/', api.AiStepSortView.as_view(), name='api_ai_step_sort'),
     path('api/import-open-data/', api.ImportOpenData.as_view(), name='api_import_open_data'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/fdc-search/', api.FdcSearchView.as_view(), name='api_fdc_search'),
