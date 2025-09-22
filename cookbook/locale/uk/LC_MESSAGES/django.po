@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-01-16 18:58+0000\n"
-"Last-Translator: Anton Shevtsov <ashevtsovs@gmail.com>\n"
+"PO-Revision-Date: 2025-09-23 19:45+0000\n"
+"Last-Translator: S <snoblomma@protonmail.com>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
 "Language: uk\n"
@@ -18,17 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.1\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Обидва поля необов'язкові. Якщо нічого не вказано, замість цього буде "
+"відображено ім'я користувача"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
-msgstr ""
+msgstr "Назва"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
@@ -87,22 +89,25 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href="
+"\"https://www.home-assistant.io/docs/authentication/#your-account-profile\""
+">Довговічний токен доступу</a> для вашої інстанції HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Щось на кшталт http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api наприклад"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
-msgstr ""
+msgstr "Сховище"
 
 #: .\cookbook\forms.py:222
 msgid "Active"
-msgstr ""
+msgstr "Активний"
 
 #: .\cookbook\forms.py:226
 msgid "Search String"
@@ -110,89 +115,109 @@ msgstr ""
 
 #: .\cookbook\forms.py:246
 msgid "File ID"
-msgstr ""
+msgstr "ID файлу"
 
 #: .\cookbook\forms.py:262
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Досягнута максимальна кількість користувачів для цього простору."
 
 #: .\cookbook\forms.py:268
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Ця адреса електронної пошти вже зайнята!"
 
 #: .\cookbook\forms.py:275
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"Адреса електронної пошти не обов'язкова, але якщо вона вказана, "
+"користувачеві буде надіслано посилання для запрошення."
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
-msgstr ""
+msgstr "Ім'я вже зайняте."
 
 #: .\cookbook\forms.py:298
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Прийняти умови використування та конфіденційності"
 
 #: .\cookbook\forms.py:332
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Визначає, наскільки нечітким є пошук, якщо він використовує зіставлення за "
+"схожістю триграм (наприклад, низькі значення означають, що більше "
+"друкарських помилок ігнорується)."
 
 #: .\cookbook\forms.py:340
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Виберіть метод пошуку. Натисніть <a href=\"/docs/search/\">тут</a> для "
+"повного опису опцій."
 
 #: .\cookbook\forms.py:341
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Використовуйте нечітке зіставлення одиниць вимірювання, ключових слів та "
+"інгредієнтів під час редагування та імпорту рецептів."
 
 #: .\cookbook\forms.py:342
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Поля для пошуку без урахування діакритичних знаків. Вибір цієї опції може "
+"покращити або погіршити якість пошуку залежно від мови"
 
 #: .\cookbook\forms.py:343
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Поля для пошуку часткових збігів. (наприклад, пошук за запитом «Pie» поверне "
+"«pie», «piece» та «soapie»)"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Поля для пошуку збігів на початку слів. (наприклад, пошук за запитом «sa» "
+"поверне «salad» та «sandwich»)"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Поля для «нечіткого» пошуку. (наприклад, пошук за запитом «recpie» знайде "
+"«recipe»). Примітка: цей параметр конфліктуватиме з методами пошуку «web» та "
+"«raw»."
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Поля для повнотекстового пошуку. Примітка: методи пошуку «web», «phrase» та "
+"«raw» працюють лише з повнотекстовими полями."
 
 #: .\cookbook\forms.py:350
 msgid "Search Method"
-msgstr ""
+msgstr "Метод пошуку"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Нечіткі пошуки"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ігнорувати акцент"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
@@ -200,26 +225,28 @@ msgstr ""
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
-msgstr ""
+msgstr "Починається з"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Нечіткий пошук"
 
 #: .\cookbook\forms.py:351
 msgid "Full Text"
-msgstr ""
+msgstr "Повний текст"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Щоб запобігти спаму, запитуваний електронний лист не було надіслано. Будь "
+"ласка, зачекайте кілька хвилин і спробуйте ще раз."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Ви не ввійшли в систему, тому не можете переглянути цю сторінку!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:174
@@ -232,22 +259,22 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:341 .\cookbook\views\data.py:35
 #: .\cookbook\views\views.py:127 .\cookbook\views\views.py:131
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "У вас немає необхідних дозволів для перегляду цієї сторінки!"
 
 #: .\cookbook\helper\permission_helper.py:192
 #: .\cookbook\helper\permission_helper.py:215
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "Ви не можете взаємодіяти з цим об'єктом, оскільки він вам не належить!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Ви досягли максимальної кількості рецептів для вашого простору."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "У вашому просторі більше користувачів, ніж дозволено."
 
 #: .\cookbook\helper\recipe_url_import.py:310
 msgid "reverse rotation"
@@ -259,19 +286,19 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
-msgstr ""
+msgstr "замісити"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
-msgstr ""
+msgstr "згустити"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "warm up"
-msgstr ""
+msgstr "розігріти"
 
 #: .\cookbook\helper\recipe_url_import.py:315
 msgid "ferment"
-msgstr ""
+msgstr "ферментувати"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
@@ -279,27 +306,29 @@ msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "Ви повинні вказати розмір порції"
 
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Не вдалося проаналізувати код шаблону."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Улюблене"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Я зробив це"
 
 #: .\cookbook\integration\integration.py:209
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"Імпортер очікував ZIP-файл. Чи ви обрали правильний тип імпортера для своїх "
+"даних?"
 
 #: .\cookbook\integration\integration.py:212
 msgid ""
@@ -309,24 +338,24 @@ msgstr ""
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Наступні рецепти були проігноровані, оскільки вони вже існували:"
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "Імпортовано %s рецептів."
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr ""
+msgstr "Джерело рецепту:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
-msgstr ""
+msgstr "Нотатки"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr ""
+msgstr "Харчова цінність"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
@@ -339,7 +368,7 @@ msgstr ""
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr ""
+msgstr "Порції"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
@@ -383,41 +412,41 @@ msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "Обід"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "Вечеря"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:919
 msgid "Other"
-msgstr ""
+msgstr "Інше"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "Жир"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "г"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Вуглеводи"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "Білки"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Калорії"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "ккал"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -428,54 +457,54 @@ msgstr ""
 #: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
 msgid "Search"
-msgstr ""
+msgstr "Пошук"
 
 #: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
 #: .\cookbook\templates\meal_plan.html:7
 msgid "Meal-Plan"
-msgstr ""
+msgstr "План харчування"
 
 #: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
 #: .\cookbook\views\views.py:459
 msgid "Books"
-msgstr ""
+msgstr "Книги"
 
 #: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
 #: .\cookbook\views\views.py:460
 msgid "Shopping"
-msgstr ""
+msgstr "Покупки"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " є частиною кроку рецепта та не може бути видалений"
 
 #: .\cookbook\models.py:918
 msgid "Nutrition"
-msgstr ""
+msgstr "Харчова цінніцть"
 
 #: .\cookbook\models.py:918
 msgid "Allergen"
-msgstr ""
+msgstr "Алерген"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Ціна"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Мета"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Простий"
 
 #: .\cookbook\models.py:1409 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Фраза"
 
 #: .\cookbook\models.py:1410 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Веб"
 
 #: .\cookbook\models.py:1411 .\cookbook\templates\search_info.html:47
 msgid "Raw"
@@ -483,15 +512,15 @@ msgstr ""
 
 #: .\cookbook\models.py:1467
 msgid "Food Alias"
-msgstr ""
+msgstr "Псевдонім продукту"
 
 #: .\cookbook\models.py:1468
 msgid "Unit Alias"
-msgstr ""
+msgstr "Псевдонім одиниці вимірювання"
 
 #: .\cookbook\models.py:1469
 msgid "Keyword Alias"
-msgstr ""
+msgstr "Псевдонім ключового слова"
 
 #: .\cookbook\models.py:1470
 msgid "Description Replace"
@@ -528,7 +557,7 @@ msgstr ""
 
 #: .\cookbook\models.py:1504
 msgid "Food"
-msgstr ""
+msgstr "Їжа"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -643,7 +672,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:10
 #: .\cookbook\templates\user_settings.html:8
 msgid "Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
@@ -871,7 +900,7 @@ msgstr ""
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "і"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
@@ -951,7 +980,7 @@ msgstr "Експорт"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Властивості"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 msgid "Unit Conversions"
@@ -1827,7 +1856,7 @@ msgstr ""
 #: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
 #: .\cookbook\templates\system.html:102 .\cookbook\templates\system.html:113
 msgid "Warning"
-msgstr ""
+msgstr "Застереження"
 
 #: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
 #: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
