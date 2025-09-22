@@ -1,9 +1,6 @@
 !!! info "Community Contributed"
     This guide was contributed by the community and is neither officially supported, nor updated or tested. Since I cannot test it myself, feedback and improvements are always very welcome.
 
-!!! danger "Tandoor 2 Compatibility"
-    This guide has not been verified/tested for Tandoor 2, which now integrates a nginx service inside the default docker container and exposes its service on port 80 instead of 8080.
-
 ## **Instructions**
 
 Basic guide to setup `vabenee1111/recipes` docker container on Synology NAS.
@@ -12,7 +9,7 @@ Basic guide to setup `vabenee1111/recipes` docker container on Synology NAS.
 - Login to Synology DSM through your browser
 - Install `Container Manager` through package center
 - Install `Text Editor` through package center (needed to edit `.env` if you don't edit it locally first)
-- If you do not already have a `docker` folder in your File Station, create one at the root of your volume. 
+- If you do not already have a shared `docker` folder in your File Station, create one at the root of your volume. 
 - inside of your `volume1/docker` folder, create a `recipes` folder. 
 - Within, create the necessary folder structure. You will need these folders:
 
@@ -44,9 +41,13 @@ volume1/docker/
 
 ### 4. Edit docker-compose.yml
 - Paste the `docker-compose.yml` into the `source` textbox. 
-- This file tells docker how to setup recipes. Docker will create three containers for recipes to work, recipes, nginx and postgresql. They are all required and need to store and share data through the folders you created before.
-- Under the `nginx_recipes` section, look for `ports` that lists `80:80` as the default. This line specifies which external synology port will point to which internal docker port. Chose a free port to use and replace the first number with it. You will open recipes by browsing to http://your.synology.ip:chosen.port, e.g. http://192.168.1.1:2000
-- If you want to use port 2000 you would edit the `ports` to `2000:80`
+- This file tells docker how to setup recipes. Docker will create two containers for recipes to work, `web_recipes` and `db_recipes`. They are all required and need to store and share data through the folders you created before.
+- Under the `web_recipes` section, you can add `ports` . This line specifies which external synology port will point to which internal docker port. Chose a free port to use and replace the first number with it. You will open recipes by browsing to http://your.synology.ip:chosen.port, e.g. http://192.168.1.1:2000
+- If you want to use port 2000 you would edit the `ports` to `2000:8080`
+	```
+	ports:
+		- "2000:8080"
+ 	```
 
 ### 5. Finishing up
 - Click `Next`. 
@@ -59,25 +60,27 @@ volume1/docker/
 	Container recipes-db_recipes-1 Started
 	Container recipes-web_recipes-1 Starting
 	Container recipes-web_recipes-1 Started
-	Container recipes-nginx_recipes-1 Starting
-	Container recipes-nginx_recipes-1 Started
 	Exit Code: 0
 	```
   - If you get an error, review the error and fix. A common reason it might fail is because you did not create the folders specified in the directory tree in step 1.
+- If you notice that `web_recipes` cannot connect to the database there is probably a misconfiguration in you Firewall, see next section.
 - Browse to 192.168.1.1:2000 or whatever your IP and port are
 
 ### 6. Firewall
-!!!info "Depreciated?" This section may be depreciated and may no longer needed. The container may be able to be used without any firewall rules enabled. Further datapoints needed before section or this warning is removed. 
-
-You need to set up firewall rules in order for the recipes_web container to be able to connect to the recipes_db container.
+You need to set up firewall rules in order for the `recipes_web` container to be able to connect to the `recipes_db` container.
 
 - Control Panel -> Security -> Firewall -> Edit Rules -> Create
 	-  Ports: All
+ 		-  if you only want to allow the database port 5432, you'll need to create 2 rules to allow ingoing and outgoing port (and eventually also specify ip more restrictive)
 	-  Source IP: Specific IP -> Select -> Subnet
 		- insert docker network ip (can be found in the docker application, network tab)
 		- Example: IP address: 172.18.0.0 and Subnet mask/Prefix length: 255.255.255.0
 	-  Action: Allow
 - Save and make sure it's above the deny rules
+- If you want to skip the SSL Setup via Reverse Proxy you'll also need to allow access to the port you used to expose the container (e.g. 2000 in this example).
+	-  Ports: 2000
+	-  Source: depends on how broad the access should be
+	-  Action: Allow
 
 ### 7. Additional SSL Setup
 Easiest way is to do it via Reverse Proxy.
@@ -102,7 +105,7 @@ Easiest way is to do it via Reverse Proxy.
 	- Action: Allow
 - Save and make sure it's above the deny rules
 	
-### 8. Depreciated Guides
+### 8. Deprecated Guides
 
 The following are older guides that may be useful if you are running older versions of DSM. 
 
