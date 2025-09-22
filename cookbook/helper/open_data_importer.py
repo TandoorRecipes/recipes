@@ -51,10 +51,10 @@ class OpenDataImporter:
         for field in field_list:
             if isinstance(getattr(obj, field), float) or isinstance(getattr(obj, field), Decimal):
                 if abs(float(getattr(obj, field)) - float(existing_obj[field])) > 0.001:  # convert both to float and check if basically equal
-                    print(f'comparing FLOAT {obj} failed because field {field} is not equal ({getattr(obj, field)} != {existing_obj[field]})')
+                    #print(f'comparing FLOAT {obj} failed because field {field} is not equal ({getattr(obj, field)} != {existing_obj[field]})')
                     return False
             elif getattr(obj, field) != existing_obj[field]:
-                print(f'comparing {obj} failed because field {field} is not equal ({getattr(obj, field)} != {existing_obj[field]})')
+                #print(f'comparing {obj} failed because field {field} is not equal ({getattr(obj, field)} != {existing_obj[field]})')
                 return False
         return True
 
@@ -342,7 +342,7 @@ class OpenDataImporter:
                 'name': self.data[datatype][k]['name'],
                 'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
                 'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']] if self.data[datatype][k]['store_category'] in self.slug_id_cache['category'] else None,
-                'fdc_id': re.sub(r'\D', '', self.data[datatype][k]['fdc_id']) if self.data[datatype][k]['fdc_id'] != '' else None,
+                'fdc_id': re.sub(r'\D', '', str(self.data[datatype][k]['fdc_id'])) if self.data[datatype][k]['fdc_id'] != '' else None,
                 'open_data_slug': k,
                 'properties_food_unit_id': None,
                 'space_id': self.request.space.id,
