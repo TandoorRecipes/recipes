@@ -1,13 +1,13 @@
 import {
     AccessToken, AiLog, AiProvider,
     ApiApi, ApiKeywordMoveUpdateRequest, Automation, type AutomationTypeEnum, ConnectorConfig, CookLog, CustomFilter,
-    Food,
+    Food, FoodInheritField,
     Ingredient,
     InviteLink, Keyword,
     MealPlan,
     MealType,
     Property, PropertyType,
-    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingListEntry,
+    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingListEntry, Space,
     Step,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
@@ -29,11 +29,11 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * @param t translation function from calling context
  * @return instance of GenericModel
  */
-export function getGenericModelFromString(modelName: EditorSupportedModels, t: any) {
+export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false|GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
         return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
-        throw Error(`Model ${modelName} not in SUPPORTED_MODELS`)
+        return false
     }
 }
 
@@ -65,6 +65,16 @@ type GenericListRequestParameter = {
     page: number,
     pageSize: number,
     query: string,
+}
+
+/**
+ * common list parameters shared by all generic models
+ */
+type DeleteRelationRequestParameter = {
+    page: number,
+    pageSize: number,
+    id: number,
+    cache: boolean,
 }
 
 /**
@@ -101,9 +111,10 @@ export type Model = {
     disableCreate?: boolean | undefined,
     disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
-    // disable showing this model as an option in the ModelListPage
+    disableSearch?: boolean | undefined,
     disableListView?: boolean | undefined,
 
+    isAdvancedDelete: boolean | undefined,
     isPaginated: boolean | undefined,
     isMerge?: boolean | undefined,
     mergeAutomation?: string | AutomationTypeEnum,
@@ -148,6 +159,8 @@ export type EditorSupportedModels =
     | 'SearchFields'
     | 'AiProvider'
     | 'AiLog'
+    | 'Space'
+    | 'FoodInheritField'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -184,6 +197,8 @@ export type EditorSupportedTypes =
     | SearchFields
     | AiProvider
     | AiLog
+    | Space
+    | FoodInheritField
 
 export const TFood = {
     name: 'Food',
@@ -194,6 +209,7 @@ export const TFood = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/FoodEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     isTree: true,
     mergeAutomation: 'FOOD_ALIAS',
@@ -217,6 +233,7 @@ export const TUnit = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/UnitEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     mergeAutomation: 'UNIT_ALIAS',
     toStringKeys: ['name'],
@@ -238,6 +255,7 @@ export const TKeyword = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/KeywordEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     isTree: true,
     mergeAutomation: 'KEYWORD_ALIAS',
@@ -259,6 +277,7 @@ export const TRecipe = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/RecipeEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     disableListView: true,
@@ -315,6 +334,7 @@ export const TMealType = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/MealTypeEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -354,6 +374,7 @@ export const TRecipeBook = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/RecipeBookEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     disableListView: true,
@@ -433,6 +454,7 @@ export const TSupermarket = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SupermarketEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -451,6 +473,7 @@ export const TSupermarketCategory = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SupermarketCategoryEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     isMerge: true,
     toStringKeys: ['name'],
 
@@ -491,6 +514,7 @@ export const TPropertyType = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/PropertyTypeEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -551,6 +575,7 @@ export const TUserFile = {
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/UserFileEditor.vue`)),
 
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
@@ -655,7 +680,8 @@ export const TUserSpace = {
     disableCreate: true,
 
     tableHeaders: [
-        {title: 'User', key: 'user'},
+        {title: 'User', key: 'user.displayName'},
+        {title: 'Group', key: 'groups'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
@@ -669,18 +695,39 @@ export const TInviteLink = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/InviteLinkEditor.vue`)),
 
-    disableListView: true,
+    disableSearch: true,
     isPaginated: true,
     toStringKeys: ['email', 'role'],
 
     tableHeaders: [
         {title: 'Email', key: 'email'},
-        {title: 'Role', key: 'group'},
+        {title: 'Role', key: 'group.name'},
         {title: 'Valid Until', key: 'validUntil'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
 registerModel(TInviteLink)
+
+export const TSpace = {
+    name: 'Space',
+    localizationKey: 'Space',
+    localizationKeyDescription: 'SpaceHelp',
+    icon: 'fa-solid fa-hard-drive',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SpaceEditor.vue`)),
+
+    disableDelete: true,
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Owner', key: 'createdBy.displayName'},
+        {title: 'Active', key: 'active'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TSpace)
 
 export const TStorage = {
     name: 'Storage',
@@ -693,6 +740,7 @@ export const TStorage = {
     disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -712,6 +760,7 @@ export const TSync = {
     disableListView: false,
     toStringKeys: ['path'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     tableHeaders: [
         {title: 'SyncedPath', key: 'path'},
@@ -779,6 +828,7 @@ export const TConnectorConfig = {
     disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     disableCreate: false,
     disableDelete: false,
@@ -803,6 +853,7 @@ export const TAiProvider = {
     disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
+    isAdvancedDelete: true,
 
     disableCreate: false,
     disableDelete: false,
@@ -834,6 +885,7 @@ export const TAiLog = {
         {title: 'Type', key: '_function'},
         {title: 'AiProvider', key: 'aiProvider.name',},
         {title: 'Credits', key: 'creditCost',},
+        {title: 'FromBalance', key: 'creditsFromBalance',},
         {title: 'CreatedAt', key: 'createdAt'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
@@ -920,7 +972,7 @@ export class GenericModel {
         } else {
             return this.api[`api${this.model.name}List`](genericListRequestParameter)
         }
-    };
+    }
 
     /**
      * create a new instance of the given model
@@ -1019,6 +1071,33 @@ export class GenericModel {
             return this.api[`api${this.model.name}MoveUpdate`](moveRequestParams)
         }
     }
+
+    /**
+     * query the protecting list endpoint
+     * @param deleteRelationRequestParameter parameters
+     * @return promise of request
+     */
+    getDeleteProtecting(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
+        return this.api[`api${this.model.name}ProtectingList`](deleteRelationRequestParameter)
+    };
+
+    /**
+     * query the cascading list endpoint
+     * @param deleteRelationRequestParameter parameters
+     * @return promise of request
+     */
+    getDeleteCascading(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
+        return this.api[`api${this.model.name}CascadingList`](deleteRelationRequestParameter)
+    };
+
+    /**
+     * query the nulling list endpoint
+     * @param deleteRelationRequestParameter parameters
+     * @return promise of request
+     */
+    getDeleteNulling(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
+        return this.api[`api${this.model.name}NullingList`](deleteRelationRequestParameter)
+    };
 
     /**
      * gets a label for a specific object instance using the model toStringKeys property

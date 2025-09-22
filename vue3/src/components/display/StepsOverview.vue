@@ -71,7 +71,7 @@ const mergedIngredients = computed(() => {
         // Add ingredients from steps
         props.steps.forEach(step => {
             step.ingredients.forEach(ingredient => {
-                if (ingredient.food && !ingredient.isHeader && !ingredient.noAmount) {
+                if (ingredient.food && !ingredient.isHeader ) {
                     ingredients.push(ingredient);
                 }
             });
@@ -80,7 +80,7 @@ const mergedIngredients = computed(() => {
             if (step.stepRecipeData) {
                 step.stepRecipeData.steps?.forEach((subStep: Step) => {
                     subStep.ingredients.forEach((ingredient: Ingredient) => {
-                        if (ingredient.food && !ingredient.isHeader && !ingredient.noAmount) {
+                        if (ingredient.food && !ingredient.isHeader) {
                             ingredients.push(ingredient);
                         }
                     });

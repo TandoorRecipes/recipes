@@ -212,6 +212,6 @@ location /static/ {
 Tandoor 1 includes gunicorn, a python WSGI server that handles python code well but is not meant to serve mediafiles. Thus, it has always been recommended to set up a nginx webserver 
 (not just a reverse proxy) in front of Tandoor to handle mediafiles. The gunicorn server by default is exposed on port 8080.
 
-Tandoor 2 now occasionally bundles nginx inside the container and exposes port 80 where mediafiles are handled by nginx and all the other requests are (mostly) passed to gunicorn.
+Tandoor 2 now bundles nginx inside the container and exposes port 80 where mediafiles are handled by nginx and all the other requests are (mostly) passed to gunicorn.
 
 A [GitHub Issue](https://github.com/TandoorRecipes/recipes/issues/3851) has been created to allow for discussions and FAQ's on this issue while this change is fresh. It will later be updated in the docs here if necessary. 

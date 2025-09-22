@@ -3,17 +3,19 @@ import inspect
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
+from django_scopes import scopes_disabled
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from oauth2_provider.models import AccessToken
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
-
-from cookbook.models import Recipe, ShareLink, UserSpace
+import random
+from cookbook.models import Recipe, ShareLink, UserSpace, Space
 
 
 def get_allowed_groups(groups_required):
@@ -330,9 +332,13 @@ class CustomRecipePermission(permissions.BasePermission):
                 return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
                         or has_group_permission(request.user, ['user'])) and obj.space == request.space
 
+
 class CustomAiProviderPermission(permissions.BasePermission):
     """
     Custom permission class for the AiProvider api endpoint
+    users: can read all
+    admins: can read and write
+    superusers: can read and write + write providers without a space
     """
     message = _('You do not have the required permissions to view this page!')
 
@@ -452,3 +458,36 @@ class IsReadOnlyDRF(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return request.method in SAFE_METHODS
+
+
+class IsCreateDRF(permissions.BasePermission):
+    message = 'You cannot interact with this object, you can only create'
+
+    def has_permission(self, request, view):
+        return request.method == 'POST'
+
+
+def create_space_for_user(user, name=None):
+    with scopes_disabled():
+        if not name:
+            name = f"{user.username}'s Space"
+
+        if Space.objects.filter(name=name).exists():
+            name = f'{name} #{random.randrange(1, 10 ** 5)}'
+
+        created_space = Space(name=name,
+                              created_by=user,
+                              max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
+                              max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
+                              max_users=settings.SPACE_DEFAULT_MAX_USERS,
+                              allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
+                              ai_enabled=settings.SPACE_AI_ENABLED,
+                              ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY,
+                              space_setup_completed=False, )
+        created_space.save()
+
+        UserSpace.objects.filter(user=user).update(active=False)
+        user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
+        user_space.groups.add(Group.objects.filter(name='admin').get())
+
+        return user_space

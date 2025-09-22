@@ -26,6 +26,7 @@ class ImportExportBase(forms.Form):
     PAPRIKA = 'PAPRIKA'
     NEXTCLOUD = 'NEXTCLOUD'
     MEALIE = 'MEALIE'
+    MEALIE1 = 'MEALIE1'
     CHOWDOWN = 'CHOWDOWN'
     SAFFRON = 'SAFFRON'
     CHEFTAP = 'CHEFTAP'
@@ -46,7 +47,7 @@ class ImportExportBase(forms.Form):
     PDF = 'PDF'
     GOURMET = 'GOURMET'
 
-    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'),
+    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (MEALIE1, 'Mealie1'), (CHOWDOWN, 'Chowdown'),
                                       (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'), (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'),
                                       (DOMESTICA, 'Domestica'), (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
                                       (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
@@ -75,6 +76,11 @@ class ImportForm(ImportExportBase):
     files = MultipleFileField(required=True)
     duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'),
                                     required=False)
+    meal_plans = forms.BooleanField(required=False)
+    shopping_lists = forms.BooleanField(required=False)
+    nutrition_per_serving = forms.BooleanField(required=False) # some managers (e.g. mealie) do not specify what the nutrition's relate to so we let the user choose
+
+
 class ExportForm(ImportExportBase):
     recipes = forms.ModelMultipleChoiceField(widget=MultiSelectWidget, queryset=Recipe.objects.none(), required=False)
     all = forms.BooleanField(required=False)

@@ -8,7 +8,8 @@
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
-        :object-name="editingObjName()">
+        :object-name="editingObjName()"
+        :editing-object="editingObj">
 
         <v-card-text class="pa-0">
             <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
@@ -72,7 +73,7 @@
                     <v-form :disabled="loading || fileApiLoading">
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
                             <v-col>
-                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)"></step-editor>
+                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -87,6 +88,7 @@
                                         v-if="!mobile">{{ $t('Split') }}</span></v-btn>
                                     <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
                                         v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                     <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"></ai-action-button>
                                 </v-btn-group>
 
 
@@ -139,7 +141,9 @@
                 <vue-draggable handle=".drag-handle" v-model="editingObj.steps" :on-sort="sortSteps">
                     <v-list-item v-for="(s,i) in editingObj.steps" :key="s.id">
                         <v-chip color="primary">{{ i + 1 }}</v-chip>
-                        {{ s.name }}
+                        <span class="ms-2" v-if="s.name"> {{ s.name }}</span>
+                        <span class="ms-2" v-else>{{ $t('Step') }} {{ i + 1 }}</span>
+
                         <template #append>
                             <v-icon class="drag-handle" icon="$dragHandle"></v-icon>
                         </template>
@@ -170,6 +174,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import AiActionButton from "@/components/buttons/AiActionButton.vue";
 
 
 const props = defineProps({
@@ -198,6 +203,8 @@ const dialogStepManager = ref(false)
 
 const {fileApiLoading, updateRecipeImage} = useFileApi()
 const file = shallowRef<File | null>(null)
+
+const aiStepSortLoading = ref(false)
 
 onMounted(() => {
     initializeEditor()
@@ -291,6 +298,22 @@ function deleteExternalFile() {
         useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
     }).finally(() => {
         loading.value = false
+    })
+}
+
+/**
+ * sort steps and ingredients using UI and update recipe with result
+ * @param providerId provider to use for request
+ */
+function aiStepSort(providerId: number){
+    let api = new ApiApi()
+    aiStepSortLoading.value = true
+    api.apiAiStepSortCreate({recipe: editingObj.value, provider: providerId}).then(r => {
+        editingObj.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        aiStepSortLoading.value = false
     })
 }
 

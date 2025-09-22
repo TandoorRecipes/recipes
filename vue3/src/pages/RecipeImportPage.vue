@@ -141,14 +141,14 @@
 
                                 <div v-if="importType == 'ai'">
                                     <v-row>
-                                        <v-col md="6">
-                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider">
+                                        <v-col cols="12" md="6">
+                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider" hide-details>
                                                 <template #append>
                                                     <v-btn icon="$settings" :to="{name:'ModelListPage', params: {model: 'AiProvider'}}" color="success"></v-btn>
                                                 </template>
                                             </ModelSelect>
                                         </v-col>
-                                        <v-col md="6">
+                                        <v-col cols="12" md="6">
                                             <v-btn-toggle class="mb-2" border divided v-model="aiMode">
                                                 <v-btn value="file">{{ $t('File') }}</v-btn>
                                                 <v-btn value="text">{{ $t('Text') }}</v-btn>
@@ -250,7 +250,7 @@
 
                                 <v-row>
                                     <v-col>
-                                        <model-select model="Keyword" v-model="keywordSelect">
+                                        <model-select model="Keyword" v-model="keywordSelect" allow-create>
                                             <template #append>
                                                 <v-btn icon="$add" color="success"
                                                        @click="keywordSelect.importKeyword = true; importResponse.recipe.keywords.push(keywordSelect); keywordSelect= null"
@@ -434,6 +434,11 @@
                                         <v-checkbox v-model="appImportDuplicates"></v-checkbox>
                                     </template>
                                 </v-alert>
+                                <div v-if="importApp == 'MEALIE1'">
+                                    <v-checkbox v-model="appImportMealPlans" :label="$t('ImportMealPlans')" hide-details></v-checkbox>
+                                    <v-checkbox v-model="appImportShoppingLists" :label="$t('ImportShoppingList')" hide-details></v-checkbox>
+                                    <v-checkbox v-model="appImportNutritionsPerServing" :label="$t('NutritionsPerServing')" :hint="$t('NutritionsPerServingHelp')" persistent-hint></v-checkbox>
+                                </div>
 
                                 <v-stepper-actions>
                                     <template #prev>
@@ -658,10 +663,13 @@ const urlListImportedRecipes = ref([] as Recipe[])
 const sourceImportText = ref("")
 const appImportFiles = ref<File[]>([])
 const appImportDuplicates = ref(false)
+const appImportMealPlans = ref(true)
+const appImportShoppingLists = ref(true)
+const appImportNutritionsPerServing = ref(false)
 const appImportLog = ref<null | ImportLog>(null)
 const image = ref<null | File>(null)
 const aiMode = ref<'file' | 'text'>('file')
-const selectedAiProvider = ref<undefined | AiProvider>(undefined)
+const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
 const editAfterImport = ref(false)
 
 const bookmarkletToken = ref("")
@@ -770,7 +778,7 @@ function loadRecipeFromAiImport() {
 }
 
 function appImport() {
-    doAppImport(appImportFiles.value, importApp.value, appImportDuplicates.value).then(r => {
+    doAppImport(appImportFiles.value, importApp.value, appImportDuplicates.value, appImportMealPlans.value, appImportShoppingLists.value, appImportNutritionsPerServing.value).then(r => {
         stepper.value = 'import_log'
         recLoadImportLog(r)
     })

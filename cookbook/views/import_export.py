@@ -17,6 +17,7 @@ from cookbook.integration.copymethat import CopyMeThat
 from cookbook.integration.default import Default
 from cookbook.integration.domestica import Domestica
 from cookbook.integration.mealie import Mealie
+from cookbook.integration.mealie1 import Mealie1
 from cookbook.integration.mealmaster import MealMaster
 from cookbook.integration.melarecipes import MelaRecipes
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
@@ -45,6 +46,8 @@ def get_integration(request, export_type):
         return NextcloudCookbook(request, export_type)
     if export_type == ImportExportBase.MEALIE:
         return Mealie(request, export_type)
+    if export_type == ImportExportBase.MEALIE1:
+        return Mealie1(request, export_type)
     if export_type == ImportExportBase.CHOWDOWN:
         return Chowdown(request, export_type)
     if export_type == ImportExportBase.SAFFRON:

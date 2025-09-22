@@ -33,9 +33,8 @@
                     </template>
                     <v-list-item-title class="font-weight-bold">
                         {{ c.createdBy.displayName }}
-
                     </v-list-item-title>
-                    <v-list-item-subtitle>{{ c.comment }}</v-list-item-subtitle>
+                    <span>{{ c.comment }}</span>
 
                     <v-list-item-subtitle class="font-italic mt-1" v-if="c.servings != null && c.servings > 0">
 
@@ -49,7 +48,7 @@
                     <template #append>
                         <v-list-item-action class="flex-column align-end">
                             <v-rating density="comfortable" size="x-small" color="tandoor" v-model="c.rating" half-increments readonly
-                                      v-if="c.rating != undefined"></v-rating>
+                                      v-if="c.rating != undefined" style="overflow: hidden"></v-rating>
                             <v-spacer></v-spacer>
                             <v-tooltip location="top" :text="DateTime.fromJSDate(c.createdAt).toLocaleString(DateTime.DATETIME_MED)" v-if="c.createdAt != undefined">
                                 <template v-slot:activator="{ props }">
@@ -121,6 +120,7 @@ function recLoadCookLog(recipeId: number, page: number = 1) {
  * reset new cook log from with proper defaults
  */
 function resetForm() {
+    newCookLog.value = {} as CookLog
     newCookLog.value.servings = props.recipe.servings
     newCookLog.value.createdAt = new Date()
     newCookLog.value.recipe = props.recipe.id!

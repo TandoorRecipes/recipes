@@ -21,7 +21,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
-from django.utils.datetime_safe import date
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
@@ -41,6 +41,9 @@ def index(request, path=None, resource=None):
         if not request.user.is_authenticated:
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
+
+    if 'signup_token' in request.session:
+        return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
     if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
         return render(request, 'frontend/tandoor.html', {})
@@ -98,7 +101,7 @@ def space_overview(request):
                                                      max_users=settings.SPACE_DEFAULT_MAX_USERS,
                                                      allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
                                                      ai_enabled=settings.SPACE_AI_ENABLED,
-                                                     ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY,)
+                                                     ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY, )
 
                 user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
                 user_space.groups.add(Group.objects.filter(name='admin').get())
@@ -223,7 +226,7 @@ def system(request):
         total_stats = ['All', int(r.get('api:request-count'))]
 
         for i in range(0, 6):
-            d = (date.today() - timedelta(days=i)).isoformat()
+            d = (timezone.now() - timedelta(days=i)).isoformat()
             api_stats[0].append(d)
             api_space_stats[0].append(d)
             total_stats.append(int(r.get(f'api:request-count:{d}')) if r.get(f'api:request-count:{d}') else 0)
@@ -234,7 +237,7 @@ def system(request):
             endpoint = x[0].decode('utf-8')
             endpoint_stats = [endpoint, x[1]]
             for i in range(0, 6):
-                d = (date.today() - timedelta(days=i)).isoformat()
+                d = (timezone.now() - timedelta(days=i)).isoformat()
                 endpoint_stats.append(r.zscore(f'api:endpoint-request-count:{d}', endpoint))
             api_stats.append(endpoint_stats)
 
@@ -243,7 +246,7 @@ def system(request):
             if space := Space.objects.filter(pk=s).first():
                 space_stats = [space.name, x[1]]
                 for i in range(0, 6):
-                    d = (date.today() - timedelta(days=i)).isoformat()
+                    d = (timezone.now() - timedelta(days=i)).isoformat()
                     space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
                 api_space_stats.append(space_stats)
 
@@ -322,7 +325,7 @@ def invite_link(request, token):
         try:
             token = UUID(token, version=4)
         except ValueError:
-            messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
+            print('Malformed Invite Link supplied!')
             return HttpResponseRedirect(reverse('index'))
 
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
@@ -331,22 +334,17 @@ def invite_link(request, token):
                     link.used_by = request.user
                     link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
-
-                if request.user.userspace_set.count() == 1:
-                    user_space.active = True
-                    user_space.save()
+                UserSpace.objects.filter(user=request.user).update(active=False)
+                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
 
                 user_space.groups.add(link.group)
 
-                messages.add_message(request, messages.SUCCESS, _('Successfully joined space.'))
-                return HttpResponseRedirect(reverse('view_space_overview'))
+                return HttpResponseRedirect(reverse('index'))
             else:
                 request.session['signup_token'] = str(token)
                 return HttpResponseRedirect(reverse('account_signup'))
 
-    messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
-    return HttpResponseRedirect(reverse('view_space_overview'))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def report_share_abuse(request, token):

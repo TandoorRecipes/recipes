@@ -34,15 +34,22 @@
                     </v-card-actions>
 
                     <v-card-text v-if="genericModel.model.name == 'AiLog'">
-                        {{$t('MonthlyCreditsUsed')}} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
-                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"></v-progress-linear>
+                        {{ $t('MonthlyCreditsUsed') }} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{
+                            useUserPreferenceStore().activeSpace.aiCreditsMonthly
+                        }})
+                        {{ $t('AiCreditsBalance') }} : {{ useUserPreferenceStore().activeSpace.aiCreditsBalance }}
+                        <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"
+                                           :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"></v-progress-linear>
                     </v-card-text>
+                    <v-card-actions v-if="genericModel.model.name == 'UserSpace'">
+                        <v-btn :prepend-icon="TInviteLink.icon" :to="{name: 'ModelListPage', params: {model: 'InviteLink'}}">{{ $t('Invites') }}</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
         <v-row>
             <v-col>
-                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="query" clearable></v-text-field>
+                <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="query" v-if="!genericModel.model.disableSearch" clearable></v-text-field>
 
                 <v-data-table-server
                     v-model="selectedItems"
@@ -64,6 +71,9 @@
                             <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact" class="pt-1 pb-1" activatable>
+                                    <v-list-item prepend-icon="fa-solid fa-list-check" @click="batchEditDialog = true" v-if="genericModel.model.name == 'Food'">
+                                        {{ $t('BatchEdit') }}
+                                    </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" @click="batchMergeDialog = true" v-if="genericModel.model.isMerge">
                                         {{ $t('Merge') }}
                                     </v-list-item>
@@ -75,8 +85,15 @@
                         </v-btn>
                     </template>
                     <template v-slot:item.space="{ item }" v-if="genericModel.model.name == 'AiProvider'">
-                        <v-chip label v-if="item.space == null" color="success">{{$t('Global')}}</v-chip>
-                        <v-chip label v-else color="info">{{$t('Space')}}</v-chip>
+                        <v-chip label v-if="item.space == null" color="success">{{ $t('Global') }}</v-chip>
+                        <v-chip label v-else color="info">{{ $t('Space') }}</v-chip>
+                    </template>
+                    <template v-slot:item.groups="{ item }" v-if="genericModel.model.name == 'UserSpace'">
+                        {{ item.groups.flatMap((x: Group) => x.name).join(', ') }}
+                    </template>
+                    <template v-slot:item.active="{ item }" v-if="genericModel.model.name == 'Space'">
+                        <v-chip label v-if="item.id == useUserPreferenceStore().activeSpace.id!" color="success">{{ $t('Active') }}</v-chip>
+                        <v-chip label v-else color="info" @click="useUserPreferenceStore().switchSpace(item)">{{ $t('Select') }}</v-chip>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
@@ -84,7 +101,7 @@
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact">
                                     <v-list-item prepend-icon="$edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}"
-                                                 v-if="!genericModel.model.disableCreate && !genericModel.model.disableUpdate && !genericModel.model.disableDelete">
+                                                 v-if="!(genericModel.model.disableCreate && genericModel.model.disableUpdate && genericModel.model.disableDelete)">
                                         {{ $t('Edit') }}
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
@@ -107,6 +124,11 @@
                                     <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'RecipeImport'" @click="importRecipe(item)">
                                         {{ $t('Import') }}
                                     </v-list-item>
+                                    <v-list-item prepend-icon="fa-solid fa-arrow-right-from-bracket"
+                                                 v-if="genericModel.model.name == 'Space'  && item.createdBy.id != useUserPreferenceStore().userSettings.user.id!"
+                                                 @click="leaveSpace(item)">
+                                        {{ $t('LeaveSpace') }}
+                                    </v-list-item>
                                 </v-list>
                             </v-menu>
                         </v-btn>
@@ -116,10 +138,13 @@
         </v-row>
 
         <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
-                                                             @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-delete-dialog>
+                             @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-delete-dialog>
 
-         <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
-                                                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
+        <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
+                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
+
+        <batch-edit-food-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'Food'" activator="model"
+                                @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-edit-food-dialog>
 
     </v-container>
 </template>
@@ -130,19 +155,20 @@
 import {onBeforeMount, PropType, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {EditorSupportedModels, EditorSupportedTypes, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
+import {EditorSupportedModels, EditorSupportedTypes, GenericModel, getGenericModelFromString, Model, TInviteLink,} from "@/types/Models";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
-import {ApiApi, ApiRecipeListRequest, RecipeImport} from "@/openapi";
+import {ApiApi, ApiRecipeListRequest, Group, RecipeImport, Space, UserSpace} from "@/openapi";
 import {useTitle} from "@vueuse/core";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
 import {useRouteQuery} from "@vueuse/router";
+import BatchEditFoodDialog from "@/components/dialogs/BatchEditFoodDialog.vue";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -171,6 +197,7 @@ const selectedItems = ref([] as EditorSupportedTypes[])
 
 const batchDeleteDialog = ref(false)
 const batchMergeDialog = ref(false)
+const batchEditDialog = ref(false)
 
 // data
 const loading = ref(false);
@@ -214,7 +241,7 @@ function loadItems(options: VDataTableUpdateOptions) {
     page.value = options.page
     pageSize.value = options.itemsPerPage
 
-    genericModel.value.list({ query: query.value, page: options.page, pageSize: pageSize.value }).then((r: any) => {
+    genericModel.value.list({query: query.value, page: options.page, pageSize: pageSize.value}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
@@ -249,6 +276,26 @@ function importAllRecipes() {
         loadItems({page: 1})
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+}
+
+/**
+ * leave the selected space as a user
+ * @param space to leave
+ */
+function leaveSpace(space: Space) {
+    let api = new ApiApi()
+    useUserPreferenceStore().userSpaces.forEach((us: UserSpace) => {
+        if (us.space == space.id!) {
+            loading.value = true
+            api.apiUserSpaceDestroy({id: us.id!}).then(r => {
+
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+            }).finally(() => {
+                loading.value = false
+            })
+        }
     })
 }
 

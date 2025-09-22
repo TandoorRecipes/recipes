@@ -14,6 +14,7 @@
                 <v-list-item link title="Space" @click="window = 'space'" prepend-icon="fa-solid fa-database"></v-list-item>
                 <v-list-item link :title="$t('Recipes')" @click="window = 'recipes'" prepend-icon="$recipes"></v-list-item>
                 <v-list-item link :title="$t('Import')" @click="window = 'import'" prepend-icon="$import"></v-list-item>
+                <v-list-item link :title="$t('AI')" @click="window = 'ai'" prepend-icon="$ai"></v-list-item>
                 <v-list-item link :title="$t('Unit')" @click="window = 'unit'" prepend-icon="fa-solid fa-scale-balanced"></v-list-item>
                 <v-list-item link :title="$t('Food')" @click="window = 'food'" prepend-icon="fa-solid fa-carrot"></v-list-item>
                 <v-list-item link :title="$t('Keyword')" @click="window = 'keyword'" prepend-icon="fa-solid fa-tags"></v-list-item>
@@ -103,6 +104,35 @@
                         </p>
                         <p class="mt-3"></p>
 
+                        <v-btn color="primary" variant="tonal" prepend-icon="$import" class="me-2" :to="{name: 'RecipeImportPage'}">{{ $t('Import') }}</v-btn>
+
+                    </v-window-item>
+                    <v-window-item value="ai">
+                        <p class="mt-3">Tandoor has several functions that allow you to use AI to automatically perform certain tasks like importing recipes from a PDFs or images.
+                        </p>
+
+                        <p class="mt-3" v-if="useUserPreferenceStore().serverSettings.hosted">
+                            To use AI you must first configure an AI Provider. This can also be done globally for all spaces by the person operating your Tandoor Server.
+                        </p>
+                        <p class="mt-3" v-if="!useUserPreferenceStore().serverSettings.hosted">
+                            Some AI Providers are available globally for every space to use. You can also configure additional AI Providers for your space only.
+                        </p>
+
+                        <p class="mt-3" v-if="useUserPreferenceStore().serverSettings.hosted">
+                            To prevent accidental AI cost you can review your AI usage using the AI Log. The Server Administrator can also set AI usage limits for your space (either monthly or using a balance).
+                        </p>
+                        <p class="mt-3" v-if="!useUserPreferenceStore().serverSettings.hosted">
+                            Depending on your subscription you will have different AI Credits available for your space every month. Additionally you might have a Credit balance
+                            that will be used once your monthly limit is reached.
+                        </p>
+
+                        <v-btn color="primary" variant="tonal" prepend-icon="$ai" class="me-2" :to="{name: 'ModelListPage', params: {model: 'AiProvider'}}">
+                            {{ $t('AiProvider') }}
+                        </v-btn>
+                        <v-btn color="primary" variant="tonal" prepend-icon="$ai" class="me-2" :to="{name: 'ModelListPage', params: {model: 'AiLog'}}">
+                            {{ $t('AiLog') }}
+                        </v-btn>
+                        <v-btn color="primary" variant="tonal" prepend-icon="$ai" class="me-2" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
                         <v-btn color="primary" variant="tonal" prepend-icon="$import" class="me-2" :to="{name: 'RecipeImportPage'}">{{ $t('Import') }}</v-btn>
 
                     </v-window-item>

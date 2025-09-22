@@ -29,9 +29,11 @@ models/ExportRequest.ts
 models/FdcQuery.ts
 models/FdcQueryFoods.ts
 models/Food.ts
+models/FoodBatchUpdate.ts
 models/FoodInheritField.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
+models/GenericModelReference.ts
 models/Group.ts
 models/ImportLog.ts
 models/ImportOpenData.ts
@@ -71,6 +73,7 @@ models/PaginatedEnterpriseSocialRecipeSearchList.ts
 models/PaginatedEnterpriseSpaceList.ts
 models/PaginatedExportLogList.ts
 models/PaginatedFoodList.ts
+models/PaginatedGenericModelReferenceList.ts
 models/PaginatedImportLogList.ts
 models/PaginatedIngredientList.ts
 models/PaginatedInviteLinkList.ts

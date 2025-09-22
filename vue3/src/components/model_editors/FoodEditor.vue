@@ -8,15 +8,16 @@
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
-        :object-name="editingObjName()">
+        :object-name="editingObjName()"
+        :editing-object="editingObj">
 
         <v-card-text class="pa-0">
             <v-tabs v-model="tab" :disabled="loading" grow>
                 <v-tab value="food">{{ $t('Food') }}</v-tab>
-                <v-tab value="properties">{{ $t('Properties') }}</v-tab>
-                <v-tab value="conversions">{{ $t('Conversion') }}</v-tab>
-                <v-tab value="hierarchy">{{ $t('Hierarchy') }}</v-tab>
-                <v-tab value="misc">{{ $t('Miscellaneous') }}</v-tab>
+                <v-tab value="properties" :disabled="!isUpdate()">{{ $t('Properties') }}</v-tab>
+                <v-tab value="conversions" :disabled="!isUpdate()">{{ $t('Conversion') }}</v-tab>
+                <v-tab value="hierarchy" :disabled="!isUpdate()">{{ $t('Hierarchy') }}</v-tab>
+                <v-tab value="misc" :disabled="!isUpdate()">{{ $t('Miscellaneous') }}</v-tab>
             </v-tabs>
         </v-card-text>
 
@@ -51,10 +52,10 @@
                         <v-number-input :label="$t('Properties_Food_Amount')" v-model="editingObj.propertiesFoodAmount" :precision="2"></v-number-input>
                         <model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></model-select>
 
-                        <properties-editor v-model="editingObj.properties" :amount-for="propertiesAmountFor"></properties-editor>
+                        <properties-editor v-model="editingObj" :amount-for="propertiesAmountFor"></properties-editor>
 
                         <!-- TODO remove once append to body for model select is working properly -->
-                        <v-spacer style="margin-top: 60px;"></v-spacer>
+                        <v-spacer style="margin-top: 80px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
 
@@ -106,7 +107,7 @@
                         </v-card>
                     </v-form>
                     <!-- TODO remove once append to body for model select is working properly -->
-                    <v-spacer style="margin-top: 60px;"></v-spacer>
+                        <v-spacer style="margin-top: 80px;"></v-spacer>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="hierarchy">
@@ -119,6 +120,9 @@
                                  mode="tags"></ModelSelect>
                     <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
                                  mode="tags"></ModelSelect>
+
+                    <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 100px;"></v-spacer>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="misc">

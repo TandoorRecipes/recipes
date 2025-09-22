@@ -60,7 +60,7 @@ SPACE_DEFAULT_MAX_USERS = int(os.getenv('SPACE_DEFAULT_MAX_USERS', 0))
 SPACE_DEFAULT_MAX_FILES = int(os.getenv('SPACE_DEFAULT_MAX_FILES', 0))
 SPACE_DEFAULT_ALLOW_SHARING = extract_bool('SPACE_DEFAULT_ALLOW_SHARING', True)
 SPACE_AI_ENABLED = extract_bool('SPACE_AI_ENABLED', True)
-SPACE_AI_CREDITS_MONTHLY = int(os.getenv('SPACE_AI_CREDITS_MONTHLY', 100))
+SPACE_AI_CREDITS_MONTHLY = int(os.getenv('SPACE_AI_CREDITS_MONTHLY', 10000))
 
 INTERNAL_IPS = extract_comma_list('INTERNAL_IPS', '127.0.0.1')
 
@@ -139,8 +139,6 @@ HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
 FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
 
-AI_API_KEY = os.getenv('AI_API_KEY', '')
-AI_MODEL_NAME = os.getenv('AI_MODEL_NAME', 'gemini/gemini-2.0-flash')
 AI_RATELIMIT = os.getenv('AI_RATELIMIT', '60/hour')
 
 SHARING_ABUSE = extract_bool('SHARING_ABUSE', False)
@@ -567,8 +565,6 @@ else:
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 LANGUAGES = [
@@ -576,19 +572,31 @@ LANGUAGES = [
     ('bg', _('Bulgarian')),
     ('ca', _('Catalan')),
     ('cs', _('Czech')),
+    ('cr', _('Croatian')),
     ('da', _('Danish')),
     ('nl', _('Dutch')),
     ('en', _('English')),
     ('fr', _('French')),
+    ('fi', _('Finnish')),
     ('de', _('German')),
+    ('el', _('Greek')),
+    ('he', _('Hebrew')),
     ('hu', _('Hungarian')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
-    ('nb', _('Norwegian ')),
+    ('nb', _('Norwegian')),
+    #('nb-NO', _('Norwegian Bokmål')),
     ('pl', _('Polish')),
+    ('pt', _('Portuguese')),
     ('ru', _('Russian')),
+    ('ro', _('Romanian')),
     ('es', _('Spanish')),
+    ('sl', _('Slovenian')),
     ('sv', _('Swedish')),
+    ('tr', _('Turkish')),
+    ('uk', _('Ukranian')),
+    #('zh-Hant', _('Chinese (Traditional Han script)')),
+    #('zh-Hans', _('Chinese (Simplified Han script)')),
 ]
 
 # Static files (CSS, JavaScript, Images)
@@ -596,8 +604,18 @@ LANGUAGES = [
 
 AWS_ENABLED = True if os.getenv('S3_ACCESS_KEY', False) else False
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    # Serve static files with gzip
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 if os.getenv('S3_ACCESS_KEY', ''):
-    DEFAULT_FILE_STORAGE = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
+    STORAGES['default']['BACKEND'] = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
 
     AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
     AWS_SECRET_ACCESS_KEY = os.getenv('S3_SECRET_ACCESS_KEY', '')
@@ -612,14 +630,9 @@ if os.getenv('S3_ACCESS_KEY', ''):
     if os.getenv('S3_CUSTOM_DOMAIN', ''):
         AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
 
-    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
-else:
-    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
-# Serve static files with gzip
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet

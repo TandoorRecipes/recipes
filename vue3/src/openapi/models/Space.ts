@@ -31,6 +31,12 @@ import {
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
 } from './SpaceNavTextColorEnum';
+import type { AiProvider } from './AiProvider';
+import {
+    AiProviderFromJSON,
+    AiProviderFromJSONTyped,
+    AiProviderToJSON,
+} from './AiProvider';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
@@ -115,7 +121,7 @@ export interface Space {
      * @type {Array<FoodInheritField>}
      * @memberof Space
      */
-    foodInherit: Array<FoodInheritField>;
+    foodInherit?: Array<FoodInheritField>;
     /**
      * 
      * @type {number}
@@ -217,13 +223,13 @@ export interface Space {
      * @type {number}
      * @memberof Space
      */
-    readonly aiCreditsMonthly: number;
+    aiCreditsMonthly?: number;
     /**
      * 
      * @type {number}
      * @memberof Space
      */
-    readonly aiCreditsBalance: number;
+    aiCreditsBalance?: number;
     /**
      * 
      * @type {number}
@@ -236,6 +242,18 @@ export interface Space {
      * @memberof Space
      */
     aiEnabled?: boolean;
+    /**
+     * 
+     * @type {AiProvider}
+     * @memberof Space
+     */
+    aiDefaultProvider?: AiProvider;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    spaceSetupCompleted?: boolean;
 }
 
 /**
@@ -249,12 +267,9 @@ export function instanceOfSpace(value: object): value is Space {
     if (!('maxUsers' in value) || value['maxUsers'] === undefined) return false;
     if (!('allowSharing' in value) || value['allowSharing'] === undefined) return false;
     if (!('demo' in value) || value['demo'] === undefined) return false;
-    if (!('foodInherit' in value) || value['foodInherit'] === undefined) return false;
     if (!('userCount' in value) || value['userCount'] === undefined) return false;
     if (!('recipeCount' in value) || value['recipeCount'] === undefined) return false;
     if (!('fileSizeMb' in value) || value['fileSizeMb'] === undefined) return false;
-    if (!('aiCreditsMonthly' in value) || value['aiCreditsMonthly'] === undefined) return false;
-    if (!('aiCreditsBalance' in value) || value['aiCreditsBalance'] === undefined) return false;
     if (!('aiMonthlyCreditsUsed' in value) || value['aiMonthlyCreditsUsed'] === undefined) return false;
     return true;
 }
@@ -279,7 +294,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'maxUsers': json['max_users'],
         'allowSharing': json['allow_sharing'],
         'demo': json['demo'],
-        'foodInherit': ((json['food_inherit'] as Array<any>).map(FoodInheritFieldFromJSON)),
+        'foodInherit': json['food_inherit'] == null ? undefined : ((json['food_inherit'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'userCount': json['user_count'],
         'recipeCount': json['recipe_count'],
         'fileSizeMb': json['file_size_mb'],
@@ -296,14 +311,16 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'logoColor192': json['logo_color_192'] == null ? undefined : UserFileViewFromJSON(json['logo_color_192']),
         'logoColor512': json['logo_color_512'] == null ? undefined : UserFileViewFromJSON(json['logo_color_512']),
         'logoColorSvg': json['logo_color_svg'] == null ? undefined : UserFileViewFromJSON(json['logo_color_svg']),
-        'aiCreditsMonthly': json['ai_credits_monthly'],
-        'aiCreditsBalance': json['ai_credits_balance'],
+        'aiCreditsMonthly': json['ai_credits_monthly'] == null ? undefined : json['ai_credits_monthly'],
+        'aiCreditsBalance': json['ai_credits_balance'] == null ? undefined : json['ai_credits_balance'],
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
+        'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
     };
 }
 
-export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiCreditsMonthly'|'aiCreditsBalance'|'aiMonthlyCreditsUsed'> | null): any {
+export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'> | null): any {
     if (value == null) {
         return value;
     }
@@ -312,7 +329,7 @@ export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxReci
         'id': value['id'],
         'name': value['name'],
         'message': value['message'],
-        'food_inherit': ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),
+        'food_inherit': value['foodInherit'] == null ? undefined : ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),
         'image': UserFileViewToJSON(value['image']),
         'nav_logo': UserFileViewToJSON(value['navLogo']),
         'space_theme': SpaceThemeEnumToJSON(value['spaceTheme']),
@@ -326,7 +343,11 @@ export function SpaceToJSON(value?: Omit<Space, 'createdBy'|'createdAt'|'maxReci
         'logo_color_192': UserFileViewToJSON(value['logoColor192']),
         'logo_color_512': UserFileViewToJSON(value['logoColor512']),
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
+        'ai_credits_monthly': value['aiCreditsMonthly'],
+        'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
+        'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'space_setup_completed': value['spaceSetupCompleted'],
     };
 }
 

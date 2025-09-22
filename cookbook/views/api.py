@@ -9,6 +9,7 @@ import threading
 import traceback
 import uuid
 from collections import OrderedDict
+from functools import wraps
 from json import JSONDecodeError
 from urllib.parse import unquote
 from zipfile import ZipFile
@@ -18,15 +19,16 @@ import litellm
 import redis
 import requests
 from PIL import UnidentifiedImageError
-from PIL.ImImagePlugin import number
-from PIL.features import check
 from django.contrib import messages
+from django.contrib.admin.utils import get_deleted_objects, NestedObjects
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db import DEFAULT_DB_ALIAS
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
+from django.db.models.deletion import Collector
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -35,7 +37,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
@@ -65,7 +66,8 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
-from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request
+from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request, AiCallbackHandler
+from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -75,7 +77,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space, CustomAiProviderPermission
+                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -112,12 +114,12 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_API_KEY, AI_MODEL_NAME
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -133,7 +135,7 @@ class LoggingMixin(object):
 
         if settings.REDIS_HOST:
             try:
-                d = date.today().isoformat()
+                d = timezone.now().isoformat()
                 space = request.space
                 endpoint = request.resolver_match.url_name
 
@@ -181,7 +183,10 @@ class StandardFilterModelViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         query = self.request.query_params.get('query', None)
         if query is not None:
-            queryset = queryset.filter(name__icontains=query)
+            try:
+                queryset = queryset.filter(name__icontains=query)
+            except FieldError:
+                pass
 
         updated_at = self.request.query_params.get('updated_at', None)
         if updated_at is not None:
@@ -510,6 +515,143 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
+def paginate(func):
+    """
+    pagination decorator for custom ViewSet actions
+    """
+
+    @wraps(func)
+    def inner(self, *args, **kwargs):
+        queryset = func(self, *args, **kwargs)
+        assert isinstance(queryset, (list, QuerySet))
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    return inner
+
+
+class DeleteRelationMixing:
+    """
+    mixin to add custom API function for model delete dependency checking
+    """
+
+    @staticmethod
+    def collect(obj):
+        # collector.nested() nested seems to not include protecting but does include cascading
+        # collector.protected: objects that raise Protected or Restricted error when deleting unit
+        # collector.field_updates: fields that get updated when deleting the unit
+        # collector.model_objs: collects the objects that should be deleted together with the selected unit
+
+        collector = NestedObjects(using=DEFAULT_DB_ALIAS)
+        collector.collect([obj])
+        return collector
+
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True), parameters=[
+        OpenApiParameter(name='cache', description='If results can be cached or not', type=bool, default=True),
+    ])
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
+    @paginate
+    def protecting(self, request, pk):
+        """
+        get a paginated list of objects that are protecting the selected object form being deleted
+        """
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_PROTECTING_{obj.__class__.__name__}_{obj.pk}'
+            cache = self.request.query_params.get('cache', "true") == "true"
+            if caches['default'].has_key(CACHE_KEY) and cache:
+                return caches['default'].get(CACHE_KEY)
+
+            collector = self.collect(obj)
+            protected_objects = []
+            for o in collector.protected:
+                protected_objects.append({
+                    'id': o.pk,
+                    'model': o.__class__.__name__,
+                    'name': str(o),
+                })
+
+            caches['default'].set(CACHE_KEY, protected_objects, 60)
+            return protected_objects
+        else:
+            return []
+
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True), parameters=[
+        OpenApiParameter(name='cache', description='If results can be cached or not', type=bool, default=True),
+    ])
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
+    @paginate
+    def cascading(self, request, pk):
+        """
+        get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+        """
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_CASCADING_{obj.__class__.__name__}_{obj.pk}'
+            cache = self.request.query_params.get('cache', "true") == "true"
+            if caches['default'].has_key(CACHE_KEY) and cache:
+                return caches['default'].get(CACHE_KEY)
+
+            collector = self.collect(obj)
+
+            cascading_objects = []
+            for model, objs in collector.model_objs.items():
+                for o in objs:
+                    if o.pk != pk and o.__class__.__name__ != obj.__class__.__name__:
+                        cascading_objects.append({
+                            'id': o.pk,
+                            'model': o.__class__.__name__,
+                            'name': str(o),
+                        })
+            caches['default'].set(CACHE_KEY, cascading_objects, 60)
+            return cascading_objects
+        else:
+            return []
+
+    @extend_schema(responses=GenericModelReferenceSerializer(many=True), parameters=[
+        OpenApiParameter(name='cache', description='If results can be cached or not', type=bool, default=True),
+    ])
+    @decorators.action(detail=True, methods=['GET'], serializer_class=GenericModelReferenceSerializer)
+    @paginate
+    def nulling(self, request, pk):
+        """
+        get a paginated list of objects where the selected object will be removed whe its deleted
+        """
+        obj = self.queryset.filter(pk=pk, space=request.space).first()
+        if obj:
+            CACHE_KEY = f'DELETE_COLLECTOR_{request.space.pk}_NULLING_{obj.__class__.__name__}_{obj.pk}'
+            cache = self.request.query_params.get('cache', "true") == "true"
+            if caches['default'].has_key(CACHE_KEY) and cache:
+                return caches['default'].get(CACHE_KEY)
+
+            collector = self.collect(obj)
+
+            nulling_objects = []
+            # field_updates is a dict of relations that will be updated and querysets of items affected
+            for key, value in collector.field_updates.items():
+                # iterate over each queryset for relation
+                for qs in value:
+                    # itereate over each object in queryset of relation
+                    for o in qs:
+                        nulling_objects.append(
+                            {
+                                'id': o.pk,
+                                'model': o.__class__.__name__,
+                                'name': str(o),
+                            }
+                        )
+            caches['default'].set(CACHE_KEY, nulling_objects, 60)
+            return nulling_objects
+        else:
+            return []
+
+
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str, many=True),
 ]))
@@ -543,9 +685,9 @@ class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
 class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest) | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
-    http_method_names = ['get', 'patch']
+    http_method_names = ['get', 'post', 'put', 'patch']
 
     def get_queryset(self):
         return self.queryset.filter(
@@ -564,7 +706,7 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
@@ -578,10 +720,23 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        if is_space_owner(self.request.user, self.request.space):
+        # >= admins can see all users, guest/user can only see themselves
+        if has_group_permission(self.request.user, ['admin']):
             return self.queryset.filter(space=self.request.space)
         else:
-            return self.queryset.filter(user=self.request.user, space=self.request.space)
+            return self.queryset.filter(space=self.request.space, user=self.request.user)
+
+    @extend_schema(responses=UserSpaceSerializer(many=True))
+    @decorators.action(detail=False, pagination_class=DefaultPagination, methods=['GET'], serializer_class=UserSpaceSerializer, )
+    def all_personal(self, request):
+        """
+        return all userspaces for the user requesting the endpoint
+        :param request:
+        :return:
+        """
+        with scopes_disabled():
+            self.queryset = self.queryset.filter(user=self.request.user)
+            return Response(self.serializer_class(self.queryset.all(), many=True, context={'request': self.request}).data)
 
 
 class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -619,7 +774,7 @@ class SearchPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user)
 
 
-class AiProviderViewSet(LoggingMixin, viewsets.ModelViewSet):
+class AiProviderViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = AiProvider.objects
     serializer_class = AiProviderSerializer
     permission_classes = [CustomAiProviderPermission & CustomTokenHasReadWriteScope]
@@ -642,7 +797,7 @@ class AiLogViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
+class StorageViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
@@ -653,7 +808,7 @@ class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class SyncViewSet(LoggingMixin, viewsets.ModelViewSet):
+class SyncViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Sync.objects
     serializer_class = SyncSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -714,7 +869,7 @@ class RecipeImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return Response({'msg': 'ok'}, status=status.HTTP_200_OK)
 
 
-class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
+class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = ConnectorConfig.objects
     serializer_class = ConnectorConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -724,7 +879,7 @@ class ConnectorConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet):
+class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -736,7 +891,7 @@ class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet):
 
 
 # TODO does supermarket category have settings to support fuzzy filtering and/or merge?
-class SupermarketCategoryViewSet(LoggingMixin, FuzzyFilterMixin, MergeMixin):
+class SupermarketCategoryViewSet(LoggingMixin, FuzzyFilterMixin, MergeMixin, DeleteRelationMixing):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
@@ -759,7 +914,7 @@ class SupermarketCategoryRelationViewSet(LoggingMixin, StandardFilterModelViewSe
         return super().get_queryset()
 
 
-class KeywordViewSet(LoggingMixin, TreeMixin):
+class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
@@ -767,7 +922,7 @@ class KeywordViewSet(LoggingMixin, TreeMixin):
     pagination_class = DefaultPagination
 
 
-class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
+class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
@@ -787,7 +942,7 @@ class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
-class FoodViewSet(LoggingMixin, TreeMixin):
+class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
@@ -933,12 +1088,176 @@ class FoodViewSet(LoggingMixin, TreeMixin):
             return JsonResponse({'msg': 'there was an error parsing the FDC data, please check the server logs'},
                                 status=500, json_dumps_params={'indent': 4})
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='provider', description='ID of the AI provider that should be used for this AI request', type=int),
+        ]
+    )
+    @decorators.action(detail=True, methods=['POST'], )
+    def aiproperties(self, request, pk):
+        serializer = RecipeSerializer(data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+
+            if not request.query_params.get('provider', None) or not re.match(r'^(\d)+$', request.query_params.get('provider', None)):
+                response = {
+                    'error': True,
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            if not can_perform_ai_request(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI or AI features are not enabled for your space."),
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            ai_provider = AiProvider.objects.filter(pk=request.query_params.get('provider')).filter(Q(space=request.space) | Q(space__isnull=True)).first()
+
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider, AiLog.F_FOOD_PROPERTIES)]
+
+            property_type_list = list(PropertyType.objects.filter(space=request.space).values('id', 'name', 'description', 'unit', 'category', 'fdc_id'))
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Given the following food and the following different types of properties please update the food so that the properties attribute contains a list with all property types in the following format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]."
+                                    "The property values should be in the unit given in the property type and for the amount specified in the properties_food_amount attribute of the food, which is given in the properties_food_unit."
+                                    "property_amount is a decimal number. Please try to keep a percision of two decimal places if given in your source data."
+                                    "Do not make up any data. If there is no data available for the given property type that is ok, just return null as a property_amount for that property type. Do not change anything else!"
+                                    "Most property types are likely going to be nutritional values. Please do not make up any values, only return values you can find in the sources available to you."
+                                    "Only return values if you are sure they are meant for the food given. Under no circumstance are you allowed to change any other value of the given food or change the structure in any way or form."
+                        },
+                        {
+                            "type": "text",
+                            "text": json.dumps(request.data)
+                        },
+                        {
+                            "type": "text",
+                            "text": json.dumps(property_type_list)
+                        },
+                    ]
+                },
+            ]
+
+            try:
+                ai_request = {
+                    'api_key': ai_provider.api_key,
+                    'model': ai_provider.model_name,
+                    'response_format': {"type": "json_object"},
+                    'messages': messages,
+                }
+                if ai_provider.url:
+                    ai_request['api_base'] = ai_provider.url
+                ai_response = completion(**ai_request)
+
+                response_text = ai_response.choices[0].message.content
+
+                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except BadRequestError as err:
+                pass
+        response = {
+            'error': True,
+            'msg': 'The AI could not process your request. \n\n' + err.message,
+        }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
     def destroy(self, *args, **kwargs):
         try:
             return (super().destroy(self, *args, **kwargs))
         except ProtectedError as e:
             content = {'error': True, 'msg': e.args[0]}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+    @decorators.action(detail=False, methods=['PUT'], serializer_class=FoodBatchUpdateSerializer)
+    def batch_update(self, request):
+        serializer = self.serializer_class(data=request.data, partial=True)
+
+        if serializer.is_valid():
+            foods = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space)
+            safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
+
+            if 'category' in serializer.validated_data:
+                foods.update(supermarket_category_id=serializer.validated_data['category'])
+
+            if 'ignore_shopping' in serializer.validated_data and serializer.validated_data['ignore_shopping'] is not None:
+                foods.update(ignore_shopping=serializer.validated_data['ignore_shopping'])
+
+            if 'on_hand' in serializer.validated_data and serializer.validated_data['on_hand'] is not None:
+                if serializer.validated_data['on_hand']:
+                    user_relation = []
+                    for f in safe_food_ids:
+                        user_relation.append(Food.onhand_users.through(food_id=f, user_id=request.user.id))
+                    Food.onhand_users.through.objects.bulk_create(user_relation, ignore_conflicts=True, unique_fields=('food_id', 'user_id',))
+                else:
+                    Food.onhand_users.through.objects.filter(food_id__in=safe_food_ids, user_id=request.user.id).delete()
+
+            if 'substitute_children' in serializer.validated_data and serializer.validated_data['substitute_children'] is not None:
+                foods.update(substitute_children=serializer.validated_data['substitute_children'])
+
+            if 'substitute_siblings' in serializer.validated_data and serializer.validated_data['substitute_siblings'] is not None:
+                foods.update(substitute_siblings=serializer.validated_data['substitute_siblings'])
+
+            # ---------- substitutes -------------
+            if 'substitute_add' in serializer.validated_data:
+                add_to_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_add'])
+
+            if 'substitute_remove' in serializer.validated_data:
+                remove_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_remove'])
+
+            if 'substitute_set' in serializer.validated_data and len(serializer.validated_data['substitute_set']) > 0:
+                set_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_set'])
+
+            if 'substitute_remove_all' in serializer.validated_data and serializer.validated_data['substitute_remove_all']:
+                remove_all_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids)
+
+            # ----------  inherit fields -------------
+            if 'inherit_fields_add' in serializer.validated_data:
+                add_to_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_add'])
+
+            if 'inherit_fields_remove' in serializer.validated_data:
+                remove_from_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_remove'])
+
+            if 'inherit_fields_set' in serializer.validated_data and len(serializer.validated_data['inherit_fields_set']) > 0:
+                set_relation(Food.inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['inherit_fields_set'])
+
+            if 'inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['inherit_fields_remove_all']:
+                remove_all_from_relation(Food.inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ---------- child inherit fields -------------
+            if 'child_inherit_fields_add' in serializer.validated_data:
+                add_to_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_add'])
+
+            if 'child_inherit_fields_remove' in serializer.validated_data:
+                remove_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_remove'])
+
+            if 'child_inherit_fields_set' in serializer.validated_data and len(serializer.validated_data['child_inherit_fields_set']) > 0:
+                set_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids, 'foodinheritfield_id', serializer.validated_data['child_inherit_fields_set'])
+
+            if 'child_inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['child_inherit_fields_remove_all']:
+                remove_all_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ------- parent --------
+            if self.model.node_order_by:
+                node_location = 'sorted'
+            else:
+                node_location = 'last'
+
+            if 'parent_remove' in serializer.validated_data and serializer.validated_data['parent_remove']:
+                for f in foods:
+                    f.move(Food.get_first_root_node(), f'{node_location}-sibling')
+
+            if 'parent_set' in serializer.validated_data:
+                parent_food = Food.objects.filter(space=request.space, id=serializer.validated_data['parent_set']).first()
+                if parent_food:
+                    for f in foods:
+                        f.move(parent_food, f'{node_location}-child')
+
+            return Response({}, 200)
+
+        return Response(serializer.errors, 400)
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -947,7 +1266,7 @@ class FoodViewSet(LoggingMixin, TreeMixin):
     OpenApiParameter(name='order_direction', description='Order ascending or descending', type=str,
                      enum=['asc', 'desc']),
 ]))
-class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet):
+class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -1101,7 +1420,7 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
         return Response(serializer.errors, 400)
 
 
-class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     """
     returns list of meal types created by the
     requesting user ordered by the order field.
@@ -1133,7 +1452,19 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
-        queryset = self.queryset.filter(step__recipe__space=self.request.space)
+        queryset = self.queryset.prefetch_related('food',
+                                                  'food__properties',
+                                                  'food__properties__property_type',
+                                                  'food__inherit_fields',
+                                                  'food__supermarket_category',
+                                                  'food__onhand_users',
+                                                  'food__substitute',
+                                                  'food__child_inherit_fields',
+                                                  'unit',
+                                                  'unit__unit_conversion_base_relation',
+                                                  'unit__unit_conversion_base_relation__base_unit',
+                                                  'unit__unit_conversion_converted_relation',
+                                                  'unit__unit_conversion_converted_relation__converted_unit', ).filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
@@ -1239,7 +1570,7 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='filter', description=_('ID of a custom filter. Returns all recipes matched by that filter.'), type=int),
     OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
 ]))
-class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
@@ -1521,7 +1852,7 @@ class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
         enum=[m[0] for m in PropertyType.CHOICES])
     ]
 ))
-class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1752,7 +2083,7 @@ class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
-class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet):
+class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1804,8 +2135,8 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
-        unused = self.request.query_params.get('unused', False)
-        if unused:
+        used = self.request.query_params.get('used', False)
+        if not used:
             self.queryset = self.queryset.filter(used_by=None)
 
         if is_space_owner(self.request.user, self.request.space):
@@ -2041,25 +2372,7 @@ class AiImportView(APIView):
 
             ai_provider = AiProvider.objects.filter(pk=serializer.validated_data['ai_provider_id']).filter(Q(space=request.space) | Q(space__isnull=True)).first()
 
-            def log_ai_request(kwargs, completion_response, start_time, end_time):
-                credit_cost = 0
-                if ai_provider.log_credit_cost:
-                    credit_cost = kwargs.get("response_cost", 0) * 100
-
-                AiLog.objects.create(
-                    created_by=request.user,
-                    space=request.space,
-                    ai_provider=ai_provider,
-                    start_time=start_time,
-                    end_time=end_time,
-                    input_tokens=completion_response['usage']['prompt_tokens'],
-                    output_tokens=completion_response['usage']['completion_tokens'],
-                    function=AiLog.F_FILE_IMPORT,
-                    credit_cost=credit_cost,
-                    credits_from_balance=False,  # TODO implement
-                )
-
-            litellm.success_callback = [log_ai_request]
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider, AiLog.F_FILE_IMPORT)]
 
             messages = []
             uploaded_file = serializer.validated_data['file']
@@ -2176,6 +2489,80 @@ class AiImportView(APIView):
             return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
 
+class AiStepSortView(APIView):
+    throttle_classes = [AiEndpointThrottle]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    @extend_schema(request=RecipeSerializer(many=False), responses=RecipeSerializer(many=False),
+                   parameters=[
+                       OpenApiParameter(name='provider', description='ID of the AI provider that should be used for this AI request', type=int),
+                   ])
+    def post(self, request, *args, **kwargs):
+        """
+        given an image or PDF file convert its content to a structured recipe using AI and the scraping system
+        """
+        serializer = RecipeSerializer(data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+
+            if not request.query_params.get('provider', None) or not re.match(r'^(\d)+$', request.query_params.get('provider', None)):
+                response = {
+                    'error': True,
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            if not can_perform_ai_request(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI or AI features are not enabled for your space."),
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            ai_provider = AiProvider.objects.filter(pk=request.query_params.get('provider')).filter(Q(space=request.space) | Q(space__isnull=True)).first()
+
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider, AiLog.F_STEP_SORT)]
+
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "You are given data for a recipe formatted as json. You cannot under any circumstance change the value of any of the fields. You are only allowed to split the instructions into multiple steps and to sort the ingredients to their appropriate step. Your goal is to properly structure the recipe by splitting large instructions into multiple coherent steps and putting the ingredients that belong to this step into the ingredients list. Generally an ingredient of a cooking recipe should occur in the first step where its needed. Please sort the ingredients to the appropriate steps without changing any of the actual field values. Return the recipe in the same format you were given as json. Do not change any field value like strings or numbers, or change the sorting, also do not change the language."
+
+                        },
+                        {
+                            "type": "text",
+                            "text": json.dumps(request.data)
+                        },
+
+                    ]
+                },
+            ]
+
+            try:
+                ai_request = {
+                    'api_key': ai_provider.api_key,
+                    'model': ai_provider.model_name,
+                    'response_format': {"type": "json_object"},
+                    'messages': messages,
+                }
+                if ai_provider.url:
+                    ai_request['api_base'] = ai_provider.url
+                ai_response = completion(**ai_request)
+
+                response_text = ai_response.choices[0].message.content
+                # TODO validate by loading/dumping using serializer ?
+
+                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except BadRequestError as err:
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
 class AppImportView(APIView):
     parser_classes = [MultiPartParser]
     throttle_classes = [RecipeImportThrottle]
@@ -2196,7 +2583,13 @@ class AppImportView(APIView):
                 files = []
                 for f in request.FILES.getlist('files'):
                     files.append({'file': io.BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
+                t = threading.Thread(target=integration.do_import,
+                                     args=[files, il, form.cleaned_data['duplicates']],
+                                     kwargs={'meal_plans': form.cleaned_data['meal_plans'],
+                                             'shopping_lists': form.cleaned_data['shopping_lists'],
+                                             'nutrition_per_serving': form.cleaned_data['nutrition_per_serving']
+                                             }
+                                     )
                 t.setDaemon(True)
                 t.start()
 
@@ -2442,7 +2835,6 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         # Attention: No login required, do not return sensitive data
         s['shopping_min_autosync_interval'] = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
         s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT
-        s['enable_ai_import'] = settings.AI_API_KEY != ''
         s['disable_external_connectors'] = settings.DISABLE_EXTERNAL_CONNECTORS
         s['terms_url'] = settings.TERMS_URL
         s['privacy_url'] = settings.PRIVACY_URL
@@ -2615,10 +3007,9 @@ def ingredient_from_string(request):
 
     if unit:
         if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
-            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
+            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
         else:
             unit_obj = Unit.objects.create(space=request.space, name=unit)
-            ingredient['food'] = {'name': unit_obj.name, 'id': unit_obj.id}
-        ingredient['unit'] = {'name': unit.name, 'id': unit.id}
+            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
 
     return JsonResponse(ingredient, status=200)

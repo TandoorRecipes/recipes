@@ -1,8 +1,15 @@
+from django.contrib.auth.models import Group
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+from psycopg2.errors import UniqueViolation
 from rest_framework.exceptions import AuthenticationFailed
 
+import random
+
+from cookbook.helper.permission_helper import create_space_for_user
+from cookbook.models import Space, UserSpace
 from cookbook.views import views
 from recipes import settings
 
@@ -34,16 +41,28 @@ class ScopeMiddleware:
             if request.path.startswith(prefix + '/switch-space/'):
                 return self.get_response(request)
 
-            with scopes_disabled():
-                if request.user.userspace_set.count() == 0 and not reverse('account_logout') in request.path:
-                    return views.space_overview(request)
+            if request.path.startswith(prefix + '/invite/'):
+                return self.get_response(request)
 
             # get active user space, if for some reason more than one space is active select first (group permission checks will fail, this is not intended at this point)
             user_space = request.user.userspace_set.filter(active=True).first()
 
-            if not user_space:
-                return views.space_overview(request)
+            if not user_space and request.user.userspace_set.count() > 0:
+                # if the users has a userspace but nothing is active, activate the first one
+                user_space = request.user.userspace_set.first()
+                if user_space:
+                    user_space.active = True
+                    user_space.save()
 
+            if not user_space:
+                if 'signup_token' in request.session:
+                    # if user is authenticated, has no space but a signup token (InviteLink) is present, redirect to invite link logic
+                    return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
+                else:
+                    # if user does not yet have a space create one for him
+                    user_space = create_space_for_user(request.user)
+
+            # TODO remove the need for this view
             if user_space.groups.count() == 0 and not reverse('account_logout') in request.path:
                 return views.no_groups(request)
 
