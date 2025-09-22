@@ -104,9 +104,9 @@ ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 # prepare nginx config
 envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
 
-# start nginx
+# start nginx with writable location as non-root
 echo "Starting nginx"
-nginx
+nginx -g 'pid /tmp/nginx.pid;'
 
 echo "Starting gunicorn"
 # Check if IPv6 is enabled, only then run gunicorn with ipv6 support
