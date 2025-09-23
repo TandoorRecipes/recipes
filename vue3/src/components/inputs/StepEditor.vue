@@ -1,10 +1,9 @@
 <template>
 
-    <v-card variant="outlined">
+    <v-card>
         <template #title>
             <v-card-title>
-                <v-chip color="primary">{{ $t('Step') }} {{ props.stepIndex + 1 }}</v-chip>
-                {{ step.name }}
+                {{ $t('Step') }} {{ props.stepIndex + 1 }}  {{ step.name }}
             </v-card-title>
         </template>
         <template v-slot:append>
@@ -27,8 +26,8 @@
                             <v-switch v-model="step.showAsHeader" :label="$t('Show_as_header')" hide-details></v-switch>
                         </v-list-item>
                         <v-list-item @click="emit('move')" prepend-icon="fa-solid fa-sort">
-                                                    {{ $t('Move') }}
-                                                </v-list-item>
+                            {{ $t('Move') }}
+                        </v-list-item>
 
                         <v-list-item prepend-icon="$delete" @click="emit('delete')">{{ $t('Delete') }}</v-list-item>
                     </v-list>
@@ -241,7 +240,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {ingredientToString} from "@/utils/model_utils";
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
 
-const emit = defineEmits(['delete','move'])
+const emit = defineEmits(['delete', 'move'])
 
 const step = defineModel<Step>({required: true})
 const recipe = defineModel<Recipe>('recipe', {required: true})

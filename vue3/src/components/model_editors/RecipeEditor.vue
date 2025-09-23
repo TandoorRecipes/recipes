@@ -71,9 +71,17 @@
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
                     <v-form :disabled="loading || fileApiLoading">
-                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
+                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
                             <v-col>
                                 <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
+
+                                <div class="text-center mt-2">
+                                    <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
+                                    <v-btn icon="fa-solid fa-down-left-and-up-right-to-center" style="transform: rotate(135deg)" variant="outlined" size="x-small" class="ms-2"
+                                        @click="mergeStep(s, editingObj.steps[i+1])" v-if="editingObj.steps.length > i + 1"
+                                    ></v-btn>
+                                    <v-btn icon="fa-solid fa-arrow-down-1-9" variant="outlined" size="x-small" class="ms-2" @click="dialogStepManager = true" :disabled="editingObj.steps.length < 2"></v-btn>
+                                </div>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -88,7 +96,8 @@
                                         v-if="!mobile">{{ $t('Split') }}</span></v-btn>
                                     <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
                                         v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
-                                     <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"></ai-action-button>
+                                    <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"
+                                                      :disabled="editingObj.steps.length < 1"></ai-action-button>
                                 </v-btn-group>
 
 
@@ -171,7 +180,7 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
+import {mergeAllSteps, mergeStep, splitAllSteps} from "@/utils/step_utils.ts";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
@@ -217,6 +226,12 @@ function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
+            addStep()
+            editingObj.value.steps[0].ingredients.push({
+                food: null,
+                unit: null,
+                amount: 0,
+            } as Ingredient)
             editingObj.value.internal = true //TODO make database default after v2
         },
         itemDefaults: props.itemDefaults,
@@ -248,13 +263,20 @@ function deleteImage() {
 
 /**
  * add a new step to the recipe
+ * @param index index to add at, -1 for end
  */
-function addStep() {
-    editingObj.value.steps.push({
+function addStep(index: number = -1) {
+    let newStep = {
         ingredients: [] as Ingredient[],
         time: 0,
         showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients
-    } as Step)
+    } as Step
+
+    if (index >= 0) {
+        editingObj.value.steps.splice(index, 0, newStep)
+    } else {
+        editingObj.value.steps.push(newStep)
+    }
 }
 
 /**
@@ -305,7 +327,7 @@ function deleteExternalFile() {
  * sort steps and ingredients using UI and update recipe with result
  * @param providerId provider to use for request
  */
-function aiStepSort(providerId: number){
+function aiStepSort(providerId: number) {
     let api = new ApiApi()
     aiStepSortLoading.value = true
     api.apiAiStepSortCreate({recipe: editingObj.value, provider: providerId}).then(r => {
