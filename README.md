@@ -30,9 +30,11 @@
 ![Preview](docs/preview.png)
 
 ## Core Features
+
 - 🥗 **Manage your recipes** - Manage your ever growing recipe collection
 - 📆 **Plan** - multiple meals for each day
 - 🛒 **Shopping lists** - via the meal plan or straight from recipes
+- 🪄 **use AI** to recognize images, sort recipe steps, find nutrition facts and more
 - 📚 **Cookbooks** - collect recipes into books
 - 👪 **Share and collaborate** on recipes with friends and family
 
@@ -62,12 +64,13 @@ a public page.
 
 Documentation can be found [here](https://docs.tandoor.dev/).
 
-## Support our work
+## ❤️ Support our work ❤️
 Tandoor is developed by volunteers in their free time just because its fun. That said earning
 some money with the project allows us to spend more time on it and thus make improvements we otherwise couldn't.
 Because of that there are several ways you can support us
 
 - **GitHub Sponsors** You can sponsor contributors of this project on GitHub: [vabene1111](https://github.com/sponsors/vabene1111)
+- **Patron** You can sponsor contributors of this project on Patron: [vabene111](https://www.patreon.com/cw/vabene1111)
 - **Host at Hetzner** We have been very happy customers of Hetzner for multiple years for all of our projects. If you want to get into self-hosting or are tired of the expensive big providers, their cloud servers are a great place to get started. When you sign up via our [referral link](https://hetzner.cloud/?ref=ISdlrLmr9kGj) you will get 20€ worth of cloud credits and we get a small kickback too.
 - **Let us host for you** We are offering a [hosted version](https://app.tandoor.dev) where all profits support us and the development of tandoor (currently only available in germany).
 
