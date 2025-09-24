@@ -22,6 +22,9 @@ display_warning() {
     echo -e "$1"
 }
 
+# prepare nginx config
+envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
+
 echo "Checking configuration..."
 
 # SECRET_KEY (or a valid file at SECRET_KEY_FILE) must be set in .env file
@@ -100,9 +103,6 @@ echo "Done"
 chmod -R 755 ${MEDIA_ROOT:-/opt/recipes/mediafiles}
 
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
-
-# prepare nginx config
-envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
 
 # start nginx
 echo "Starting nginx"
