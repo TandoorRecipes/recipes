@@ -24,7 +24,7 @@ server {
   }
 
   location /errors/ {
-    alias /etc/nginx/conf.d/errorpages/;
+    alias /etc/nginx/http.d/errorpages/;
     internal;
   }
 }
