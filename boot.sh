@@ -93,7 +93,7 @@ fi
 
 echo "Collecting static files, this may take a while..."
 
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --clear
 
 echo "Done"
 
