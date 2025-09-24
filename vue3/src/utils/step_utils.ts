@@ -64,7 +64,9 @@ export function splitStep<T extends StepLike>(steps: T[], step: T, split_charact
  * @param step2
  */
 export function mergeStep(step1: Step, step2: Step) {
-    step1.instruction = step1.instruction + '\n' + step2.instruction
+    if (step2.instruction){
+        step1.instruction = step1.instruction + '\n' + step2.instruction
+    }
     step1.ingredients = step1.ingredients.concat(step2.ingredients)
     return step1
 }

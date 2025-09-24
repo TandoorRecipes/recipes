@@ -70,6 +70,22 @@
 
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
+                    <v-row>
+                        <v-col >
+                            <v-btn-group density="compact" divided border>
+
+                                <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
+                                    v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                <v-btn prepend-icon="fa-solid fa-minimize" @click="editingObj.steps = handleMergeAllSteps()" :disabled="editingObj.steps.length < 2"><span
+                                    v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"
+                                                  :disabled="editingObj.steps.length < 1"></ai-action-button>
+                            </v-btn-group>
+
+
+                        </v-col>
+                    </v-row>
+
                     <v-form :disabled="loading || fileApiLoading">
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
                             <v-col>
@@ -78,32 +94,13 @@
                                 <div class="text-center mt-2">
                                     <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
                                     <v-btn icon="fa-solid fa-down-left-and-up-right-to-center" style="transform: rotate(135deg)" variant="outlined" size="x-small" class="ms-2"
-                                        @click="mergeStep(s, editingObj.steps[i+1])" v-if="editingObj.steps.length > i + 1"
+                                           @click="mergeStep(s, editingObj.steps[i+1]); editingObj.steps.splice(i+1,1)" v-if="editingObj.steps.length > i + 1"
                                     ></v-btn>
-                                    <v-btn icon="fa-solid fa-arrow-down-1-9" variant="outlined" size="x-small" class="ms-2" @click="dialogStepManager = true" :disabled="editingObj.steps.length < 2"></v-btn>
+                                    <v-btn icon="fa-solid fa-arrow-down-1-9" variant="outlined" size="x-small" class="ms-2" @click="dialogStepManager = true"
+                                           :disabled="editingObj.steps.length < 2"></v-btn>
                                 </div>
                             </v-col>
                         </v-row>
-                        <v-row>
-                            <v-col class="text-center">
-                                <v-btn-group density="compact" divided border>
-                                    <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
-                                    <v-btn color="warning" @click="dialogStepManager = true" :disabled="editingObj.steps.length < 2">
-                                        <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
-                                    </v-btn>
-
-                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
-                                        v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
-                                        v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
-                                    <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"
-                                                      :disabled="editingObj.steps.length < 1"></ai-action-button>
-                                </v-btn-group>
-
-
-                            </v-col>
-                        </v-row>
-
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="properties">
@@ -296,10 +293,11 @@ function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
 }
 
-function handleMergeAllSteps(): void {
+function handleMergeAllSteps() {
     if (editingObj.value.steps) {
-        mergeAllSteps(editingObj.value.steps)
+        return mergeAllSteps(editingObj.value.steps)
     }
+    return []
 }
 
 function handleSplitAllSteps(): void {

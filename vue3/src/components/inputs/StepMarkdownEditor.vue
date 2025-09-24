@@ -1,6 +1,6 @@
 <template>
     <mavon-editor v-model="step.instruction" :autofocus="false" :external-link="false"
-                  style="z-index: auto" :id="'id_instruction_' + step.id"
+                  style="z-index: auto; box-shadow: none;" class="border-sm" :id="'id_instruction_' + step.id"
                   :language="'en'"
                   :toolbars="md_editor_toolbars" :defaultOpen="'edit'" ref="markdownEditor">
         <template #left-toolbar-after>
