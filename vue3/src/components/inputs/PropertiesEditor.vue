@@ -1,10 +1,11 @@
 <template>
     <v-btn-group density="compact">
-        <v-btn color="create" @click="properties.push({} as Property)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
+        <v-btn color="create" @click="food.properties.push({} as Property)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
         <v-btn color="secondary" @click="addAllProperties" prepend-icon="fa-solid fa-list">{{ $t('AddAll') }}</v-btn>
+        <ai-action-button color="info" @selected="propertiesFromAi" :loading="aiLoading" prepend-icon="$ai">{{ $t('AI') }}</ai-action-button>
     </v-btn-group>
 
-    <v-row class="d-none d-md-flex mt-2" v-for="p in properties" dense>
+    <v-row class="d-none d-md-flex mt-2" v-for="p in food.properties" dense>
         <v-col cols="0" md="6">
             <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked" :precision="2">
                 <template #append-inner v-if="p.propertyType">
@@ -14,7 +15,7 @@
             </v-number-input>
         </v-col>
         <v-col cols="0" md="6">
-            <model-select  v-model="p.propertyType" model="PropertyType">
+            <model-select v-model="p.propertyType" model="PropertyType">
                 <template #append>
                     <v-btn color="delete" icon @click="deleteProperty(p)">
                         <v-icon icon="$delete"></v-icon>
@@ -24,7 +25,7 @@
         </v-col>
     </v-row>
     <v-list class="d-md-none">
-        <v-list-item v-for="p in properties" border>
+        <v-list-item v-for="p in food.properties" border>
             <span v-if="p.propertyType">{{ p.propertyAmount }} {{ p.propertyType.unit }} {{ p.propertyType.name }} / {{ props.amountFor }}
             </span>
             <span v-else><i><{{ $t('New') }}></i></span>
@@ -40,23 +41,30 @@
 
 <script setup lang="ts">
 
-import {ApiApi, Property} from "@/openapi";
+import {ApiApi, Food, Property} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import {PropType, ref} from "vue";
+import AiActionButton from "@/components/buttons/AiActionButton.vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 
 const props = defineProps({
-    amountFor: {type: String, required: true}
+    amountFor: {type: String, required: true},
 })
 
-const properties = defineModel<Property[]>({required: true})
+const food = defineModel<Food>({required: true})
+
+const aiLoading = ref(false)
 
 /**
  * remove a property from the list
  * @param property property to delete
  */
 function deleteProperty(property: Property) {
-    properties.value = properties.value.filter(p => p !== property)
-    // TODO delete from DB, needs endpoint for property relation to either recipe or food
+    if (food.value.properties) {
+        food.value.properties = food.value.properties.filter(p => p !== property)
+        // TODO delete from DB, needs endpoint for property relation to either recipe or food
+    }
 }
 
 /**
@@ -65,12 +73,29 @@ function deleteProperty(property: Property) {
  */
 function addAllProperties() {
     const api = new ApiApi()
+
+    if (food.value.properties) {
+        food.value.properties = []
+    }
+
     api.apiPropertyTypeList().then(r => {
         r.results.forEach(pt => {
-            if (properties.value.findIndex(x => x.propertyType.name == pt.name) == -1) {
-                properties.value.push({propertyAmount: 0, propertyType: pt} as Property)
+            if (food.value.properties.findIndex(x => x.propertyType.name == pt.name) == -1) {
+                food.value.properties.push({propertyAmount: 0, propertyType: pt} as Property)
             }
         })
+    })
+}
+
+function propertiesFromAi(providerId: number) {
+    const api = new ApiApi()
+    aiLoading.value = true
+    api.apiFoodAipropertiesCreate({id: food.value.id!, food: food.value, provider: providerId}).then(r => {
+        food.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        aiLoading.value = false
     })
 }
 

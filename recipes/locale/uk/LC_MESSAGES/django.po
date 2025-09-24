@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-01 15:04+0200\n"
+"POT-Creation-Date: 2025-09-22 20:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,70 +71,110 @@ msgstr ""
 msgid "end"
 msgstr ""
 
-#: .\recipes\settings.py:478
+#: .\recipes\plugins\enterprise_plugin\templates\enterprise_social_public_view.html:15
+msgid "Tandoor Recipe Manager"
+msgstr ""
+
+#: .\recipes\settings.py:571
 msgid "Armenian "
 msgstr ""
 
-#: .\recipes\settings.py:479
+#: .\recipes\settings.py:572
 msgid "Bulgarian"
 msgstr ""
 
-#: .\recipes\settings.py:480
+#: .\recipes\settings.py:573
 msgid "Catalan"
 msgstr ""
 
-#: .\recipes\settings.py:481
+#: .\recipes\settings.py:574
 msgid "Czech"
 msgstr ""
 
-#: .\recipes\settings.py:482
+#: .\recipes\settings.py:575
+msgid "Croatian"
+msgstr ""
+
+#: .\recipes\settings.py:576
 msgid "Danish"
 msgstr ""
 
-#: .\recipes\settings.py:483
+#: .\recipes\settings.py:577
 msgid "Dutch"
 msgstr ""
 
-#: .\recipes\settings.py:484
+#: .\recipes\settings.py:578
 msgid "English"
 msgstr ""
 
-#: .\recipes\settings.py:485
+#: .\recipes\settings.py:579
 msgid "French"
 msgstr ""
 
-#: .\recipes\settings.py:486
+#: .\recipes\settings.py:580
+msgid "Finnish"
+msgstr ""
+
+#: .\recipes\settings.py:581
 msgid "German"
 msgstr ""
 
-#: .\recipes\settings.py:487
+#: .\recipes\settings.py:582
+msgid "Greek"
+msgstr ""
+
+#: .\recipes\settings.py:583
+msgid "Hebrew"
+msgstr ""
+
+#: .\recipes\settings.py:584
 msgid "Hungarian"
 msgstr ""
 
-#: .\recipes\settings.py:488
+#: .\recipes\settings.py:585
 msgid "Italian"
 msgstr ""
 
-#: .\recipes\settings.py:489
+#: .\recipes\settings.py:586
 msgid "Latvian"
 msgstr ""
 
-#: .\recipes\settings.py:490
-msgid "Norwegian "
+#: .\recipes\settings.py:587
+msgid "Norwegian"
 msgstr ""
 
-#: .\recipes\settings.py:491
+#: .\recipes\settings.py:589
 msgid "Polish"
 msgstr ""
 
-#: .\recipes\settings.py:492
+#: .\recipes\settings.py:590
+msgid "Portuguese"
+msgstr ""
+
+#: .\recipes\settings.py:591
 msgid "Russian"
 msgstr ""
 
-#: .\recipes\settings.py:493
+#: .\recipes\settings.py:592
+msgid "Romanian"
+msgstr ""
+
+#: .\recipes\settings.py:593
 msgid "Spanish"
 msgstr ""
 
-#: .\recipes\settings.py:494
+#: .\recipes\settings.py:594
+msgid "Slovenian"
+msgstr ""
+
+#: .\recipes\settings.py:595
 msgid "Swedish"
+msgstr ""
+
+#: .\recipes\settings.py:596
+msgid "Turkish"
+msgstr ""
+
+#: .\recipes\settings.py:597
+msgid "Ukranian"
 msgstr ""

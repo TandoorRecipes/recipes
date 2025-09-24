@@ -8,7 +8,8 @@
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
-        :object-name="editingObjName()">
+        :object-name="editingObjName()"
+        :editing-object="editingObj">
         <v-card-text>
             <v-form :disabled="loading">
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
@@ -53,7 +54,6 @@ watch([() => props.item, () => props.itemId], () => {
 // object specific data (for selects/display)
 
 
-
 onMounted(() => {
     initializeEditor()
 })
@@ -61,7 +61,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 }
 

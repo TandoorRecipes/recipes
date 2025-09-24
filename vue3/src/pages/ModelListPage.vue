@@ -41,6 +41,9 @@
                         <v-progress-linear :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"
                                            :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"></v-progress-linear>
                     </v-card-text>
+                    <v-card-actions v-if="genericModel.model.name == 'UserSpace'">
+                        <v-btn :prepend-icon="TInviteLink.icon" :to="{name: 'ModelListPage', params: {model: 'InviteLink'}}">{{ $t('Invites') }}</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
@@ -152,7 +155,7 @@
 import {onBeforeMount, PropType, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {EditorSupportedModels, EditorSupportedTypes, GenericModel, getGenericModelFromString, Model,} from "@/types/Models";
+import {EditorSupportedModels, EditorSupportedTypes, GenericModel, getGenericModelFromString, Model, TInviteLink,} from "@/types/Models";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";

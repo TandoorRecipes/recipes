@@ -28,6 +28,10 @@ export default createVuetify({
         // always use color for switches to properly see if enabled or not
         VSwitch: {
             color: 'primary'
+        },
+        // globally set the correct decimal seperator
+        VNumberInput: {
+            decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
         }
     },
     theme: {

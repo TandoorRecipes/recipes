@@ -420,9 +420,14 @@ class AiProvider(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('id',)
+
 
 class AiLog(models.Model, PermissionModelMixin):
     F_FILE_IMPORT = 'FILE_IMPORT'
+    F_STEP_SORT = 'STEP_SORT'
+    F_FOOD_PROPERTIES = 'FOOD_PROPERTIES'
 
     ai_provider = models.ForeignKey(AiProvider, on_delete=models.SET_NULL, null=True)
     function = models.CharField(max_length=64)
@@ -442,6 +447,9 @@ class AiLog(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f"{self.function} {self.ai_provider.name} {self.created_at}"
+
+    class Meta:
+        ordering = ('-created_at',)
 
 
 class ConnectorConfig(models.Model, PermissionModelMixin):
@@ -799,14 +807,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         self.delete()
         return target
 
-    def delete(self):
-        if self.ingredient_set.all().exclude(step=None).count() > 0:
-            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
-        else:
-            return super().delete()
-
     # MP_Tree move uses raw SQL to execute move, override behavior to force a save triggering post_save signal
-
     def move(self, *args, **kwargs):
         super().move(*args, **kwargs)
         # treebeard bypasses ORM, need to explicity save to trigger post save signals retrieve the object again to avoid writing previous state back to disk

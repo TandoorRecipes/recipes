@@ -8,7 +8,8 @@
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
-        :object-name="editingObjName()">
+        :object-name="editingObjName()"
+        :editing-object="editingObj">
 
         <v-card-text class="pa-0">
             <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
@@ -69,30 +70,37 @@
 
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
+                    <v-row>
+                        <v-col >
+                            <v-btn-group density="compact" divided border>
+
+                                <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
+                                    v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                <v-btn prepend-icon="fa-solid fa-minimize" @click="editingObj.steps = handleMergeAllSteps()" :disabled="editingObj.steps.length < 2"><span
+                                    v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                <ai-action-button :text="$t('Auto_Sort')" prepend-icon="$ai" :loading="aiStepSortLoading" @selected="aiStepSort"
+                                                  :disabled="editingObj.steps.length < 1"></ai-action-button>
+                            </v-btn-group>
+
+
+                        </v-col>
+                    </v-row>
+
                     <v-form :disabled="loading || fileApiLoading">
-                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id">
+                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
                             <v-col>
-                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)"></step-editor>
+                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
+
+                                <div class="text-center mt-2">
+                                    <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
+                                    <v-btn icon="fa-solid fa-down-left-and-up-right-to-center" style="transform: rotate(135deg)" variant="outlined" size="x-small" class="ms-2"
+                                           @click="mergeStep(s, editingObj.steps[i+1]); editingObj.steps.splice(i+1,1)" v-if="editingObj.steps.length > i + 1"
+                                    ></v-btn>
+                                    <v-btn icon="fa-solid fa-arrow-down-1-9" variant="outlined" size="x-small" class="ms-2" @click="dialogStepManager = true"
+                                           :disabled="editingObj.steps.length < 2"></v-btn>
+                                </div>
                             </v-col>
                         </v-row>
-                        <v-row>
-                            <v-col class="text-center">
-                                <v-btn-group density="compact" divided border>
-                                    <v-btn color="success" prepend-icon="fa-solid fa-plus" @click="addStep()">{{ $t('Add_Step') }}</v-btn>
-                                    <v-btn color="warning" @click="dialogStepManager = true" :disabled="editingObj.steps.length < 2">
-                                        <v-icon icon="fa-solid fa-arrow-down-1-9"></v-icon>
-                                    </v-btn>
-
-                                    <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
-                                        v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                    <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps" :disabled="editingObj.steps.length < 2"><span
-                                        v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
-                                </v-btn-group>
-
-
-                            </v-col>
-                        </v-row>
-
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="properties">
@@ -139,7 +147,9 @@
                 <vue-draggable handle=".drag-handle" v-model="editingObj.steps" :on-sort="sortSteps">
                     <v-list-item v-for="(s,i) in editingObj.steps" :key="s.id">
                         <v-chip color="primary">{{ i + 1 }}</v-chip>
-                        {{ s.name }}
+                        <span class="ms-2" v-if="s.name"> {{ s.name }}</span>
+                        <span class="ms-2" v-else>{{ $t('Step') }} {{ i + 1 }}</span>
+
                         <template #append>
                             <v-icon class="drag-handle" icon="$dragHandle"></v-icon>
                         </template>
@@ -167,9 +177,10 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {mergeAllSteps, splitAllSteps} from "@/utils/step_utils.ts";
+import {mergeAllSteps, mergeStep, splitAllSteps} from "@/utils/step_utils.ts";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import AiActionButton from "@/components/buttons/AiActionButton.vue";
 
 
 const props = defineProps({
@@ -199,6 +210,8 @@ const dialogStepManager = ref(false)
 const {fileApiLoading, updateRecipeImage} = useFileApi()
 const file = shallowRef<File | null>(null)
 
+const aiStepSortLoading = ref(false)
+
 onMounted(() => {
     initializeEditor()
 })
@@ -210,6 +223,12 @@ function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.steps = [] as Step[]
+            addStep()
+            editingObj.value.steps[0].ingredients.push({
+                food: null,
+                unit: null,
+                amount: 0,
+            } as Ingredient)
             editingObj.value.internal = true //TODO make database default after v2
         },
         itemDefaults: props.itemDefaults,
@@ -241,13 +260,20 @@ function deleteImage() {
 
 /**
  * add a new step to the recipe
+ * @param index index to add at, -1 for end
  */
-function addStep() {
-    editingObj.value.steps.push({
+function addStep(index: number = -1) {
+    let newStep = {
         ingredients: [] as Ingredient[],
         time: 0,
         showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients
-    } as Step)
+    } as Step
+
+    if (index >= 0) {
+        editingObj.value.steps.splice(index, 0, newStep)
+    } else {
+        editingObj.value.steps.push(newStep)
+    }
 }
 
 /**
@@ -267,10 +293,11 @@ function deleteStepAtIndex(index: number) {
     editingObj.value.steps.splice(index, 1)
 }
 
-function handleMergeAllSteps(): void {
+function handleMergeAllSteps() {
     if (editingObj.value.steps) {
-        mergeAllSteps(editingObj.value.steps)
+        return mergeAllSteps(editingObj.value.steps)
     }
+    return []
 }
 
 function handleSplitAllSteps(): void {
@@ -291,6 +318,22 @@ function deleteExternalFile() {
         useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
     }).finally(() => {
         loading.value = false
+    })
+}
+
+/**
+ * sort steps and ingredients using UI and update recipe with result
+ * @param providerId provider to use for request
+ */
+function aiStepSort(providerId: number) {
+    let api = new ApiApi()
+    aiStepSortLoading.value = true
+    api.apiAiStepSortCreate({recipe: editingObj.value, provider: providerId}).then(r => {
+        editingObj.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        aiStepSortLoading.value = false
     })
 }
 

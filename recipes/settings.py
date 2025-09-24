@@ -535,6 +535,7 @@ DJANGO_VITE = {
     "default": {
         "dev_mode": False,
         "static_url_prefix": 'vue3',
+        'manifest_path': os.path.join(BASE_DIR, 'cookbook/static/vue3/manifest.json'),
         "dev_server_port": 5173,
         "dev_server_host": os.getenv('DJANGO_VITE_DEV_SERVER_HOST', 'localhost'),
     },
@@ -572,19 +573,31 @@ LANGUAGES = [
     ('bg', _('Bulgarian')),
     ('ca', _('Catalan')),
     ('cs', _('Czech')),
+    ('cr', _('Croatian')),
     ('da', _('Danish')),
     ('nl', _('Dutch')),
     ('en', _('English')),
     ('fr', _('French')),
+    ('fi', _('Finnish')),
     ('de', _('German')),
+    ('el', _('Greek')),
+    ('he', _('Hebrew')),
     ('hu', _('Hungarian')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
-    ('nb', _('Norwegian ')),
+    ('nb', _('Norwegian')),
+    # ('nb-NO', _('Norwegian Bokmål')),
     ('pl', _('Polish')),
+    ('pt', _('Portuguese')),
     ('ru', _('Russian')),
+    ('ro', _('Romanian')),
     ('es', _('Spanish')),
+    ('sl', _('Slovenian')),
     ('sv', _('Swedish')),
+    ('tr', _('Turkish')),
+    ('uk', _('Ukranian')),
+    # ('zh-Hant', _('Chinese (Traditional Han script)')),
+    # ('zh-Hans', _('Chinese (Simplified Han script)')),
 ]
 
 # Static files (CSS, JavaScript, Images)
@@ -617,7 +630,6 @@ if os.getenv('S3_ACCESS_KEY', ''):
         AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', '')
     if os.getenv('S3_CUSTOM_DOMAIN', ''):
         AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
-
 
 MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
 MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))

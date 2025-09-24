@@ -288,7 +288,7 @@ class RecipeSearch():
 
     def _updated_on_filter(self):
         if self._updatedon:
-            self._queryset = self._queryset.filter(updated_at__date__date=self._updatedon)
+            self._queryset = self._queryset.filter(updated_at__date=self._updatedon)
         elif self._updatedon_lte:
             self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
         elif self._updatedon_gte:

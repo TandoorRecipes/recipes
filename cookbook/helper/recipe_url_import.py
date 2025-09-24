@@ -155,7 +155,7 @@ def get_from_scraper(scrape, request):
 
     # assign steps
     try:
-        for i in parse_instructions(scrape.instructions()):
+        for i in parse_instructions(scrape.instructions_list()):
             recipe_json['steps'].append({
                 'instruction': i,
                 'ingredients': [],
@@ -177,11 +177,11 @@ def get_from_scraper(scrape, request):
         for x in scrape.ingredients():
             if x.strip() != '':
                 try:
-                    amount, unit, ingredient, note = ingredient_parser.parse(x)
+                    amount, unit, food, note = ingredient_parser.parse(x)
                     ingredient = {
                         'amount': amount,
                         'food': {
-                            'name': ingredient,
+                            'name': food,
                         },
                         'unit': None,
                         'note': note,
@@ -315,14 +315,29 @@ def clean_instruction_string(instruction):
     # handle unsupported, special UTF8 character in Thermomix-specific instructions,
     # that happen in nearly every recipe on Cookidoo, Zaubertopf Club, Rezeptwelt
     # and in Thermomix-specific recipes on many other sites
-    return normalized_string \
-        .replace("", _('reverse rotation')) \
-        .replace("", _('careful rotation')) \
-        .replace("", _('knead')) \
-        .replace("", _('thicken')) \
-        .replace("", _('warm up')) \
-        .replace("", _('ferment')) \
-        .replace("", _("sous-vide"))
+    normalized_string = normalized_string \
+        .replace(u"\uE003", _('reverse rotation')) \
+        .replace(u"\uE002", _('careful rotation')) \
+        .replace(u"\uE001", _('knead')) \
+        .replace(u"\uE031", _('thicken')) \
+        .replace(u"\uE019", _('warm up')) \
+        .replace(u"\uE02E", _('ferment')) \
+        .replace(u"\uE018", _('slow cook')) \
+        .replace(u"\uE033", _('egg boiler')) \
+        .replace(u"\uE016", _('kettle')) \
+        .replace(u"\uE01E", _('blend')) \
+        .replace(u"\uE011", _('pre-clean')) \
+        .replace(u"\uE026", _('high temperature')) \
+        .replace(u"\uE00D", _('rice cooker')) \
+        .replace(u"\uE00C", _('caramelize')) \
+        .replace(u"\uE038", _('peeler')) \
+        .replace(u"\uE037", _('slicer')) \
+        .replace(u"\uE036", _('grater')) \
+        .replace(u"\uE04C", _('spiralizer')) \
+        .replace(u"\uE02D", _("sous-vide"))
+
+
+    return normalized_string
 
 
 def parse_instructions(instructions):

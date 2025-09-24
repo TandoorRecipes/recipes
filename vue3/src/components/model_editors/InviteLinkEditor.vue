@@ -8,7 +8,8 @@
         :is-update="isUpdate()"
         :is-changed="editingObjChanged"
         :model-class="modelClass"
-        :object-name="editingObjName()">
+        :object-name="editingObjName()"
+        :editing-object="editingObj">
         <v-card-text>
             <v-form :disabled="loading">
                 <v-text-field :label="$t('Email')" v-model="editingObj.email"></v-text-field>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-01 15:04+0200\n"
+"POT-Creation-Date: 2025-09-22 20:15+0200\n"
 "PO-Revision-Date: 2023-04-12 11:55+0000\n"
 "Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Bulgarian <http://translate.tandoor.dev/projects/tandoor/"
@@ -19,43 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.15\n"
 
-#: .\cookbook\forms.py:45
-msgid ""
-"Both fields are optional. If none are given the username will be displayed "
-"instead"
-msgstr ""
-"И двете полета са незадължителни. Ако не се даде нито едно, вместо него ще "
-"се покаже потребителското име"
-
-#: .\cookbook\forms.py:62 .\cookbook\forms.py:246
-msgid "Name"
-msgstr "Име"
-
-#: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
-msgid "Keywords"
-msgstr "Ключови думи"
-
-#: .\cookbook\forms.py:62
-msgid "Preparation time in minutes"
-msgstr "Време за приготвяне в минути"
-
-#: .\cookbook\forms.py:62
-msgid "Waiting time (cooking/baking) in minutes"
-msgstr "Време за изчакване (готвене/изпичане) в минути"
-
-#: .\cookbook\forms.py:63 .\cookbook\forms.py:222 .\cookbook\forms.py:246
-msgid "Path"
-msgstr "Път"
-
-#: .\cookbook\forms.py:63
-msgid "Storage UID"
-msgstr "Потребителски идентификатор на хранилището"
-
-#: .\cookbook\forms.py:93
+#: .\cookbook\forms.py:50
 msgid "Default"
 msgstr "По подразбиране"
 
-#: .\cookbook\forms.py:121
+#: .\cookbook\forms.py:77
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
@@ -64,66 +32,15 @@ msgstr ""
 "съществуващите се игнорират. Поставете отметка в това квадратче, за да "
 "импортирате всичко."
 
-#: .\cookbook\forms.py:143
-msgid "Add your comment: "
-msgstr "Добавете вашия коментар: "
-
-#: .\cookbook\forms.py:151
-msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
-"Оставете празно за dropbox и въведете парола за приложението за nextcloud."
-
-#: .\cookbook\forms.py:154
-msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr "Оставете празно за nextcloud и въведете api токен за dropbox."
-
-#: .\cookbook\forms.py:160
-msgid ""
-"Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
-"php/webdav/</code> is added automatically)"
-msgstr ""
-"Оставете празно за dropbox и въведете само основен URL адрес за nextcloud "
-"(<code>/remote.php/webdav/</code> се добавя автоматично)"
-
-#: .\cookbook\forms.py:188
-msgid ""
-"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
-"profile\">Long Lived Access Token</a> for your HomeAssistant instance"
-msgstr ""
-
-#: .\cookbook\forms.py:193
-msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
-
-#: .\cookbook\forms.py:205
-msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
-
-#: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
-msgid "Storage"
-msgstr "Хранилище"
-
-#: .\cookbook\forms.py:222
-msgid "Active"
-msgstr "Активен"
-
-#: .\cookbook\forms.py:226
-msgid "Search String"
-msgstr "Търсене низ"
-
-#: .\cookbook\forms.py:246
-msgid "File ID"
-msgstr "Идентификатор на файла"
-
-#: .\cookbook\forms.py:262
+#: .\cookbook\forms.py:108
 msgid "Maximum number of users for this space reached."
 msgstr "Достигнат е максималният брой потребители за това пространство."
 
-#: .\cookbook\forms.py:268
+#: .\cookbook\forms.py:114
 msgid "Email address already taken!"
 msgstr "Имейл адресът вече е зает!"
 
-#: .\cookbook\forms.py:275
+#: .\cookbook\forms.py:121
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
@@ -131,107 +48,13 @@ msgstr ""
 "Имейл адресът не се изисква, но ако е налице, връзката за покана ще бъде "
 "изпратена на потребителя."
 
-#: .\cookbook\forms.py:287
+#: .\cookbook\forms.py:133
 msgid "Name already taken."
 msgstr "Име вече е заето."
 
-#: .\cookbook\forms.py:298
+#: .\cookbook\forms.py:144 .\cookbook\forms.py:158
 msgid "Accept Terms and Privacy"
 msgstr "Приемете условия за ползване и поверителност"
-
-#: .\cookbook\forms.py:332
-msgid ""
-"Determines how fuzzy a search is if it uses trigram similarity matching (e."
-"g. low values mean more typos are ignored)."
-msgstr ""
-"Определя колко размито е търсенето, ако използва съвпадение на триграми "
-"(напр. ниските стойности означават, че повече правописни грешки се "
-"игнорират)."
-
-#: .\cookbook\forms.py:340
-msgid ""
-"Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
-"full description of choices."
-msgstr ""
-"Изберете тип метод за търсене. Кликнете <a href=\"/docs/search/\">тук</a> за "
-"пълно описание на избора."
-
-#: .\cookbook\forms.py:341
-msgid ""
-"Use fuzzy matching on units, keywords and ingredients when editing and "
-"importing recipes."
-msgstr ""
-"Използвайте размито съвпадение за единици, ключови думи и съставки, когато "
-"редактирате и импортирате рецепти."
-
-#: .\cookbook\forms.py:342
-msgid ""
-"Fields to search ignoring accents.  Selecting this option can improve or "
-"degrade search quality depending on language"
-msgstr ""
-"Полета за търсене без акценти. Избирането на тази опция може да подобри или "
-"влоши качеството на търсене в зависимост от езика"
-
-#: .\cookbook\forms.py:343
-msgid ""
-"Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
-"'pie' and 'piece' and 'soapie')"
-msgstr ""
-"Полета за търсене на частични съвпадения. (напр. търсенето на „Па“ ще върне "
-"„пай“, „парче“ и „супа“)"
-
-#: .\cookbook\forms.py:344
-msgid ""
-"Fields to search for beginning of word matches. (e.g. searching for 'sa' "
-"will return 'salad' and 'sandwich')"
-msgstr ""
-"Полета за търсене на начало на съвпадения на думи. (напр. търсенето на „са“ "
-"ще върне „салата“ и „сандвич“)"
-
-#: .\cookbook\forms.py:345
-msgid ""
-"Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
-"Note: this option will conflict with 'web' and 'raw' methods of search."
-msgstr ""
-"Полета за „размито“ търсене. (напр. търсенето на „recpie“ ще намери "
-"„recipe“.) Забележка: тази опция ще е в конфликт с „web“ и „raw“ методи за "
-"търсене."
-
-#: .\cookbook\forms.py:346
-msgid ""
-"Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
-"only function with fulltext fields."
-msgstr ""
-"Полета за пълно текстово търсене. Забележка: Методите за търсене „web“, "
-"„phrase“ и „raw“ функционират само с пълнотекстови полета."
-
-#: .\cookbook\forms.py:350
-msgid "Search Method"
-msgstr "Метод за търсене"
-
-#: .\cookbook\forms.py:350
-msgid "Fuzzy Lookups"
-msgstr "Размити търсения"
-
-#: .\cookbook\forms.py:350
-msgid "Ignore Accent"
-msgstr "Игнорирайте акцента"
-
-#: .\cookbook\forms.py:350
-msgid "Partial Match"
-msgstr "Частично съвпадение"
-
-#: .\cookbook\forms.py:350
-msgid "Starts With"
-msgstr "Започва с"
-
-#: .\cookbook\forms.py:351
-msgid "Fuzzy Search"
-msgstr "Размито търсене"
-
-#: .\cookbook\forms.py:351
-msgid "Full Text"
-msgstr "Пълен текст"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
@@ -241,69 +64,119 @@ msgstr ""
 "За да се предотврати спам, исканият имейл не беше изпратен. Моля, изчакайте "
 "няколко минути и опитайте отново."
 
-#: .\cookbook\helper\permission_helper.py:164
-#: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
+#: .\cookbook\helper\permission_helper.py:165
+#: .\cookbook\helper\permission_helper.py:186 .\cookbook\views\views.py:138
 msgid "You are not logged in and therefore cannot view this page!"
 msgstr "Не сте влезли и следователно не можете да видите тази страница!"
 
 #: .\cookbook\helper\permission_helper.py:168
-#: .\cookbook\helper\permission_helper.py:174
-#: .\cookbook\helper\permission_helper.py:199
-#: .\cookbook\helper\permission_helper.py:266
-#: .\cookbook\helper\permission_helper.py:280
-#: .\cookbook\helper\permission_helper.py:291
-#: .\cookbook\helper\permission_helper.py:302
-#: .\cookbook\helper\permission_helper.py:318
-#: .\cookbook\helper\permission_helper.py:341 .\cookbook\views\data.py:35
-#: .\cookbook\views\views.py:127 .\cookbook\views\views.py:131
+#: .\cookbook\helper\permission_helper.py:173
+#: .\cookbook\helper\permission_helper.py:198
+#: .\cookbook\helper\permission_helper.py:265
+#: .\cookbook\helper\permission_helper.py:279
+#: .\cookbook\helper\permission_helper.py:290
+#: .\cookbook\helper\permission_helper.py:301
+#: .\cookbook\helper\permission_helper.py:317
+#: .\cookbook\helper\permission_helper.py:343
+#: .\cookbook\helper\permission_helper.py:359
 msgid "You do not have the required permissions to view this page!"
 msgstr "Нямате необходимите разрешения за преглед на тази страница!"
 
-#: .\cookbook\helper\permission_helper.py:192
-#: .\cookbook\helper\permission_helper.py:215
-#: .\cookbook\helper\permission_helper.py:237
-#: .\cookbook\helper\permission_helper.py:252
+#: .\cookbook\helper\permission_helper.py:191
+#: .\cookbook\helper\permission_helper.py:214
+#: .\cookbook\helper\permission_helper.py:236
+#: .\cookbook\helper\permission_helper.py:251
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
 "Не можете да взаимодействате с този обект, тъй като той не е ваша "
 "собственост!"
 
-#: .\cookbook\helper\permission_helper.py:402
+#: .\cookbook\helper\permission_helper.py:420
 msgid "You have reached the maximum number of recipes for your space."
 msgstr "Достигнахте максималния брой рецепти за вашето пространство."
 
-#: .\cookbook\helper\permission_helper.py:414
+#: .\cookbook\helper\permission_helper.py:432
 msgid "You have more users than allowed in your space."
 msgstr ""
 "Имате повече потребители, отколкото е позволено във вашето пространство."
 
-#: .\cookbook\helper\recipe_url_import.py:310
+#: .\cookbook\helper\recipe_url_import.py:319
 #, fuzzy
 #| msgid "Use fractions"
 msgid "reverse rotation"
 msgstr "Използвайте дроби"
 
-#: .\cookbook\helper\recipe_url_import.py:311
+#: .\cookbook\helper\recipe_url_import.py:320
 msgid "careful rotation"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:312
+#: .\cookbook\helper\recipe_url_import.py:321
 msgid "knead"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:313
+#: .\cookbook\helper\recipe_url_import.py:322
 msgid "thicken"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:314
+#: .\cookbook\helper\recipe_url_import.py:323
 msgid "warm up"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:315
+#: .\cookbook\helper\recipe_url_import.py:324
 msgid "ferment"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:316
+#: .\cookbook\helper\recipe_url_import.py:325
+#, fuzzy
+#| msgid "Last cooked"
+msgid "slow cook"
+msgstr "Последно приготвени"
+
+#: .\cookbook\helper\recipe_url_import.py:326
+msgid "egg boiler"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:327
+msgid "kettle"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:328
+msgid "blend"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:329
+msgid "pre-clean"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:330
+msgid "high temperature"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:331
+msgid "rice cooker"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:332
+msgid "caramelize"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:333
+msgid "peeler"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:334
+msgid "slicer"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:335
+msgid "grater"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:336
+msgid "spiralizer"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
 msgstr ""
 
@@ -311,8 +184,9 @@ msgstr ""
 msgid "You must supply a servings size"
 msgstr "Трябва да предоставите размер на порции"
 
-#: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
+#: .\cookbook\helper\template_helper.py:99
+#: .\cookbook\helper\template_helper.py:101
 msgid "Could not parse template code."
 msgstr "Не можа да се анализира синтактичен код на шаблона."
 
@@ -325,7 +199,7 @@ msgstr "Любим"
 msgid "I made this"
 msgstr ""
 
-#: .\cookbook\integration\integration.py:209
+#: .\cookbook\integration\integration.py:238
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
@@ -333,7 +207,7 @@ msgstr ""
 "Вносителят очаква .zip файл. Избрахте ли правилния тип вносител за вашите "
 "данни?"
 
-#: .\cookbook\integration\integration.py:212
+#: .\cookbook\integration\integration.py:241
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
@@ -341,14 +215,63 @@ msgstr ""
 "По време на импортирането възникна неочаквана грешка. Моля, уверете се, че "
 "сте качили валиден файл."
 
-#: .\cookbook\integration\integration.py:217
+#: .\cookbook\integration\integration.py:246
 msgid "The following recipes were ignored because they already existed:"
 msgstr "Следните рецепти бяха игнорирани, защото вече съществуваха:"
 
-#: .\cookbook\integration\integration.py:221
+#: .\cookbook\integration\integration.py:250
 #, python-format
 msgid "Imported %s recipes."
 msgstr "Импортирани %s рецепти."
+
+#: .\cookbook\integration\mealie1.py:210
+#: .\cookbook\migrations\0190_auto_20230525_1506.py:20
+msgid "Calories"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:211
+#: .\cookbook\migrations\0190_auto_20230525_1506.py:18
+msgid "Carbohydrates"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:212
+msgid "Cholesterol"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:213
+#: .\cookbook\migrations\0190_auto_20230525_1506.py:17
+msgid "Fat"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:214
+msgid "Fiber"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:215
+#, fuzzy
+#| msgid "Protected"
+msgid "Protein"
+msgstr "Защитени"
+
+#: .\cookbook\integration\mealie1.py:216
+msgid "Saturated Fat"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:217
+msgid "Sodium"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:218
+msgid "Sugar"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:219
+msgid "Trans Fat"
+msgstr ""
+
+#: .\cookbook\integration\mealie1.py:220
+msgid "Unsaturated Fat"
+msgstr ""
 
 #: .\cookbook\integration\openeats.py:28
 #, fuzzy
@@ -368,7 +291,7 @@ msgstr "Хранителна информация"
 msgid "Source"
 msgstr "Източник"
 
-#: .\cookbook\integration\recettetek.py:54
+#: .\cookbook\integration\recettetek.py:55
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
 msgstr "Внесено от"
@@ -385,7 +308,7 @@ msgstr "Време за чакане"
 msgid "Preparation Time"
 msgstr "Време за подготовка"
 
-#: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:7
+#: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:6
 msgid "Cookbook"
 msgstr "Готварска книга"
 
@@ -427,13 +350,9 @@ msgstr "Обяд"
 msgid "Dinner"
 msgstr "Вечеря"
 
-#: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:919
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:971
 msgid "Other"
 msgstr "Друго"
-
-#: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-msgid "Fat"
-msgstr ""
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
@@ -441,16 +360,8 @@ msgstr ""
 msgid "g"
 msgstr ""
 
-#: .\cookbook\migrations\0190_auto_20230525_1506.py:18
-msgid "Carbohydrates"
-msgstr ""
-
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
-
-#: .\cookbook\migrations\0190_auto_20230525_1506.py:20
-msgid "Calories"
 msgstr ""
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
@@ -465,177 +376,184 @@ msgstr ""
 "Максимално място за съхранение на файлове в MB. 0 за неограничено, -1 за "
 "деактивиране на качването на файлове."
 
-#: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
-#: .\cookbook\templates\settings.html:18
+#: .\cookbook\models.py:513
 msgid "Search"
 msgstr "Търсене"
 
-#: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
-#: .\cookbook\templates\meal_plan.html:7
+#: .\cookbook\models.py:514
 msgid "Meal-Plan"
 msgstr "План на хранене"
 
-#: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
-#: .\cookbook\views\views.py:459
+#: .\cookbook\models.py:515
 msgid "Books"
 msgstr "Книги"
 
-#: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
-#: .\cookbook\views\views.py:460
+#: .\cookbook\models.py:516 .\cookbook\views\views.py:416
+#: .\cookbook\views\views.py:417
 msgid "Shopping"
 msgstr "Пазаруване"
 
-#: .\cookbook\models.py:752
-msgid " is part of a recipe step and cannot be deleted"
-msgstr " е част от стъпка от рецептата и не може да бъде изтрита"
-
-#: .\cookbook\models.py:918
+#: .\cookbook\models.py:967
 #, fuzzy
 #| msgid "Automations"
 msgid "Nutrition"
 msgstr "Автоматики"
 
-#: .\cookbook\models.py:918
+#: .\cookbook\models.py:968
 #, fuzzy
 #| msgid "Merge"
 msgid "Allergen"
 msgstr "Обединяване"
 
-#: .\cookbook\models.py:919
+#: .\cookbook\models.py:969
 msgid "Price"
 msgstr ""
 
-#: .\cookbook\models.py:919
+#: .\cookbook\models.py:970
 msgid "Goal"
 msgstr ""
 
-#: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
+#: .\cookbook\models.py:1467 .\cookbook\templates\search_info.html:28
 msgid "Simple"
 msgstr "Просто"
 
-#: .\cookbook\models.py:1409 .\cookbook\templates\search_info.html:33
+#: .\cookbook\models.py:1468 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
 msgstr "Фраза"
 
-#: .\cookbook\models.py:1410 .\cookbook\templates\search_info.html:38
+#: .\cookbook\models.py:1469 .\cookbook\templates\search_info.html:38
 msgid "Web"
 msgstr "Мрежа"
 
-#: .\cookbook\models.py:1411 .\cookbook\templates\search_info.html:47
+#: .\cookbook\models.py:1470 .\cookbook\templates\search_info.html:47
 msgid "Raw"
 msgstr "Суров"
 
-#: .\cookbook\models.py:1467
+#: .\cookbook\models.py:1525
 msgid "Food Alias"
 msgstr "Псевдоним на храна"
 
-#: .\cookbook\models.py:1468
+#: .\cookbook\models.py:1526
 msgid "Unit Alias"
 msgstr "Псевдоним на единица"
 
-#: .\cookbook\models.py:1469
+#: .\cookbook\models.py:1527
 msgid "Keyword Alias"
 msgstr "Псевдоним на ключова дума"
 
-#: .\cookbook\models.py:1470
+#: .\cookbook\models.py:1528
 msgid "Description Replace"
 msgstr ""
 
-#: .\cookbook\models.py:1471
+#: .\cookbook\models.py:1529
 msgid "Instruction Replace"
 msgstr ""
 
-#: .\cookbook\models.py:1472
+#: .\cookbook\models.py:1530
 msgid "Never Unit"
 msgstr ""
 
-#: .\cookbook\models.py:1473
+#: .\cookbook\models.py:1531
 msgid "Transpose Words"
 msgstr ""
 
-#: .\cookbook\models.py:1474
+#: .\cookbook\models.py:1532
 #, fuzzy
 #| msgid "Food Alias"
 msgid "Food Replace"
 msgstr "Псевдоним на храна"
 
-#: .\cookbook\models.py:1475
+#: .\cookbook\models.py:1533
 #, fuzzy
 #| msgid "Unit Alias"
 msgid "Unit Replace"
 msgstr "Псевдоним на единица"
 
-#: .\cookbook\models.py:1476
+#: .\cookbook\models.py:1534
 msgid "Name Replace"
 msgstr ""
 
-#: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
-#: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
+#: .\cookbook\models.py:1564
 msgid "Recipe"
 msgstr "Рецепта"
 
-#: .\cookbook\models.py:1504
+#: .\cookbook\models.py:1565
 msgid "Food"
 msgstr "Храна"
 
-#: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
+#: .\cookbook\models.py:1566
 msgid "Keyword"
 msgstr "Ключова дума"
 
-#: .\cookbook\serializer.py:222
+#: .\cookbook\serializer.py:262
 msgid "File uploads are not enabled for this Space."
 msgstr "Качването на файлове не е разрешено за това пространство."
 
-#: .\cookbook\serializer.py:233
+#: .\cookbook\serializer.py:273
 msgid "You have reached your file upload limit."
 msgstr "Достигнахте лимита си за качване на файлове."
 
-#: .\cookbook\serializer.py:328
+#: .\cookbook\serializer.py:281
+msgid "The given file type is not allowed."
+msgstr ""
+
+#: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
+#, fuzzy
+#| msgid "You have reached the maximum number of recipes for your space."
+msgid ""
+"You have the reached the maximum amount of spaces that can be owned by you."
+msgstr "Достигнахте максималния брой рецепти за вашето пространство."
+
+#: .\cookbook\serializer.py:434
+msgid "Space Name must be unique."
+msgstr ""
+
+#: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
 msgstr ""
 
-#: .\cookbook\serializer.py:1270
+#: .\cookbook\serializer.py:1596
 msgid "Hello"
 msgstr "Здравейте"
 
-#: .\cookbook\serializer.py:1270
+#: .\cookbook\serializer.py:1596
 msgid "You have been invited by "
 msgstr "Вие сте поканени от "
 
-#: .\cookbook\serializer.py:1272
+#: .\cookbook\serializer.py:1598
 msgid " to join their Tandoor Recipes space "
 msgstr " да се присъединят към тяхното пространство Tandoor Рецепти "
 
-#: .\cookbook\serializer.py:1274
+#: .\cookbook\serializer.py:1600
 msgid "Click the following link to activate your account: "
 msgstr "Щракнете върху следната връзка, за да активирате профила си: "
 
-#: .\cookbook\serializer.py:1276
+#: .\cookbook\serializer.py:1602
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
 "Ако връзката не работи, използвайте следния код, за да се присъедините ръчно "
 "към пространството: "
 
-#: .\cookbook\serializer.py:1278
+#: .\cookbook\serializer.py:1604
 msgid "The invitation is valid until "
 msgstr "Поканата е валидна до "
 
-#: .\cookbook\serializer.py:1280
+#: .\cookbook\serializer.py:1606
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
 "Tandoor Рецепти е мениджър на рецепти с отворен код. Вижте го в GitHub "
 
-#: .\cookbook\serializer.py:1283
+#: .\cookbook\serializer.py:1609
 msgid "Tandoor Recipes Invite"
 msgstr "Покана за Tandoor Рецепти"
 
-#: .\cookbook\serializer.py:1426
+#: .\cookbook\serializer.py:1813
 msgid "Existing shopping list to update"
 msgstr "Съществуващ списък за пазаруване за актуализиране"
 
-#: .\cookbook\serializer.py:1428
+#: .\cookbook\serializer.py:1815
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
@@ -643,34 +561,27 @@ msgstr ""
 "Списък с идентификаторите на съставките от рецептата за добавяне, ако не са "
 "предоставени, всички съставки ще бъдат добавени."
 
-#: .\cookbook\serializer.py:1430
+#: .\cookbook\serializer.py:1817
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
 "Предоставянето на идентификатор на list_recipe и порции от 0 ще изтрие този "
 "списък за пазаруване."
 
-#: .\cookbook\serializer.py:1439
+#: .\cookbook\serializer.py:1826
 msgid "Amount of food to add to the shopping list"
 msgstr "Количество храна, което да добавите към списъка за пазаруване"
 
-#: .\cookbook\serializer.py:1441
+#: .\cookbook\serializer.py:1828
 msgid "ID of unit to use for the shopping list"
 msgstr ""
 "Идентификатор на единицата, която да се използва за списъка за пазаруване"
 
-#: .\cookbook\serializer.py:1443
+#: .\cookbook\serializer.py:1830
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
 "Когато е зададено на true, ще изтрие цялата храна от активните списъци за "
 "пазаруване."
-
-#: .\cookbook\tables.py:69 .\cookbook\tables.py:83
-#: .\cookbook\templates\generic\delete_template.html:7
-#: .\cookbook\templates\generic\delete_template.html:15
-#: .\cookbook\templates\generic\edit_template.html:28
-msgid "Delete"
-msgstr "Изтриване"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
@@ -689,59 +600,44 @@ msgid "Report a Bug"
 msgstr "Докладвайте грешка"
 
 #: .\cookbook\templates\account\email.html:6
-#: .\cookbook\templates\account\email.html:17
+#: .\cookbook\templates\account\email.html:10
 msgid "E-mail Addresses"
 msgstr "Имейл адреси"
 
 #: .\cookbook\templates\account\email.html:12
-#: .\cookbook\templates\account\password_change.html:11
-#: .\cookbook\templates\account\password_set.html:11
-#: .\cookbook\templates\base.html:331 .\cookbook\templates\settings.html:6
-#: .\cookbook\templates\settings.html:17
-#: .\cookbook\templates\socialaccount\connections.html:10
-#: .\cookbook\templates\user_settings.html:8
-msgid "Settings"
-msgstr "Настройки"
-
-#: .\cookbook\templates\account\email.html:13
-msgid "Email"
-msgstr "Електронна поща"
-
-#: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
 msgstr "Следните имейл адреси са свързани с вашия акаунт:"
 
-#: .\cookbook\templates\account\email.html:36
+#: .\cookbook\templates\account\email.html:29
 msgid "Verified"
 msgstr "Потвърдено"
 
-#: .\cookbook\templates\account\email.html:38
+#: .\cookbook\templates\account\email.html:31
 msgid "Unverified"
 msgstr "Непроверено"
 
-#: .\cookbook\templates\account\email.html:40
+#: .\cookbook\templates\account\email.html:33
 msgid "Primary"
 msgstr "Основен"
 
-#: .\cookbook\templates\account\email.html:47
+#: .\cookbook\templates\account\email.html:40
 msgid "Make Primary"
 msgstr "Направи основен"
 
-#: .\cookbook\templates\account\email.html:49
+#: .\cookbook\templates\account\email.html:42
 msgid "Re-send Verification"
 msgstr "Изпрати повторно потвърждението"
 
-#: .\cookbook\templates\account\email.html:50
-#: .\cookbook\templates\generic\delete_template.html:57
-#: .\cookbook\templates\socialaccount\connections.html:44
+#: .\cookbook\templates\account\email.html:43
+#: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
 msgstr "Премахване"
 
-#: .\cookbook\templates\account\email.html:58
+#: .\cookbook\templates\account\email.html:51
 msgid "Warning:"
 msgstr "Внимание:"
 
-#: .\cookbook\templates\account\email.html:58
+#: .\cookbook\templates\account\email.html:51
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
@@ -749,15 +645,15 @@ msgstr ""
 "В момента нямате зададен имейл адрес. Наистина трябва да добавите имейл "
 "адрес, за да можете да получавате известия, да нулирате паролата си и т.н."
 
-#: .\cookbook\templates\account\email.html:64
+#: .\cookbook\templates\account\email.html:57
 msgid "Add E-mail Address"
 msgstr "Добавете имейл адрес"
 
-#: .\cookbook\templates\account\email.html:69
+#: .\cookbook\templates\account\email.html:62
 msgid "Add E-mail"
 msgstr "Добавете имейл"
 
-#: .\cookbook\templates\account\email.html:79
+#: .\cookbook\templates\account\email.html:72
 msgid "Do you really want to remove the selected e-mail address?"
 msgstr "Наистина ли искате да премахнете избрания имейл адрес?"
 
@@ -780,7 +676,6 @@ msgstr ""
 "            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
-#: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
 msgstr "Потвърдете"
 
@@ -795,7 +690,7 @@ msgstr ""
 "             <a href=\"%(email_url)s\">издадете нова заявка за потвърждение "
 "на имейл</a>."
 
-#: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
+#: .\cookbook\templates\account\login.html:8
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
 msgstr "Влизане"
@@ -804,7 +699,7 @@ msgstr "Влизане"
 #: .\cookbook\templates\account\login.html:31
 #: .\cookbook\templates\account\password_reset.html:39
 #: .\cookbook\templates\account\password_reset_done.html:31
-#: .\cookbook\templates\account\signup.html:69
+#: .\cookbook\templates\account\signup.html:68
 #: .\cookbook\templates\account\signup_closed.html:15
 #: .\cookbook\templates\openid\login.html:15
 #: .\cookbook\templates\openid\login.html:26
@@ -816,7 +711,7 @@ msgstr "Впиши се"
 #: .\cookbook\templates\account\password_reset.html:41
 #: .\cookbook\templates\account\password_reset_done.html:33
 #: .\cookbook\templates\socialaccount\signup.html:8
-#: .\cookbook\templates\socialaccount\signup.html:57
+#: .\cookbook\templates\socialaccount\signup.html:56
 msgid "Sign Up"
 msgstr "Регистрирай се"
 
@@ -848,8 +743,8 @@ msgid "Are you sure you want to sign out?"
 msgstr "Сигурни ли сте, че искате да излезете?"
 
 #: .\cookbook\templates\account\password_change.html:6
-#: .\cookbook\templates\account\password_change.html:16
-#: .\cookbook\templates\account\password_change.html:21
+#: .\cookbook\templates\account\password_change.html:10
+#: .\cookbook\templates\account\password_change.html:15
 #: .\cookbook\templates\account\password_reset_from_key.html:7
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
@@ -857,12 +752,7 @@ msgstr "Сигурни ли сте, че искате да излезете?"
 msgid "Change Password"
 msgstr "Промяна на паролата"
 
-#: .\cookbook\templates\account\password_change.html:12
-#: .\cookbook\templates\account\password_set.html:12
-msgid "Password"
-msgstr "Парола"
-
-#: .\cookbook\templates\account\password_change.html:22
+#: .\cookbook\templates\account\password_change.html:16
 msgid "Forgot Password?"
 msgstr "Забравена парола?"
 
@@ -920,44 +810,43 @@ msgid "Your password is now changed."
 msgstr "Вашата парола вече е променена."
 
 #: .\cookbook\templates\account\password_set.html:6
-#: .\cookbook\templates\account\password_set.html:16
-#: .\cookbook\templates\account\password_set.html:21
+#: .\cookbook\templates\account\password_set.html:10
+#: .\cookbook\templates\account\password_set.html:15
 msgid "Set Password"
 msgstr "Задайте парола"
 
-#: .\cookbook\templates\account\signup.html:6
+#: .\cookbook\templates\account\signup.html:5
 msgid "Register"
 msgstr "Регистрация"
 
-#: .\cookbook\templates\account\signup.html:12
+#: .\cookbook\templates\account\signup.html:11
 msgid "Create an Account"
 msgstr "Създай профил"
 
-#: .\cookbook\templates\account\signup.html:42
-#: .\cookbook\templates\socialaccount\signup.html:33
+#: .\cookbook\templates\account\signup.html:41
 msgid "I accept the follwoing"
 msgstr "Приемам следното"
 
-#: .\cookbook\templates\account\signup.html:45
-#: .\cookbook\templates\socialaccount\signup.html:36
+#: .\cookbook\templates\account\signup.html:44
+#: .\cookbook\templates\socialaccount\signup.html:35
 msgid "Terms and Conditions"
 msgstr "Правила и условия"
 
-#: .\cookbook\templates\account\signup.html:48
-#: .\cookbook\templates\socialaccount\signup.html:39
+#: .\cookbook\templates\account\signup.html:47
+#: .\cookbook\templates\socialaccount\signup.html:38
 msgid "and"
 msgstr "и"
 
-#: .\cookbook\templates\account\signup.html:52
-#: .\cookbook\templates\socialaccount\signup.html:43
+#: .\cookbook\templates\account\signup.html:51
+#: .\cookbook\templates\socialaccount\signup.html:42
 msgid "Privacy Policy"
 msgstr "Политика за поверителност"
 
-#: .\cookbook\templates\account\signup.html:65
+#: .\cookbook\templates\account\signup.html:64
 msgid "Create User"
 msgstr "Създаване на потребител"
 
-#: .\cookbook\templates\account\signup.html:69
+#: .\cookbook\templates\account\signup.html:68
 msgid "Already have an account?"
 msgstr "Вече имате профил?"
 
@@ -970,347 +859,41 @@ msgstr "Регистрациите са затворени"
 msgid "We are sorry, but the sign up is currently closed."
 msgstr "Съжаляваме, но регистрацията в момента е затворена."
 
-#: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:378
-#: .\cookbook\templates\rest_framework\api.html:11
-msgid "API Documentation"
-msgstr "Документация за API"
-
-#: .\cookbook\templates\base.html:110 .\cookbook\templates\index.html:87
-msgid "Recipes"
-msgstr "Рецепти"
-
-#: .\cookbook\templates\base.html:161 .\cookbook\views\lists.py:120
-msgid "Foods"
-msgstr "Храни"
-
-#: .\cookbook\templates\base.html:173 .\cookbook\views\lists.py:137
-msgid "Units"
-msgstr "Мерни единици"
-
-#: .\cookbook\templates\base.html:187
-msgid "Supermarket"
-msgstr "Супермаркет"
-
-#: .\cookbook\templates\base.html:199
-msgid "Supermarket Category"
-msgstr "Категория супермаркет"
-
-#: .\cookbook\templates\base.html:211 .\cookbook\views\lists.py:186
-msgid "Automations"
-msgstr "Автоматики"
-
-#: .\cookbook\templates\base.html:225 .\cookbook\views\lists.py:222
-msgid "Files"
-msgstr "Файлове"
-
-#: .\cookbook\templates\base.html:237
-msgid "Batch Edit"
-msgstr "Пакетно редактиране"
-
-#: .\cookbook\templates\base.html:249 .\cookbook\templates\history.html:6
-#: .\cookbook\templates\history.html:14
-msgid "History"
-msgstr "История"
-
-#: .\cookbook\templates\base.html:263
-#: .\cookbook\templates\ingredient_editor.html:7
-#: .\cookbook\templates\ingredient_editor.html:13
-msgid "Ingredient Editor"
-msgstr "Редактор на съставки"
-
-#: .\cookbook\templates\base.html:275
-#: .\cookbook\templates\export_response.html:7
-#: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
-msgid "Export"
-msgstr "Експортиране"
-
-#: .\cookbook\templates\base.html:287
-msgid "Properties"
-msgstr ""
-
-#: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
+#: .\cookbook\templates\frontend\tandoor.html:15
 #, fuzzy
-#| msgid "Account Connections"
-msgid "Unit Conversions"
-msgstr "Връзки с профил"
+#| msgid "Tandoor Recipes Invite"
+msgid "Tandoor Recipe Manager"
+msgstr "Покана за Tandoor Рецепти"
 
-#: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
-msgid "Import Recipe"
-msgstr "Внасяне на рецепта"
-
-#: .\cookbook\templates\base.html:320
-msgid "Create"
-msgstr "Създайте"
-
-#: .\cookbook\templates\base.html:333
-#: .\cookbook\templates\generic\list_template.html:14
-msgid "External Recipes"
-msgstr "Външни рецепти"
-
-#: .\cookbook\templates\base.html:336 .\cookbook\templates\space_manage.html:15
-msgid "Space Settings"
-msgstr "Настройки на пространството"
-
-#: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
-msgid "External Connectors"
-msgstr "Външни рецепти"
-
-#: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
-msgid "System"
-msgstr "Система"
-
-#: .\cookbook\templates\base.html:347
-msgid "Admin"
-msgstr "Админ"
-
-#: .\cookbook\templates\base.html:351
-#: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
-msgid "Your Spaces"
-msgstr "Няма място"
-
-#: .\cookbook\templates\base.html:362
-#: .\cookbook\templates\space_overview.html:6
-msgid "Overview"
-msgstr ""
-
-#: .\cookbook\templates\base.html:372
-msgid "Markdown Guide"
-msgstr "Ръководство за намаление"
-
-#: .\cookbook\templates\base.html:374
-msgid "GitHub"
-msgstr "GitHub"
-
-#: .\cookbook\templates\base.html:376
-msgid "Translate Tandoor"
-msgstr "Преведете Tandoor"
-
-#: .\cookbook\templates\base.html:380
-msgid "API Browser"
-msgstr "API браузър"
-
-#: .\cookbook\templates\base.html:383
-msgid "Log out"
-msgstr "Излез от профила си"
-
-#: .\cookbook\templates\base.html:406
-msgid "You are using the free version of Tandor"
-msgstr "Вие използвате безплатната версия на Tandor"
-
-#: .\cookbook\templates\base.html:407
-msgid "Upgrade Now"
-msgstr "Надстройте сега"
-
-#: .\cookbook\templates\batch\edit.html:6
-msgid "Batch edit Category"
-msgstr "Категория за групово редактиране"
-
-#: .\cookbook\templates\batch\edit.html:15
-msgid "Batch edit Recipes"
-msgstr "Рецепти за групово редактиране"
-
-#: .\cookbook\templates\batch\edit.html:20
-msgid "Add the specified keywords to all recipes containing a word"
-msgstr "Добавете посочените ключови думи към всички рецепти, съдържащи дума"
-
-#: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:75
-msgid "Sync"
-msgstr "Синхронизиране"
-
-#: .\cookbook\templates\batch\monitor.html:10
-msgid "Manage watched Folders"
-msgstr "Управление на наблюдаваните папки"
-
-#: .\cookbook\templates\batch\monitor.html:14
-msgid ""
-"On this Page you can manage all storage folder locations that should be "
-"monitored and synced."
-msgstr ""
-"На тази страница можете да управлявате всички местоположения на папки за "
-"съхранение, които трябва да бъдат наблюдавани и синхронизирани."
-
-#: .\cookbook\templates\batch\monitor.html:16
-msgid "The path must be in the following format"
-msgstr "Пътят трябва да бъде в следния формат"
-
-#: .\cookbook\templates\batch\monitor.html:20
-#: .\cookbook\templates\forms\edit_import_recipe.html:14
-#: .\cookbook\templates\generic\edit_template.html:23
-#: .\cookbook\templates\generic\new_template.html:23
-#: .\cookbook\templates\settings.html:57
-msgid "Save"
-msgstr "Запазете"
-
-#: .\cookbook\templates\batch\monitor.html:21
-msgid "Manage External Storage"
-msgstr "Управление на външно хранилище"
-
-#: .\cookbook\templates\batch\monitor.html:28
-msgid "Sync Now!"
-msgstr "Синхронизирайте сега!"
-
-#: .\cookbook\templates\batch\monitor.html:29
-msgid "Show Recipes"
-msgstr "Покажи рецепти"
-
-#: .\cookbook\templates\batch\monitor.html:30
-msgid "Show Log"
-msgstr "Покажи дневник"
-
-#: .\cookbook\templates\batch\waiting.html:4
-#: .\cookbook\templates\batch\waiting.html:10
-msgid "Importing Recipes"
-msgstr "Импортиране на рецепти"
-
-#: .\cookbook\templates\batch\waiting.html:28
-msgid ""
-"This can take a few minutes, depending on the number of recipes in sync, "
-"please wait."
-msgstr ""
-"Това може да отнеме няколко минути, в зависимост от броя на синхронизираните "
-"рецепти, моля, изчакайте."
-
-#: .\cookbook\templates\books.html:7
-msgid "Recipe Books"
-msgstr "Книги с рецепти"
-
-#: .\cookbook\templates\export.html:7 .\cookbook\templates\test2.html:6
-msgid "Export Recipes"
-msgstr "Експортиране на рецепти"
-
-#: .\cookbook\templates\forms\edit_import_recipe.html:5
-#: .\cookbook\templates\forms\edit_import_recipe.html:9
-msgid "Import new Recipe"
-msgstr "Импортиране на нова рецепта"
-
-#: .\cookbook\templates\forms\edit_internal_recipe.html:7
-msgid "Edit Recipe"
-msgstr "Редактиране на рецепта"
-
-#: .\cookbook\templates\generic\delete_template.html:21
-#, python-format
-msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "Наистина ли искате да изтриете %(title)s: <b>%(object)s</b> "
-
-#: .\cookbook\templates\generic\delete_template.html:22
-msgid "This cannot be undone!"
-msgstr ""
-
-#: .\cookbook\templates\generic\delete_template.html:27
-msgid "Protected"
-msgstr "Защитени"
-
-#: .\cookbook\templates\generic\delete_template.html:42
-msgid "Cascade"
-msgstr "Каскада"
-
-#: .\cookbook\templates\generic\delete_template.html:73
-msgid "Cancel"
-msgstr "Отмяна"
-
-#: .\cookbook\templates\generic\edit_template.html:6
-#: .\cookbook\templates\generic\edit_template.html:14
-msgid "Edit"
-msgstr "Редактиране"
-
-#: .\cookbook\templates\generic\edit_template.html:32
-msgid "View"
-msgstr "Изглед"
-
-#: .\cookbook\templates\generic\edit_template.html:36
-msgid "Delete original file"
-msgstr "Изтрийте оригиналния файл"
-
-#: .\cookbook\templates\generic\list_template.html:6
-#: .\cookbook\templates\generic\list_template.html:22
-msgid "List"
-msgstr "Списък"
-
-#: .\cookbook\templates\generic\list_template.html:36
-msgid "Filter"
-msgstr "Филтрирайте"
-
-#: .\cookbook\templates\generic\list_template.html:41
-msgid "Import all"
-msgstr "Импортирайте всичко"
-
-#: .\cookbook\templates\generic\new_template.html:6
-#: .\cookbook\templates\generic\new_template.html:14
-msgid "New"
-msgstr "Нов"
-
-#: .\cookbook\templates\generic\table_template.html:76
-msgid "previous"
-msgstr "предишен"
-
-#: .\cookbook\templates\generic\table_template.html:98
-msgid "next"
-msgstr "следващ"
-
-#: .\cookbook\templates\history.html:20
-msgid "View Log"
-msgstr "Преглед на дневника"
-
-#: .\cookbook\templates\history.html:24
-msgid "Cook Log"
-msgstr "Дневник на готвене"
-
-#: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:90
-#: .\cookbook\views\edit.py:174
-msgid "Import"
-msgstr "Импортиране"
-
-#: .\cookbook\templates\include\storage_backend_warning.html:4
-msgid "Security Warning"
-msgstr "Предупреждение за сигурност"
-
-#: .\cookbook\templates\include\storage_backend_warning.html:5
-msgid ""
-"\n"
-"        The <b>Password and Token</b> field are stored as <b>plain text</b> "
-"inside the database.\n"
-"        This is necessary because they are needed to make API requests, but "
-"it also increases the risk of\n"
-"        someone stealing it. <br/>\n"
-"        To limit the possible damage tokens or accounts with limited access "
-"can be used.\n"
-"    "
-msgstr ""
-"\n"
-"        Полето <b>Парола и символ</b> се съхраняват като <b>обикновен текст</"
-"b> в базата данни.\n"
-"         Това е необходимо, защото те са необходими за отправяне на заявки "
-"за API, но също така увеличава риска от\n"
-"         някой да го открадне. <br/>\n"
-"         За ограничаване на възможните щети могат да се използват символи "
-"или профили с ограничен достъп.\n"
-"    "
-
-#: .\cookbook\templates\index.html:29
+#: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
 msgstr "Търсете рецепта ..."
 
-#: .\cookbook\templates\index.html:44
+#: .\cookbook\templates\index.html:43
 msgid "New Recipe"
 msgstr "Нова рецепта"
 
-#: .\cookbook\templates\index.html:53
+#: .\cookbook\templates\index.html:46
+msgid "Import Recipe"
+msgstr "Внасяне на рецепта"
+
+#: .\cookbook\templates\index.html:52
 msgid "Advanced Search"
 msgstr "Разширено търсене"
 
-#: .\cookbook\templates\index.html:57
+#: .\cookbook\templates\index.html:56
 msgid "Reset Search"
 msgstr "Нулиране на търсенето"
 
-#: .\cookbook\templates\index.html:85
+#: .\cookbook\templates\index.html:84
 msgid "Last viewed"
 msgstr "Последно разглеждан"
 
-#: .\cookbook\templates\index.html:94
+#: .\cookbook\templates\index.html:86
+msgid "Recipes"
+msgstr "Рецепти"
+
+#: .\cookbook\templates\index.html:93
 msgid "Log in to view recipes"
 msgstr "Влезте, за да видите рецептите"
 
@@ -1498,53 +1081,25 @@ msgstr ""
 "Нямате необходимите разрешения, за да видите тази страница или да извършите "
 "това действие."
 
-#: .\cookbook\templates\offline.html:6
+#: .\cookbook\templates\offline.html:5
 msgid "Offline"
 msgstr "Извън линия"
-
-#: .\cookbook\templates\offline.html:19
-msgid "You are currently offline!"
-msgstr "В момента сте извън линия!"
-
-#: .\cookbook\templates\offline.html:20
-msgid ""
-"The recipes listed below are available for offline viewing because you have "
-"recently viewed them. Keep in mind that data might be outdated."
-msgstr ""
-"Изброените по-долу рецепти са достъпни за гледане офлайн, тъй като наскоро "
-"сте ги гледали. Имайте предвид, че данните може да са остарели."
 
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
 msgstr "Обратно"
 
-#: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredient Editor"
-msgid "Property Editor"
-msgstr "Редактор на съставки"
-
-#: .\cookbook\templates\recipe_view.html:36
-msgid "Comments"
-msgstr "Коментари"
-
-#: .\cookbook\templates\recipe_view.html:41
-msgid "by"
-msgstr "от"
-
-#: .\cookbook\templates\recipe_view.html:59 .\cookbook\views\delete.py:146
-#: .\cookbook\views\edit.py:156
-msgid "Comment"
-msgstr "Коментар"
-
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
 msgstr "Рецепта Начало"
 
+#: .\cookbook\templates\rest_framework\api.html:11
+msgid "API Documentation"
+msgstr "Документация за API"
+
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
-#: .\cookbook\templates\settings.html:24
 msgid "Search Settings"
 msgstr "Настройки за търсене"
 
@@ -1804,70 +1359,7 @@ msgstr ""
 "изпълните командата за управление 'python manage.py rebuildindex'\n"
 "            "
 
-#: .\cookbook\templates\settings.html:25
-msgid ""
-"There are many options to configure the search depending on your personal "
-"preferences."
-msgstr ""
-"Има много опции за конфигуриране на търсенето в зависимост от вашите лични "
-"предпочитания."
-
-#: .\cookbook\templates\settings.html:26
-msgid ""
-"Usually you do <b>not need</b> to configure any of them and can just stick "
-"with either the default or one of the following presets."
-msgstr ""
-"Обикновено <b>не е необходимо</b> да конфигурирате нито един от тях и можете "
-"просто да се придържате към стандартната или една от следните предварително "
-"зададени настройки."
-
-#: .\cookbook\templates\settings.html:27
-msgid ""
-"If you do want to configure the search you can read about the different "
-"options <a href=\"/docs/search/\">here</a>."
-msgstr ""
-"Ако искате да конфигурирате търсенето, можете да прочетете за различните "
-"опции <a href=\"/docs/search/\">тук</a>."
-
-#: .\cookbook\templates\settings.html:32
-msgid "Fuzzy"
-msgstr "Размит"
-
-#: .\cookbook\templates\settings.html:33
-msgid ""
-"Find what you need even if your search or the recipe contains typos. Might "
-"return more results than needed to make sure you find what you are looking "
-"for."
-msgstr ""
-"Намерете това, от което се нуждаете, дори ако вашето търсене или рецептата "
-"съдържат правописни грешки. Може да върне повече резултати, отколкото е "
-"необходимо, за да сте сигурни, че ще намерите това, което търсите."
-
-#: .\cookbook\templates\settings.html:34
-msgid "This is the default behavior"
-msgstr "Това е поведението по подразбиране"
-
-#: .\cookbook\templates\settings.html:37 .\cookbook\templates\settings.html:46
-msgid "Apply"
-msgstr "Приложи"
-
-#: .\cookbook\templates\settings.html:42
-msgid "Precise"
-msgstr "Прецизно"
-
-#: .\cookbook\templates\settings.html:43
-msgid ""
-"Allows fine control over search results but might not return results if too "
-"many spelling mistakes are made."
-msgstr ""
-"Позволява фин контрол върху резултатите от търсенето, но може да не върне "
-"резултати, ако са направени твърде много правописни грешки."
-
-#: .\cookbook\templates\settings.html:44
-msgid "Perfect for large Databases"
-msgstr "Идеален за големи бази данни"
-
-#: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
+#: .\cookbook\templates\setup.html:6
 msgid "Cookbook Setup"
 msgstr "Настройка на готварска книга"
 
@@ -1898,15 +1390,11 @@ msgstr ""
 "Възникна грешка при опит за влизане през профила ви в социалната мрежа."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
-#: .\cookbook\templates\socialaccount\connections.html:15
+#: .\cookbook\templates\socialaccount\connections.html:7
 msgid "Account Connections"
 msgstr "Връзки с профил"
 
-#: .\cookbook\templates\socialaccount\connections.html:11
-msgid "Social"
-msgstr "Социални"
-
-#: .\cookbook\templates\socialaccount\connections.html:18
+#: .\cookbook\templates\socialaccount\connections.html:10
 msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
@@ -1914,12 +1402,12 @@ msgstr ""
 "Можете да влезете в профила си, като използвате някоя от следните външни\n"
 "             профили:"
 
-#: .\cookbook\templates\socialaccount\connections.html:52
+#: .\cookbook\templates\socialaccount\connections.html:44
 msgid ""
 "You currently have no social network accounts connected to this account."
 msgstr "В момента нямате профили в социални мрежи, свързани с този профил."
 
-#: .\cookbook\templates\socialaccount\connections.html:55
+#: .\cookbook\templates\socialaccount\connections.html:47
 msgid "Add a 3rd Party Account"
 msgstr "Добавете профил на трета страна"
 
@@ -1964,6 +1452,12 @@ msgstr ""
 "         %(site_name)s. Като последна стъпка, моля, попълнете следния "
 "формуляр:"
 
+#: .\cookbook\templates\socialaccount\signup.html:32
+#, fuzzy
+#| msgid "I accept the follwoing"
+msgid "I accept the following"
+msgstr "Приемам следното"
+
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:39
@@ -1981,19 +1475,11 @@ msgstr ""
 msgid "Sign in using"
 msgstr "Влезте използвайки"
 
-#: .\cookbook\templates\space_manage.html:7
-msgid "Space Management"
+#: .\cookbook\templates\space_overview.html:6
+msgid "Overview"
 msgstr ""
 
-#: .\cookbook\templates\space_manage.html:26
-msgid "Space:"
-msgstr "Пространство:"
-
-#: .\cookbook\templates\space_manage.html:27
-msgid "Manage Subscription"
-msgstr "Управление на абонамента"
-
-#: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:184
+#: .\cookbook\templates\space_overview.html:13
 #, fuzzy
 #| msgid "Space:"
 msgid "Space"
@@ -2014,26 +1500,26 @@ msgstr ""
 "Можете да бъдете поканени в съществуващо пространство или да създадете свое "
 "собствено."
 
+#: .\cookbook\templates\space_overview.html:25
+#, fuzzy
+#| msgid "No Space"
+msgid "Your Spaces"
+msgstr "Няма място"
+
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
 msgstr ""
 
-#: .\cookbook\templates\space_overview.html:57
-#, fuzzy
-#| msgid "Create Space"
-msgid "Leave Space"
-msgstr "Създайте пространство"
-
-#: .\cookbook\templates\space_overview.html:78
-#: .\cookbook\templates\space_overview.html:88
+#: .\cookbook\templates\space_overview.html:73
+#: .\cookbook\templates\space_overview.html:83
 msgid "Join Space"
 msgstr "Присъединете се към пространството"
 
-#: .\cookbook\templates\space_overview.html:81
+#: .\cookbook\templates\space_overview.html:76
 msgid "Join an existing space."
 msgstr "Присъединете се към съществуващо пространство."
 
-#: .\cookbook\templates\space_overview.html:83
+#: .\cookbook\templates\space_overview.html:78
 msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
@@ -2042,28 +1528,41 @@ msgstr ""
 "покана или кликнете върху връзката за покана, която собственикът на "
 "пространството ви е изпратил."
 
-#: .\cookbook\templates\space_overview.html:96
-#: .\cookbook\templates\space_overview.html:105
+#: .\cookbook\templates\space_overview.html:91
+#: .\cookbook\templates\space_overview.html:100
 msgid "Create Space"
 msgstr "Създайте пространство"
 
-#: .\cookbook\templates\space_overview.html:99
+#: .\cookbook\templates\space_overview.html:94
 msgid "Create your own recipe space."
 msgstr "Създайте свое собствено пространство за рецепти."
 
-#: .\cookbook\templates\space_overview.html:101
+#: .\cookbook\templates\space_overview.html:96
 msgid "Start your own recipe space and invite other users to it."
 msgstr ""
 "Започнете свое собствено пространство за рецепти и поканете други "
 "потребители в него."
 
-#: .\cookbook\templates\system.html:14
+#: .\cookbook\templates\system.html:23
+msgid "System"
+msgstr "Система"
+
+#: .\cookbook\templates\system.html:24
+#, fuzzy
+#| msgid ""
+#| "\n"
+#| "        Django Recipes is an open source free software application. It "
+#| "can be found on\n"
+#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
+#| "recipes/releases\">here</a>.\n"
+#| "    "
 msgid ""
 "\n"
-"        Django Recipes is an open source free software application. It can "
+"        Tandoor Recipes is an open source free software application. It can "
 "be found on\n"
-"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"        Changelogs can be found <a href=\"https://github.com/vabene1111/"
+"        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>.\n"
+"        Changelogs can be found <a href=\"https://github.com/TandoorRecipes/"
 "recipes/releases\">here</a>.\n"
 "    "
 msgstr ""
@@ -2075,11 +1574,11 @@ msgstr ""
 "github.com/vabene1111/recipes/releases\">тук</a>.\n"
 "    "
 
-#: .\cookbook\templates\system.html:20
+#: .\cookbook\templates\system.html:30
 msgid "System Information"
 msgstr "Системна информация"
 
-#: .\cookbook\templates\system.html:41
+#: .\cookbook\templates\system.html:51
 msgid ""
 "\n"
 "            You need to execute <code>version.py</code> in your update "
@@ -2087,23 +1586,27 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\cookbook\templates\system.html:46
+#: .\cookbook\templates\system.html:56
+msgid "Plugins"
+msgstr ""
+
+#: .\cookbook\templates\system.html:67
 msgid "Media Serving"
 msgstr "Обслужване на медии"
 
-#: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
-#: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
-#: .\cookbook\templates\system.html:102 .\cookbook\templates\system.html:113
+#: .\cookbook\templates\system.html:68 .\cookbook\templates\system.html:82
+#: .\cookbook\templates\system.html:96 .\cookbook\templates\system.html:109
+#: .\cookbook\templates\system.html:123 .\cookbook\templates\system.html:134
 msgid "Warning"
 msgstr "Внимание"
 
-#: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
-#: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
-#: .\cookbook\templates\system.html:104 .\cookbook\templates\system.html:113
+#: .\cookbook\templates\system.html:68 .\cookbook\templates\system.html:82
+#: .\cookbook\templates\system.html:96 .\cookbook\templates\system.html:109
+#: .\cookbook\templates\system.html:125 .\cookbook\templates\system.html:134
 msgid "Ok"
 msgstr "ОК"
 
-#: .\cookbook\templates\system.html:49
+#: .\cookbook\templates\system.html:70
 msgid ""
 "Serving media files directly using gunicorn/python is <b>not recommend</b>!\n"
 "            Please follow the steps described\n"
@@ -2120,17 +1623,17 @@ msgstr ""
 "             вашата инсталация.\n"
 "        "
 
-#: .\cookbook\templates\system.html:55 .\cookbook\templates\system.html:70
-#: .\cookbook\templates\system.html:83 .\cookbook\templates\system.html:94
-#: .\cookbook\views\views.py:303
+#: .\cookbook\templates\system.html:76 .\cookbook\templates\system.html:91
+#: .\cookbook\templates\system.html:104 .\cookbook\templates\system.html:115
+#: .\cookbook\views\views.py:168
 msgid "Everything is fine!"
 msgstr "Всичко е наред!"
 
-#: .\cookbook\templates\system.html:59
+#: .\cookbook\templates\system.html:80
 msgid "Secret Key"
 msgstr "Секретен ключ"
 
-#: .\cookbook\templates\system.html:63
+#: .\cookbook\templates\system.html:84
 msgid ""
 "\n"
 "            You do not have a <code>SECRET_KEY</code> configured in your "
@@ -2152,11 +1655,11 @@ msgstr ""
 "code>.\n"
 "        "
 
-#: .\cookbook\templates\system.html:73
+#: .\cookbook\templates\system.html:94
 msgid "Debug Mode"
 msgstr "Режим за отстраняване на грешки"
 
-#: .\cookbook\templates\system.html:77
+#: .\cookbook\templates\system.html:98
 msgid ""
 "\n"
 "            This application is still running in debug mode. This is most "
@@ -2175,11 +1678,11 @@ msgstr ""
 "code>.\n"
 "        "
 
-#: .\cookbook\templates\system.html:86
+#: .\cookbook\templates\system.html:107
 msgid "Allowed Hosts"
 msgstr ""
 
-#: .\cookbook\templates\system.html:90
+#: .\cookbook\templates\system.html:111
 msgid ""
 "\n"
 "            Your allowed hosts are configured to allow every host. This "
@@ -2188,21 +1691,21 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\cookbook\templates\system.html:97
+#: .\cookbook\templates\system.html:118
 msgid "Database"
 msgstr "База данни"
 
-#: .\cookbook\templates\system.html:100
+#: .\cookbook\templates\system.html:121
 msgid "Info"
 msgstr "Информация"
 
-#: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
+#: .\cookbook\templates\system.html:131 .\cookbook\templates\system.html:148
 #, fuzzy
 #| msgid "Use fractions"
 msgid "Migrations"
 msgstr "Използвайте дроби"
 
-#: .\cookbook\templates\system.html:116
+#: .\cookbook\templates\system.html:137
 msgid ""
 "\n"
 "            Migrations should never fail!\n"
@@ -2214,103 +1717,106 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\cookbook\templates\system.html:182
+#: .\cookbook\templates\system.html:238
 msgid "False"
 msgstr ""
 
-#: .\cookbook\templates\system.html:182
+#: .\cookbook\templates\system.html:238
 msgid "True"
 msgstr ""
 
-#: .\cookbook\templates\system.html:207
+#: .\cookbook\templates\system.html:268
 msgid "Hide"
 msgstr ""
 
-#: .\cookbook\templates\system.html:210
+#: .\cookbook\templates\system.html:271
 #, fuzzy
 #| msgid "Show Log"
 msgid "Show"
 msgstr "Покажи дневник"
 
-#: .\cookbook\templates\url_import.html:8
-msgid "URL Import"
-msgstr "Импортиране на URL"
+#: .\cookbook\templates\test2.html:6
+msgid "Export Recipes"
+msgstr "Експортиране на рецепти"
 
-#: .\cookbook\views\api.py:120 .\cookbook\views\api.py:213
+#: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
+msgid "Export"
+msgstr "Експортиране"
+
+#: .\cookbook\views\api.py:198 .\cookbook\views\api.py:326
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "Параметърът updated_at е форматиран неправилно"
 
-#: .\cookbook\views\api.py:234 .\cookbook\views\api.py:340
+#: .\cookbook\views\api.py:351 .\cookbook\views\api.py:484
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
 msgstr "Не съществува {self.basename} с идентификатор {pk}"
 
-#: .\cookbook\views\api.py:238
+#: .\cookbook\views\api.py:355
 msgid "Cannot merge with the same object!"
 msgstr "Не може да се слее със същия обект!"
 
-#: .\cookbook\views\api.py:245
+#: .\cookbook\views\api.py:362
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
 msgstr "Не съществува {self.basename} с идентификатор {target}"
 
-#: .\cookbook\views\api.py:250
+#: .\cookbook\views\api.py:367
 msgid "Cannot merge with child object!"
 msgstr "Не може да се слее с дъщерен обект!"
 
-#: .\cookbook\views\api.py:288
+#: .\cookbook\views\api.py:405
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr "{source.name} беше обединен успешно с {target.name}"
 
-#: .\cookbook\views\api.py:293
+#: .\cookbook\views\api.py:411
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr "Възникна грешка при опит за сливане на {source.name} с {target.name}"
 
-#: .\cookbook\views\api.py:349
+#: .\cookbook\views\api.py:493
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
 msgstr "{child.name} беше преместен успешно в основния."
 
-#: .\cookbook\views\api.py:352 .\cookbook\views\api.py:370
+#: .\cookbook\views\api.py:496 .\cookbook\views\api.py:514
 msgid "An error occurred attempting to move "
 msgstr "Възникна грешка при опит за преместване "
 
-#: .\cookbook\views\api.py:355
+#: .\cookbook\views\api.py:499
 msgid "Cannot move an object to itself!"
 msgstr "Не може да премести обект към себе си!"
 
-#: .\cookbook\views\api.py:361
+#: .\cookbook\views\api.py:505
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
 msgstr "Не съществува {self.basename} с идентификатор {parent}"
 
-#: .\cookbook\views\api.py:367
+#: .\cookbook\views\api.py:511
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr "{child.name} беше преместен успешно в родител {parent.name}"
 
-#: .\cookbook\views\api.py:589
+#: .\cookbook\views\api.py:992
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} беше премахнат от списъка за пазаруване."
 
-#: .\cookbook\views\api.py:594 .\cookbook\views\api.py:1037
-#: .\cookbook\views\api.py:1050
+#: .\cookbook\views\api.py:997 .\cookbook\views\api.py:1627
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} беше добавен към списъка за пазаруване."
 
-#: .\cookbook\views\api.py:742
-msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
+#: .\cookbook\views\api.py:1239
+msgid "Filter meal plans from date (inclusive)."
 msgstr ""
 
-#: .\cookbook\views\api.py:743
-msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
+#: .\cookbook\views\api.py:1241
+msgid "Filter meal plans to date (inclusive)."
 msgstr ""
 
-#: .\cookbook\views\api.py:744
+#: .\cookbook\views\api.py:1244
 #, fuzzy
 #| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -2318,17 +1824,17 @@ msgstr ""
 "Идентификатор на рецептата, част от която е стъпка. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:872
+#: .\cookbook\views\api.py:1404
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
 "Идентификатор на рецептата, част от която е стъпка. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:873
+#: .\cookbook\views\api.py:1406
 msgid "Query string matched (fuzzy) against object name."
 msgstr "Низът на заявката съответства (размито) спрямо името на обекта."
 
-#: .\cookbook\views\api.py:909
+#: .\cookbook\views\api.py:1442
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
@@ -2336,7 +1842,7 @@ msgstr ""
 "Низът на заявката съвпада (размито) с името на рецептата. В бъдеще също и "
 "пълнотекстово търсене."
 
-#: .\cookbook\views\api.py:910
+#: .\cookbook\views\api.py:1444
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
@@ -2344,321 +1850,328 @@ msgstr ""
 "Идентификатор на ключовата дума, която рецептата трябва да има. За параметър "
 "за многократно повторение. Еквивалентно на keywords_or"
 
-#: .\cookbook\views\api.py:911
+#: .\cookbook\views\api.py:1445
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Връща рецепти с някоя "
 "от ключовите думи"
 
-#: .\cookbook\views\api.py:912
+#: .\cookbook\views\api.py:1446
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Връща рецепти с всички "
 "ключови думи."
 
-#: .\cookbook\views\api.py:913
+#: .\cookbook\views\api.py:1447
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Изключва рецепти с "
 "някоя от ключовите думи."
 
-#: .\cookbook\views\api.py:914
+#: .\cookbook\views\api.py:1448
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Изключва рецепти с "
 "всички ключови думи."
 
-#: .\cookbook\views\api.py:915
+#: .\cookbook\views\api.py:1450
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
 "Идентификация на храната, която рецептата трябва да има. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:916
+#: .\cookbook\views\api.py:1451
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Връща рецепти с някоя от "
 "храните"
 
-#: .\cookbook\views\api.py:917
+#: .\cookbook\views\api.py:1452
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Връща рецептите с всички "
 "храни."
 
-#: .\cookbook\views\api.py:918
+#: .\cookbook\views\api.py:1453
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Изключва рецепти с някоя от "
 "храните."
 
-#: .\cookbook\views\api.py:919
+#: .\cookbook\views\api.py:1454
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Изключва рецепти с всички "
 "храни."
 
-#: .\cookbook\views\api.py:920
-msgid "ID of unit a recipe should have."
-msgstr "Идентификатор на единицата, която рецептата трябва да има."
-
-#: .\cookbook\views\api.py:921
-msgid ""
-"Rating a recipe should have or greater. [0 - 5] Negative value filters "
-"rating less than."
-msgstr ""
-"Оценка на рецептата трябва да има или по-висока. [0 - 5] Отрицателна "
-"стойност филтрира оценка по-малка от."
-
-#: .\cookbook\views\api.py:922
+#: .\cookbook\views\api.py:1456
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
 "Идентификатор на книгата, в която трябва да е рецепта. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:923
+#: .\cookbook\views\api.py:1457
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Връща рецепти с някоя от "
 "книгите"
 
-#: .\cookbook\views\api.py:924
+#: .\cookbook\views\api.py:1458
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Връща рецептите с всички "
 "книги."
 
-#: .\cookbook\views\api.py:925
+#: .\cookbook\views\api.py:1459
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Изключва рецептите с "
 "някоя от книгите."
 
-#: .\cookbook\views\api.py:926
+#: .\cookbook\views\api.py:1460
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Изключва рецептите от "
 "всички книги."
 
-#: .\cookbook\views\api.py:927
-msgid "If only internal recipes should be returned. [true/<b>false</b>]"
-msgstr "Ако трябва да се върнат само вътрешни рецепти. [вярно/<b>невярно</b>]"
+#: .\cookbook\views\api.py:1462
+msgid "ID of unit a recipe should have."
+msgstr "Идентификатор на единицата, която рецептата трябва да има."
 
-#: .\cookbook\views\api.py:928
-msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr "Връща резултатите в произволен ред. [вярно/<b>невярно</b>]"
-
-#: .\cookbook\views\api.py:929
-msgid "Returns new results first in search results. [true/<b>false</b>]"
+#: .\cookbook\views\api.py:1464
+msgid "Exact rating of recipe"
 msgstr ""
-"Първо връща нови резултати в резултатите от търсенето. [вярно/<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:930
-msgid ""
-"Filter recipes cooked X times or more.  Negative values returns cooked less "
-"than X times"
+#: .\cookbook\views\api.py:1465
+#, fuzzy
+#| msgid "ID of unit a recipe should have."
+msgid "Rating a recipe should have or greater."
+msgstr "Идентификатор на единицата, която рецептата трябва да има."
+
+#: .\cookbook\views\api.py:1466
+#, fuzzy
+#| msgid "ID of unit a recipe should have."
+msgid "Rating a recipe should have or smaller."
+msgstr "Идентификатор на единицата, която рецептата трябва да има."
+
+#: .\cookbook\views\api.py:1468
+msgid "Filter recipes cooked X times."
+msgstr ""
+
+#: .\cookbook\views\api.py:1469
+#, fuzzy
+#| msgid ""
+#| "Filter recipes cooked X times or more.  Negative values returns cooked "
+#| "less than X times"
+msgid "Filter recipes cooked X times or more."
 msgstr ""
 "Филтрирайте рецепти, приготвени X пъти или повече. Отрицателните стойности "
 "връщат приготвени по-малко от X пъти"
 
-#: .\cookbook\views\api.py:931
-msgid ""
-"Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
-"or before date."
+#: .\cookbook\views\api.py:1470
+msgid "Filter recipes cooked X times or less."
 msgstr ""
-"Филтрирайте последно приготвените рецепти на или след ГГГГ-ММ-ДД. "
-"Предварително – филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:932
-msgid ""
-"Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-"before date."
+#: .\cookbook\views\api.py:1472
+#, fuzzy
+#| msgid ""
+#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
+#| "before date."
+msgid "Filter recipes created on the given date."
 msgstr ""
 "Филтрирайте рецептите, създадени на или след ГГГГ-ММ-ДД. Предварително – "
 "филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:933
-msgid ""
-"Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
-"before date."
+#: .\cookbook\views\api.py:1473
+#, fuzzy
+#| msgid ""
+#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
+#| "before date."
+msgid "Filter recipes created on the given date or after."
+msgstr ""
+"Филтрирайте рецептите, създадени на или след ГГГГ-ММ-ДД. Предварително – "
+"филтрира на или преди дата."
+
+#: .\cookbook\views\api.py:1474
+#, fuzzy
+#| msgid ""
+#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
+#| "before date."
+msgid "Filter recipes created on the given date or before."
+msgstr ""
+"Филтрирайте рецептите, създадени на или след ГГГГ-ММ-ДД. Предварително – "
+"филтрира на или преди дата."
+
+#: .\cookbook\views\api.py:1476 .\cookbook\views\api.py:1477
+#: .\cookbook\views\api.py:1478
+#, fuzzy
+#| msgid ""
+#| "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
+#| "before date."
+msgid "Filter recipes updated on the given date."
 msgstr ""
 "Филтрирайте рецептите, актуализирани на или след ГГГГ-ММ-ДД. Предварително – "
 "филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:934
-msgid ""
-"Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
-"or before date."
+#: .\cookbook\views\api.py:1480
+#, fuzzy
+#| msgid ""
+#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
+#| "on or before date."
+msgid "Filter recipes last cooked on the given date or after."
+msgstr ""
+"Филтрирайте последно приготвените рецепти на или след ГГГГ-ММ-ДД. "
+"Предварително – филтрира на или преди дата."
+
+#: .\cookbook\views\api.py:1481
+#, fuzzy
+#| msgid ""
+#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
+#| "on or before date."
+msgid "Filter recipes last cooked on the given date or before."
+msgstr ""
+"Филтрирайте последно приготвените рецепти на или след ГГГГ-ММ-ДД. "
+"Предварително – филтрира на или преди дата."
+
+#: .\cookbook\views\api.py:1483 .\cookbook\views\api.py:1484
+#, fuzzy
+#| msgid ""
+#| "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters "
+#| "on or before date."
+msgid "Filter recipes lasts viewed on the given date."
 msgstr ""
 "Филтрирането на рецептите последно разглеждани на или след ГГГГ-ММ-ДД. "
 "Предварително – филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:935
+#: .\cookbook\views\api.py:1486
+msgid "Filter recipes for ones created by the given user ID"
+msgstr ""
+
+#: .\cookbook\views\api.py:1487
+msgid "If only internal recipes should be returned. [true/<b>false</b>]"
+msgstr "Ако трябва да се върнат само вътрешни рецепти. [вярно/<b>невярно</b>]"
+
+#: .\cookbook\views\api.py:1488
+msgid "Returns the results in randomized order. [true/<b>false</b>]"
+msgstr "Връща резултатите в произволен ред. [вярно/<b>невярно</b>]"
+
+#: .\cookbook\views\api.py:1490
+msgid ""
+"Determines the order of the results. Options are: score,-score,name,-name,"
+"lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
+"created_at,lastviewed,-lastviewed"
+msgstr ""
+
+#: .\cookbook\views\api.py:1492
+msgid "Returns new results first in search results. [true/<b>false</b>]"
+msgstr ""
+"Първо връща нови резултати в резултатите от търсенето. [вярно/<b>невярно</b>]"
+
+#: .\cookbook\views\api.py:1493
+msgid ""
+"Returns the given number of recently viewed recipes before search results "
+"(if given)"
+msgstr ""
+
+#: .\cookbook\views\api.py:1494
+msgid "ID of a custom filter. Returns all recipes matched by that filter."
+msgstr ""
+
+#: .\cookbook\views\api.py:1495
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 "Филтрирайте рецепти, които могат да се приготвят с храна в наличност. [вярно/"
 "<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:1122
+#: .\cookbook\views\api.py:1773
 msgid ""
-"Returns the shopping list entry with a primary key of id.  Multiple values "
-"allowed."
+"Return the PropertyTypes matching the property category.  Repeat for "
+"multiple."
 msgstr ""
-"Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
-"Разрешени са множество стойности."
 
-#: .\cookbook\views\api.py:1125
-#, fuzzy
-#| msgid ""
-#| "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
-#| "b>]<br>  - recent includes unchecked items and recently completed items."
+#: .\cookbook\views\api.py:1804 .\cookbook\views\api.py:1860
+msgid "Returns only entries associated with the given mealplan id"
+msgstr ""
+
+#: .\cookbook\views\api.py:1858
 msgid ""
-"Filter shopping list entries on checked.  [true, false, both, <b>recent</"
-"b>]<br>                  - recent includes unchecked items and recently "
-"completed items."
-msgstr ""
-"Филтрирайте записите в списъка за пазаруване на отметнато. [вярно, невярно, "
-"и двете, <b>скорошни</b>]<br> - скорошни включва неотметнати елементи и "
-"наскоро завършени елементи."
-
-#: .\cookbook\views\api.py:1128
-msgid "Returns the shopping list entries sorted by supermarket category order."
-msgstr ""
-"Връща записите в списъка за пазаруване, сортирани по реда на категории "
-"супермаркети."
-
-#: .\cookbook\views\api.py:1210
-msgid "Filter for entries with the given recipe"
+"Returns only elements updated after the given timestamp in ISO 8601 format."
 msgstr ""
 
-#: .\cookbook\views\api.py:1292
+#: .\cookbook\views\api.py:2031
 #, fuzzy
 #| msgid ""
 #| "Returns the shopping list entry with a primary key of id.  Multiple "
 #| "values allowed."
 msgid ""
-"Return the Automations matching the automation type.  Multiple values "
-"allowed."
+"Return the Automations matching the automation type.  Repeat for multiple."
 msgstr ""
 "Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
 "Разрешени са множество стойности."
 
-#: .\cookbook\views\api.py:1415
+#: .\cookbook\views\api.py:2048
+msgid ""
+"Text field to store data that gets carried over to the UserSpace created "
+"from the InviteLink"
+msgstr ""
+
+#: .\cookbook\views\api.py:2049
+msgid "Only return InviteLinks that have not been used yet."
+msgstr ""
+
+#: .\cookbook\views\api.py:2076
+#, fuzzy
+#| msgid ""
+#| "Returns the shopping list entry with a primary key of id.  Multiple "
+#| "values allowed."
+msgid "Return the CustomFilters matching the model type.  Repeat for multiple."
+msgstr ""
+"Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
+"Разрешени са множество стойности."
+
+#: .\cookbook\views\api.py:2176
 msgid "Nothing to do."
 msgstr "Няма нищо за правене."
 
-#: .\cookbook\views\api.py:1445
+#: .\cookbook\views\api.py:2222
 msgid "Invalid Url"
 msgstr ""
 
-#: .\cookbook\views\api.py:1449
+#: .\cookbook\views\api.py:2228
 msgid "Connection Refused."
 msgstr "Връзката е отказана."
 
-#: .\cookbook\views\api.py:1451
+#: .\cookbook\views\api.py:2232
 msgid "Bad URL Schema."
 msgstr "Лоша URL схема."
 
-#: .\cookbook\views\api.py:1474
+#: .\cookbook\views\api.py:2257
 msgid "No usable data could be found."
 msgstr "Не бяха намерени полезни данни."
 
-#: .\cookbook\views\api.py:1549
+#: .\cookbook\views\api.py:2286 .\cookbook\views\api.py:2434
+msgid "You must select an AI provider to perform your request."
+msgstr ""
+
+#: .\cookbook\views\api.py:2293 .\cookbook\views\api.py:2441
+msgid ""
+"You don't have any credits remaining to use AI or AI features are not "
+"enabled for your space."
+msgstr ""
+
+#: .\cookbook\views\api.py:2499 .\cookbook\views\api.py:2667
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:2522 .\cookbook\views\api.py:2684
 msgid "Importing is not implemented for this provider"
 msgstr "Импортирането не е реализирано за този доставчик"
 
-#: .\cookbook\views\api.py:1650 .\cookbook\views\data.py:30
-#: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
-#: .\cookbook\views\new.py:82
-msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "Тази функция все още не е налична в хостваната версия на tandoor!"
-
-#: .\cookbook\views\api.py:1671
-msgid "Sync successful!"
-msgstr "Синхронизирането успешно!"
-
-#: .\cookbook\views\api.py:1674
-msgid "Error synchronizing with Storage"
-msgstr "Грешка при синхронизирането с хранилището"
-
-#: .\cookbook\views\data.py:99
-#, python-format
-msgid "Batch edit done. %(count)d recipe was updated."
-msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] "Редакцията е извършена. %(count)d рецепта бе актуализирана."
-msgstr[1] "Редакцията е извършена. %(count)d рецептите бяха актуализирани."
-
-#: .\cookbook\views\delete.py:102
-msgid "Monitor"
-msgstr "Монитор"
-
-#: .\cookbook\views\delete.py:114 .\cookbook\views\lists.py:61
-#: .\cookbook\views\new.py:69
-msgid "Storage Backend"
-msgstr "Бекенд за съхранение"
-
-#: .\cookbook\views\delete.py:122
-msgid ""
-"Could not delete this storage backend as it is used in at least one monitor."
-msgstr ""
-"Не можа да се изтрие този бекенд за съхранение, тъй като се използва в поне "
-"един монитор."
-
-#: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
-msgid "Connectors Config Backend"
-msgstr "Бекенд за съхранение"
-
-#: .\cookbook\views\delete.py:157
-msgid "Invite Link"
-msgstr "Връзка за покана"
-
-#: .\cookbook\views\delete.py:168
-#, fuzzy
-#| msgid "Members"
-msgid "Space Membership"
-msgstr "Членове"
-
-#: .\cookbook\views\edit.py:84
-msgid "You cannot edit this storage!"
-msgstr "Не можете да редактирате това хранилище!"
-
-#: .\cookbook\views\edit.py:108
-msgid "Storage saved!"
-msgstr "Хранилището е запазено!"
-
-#: .\cookbook\views\edit.py:110
-msgid "There was an error updating this storage backend!"
-msgstr "Възникна грешка при актуализирането на този бекенд за съхранение!"
-
-#: .\cookbook\views\edit.py:134
-#, fuzzy
-#| msgid "Changes saved!"
-msgid "Config saved!"
-msgstr "Промените са запазени!"
-
-#: .\cookbook\views\edit.py:142
-msgid "ConnectorConfig"
-msgstr ""
-
-#: .\cookbook\views\edit.py:198
-msgid "Changes saved!"
-msgstr "Промените са запазени!"
-
-#: .\cookbook\views\edit.py:202
-msgid "Error saving changes!"
-msgstr "Грешка при запазване на промените!"
-
-#: .\cookbook\views\import_export.py:101
+#: .\cookbook\views\api.py:2548
 msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
@@ -2666,75 +2179,23 @@ msgstr ""
 "PDF експортирането не е активирано в този вид, тъй като все още е в "
 "експериментално състояние."
 
-#: .\cookbook\views\lists.py:23
-msgid "Import Log"
-msgstr "Дневник за импортиране"
+#: .\cookbook\views\api.py:2842
+msgid "This feature is not yet available in the hosted version of tandoor!"
+msgstr "Тази функция все още не е налична в хостваната версия на tandoor!"
 
-#: .\cookbook\views\lists.py:36
-msgid "Discovery"
-msgstr "Откритие"
+#: .\cookbook\views\api.py:2863
+msgid "Sync successful!"
+msgstr "Синхронизирането успешно!"
 
-#: .\cookbook\views\lists.py:46
-msgid "Shopping List"
-msgstr "Списък за пазаруване"
+#: .\cookbook\views\api.py:2866
+msgid "Error synchronizing with Storage"
+msgstr "Грешка при синхронизирането с хранилището"
 
-#: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
-msgid "Connector Config Backend"
-msgstr "Бекенд за съхранение"
-
-#: .\cookbook\views\lists.py:91
-msgid "Invite Links"
-msgstr "Връзки за покани"
-
-#: .\cookbook\views\lists.py:154
-msgid "Supermarkets"
-msgstr "Супермаркети"
-
-#: .\cookbook\views\lists.py:170
-msgid "Shopping Categories"
-msgstr "Категории за пазаруване"
-
-#: .\cookbook\views\lists.py:202
-msgid "Custom Filters"
-msgstr "Персонализирани филтри"
-
-#: .\cookbook\views\lists.py:239
-msgid "Steps"
-msgstr "Стъпки"
-
-#: .\cookbook\views\lists.py:270
-msgid "Property Types"
-msgstr ""
-
-#: .\cookbook\views\new.py:86
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
-msgid "This feature is not enabled by the server admin!"
-msgstr "Тази функция не е налична в демо версията!"
-
-#: .\cookbook\views\new.py:123
-msgid "Imported new recipe!"
-msgstr "Добавена бе нова рецепта!"
-
-#: .\cookbook\views\new.py:126
-msgid "There was an error importing this recipe!"
-msgstr "При импортирането на тази рецепта възникна грешка!"
-
-#: .\cookbook\views\views.py:69 .\cookbook\views\views.py:177
-#: .\cookbook\views\views.py:204 .\cookbook\views\views.py:423
+#: .\cookbook\views\views.py:89
 msgid "This feature is not available in the demo version!"
 msgstr "Тази функция не е налична в демо версията!"
 
-#: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
-msgid ""
-"You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Достигнахте максималния брой рецепти за вашето пространство."
-
-#: .\cookbook\views\views.py:89
+#: .\cookbook\views\views.py:110
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
@@ -2742,45 +2203,21 @@ msgstr ""
 "Успешно създадохте свое собствено пространство за рецепти. Започнете, като "
 "добавите някои рецепти или поканете други хора да се присъединят към вас."
 
-#: .\cookbook\views\views.py:138
-msgid "You do not have the required permissions to perform this action!"
-msgstr "Нямате необходимите разрешения за извършване на това действие!"
-
-#: .\cookbook\views\views.py:149
-msgid "Comment saved!"
-msgstr "Коментарът е запазен!"
-
-#: .\cookbook\views\views.py:240
-msgid "You must select at least one field to search!"
-msgstr "Трябва да изберете поне едно поле за търсене!"
-
-#: .\cookbook\views\views.py:243
-msgid ""
-"To use this search method you must select at least one full text search "
-"field!"
-msgstr ""
-"За да използвате този метод за търсене, трябва да изберете поне едно поле за "
-"пълно текстово търсене!"
-
-#: .\cookbook\views\views.py:246
-msgid "Fuzzy search is not compatible with this search method!"
-msgstr "Размитото търсене не е съвместимо с този метод за търсене!"
-
-#: .\cookbook\views\views.py:306
+#: .\cookbook\views\views.py:171
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
 
-#: .\cookbook\views\views.py:309
+#: .\cookbook\views\views.py:174
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
 msgstr ""
 
-#: .\cookbook\views\views.py:313
+#: .\cookbook\views\views.py:178
 msgid "Unable to determine PostgreSQL version."
 msgstr ""
 
-#: .\cookbook\views\views.py:317
+#: .\cookbook\views\views.py:182
 #, fuzzy
 #| msgid ""
 #| "\n"
@@ -2798,7 +2235,7 @@ msgstr ""
 "             функциите работят само с бази данни Postgres.\n"
 "        "
 
-#: .\cookbook\views\views.py:360
+#: .\cookbook\views\views.py:296
 #, fuzzy
 #| msgid ""
 #| "The setup page can only be used to create the first user! If you have "
@@ -2814,27 +2251,15 @@ msgstr ""
 "потребител, моля, вижте документацията на django за това как да нулирате "
 "пароли."
 
-#: .\cookbook\views\views.py:369
+#: .\cookbook\views\views.py:304
 msgid "Passwords dont match!"
 msgstr "Паролите не съвпадат!"
 
-#: .\cookbook\views\views.py:377
+#: .\cookbook\views\views.py:312
 msgid "User has been created, please login!"
 msgstr "Потребителят е създаден, моля, влезте!"
 
-#: .\cookbook\views\views.py:393
-msgid "Malformed Invite Link supplied!"
-msgstr "Malformed връзка за покана е предоставена!"
-
-#: .\cookbook\views\views.py:410
-msgid "Successfully joined space."
-msgstr "Успешно присъединяване към пространството."
-
-#: .\cookbook\views\views.py:416
-msgid "Invite Link not valid or already used!"
-msgstr "Връзката за покана не е валидна или вече е използвана!"
-
-#: .\cookbook\views\views.py:432
+#: .\cookbook\views\views.py:352
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
@@ -2842,7 +2267,7 @@ msgstr ""
 "Отчитането на връзките за споделяне не е активирано за тази инстанция. Моля, "
 "уведомете администратора на страницата, за да съобщи за проблеми."
 
-#: .\cookbook\views\views.py:437
+#: .\cookbook\views\views.py:357
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
@@ -2850,29 +2275,621 @@ msgstr ""
 "Връзката за споделяне на рецепти е деактивирана! За допълнителна информация, "
 "моля свържете се с администратора на страницата."
 
-#: .\cookbook\views\views.py:451
+#: .\cookbook\views\views.py:383
 msgid "Manage recipes, shopping list, meal plans and more."
 msgstr ""
 
-#: .\cookbook\views\views.py:458
+#: .\cookbook\views\views.py:397 .\cookbook\views\views.py:398
 #, fuzzy
 #| msgid "Meal-Plan"
 msgid "Plan"
 msgstr "План на хранене"
 
-#: .\cookbook\views\views.py:458
+#: .\cookbook\views\views.py:399
 msgid "View your meal Plan"
 msgstr ""
 
-#: .\cookbook\views\views.py:459
-msgid "View your cookbooks"
-msgstr ""
-
-#: .\cookbook\views\views.py:460
+#: .\cookbook\views\views.py:418
 #, fuzzy
 #| msgid "Users with whom to share shopping lists."
 msgid "View your shopping lists"
 msgstr "Потребители, с които да споделят списъци за пазаруване."
+
+#~ msgid ""
+#~ "Both fields are optional. If none are given the username will be "
+#~ "displayed instead"
+#~ msgstr ""
+#~ "И двете полета са незадължителни. Ако не се даде нито едно, вместо него "
+#~ "ще се покаже потребителското име"
+
+#~ msgid "Name"
+#~ msgstr "Име"
+
+#~ msgid "Keywords"
+#~ msgstr "Ключови думи"
+
+#~ msgid "Preparation time in minutes"
+#~ msgstr "Време за приготвяне в минути"
+
+#~ msgid "Waiting time (cooking/baking) in minutes"
+#~ msgstr "Време за изчакване (готвене/изпичане) в минути"
+
+#~ msgid "Path"
+#~ msgstr "Път"
+
+#~ msgid "Storage UID"
+#~ msgstr "Потребителски идентификатор на хранилището"
+
+#~ msgid "Add your comment: "
+#~ msgstr "Добавете вашия коментар: "
+
+#~ msgid "Leave empty for dropbox and enter app password for nextcloud."
+#~ msgstr ""
+#~ "Оставете празно за dropbox и въведете парола за приложението за nextcloud."
+
+#~ msgid "Leave empty for nextcloud and enter api token for dropbox."
+#~ msgstr "Оставете празно за nextcloud и въведете api токен за dropbox."
+
+#~ msgid ""
+#~ "Leave empty for dropbox and enter only base url for nextcloud (<code>/"
+#~ "remote.php/webdav/</code> is added automatically)"
+#~ msgstr ""
+#~ "Оставете празно за dropbox и въведете само основен URL адрес за nextcloud "
+#~ "(<code>/remote.php/webdav/</code> се добавя автоматично)"
+
+#~ msgid "Storage"
+#~ msgstr "Хранилище"
+
+#~ msgid "Active"
+#~ msgstr "Активен"
+
+#~ msgid "Search String"
+#~ msgstr "Търсене низ"
+
+#~ msgid "File ID"
+#~ msgstr "Идентификатор на файла"
+
+#~ msgid ""
+#~ "Determines how fuzzy a search is if it uses trigram similarity matching "
+#~ "(e.g. low values mean more typos are ignored)."
+#~ msgstr ""
+#~ "Определя колко размито е търсенето, ако използва съвпадение на триграми "
+#~ "(напр. ниските стойности означават, че повече правописни грешки се "
+#~ "игнорират)."
+
+#~ msgid ""
+#~ "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
+#~ "for full description of choices."
+#~ msgstr ""
+#~ "Изберете тип метод за търсене. Кликнете <a href=\"/docs/search/\">тук</a> "
+#~ "за пълно описание на избора."
+
+#~ msgid ""
+#~ "Use fuzzy matching on units, keywords and ingredients when editing and "
+#~ "importing recipes."
+#~ msgstr ""
+#~ "Използвайте размито съвпадение за единици, ключови думи и съставки, "
+#~ "когато редактирате и импортирате рецепти."
+
+#~ msgid ""
+#~ "Fields to search ignoring accents.  Selecting this option can improve or "
+#~ "degrade search quality depending on language"
+#~ msgstr ""
+#~ "Полета за търсене без акценти. Избирането на тази опция може да подобри "
+#~ "или влоши качеството на търсене в зависимост от езика"
+
+#~ msgid ""
+#~ "Fields to search for partial matches.  (e.g. searching for 'Pie' will "
+#~ "return 'pie' and 'piece' and 'soapie')"
+#~ msgstr ""
+#~ "Полета за търсене на частични съвпадения. (напр. търсенето на „Па“ ще "
+#~ "върне „пай“, „парче“ и „супа“)"
+
+#~ msgid ""
+#~ "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
+#~ "will return 'salad' and 'sandwich')"
+#~ msgstr ""
+#~ "Полета за търсене на начало на съвпадения на думи. (напр. търсенето на "
+#~ "„са“ ще върне „салата“ и „сандвич“)"
+
+#~ msgid ""
+#~ "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find "
+#~ "'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods "
+#~ "of search."
+#~ msgstr ""
+#~ "Полета за „размито“ търсене. (напр. търсенето на „recpie“ ще намери "
+#~ "„recipe“.) Забележка: тази опция ще е в конфликт с „web“ и „raw“ методи "
+#~ "за търсене."
+
+#~ msgid ""
+#~ "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search "
+#~ "methods only function with fulltext fields."
+#~ msgstr ""
+#~ "Полета за пълно текстово търсене. Забележка: Методите за търсене „web“, "
+#~ "„phrase“ и „raw“ функционират само с пълнотекстови полета."
+
+#~ msgid "Search Method"
+#~ msgstr "Метод за търсене"
+
+#~ msgid "Fuzzy Lookups"
+#~ msgstr "Размити търсения"
+
+#~ msgid "Ignore Accent"
+#~ msgstr "Игнорирайте акцента"
+
+#~ msgid "Partial Match"
+#~ msgstr "Частично съвпадение"
+
+#~ msgid "Starts With"
+#~ msgstr "Започва с"
+
+#~ msgid "Fuzzy Search"
+#~ msgstr "Размито търсене"
+
+#~ msgid "Full Text"
+#~ msgstr "Пълен текст"
+
+#~ msgid " is part of a recipe step and cannot be deleted"
+#~ msgstr " е част от стъпка от рецептата и не може да бъде изтрита"
+
+#~ msgid "Delete"
+#~ msgstr "Изтриване"
+
+#~ msgid "Settings"
+#~ msgstr "Настройки"
+
+#~ msgid "Email"
+#~ msgstr "Електронна поща"
+
+#~ msgid "Password"
+#~ msgstr "Парола"
+
+#~ msgid "Foods"
+#~ msgstr "Храни"
+
+#~ msgid "Units"
+#~ msgstr "Мерни единици"
+
+#~ msgid "Supermarket"
+#~ msgstr "Супермаркет"
+
+#~ msgid "Supermarket Category"
+#~ msgstr "Категория супермаркет"
+
+#~ msgid "Automations"
+#~ msgstr "Автоматики"
+
+#~ msgid "Files"
+#~ msgstr "Файлове"
+
+#~ msgid "Batch Edit"
+#~ msgstr "Пакетно редактиране"
+
+#~ msgid "History"
+#~ msgstr "История"
+
+#~ msgid "Ingredient Editor"
+#~ msgstr "Редактор на съставки"
+
+#, fuzzy
+#~| msgid "Account Connections"
+#~ msgid "Unit Conversions"
+#~ msgstr "Връзки с профил"
+
+#~ msgid "Create"
+#~ msgstr "Създайте"
+
+#~ msgid "External Recipes"
+#~ msgstr "Външни рецепти"
+
+#~ msgid "Space Settings"
+#~ msgstr "Настройки на пространството"
+
+#, fuzzy
+#~| msgid "External Recipes"
+#~ msgid "External Connectors"
+#~ msgstr "Външни рецепти"
+
+#~ msgid "Admin"
+#~ msgstr "Админ"
+
+#~ msgid "Markdown Guide"
+#~ msgstr "Ръководство за намаление"
+
+#~ msgid "GitHub"
+#~ msgstr "GitHub"
+
+#~ msgid "Translate Tandoor"
+#~ msgstr "Преведете Tandoor"
+
+#~ msgid "API Browser"
+#~ msgstr "API браузър"
+
+#~ msgid "Log out"
+#~ msgstr "Излез от профила си"
+
+#~ msgid "You are using the free version of Tandor"
+#~ msgstr "Вие използвате безплатната версия на Tandor"
+
+#~ msgid "Upgrade Now"
+#~ msgstr "Надстройте сега"
+
+#~ msgid "Batch edit Category"
+#~ msgstr "Категория за групово редактиране"
+
+#~ msgid "Batch edit Recipes"
+#~ msgstr "Рецепти за групово редактиране"
+
+#~ msgid "Add the specified keywords to all recipes containing a word"
+#~ msgstr "Добавете посочените ключови думи към всички рецепти, съдържащи дума"
+
+#~ msgid "Sync"
+#~ msgstr "Синхронизиране"
+
+#~ msgid "Manage watched Folders"
+#~ msgstr "Управление на наблюдаваните папки"
+
+#~ msgid ""
+#~ "On this Page you can manage all storage folder locations that should be "
+#~ "monitored and synced."
+#~ msgstr ""
+#~ "На тази страница можете да управлявате всички местоположения на папки за "
+#~ "съхранение, които трябва да бъдат наблюдавани и синхронизирани."
+
+#~ msgid "The path must be in the following format"
+#~ msgstr "Пътят трябва да бъде в следния формат"
+
+#~ msgid "Save"
+#~ msgstr "Запазете"
+
+#~ msgid "Manage External Storage"
+#~ msgstr "Управление на външно хранилище"
+
+#~ msgid "Sync Now!"
+#~ msgstr "Синхронизирайте сега!"
+
+#~ msgid "Show Recipes"
+#~ msgstr "Покажи рецепти"
+
+#~ msgid "Show Log"
+#~ msgstr "Покажи дневник"
+
+#~ msgid "Importing Recipes"
+#~ msgstr "Импортиране на рецепти"
+
+#~ msgid ""
+#~ "This can take a few minutes, depending on the number of recipes in sync, "
+#~ "please wait."
+#~ msgstr ""
+#~ "Това може да отнеме няколко минути, в зависимост от броя на "
+#~ "синхронизираните рецепти, моля, изчакайте."
+
+#~ msgid "Recipe Books"
+#~ msgstr "Книги с рецепти"
+
+#~ msgid "Import new Recipe"
+#~ msgstr "Импортиране на нова рецепта"
+
+#~ msgid "Edit Recipe"
+#~ msgstr "Редактиране на рецепта"
+
+#, python-format
+#~ msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
+#~ msgstr "Наистина ли искате да изтриете %(title)s: <b>%(object)s</b> "
+
+#~ msgid "Cascade"
+#~ msgstr "Каскада"
+
+#~ msgid "Cancel"
+#~ msgstr "Отмяна"
+
+#~ msgid "Edit"
+#~ msgstr "Редактиране"
+
+#~ msgid "View"
+#~ msgstr "Изглед"
+
+#~ msgid "Delete original file"
+#~ msgstr "Изтрийте оригиналния файл"
+
+#~ msgid "List"
+#~ msgstr "Списък"
+
+#~ msgid "Filter"
+#~ msgstr "Филтрирайте"
+
+#~ msgid "Import all"
+#~ msgstr "Импортирайте всичко"
+
+#~ msgid "New"
+#~ msgstr "Нов"
+
+#~ msgid "previous"
+#~ msgstr "предишен"
+
+#~ msgid "next"
+#~ msgstr "следващ"
+
+#~ msgid "View Log"
+#~ msgstr "Преглед на дневника"
+
+#~ msgid "Cook Log"
+#~ msgstr "Дневник на готвене"
+
+#~ msgid "Import"
+#~ msgstr "Импортиране"
+
+#~ msgid "Security Warning"
+#~ msgstr "Предупреждение за сигурност"
+
+#~ msgid ""
+#~ "\n"
+#~ "        The <b>Password and Token</b> field are stored as <b>plain text</"
+#~ "b> inside the database.\n"
+#~ "        This is necessary because they are needed to make API requests, "
+#~ "but it also increases the risk of\n"
+#~ "        someone stealing it. <br/>\n"
+#~ "        To limit the possible damage tokens or accounts with limited "
+#~ "access can be used.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Полето <b>Парола и символ</b> се съхраняват като <b>обикновен "
+#~ "текст</b> в базата данни.\n"
+#~ "         Това е необходимо, защото те са необходими за отправяне на "
+#~ "заявки за API, но също така увеличава риска от\n"
+#~ "         някой да го открадне. <br/>\n"
+#~ "         За ограничаване на възможните щети могат да се използват символи "
+#~ "или профили с ограничен достъп.\n"
+#~ "    "
+
+#~ msgid "You are currently offline!"
+#~ msgstr "В момента сте извън линия!"
+
+#~ msgid ""
+#~ "The recipes listed below are available for offline viewing because you "
+#~ "have recently viewed them. Keep in mind that data might be outdated."
+#~ msgstr ""
+#~ "Изброените по-долу рецепти са достъпни за гледане офлайн, тъй като "
+#~ "наскоро сте ги гледали. Имайте предвид, че данните може да са остарели."
+
+#, fuzzy
+#~| msgid "Ingredient Editor"
+#~ msgid "Property Editor"
+#~ msgstr "Редактор на съставки"
+
+#~ msgid "Comments"
+#~ msgstr "Коментари"
+
+#~ msgid "by"
+#~ msgstr "от"
+
+#~ msgid "Comment"
+#~ msgstr "Коментар"
+
+#~ msgid ""
+#~ "There are many options to configure the search depending on your personal "
+#~ "preferences."
+#~ msgstr ""
+#~ "Има много опции за конфигуриране на търсенето в зависимост от вашите "
+#~ "лични предпочитания."
+
+#~ msgid ""
+#~ "Usually you do <b>not need</b> to configure any of them and can just "
+#~ "stick with either the default or one of the following presets."
+#~ msgstr ""
+#~ "Обикновено <b>не е необходимо</b> да конфигурирате нито един от тях и "
+#~ "можете просто да се придържате към стандартната или една от следните "
+#~ "предварително зададени настройки."
+
+#~ msgid ""
+#~ "If you do want to configure the search you can read about the different "
+#~ "options <a href=\"/docs/search/\">here</a>."
+#~ msgstr ""
+#~ "Ако искате да конфигурирате търсенето, можете да прочетете за различните "
+#~ "опции <a href=\"/docs/search/\">тук</a>."
+
+#~ msgid "Fuzzy"
+#~ msgstr "Размит"
+
+#~ msgid ""
+#~ "Find what you need even if your search or the recipe contains typos. "
+#~ "Might return more results than needed to make sure you find what you are "
+#~ "looking for."
+#~ msgstr ""
+#~ "Намерете това, от което се нуждаете, дори ако вашето търсене или "
+#~ "рецептата съдържат правописни грешки. Може да върне повече резултати, "
+#~ "отколкото е необходимо, за да сте сигурни, че ще намерите това, което "
+#~ "търсите."
+
+#~ msgid "This is the default behavior"
+#~ msgstr "Това е поведението по подразбиране"
+
+#~ msgid "Apply"
+#~ msgstr "Приложи"
+
+#~ msgid "Precise"
+#~ msgstr "Прецизно"
+
+#~ msgid ""
+#~ "Allows fine control over search results but might not return results if "
+#~ "too many spelling mistakes are made."
+#~ msgstr ""
+#~ "Позволява фин контрол върху резултатите от търсенето, но може да не върне "
+#~ "резултати, ако са направени твърде много правописни грешки."
+
+#~ msgid "Perfect for large Databases"
+#~ msgstr "Идеален за големи бази данни"
+
+#~ msgid "Social"
+#~ msgstr "Социални"
+
+#~ msgid "Space:"
+#~ msgstr "Пространство:"
+
+#~ msgid "Manage Subscription"
+#~ msgstr "Управление на абонамента"
+
+#, fuzzy
+#~| msgid "Create Space"
+#~ msgid "Leave Space"
+#~ msgstr "Създайте пространство"
+
+#~ msgid "URL Import"
+#~ msgstr "Импортиране на URL"
+
+#~ msgid ""
+#~ "Rating a recipe should have or greater. [0 - 5] Negative value filters "
+#~ "rating less than."
+#~ msgstr ""
+#~ "Оценка на рецептата трябва да има или по-висока. [0 - 5] Отрицателна "
+#~ "стойност филтрира оценка по-малка от."
+
+#~ msgid ""
+#~ "Returns the shopping list entry with a primary key of id.  Multiple "
+#~ "values allowed."
+#~ msgstr ""
+#~ "Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
+#~ "Разрешени са множество стойности."
+
+#, fuzzy
+#~| msgid ""
+#~| "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
+#~| "b>]<br>  - recent includes unchecked items and recently completed items."
+#~ msgid ""
+#~ "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
+#~ "b>]<br>                  - recent includes unchecked items and recently "
+#~ "completed items."
+#~ msgstr ""
+#~ "Филтрирайте записите в списъка за пазаруване на отметнато. [вярно, "
+#~ "невярно, и двете, <b>скорошни</b>]<br> - скорошни включва неотметнати "
+#~ "елементи и наскоро завършени елементи."
+
+#~ msgid ""
+#~ "Returns the shopping list entries sorted by supermarket category order."
+#~ msgstr ""
+#~ "Връща записите в списъка за пазаруване, сортирани по реда на категории "
+#~ "супермаркети."
+
+#, python-format
+#~ msgid "Batch edit done. %(count)d recipe was updated."
+#~ msgid_plural "Batch edit done. %(count)d Recipes where updated."
+#~ msgstr[0] "Редакцията е извършена. %(count)d рецепта бе актуализирана."
+#~ msgstr[1] "Редакцията е извършена. %(count)d рецептите бяха актуализирани."
+
+#~ msgid "Monitor"
+#~ msgstr "Монитор"
+
+#~ msgid "Storage Backend"
+#~ msgstr "Бекенд за съхранение"
+
+#~ msgid ""
+#~ "Could not delete this storage backend as it is used in at least one "
+#~ "monitor."
+#~ msgstr ""
+#~ "Не можа да се изтрие този бекенд за съхранение, тъй като се използва в "
+#~ "поне един монитор."
+
+#, fuzzy
+#~| msgid "Storage Backend"
+#~ msgid "Connectors Config Backend"
+#~ msgstr "Бекенд за съхранение"
+
+#~ msgid "Invite Link"
+#~ msgstr "Връзка за покана"
+
+#, fuzzy
+#~| msgid "Members"
+#~ msgid "Space Membership"
+#~ msgstr "Членове"
+
+#~ msgid "You cannot edit this storage!"
+#~ msgstr "Не можете да редактирате това хранилище!"
+
+#~ msgid "Storage saved!"
+#~ msgstr "Хранилището е запазено!"
+
+#~ msgid "There was an error updating this storage backend!"
+#~ msgstr "Възникна грешка при актуализирането на този бекенд за съхранение!"
+
+#, fuzzy
+#~| msgid "Changes saved!"
+#~ msgid "Config saved!"
+#~ msgstr "Промените са запазени!"
+
+#~ msgid "Changes saved!"
+#~ msgstr "Промените са запазени!"
+
+#~ msgid "Error saving changes!"
+#~ msgstr "Грешка при запазване на промените!"
+
+#~ msgid "Import Log"
+#~ msgstr "Дневник за импортиране"
+
+#~ msgid "Discovery"
+#~ msgstr "Откритие"
+
+#~ msgid "Shopping List"
+#~ msgstr "Списък за пазаруване"
+
+#, fuzzy
+#~| msgid "Storage Backend"
+#~ msgid "Connector Config Backend"
+#~ msgstr "Бекенд за съхранение"
+
+#~ msgid "Invite Links"
+#~ msgstr "Връзки за покани"
+
+#~ msgid "Supermarkets"
+#~ msgstr "Супермаркети"
+
+#~ msgid "Shopping Categories"
+#~ msgstr "Категории за пазаруване"
+
+#~ msgid "Custom Filters"
+#~ msgstr "Персонализирани филтри"
+
+#~ msgid "Steps"
+#~ msgstr "Стъпки"
+
+#, fuzzy
+#~| msgid "This feature is not available in the demo version!"
+#~ msgid "This feature is not enabled by the server admin!"
+#~ msgstr "Тази функция не е налична в демо версията!"
+
+#~ msgid "Imported new recipe!"
+#~ msgstr "Добавена бе нова рецепта!"
+
+#~ msgid "There was an error importing this recipe!"
+#~ msgstr "При импортирането на тази рецепта възникна грешка!"
+
+#~ msgid "You do not have the required permissions to perform this action!"
+#~ msgstr "Нямате необходимите разрешения за извършване на това действие!"
+
+#~ msgid "Comment saved!"
+#~ msgstr "Коментарът е запазен!"
+
+#~ msgid "You must select at least one field to search!"
+#~ msgstr "Трябва да изберете поне едно поле за търсене!"
+
+#~ msgid ""
+#~ "To use this search method you must select at least one full text search "
+#~ "field!"
+#~ msgstr ""
+#~ "За да използвате този метод за търсене, трябва да изберете поне едно поле "
+#~ "за пълно текстово търсене!"
+
+#~ msgid "Fuzzy search is not compatible with this search method!"
+#~ msgstr "Размитото търсене не е съвместимо с този метод за търсене!"
+
+#~ msgid "Malformed Invite Link supplied!"
+#~ msgstr "Malformed връзка за покана е предоставена!"
+
+#~ msgid "Successfully joined space."
+#~ msgstr "Успешно присъединяване към пространството."
+
+#~ msgid "Invite Link not valid or already used!"
+#~ msgstr "Връзката за покана не е валидна или вече е използвана!"
 
 #~ msgid "Ingredients"
 #~ msgstr "Съставки"
@@ -3143,9 +3160,6 @@ msgstr "Потребители, с които да споделят списъц
 
 #~ msgid "Shared with"
 #~ msgstr "Споделено с"
-
-#~ msgid "Last cooked"
-#~ msgstr "Последно приготвени"
 
 #~ msgid "Never cooked before."
 #~ msgstr "Никога не е готвен преди."

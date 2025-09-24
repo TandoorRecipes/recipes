@@ -20,11 +20,13 @@ server {
   location / {
     proxy_set_header Host $http_host;
     proxy_pass http://localhost:${TANDOOR_PORT};
-    error_page 502 /errors/http502.html;
+
+    # disabled for now because it redirects to the error page and not back, also not showing html
+    #error_page 502 /errors/http502.html;
   }
 
   location /errors/ {
-    alias /etc/nginx/conf.d/errorpages/;
+    alias /etc/nginx/http.d/errorpages/;
     internal;
   }
 }

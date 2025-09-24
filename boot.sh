@@ -22,6 +22,14 @@ display_warning() {
     echo -e "$1"
 }
 
+# prepare nginx config
+envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
+
+# start nginx early to display error pages
+echo "Starting nginx"
+nginx
+
+
 echo "Checking configuration..."
 
 # SECRET_KEY (or a valid file at SECRET_KEY_FILE) must be set in .env file
@@ -93,20 +101,13 @@ fi
 
 echo "Collecting static files, this may take a while..."
 
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --clear
 
 echo "Done"
 
 chmod -R 755 ${MEDIA_ROOT:-/opt/recipes/mediafiles}
 
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
-
-# prepare nginx config
-envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
-
-# start nginx
-echo "Starting nginx"
-nginx
 
 echo "Starting gunicorn"
 # Check if IPv6 is enabled, only then run gunicorn with ipv6 support
