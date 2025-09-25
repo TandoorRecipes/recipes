@@ -60,32 +60,27 @@
                     <v-label>{{ $t('Ingredients') }}</v-label>
                     <div v-if="!mobile">
                         <vue-draggable v-model="step.ingredients" handle=".drag-handle" :on-sort="sortIngredients" :empty-insert-threshold="25" group="ingredients">
-                            <v-row v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" class="d-flex" dense>
+                            <v-row v-for="(ingredient, index) in step.ingredients" :key="ingredient.id" class="d-flex flex-nowrap" dense>
                                 <v-col cols="12" class="pa-0 ma-0 text-center text-disabled" v-if="ingredient.originalText">
                                     <v-icon icon="$import" size="x-small"></v-icon>
                                     {{ ingredient.originalText }}
                                 </v-col>
-                                <div class="flex-col flex-grow-0 ma-1" style="width: 15vw" v-if="!ingredient.isHeader">
-                                    <v-input hide-details>
-                                        <template #prepend>
-                                            <v-icon icon="$dragHandle" class="drag-handle cursor-grab mt-2" v-if="ingredient.noAmount" density="compact"></v-icon>
-                                        </template>
-                                    </v-input>
+                                <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
                                     <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
-                                                  hide-details v-if="!ingredient.noAmount">
+                                                  hide-details :disabled="ingredient.noAmount">
 
                                         <template #prepend>
                                             <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
                                         </template>
                                     </v-text-field>
                                 </div>
-                                <div class="flex-col flex-grow-0  ma-1" style="min-width: 20vw" v-if="!ingredient.isHeader ">
-                                    <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details v-if="!ingredient.noAmount"></model-select>
+                                <div class="flex-col flex-grow-0  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader ">
+                                    <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details :disabled="ingredient.noAmount"></model-select>
                                 </div>
-                                <div class="flex-col flex-grow-0  ma-1" style="min-width: 20vw" v-if="!ingredient.isHeader">
+                                <div class="flex-col flex-grow-1  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
                                     <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
                                 </div>
-                                <div class="flex-col flex-grow-1  ma-1" @keydown.tab="event => handleIngredientNoteTab(event, index)">
+                                <div class="flex-col ma-1" style="min-width: 15%" :class="{'flex-grow-1': ingredient.isHeader, 'flex-grow-0': !ingredient.isHeader}" @keydown.tab="event => handleIngredientNoteTab(event, index)">
                                     <v-text-field :label="(ingredient.isHeader) ? $t('Headline') : $t('Note')" v-model="ingredient.note" density="compact" hide-details>
                                         <template #prepend v-if="ingredient.isHeader">
                                             <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
