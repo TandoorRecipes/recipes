@@ -16,7 +16,7 @@ import uuid
 from django.conf import settings
 from django.db import migrations, models
 from cookbook.models import SearchFields
-
+from django.contrib.postgres.operations import TrigramExtension, UnaccentExtension
 
 def allSearchFields():
     return list(SearchFields.objects.values_list('id', flat=True))
@@ -141,6 +141,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        TrigramExtension(),
+        UnaccentExtension(),
         migrations.RunPython(create_default_groups),
         migrations.CreateModel(
             name='AiProvider',
