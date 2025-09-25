@@ -95,7 +95,7 @@
 
                             </v-number-input>
 
-                            <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0">
+                            <v-btn variant="outlined" color="create" block v-if="p.propertyAmount == null" @click="p.propertyAmount = 0; updateFood(ingredient)">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
                         </td>
