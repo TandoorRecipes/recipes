@@ -1,7 +1,7 @@
 <template>
     <v-card class="mt-1 d-print-none" v-if="useUserPreferenceStore().isAuthenticated" :loading="loading">
         <v-card-text>
-            <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment"></v-textarea>
+            <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment" auto-grow></v-textarea>
             <v-row dense>
                 <v-col cols="12" md="4">
                     <v-label>{{ $t('Rating') }}</v-label>

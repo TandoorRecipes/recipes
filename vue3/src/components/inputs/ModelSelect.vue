@@ -2,7 +2,7 @@
     <!-- TODO label is not showing for some reason, for now in placeholder -->
 
     <v-label class="mt-2" v-if="props.label">{{ props.label }}</v-label>
-    <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails">
+    <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails" :disabled="props.disabled">
         <template #prepend v-if="$slots.prepend">
             <slot name="prepend"></slot>
         </template>
@@ -37,6 +37,7 @@
             :classes="{
                 dropdown: 'multiselect-dropdown z-3000',
                 containerActive: '',
+                containerDisabled: 'text-disabled'
             }"
         >
             <template #option="{ option }" v-if="props.allowCreate">

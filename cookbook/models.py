@@ -592,7 +592,7 @@ class Storage(models.Model, PermissionModelMixin):
     )
     username = models.CharField(max_length=128, blank=True, null=True)
     password = models.CharField(max_length=128, blank=True, null=True)
-    token = models.CharField(max_length=512, blank=True, null=True)
+    token = models.CharField(max_length=4098, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     path = models.CharField(blank=True, default='', max_length=256)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
