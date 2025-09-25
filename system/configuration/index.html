@@ -1,0 +1,3154 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Tandoor Recipe Documentation">
+      
+      
+        <meta name="author" content="vabene1111">
+      
+      
+      
+        <link rel="prev" href="../../features/telegram_bot/">
+      
+      
+        <link rel="next" href="../updating/">
+      
+      
+      <link rel="icon" href="../../logo_color.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+    
+    
+      
+        <title>Configuration - Tandoor Recipes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.e53b48f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#required-settings" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Tandoor Recipes" class="md-header__button md-logo" aria-label="Tandoor Recipes" data-md-component="logo">
+      
+  <img src="../../logo_color.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tandoor Recipes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vabene1111/recipes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Tandoor Recipes" class="md-nav__button md-logo" aria-label="Tandoor Recipes" data-md-component="logo">
+      
+  <img src="../../logo_color.svg" alt="logo">
+
+    </a>
+    Tandoor Recipes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vabene1111/recipes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Installation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/unraid/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Unraid
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/synology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Synology
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kubernetes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/kubesail/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    KubeSail or PiBox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/truenas_portainer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    TrueNAS Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    WSL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/archlinux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ArchLinux
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    HomeAssistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/manual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Manual
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../install/other/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Other setups
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Features
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Features
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/templating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Templating
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/shopping/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Shopping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/automation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Automation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/connectors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Connectors
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/external_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Storages and Sync
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/import_export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Import/Export
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/telegram_bot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Telegram bot
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    System
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            System
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#required-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Required Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secret-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secret Key
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Secret Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#allowed-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allowed Hosts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Password file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection String
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#server-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      URL Path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static root
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Media URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      Media root
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Workers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Threads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Media
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csrf-trusted-origins" class="md-nav__link">
+    <span class="md-ellipsis">
+      CSRF Trusted Origins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cors-origins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cors origins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-cookies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Session Cookies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#captcha" class="md-nav__link">
+    <span class="md-ellipsis">
+      Captcha
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-sorting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree Sorting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdf-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      PDF Export
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legal-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Legal URLS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rate Limits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Permissions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-signup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable Signup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Social Auth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-user-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote User Auth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap" class="md-nav__link">
+    <span class="md-ellipsis">
+      LDAP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      External Services
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="External Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#email" class="md-nav__link">
+    <span class="md-ellipsis">
+      Email
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s3-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      S3 Object storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      AI Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdc-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      FDC Api
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connectors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debuggingdevelopment-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging/Development settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debugging/Development settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug Toolbar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-log-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Log Level
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-log-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Log Level
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-user-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default User Preferences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Default User Preferences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fractions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sticky-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sticky Navigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-owned-spaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Max owned spaces
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cosmetic-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cosmetic / Preferences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cosmetic / Preferences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Force Theme
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limiting-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rate Limiting / Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rate Limiting / Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shopping-auto-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shopping auto sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-url-import-throttle" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Url Import throttle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-space-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Space Limits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-file-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export file caching
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../updating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Updating
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration_sqlite-postgres/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Migrate sqlite to postgres
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permissions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Permission System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Backup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Contributing
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/translations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Translations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/guidelines/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    IDE Setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            IDE Setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/vscode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VSCode
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/pycharm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    PyCharm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/related/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Related Projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#required-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Required Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#secret-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secret Key
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Secret Key">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#allowed-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allowed Hosts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Password file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection String
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection Options
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optional Settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional Settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#server-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#port" class="md-nav__link">
+    <span class="md-ellipsis">
+      Port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      URL Path
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static root
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      Media URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-root" class="md-nav__link">
+    <span class="md-ellipsis">
+      Media root
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Workers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Threads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Media
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csrf-trusted-origins" class="md-nav__link">
+    <span class="md-ellipsis">
+      CSRF Trusted Origins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cors-origins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cors origins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-cookies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Session Cookies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#captcha" class="md-nav__link">
+    <span class="md-ellipsis">
+      Captcha
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-sorting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree Sorting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pdf-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      PDF Export
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#legal-urls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Legal URLS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rate Limits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentication
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Permissions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-signup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable Signup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Social Auth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-user-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote User Auth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap" class="md-nav__link">
+    <span class="md-ellipsis">
+      LDAP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#external-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      External Services
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="External Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#email" class="md-nav__link">
+    <span class="md-ellipsis">
+      Email
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s3-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      S3 Object storage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      AI Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fdc-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      FDC Api
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connectors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debuggingdevelopment-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging/Development settings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debugging/Development settings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug Toolbar
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQL Debug
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-log-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      Application Log Level
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gunicorn-log-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gunicorn Log Level
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-user-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default User Preferences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Default User Preferences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fractions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fractions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sticky-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sticky Navigation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#max-owned-spaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Max owned spaces
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cosmetic-preferences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cosmetic / Preferences
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cosmetic / Preferences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timezone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Timezone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Theme
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#force-theme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Force Theme
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rate-limiting-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rate Limiting / Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rate Limiting / Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shopping-auto-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shopping auto sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-url-import-throttle" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Url Import throttle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-space-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Space Limits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-file-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export file caching
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Configuration</h1>
+
+<p>This page describes all configuration options for the application
+server. All settings must be configured in the environment of the
+application server, usually by adding them to the <code>.env</code> file.</p>
+<h2 id="required-settings">Required Settings</h2>
+<p>The following settings need to be set appropriately for your installation.
+They are included in the default <code>env.template</code>.</p>
+<h3 id="secret-key">Secret Key</h3>
+<p>Random secret key (at least 50 characters), use for example <code>base64 /dev/urandom | head -c50</code> to generate one.
+It is used internally by django for various signing/cryptographic operations and <strong>should be kept secret</strong>.
+See <a href="https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-SECRET_KEY">Django Docs</a></p>
+<div class="highlight"><pre><span></span><code>SECRET_KEY=#$tp%v6*(*ba01wcz(ip(i5vfz8z$f%qdio&amp;q@anr1#$=%(m4c
+</code></pre></div>
+<p>Alternatively you can point to a file containing just the secret key value. If using containers make sure the file is
+persistent and available inside the container.</p>
+<div class="highlight"><pre><span></span><code>SECRET_KEY_FILE=/path/to/file.txt
+
+// contents of file
+#$tp%v6*(*ba01wcz(ip(i5vfz8z$f%qdio&amp;q@anr1#$=%(m4c
+</code></pre></div>
+<h4 id="allowed-hosts">Allowed Hosts</h4>
+<blockquote>
+<p>default <code>*</code> - options: <code>recipes.mydomain.com,cooking.mydomain.com,...</code> (comma seperated domain/ip list)</p>
+</blockquote>
+<p>Security setting to prevent HTTP Host Header Attacks,
+see <a href="https://docs.djangoproject.com/en/5.0/ref/settings/#allowed-hosts">Django docs</a>.
+Some proxies require <code>*</code> (default) but it should be set to the actual host(s).</p>
+<div class="highlight"><pre><span></span><code>ALLOWED_HOSTS=recipes.mydomain.com
+</code></pre></div>
+<h3 id="database">Database</h3>
+<p>Multiple parameters are required to configure the database.
+<em>Note: You can setup parameters for a test database by defining all of the parameters preceded by <code>TEST_</code> e.g. TEST_DB_ENGINE=</em></p>
+<table>
+<thead>
+<tr>
+<th>Var</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB_ENGINE</td>
+<td>django.db.backends.postgresql (default) django.db.backends.sqlite3</td>
+<td>Type of database connection. Production should always use postgresql.</td>
+</tr>
+<tr>
+<td>POSTGRES_HOST</td>
+<td>any</td>
+<td>Used to connect to database server. Use container name in docker setup.</td>
+</tr>
+<tr>
+<td>POSTGRES_DB</td>
+<td>any</td>
+<td>Name of database.</td>
+</tr>
+<tr>
+<td>POSTGRES_PORT</td>
+<td>1-65535</td>
+<td>Port of database, Postgresql default <code>5432</code></td>
+</tr>
+<tr>
+<td>POSTGRES_USER</td>
+<td>any</td>
+<td>Username for database connection.</td>
+</tr>
+<tr>
+<td>POSTGRES_PASSWORD</td>
+<td>any</td>
+<td>Password for database connection.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="password-file">Password file</h4>
+<blockquote>
+<p>default <code>None</code> - options: file path</p>
+</blockquote>
+<p>Path to file containing the database password. Overrides <code>POSTGRES_PASSWORD</code>. Only applied when using Docker (or other
+setups running <code>boot.sh</code>)</p>
+<div class="highlight"><pre><span></span><code>POSTGRES_PASSWORD_FILE=
+</code></pre></div>
+<h4 id="connection-string">Connection String</h4>
+<blockquote>
+<p>default <code>None</code> - options: according to database specifications</p>
+</blockquote>
+<p>Instead of configuring the connection using multiple individual environment parameters, you can use a connection string.
+The connection string will override all other database settings.</p>
+<div class="highlight"><pre><span></span><code>DATABASE_URL = engine://username:password@host:port/dbname
+</code></pre></div>
+<h4 id="connection-options">Connection Options</h4>
+<blockquote>
+<p>default <code>{}</code> - options: according to database specifications</p>
+</blockquote>
+<p>Additional connection options can be set as shown in the example below.</p>
+<div class="highlight"><pre><span></span><code>DB_OPTIONS={&quot;sslmode&quot;:&quot;require&quot;}
+</code></pre></div>
+<h2 id="optional-settings">Optional Settings</h2>
+<p>All optional settings are, as their name says, optional and can be ignored safely. If you want to know more about what
+you can do with them take a look through this page. I recommend using the categories to guide yourself.</p>
+<h3 id="server-configuration">Server configuration</h3>
+<p>Configuration options for serving related services.</p>
+<h4 id="port">Port</h4>
+<blockquote>
+<p>default <code>8080</code> - options: <code>1-65535</code></p>
+</blockquote>
+<p>Port for gunicorn to bind to. Should not be changed if using docker stack with reverse proxy.</p>
+<div class="highlight"><pre><span></span><code>TANDOOR_PORT=8080
+</code></pre></div>
+<h4 id="url-path">URL Path</h4>
+<blockquote>
+<p>default <code>None</code> - options: <code>/custom/url/base/path</code></p>
+</blockquote>
+<p>If base URL is something other than just / (you are serving a subfolder in your proxy for
+instance http://recipe_app/recipes/)
+Be sure to not have a trailing slash: e.g. '/recipes' instead of '/recipes/'</p>
+<div class="highlight"><pre><span></span><code>SCRIPT_NAME=/recipes
+</code></pre></div>
+<h4 id="static-url">Static URL</h4>
+<blockquote>
+<p>default <code>/static/</code> - options: <code>/any/url/path/</code>, <code>https://any.domain.name/and/url/path</code></p>
+</blockquote>
+<p>If staticfiles are stored or served from a different location uncomment and change accordingly.
+This can either be a relative path from the applications base path or the url of an external host.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<ul>
+<li>MUST END IN <code>/</code></li>
+<li>This is not required if you are just using a subfolder</li>
+</ul>
+</div>
+<div class="highlight"><pre><span></span><code>STATIC_URL=/static/
+</code></pre></div>
+<h4 id="static-root">Static root</h4>
+<blockquote>
+<p>default <code>&lt;basedir&gt;/staticfiles</code> - options <code>/some/other/media/path</code>.</p>
+</blockquote>
+<p>Where staticfiles should be stored on disk. The default location is a
+<code>staticfiles</code> subfolder at the root of the application directory.</p>
+<h4 id="media-url">Media URL</h4>
+<blockquote>
+<p>default <code>/static/</code> - options: <code>/any/url/path/</code>, <code>https://any.domain.name/and/url/path</code></p>
+</blockquote>
+<p>If mediafiles are stored at a different location uncomment and change accordingly.
+This can either be a relative path from the applications base path or the url of an external host</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<ul>
+<li>MUST END IN <code>/</code></li>
+<li>This is <strong>not required</strong> if you are just using a subfolder</li>
+<li>This is <strong>not required</strong> if using S3/object storage</li>
+</ul>
+</div>
+<div class="highlight"><pre><span></span><code>MEDIA_URL=/media/
+</code></pre></div>
+<h4 id="media-root">Media root</h4>
+<blockquote>
+<p>default <code>&lt;basedir&gt;/mediafiles</code> - options <code>/some/other/media/path</code>.</p>
+</blockquote>
+<p>Where mediafiles should be stored on disk. The default location is a
+<code>mediafiles</code> subfolder at the root of the application directory.</p>
+<h4 id="gunicorn-workers">Gunicorn Workers</h4>
+<blockquote>
+<p>default <code>3</code> - options <code>1-X</code></p>
+</blockquote>
+<p>Set the number of gunicorn workers to start when starting using <code>boot.sh</code> (all container installations).
+The default is likely appropriate for most installations.
+See <a href="https://docs.gunicorn.org/en/stable/design.html#how-many-workers">Gunicorn docs</a> for recommended settings.</p>
+<div class="highlight"><pre><span></span><code>GUNICORN_WORKERS=3
+</code></pre></div>
+<h4 id="gunicorn-threads">Gunicorn Threads</h4>
+<blockquote>
+<p>default <code>2</code> - options <code>1-X</code></p>
+</blockquote>
+<p>Set the number of gunicorn threads to start when starting using <code>boot.sh</code> (all container installations).
+The default is likely appropriate for most installations.
+See <a href="https://docs.gunicorn.org/en/stable/design.html#how-many-workers">Gunicorn docs</a> for recommended settings.</p>
+<div class="highlight"><pre><span></span><code>GUNICORN_THREADS=2
+</code></pre></div>
+<h4 id="gunicorn-media">Gunicorn Media</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>Serve media files directly using gunicorn. Basically everyone recommends not doing this. Please use any of the examples
+provided that include an additional nxginx container to handle media file serving.
+If you know what you are doing turn this on (<code>1</code>) to serve media files using djangos serve() method.</p>
+<div class="highlight"><pre><span></span><code>GUNICORN_MEDIA=0
+</code></pre></div>
+<h4 id="csrf-trusted-origins">CSRF Trusted Origins</h4>
+<blockquote>
+<p>default <code>[]</code> - options: [list,of,trusted,origins]</p>
+</blockquote>
+<p>Allows setting origins to allow for unsafe requests.
+See <a href="https://docs.djangoproject.com/en/5.0/ref/settings/#csrf-trusted-origins">Django docs</a></p>
+<div class="highlight"><pre><span></span><code>CSRF_TRUSTED_ORIGINS = []
+</code></pre></div>
+<h4 id="cors-origins">Cors origins</h4>
+<blockquote>
+<p>default <code>False</code> - options: <code>False</code>, <code>True</code></p>
+</blockquote>
+<p>By default, cross-origin resource sharing is disabled. Enabling this will allow access to your resources from other
+domains.
+Please read <a href="https://github.com/adamchainz/django-cors-headers">the docs</a> carefully before enabling this.</p>
+<div class="highlight"><pre><span></span><code>CORS_ALLOW_ALL_ORIGINS = True
+</code></pre></div>
+<h4 id="session-cookies">Session Cookies</h4>
+<p>Django session cookie settings. Can be changed to allow a single django application to authenticate several applications
+when running under the same database.</p>
+<div class="highlight"><pre><span></span><code>SESSION_COOKIE_DOMAIN=.example.com
+SESSION_COOKIE_NAME=sessionid # use this only to not interfere with non unified django applications under the same top level domain
+</code></pre></div>
+<h3 id="features">Features</h3>
+<p>Some features can be enabled/disabled on a server level because they might change the user experience significantly,
+they might be unstable/beta or they have performance/security implications.</p>
+<h4 id="captcha">Captcha</h4>
+<p>If you allow signing up to your instance you might want to use a captcha to prevent spam.
+Tandoor supports HCAPTCHA which is supposed to be a privacy-friendly captcha provider.
+See <a href="https://www.hcaptcha.com/">HCAPTCHA website</a> for more information and to acquire your sitekey and secret.</p>
+<div class="highlight"><pre><span></span><code>HCAPTCHA_SITEKEY=
+HCAPTCHA_SECRET=
+</code></pre></div>
+<h4 id="metrics">Metrics</h4>
+<p>Enable serving of prometheus metrics under the <code>/metrics</code> path</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>The view is not secured (as per the prometheus default way) so make sure to secure it
+through your web server.</p>
+</div>
+<div class="highlight"><pre><span></span><code>ENABLE_METRICS=0
+</code></pre></div>
+<h4 id="tree-sorting">Tree Sorting</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>By default SORT_TREE_BY_NAME is disabled this will store all Keywords and Food in the order they are created.
+Enabling this setting makes saving new keywords and foods very slow, which doesn't matter in most usecases.
+However, when doing large imports of recipes that will create new objects, can increase total run time by 10-15x
+Keywords and Food can be manually sorted by name in Admin
+This value can also be temporarily changed in Admin, it will revert the next time the application is started</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Disabling tree sorting is a temporary fix, in the future we might find a better implementation to allow tree sorting
+without the large performance impacts.</p>
+</div>
+<div class="highlight"><pre><span></span><code>SORT_TREE_BY_NAME=0
+</code></pre></div>
+<h4 id="pdf-export">PDF Export</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>Exporting PDF's is a community contributed feature to export recipes as PDF files. This requires the server to download
+a chromium binary and is generally implemented only rudimentary and somewhat slow depending on your server device.</p>
+<p>See <a href="https://docs.tandoor.dev/features/import_export/#pdf">Export feature docs</a> for additional information.</p>
+<div class="highlight"><pre><span></span><code>ENABLE_PDF_EXPORT=1
+</code></pre></div>
+<h4 id="legal-urls">Legal URLS</h4>
+<p>Depending on your jurisdiction you might need to provide any of the following URLs for your instance.</p>
+<div class="highlight"><pre><span></span><code>TERMS_URL=
+PRIVACY_URL=
+IMPRINT_URL=
+</code></pre></div>
+<h4 id="rate-limits">Rate Limits</h4>
+<p>There are some rate limits that can be configured.</p>
+<ul>
+<li>RATELIMIT_URL_IMPORT_REQUESTS: limit the number of external URL import requests. Useful to prevent your server from being abused for malicious requests.</li>
+</ul>
+<h3 id="authentication">Authentication</h3>
+<p>All configurable variables regarding authentication.
+Please also visit the <a href="https://docs.tandoor.dev/features/authentication/">dedicated docs page</a> for more information.</p>
+<h4 id="default-permissions">Default Permissions</h4>
+<p>Configures if a newly created user (from social auth or public signup) should automatically join into the given space and
+default group.</p>
+<p>This setting is targeted at private, single space instances that typically have a custom authentication system managing
+access to the data.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>With public signup enabled this will give everyone access to the data in the given space</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This feature might be deprecated in favor of a space join and public viewing system in the future</p>
+</div>
+<blockquote>
+<p>default <code>0</code> (disabled) - options <code>0</code>, <code>1-X</code> (space id)</p>
+</blockquote>
+<p>When enabled will join user into space and apply group configured in <code>SOCIAL_DEFAULT_GROUP</code>.</p>
+<div class="highlight"><pre><span></span><code>SOCIAL_DEFAULT_ACCESS = 1
+</code></pre></div>
+<blockquote>
+<p>default <code>guest</code> - options <code>guest</code>, <code>user</code>, <code>admin</code></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code>SOCIAL_DEFAULT_GROUP=guest
+</code></pre></div>
+<h4 id="enable-signup">Enable Signup</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>Allow everyone to create local accounts on your application instance (without an invite link)
+You might want to setup HCAPTCHA to prevent bots from creating accounts/spam.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Social accounts will always be able to sign up, if providers are configured</p>
+</div>
+<div class="highlight"><pre><span></span><code>ENABLE_SIGNUP=0
+</code></pre></div>
+<h4 id="social-auth">Social Auth</h4>
+<p>Allows you to set up external OAuth providers.</p>
+<div class="highlight"><pre><span></span><code>SOCIAL_PROVIDERS = allauth.socialaccount.providers.github, allauth.socialaccount.providers.nextcloud,
+</code></pre></div>
+<h4 id="remote-user-auth">Remote User Auth</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>Allow authentication via the REMOTE-USER header (can be used for e.g. authelia).</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Leave off if you don't know what you are doing! Enabling this without proper configuration will enable anybody
+to login with any username!</p>
+</div>
+<div class="highlight"><pre><span></span><code>REMOTE_USER_AUTH=0
+</code></pre></div>
+<h4 id="ldap">LDAP</h4>
+<p>LDAP based authentication is disabled by default. You can enable it by setting <code>LDAP_AUTH</code> to <code>1</code> and configuring the
+other
+settings accordingly. Please remove/comment settings you do not need for your setup.</p>
+<div class="highlight"><pre><span></span><code>LDAP_AUTH=
+AUTH_LDAP_SERVER_URI=
+AUTH_LDAP_BIND_DN=
+AUTH_LDAP_BIND_PASSWORD=
+AUTH_LDAP_USER_SEARCH_BASE_DN=
+AUTH_LDAP_TLS_CACERTFILE=
+AUTH_LDAP_START_TLS=
+</code></pre></div>
+<p>Instead of passing the LDAP password directly through the environment variable <code>AUTH_LDAP_BIND_PASSWORD</code>,
+you can set the password in a file and set the environment variable <code>AUTH_LDAP_BIND_PASSWORD_FILE</code>
+to the path of the file containing the ldap secret.</p>
+<div class="highlight"><pre><span></span><code>AUTH_LDAP_BIND_PASSWORD_FILE=/run/secrets/ldap_password.txt
+</code></pre></div>
+<h3 id="external-services">External Services</h3>
+<h4 id="email">Email</h4>
+<p>Email Settings, see <a href="https://docs.djangoproject.com/en/3.2/ref/settings/#email-host">Django docs</a> for additional
+information.
+Required for email confirmation and password reset (automatically activates if host is set).</p>
+<div class="highlight"><pre><span></span><code>EMAIL_HOST=
+EMAIL_PORT=
+EMAIL_HOST_USER=
+EMAIL_HOST_PASSWORD=
+EMAIL_USE_TLS=0
+EMAIL_USE_SSL=0
+# email sender address (default &#39;webmaster@localhost&#39;)
+DEFAULT_FROM_EMAIL=
+</code></pre></div>
+<p>Instead of passing the email password directly through the environment variable <code>EMAIL_HOST_PASSWORD</code>,
+you can set the password in a file and set the environment variable <code>EMAIL_HOST_PASSWORD_FILE</code>
+to the path of the file containing the ldap secret.</p>
+<div class="highlight"><pre><span></span><code>EMAIL_HOST_PASSWORD_FILE=/run/secrets/email_password.txt
+</code></pre></div>
+<p>Optional settings (only copy the ones you need)</p>
+<div class="highlight"><pre><span></span><code># prefix used for account related emails (default &quot;[Tandoor Recipes] &quot;)
+ACCOUNT_EMAIL_SUBJECT_PREFIX=
+</code></pre></div>
+<h4 id="s3-object-storage">S3 Object storage</h4>
+<p>If you want to store your users media files using an external storage provider supporting the S3 API's (Like S3,
+MinIO, ...)
+configure the following settings accordingly.
+As long as <code>S3_ACCESS_KEY</code> is not set, all object storage related settings are disabled.</p>
+<p>See also <a href="https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html">Django Storages Docs</a> for additional
+information.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Settings are only named S3 but apply to all compatible object storage providers.</p>
+</div>
+<p>Required settings</p>
+<div class="highlight"><pre><span></span><code>S3_ACCESS_KEY=
+S3_SECRET_ACCESS_KEY=
+S3_BUCKET_NAME=
+</code></pre></div>
+<p>Alternatively you can point to a file containing the S3_SECRET_ACCESS_KEY value. If using containers make sure the file is
+persistent and available inside the container.</p>
+<div class="highlight"><pre><span></span><code>S3_SECRET_ACCESS_KEY_FILE=/path/to/file.txt
+</code></pre></div>
+<p>Optional settings (only copy the ones you need)</p>
+<div class="highlight"><pre><span></span><code>S3_REGION_NAME= # default none, set your region might be required
+S3_QUERYSTRING_AUTH=1 # default true, set to 0 to serve media from a public bucket without signed urls
+S3_QUERYSTRING_EXPIRE=3600 # number of seconds querystring are valid for
+S3_ENDPOINT_URL= # when using a custom endpoint like minio
+S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/TandoorRecipes/recipes/issues/1943)
+</code></pre></div>
+<h4 id="ai-integration">AI Integration</h4>
+<p>Most AI features are configured trough the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.</p>
+<p>Enables AI features for spaces by default
+<div class="highlight"><pre><span></span><code>SPACE_AI_ENABLED=1
+</code></pre></div></p>
+<p>Sets the monthly default credit limit for AI usage
+<div class="highlight"><pre><span></span><code>SPACE_AI_CREDITS_MONTHLY=100
+</code></pre></div></p>
+<p>Ratelimit for AI API
+<div class="highlight"><pre><span></span><code>AI_RATELIMIT=60/hour
+</code></pre></div></p>
+<h4 id="fdc-api">FDC Api</h4>
+<p>The FDC Api is used to automatically load nutrition information from
+the <a href="https://fdc.nal.usda.gov/fdc-app.html#/">FDC Nutrition Database</a>.
+The default <code>DEMO_KEY</code> is limited to 30 requests / hour or 50 requests / day.
+If you want to do many requests to the FDC API you need to get a (free) API
+key <a href="https://fdc.nal.usda.gov/api-key-signup.html">here</a>.</p>
+<div class="highlight"><pre><span></span><code>FDC_API_KEY=DEMO_KEY
+</code></pre></div>
+<h4 id="connectors">Connectors</h4>
+<ul>
+<li><code>DISABLE_EXTERNAL_CONNECTORS</code> is a global switch to disable External Connectors entirely.</li>
+<li><code>EXTERNAL_CONNECTORS_QUEUE_SIZE</code> is the amount of changes that are kept in memory if the worker cannot keep up.</li>
+</ul>
+<p>(External) Connectors are used to sync the status from Tandoor to other services. More info can be found <a href="https://docs.tandoor.dev/features/connectors/">here</a>.</p>
+<div class="highlight"><pre><span></span><code>DISABLE_EXTERNAL_CONNECTORS=0  # Default 0 (false), set to 1 (true) to disable connectors
+EXTERNAL_CONNECTORS_QUEUE_SIZE=100  # Defaults to 100, set to any number &gt;1
+</code></pre></div>
+<h3 id="debuggingdevelopment-settings">Debugging/Development settings</h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These settings should not be left on in production as they might provide additional attack surfaces and
+information to adversaries.</p>
+</div>
+<h4 id="debug">Debug</h4>
+<blockquote>
+<p>default <code>0</code> - options: <code>0</code>, <code>1</code></p>
+</blockquote>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Please enable this before posting logs anywhere to ask for help.</p>
+</div>
+<p>Setting to <code>1</code> enables several django debug features and additional
+logs (<a href="https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-DEBUG">see docs</a>).</p>
+<div class="highlight"><pre><span></span><code>DEBUG=0
+</code></pre></div>
+<h4 id="debug-toolbar">Debug Toolbar</h4>
+<blockquote>
+<p>default <code>0</code> - options: <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>Set to <code>1</code> to enable django debug toolbar middleware. Toolbar only shows if <code>DEBUG=1</code> is set and the requesting IP
+is in <code>INTERNAL_IPS</code>.
+See <a href="https://django-debug-toolbar.readthedocs.io/en/latest/">Django Debug Toolbar Docs</a>.</p>
+<div class="highlight"><pre><span></span><code>DEBUG_TOOLBAR=0
+</code></pre></div>
+<h4 id="sql-debug">SQL Debug</h4>
+<blockquote>
+<p>default <code>0</code> - options: <code>0</code>, <code>1</code></p>
+</blockquote>
+<p>Set to <code>1</code> to enable additional query output on the search page.</p>
+<div class="highlight"><pre><span></span><code>SQL_DEBUG=0
+</code></pre></div>
+<h4 id="application-log-level">Application Log Level</h4>
+<blockquote>
+<p>default <code>WARNING</code> - options: <a href="https://docs.djangoproject.com/en/5.0/topics/logging/#loggers">see Django Docs</a></p>
+</blockquote>
+<p>Increase or decrease the logging done by application.
+Please set to <code>DEBUG</code> when making a bug report.</p>
+<div class="highlight"><pre><span></span><code> LOG_LEVEL=&quot;DEBUG&quot;
+</code></pre></div>
+<h4 id="gunicorn-log-level">Gunicorn Log Level</h4>
+<blockquote>
+<p>default <code>info</code> - options: <a href="https://docs.gunicorn.org/en/stable/settings.html#loglevel">see Gunicorn Docs</a></p>
+</blockquote>
+<p>Increase or decrease the logging done by gunicorn (the python wsgi application).</p>
+<div class="highlight"><pre><span></span><code> GUNICORN_LOG_LEVEL=&quot;debug&quot;
+</code></pre></div>
+<h3 id="default-user-preferences">Default User Preferences</h3>
+<p>Having default user preferences is nice so that users signing up to your instance already have the settings you deem
+appropriate.</p>
+<h4 id="fractions">Fractions</h4>
+<blockquote>
+<p>default <code>0</code> - options: <code>0</code>,<code>1</code></p>
+</blockquote>
+<p>The default value for the user preference 'fractions' (showing amounts as decimals or fractions).</p>
+<div class="highlight"><pre><span></span><code>FRACTION_PREF_DEFAULT=0
+</code></pre></div>
+<h4 id="comments">Comments</h4>
+<blockquote>
+<p>default <code>1</code> - options: <code>0</code>,<code>1</code></p>
+</blockquote>
+<p>The default value for the user preference 'comments' (enable/disable commenting system)</p>
+<div class="highlight"><pre><span></span><code>COMMENT_PREF_DEFAULT=1
+</code></pre></div>
+<h4 id="sticky-navigation">Sticky Navigation</h4>
+<blockquote>
+<p>default <code>1</code> - options: <code>0</code>,<code>1</code></p>
+</blockquote>
+<p>The default value for the user preference 'sticky navigation' (always show navbar on top or hide when scrolling)</p>
+<div class="highlight"><pre><span></span><code>STICKY_NAV_PREF_DEFAULT=1
+</code></pre></div>
+<h4 id="max-owned-spaces">Max owned spaces</h4>
+<blockquote>
+<p>default <code>100</code> - options: <code>0-X</code></p>
+</blockquote>
+<p>The default for the number of spaces a user can own. By setting to 0 space creation for users will be disabled.
+Superusers can always bypass this limit.</p>
+<div class="highlight"><pre><span></span><code>MAX_OWNED_SPACES_PREF_DEFAULT=100
+</code></pre></div>
+<h3 id="cosmetic-preferences">Cosmetic / Preferences</h3>
+<h4 id="timezone">Timezone</h4>
+<blockquote>
+<p>default <code>Europe/Berlin</code> - options: <a href="https://timezonedb.com/time-zones">see timezone DB</a></p>
+</blockquote>
+<p>Default timezone to use for database
+connections (<a href="https://docs.djangoproject.com/en/5.0/ref/settings/#time-zone">see Django docs</a>).
+Usually everything is converted to the users timezone so this setting doesn't really need to be correct.</p>
+<div class="highlight"><pre><span></span><code>TZ=Europe/Berlin
+</code></pre></div>
+<h4 id="default-theme">Default Theme</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>1-X</code> (space ID)</p>
+</blockquote>
+<p>Tandoors appearance can be changed on a user and space level but unauthenticated users always see the tandoor default style.
+With this setting you can specify the ID of a space of which the appearance settings should be applied if a user is not logged in.</p>
+<div class="highlight"><pre><span></span><code>UNAUTHENTICATED_THEME_FROM_SPACE=
+</code></pre></div>
+<h4 id="force-theme">Force Theme</h4>
+<blockquote>
+<p>default <code>0</code> - options <code>1-X</code> (space ID)</p>
+</blockquote>
+<p>Similar to the Default theme but forces the theme upon all users (authenticated/unauthenticated) and all spaces</p>
+<div class="highlight"><pre><span></span><code>FORCE_THEME_FROM_SPACE=
+</code></pre></div>
+<h3 id="rate-limiting-performance">Rate Limiting / Performance</h3>
+<h4 id="shopping-auto-sync">Shopping auto sync</h4>
+<blockquote>
+<p>default <code>5</code> - options: <code>1-XXX</code></p>
+</blockquote>
+<p>Users can set an amount of time after which the shopping list is automatically refreshed.
+This is the minimum interval users can set. Setting this to a low value will allow users to automatically refresh very
+frequently which
+might cause high load on the server. (Technically they can obviously refresh as often as they want with their own
+scripts)</p>
+<div class="highlight"><pre><span></span><code>SHOPPING_MIN_AUTOSYNC_INTERVAL=5
+</code></pre></div>
+<h4 id="api-url-import-throttle">API Url Import throttle</h4>
+<blockquote>
+<p>default <code>60/hour</code> - options: <code>x/hour</code>, <code>x/day</code>, <code>x/minute</code>, <code>x/second</code></p>
+</blockquote>
+<p>Limits how many recipes a user can import per hour.
+A rate limit is recommended to prevent users from abusing your server for (DDoS) relay attacks and to prevent external
+service
+providers from blocking your server for too many request.</p>
+<div class="highlight"><pre><span></span><code>DRF_THROTTLE_RECIPE_URL_IMPORT=60/hour
+</code></pre></div>
+<h4 id="default-space-limits">Default Space Limits</h4>
+<p>You might want to limit how many resources a user might create. The following settings apply automatically to newly
+created spaces. These defaults can be changed in the admin view after a space has been created.</p>
+<p>If unset, all settings default to unlimited/enabled</p>
+<div class="highlight"><pre><span></span><code>SPACE_DEFAULT_MAX_RECIPES=0 # 0=unlimited recipes
+SPACE_DEFAULT_MAX_USERS=0 # 0=unlimited users per space
+SPACE_DEFAULT_MAX_FILES=0 # Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.
+SPACE_DEFAULT_ALLOW_SHARING=1 # Allow users to share recipes with public links
+</code></pre></div>
+<h4 id="export-file-caching">Export file caching</h4>
+<blockquote>
+<p>default <code>600</code> - options <code>1-X</code></p>
+</blockquote>
+<p>Recipe exports are cached for a certain time (in seconds) by default, adjust time if needed
+<div class="highlight"><pre><span></span><code>EXPORT_FILE_CACHE_DURATION=600
+</code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
