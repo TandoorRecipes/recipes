@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="d-flex flex-nowrap">
                                     <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
-                                        <v-text-field :id="`id_input_amount_${step.id}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
+                                        <v-text-field :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
                                                       hide-details :disabled="ingredient.noAmount">
 
                                             <template #prepend>
@@ -349,7 +349,7 @@ function insertAndFocusIngredient() {
             editingIngredientIndex.value = step.value.ingredients.length - 1
             dialogIngredientEditor.value = true
         } else {
-            document.getElementById(`id_input_amount_${step.value.id}_${step.value.ingredients.length - 1}`).select()
+            document.getElementById(`id_input_amount_${props.stepIndex}_${step.value.ingredients.length - 1}`).select()
         }
     })
 }
