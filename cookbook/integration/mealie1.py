@@ -138,6 +138,16 @@ class Mealie1(Integration):
                 if s['recipe_id'] not in first_step_of_recipe_dict:
                     first_step_of_recipe_dict[s['recipe_id']] = step.pk
 
+            # it is possible for a recipe to not have steps but have ingredients, in that case create an empty step to add them to later
+            for r in recipes_dict.keys():
+                if r not in first_step_of_recipe_dict:
+                    step = Step.objects.create(instruction='',
+                                        order=0,
+                                        name='',
+                                        space=self.request.space)
+                    steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[r], step_id=step.pk))
+                    first_step_of_recipe_dict[r] = step.pk
+
         for n in mealie_database['notes']:
             if n['recipe_id'] in recipes_dict:
                 step = Step.objects.create(instruction=n['text'],
@@ -169,7 +179,7 @@ class Mealie1(Integration):
                         unit_id=units_dict[i['unit_id']] if i['unit_id'] in units_dict else None,
                         original_text=i['original_text'],
                         order=i['position'],
-                        amount=i['quantity'],
+                        amount=i['quantity'] if i['quantity'] else 0,
                         note=i['note'],
                         space=self.request.space,
                     )
