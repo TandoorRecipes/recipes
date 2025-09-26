@@ -10,6 +10,7 @@ LICENSE
 .env
 .env.template
 .github
+.git
 .idea
 .prettierignore
 LICENSE.md
