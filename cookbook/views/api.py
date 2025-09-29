@@ -1963,6 +1963,8 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                                                                'list_recipe__mealplan__recipe',
                                                                                                ).distinct().all()
 
+        self.queryset = self.queryset.order_by('id')
+
         updated_after = self.request.query_params.get('updated_after', None)
         mealplan = self.request.query_params.get('mealplan', None)
 
