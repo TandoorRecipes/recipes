@@ -185,3 +185,32 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         assert next(x for x in conversions if x.unit == unit_kg_space_2) is not None
         assert abs(next(x for x in conversions if x.unit == unit_kg_space_2).amount - Decimal(0.1)) < 0.0001
         print(conversions)
+
+def test_conversion_with_zero(space_1, space_2, u1_s1):
+    with scopes_disabled():
+        uch = UnitConversionHelper(space_1)
+
+        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+        unit_fantasy = Unit.objects.create(name='Fantasy Unit', base_unit=None, space=space_1)
+
+        food_1 = Food.objects.create(name='Test Food 1', space=space_1)
+
+        ingredient_food_1_gram = Ingredient.objects.create(
+            food=food_1,
+            unit=unit_gram,
+            amount=100,
+            space=space_1,
+        )
+
+        print('\n----------- TEST BASE CUSTOM CONVERSION - TO CUSTOM CONVERSION ---------------')
+        UnitConversion.objects.create(
+            base_amount=0,
+            base_unit=unit_gram,
+            converted_amount=0,
+            converted_unit=unit_fantasy,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+        conversions = uch.get_conversions(ingredient_food_1_gram)
+
+        assert len(conversions) == 1 # conversion always includes the ingredient, if count is 1 no other conversion was found

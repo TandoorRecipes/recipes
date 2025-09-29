@@ -135,8 +135,9 @@ class UnitConversionHelper:
         :param food: base food
         :return: converted ingredient object from base amount/unit/food
         """
-        if uc.food is None or uc.food == food:
+        if (uc.food is None or uc.food == food) and uc.converted_amount > 0 and uc.base_amount > 0:
             if unit == uc.base_unit:
                 return Ingredient(amount=amount * (uc.converted_amount / uc.base_amount), unit=uc.converted_unit, food=food, space=self.space)
             else:
                 return Ingredient(amount=amount * (uc.base_amount / uc.converted_amount), unit=uc.base_unit, food=food, space=self.space)
+        return None
