@@ -2,7 +2,7 @@
 source venv/bin/activate
 
 # these are envsubst in the nginx config, make sure they default to something sensible when unset
-export TANDOOR_PORT="${TANDOOR_PORT:-8080}"
+export TANDOOR_PORT="${TANDOOR_PORT:-80}"
 export MEDIA_ROOT=${MEDIA_ROOT:-/opt/recipes/mediafiles};
 export STATIC_ROOT=${STATIC_ROOT:-/opt/recipes/staticfiles};
 
@@ -11,11 +11,6 @@ GUNICORN_THREADS="${GUNICORN_THREADS:-2}"
 GUNICORN_LOG_LEVEL="${GUNICORN_LOG_LEVEL:-'info'}"
 
 PLUGINS_BUILD="${PLUGINS_BUILD:-0}"
-
-if [ "${TANDOOR_PORT}" -eq 80 ]; then
-    echo "TANDOOR_PORT set to 8080 because 80 is now taken by the integrated nginx"
-    TANDOOR_PORT=8080
-fi
 
 display_warning() {
     echo "[WARNING]"
@@ -28,7 +23,6 @@ envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.
 # start nginx early to display error pages
 echo "Starting nginx"
 nginx
-
 
 echo "Checking configuration..."
 
@@ -110,9 +104,5 @@ chmod -R 755 ${MEDIA_ROOT:-/opt/recipes/mediafiles}
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
 echo "Starting gunicorn"
-# Check if IPv6 is enabled, only then run gunicorn with ipv6 support
-if [ "$ipv6_disable" -eq 0 ]; then
-    exec gunicorn -b "[::]:$TANDOOR_PORT" --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
-else
-    exec gunicorn -b ":$TANDOOR_PORT" --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
-fi
+exec gunicorn --bind unix:/run/tandoor.sock --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
+
