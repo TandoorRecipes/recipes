@@ -15,14 +15,14 @@
 <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/badge/icon/discord?icon=discord&label" ></a>
 <a href="https://hub.docker.com/r/vabene1111/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/vabene1111/recipes" ></a>
 <a href="https://github.com/vabene1111/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/vabene1111/recipes" ></a>
-<a href="https://app.tandoor.dev/e/demo-auto-login/" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>
+<a href="https://app.tandoor.dev/e/demo-auto-login/e/demo-auto-login/" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>
 </p>
 
 <p align="center">
 <a href="https://tandoor.dev" target="_blank" rel="noopener noreferrer">Website</a> •
 <a href="https://docs.tandoor.dev/install/docker/" target="_blank" rel="noopener noreferrer">Installation</a> •
 <a href="https://docs.tandoor.dev/" target="_blank" rel="noopener noreferrer">Docs</a> •
-<a href="https://app.tandoor.dev/e/demo-auto-login/" target="_blank" rel="noopener noreferrer">Demo</a> •
+<a href="https://app.tandoor.dev/e/demo-auto-login/e/demo-auto-login/" target="_blank" rel="noopener noreferrer">Demo</a> •
 <a href="https://community.tandoor.dev" target="_blank" rel="noopener noreferrer">Community</a> •
 <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer">Discord</a>
 </p>
@@ -65,6 +65,7 @@ a public page.
 Documentation can be found [here](https://docs.tandoor.dev/).
 
 ## ❤️ Support our work ❤️
+
 Tandoor is developed by volunteers in their free time just because its fun. That said earning
 some money with the project allows us to spend more time on it and thus make improvements we otherwise couldn't.
 Because of that there are several ways you can support us
@@ -75,6 +76,7 @@ Because of that there are several ways you can support us
 - **Let us host for you** We are offering a [hosted version](https://app.tandoor.dev) where all profits support us and the development of tandoor (currently only available in germany).
 
 ## Contributing
+
 Contributions are welcome but please read [this](https://docs.tandoor.dev/contribute/guidelines/) **BEFORE** contributing anything!
 
 ## Your Feedback
@@ -101,11 +103,11 @@ Beginning with version 0.10.0 the code in this repository is licensed under the 
 [common clause](https://commonsclause.com/) selling exception. See [LICENSE.md](https://github.com/vabene1111/recipes/blob/develop/LICENSE.md) for details.
 
 > NOTE: There appears to be a whole range of legal issues with licensing anything other than the standard completely open licenses.
-> I am in the process of getting some professional legal advice to sort out these issues. 
+> I am in the process of getting some professional legal advice to sort out these issues.
 > Please also see [Issue 238](https://github.com/vabene1111/recipes/issues/238) for some discussion and **reasoning** regarding the topic.
 
 **Reasoning**
-**This software and *all* its features are and will always be free for everyone to use and enjoy.**
+**This software and _all_ its features are and will always be free for everyone to use and enjoy.**
 
 The reason for the selling exception is that a significant amount of time was spend over multiple years to develop this software.
 A paid hosted version which will be identical in features and code base to the software offered in this repository will
