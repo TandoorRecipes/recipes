@@ -96,12 +96,15 @@ Configuration options for serving related services.
 
 #### Port
 
-> default `8080` - options: `1-65535`
+> default `80` - options: `1-65535`
 
-Port for gunicorn to bind to. Should not be changed if using docker stack with reverse proxy.
+!!! warning
+    Changed in version 2.3 to no longer configure the port of gunicorn but the port of the internal nginx
+
+Port where Tandoor exposes its internal web server.
 
 ```
-TANDOOR_PORT=8080
+TANDOOR_PORT=80
 ```
 
 

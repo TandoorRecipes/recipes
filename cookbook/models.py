@@ -402,6 +402,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class AiProvider(models.Model):
     name = models.CharField(max_length=128)
@@ -421,7 +424,7 @@ class AiProvider(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('pk',)
 
 
 class AiLog(models.Model, PermissionModelMixin):
@@ -475,6 +478,9 @@ class ConnectorConfig(models.Model, PermissionModelMixin):
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class UserPreference(models.Model, PermissionModelMixin):
@@ -579,6 +585,9 @@ class UserSpace(models.Model, PermissionModelMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class Storage(models.Model, PermissionModelMixin):
     DROPBOX = 'DB'
@@ -592,7 +601,7 @@ class Storage(models.Model, PermissionModelMixin):
     )
     username = models.CharField(max_length=128, blank=True, null=True)
     password = models.CharField(max_length=128, blank=True, null=True)
-    token = models.CharField(max_length=512, blank=True, null=True)
+    token = models.CharField(max_length=4098, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     path = models.CharField(blank=True, default='', max_length=256)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -602,6 +611,9 @@ class Storage(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class Sync(models.Model, PermissionModelMixin):
@@ -617,6 +629,9 @@ class Sync(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return self.path
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class SupermarketCategory(models.Model, PermissionModelMixin, MergeModelMixin):
@@ -643,6 +658,7 @@ class SupermarketCategory(models.Model, PermissionModelMixin, MergeModelMixin):
             models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space'),
             models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_category_unique_open_data_slug_per_space')
         ]
+        ordering = ('name',)
 
 
 class Supermarket(models.Model, PermissionModelMixin):
@@ -662,6 +678,7 @@ class Supermarket(models.Model, PermissionModelMixin):
             models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space'),
             models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_unique_open_data_slug_per_space')
         ]
+        ordering = ('name',)
 
 
 class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
@@ -693,6 +710,9 @@ class SyncLog(models.Model, PermissionModelMixin):
     def __str__(self):
         return f"{self.created_at}:{self.sync} - {self.status}"
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelMixin):
     if SORT_TREE_BY_NAME:
@@ -710,6 +730,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
             models.UniqueConstraint(fields=['space', 'name'], name='kw_unique_name_per_space')
         ]
         indexes = (Index(fields=['id', 'name']),)
+        ordering = ('name',)
 
 
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin, MergeModelMixin):
@@ -741,6 +762,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
             models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space'),
             models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_unique_open_data_slug_per_space')
         ]
+        ordering = ('name',)
 
 
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
@@ -874,6 +896,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             Index(fields=['id']),
             Index(fields=['name']),
         )
+        ordering = ('name',)
 
 
 class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model, PermissionModelMixin):
@@ -900,6 +923,7 @@ class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model
             models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'], name='f_unique_conversion_per_space'),
             models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_conversion_unique_open_data_slug_per_space')
         ]
+        ordering = ('pk',)
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -1104,13 +1128,14 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         sub_food_recipes = Q(id__in=Food.objects.filter(ingredient__step__recipe__in=related_recipes).exclude(recipe=None).values_list('recipe'))
         return Recipe.objects.filter(Q(id__in=related_recipes.values_list('id')) | sub_step_recipes | sub_food_recipes)
 
-    class Meta():
+    class Meta:
         indexes = (
             GinIndex(fields=["name_search_vector"]),
             GinIndex(fields=["desc_search_vector"]),
             Index(fields=['id']),
             Index(fields=['name']),
         )
+        ordering = ('name',)
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):
@@ -1131,6 +1156,9 @@ class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionMod
 
     def __str__(self):
         return self.text
+    
+    class Meta:
+        ordering = ('pk',)
 
 
 class RecipeImport(models.Model, PermissionModelMixin):
@@ -1159,6 +1187,9 @@ class RecipeImport(models.Model, PermissionModelMixin):
         self.delete()
         return recipe
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
@@ -1176,6 +1207,7 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
 
     class Meta():
         indexes = (Index(fields=['name']),)
+        ordering = ('name',)
 
 
 class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, PermissionModelMixin):
@@ -1221,6 +1253,7 @@ class MealType(models.Model, PermissionModelMixin):
         constraints = [
             models.UniqueConstraint(fields=['space', 'name', 'created_by'], name='mt_unique_name_per_space'),
         ]
+        ordering = ('name',)
 
 
 class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, PermissionModelMixin):
@@ -1248,6 +1281,9 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     def __str__(self):
         return f'{self.get_label()} - {self.from_date} - {self.meal_type.name}'
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=32, blank=True, default='')
@@ -1262,6 +1298,9 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def __str__(self):
         return f'Shopping list recipe {self.id} - {self.recipe}'
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
@@ -1294,6 +1333,9 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
         except AttributeError:
             return None
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
@@ -1308,6 +1350,9 @@ class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, Permissi
 
     def __str__(self):
         return f'{self.recipe} - {self.uuid}'
+
+    class Meta:
+        ordering = ('pk',)
 
 
 def default_valid_until():
@@ -1332,6 +1377,9 @@ class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, Permis
     def __str__(self):
         return f'{self.uuid}'
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class TelegramBot(models.Model, PermissionModelMixin):
     token = models.CharField(max_length=256)
@@ -1345,6 +1393,9 @@ class TelegramBot(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f"{self.name}"
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionModelMixin):
@@ -1363,7 +1414,7 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
     def __str__(self):
         return self.recipe.name
 
-    class Meta():
+    class Meta:
         indexes = (
             Index(fields=['id']),
             Index(fields=['recipe']),
@@ -1372,6 +1423,7 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
             Index(fields=['created_by']),
             Index(fields=['created_by', 'rating']),
         )
+        ordering = ('pk',)
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
@@ -1385,13 +1437,14 @@ class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionMo
     def __str__(self):
         return self.recipe.name
 
-    class Meta():
+    class Meta:
         indexes = (
             Index(fields=['recipe']),
             Index(fields=['-created_at']),
             Index(fields=['created_by']),
             Index(fields=['recipe', '-created_at', 'created_by']),
         )
+        ordering = ('pk',)
 
 
 class ImportLog(models.Model, PermissionModelMixin):
@@ -1411,6 +1464,9 @@ class ImportLog(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f"{self.created_at}:{self.type}"
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class ExportLog(models.Model, PermissionModelMixin):
@@ -1432,6 +1488,9 @@ class ExportLog(models.Model, PermissionModelMixin):
     def __str__(self):
         return f"{self.created_at}:{self.type}"
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models.Model, PermissionModelMixin):
     html = models.TextField()
@@ -1441,6 +1500,9 @@ class BookmarkletImport(ExportModelOperationsMixin('bookmarklet_import'), models
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('pk',)
 
 
 # field names used to configure search behavior - all data populated during data migration
@@ -1509,6 +1571,9 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
     def __str__(self):
         return f'{self.name} (#{self.id})'
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class Automation(ExportModelOperationsMixin('automations'), models.Model, PermissionModelMixin):
     FOOD_ALIAS = 'FOOD_ALIAS'
@@ -1555,6 +1620,9 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class CustomFilter(models.Model, PermissionModelMixin):
     RECIPE = 'RECIPE'
@@ -1585,3 +1653,4 @@ class CustomFilter(models.Model, PermissionModelMixin):
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='cf_unique_name_per_space')
         ]
+        ordering = ('pk',)

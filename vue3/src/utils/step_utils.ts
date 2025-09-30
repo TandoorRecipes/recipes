@@ -1,11 +1,11 @@
 import {MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {Step} from "@/openapi";
+import {SourceImportStep, Step} from "@/openapi";
 
 interface StepLike {
-        instruction?: string;
-        ingredients?: Array<any>;
-        showIngredientsTable?: boolean;
+    instruction?: string;
+    ingredients?: Array<any>;
+    showIngredientsTable?: boolean;
 }
 
 /**
@@ -15,7 +15,7 @@ interface StepLike {
  */
 function splitStepObject<T extends StepLike>(step: T, split_character: string) {
     let steps: T[] = []
-    if (step.instruction){
+    if (step.instruction) {
         step.instruction.split(split_character).forEach(part => {
             if (part.trim() !== '') {
                 steps.push({instruction: part, ingredients: [], time: 0, showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!})
@@ -49,7 +49,7 @@ export function splitAllSteps<T extends StepLike>(orig_steps: T[], split_charact
  * @param split_character character to use as a delimiter between steps
  */
 export function splitStep<T extends StepLike>(steps: T[], step: T, split_character: string) {
-    if (steps){
+    if (steps) {
         let old_index = steps.findIndex(x => x === step)
         let new_steps = splitStepObject(step, split_character)
         steps.splice(old_index, 1, ...new_steps)
@@ -59,15 +59,29 @@ export function splitStep<T extends StepLike>(steps: T[], step: T, split_charact
 }
 
 /**
- * Merge all steps of a given recipe_json into one
+ * merge two given steps into the first one and return it
+ * @param step1
+ * @param step2
  */
-export function mergeAllSteps<T extends StepLike>(steps: T[]) {
-    let step = {instruction: '', ingredients: [], showIngredientsTable: useUserPreferenceStore().userSettings.showStepIngredients!} as T
-    if (steps) {
-        step.instruction = steps.map(s => s.instruction).join('\n')
-        step.ingredients = steps.flatMap(s => s.ingredients)
-        steps.splice(0, steps.length, step) // replace all steps with the merged step
+export function mergeStep(step1: Step, step2: Step) {
+    if (step2.instruction){
+        step1.instruction = step1.instruction + '\n' + step2.instruction
+    }
+    step1.ingredients = step1.ingredients.concat(step2.ingredients)
+    return step1
+}
+
+/**
+ * Merge all steps of a given steps array into one
+ */
+export function mergeAllSteps(steps: Step[] | SourceImportStep[]) {
+    if (steps.length > 1) {
+        steps[0].instruction = steps.map(s => s.instruction).join('\n')
+        steps[0].ingredients = steps.flatMap(s => s.ingredients)
+        steps = [steps[0]]
     } else {
         useMessageStore().addMessage(MessageType.ERROR, "no steps found to split")
     }
+
+    return steps
 }

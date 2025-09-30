@@ -4,7 +4,6 @@
             <v-row>
                 <v-col>
                     <span v-if="step.name">{{ step.name }}</span>
-                    <span v-else-if="step.stepRecipe"><v-icon icon="$recipes"></v-icon> {{ step.stepRecipeData.name }}</span>
                     <span v-else>{{ $t('Step') }} {{ props.stepNumber }}</span>
                 </v-col>
                 <v-col class="text-right">
@@ -23,11 +22,12 @@
             <timer :seconds="step.time != undefined ? step.time*60 : 0" @stop="timerRunning = false" v-if="timerRunning"></timer>
             <v-card-text v-if="step.ingredients.length > 0 || step.instruction != ''">
                 <v-row>
-                    <v-col cols="12" md="6" v-if="step.ingredients.length > 0 && step.showIngredientsTable">
+                    <v-col cols="12" md="6" v-if="step.ingredients.length > 0 && (step.showIngredientsTable || step.show_ingredients_table)">
                         <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"></ingredients-table>
                     </v-col>
                     <v-col cols="12" md="6" class="markdown-body">
-                        <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="ingredientFactor" v-if="step.instructionsMarkdown != undefined"></instructions>
+                        <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="ingredientFactor"
+                                      v-if="step.instructionsMarkdown != undefined"></instructions>
                         <!-- sub recipes dont have a correct schema, thus they use different variable naming -->
                         <instructions :instructions_html="step.instructions_markdown" :ingredient_factor="ingredientFactor" v-else></instructions>
                     </v-col>
@@ -35,7 +35,12 @@
             </v-card-text>
 
             <template v-if="step.stepRecipe">
-                <v-card  class="ma-2 border-md" prepend-icon="$recipes" :title="step.stepRecipeData.name">
+                <v-card class="ma-2 border-md">
+                    <v-card-title>
+                        <v-icon icon="$recipes"></v-icon>
+                        {{ step.stepRecipeData.name }}
+                        <v-btn icon="fa-solid fa-up-right-from-square" size="x-small" :to="{name: 'RecipeViewPage', params: {id: step.stepRecipeData.id}}" target="_blank" variant="plain"></v-btn>
+                    </v-card-title>
                     <v-card-text class="mt-1" v-for="(subRecipeStep, subRecipeStepIndex) in step.stepRecipeData.steps" :key="subRecipeStep.id">
                         <step-view v-model="step.stepRecipeData.steps[subRecipeStepIndex]" :step-number="subRecipeStepIndex+1" :ingredientFactor="ingredientFactor"></step-view>
                     </v-card-text>

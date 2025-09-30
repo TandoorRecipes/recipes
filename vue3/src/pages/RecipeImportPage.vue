@@ -837,7 +837,7 @@ function deleteStep(step: SourceImportStep) {
 
 function handleMergeAllSteps(): void {
     if (importResponse.value.recipe && importResponse.value.recipe.steps) {
-        mergeAllSteps(importResponse.value.recipe.steps)
+        importResponse.value.recipe.steps = mergeAllSteps(importResponse.value.recipe.steps)
     }
 }
 
@@ -931,7 +931,10 @@ function setAllKeywordsImportStatus(status: boolean) {
  * add a new (empty) step at the end of the step list
  */
 function addStep() {
-    importResponse.value.recipe?.steps.push({} as SourceImportStep)
+    importResponse.value.recipe?.steps.push({
+        ingredients: [],
+        instruction: ''
+    } as SourceImportStep)
 }
 
 

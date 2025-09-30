@@ -288,7 +288,7 @@ class RecipeSearch():
 
     def _updated_on_filter(self):
         if self._updatedon:
-            self._queryset = self._queryset.filter(updated_at__date__date=self._updatedon)
+            self._queryset = self._queryset.filter(updated_at__date=self._updatedon)
         elif self._updatedon_lte:
             self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
         elif self._updatedon_gte:
@@ -326,7 +326,7 @@ class RecipeSearch():
     def _favorite_recipes(self):
         if self._sort_includes('favorite') or self._timescooked or self._timescooked_gte or self._timescooked_lte:
             less_than = self._timescooked_lte and not self._sort_includes('-favorite')
-            if less_than:
+            if less_than or self._timescooked == 0:
                 default = 1000
             else:
                 default = 0
@@ -339,7 +339,7 @@ class RecipeSearch():
             self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), default))
 
         if self._timescooked:
-            self._queryset = self._queryset.filter(favorite=0)
+            self._queryset = self._queryset.filter(favorite=self._timescooked)
         elif self._timescooked_lte:
             self._queryset = self._queryset.filter(favorite__lte=int(self._timescooked_lte)).exclude(favorite=0)
         elif self._timescooked_gte:

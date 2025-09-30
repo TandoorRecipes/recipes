@@ -98,10 +98,10 @@ const mergedIngredients = computed(() => {
     const groupedIngredients = new Map<string, Ingredient>();
 
     allIngredients.forEach(ingredient => {
-        if (!ingredient.food || !ingredient.unit) return;
+        if (!ingredient.food) return;
 
         // Create a unique key for food-unit combination
-        const key = `${ingredient.food.id}-${ingredient.unit.id}`;
+        const key = `${ingredient.food.id}-${(ingredient.unit ? ingredient.unit.id : 'no_unit')}`;
 
         if (groupedIngredients.has(key)) {
             // If this food-unit combination already exists, sum the amounts

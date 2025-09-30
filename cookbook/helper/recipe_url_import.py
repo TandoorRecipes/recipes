@@ -155,7 +155,7 @@ def get_from_scraper(scrape, request):
 
     # assign steps
     try:
-        for i in parse_instructions(scrape.instructions()):
+        for i in parse_instructions(scrape.instructions_list()):
             recipe_json['steps'].append({
                 'instruction': i,
                 'ingredients': [],
@@ -177,11 +177,11 @@ def get_from_scraper(scrape, request):
         for x in scrape.ingredients():
             if x.strip() != '':
                 try:
-                    amount, unit, ingredient, note = ingredient_parser.parse(x)
+                    amount, unit, food, note = ingredient_parser.parse(x)
                     ingredient = {
                         'amount': amount,
                         'food': {
-                            'name': ingredient,
+                            'name': food,
                         },
                         'unit': None,
                         'note': note,

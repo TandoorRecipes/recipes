@@ -788,7 +788,7 @@ const filters = ref({
         enabled: false,
         default: undefined,
         is: VNumberInput,
-        modelValue: useRouteQuery('timescookedGte', undefined, {transform: Number}),
+        modelValue: useRouteQuery('timescooked', undefined, {transform: Number}),
     },
     timescookedGte: {
         id: 'timescookedGte',

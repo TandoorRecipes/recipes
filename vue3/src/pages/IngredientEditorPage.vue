@@ -26,7 +26,7 @@
                                             </v-list-item>
                                             <v-list-item link prepend-icon="fa-solid fa-arrows-to-dot" :disabled="!selectedFood">
                                                 {{ $t('Merge') }}
-                                                <model-merge-dialog :source="selectedFood" model="Food"
+                                                <model-merge-dialog :source="[selectedFood]" model="Food"
                                                                     @change="(obj: Food) => {selectedFood = obj;refreshPage()} "></model-merge-dialog>
                                             </v-list-item>
 
@@ -61,7 +61,7 @@
                                             </v-list-item>
                                             <v-list-item link prepend-icon="fa-solid fa-arrows-to-dot" :disabled="!selectedUnit">
                                                 {{ $t('Merge') }}
-                                                <model-merge-dialog :source="selectedUnit" model="Unit"
+                                                <model-merge-dialog :source="[selectedUnit]" model="Unit"
                                                                     @change="(obj: Food) => {selectedUnit = obj;refreshPage()} "></model-merge-dialog>
                                             </v-list-item>
                                             <v-list-item link prepend-icon="$automation" :disabled="!selectedUnit">
@@ -117,12 +117,12 @@
                                     @update:modelValue="item.changed = true" :precision="2"></v-number-input>
                 </template>
                 <template v-slot:item.unit="{ item }">
-                    <model-select model="Unit" v-model="item.unit" :label="$t('Unit')" density="compact" hide-details allow-create append-to-body
+                    <model-select model="Unit" v-model="item.unit"  density="compact" hide-details allow-create append-to-body
                                   @update:modelValue="item.changed = true">
                     </model-select>
                 </template>
                 <template v-slot:item.food="{ item }">
-                    <model-select model="Food" v-model="item.food" :label="$t('Food')" density="compact" hide-details allow-create append-to-body
+                    <model-select model="Food" v-model="item.food"  density="compact" hide-details allow-create append-to-body
                                   @update:modelValue="item.changed = true"></model-select>
                 </template>
                 <template v-slot:item.note="{ item }">
