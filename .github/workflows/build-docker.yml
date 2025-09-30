@@ -34,18 +34,10 @@ jobs:
             echo VERSION=develop >> $GITHUB_OUTPUT
           fi
 
-      # Build Vue 3 frontend
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: yarn
-          cache-dependency-path: vue3/yarn.lock
-      - name: Install dependencies
-        working-directory: ./vue3
-        run: yarn install --frozen-lockfile
-      - name: Build dependencies
-        working-directory: ./vue3
-        run: yarn build
+      - name: Setup python
+        uses: actions/setup-python@v6
+      - name: Generate version.py
+        run: python version.py
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
