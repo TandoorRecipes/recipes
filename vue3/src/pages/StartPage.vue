@@ -35,9 +35,9 @@
         </v-card>
         <template v-if="totalRecipes > 0">
             <horizontal-recipe-scroller :skeletons="4" mode="recent" v-if="totalRecipes > 5"></horizontal-recipe-scroller>
-            <horizontal-recipe-scroller :skeletons="4" mode="new"></horizontal-recipe-scroller>
+            <horizontal-recipe-scroller :skeletons="4" mode="new" v-if="totalRecipes > 1"></horizontal-recipe-scroller>
             <horizontal-recipe-scroller :skeletons="4" mode="keyword" v-if="totalRecipes > 10"></horizontal-recipe-scroller>
-            <horizontal-recipe-scroller :skeletons="4" mode="random"></horizontal-recipe-scroller>
+            <horizontal-recipe-scroller :skeletons="4" mode="random" v-if="totalRecipes > 1"></horizontal-recipe-scroller>
             <horizontal-recipe-scroller :skeletons="4" mode="created_by" v-if="totalRecipes > 5"></horizontal-recipe-scroller>
             <horizontal-recipe-scroller :skeletons="2" mode="rating" v-if="totalRecipes > 5"></horizontal-recipe-scroller>
             <horizontal-recipe-scroller :skeletons="4" mode="keyword" v-if="totalRecipes > 5"></horizontal-recipe-scroller>
