@@ -13,7 +13,7 @@
     "@types/sortablejs": "^1.15.8",
     "@vueform/multiselect": "^2.6.11",
     "@vueuse/core": "^13.6.0",
-    "@vueuse/router": "^13.6.0",
+    "@vueuse/router": "^13.9.0",
     "luxon": "^3.7.1",
     "mavon-editor": "^3.0.1",
     "pinia": "^3.0.2",
