@@ -23,7 +23,7 @@
     "vue-router": "^4.5.0",
     "vue-simple-calendar": "7.1.0",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.9.7"
+    "vuetify": "^3.10.3"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
