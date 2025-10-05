@@ -2,7 +2,7 @@
     <v-btn-group density="compact">
         <v-btn color="create" @click="editingObj.properties.push({} as Property)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
         <v-btn color="secondary" @click="addAllProperties" prepend-icon="fa-solid fa-list">{{ $t('AddAll') }}</v-btn>
-        <ai-action-button color="info" @selected="propertiesFromAi" :loading="aiLoading" prepend-icon="$ai" v-if="isFood">{{ $t('AI') }}</ai-action-button>
+        <ai-action-button color="info" @selected="propertiesFromAi" :loading="aiLoading" prepend-icon="$ai">{{ $t('AI') }}</ai-action-button>
     </v-btn-group>
 
     <v-row class="d-none d-md-flex mt-2" v-for="p in editingObj.properties" dense>
@@ -56,7 +56,7 @@ const isFood = computed(() => {
     return !('steps' in editingObj.value)
 })
 
-const editingObj = defineModel<Food|Recipe>({required: true})
+const editingObj = defineModel<Food | Recipe>({required: true})
 
 const aiLoading = ref(false)
 
@@ -94,13 +94,25 @@ function addAllProperties() {
 function propertiesFromAi(providerId: number) {
     const api = new ApiApi()
     aiLoading.value = true
-    api.apiFoodAipropertiesCreate({id: editingObj.value.id!, food: editingObj.value, provider: providerId}).then(r => {
-        editingObj.value = r
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-    }).finally(() => {
-        aiLoading.value = false
-    })
+
+    if (isFood.value) {
+        api.apiFoodAipropertiesCreate({id: editingObj.value.id!, food: editingObj.value, provider: providerId}).then(r => {
+            editingObj.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }).finally(() => {
+            aiLoading.value = false
+        })
+    } else {
+        api.apiRecipeAipropertiesCreate({id: editingObj.value.id!, recipe: editingObj.value, provider: providerId}).then(r => {
+            editingObj.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }).finally(() => {
+            aiLoading.value = false
+        })
+    }
+
 }
 
 

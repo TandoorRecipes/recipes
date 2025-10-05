@@ -15,8 +15,8 @@
             <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
                 <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
                 <v-tab value="steps">{{ $t('Steps') }}</v-tab>
-                <v-tab value="properties">{{ $t('Properties') }}</v-tab>
-                <v-tab value="settings">{{ $t('Miscellaneous') }}</v-tab>
+                <v-tab value="properties" :disabled="!isUpdate()">{{ $t('Properties') }}</v-tab>
+                <v-tab value="settings" :disabled="!isUpdate()">{{ $t('Miscellaneous') }}</v-tab>
             </v-tabs>
         </v-card-text>
         <v-card-text v-if="!isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
