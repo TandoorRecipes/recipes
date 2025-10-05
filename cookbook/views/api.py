@@ -1125,7 +1125,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                             "type": "text",
                             "text": "Given the following food and the following different types of properties please update the food so that the properties attribute contains a list with all property types in the following format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]."
                                     "The property values should be in the unit given in the property type and for the amount specified in the properties_food_amount attribute of the food, which is given in the properties_food_unit."
-                                    "property_amount is a decimal number. Please try to keep a percision of two decimal places if given in your source data."
+                                    "property_amount is a decimal number. Please try to keep a precision of two decimal places if given in your source data."
                                     "Do not make up any data. If there is no data available for the given property type that is ok, just return null as a property_amount for that property type. Do not change anything else!"
                                     "Most property types are likely going to be nutritional values. Please do not make up any values, only return values you can find in the sources available to you."
                                     "Only return values if you are sure they are meant for the food given. Under no circumstance are you allowed to change any other value of the given food or change the structure in any way or form."

@@ -106,7 +106,10 @@
                 <v-tabs-window-item value="properties">
                     <v-form :disabled="loading || fileApiLoading">
                         <closable-help-alert :text="$t('PropertiesFoodHelp')"></closable-help-alert>
-                        <properties-editor v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
+                        <properties-editor v-model="editingObj" :amount-for="$t('Serving')"></properties-editor>
+
+                        <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 100px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
