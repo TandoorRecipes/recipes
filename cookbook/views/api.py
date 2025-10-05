@@ -372,10 +372,15 @@ class MergeMixin(ViewSetMixin):
                 isTree = False
 
             try:
+                # TODO these checks could be improved to merge existing properties and conversion in a smart way. For now it will just loose them to prevent duplicates
                 if isinstance(source, Food):
                     source.properties.all().delete()
                     source.properties.clear()
                     UnitConversion.objects.filter(food=source).delete()
+
+                if isinstance(source, Unit):
+                    UnitConversion.objects.filter(base_unit=source).delete()
+                    UnitConversion.objects.filter(converted_unit=source).delete()
 
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
