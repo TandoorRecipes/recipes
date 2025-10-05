@@ -229,7 +229,7 @@ function initializeEditor() {
             addStep()
             editingObj.value.steps[0].ingredients.push({
                 food: null,
-                unit: null,
+                unit: useUserPreferenceStore().defaultUnitObj,
                 amount: 0,
             } as Ingredient)
             editingObj.value.internal = true //TODO make database default after v2

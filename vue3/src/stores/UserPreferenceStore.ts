@@ -1,7 +1,7 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 import {useStorage} from "@vueuse/core";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {ApiApi, ServerSettings, Space, UserPreference, UserSpace} from "@/openapi";
+import {ApiApi, ServerSettings, Space, Unit, UserPreference, UserSpace} from "@/openapi";
 import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
@@ -50,6 +50,11 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     const initCompleted = ref(false)
 
+    /**
+     * load the default unit to the store for easy use in editors and more
+     */
+    const defaultUnitObj = ref<Unit | null>(null)
+
     const theme = useTheme()
     const router = useRouter()
 
@@ -77,6 +82,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
                 userSettings.value = r[0]
                 isAuthenticated.value = true
                 updateTheme()
+                loadDefaultUnit()
             } else {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, r)
             }
@@ -85,6 +91,28 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })
+    }
+
+    /**
+     * load the default unit from the backend
+     * TODO migrate to nested serializer but requires actually creating the unit as currently its possible the default unit does not exist yet
+     */
+    function loadDefaultUnit() {
+        let api = new ApiApi()
+
+        if (userSettings.value.defaultUnit) {
+            api.apiUnitList({query: userSettings.value.defaultUnit}).then(r => {
+                r.results.forEach(u => {
+                    if (u.name == userSettings.value.defaultUnit) {
+                        defaultUnitObj.value = u
+                    }
+                })
+            }).catch(err => {
+                if (err.response.status != 403) {
+                    useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+                }
+            })
+        }
     }
 
     /**
@@ -254,6 +282,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         activeUserSpace,
         isAuthenticated,
         initCompleted,
+        defaultUnitObj,
         loadUserSettings,
         loadServerSettings,
         updateUserSettings,

@@ -261,24 +261,6 @@ const dialogIngredientSorter = ref(false)
 const editingIngredientIndex = ref(0)
 const ingredientTextInput = ref("")
 
-const defaultUnit = ref<null | Unit>(null)
-
-onMounted(() => {
-    let api = new ApiApi()
-
-    if (useUserPreferenceStore().userSettings.defaultUnit) {
-        api.apiUnitList({query: useUserPreferenceStore().userSettings.defaultUnit}).then(r => {
-            r.results.forEach(u => {
-                if (u.name == useUserPreferenceStore().userSettings.defaultUnit) {
-                    defaultUnit.value = u
-                }
-            })
-        }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-        })
-    }
-})
-
 /**
  * sort function called by draggable when ingredient table is sorted
  */
@@ -334,13 +316,9 @@ function handleIngredientNoteTab(event: KeyboardEvent, index: number) {
 function insertAndFocusIngredient() {
     let ingredient = {
         amount: 0,
-        unit: null,
+        unit: useUserPreferenceStore().defaultUnitObj,
         food: null,
     } as Ingredient
-
-    if (defaultUnit.value != null) {
-        ingredient.unit = defaultUnit.value
-    }
 
     step.value.ingredients.push(ingredient)
     nextTick(() => {
