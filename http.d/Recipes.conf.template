@@ -21,6 +21,9 @@ server {
     proxy_set_header Host $http_host;
     proxy_pass http://unix:/run/tandoor.sock;
 
+    # param needed by django allauth sessions to log IP
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
     # disabled for now because it redirects to the error page and not back, also not showing html
     #error_page 502 /errors/http502.html;
   }
