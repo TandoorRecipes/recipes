@@ -124,6 +124,8 @@ export function useFileApi() {
      * @returns Promise resolving to the import ID of the app import
      */
     function doAppImport(files: File[], app: string, includeDuplicates: boolean, mealPlans: boolean = true, shoppingLists: boolean = true, nutritionPerServing: boolean = false,) {
+        fileApiLoading.value = true
+
         let formData = new FormData()
         formData.append('type', app);
         formData.append('duplicates', includeDuplicates ? 'true' : 'false')
