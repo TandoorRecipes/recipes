@@ -44,7 +44,7 @@
 import {ApiApi, Food, Property, Recipe, Unit} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {computed, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref} from "vue";
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
@@ -101,7 +101,9 @@ function propertiesFromAi(providerId: number) {
     if (isFood.value) {
         api.apiFoodAipropertiesCreate({id: editingObj.value.id!, food: editingObj.value, provider: providerId}).then(r => {
             editingObj.value = r
-            addPropertiesFoodUnit()
+            nextTick(() => {
+                addPropertiesFoodUnit()
+            })
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         }).finally(() => {
@@ -123,7 +125,9 @@ function propertiesFromAi(providerId: number) {
  * if its empty add the properties food unit
  */
 function addPropertiesFoodUnit(){
-    if (isFood.value && editingObj.value.propertiesFoodUnit == undefined) {
+    console.log('ADDING UNIT', !editingObj.value.propertiesFoodUnit)
+    if (isFood.value && !editingObj.value.propertiesFoodUnit) {
+        console.log('ADDING UNIT ACTUALLY')
         editingObj.value.propertiesFoodUnit = (useUserPreferenceStore().defaultUnitObj != null) ? useUserPreferenceStore().defaultUnitObj! : {name: 'g'} as Unit
     }
 }

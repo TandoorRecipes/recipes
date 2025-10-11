@@ -110,7 +110,7 @@
                     <!-- TODO remove once append to body for model select is working properly -->
                     <v-spacer style="margin-top: 120px;"></v-spacer>
                 </v-table>
-                
+
                 <v-card prepend-icon="fa-solid fa-calculator" :title="$t('Calculator')">
                     <v-card-text>
                         <v-row dense>

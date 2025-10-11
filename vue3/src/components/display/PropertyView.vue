@@ -53,13 +53,13 @@
                             {{ fv.food.name }}
                         </span>
                         <template #append>
-                            <v-chip v-if="fv.value != undefined">{{ $n(fv.value) }} {{ dialogProperty.unit }}</v-chip>
-                            <v-chip color="create" v-else-if="fv.missing_conversion" class="cursor-pointer" prepend-icon="$create">
+                            <v-chip color="create" v-if="fv.missing_conversion" class="cursor-pointer" prepend-icon="$create">
                                 {{ $t('Conversion') }}: {{ fv.missing_conversion.base_unit.name }} <i class="fa-solid fa-arrow-right me-1 ms-1"></i>
                                 {{ fv.missing_conversion.converted_unit.name }}
                                 <model-edit-dialog model="UnitConversion" @create="refreshRecipe()"
                                                    :item-defaults="{baseAmount: 1, baseUnit: fv.missing_conversion.base_unit,  convertedUnit: fv.missing_conversion.converted_unit, food: fv.food}"></model-edit-dialog>
                             </v-chip>
+                            <v-chip v-else-if="fv.value != undefined">{{ $n(fv.value) }} {{ dialogProperty.unit }}</v-chip>
                             <v-chip color="warning" prepend-icon="$edit" class="cursor-pointer" :to="{name: 'ModelEditPage', params: {model: 'Recipe', id: recipe.id}}" v-else-if="fv.missing_unit">
                                 {{ $t('NoUnit') }}
                             </v-chip>
