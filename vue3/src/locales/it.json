@@ -56,7 +56,7 @@
   "BaseUnit": "Unità di base",
   "BaseUnitHelp": "Unità standard per la conversione automatica di unità",
   "Basics": "Informazioni di base",
-  "BatchDeleteConfirm": "Vuoi eliminare tutti gli elementi mostrati? Questo non può essere annullato!",
+  "BatchDeleteConfirm": "",
   "BatchDeleteHelp": "Se un elemento non può essere eliminato, è utilizzato altrove. ",
   "BatchEdit": "Modifica massiva",
   "BatchEditUpdatingItemsCount": "Modifica di {count} {type}",

@@ -57,7 +57,7 @@
   "BaseUnit": "Basiseinheit",
   "BaseUnitHelp": "Optionale Standardeinheit zur automatischen Umrechnung",
   "Basics": "Grundlagen",
-  "BatchDeleteConfirm": "Möchtest du alle angezeigten Objekte löschen? Dies kann nicht rückgängig gemacht werden!",
+  "BatchDeleteConfirm": "Möchtest du alle angezeigten Objekte löschen? Dies kann nicht rückgängig gemacht werden! ACHTUNG: Es ist möglich das Objekte gelöscht werden die an anderen Stellen verwendet werden!",
   "BatchDeleteHelp": "Wenn ein Objekt nicht gelöscht werden kann, wird es noch irgendwo verwendet. ",
   "BatchEdit": "Massenbearbeitung",
   "BatchEditUpdatingItemsCount": "Bearbeite {count} {type}",
