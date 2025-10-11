@@ -26,7 +26,7 @@
                 Authentication works by proving the word <code>Bearer</code> followed by an API Token as a request Authorization
                 header as shown below. <br/>
                 <code>Authorization: Bearer TOKEN</code> -or-<br/>
-                <code>curl -X GET http://your.domain.com/api/recipes/ -H 'Authorization:
+                <code>curl -X GET http://your.domain.com/api/recipe/ -H 'Authorization:
                     Bearer TOKEN'</code>
 
                 <br/>
