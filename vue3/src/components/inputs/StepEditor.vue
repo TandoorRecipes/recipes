@@ -67,13 +67,13 @@
                                 </div>
                                 <div class="d-flex flex-nowrap">
                                     <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
-                                        <v-text-field :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
-                                                      hide-details :disabled="ingredient.noAmount">
+                                        <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
+                                                      hide-details control-variant="hidden" :disabled="ingredient.noAmount">
 
                                             <template #prepend>
                                                 <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
                                             </template>
-                                        </v-text-field>
+                                        </v-number-input>
                                     </div>
                                     <div class="flex-col flex-grow-0  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader ">
                                         <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details :disabled="ingredient.noAmount"></model-select>
