@@ -3,7 +3,7 @@ server {
   listen [::]:${TANDOOR_PORT} ipv6only=on;
   server_name localhost;
 
-  client_max_body_size 128M;
+  client_max_body_size 512M;
 
   # serve media files
   location /media {
