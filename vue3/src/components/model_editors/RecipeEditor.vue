@@ -87,6 +87,12 @@
                     </v-row>
 
                     <v-form :disabled="loading || fileApiLoading">
+                        <v-row v-if="editingObj.steps.length == 0">
+                            <v-col class="text-center">
+                                <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
+                            </v-col>
+                        </v-row>
+
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
                             <v-col>
                                 <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
