@@ -49,10 +49,10 @@
                         <td>
                             {{ ingredient.food.name }}
                             <!-- TODO weird mixture of using ingredients but not in the correct relation to the recipe not good, properly sort out and add easy unitconversion/food edit features -->
-<!--                            <v-btn variant="outlined" block>-->
-<!--                                {{ ingredient.food.name }}-->
-<!--                                <model-edit-dialog model="Food" :item="ingredient.food!" @save="args => ingredient.food = args"></model-edit-dialog>-->
-<!--                            </v-btn>-->
+                            <!--                            <v-btn variant="outlined" block>-->
+                            <!--                                {{ ingredient.food.name }}-->
+                            <!--                                <model-edit-dialog model="Food" :item="ingredient.food!" @save="args => ingredient.food = args"></model-edit-dialog>-->
+                            <!--                            </v-btn>-->
                             <!--                            <v-chip v-if="ingredient.unit && ingredient.food.propertiesFoodUnit && ingredient.unit.id == ingredient.food.propertiesFoodUnit.id" color="success"-->
                             <!--                                    size="small">{{ ingredient.unit.name }}-->
                             <!--                            </v-chip>-->
@@ -73,7 +73,8 @@
                                            @click="fdcSelectedIngredient = ingredient; fdcDialog = true"></v-btn>
                                     <v-btn @click="updateFoodFdcData(ingredient)" icon="fa-solid fa-arrows-rotate" size="small" density="compact" variant="plain"
                                            v-if="ingredient.food.fdcId"></v-btn>
-                                    <v-btn @click="openFdcPage(ingredient.food.fdcId)" :href="`https://fdc.nal.usda.gov/food-details/${ingredient.food.fdcId}/nutrients`" target="_blank"
+                                    <v-btn @click="openFdcPage(ingredient.food.fdcId)" :href="`https://fdc.nal.usda.gov/food-details/${ingredient.food.fdcId}/nutrients`"
+                                           target="_blank"
                                            icon="fa-solid fa-arrow-up-right-from-square"
                                            size="small" variant="plain" v-if="ingredient.food.fdcId"></v-btn>
                                 </template>
@@ -81,7 +82,7 @@
                         </td>
                         <td>
                             <v-number-input v-model="ingredient.food.propertiesFoodAmount" density="compact" hide-details @change="updateFood(ingredient)"
-                                          :loading="ingredient.loading" style="min-width: 100px" control-variant="hidden" :precision="2">
+                                            :loading="ingredient.loading" style="min-width: 100px" control-variant="hidden" :precision="2">
 
                             </v-number-input>
                         </td>
@@ -90,8 +91,10 @@
                                           :loading="ingredient.loading"></model-select>
                         </td>
                         <td v-for="p in ingredient.food.properties" v-bind:key="`${ingredient.food.id}_${p.propertyType.id}`">
-                            <v-number-input v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)" :precision="2"
-                                          :loading="ingredient.loading" @click:clear="deleteFoodProperty(p, ingredient)" style="min-width: 120px" control-variant="hidden" clearable>
+                            <v-number-input v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)"
+                                            :precision="2"
+                                            :loading="ingredient.loading" @click:clear="deleteFoodProperty(p, ingredient)" style="min-width: 120px" control-variant="hidden"
+                                            clearable>
 
                             </v-number-input>
 
@@ -104,11 +107,10 @@
                         </td>
                     </tr>
                     </tbody>
+                    <!-- TODO remove once append to body for model select is working properly -->
+                    <v-spacer style="margin-top: 120px;"></v-spacer>
                 </v-table>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
+                
                 <v-card prepend-icon="fa-solid fa-calculator" :title="$t('Calculator')">
                     <v-card-text>
                         <v-row dense>
