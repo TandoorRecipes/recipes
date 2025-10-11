@@ -226,7 +226,7 @@ function initializeEditor() {
     setupState(props.item, props.itemId, {
         newItemFunction: () => {
             editingObj.value.propertiesFoodAmount = 100
-            editingObj.value.propertiesFoodUnit = {name: (useUserPreferenceStore().userSettings.defaultUnit != undefined ? useUserPreferenceStore().userSettings.defaultUnit : 'g')} as Unit
+            editingObj.value.propertiesFoodUnit = (useUserPreferenceStore().defaultUnitObj != null) ? useUserPreferenceStore().defaultUnitObj! : {name: 'g'} as Unit
         },
         itemDefaults: props.itemDefaults,
     })

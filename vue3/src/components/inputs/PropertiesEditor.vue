@@ -1,6 +1,6 @@
 <template>
     <v-btn-group density="compact">
-        <v-btn color="create" @click="editingObj.properties.push({} as Property)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
+        <v-btn color="create" @click="editingObj.properties.push({} as Property); addPropertiesFoodUnit()" prepend-icon="$create">{{ $t('Add') }}</v-btn>
         <v-btn color="secondary" @click="addAllProperties" prepend-icon="fa-solid fa-list">{{ $t('AddAll') }}</v-btn>
         <ai-action-button color="info" @selected="propertiesFromAi" :loading="aiLoading" prepend-icon="$ai">{{ $t('AI') }}</ai-action-button>
     </v-btn-group>
@@ -41,12 +41,13 @@
 
 <script setup lang="ts">
 
-import {ApiApi, Food, Property, Recipe} from "@/openapi";
+import {ApiApi, Food, Property, Recipe, Unit} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {computed, onMounted, ref} from "vue";
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const props = defineProps({
     amountFor: {type: String, required: true},
@@ -78,9 +79,11 @@ function deleteProperty(property: Property) {
 function addAllProperties() {
     const api = new ApiApi()
 
-    if (editingObj.value.properties) {
-        editingObj.value.properties = []
-    }
+    // if (editingObj.value.properties) {
+    //     editingObj.value.properties = []
+    // }
+
+    addPropertiesFoodUnit()
 
     api.apiPropertyTypeList().then(r => {
         r.results.forEach(pt => {
@@ -98,6 +101,7 @@ function propertiesFromAi(providerId: number) {
     if (isFood.value) {
         api.apiFoodAipropertiesCreate({id: editingObj.value.id!, food: editingObj.value, provider: providerId}).then(r => {
             editingObj.value = r
+            addPropertiesFoodUnit()
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         }).finally(() => {
@@ -113,6 +117,15 @@ function propertiesFromAi(providerId: number) {
         })
     }
 
+}
+
+/**
+ * if its empty add the properties food unit
+ */
+function addPropertiesFoodUnit(){
+    if (isFood.value && editingObj.value.propertiesFoodUnit == undefined) {
+        editingObj.value.propertiesFoodUnit = (useUserPreferenceStore().defaultUnitObj != null) ? useUserPreferenceStore().defaultUnitObj! : {name: 'g'} as Unit
+    }
 }
 
 
