@@ -72,7 +72,8 @@ def get_from_scraper(scrape, request):
     # assign servings attributes
     try:
         # dont use scrape.yields() as this will always return "x servings" or "x items", should be improved in scrapers directly
-        servings = scrape.schema.data.get('recipeYield') or 1
+        # max(x,1) to prevent 0 servings which breaks scaling
+        servings = max(scrape.schema.data.get('recipeYield') or 1, 1)
     except Exception:
         servings = 1
 
