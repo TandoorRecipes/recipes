@@ -36,8 +36,6 @@
                 <v-pagination :model-value="page + 1"
                               @update:model-value="value => page = Math.max(value - 1, 0)"
                               :length="totalItems"
-                              @next="page = Math.min(page + (mdAndUp ? 1 : 0), totalItems - 1)"
-                              @prev="page = Math.max(page - (mdAndUp ? 1 : 0), 0)"
                 ></v-pagination>
             </v-col>
         </v-row>
