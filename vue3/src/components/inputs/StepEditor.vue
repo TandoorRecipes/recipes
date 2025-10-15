@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="d-flex flex-nowrap">
                                     <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
-                                        <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
+                                        <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" density="compact"
                                                       hide-details control-variant="hidden" :disabled="ingredient.noAmount" :precision="useUserPreferenceStore().userSettings.ingredientDecimals">
 
                                             <template #prepend>
