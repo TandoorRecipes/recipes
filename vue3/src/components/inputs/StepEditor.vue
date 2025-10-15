@@ -67,8 +67,8 @@
                                 </div>
                                 <div class="d-flex flex-nowrap">
                                     <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
-                                        <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" type="number" v-model="ingredient.amount" density="compact"
-                                                      hide-details control-variant="hidden" :disabled="ingredient.noAmount">
+                                        <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" density="compact"
+                                                      hide-details control-variant="hidden" :disabled="ingredient.noAmount" :precision="useUserPreferenceStore().userSettings.ingredientDecimals">
 
                                             <template #prepend>
                                                 <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
@@ -195,7 +195,7 @@
                     <v-text-field :label="$t('Original_Text')" readonly v-model="step.ingredients[editingIngredientIndex].originalText"
                                   v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
-                                    :min="0" :precision="2" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
+                                    :min="0" :precision="useUserPreferenceStore().userSettings.ingredientDecimals" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
                                   allow-create></model-select>
                     <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
