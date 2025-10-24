@@ -15,6 +15,7 @@
 
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
+            <offline-status-icon class="me-2 d-print-none"></offline-status-icon>
             <v-btn icon="$add" class="d-print-none">
                 <v-icon icon="$add" class="fa-fw"></v-icon>
                 <v-menu activator="parent">
@@ -124,12 +125,15 @@
             location="top center"
         ></v-snackbar-queued>
 
-    </v-app>
+        <offline-indicator></offline-indicator>
+  </v-app>
 
 </template>
 
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
+import OfflineIndicator from "@/components/display/OfflineIndicator.vue"
+import OfflineStatusIcon from "@/components/display/OfflineStatusIcon.vue"
 
 import {useDisplay} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
