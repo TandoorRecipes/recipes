@@ -14,21 +14,25 @@
                 <div class="mt-1">
                     <!--                    <v-btn icon="fas fa-ellipsis-v" size="small" variant="plain"></v-btn>-->
                     <recipe-context-menu :recipe="props.recipe" size="small" v-if="props.showMenu"></recipe-context-menu>
-                </div>
+                </div> 
             </div>
             <!--            <p class="text-disabled">{{ props.recipe.createdBy.displayName}}</p>-->
             <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="3" v-if="props.showKeywords">
                 <template #prepend>
 
                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" v-if="recipe._private">
-                        <private-recipe-badge  :show-text="false"></private-recipe-badge>
+                        <private-recipe-badge :show-text="false"></private-recipe-badge>
+                    </v-chip>
+                    <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" prepend-icon="fa-solid fa-user"
+                        :to="(useUserPreferenceStore().isAuthenticated) ? { name: 'SearchPage', query: { createdby: recipe.createdBy.id! } } : undefined">
+                        {{ recipe.createdBy.displayName }}
                     </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" color="info"
-                            v-if="props.recipe.internal == false">
+                        v-if="props.recipe.internal == false">
                         {{ $t('External') }}
                     </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined"
-                            v-if="props.recipe.workingTime != undefined && props.recipe.workingTime > 0">
+                        v-if="props.recipe.workingTime != undefined && props.recipe.workingTime > 0">
                         {{ recipe.workingTime! + recipe.waitingTime! }}
                     </v-chip>
                 </template>
@@ -105,6 +109,7 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import {useRouter} from "vue-router";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
+import { useUserPreferenceStore } from '@/stores/UserPreferenceStore';
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe | RecipeOverview>, required: true,},
