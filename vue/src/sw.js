@@ -1,3 +1,6 @@
+// sw.js
+
+// These JavaScript module imports need to be bundled:
 import { Queue } from "workbox-background-sync";
 import { ExpirationPlugin } from "workbox-expiration";
 import { registerRoute, setCatchHandler } from "workbox-routing";
@@ -8,40 +11,22 @@ import {
   StaleWhileRevalidate,
 } from "workbox-strategies";
 
-// ---- BASE / SCRIPT_NAME DETECTION ----
+// ─────────────────────────────────────────────────────────────
+// BASE / SCRIPT_NAME detection
+// ─────────────────────────────────────────────────────────────
 
-const REG_SCOPE = new URL(self.registration.scope).pathname;
+const regScope = new URL(self.registration.scope).pathname; // e.g. "/recipes/" or "/"
 function normalizeBase(path) {
   return path.endsWith("/") ? path : path + "/";
 }
-let SCRIPT_NAME = normalizeBase(REG_SCOPE);
-
-self.addEventListener("message", (event) => {
-  if (event.data?.type === "BGSYNC_REPLAY_REQUESTS") {
-    queue
-      .replayRequests()
-      .then(() => event.ports?.[0]?.postMessage("REPLAY_SUCCESS SW"))
-      .catch(() => event.ports?.[0]?.postMessage("REPLAY_FAILURE"));
-    return;
-  }
-  if (event.data?.type === "BGSYNC_COUNT_QUEUE") {
-    queue.getAll().then((r) => {
-      event.ports?.[0]?.postMessage(r.length);
-    });
-    return;
-  }
-  if (
-    event.data?.type === "SET_SCRIPT_NAME" &&
-    typeof event.data.value === "string"
-  ) {
-    SCRIPT_NAME = normalizeBase(event.data.value);
-  }
-});
+let SCRIPT_NAME = normalizeBase(regScope);
 
 const OFFLINE_CACHE_NAME = "offline-html";
-const OFFLINE_PAGE_URL = SCRIPT_NAME + "offline/";
+let OFFLINE_PAGE_URL = SCRIPT_NAME + "offline/";
 
-// ---- INSTALL: cache offline page for this scope ----
+// ─────────────────────────────────────────────────────────────
+// install: cache offline page for *this* scope
+// ─────────────────────────────────────────────────────────────
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
@@ -53,26 +38,26 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Workbox inject manifest placeholder (leave it here)
+// workbox inject-mANIFEST placeholder (keep!)
 self.__WB_MANIFEST;
 
-// ---- FALLBACK for failed navigations ----
+// ─────────────────────────────────────────────────────────────
+// fallback for failed navigations
+// ─────────────────────────────────────────────────────────────
 setCatchHandler(async ({ event }) => {
-  switch (event.request.destination) {
-    case "document":
-      const cache = await caches.open(OFFLINE_CACHE_NAME);
-      const match = await cache.match(OFFLINE_PAGE_URL);
-      if (match) {
-        return match;
-      }
-      // last resort: generic error
-      return Response.error();
-    default:
-      return Response.error();
+  if (event.request.destination === "document") {
+    const cache = await caches.open(OFFLINE_CACHE_NAME);
+    const match = await cache.match(OFFLINE_PAGE_URL);
+    if (match) {
+      return match;
+    }
   }
+  return Response.error();
 });
 
-// ---- ROUTES ----
+// ─────────────────────────────────────────────────────────────
+// routes
+// ─────────────────────────────────────────────────────────────
 
 // images
 registerRoute(
@@ -96,16 +81,20 @@ registerRoute(
   }),
 );
 
-// django js reverse
+// django jsreverse
 registerRoute(
   new RegExp("jsreverse"),
-  new StaleWhileRevalidate({ cacheName: "assets" }),
+  new StaleWhileRevalidate({
+    cacheName: "assets",
+  }),
 );
 
-// django i18n
+// django jsi18n
 registerRoute(
   new RegExp("jsi18n"),
-  new StaleWhileRevalidate({ cacheName: "assets" }),
+  new StaleWhileRevalidate({
+    cacheName: "assets",
+  }),
 );
 
 // recipe detail APIs
@@ -119,25 +108,6 @@ registerRoute(
       }),
     ],
   }),
-);
-
-// ---- Background sync queue ----
-const queue = new Queue("shopping-sync-queue", {
-  maxRetentionTime: 7 * 24 * 60, // minutes
-});
-
-registerRoute(
-  new RegExp("api/shopping-list-entry/([0-9]+)"),
-  new NetworkOnly({
-    plugins: [
-      {
-        fetchDidFail: async ({ request }) => {
-          await queue.pushRequest({ request });
-        },
-      },
-    ],
-  }),
-  "PATCH",
 );
 
 // general API
@@ -166,3 +136,64 @@ registerRoute(
     ],
   }),
 );
+
+// ─────────────────────────────────────────────────────────────
+// background sync queue (must exist BEFORE message handler)
+// ─────────────────────────────────────────────────────────────
+const queue = new Queue("shopping-sync-queue", {
+  maxRetentionTime: 7 * 24 * 60, // minutes
+});
+
+registerRoute(
+  new RegExp("api/shopping-list-entry/([0-9]+)"),
+  new NetworkOnly({
+    plugins: [
+      {
+        fetchDidFail: async ({ request }) => {
+          await queue.pushRequest({ request });
+        },
+      },
+    ],
+  }),
+  "PATCH",
+);
+
+// ─────────────────────────────────────────────────────────────
+// message handler (ESLint-safe)
+// ─────────────────────────────────────────────────────────────
+self.addEventListener("message", (event) => {
+  const data = event.data || {};
+
+  // SET_SCRIPT_NAME lets the page tell the SW "use /recipes/"
+  if (data.type === "SET_SCRIPT_NAME" && typeof data.value === "string") {
+    SCRIPT_NAME = normalizeBase(data.value);
+    OFFLINE_PAGE_URL = SCRIPT_NAME + "offline/";
+    return;
+  }
+
+  // replay BGSYNC
+  if (data.type === "BGSYNC_REPLAY_REQUESTS") {
+    queue
+      .replayRequests()
+      .then(() => {
+        if (event.ports && event.ports[0]) {
+          event.ports[0].postMessage("REPLAY_SUCCESS SW");
+        }
+      })
+      .catch(() => {
+        if (event.ports && event.ports[0]) {
+          event.ports[0].postMessage("REPLAY_FAILURE");
+        }
+      });
+    return;
+  }
+
+  // count BGSYNC
+  if (data.type === "BGSYNC_COUNT_QUEUE") {
+    queue.getAll().then((requests) => {
+      if (event.ports && event.ports[0]) {
+        event.ports[0].postMessage(requests.length);
+      }
+    });
+  }
+});
