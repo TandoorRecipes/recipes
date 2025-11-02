@@ -14,7 +14,7 @@
     "@codemirror/state": "^6.3.3",
     "@codemirror/view": "^6.38.6",
     "@popperjs/core": "^2.11.7",
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
     "body-parser": "1.20.3",
     "bootstrap-vue": "^2.23.1",
     "brace-expansion": "2.0.2",
