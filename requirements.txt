@@ -35,7 +35,7 @@ Pillow==11.3.0
 psycopg2-binary==2.9.11
 pyjwt==2.10.1
 pyppeteer==2.0.0
-python-dotenv==1.1.1
+python-dotenv==1.2.1
 python-ldap==3.4.5
 python3-openid==3.2.0
 python3-saml==1.16.0
