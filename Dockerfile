@@ -1,34 +1,87 @@
+# Build frontend
+FROM node:22-alpine AS build
+COPY --link ./vue3 /opt/recipes/vue3
+WORKDIR /opt/recipes/vue3
+RUN yarn install --frozen-lockfile && \
+    yarn build
+
+# Main app image
 FROM python:3.13-alpine3.22
 
-#Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
+# Install all dependencies.
+RUN apk add --no-cache \
+    envsubst \
+    gettext \
+    libgcc \
+    libjpeg \
+    libstdc++ \
+    libwebp \
+    libxml2-dev \
+    libxslt-dev \
+    nginx \
+    nodejs \
+    npm \
+    openldap \
+    postgresql-client \
+    postgresql-libs \
+    tini \
+    zlib
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED=1 \
     DOCKER=true
 
-#This port will be used by gunicorn.
+# This port will be used by gunicorn.
 EXPOSE 80 8080
 
-#Create app dir and install requirements.
-RUN mkdir /opt/recipes
+# Create app dir and install requirements.
 WORKDIR /opt/recipes
 
-COPY requirements.txt ./
+COPY --link requirements.txt ./
 
-# remove Development dependencies from requirements.txt
-RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
-    python -m venv venv && \
-    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip debug -v && \
-    venv/bin/pip install wheel==0.45.1 && \
-    venv/bin/pip install setuptools_rust==1.10.2 && \
-    venv/bin/pip install -r requirements.txt --no-cache-dir &&\
+RUN <<EOF
+    # remove Development dependencies from requirements.txt
+    sed -i '/# Development/,$d' requirements.txt
+    apk add --no-cache --virtual .build-deps \
+        build-base \
+        cargo \
+        curl \
+        g++ \
+        gcc \
+        jpeg-dev \
+        libffi-dev \
+        libwebp-dev \
+        musl-dev \
+        postgresql-dev \
+        python3-dev \
+        openldap-dev \
+        openssl-dev \
+        xmlsec \
+        xmlsec-dev \
+        rust \
+        zlib-dev
+    python -m venv venv
+    venv/bin/python -m pip install --upgrade pip
+    venv/bin/pip debug -v
+    venv/bin/pip install wheel==0.45.1
+    venv/bin/pip install setuptools_rust==1.10.2
+    venv/bin/pip install -r requirements.txt --no-cache-dir
     apk --purge del .build-deps
+EOF
 
-#Copy project and execute it.
-COPY . ./
+# Copy minimal parts of project to run
+COPY --link ./recipes/ /opt/recipes/recipes
+COPY --link ./cookbook/ /opt/recipes/cookbook
+COPY --link ./http.d/ /opt/recipes/http.d
+COPY --link --chmod=755 \
+    ./boot.sh \
+    ./manage.py \
+    /opt/recipes
+
+# Add compiled frontend
+COPY --link --from=build \
+    /opt/recipes/cookbook/static/vue3/ \
+    /opt/recipes/cookbook/static/vue3/
 
 # delete default nginx config and link it to tandoors config
 # create symlinks to access and error log to show them on stdout
@@ -44,10 +97,4 @@ RUN rm -rf /etc/nginx/http.d && \
 #            --retries=3 \
 #            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
 
-# collect information from git repositories
-RUN /opt/recipes/venv/bin/python version.py
-# delete git repositories to reduce image size
-RUN find . -type d -name ".git" | xargs rm -rf
-
-RUN chmod +x boot.sh
 ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]
