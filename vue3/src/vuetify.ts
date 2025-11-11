@@ -5,6 +5,7 @@ import {aliases, fa} from 'vuetify/iconsets/fa'
 // Composables
 import {createVuetify} from 'vuetify'
 import {DateTime} from "luxon";
+import {af, ar, az, bg, ca, ckb, cs, da, de, el, en, es, et, fi, fr, he, hr, hu, id, it, ja, km, ko, lt, lv, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, srLatn, sv, th, tr, uk, vi, zhHans, zhHant} from "vuetify/locale";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -22,22 +23,24 @@ export default createVuetify({
             maxWidth: '1400px'
         },
         // always localize the date display of DateInputs
-        VDateInput: {
-            displayFormat: (date: Date) => DateTime.fromJSDate(date).toLocaleString()
-        },
+        // VDateInput: {
+        //     displayFormat: (date: Date) => DateTime.fromJSDate(date).toLocaleString()
+        // },
         // always use color for switches to properly see if enabled or not
         VSwitch: {
             color: 'primary'
         },
         // globally set the correct decimal seperator
-        VNumberInput: {
-            decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
-        }
+        // VNumberInput: {
+        //     decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
+        // }
     },
-    // locale: {
-    //     locale: 'de',
-    //     fallback: 'en',
-    // },
+    locale: {
+        locale: 'en',
+        fallback: 'en',
+        messages: {af, ar, az, bg, ca, ckb, cs, da, de, el, en, es, et, fi, fr, he, hr, hu, id, it, ja, km, ko, lt, lv, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, srLatn, sv, th, tr, uk, vi, zhHans, zhHant},
+        decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
+    },
     theme: {
         defaultTheme: 'light',
         themes: {
