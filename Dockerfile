@@ -44,6 +44,15 @@ RUN rm -rf /etc/nginx/http.d && \
 #            --retries=3 \
 #            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
 
+
+# collect and build Vue files using Yarn
+RUN npm install -g yarn
+WORKDIR /opt/recipes/vue3
+RUN yarn install
+RUN yarn build
+
+WORKDIR /opt/recipes
+
 # collect information from git repositories
 RUN /opt/recipes/venv/bin/python version.py
 # delete git repositories to reduce image size
