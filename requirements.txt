@@ -28,7 +28,7 @@ icalendar==6.3.2
 inflection==0.5.1
 Jinja2==3.1.6
 lxml==6.0.2
-Markdown==3.9
+Markdown==3.10
 microdata==0.8.0
 mock==5.2.0
 Pillow==11.3.0
