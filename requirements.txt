@@ -12,7 +12,7 @@ django-oauth-toolkit==2.4.0
 django-debug-toolbar==6.0.0
 bleach==6.2.0
 gunicorn==23.0.0
-lxml==5.3.1
+lxml==6.0.2
 Markdown==3.7
 Pillow==11.3.0
 psycopg2-binary==2.9.10
