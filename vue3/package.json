@@ -13,7 +13,7 @@
     "@types/sortablejs": "^1.15.8",
     "@vueform/multiselect": "^2.6.11",
     "@vueuse/core": "^13.6.0",
-    "@vueuse/router": "^13.6.0",
+    "@vueuse/router": "^13.9.0",
     "luxon": "^3.7.1",
     "mavon-editor": "^3.0.1",
     "pinia": "^3.0.2",
@@ -23,7 +23,7 @@
     "vue-router": "^4.5.0",
     "vue-simple-calendar": "7.1.0",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.9.7"
+    "vuetify": "^3.10.3"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -31,11 +31,11 @@
     "@types/jsdom": "^21.1.7",
     "@types/node": "^24.0.8",
     "@vitejs/plugin-vue": "^6.0.0",
-    "@vue/tsconfig": "^0.7.0",
+    "@vue/tsconfig": "^0.8.1",
     "esbuild-register": "^3.6.0",
     "jsdom": "^26.1.0",
     "typescript": "^5.8.3",
-    "vite": "7.1.5",
+    "vite": "7.1.11",
     "vite-plugin-pwa": "^1.0.3",
     "vite-plugin-vuetify": "^2.1.1",
     "vue-tsc": "^3.0.6",

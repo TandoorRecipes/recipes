@@ -29,7 +29,11 @@
         <v-checkbox v-model="useUserPreferenceStore().deviceSettings.start_showMealPlan" :label="$t('ShowMealPlanOnStartPage')"></v-checkbox>
 
         <v-btn @click="useUserPreferenceStore().resetDeviceSettings()" color="warning">{{ $t('Reset') }}</v-btn>  <br/>
-        <v-btn @click="useUserPreferenceStore().deviceSettings.general_closedHelpAlerts = []" color="warning" class="mt-1">{{ $t('ResetHelp') }}</v-btn>
+        <v-btn @click="useUserPreferenceStore().deviceSettings.general_closedHelpAlerts = []" color="warning" class="mt-1">{{ $t('ResetHelp') }}</v-btn> <br/>
+        <v-btn color="info" class="mt-1">
+            <message-list-dialog></message-list-dialog>
+            {{ $t('Messages') }}
+        </v-btn>
 
     </v-form>
 </template>
@@ -43,6 +47,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import ThankYouNote from "@/components/display/ThankYouNote.vue";
+import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 
 const {getDjangoUrl} = useDjangoUrls()
 

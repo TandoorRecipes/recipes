@@ -372,10 +372,15 @@ class MergeMixin(ViewSetMixin):
                 isTree = False
 
             try:
+                # TODO these checks could be improved to merge existing properties and conversion in a smart way. For now it will just loose them to prevent duplicates
                 if isinstance(source, Food):
                     source.properties.all().delete()
                     source.properties.clear()
                     UnitConversion.objects.filter(food=source).delete()
+
+                if isinstance(source, Unit):
+                    UnitConversion.objects.filter(base_unit=source).delete()
+                    UnitConversion.objects.filter(converted_unit=source).delete()
 
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
@@ -1125,7 +1130,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                             "type": "text",
                             "text": "Given the following food and the following different types of properties please update the food so that the properties attribute contains a list with all property types in the following format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]."
                                     "The property values should be in the unit given in the property type and for the amount specified in the properties_food_amount attribute of the food, which is given in the properties_food_unit."
-                                    "property_amount is a decimal number. Please try to keep a percision of two decimal places if given in your source data."
+                                    "property_amount is a decimal number. Please try to keep a precision of two decimal places if given in your source data."
                                     "Do not make up any data. If there is no data available for the given property type that is ok, just return null as a property_amount for that property type. Do not change anything else!"
                                     "Most property types are likely going to be nutritional values. Please do not make up any values, only return values you can find in the sources available to you."
                                     "Only return values if you are sure they are meant for the food given. Under no circumstance are you allowed to change any other value of the given food or change the structure in any way or form."
@@ -1805,6 +1810,82 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
         return Response(serializer.errors, 400)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='provider', description='ID of the AI provider that should be used for this AI request', type=int),
+        ]
+    )
+    @decorators.action(detail=True, methods=['POST'], )
+    def aiproperties(self, request, pk):
+        serializer = RecipeSerializer(data=request.data, partial=True, context={'request': request})
+        if serializer.is_valid():
+
+            if not request.query_params.get('provider', None) or not re.match(r'^(\d)+$', request.query_params.get('provider', None)):
+                response = {
+                    'error': True,
+                    'msg': _('You must select an AI provider to perform your request.'),
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            if not can_perform_ai_request(request.space):
+                response = {
+                    'error': True,
+                    'msg': _("You don't have any credits remaining to use AI or AI features are not enabled for your space."),
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            ai_provider = AiProvider.objects.filter(pk=request.query_params.get('provider')).filter(Q(space=request.space) | Q(space__isnull=True)).first()
+
+            litellm.callbacks = [AiCallbackHandler(request.space, request.user, ai_provider, AiLog.F_RECIPE_PROPERTIES)]
+
+            property_type_list = list(PropertyType.objects.filter(space=request.space).values('id', 'name', 'description', 'unit', 'category', 'fdc_id'))
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Given the following recipe and the following different types of properties please update the recipe so that the properties attribute contains a list with all property types in the following format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]."
+                                    "The property values should be in the unit given in the property type and calculated based on the total quantity of the foods used for the recipe."
+                                    "property_amount is a decimal number. Please try to keep a precision of two decimal places if given in your source data."
+                                    "Do not make up any data. If there is no data available for the given property type that is ok, just return null as a property_amount for that property type. Do not change anything else!"
+                                    "Most property types are likely going to be nutritional values. Please do not make up any values, only return values you can find in the sources available to you."
+                                    "Under no circumstance are you allowed to change any other value of the given food or change the structure in any way or form."
+                        },
+                        {
+                            "type": "text",
+                            "text": json.dumps(request.data)
+                        },
+                        {
+                            "type": "text",
+                            "text": json.dumps(property_type_list)
+                        },
+                    ]
+                },
+            ]
+
+            try:
+                ai_request = {
+                    'api_key': ai_provider.api_key,
+                    'model': ai_provider.model_name,
+                    'response_format': {"type": "json_object"},
+                    'messages': messages,
+                }
+                if ai_provider.url:
+                    ai_request['api_base'] = ai_provider.url
+                ai_response = completion(**ai_request)
+
+                response_text = ai_response.choices[0].message.content
+
+                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except BadRequestError as err:
+                pass
+        response = {
+            'error': True,
+            'msg': 'The AI could not process your request. \n\n' + err.message,
+        }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
     @extend_schema(responses=RecipeSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
     def delete_external(self, request, pk):
@@ -2479,6 +2560,13 @@ class AiImportView(APIView):
                 response = {
                     'error': True,
                     'msg': "Error parsing AI results. Response Text:\n\n" + response_text
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+            except Exception:
+                traceback.print_exc()
+                response = {
+                    'error': True,
+                    'msg': "Error processing AI results. Response Text:\n\n" + response_text + "\n\n" + traceback.format_exc()
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
         else:

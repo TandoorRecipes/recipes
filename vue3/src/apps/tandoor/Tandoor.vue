@@ -131,7 +131,7 @@
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
-import {useDisplay} from "vuetify"
+import {useDisplay, useLocale} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -152,6 +152,7 @@ const {t} = useI18n()
 
 const title = useTitle()
 const router = useRouter()
+const i18n = useI18n()
 
 const isPrintMode = useMediaQuery('print')
 
@@ -161,13 +162,20 @@ onMounted(() => {
             router.push({name: 'WelcomePage'})
         }
     })
+
+
+    const {current} = useLocale()
+    let locale = document.querySelector('html')!.getAttribute('lang')
+    if (locale != null) {
+        current.value = locale
+    }
 })
 
 /**
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
-    if(to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined &&!useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
+    if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
     }
     nextTick(() => {

@@ -69,8 +69,6 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/d
 
 Most deployments will likely use a reverse proxy.
 
-If your reverse proxy is not listed below, please refer to chapter [Others](#others).
-
 #### **Traefik**
 
 If you use Traefik, this configuration is the one for you.
@@ -115,6 +113,17 @@ wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/d
 {% include "./docker/nginx-proxy/docker-compose.yml" %}
 ~~~
 
+
+#### **Apache proxy**
+
+If you use Apache as a reverse proxy, this configuration is the one for you.
+
+~~~yaml
+{% include "./docker/apache-proxy/docker-compose.yml" %}
+~~~
+
+Keep in mind, that the port configured for the service `web_recipes` should be the same as in chapter [Required Headers: Apache](#apache).
+
 ## **DockSTARTer**
 
 The main goal of [DockSTARTer](https://dockstarter.com/) is to make it quick and easy to get up and running with Docker.
@@ -139,7 +148,8 @@ if you manually change it/bind the folder as a volume.
 
 Please be sure to supply all required headers in your nginx/Apache/Caddy/... configuration!
 
-nginx:
+#### **nginx**
+
 ```nginx
 location / {
     proxy_set_header Host $http_host; # try $host instead if this doesn't work
@@ -149,7 +159,8 @@ location / {
 }
 ```
 
-Apache:
+#### **Apache**
+
 ```apache
 RequestHeader set X-Forwarded-Proto "https"
 Header always set Access-Control-Allow-Origin "*"

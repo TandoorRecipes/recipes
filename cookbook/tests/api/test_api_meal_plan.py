@@ -99,19 +99,19 @@ def test_list_filter(obj_1, u1_s1):
 
     response = json.loads(
         u1_s1.get(
-            f'{reverse(LIST_URL)}?from_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}'
+            f'{reverse(LIST_URL)}?from_date={(timezone.localtime(timezone.now()) + timedelta(days=1)).strftime("%Y-%m-%d")}'
         ).content)['results']
     assert len(response) == 0
 
     response = json.loads(
         u1_s1.get(
-            f'{reverse(LIST_URL)}?to_date={(timezone.now() - timedelta(days=2)).strftime("%Y-%m-%d")}'
+            f'{reverse(LIST_URL)}?to_date={(timezone.localtime(timezone.now()) - timedelta(days=1)).strftime("%Y-%m-%d")}'
         ).content)['results']
     assert len(response) == 0
 
     response = json.loads(
         u1_s1.get(
-            f'{reverse(LIST_URL)}?from_date={(timezone.now() - timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}'
+            f'{reverse(LIST_URL)}?from_date={(timezone.localtime(timezone.now()) - timedelta(days=1)).strftime("%Y-%m-%d")}&to_date={(timezone.localtime(timezone.now()) + timedelta(days=1)).strftime("%Y-%m-%d")}'
         ).content)['results']
     assert len(response) == 1
 
@@ -153,8 +153,8 @@ def test_add(arg, request, u1_s2, recipe_1_s1, meal_type):
             'id': meal_type.id,
             'name': meal_type.name
         },
-        'from_date': (timezone.now()).strftime("%Y-%m-%d"),
-        'to_date': (timezone.now()).strftime("%Y-%m-%d"),
+        'from_date': (timezone.localtime(timezone.now())).strftime("%Y-%m-%d"),
+        'to_date': (timezone.localtime(timezone.now())).strftime("%Y-%m-%d"),
         'servings': 1,
         'title': 'test',
         'shared': []
@@ -196,8 +196,8 @@ def test_add_with_shopping(u1_s1, meal_type):
             'id': meal_type.id,
             'name': meal_type.name
         },
-        'from_date': (timezone.now()).strftime("%Y-%m-%d"),
-        'to_date': (timezone.now()).strftime("%Y-%m-%d"),
+        'from_date': (timezone.localtime(timezone.now())).strftime("%Y-%m-%d"),
+        'to_date': (timezone.localtime(timezone.now())).strftime("%Y-%m-%d"),
         'servings': 1,
         'title': 'test',
         'shared': [],
@@ -212,13 +212,13 @@ def test_add_with_shopping(u1_s1, meal_type):
 
 @pytest.mark.parametrize("arg", [
     ['', 2],
-    [f'?from_date={timezone.now().strftime("%Y-%m-%d")}', 1],
+    [f'?from_date={timezone.localtime(timezone.now()).strftime("%Y-%m-%d")}', 1],
     [
-        f'?to_date={(timezone.now() - timedelta(days=1)).strftime("%Y-%m-%d")}',
+        f'?to_date={(timezone.localtime(timezone.now()) - timedelta(days=1)).strftime("%Y-%m-%d")}',
         1
     ],
     [
-        f'?from_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}',
+        f'?from_date={(timezone.localtime(timezone.now()) + timedelta(days=1)).strftime("%Y-%m-%d")}&to_date={(timezone.localtime(timezone.now()) + timedelta(days=1)).strftime("%Y-%m-%d")}',
         0
     ],
 ])

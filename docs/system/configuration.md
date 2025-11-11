@@ -189,6 +189,19 @@ See [Gunicorn docs](https://docs.gunicorn.org/en/stable/design.html#how-many-wor
 GUNICORN_THREADS=2
 ```
 
+
+#### Gunicorn Timeout
+
+> default `30` - options `1-X`
+
+Set the timeout in seconds of gunicorn when starting using `boot.sh` (all container installations).
+The default is likely appropriate for most installations. However, if you are using a LLM which high response times gunicornmight time out during the wait until the LLM finished, in such cases you might want to increase the timeout.
+See [Gunicorn docs]([https://docs.gunicorn.org/en/stable/design.html#how-many-workers](https://docs.gunicorn.org/en/stable/settings.html#timeout)) for default settings.
+
+```
+GUNICORN_TIMEOUT=30
+```
+
 #### Gunicorn Media
 
 > default `0` - options `0`, `1`

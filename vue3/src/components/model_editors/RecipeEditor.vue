@@ -15,8 +15,8 @@
             <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
                 <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
                 <v-tab value="steps">{{ $t('Steps') }}</v-tab>
-                <v-tab value="properties">{{ $t('Properties') }}</v-tab>
-                <v-tab value="settings">{{ $t('Miscellaneous') }}</v-tab>
+                <v-tab value="properties" :disabled="!isUpdate()">{{ $t('Properties') }}</v-tab>
+                <v-tab value="settings" :disabled="!isUpdate()">{{ $t('Miscellaneous') }}</v-tab>
             </v-tabs>
         </v-card-text>
         <v-card-text v-if="!isSpaceAtRecipeLimit(useUserPreferenceStore().activeSpace)">
@@ -87,6 +87,12 @@
                     </v-row>
 
                     <v-form :disabled="loading || fileApiLoading">
+                        <v-row v-if="editingObj.steps.length == 0">
+                            <v-col class="text-center">
+                                <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
+                            </v-col>
+                        </v-row>
+
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
                             <v-col>
                                 <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
@@ -106,7 +112,10 @@
                 <v-tabs-window-item value="properties">
                     <v-form :disabled="loading || fileApiLoading">
                         <closable-help-alert :text="$t('PropertiesFoodHelp')"></closable-help-alert>
-                        <properties-editor v-model="editingObj.properties" :amount-for="$t('Serving')"></properties-editor>
+                        <properties-editor v-model="editingObj" :amount-for="$t('Serving')"></properties-editor>
+
+                        <!-- TODO remove once append to body for model select is working properly -->
+                        <v-spacer style="margin-top: 100px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
@@ -226,7 +235,7 @@ function initializeEditor() {
             addStep()
             editingObj.value.steps[0].ingredients.push({
                 food: null,
-                unit: null,
+                unit: useUserPreferenceStore().defaultUnitObj,
                 amount: 0,
             } as Ingredient)
             editingObj.value.internal = true //TODO make database default after v2

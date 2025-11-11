@@ -48,7 +48,7 @@ class FoodPropertyHelper:
                     found_property = False
                     # if food has a value for the given property type (no matter if conversion is possible)
                     has_property_value = False
-                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None and not (i.amount == 0 or i.no_amount):  # if food is configured incorrectly
+                    if (i.food.properties_food_amount == 0 or i.food.properties_food_unit is None) and not (i.amount == 0 or i.no_amount):  # if food is configured incorrectly
                         computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
                         computed_properties[pt.id]['missing_value'] = True
                     else:
@@ -63,8 +63,9 @@ class FoodPropertyHelper:
                                             computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
                         # if no amount and food does not exist yet add it but don't count as missing
-                        if i.amount == 0 or i.no_amount and i.food.id not in computed_properties[pt.id]['food_values']:
-                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
+                        if i.amount == 0 or i.no_amount:
+                            if i.food.id not in computed_properties[pt.id]['food_values']:
+                                computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
                         # if amount is present but unit is missing indicate it in the result
                         elif i.unit is None:
                             if i.food.id not in computed_properties[pt.id]['food_values']:
@@ -72,7 +73,8 @@ class FoodPropertyHelper:
                             computed_properties[pt.id]['food_values'][i.food.id]['missing_unit'] = True
                         else:
                             computed_properties[pt.id]['missing_value'] = True
-                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
+                            if i.food.id not in computed_properties[pt.id]['food_values']:
+                                computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
                             if has_property_value and i.unit is not None:
                                 computed_properties[pt.id]['food_values'][i.food.id]['missing_conversion'] = {'base_unit': {'id': i.unit.id, 'name': i.unit.name}, 'converted_unit': {'id': i.food.properties_food_unit.id, 'name': i.food.properties_food_unit.name}}
 
@@ -82,8 +84,12 @@ class FoodPropertyHelper:
     # TODO move to central helper ? --> use defaultdict
     @staticmethod
     def add_or_create(d, key, value, food):
-        if key in d and d[key]['value']:
-            d[key]['value'] += value
+        if key in d:
+            # value can be None if a previous instance of the same food was missing a conversion
+            if d[key]['value']:
+                d[key]['value'] += value
+            else:
+                d[key]['value'] = value
         else:
             d[key] = {'id': food.id, 'food': {'id': food.id, 'name': food.name}, 'value': value}
         return d

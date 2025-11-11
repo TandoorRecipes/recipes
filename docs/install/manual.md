@@ -77,10 +77,10 @@ Using binaries from the virtual env:
 /var/www/recipes/bin/pip3 install -r requirements.txt
 ```
 
-You will also need to install front end requirements and build them. For this navigate to the `./vue` folder and run
+You will also need to install front end requirements and build them. For this navigate to the `./vue3` folder and run
 
 ```shell
-cd ./vue
+cd ./vue3
 yarn install
 yarn build
 ```
@@ -224,7 +224,7 @@ bin/python3 manage.py migrate
 bin/python3 manage.py collectstatic --no-input
 bin/python3 manage.py collectstatic_js_reverse
 # change to frontend directory
-cd vue
+cd vue3
 # install and build frontend
 yarn install
 yarn build

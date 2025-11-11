@@ -229,7 +229,7 @@ const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().
  * factor for multiplying ingredient amounts based on recipe base servings and user selected servings
  */
 const ingredientFactor = computed(() => {
-    return servings.value / ((recipe.value.servings != undefined) ? recipe.value.servings : 1)
+    return servings.value / ((recipe.value.servings != undefined) ? Math.max(recipe.value.servings, 1) : 1)
 })
 
 /**

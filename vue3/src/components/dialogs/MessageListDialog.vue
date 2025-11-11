@@ -79,7 +79,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn @click="useMessageStore().deleteAllMessages()" color="error">{{$t('Delete_All')}}</v-btn>
-                    <v-btn @click="addTestMessage()" color="warning">{{$t('Add')}}</v-btn>
+<!--                    <v-btn @click="addTestMessage()" color="warning">{{$t('Add')}}</v-btn>-->
                     <v-btn @click="isActive.value = false">{{ $t('Close')}}</v-btn>
                 </v-card-actions>
             </v-card>

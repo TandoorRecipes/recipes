@@ -877,6 +877,12 @@ export interface ApiEnterpriseSocialKeywordUpdateRequest {
     keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
 }
 
+export interface ApiEnterpriseSocialRecipeAipropertiesCreateRequest {
+    id: number;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    provider?: number;
+}
+
 export interface ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest {
     recipeBatchUpdate: RecipeBatchUpdate;
 }
@@ -1687,6 +1693,12 @@ export interface ApiPropertyTypeUpdateRequest {
 export interface ApiPropertyUpdateRequest {
     id: number;
     property: Property;
+}
+
+export interface ApiRecipeAipropertiesCreateRequest {
+    id: number;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    provider?: number;
 }
 
 export interface ApiRecipeBatchUpdateUpdateRequest {
@@ -5571,6 +5583,57 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseSocialKeywordUpdate(requestParameters: ApiEnterpriseSocialKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiEnterpriseSocialKeywordUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeAipropertiesCreateRaw(requestParameters: ApiEnterpriseSocialRecipeAipropertiesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseSocialRecipeAipropertiesCreate().'
+            );
+        }
+
+        if (requestParameters['recipe'] == null) {
+            throw new runtime.RequiredError(
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiEnterpriseSocialRecipeAipropertiesCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['provider'] != null) {
+            queryParameters['provider'] = requestParameters['provider'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-social-recipe/{id}/aiproperties/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeToJSON(requestParameters['recipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiEnterpriseSocialRecipeAipropertiesCreate(requestParameters: ApiEnterpriseSocialRecipeAipropertiesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiEnterpriseSocialRecipeAipropertiesCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -12348,6 +12411,57 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiPropertyUpdate(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeAipropertiesCreateRaw(requestParameters: ApiRecipeAipropertiesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeAipropertiesCreate().'
+            );
+        }
+
+        if (requestParameters['recipe'] == null) {
+            throw new runtime.RequiredError(
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiRecipeAipropertiesCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['provider'] != null) {
+            queryParameters['provider'] = requestParameters['provider'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/recipe/{id}/aiproperties/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeToJSON(requestParameters['recipe']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiRecipeAipropertiesCreate(requestParameters: ApiRecipeAipropertiesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+        const response = await this.apiRecipeAipropertiesCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
