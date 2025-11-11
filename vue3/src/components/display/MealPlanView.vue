@@ -157,6 +157,7 @@ function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, 
                 let new_entry = Object.assign({}, mealPlan)
                 new_entry.fromDate = targetDate
                 new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                new_entry.addshopping = mealPlan.shopping
                 useMealPlanStore().createObject(new_entry)
             } else {
                 mealPlan.fromDate = targetDate
