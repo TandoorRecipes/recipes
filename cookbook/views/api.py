@@ -2562,6 +2562,13 @@ class AiImportView(APIView):
                     'msg': "Error parsing AI results. Response Text:\n\n" + response_text
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+            except Exception:
+                traceback.print_exc()
+                response = {
+                    'error': True,
+                    'msg': "Error processing AI results. Response Text:\n\n" + response_text + "\n\n" + traceback.format_exc()
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
         else:
             response = {
                 'error': True,
