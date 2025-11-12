@@ -14,6 +14,7 @@ export const INTEGRATIONS: Array<Integration> = [
     {id: 'CHEFTAP', name: "Cheftap", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cheftap'},
     {id: 'CHOWDOWN', name: "Chowdown", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#chowdown'},
     {id: 'COOKBOOKAPP', name: "CookBookApp", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookbookapp'},
+    {id: 'COOKLANG', name: "Cooklang Markdown", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cooklang'},
     {id: 'COOKMATE', name: "Cookmate", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookmate'},
     {id: 'COPYMETHAT', name: "CopyMeThat", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#copymethat'},
     {id: 'DOMESTICA', name: "Domestica", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#domestica'},
