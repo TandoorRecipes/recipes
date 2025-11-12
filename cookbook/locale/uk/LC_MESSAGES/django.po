@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-11-12 12:01+0000\n"
+"PO-Revision-Date: 2025-11-13 13:33+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -571,7 +571,7 @@ msgstr "Ключове слово"
 
 #: .\cookbook\serializer.py:222
 msgid "File uploads are not enabled for this Space."
-msgstr "Завантаження файлів не дозволено тут."
+msgstr "Завантаження файлів не дозволено в цьому просторі."
 
 #: .\cookbook\serializer.py:233
 msgid "You have reached your file upload limit."
@@ -704,52 +704,54 @@ msgstr "Перевірено"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "Неперевірено"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "Головний"
 
 #: .\cookbook\templates\account\email.html:47
 msgid "Make Primary"
-msgstr ""
+msgstr "Зробити головним"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Повторно надіслати підтвердження"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\generic\delete_template.html:57
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
-msgstr ""
+msgstr "Прибрати"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "Попередження:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Наразі у вас не налаштовано жодної адреси електронної пошти. Вам слід додати "
+"адресу електронної пошти, щоб отримувати сповіщення, скидати пароль тощо."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Додати адресу електронної пошти"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "Додати електрону пошту"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Ви дійсно хочете видалити вибрану адресу електронної пошти?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Підтвердити адресу електронної пошти"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -767,7 +769,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
-msgstr ""
+msgstr "Підтвердити"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -776,11 +778,15 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
+"Цейпосилання для підтвердження електронної пошти прострочено або недійсне. "
+"Будь ласка,\n"
+"            <a href=\"%(email_url)s\">надішліть новий запит на підтвердження "
+"електронної пошти</a>."
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr ""
+msgstr "Вхід"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -792,7 +798,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "Увійти"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:41
@@ -800,34 +806,34 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "Реєстрація"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
-msgstr ""
+msgstr "Загубили пароль?"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "Скинути мій пароль"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
-msgstr ""
+msgstr "Вхід через соцмережи"
 
 #: .\cookbook\templates\account\login.html:51
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "Ви можете використовувати будь-що з наступного для входу."
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "Вихід"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Ви впевнені, що хочете вийти?"
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
@@ -837,43 +843,47 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
 msgid "Change Password"
-msgstr ""
+msgstr "Змінити пароль"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Забули пароль?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:18
 msgid "Password Reset"
-msgstr ""
+msgstr "Скинути пароль"
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Забули пароль? Введіть свою адресу електронної пошти нижче, і ми надішлемо "
+"вам електронного листа, який дозволить вам його змінити."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr ""
+msgstr "Скидання пароля на цьому сервері відключено."
 
 #: .\cookbook\templates\account\password_reset_done.html:25
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Ми надіслали вам електронного листа. Якщо ви не отримаєте його протягом "
+"декількох хвилин, зв'яжіться з нами."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
-msgstr ""
+msgstr "Некоректний токен"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -883,39 +893,43 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Посилання для скидання пароля було недійсним, можливо, тому що воно вже було "
+"використано.\n"
+"                    Будь ласка, запросіть <a href=\"%(passwd_reset_url)s\""
+">нове посилання для скидання пароля</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr ""
+msgstr "змінити пароль"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Ваш пароль тепер змінено."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "Встановити пароль"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr ""
+msgstr "Зареєструватись"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "Створити акаунт"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Я приймаю наступне"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Умови та положення"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
@@ -925,66 +939,66 @@ msgstr "і"
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Політика конфіденційності"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "Створити користувача"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "Вже є акаунт?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Реєстрація закрита"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "На жаль, реєстрація наразі закрита."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:378
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr ""
+msgstr "API документація"
 
 #: .\cookbook\templates\base.html:110 .\cookbook\templates\index.html:87
 msgid "Recipes"
-msgstr ""
+msgstr "Рецепти"
 
 #: .\cookbook\templates\base.html:161 .\cookbook\views\lists.py:120
 msgid "Foods"
-msgstr ""
+msgstr "Продукти харчування"
 
 #: .\cookbook\templates\base.html:173 .\cookbook\views\lists.py:137
 msgid "Units"
-msgstr ""
+msgstr "Одиниці вимірювання"
 
 #: .\cookbook\templates\base.html:187
 msgid "Supermarket"
-msgstr ""
+msgstr "Супермаркет"
 
 #: .\cookbook\templates\base.html:199
 msgid "Supermarket Category"
-msgstr ""
+msgstr "Категорія супермаркетів"
 
 #: .\cookbook\templates\base.html:211 .\cookbook\views\lists.py:186
 msgid "Automations"
-msgstr ""
+msgstr "Автоматизації"
 
 #: .\cookbook\templates\base.html:225 .\cookbook\views\lists.py:222
 msgid "Files"
-msgstr ""
+msgstr "Файли"
 
 #: .\cookbook\templates\base.html:237
 msgid "Batch Edit"
-msgstr ""
+msgstr "Групове редагування"
 
 #: .\cookbook\templates\base.html:249 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr ""
+msgstr "Історія"
 
 #: .\cookbook\templates\base.html:263
 #: .\cookbook\templates\ingredient_editor.html:7
@@ -1004,50 +1018,50 @@ msgstr "Властивості"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 msgid "Unit Conversions"
-msgstr ""
+msgstr "Конвертація одиниць вимірювання"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
-msgstr ""
+msgstr "Імпортувати рецепт"
 
 #: .\cookbook\templates\base.html:320
 msgid "Create"
-msgstr ""
+msgstr "Створити"
 
 #: .\cookbook\templates\base.html:333
 #: .\cookbook\templates\generic\list_template.html:14
 msgid "External Recipes"
-msgstr ""
+msgstr "Зовнішні рецепти"
 
 #: .\cookbook\templates\base.html:336 .\cookbook\templates\space_manage.html:15
 msgid "Space Settings"
-msgstr ""
+msgstr "Налаштування простору"
 
 #: .\cookbook\templates\base.html:340
 msgid "External Connectors"
-msgstr ""
+msgstr "Зовнішні підключення"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr ""
+msgstr "Система"
 
 #: .\cookbook\templates\base.html:347
 msgid "Admin"
-msgstr ""
+msgstr "Адмін"
 
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
 msgid "Your Spaces"
-msgstr ""
+msgstr "Ваші простори"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Огляд"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Посібник з Markdown"
 
 #: .\cookbook\templates\base.html:374
 msgid "GitHub"
@@ -1055,53 +1069,55 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:376
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Переклад Tandoor"
 
 #: .\cookbook\templates\base.html:380
 msgid "API Browser"
-msgstr ""
+msgstr "Браузер API"
 
 #: .\cookbook\templates\base.html:383
 msgid "Log out"
-msgstr ""
+msgstr "Вийти"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Ви використовуєте безкоштовну версію Tandor"
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Оновити зараз"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr ""
+msgstr "Групове редагування Категорії"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr ""
+msgstr "Групове редагування Рецептів"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
-msgstr ""
+msgstr "Додати вказані ключові слова до всіх рецептів, що містять слово"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:75
 msgid "Sync"
-msgstr ""
+msgstr "Синхронізація"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr ""
+msgstr "Керувати папками, що відстежуються"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"На цій сторінці ви можете керувати всіма папками для зберігання, які слід "
+"контролювати та синхронізувати."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr ""
+msgstr "Шлях повинен мати такий формат"
 
 #: .\cookbook\templates\batch\monitor.html:20
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
@@ -1109,128 +1125,130 @@ msgstr ""
 #: .\cookbook\templates\generic\new_template.html:23
 #: .\cookbook\templates\settings.html:57
 msgid "Save"
-msgstr ""
+msgstr "Зберігти"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
-msgstr ""
+msgstr "Керувати зовнішнім сховищем"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
-msgstr ""
+msgstr "Синхронізувати зараз!"
 
 #: .\cookbook\templates\batch\monitor.html:29
 msgid "Show Recipes"
-msgstr ""
+msgstr "Показати рецепти"
 
 #: .\cookbook\templates\batch\monitor.html:30
 msgid "Show Log"
-msgstr ""
+msgstr "Показати лог"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr ""
+msgstr "Імпорт рецептів"
 
 #: .\cookbook\templates\batch\waiting.html:28
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
+"Це може зайняти кілька хвилин, залежно від кількості синхронізованих "
+"рецептів. Будь ласка, зачекайте."
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
-msgstr ""
+msgstr "Книги рецептів"
 
 #: .\cookbook\templates\export.html:7 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr ""
+msgstr "Експорт рецептів"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr ""
+msgstr "Імпортувати новий рецепт"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
-msgstr ""
+msgstr "Редагувати рецепт"
 
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr ""
+msgstr "Ви впевнені, що хочете видалити %(title)s: <b>%(object)s</b>? "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Це не можна скасувати!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
-msgstr ""
+msgstr "Захищено"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
-msgstr ""
+msgstr "Каскад"
 
 #: .\cookbook\templates\generic\delete_template.html:73
 msgid "Cancel"
-msgstr ""
+msgstr "Відміна"
 
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr ""
+msgstr "Редагувати"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr ""
+msgstr "Перегляд"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr ""
+msgstr "Видалити оригінальний файл"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
 msgid "List"
-msgstr ""
+msgstr "Список"
 
 #: .\cookbook\templates\generic\list_template.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Фільтр"
 
 #: .\cookbook\templates\generic\list_template.html:41
 msgid "Import all"
-msgstr ""
+msgstr "Імпортувати все"
 
 #: .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr ""
+msgstr "Новий"
 
 #: .\cookbook\templates\generic\table_template.html:76
 msgid "previous"
-msgstr ""
+msgstr "попередній"
 
 #: .\cookbook\templates\generic\table_template.html:98
 msgid "next"
-msgstr ""
+msgstr "наступний"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Подивитись лог"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Лог готування"
 
 #: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:90
 #: .\cookbook\views\edit.py:174
 msgid "Import"
-msgstr ""
+msgstr "Імпорт"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Попередження про безпеку"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1244,35 +1262,44 @@ msgid ""
 "can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        Поля <b>пароль і токен</b> зберігаються як <b>простий текст</b> в "
+"базі даних.\n"
+"        Це необхідно, оскільки вони потрібні для здійснення запитів API, але "
+"це також збільшує ризик\n"
+"        їхнього викрадення <br/>\n"
+"        Щоб обмежити можливий збиток, можна використовувати токени або "
+"облікові записи з обмеженим доступом.\n"
+"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr ""
+msgstr "Пошук рецепту..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Новий рецепт"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr ""
+msgstr "Розширений пошук"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr ""
+msgstr "Скинути пошук"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr ""
+msgstr "Останній переглянутий"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Ввійти щоб подивитись рецепти"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr ""
+msgstr "Інформація про Markdown"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -1289,54 +1316,70 @@ msgid ""
 "below.\n"
 "    "
 msgstr ""
+"\n"
+"        Markdown - проста мова розмітки, яку можна використовувати для "
+"простого форматування звичайного тексту.\n"
+"        Цей сайт використовує бібліотеку <a href="
+"\"https://python-markdown.github.io/\" target=\"_blank\">Python Markdown</a> "
+"для\n"
+"        перетворення вашого тексту в приємний на вигляд HTML. Повну "
+"документацію щодо Markdown можна знайти\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">here</a>.\n"
+"        Неповну, але, найімовірніше, достатню документацію можна знайти "
+"нижче.\n"
+"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr ""
+msgstr "Заголовки"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr ""
+msgstr "Форматування"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
 msgstr ""
+"Розриви рядків вставляються шляхом додавання двох пробілів після кінця рядка"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line in between."
-msgstr ""
+msgstr "або залишивши порожній рядок між ними."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Цей текст виділено жирним шрифтом"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr ""
+msgstr "Цей текст виділено курсивом"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Також можливі цитати"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Списки"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
+"Списки можуть бути впорядкованими або невпорядкованими. <b>Важливо залишати "
+"порожній рядок перед списком!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr ""
+msgstr "Упорядкований список"
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -1345,12 +1388,12 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr ""
+msgstr "елемент неупорядкованого списку"
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr ""
+msgstr "Неупорядкований список"
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -1359,26 +1402,29 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr ""
+msgstr "елемент упорядкованого списку"
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr ""
+msgstr "Зображення та посилання"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
+"Посилання можна форматувати за допомогою Markdown. Ця програма також "
+"дозволяє вставляти посилання безпосередньо в поля Markdown без будь-якого "
+"форматування."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr ""
+msgstr "Це стане зображенням"
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr ""
+msgstr "Таблиці"
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
@@ -1386,28 +1432,32 @@ msgid ""
 "editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
+"Таблиці Markdown важко створювати вручну. Рекомендується використовувати "
+"редактор таблиць, такий як<a href="
+"\"https://www.tablesgenerator.com/markdown_tables\" rel="
+"\"noreferrer noopener\" target=\"_blank\">ось цей.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr ""
+msgstr "Таблиця"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr ""
+msgstr "Заголовок"
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr ""
+msgstr "Клітинка"
 
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr ""
+msgstr "Не має дозволів"
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
@@ -1416,64 +1466,68 @@ msgstr "У вас немає груп, тому ви не можете кори�
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Зверніться до вашого адміністратора."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
 msgid "No Permission"
-msgstr ""
+msgstr "Нема доступів"
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
 msgstr ""
+"Ви не маєте необхідних прав для перегляду цієї сторінки або виконання цієї "
+"дії."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr ""
+msgstr "Оффлайн"
 
 #: .\cookbook\templates\offline.html:19
 msgid "You are currently offline!"
-msgstr ""
+msgstr "Ви наразі оффлайн!"
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
 "The recipes listed below are available for offline viewing because you have "
 "recently viewed them. Keep in mind that data might be outdated."
 msgstr ""
+"Наведені нижче рецепти доступні для перегляду в автономному режимі, оскільки "
+"ви нещодавно їх переглядали. Майте на увазі, що дані можуть бути застарілими."
 
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: .\cookbook\templates\property_editor.html:7
 msgid "Property Editor"
-msgstr ""
+msgstr "Редактор властивостей"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
-msgstr ""
+msgstr "Коментарі"
 
 #: .\cookbook\templates\recipe_view.html:41
 msgid "by"
-msgstr ""
+msgstr " "
 
 #: .\cookbook\templates\recipe_view.html:59 .\cookbook\views\delete.py:146
 #: .\cookbook\views\edit.py:156
 msgid "Comment"
-msgstr ""
+msgstr "Коментар"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr ""
+msgstr "Головна рецептів"
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
 #: .\cookbook\templates\settings.html:24
 msgid "Search Settings"
-msgstr ""
+msgstr "Налаштування пошуку"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1486,10 +1540,19 @@ msgid ""
 "only available if you are using Postgres for your database.\n"
 "    "
 msgstr ""
+"\n"
+"        Створення найкращого досвіду пошуку є складним завданням і значною "
+"мірою залежить від ваших особистих налаштувань.  \n"
+"        Зміна будь-яких налаштувань пошуку може мати значний вплив на "
+"швидкість і якість результатів.\n"
+"        Налаштування методів пошуку, триграм і повнотекстового пошуку "
+"доступні лише в тому випадку, якщо ви використовуєте Postgres для своєї бази "
+"даних.\n"
+"    "
 
 #: .\cookbook\templates\search_info.html:19
 msgid "Search Methods"
-msgstr ""
+msgstr "Методи пошуку"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1505,6 +1568,16 @@ msgid ""
 "html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
 "            "
 msgstr ""
+" \n"
+"            FПовний текстовий пошук намагається нормалізувати введені слова, "
+"щоб вони відповідали поширеним варіантам.  Наприклад: «forked», «forking», "
+"«forks» будуть нормалізовані до «fork».\n"
+"            Існує кілька методів, описаних нижче, які контролюють поведінку "
+"пошуку при пошуку декількох слів.\n"
+"            Повні технічні деталі щодо їхнього функціонування можна "
+"переглянути на <a href=https://www.postgresql.org/docs/current/textsearch-"
+"controls.html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:29
 msgid ""
