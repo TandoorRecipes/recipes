@@ -42,3 +42,13 @@ In order to work on these pages, you will have to install a Javascript package m
 
 If you do not wish to work on those pages, but instead want the application to work properly during development, run `yarn build` to build the frontend pages once. After that you 
 might need to run `python manage.py collectstatic` to setup the static files.
+
+
+### Building Docker Image from Source
+Similar to the Vue.js procedure, if you wish to build a docker image from source run you must build the vue3 files first.
+
+1. in your project files navigate to `vue3` and run `yarn install` to install the dependencies
+2. run `yarn build` to build the static files for django to use.
+3. navigate back to the root directory and run `docker build -t ${tag}:${version} .`
+
+Django's `collectstatic` command is not necessary in this instance as the `Dockerfile`'s entrypoint will collect the static files upon startup on `docker run`. 
