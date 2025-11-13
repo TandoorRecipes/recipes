@@ -38,15 +38,6 @@ class YourIntegrationName(Integration):
         # return 'Filename.extension', 'file string'
         pass
         
-    def get_files_from_recipes(self, recipes, el, cookie) -> str:
-        
-        for recipe in recipes:
-            If True: #add any verification logic
-                #convert recipe to File string
-            el.exported_recipes += 1
-            el.msg += self.get_recipe_processed_msg(recipe)
-            el.save()
-        pass
 
     def get_files_from_recipes(self, recipes, el, cookie) -> list[list[str,bytes]]:
         # 'el' and 'cookie' are passed through by the calling function 'do_export'
