@@ -54,7 +54,7 @@
     "BaseUnit": "Osnovna enota",
     "BaseUnitHelp": "Standardna enota za samodejno pretvorbo enot",
     "Basics": "Osnove",
-    "BatchDeleteConfirm": "Ali želite izbrisati vse prikazane elemente? Tega ni mogoče razveljaviti!",
+    "BatchDeleteConfirm": "Ali želite izbrisati vse prikazane elemente? Tega ni mogoče razveljaviti! OPOZORILO: Možno je, da se s tem izbrišejo predmeti, ki se uporabljajo drugje. ",
     "BatchDeleteHelp": "Če elementa ni mogoče izbrisati, se nekje uporablja. ",
     "BatchEdit": "Paketno urejanje",
     "BatchEditUpdatingItemsCount": "Urejanje {count} {type}",
@@ -495,7 +495,7 @@
     "ShopLater": "Nakupujte pozneje",
     "ShopNow": "Nakupujte zdaj",
     "ShoppingBackgroundSyncWarning": "Slabo omrežje, čakanje na sinhronizacijo ...",
-    "ShoppingListEntry": "Vnos nakupovalnega seznama",
+    "ShoppingListEntry": "Vnos na nakupovalni seznam",
     "ShoppingListEntryHelp": "Vnose na nakupovalni seznam lahko ustvarite ročno ali z recepti in načrti obrokov.",
     "ShoppingListRecipe": "Recept za nakupovalni seznam",
     "Shopping_Categories": "Kategorije nakupa",
@@ -505,7 +505,7 @@
     "Shopping_list": "Nakupovalni Seznam",
     "ShowDelayed": "Pokaži odložene elemente",
     "ShowIngredients": "Prikaži sestavine",
-    "ShowMealPlanOnStartPage": "Prikaži načrte prehrane na začetni strani.",
+    "ShowMealPlanOnStartPage": "Prikaži načrte obrokov na začetni strani.",
     "ShowRecentlyCompleted": "Prikaži nedavno dokončane elemente",
     "ShowUncategorizedFood": "Prikaži nedefinirano",
     "Show_Logo": "Prikaži logotip",
@@ -865,5 +865,10 @@
     "APIKey": "API ključ",
     "Model": "Model",
     "Structured": "Strukturirano",
-    "Summary": "Povzetek"
+    "Summary": "Povzetek",
+    "AboutTandoor": "Tandoor je odprtokodna platforma za upravljanje receptov, načrtov obrokov, nakupovalnih seznamov in še več.",
+    "CreateAccount": "Ustvari račun",
+    "Finish": "Končaj",
+    "ImportIntoTandoorHelp": "Če želite uvoziti ta recept v svojo zbirko Tandoor, sledite naslednjim korakom.",
+    "SelfHosted": "Samostojno gostovanje"
 }
