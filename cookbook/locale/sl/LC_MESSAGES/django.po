@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2024-11-19 06:58+0000\n"
+"PO-Revision-Date: 2025-11-15 12:08+0000\n"
 "Last-Translator: \"Matjaž T.\" <matjaz@moj-svet.si>\n"
 "Language-Team: Slovenian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sl/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.6.2\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -123,51 +123,51 @@ msgstr "fermentiramo"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "slow cook"
-msgstr ""
+msgstr "počasno kuhanje"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr ""
+msgstr "kuhalnik jajc"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "kotel"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
-msgstr ""
+msgstr "mešanica"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "pre-clean"
-msgstr ""
+msgstr "predhodno čiščenje"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr ""
+msgstr "visoka temperatura"
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr ""
+msgstr "kuhalnik riža"
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
-msgstr ""
+msgstr "karamelizirati"
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr ""
+msgstr "lupilec"
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
-msgstr ""
+msgstr "rezalnik"
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "strgalo"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
-msgstr ""
+msgstr "spiralizator"
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
@@ -229,7 +229,7 @@ msgstr "Ogljikovi hidrati"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "Holesterol"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -238,33 +238,31 @@ msgstr "Maščoba"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Vlaknine"
 
 #: .\cookbook\integration\mealie1.py:215
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
 msgstr "Beljakovine"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Nasičene maščobe"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Natrij"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Sladkor"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr ""
+msgstr "Trans maščobe"
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Nenasičene maščobe"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -478,7 +476,7 @@ msgstr "Dosegli ste omejitev nalaganja datotek."
 
 #: .\cookbook\serializer.py:281
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Navedena vrsta datoteke ni dovoljena."
 
 #: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
 msgid ""
@@ -487,7 +485,7 @@ msgstr "Dosegli ste največje število prostorov, ki so lahko v vaši lasti."
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Ime prostora mora biti edinstveno."
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
@@ -838,10 +836,8 @@ msgid "We are sorry, but the sign up is currently closed."
 msgstr "Žal nam je, vendar so registracije trenutno zaprte."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
-#, fuzzy
-#| msgid "Tandoor Recipes Invite"
 msgid "Tandoor Recipe Manager"
-msgstr "Tandoor Recepti vabilo"
+msgstr "Urejevalnik Tandoor Recepti"
 
 #: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
@@ -1428,8 +1424,6 @@ msgstr ""
 "        %(site_name)s. Kot zadnji korak izpolnite naslednji obrazec:"
 
 #: .\cookbook\templates\socialaccount\signup.html:32
-#, fuzzy
-#| msgid "I accept the follwoing"
 msgid "I accept the following"
 msgstr "Sprejemam naslednje"
 
@@ -1514,15 +1508,6 @@ msgid "System"
 msgstr "Sistem"
 
 #: .\cookbook\templates\system.html:24
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "        Django Recipes is an open source free software application. It "
-#| "can be found on\n"
-#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-#| "recipes/releases\">here</a>.\n"
-#| "    "
 msgid ""
 "\n"
 "        Tandoor Recipes is an open source free software application. It can "
@@ -1533,11 +1518,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Django Recipes je odprtokodna brezplačna programska aplikacija. "
-"Najdete ga na GitHub\n"
-"        <a href=\"https://github.com/vabene1111/recipes\"></a>.\n"
-"        Dnevnike sprememb lahko najdete tukaj <a href=\"https://github.com/"
-"vabene1111/recipes/releases\"></a>.\n"
+"        Tandoor Recipes je odprtokodna brezplačna programska oprema. Najdete "
+"jo na\n"
+"        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>.\n"
+"        Dnevnike sprememb najdete <a href="
+"\"https://github.com/TandoorRecipes/recipes/releases\">tukaj</a>.\n"
 "    "
 
 #: .\cookbook\templates\system.html:30
@@ -1559,7 +1544,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:56
 msgid "Plugins"
-msgstr ""
+msgstr "Vtičniki"
 
 #: .\cookbook\templates\system.html:67
 msgid "Media Serving"
@@ -1789,16 +1774,12 @@ msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} je bil dodan na nakupovalni seznam."
 
 #: .\cookbook\views\api.py:1239
-#, fuzzy
-#| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgid "Filter meal plans from date (inclusive)."
-msgstr "Filtrirajte načrte obrokov od datuma (vključno) v obliki LLLL-MM-DD."
+msgstr "Filtriraj načrte obrokov od datuma (vključno)."
 
 #: .\cookbook\views\api.py:1241
-#, fuzzy
-#| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgid "Filter meal plans to date (inclusive)."
-msgstr "Filtrirajte dosedanje načrte obrokov (vključno) v obliki LLLL-MM-DD."
+msgstr "Filtriraj načrte obrokov do danes (vključno)."
 
 #: .\cookbook\views\api.py:1244
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -1905,106 +1886,62 @@ msgstr "ID enote, ki bi jo moral imeti recept."
 
 #: .\cookbook\views\api.py:1464
 msgid "Exact rating of recipe"
-msgstr ""
+msgstr "Natančna ocena recepta"
 
 #: .\cookbook\views\api.py:1465
-#, fuzzy
-#| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or greater."
-msgstr "ID enote, ki bi jo moral imeti recept."
+msgstr "Ocena, ki bi jo moral imeti recept, ali višja."
 
 #: .\cookbook\views\api.py:1466
-#, fuzzy
-#| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or smaller."
-msgstr "ID enote, ki bi jo moral imeti recept."
+msgstr "Ocena, ki jo mora imeti recept, je 1 ali manjša."
 
 #: .\cookbook\views\api.py:1468
 msgid "Filter recipes cooked X times."
-msgstr ""
+msgstr "Filtriraj recepte, kuhane X-krat."
 
 #: .\cookbook\views\api.py:1469
-#, fuzzy
-#| msgid ""
-#| "Filter recipes cooked X times or more.  Negative values returns cooked "
-#| "less than X times"
 msgid "Filter recipes cooked X times or more."
-msgstr ""
-"Filtrirajte recepte, kuhane X-krat ali večkrat. Negativne vrednosti se "
-"vrnejo kuhane manj kot X-krat"
+msgstr "Filtriraj recepte, kuhane X-krat ali večkrat."
 
 #: .\cookbook\views\api.py:1470
 msgid "Filter recipes cooked X times or less."
-msgstr ""
+msgstr "Filtriraj recepte, kuhane X-krat ali manj."
 
 #: .\cookbook\views\api.py:1472
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes created on the given date."
-msgstr "Filter za vnose z danim receptom"
+msgstr "Filtriraj recepte, ustvarjene na določen datum."
 
 #: .\cookbook\views\api.py:1473
-#, fuzzy
-#| msgid ""
-#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-#| "before date."
 msgid "Filter recipes created on the given date or after."
-msgstr ""
-"Filtrirajte recepte, ustvarjene LLLL-MM-DD ali pozneje. Pred - filtrira na "
-"ali pred datumom."
+msgstr "Filtriraj recepte, ustvarjene na določen datum ali pozneje."
 
 #: .\cookbook\views\api.py:1474
-#, fuzzy
-#| msgid ""
-#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-#| "before date."
 msgid "Filter recipes created on the given date or before."
-msgstr ""
-"Filtrirajte recepte, ustvarjene LLLL-MM-DD ali pozneje. Pred - filtrira na "
-"ali pred datumom."
+msgstr "Filtriraj recepte, ustvarjene na določen datum ali prej."
 
 #: .\cookbook\views\api.py:1476 .\cookbook\views\api.py:1477
 #: .\cookbook\views\api.py:1478
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes updated on the given date."
-msgstr "Filter za vnose z danim receptom"
+msgstr "Filtriraj recepte, posodobljene na navedeni datum."
 
 #: .\cookbook\views\api.py:1480
-#, fuzzy
-#| msgid ""
-#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
 msgid "Filter recipes last cooked on the given date or after."
 msgstr ""
-"Filtriraj recepte, nazadnje kuhane LLLL-MM-DD ali pozneje. Pred - filtrira "
-"na ali pred datumom."
+"Filtriraj recepte, ki so bili nazadnje kuhani na določen datum ali pozneje."
 
 #: .\cookbook\views\api.py:1481
-#, fuzzy
-#| msgid ""
-#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
 msgid "Filter recipes last cooked on the given date or before."
 msgstr ""
-"Filtriraj recepte, nazadnje kuhane LLLL-MM-DD ali pozneje. Pred - filtrira "
-"na ali pred datumom."
+"Filtriraj recepte, ki so bili nazadnje kuhani na določen datum ali prej."
 
 #: .\cookbook\views\api.py:1483 .\cookbook\views\api.py:1484
-#, fuzzy
-#| msgid ""
-#| "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
 msgid "Filter recipes lasts viewed on the given date."
-msgstr ""
-"Recepti filtrov so zadnjič prikazani LLLL-MM-DD ali pozneje. Pred - filtrira "
-"na ali pred datumom."
+msgstr "Filtriraj recepte, ki so bili nazadnje ogledani na določen datum."
 
 #: .\cookbook\views\api.py:1486
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes for ones created by the given user ID"
-msgstr "Filter za vnose z danim receptom"
+msgstr "Filtriraj recepte po tistih, ki jih je ustvaril dani uporabniški ID"
 
 #: .\cookbook\views\api.py:1487
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
@@ -2021,6 +1958,9 @@ msgid ""
 "lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
 "created_at,lastviewed,-lastviewed"
 msgstr ""
+"Določa vrstni red rezultatov. Možnosti so: "
+"score,-score,name,-name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,lastviewed,-lastviewed"
+""
 
 #: .\cookbook\views\api.py:1492
 msgid "Returns new results first in search results. [true/<b>false</b>]"
@@ -2031,10 +1971,12 @@ msgid ""
 "Returns the given number of recently viewed recipes before search results "
 "(if given)"
 msgstr ""
+"Vrne podano število nedavno ogledanih receptov pred rezultati iskanja "
+"(če je podano)"
 
 #: .\cookbook\views\api.py:1494
 msgid "ID of a custom filter. Returns all recipes matched by that filter."
-msgstr ""
+msgstr "ID filtra po meri. Vrne vse recepte, ki se ujemajo s tem filtrom."
 
 #: .\cookbook\views\api.py:1495
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
@@ -2047,48 +1989,43 @@ msgid ""
 "Return the PropertyTypes matching the property category.  Repeat for "
 "multiple."
 msgstr ""
+"Vrne vrste lastnosti (PropertyTypes), ki ustrezajo kategoriji lastnosti. "
+"Ponovite za več vrst lastnosti."
 
 #: .\cookbook\views\api.py:1804 .\cookbook\views\api.py:1860
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Returns only entries associated with the given mealplan id"
-msgstr "Filter za vnose z danim receptom"
+msgstr "Vrne samo vnose, povezane z danim ID-jem načrta obrokov"
 
 #: .\cookbook\views\api.py:1858
 msgid ""
 "Returns only elements updated after the given timestamp in ISO 8601 format."
 msgstr ""
+"Vrne samo elemente, posodobljene po danem časovnem žigu v formatu ISO 8601."
 
 #: .\cookbook\views\api.py:2031
-#, fuzzy
-#| msgid ""
-#| "Return the Automations matching the automation type.  Multiple values "
-#| "allowed."
 msgid ""
 "Return the Automations matching the automation type.  Repeat for multiple."
 msgstr ""
-"Vrnite avtomatizacije, ki ustrezajo vrsti avtomatizacije.     Dovoljenih je "
-"več vrednosti."
+"Vrne avtomatizacije, ki ustrezajo vrsti avtomatizacije.  Ponovite za več "
+"avtomatizacij."
 
 #: .\cookbook\views\api.py:2048
 msgid ""
 "Text field to store data that gets carried over to the UserSpace created "
 "from the InviteLink"
 msgstr ""
+"Besedilno polje za shranjevanje podatkov, ki se prenesejo v uporabniški "
+"prostor, ustvarjen iz InviteLink"
 
 #: .\cookbook\views\api.py:2049
 msgid "Only return InviteLinks that have not been used yet."
-msgstr ""
+msgstr "Vrni samo povezave InviteLink, ki še niso bile uporabljene."
 
 #: .\cookbook\views\api.py:2076
-#, fuzzy
-#| msgid ""
-#| "Return the Automations matching the automation type.  Multiple values "
-#| "allowed."
 msgid "Return the CustomFilters matching the model type.  Repeat for multiple."
 msgstr ""
-"Vrnite avtomatizacije, ki ustrezajo vrsti avtomatizacije.     Dovoljenih je "
-"več vrednosti."
+"Vrne filtre CustomFilters, ki ustrezajo vrsti modela.  Ponovite za več "
+"filtrov."
 
 #: .\cookbook\views\api.py:2176
 msgid "Nothing to do."
@@ -2112,13 +2049,15 @@ msgstr "Uporabnih podatkov ni bilo mogoče najti."
 
 #: .\cookbook\views\api.py:2286 .\cookbook\views\api.py:2434
 msgid "You must select an AI provider to perform your request."
-msgstr ""
+msgstr "Za izvedbo vaše zahteve morate izbrati ponudnika umetne inteligence."
 
 #: .\cookbook\views\api.py:2293 .\cookbook\views\api.py:2441
 msgid ""
 "You don't have any credits remaining to use AI or AI features are not "
 "enabled for your space."
 msgstr ""
+"Nimate več kreditov za uporabo umetne inteligence ali pa funkcije umetne "
+"inteligence niso omogočene za vaš prostor."
 
 #: .\cookbook\views\api.py:2499 .\cookbook\views\api.py:2667
 msgid "File is above space limit"
