@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-09-22 10:09+0000\n"
+"PO-Revision-Date: 2025-11-17 06:42+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.1\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -137,7 +137,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "teiera"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
@@ -149,7 +149,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr ""
+msgstr "alta temperatura"
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
@@ -169,7 +169,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "grattugia"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
@@ -235,7 +235,7 @@ msgstr "Carboidrati"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "Colesterolo"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -244,25 +244,23 @@ msgstr "Grassi"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Fibra"
 
 #: .\cookbook\integration\mealie1.py:215
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
-msgstr "Proteine"
+msgstr "Proteina"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Grasso saturo"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Sodio"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Zucchero"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
