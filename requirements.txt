@@ -31,7 +31,7 @@ lxml==6.0.2
 Markdown==3.10
 microdata==0.8.0
 mock==5.2.0
-Pillow==11.3.0
+Pillow==12.0.0
 psycopg2-binary==2.9.11
 pyjwt==2.10.1
 pyppeteer==2.0.0
