@@ -54,15 +54,13 @@
                             </router-link>
                             <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
                             <span v-else>{{ ingredientToFoodString(i, ingredientFactor) }}</span>
-                            <template v-if="i.note != '' && i.note != undefined">
-                                <span class="d-none d-print-block text-disabled font-italic">&nbsp;{{ i.note }}</span>
-                            </template>
+
                         </template>
-
-
                     </td>
-
-                    <td style="width: 1%; text-wrap: nowrap" class="d-print-none">
+                    <td v-if="useUserPreferenceStore().isPrintMode">
+                        <span class="text-disabled font-italic"> {{ i.note }}</span>
+                    </td>
+                    <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode">
                         <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
                             <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
                         </v-icon>
