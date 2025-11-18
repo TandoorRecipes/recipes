@@ -10,7 +10,7 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none">
+        <template class="d-block d-lg-none d-print-none">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -61,7 +61,7 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block">
+        <template class="d-none d-lg-block d-print-block">
             <v-row dense>
                 <v-col cols="8">
                     <recipe-image
@@ -118,7 +118,7 @@
             </v-row>
         </template>
 
-        <template v-if="recipe.filePath">
+        <template v-if="recipe.filePath && !useUserPreferenceStore().isPrintMode">
             <external-recipe-viewer class="mt-2" :recipe="recipe"></external-recipe-viewer>
 
             <v-card :title="$t('AI')" prepend-icon="$ai" :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading || !useUserPreferenceStore().activeSpace.aiEnabled"
