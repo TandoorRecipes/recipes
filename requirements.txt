@@ -29,7 +29,7 @@ microdata==0.8.0
 mock==5.2.0
 Jinja2==3.1.6
 django-allauth[mfa,socialaccount]==65.9.0
-recipe-scrapers==15.9.0
+recipe-scrapers==15.10.0
 django-scopes==2.0.0
 django-treebeard==4.7.1
 django-cors-headers==4.6.0

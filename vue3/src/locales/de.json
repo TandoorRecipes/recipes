@@ -594,7 +594,7 @@
     "TrigramThresholdHelp": "Steuert bei der Verwendung unscharfer Suche wie viele Unterschiede zugelasen werden. Niedrigere Werte führen zu mehr Ergebnissen/größerer Unschärfe.",
     "Tuesday": "Dienstag",
     "Type": "Typ",
-    "UPDATE_ERROR": "Fehler beim aktualisieren",
+    "UPDATE_ERROR": "Fehler beim Aktualisieren",
     "Unchanged": "Unverändert",
     "Undefined": "undefiniert",
     "Undo": "Rückgängig",
