@@ -6,6 +6,9 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
  */
 export function roundDecimals(num: number) {
     let decimals = useUserPreferenceStore().userSettings.ingredientDecimals
+    if (decimals === undefined) {
+        decimals = 2
+    }
     return Number(num.toFixed(decimals))
 }
 

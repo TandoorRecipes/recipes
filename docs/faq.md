@@ -36,7 +36,7 @@ then make sure you have set [all required headers](install/docker.md#required-he
 If that doesn't fix it, you can also refer to the appropriate sub section in the [reverse proxy documentation](install/docker.md#reverse-proxy) and verify your general webserver configuration.
 
 ### Required Headers
-Navigate to `/system` and review the headers listed in the DEBUG section.  At a minimum, if you are using a reverse proxy the headers must match the below conditions.
+Navigate to `/system/` and review the headers listed in the DEBUG section.  At a minimum, if you are using a reverse proxy the headers must match the below conditions.
 
 | Header      | Requirement |
 | :---        |    :----   |

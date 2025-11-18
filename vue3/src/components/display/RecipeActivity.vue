@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mt-1 d-print-none" v-if="useUserPreferenceStore().isAuthenticated" :loading="loading">
+    <v-card class="mt-1" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode" :loading="loading">
         <v-card-text>
             <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment" auto-grow></v-textarea>
             <v-row dense>

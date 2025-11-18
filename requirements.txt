@@ -1,18 +1,18 @@
-Django==5.2.7
+Django==5.2.8
 cryptography===45.0.5
 django-annoying==0.10.6
 django-cleanup==9.0.0
 django-crispy-forms==2.4
 crispy-bootstrap4==2025.6
 djangorestframework==3.16.1
-drf-spectacular==0.27.1
+drf-spectacular==0.28.0
 drf-spectacular-sidecar==2025.8.1
 drf-writable-nested==0.7.2
 django-oauth-toolkit==2.4.0
-django-debug-toolbar==4.3.0
+django-debug-toolbar==6.0.0
 bleach==6.2.0
 gunicorn==23.0.0
-lxml==5.3.1
+lxml==6.0.2
 Markdown==3.7
 Pillow==11.3.0
 psycopg2-binary==2.9.10
@@ -22,14 +22,14 @@ six==1.17.0
 webdavclient3==3.14.6
 whitenoise==6.8.2
 icalendar==6.3.1
-pyyaml==6.0.2
+pyyaml==6.0.3
 uritemplate==4.1.1
 beautifulsoup4==4.12.3
 microdata==0.8.0
 mock==5.2.0
 Jinja2==3.1.6
 django-allauth[mfa,socialaccount]==65.9.0
-recipe-scrapers==15.8.0
+recipe-scrapers==15.10.0
 django-scopes==2.0.0
 django-treebeard==4.7.1
 django-cors-headers==4.6.0
@@ -53,7 +53,7 @@ django-vite==3.1.0
 litellm==1.64.1
 
 # Development
-pytest==8.4.1
+pytest==8.4.2
 pytest-django==4.11.0
 pytest-cov===6.2.1
 pytest-factoryboy==2.8.1

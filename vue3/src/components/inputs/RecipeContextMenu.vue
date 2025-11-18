@@ -26,11 +26,9 @@
                         <v-progress-circular v-if="duplicateLoading" indeterminate size="small"></v-progress-circular>
                     </template>
                 </v-list-item>
-
-                <!-- TODO when calling print() some timing or whatever issue makes it so the useMediaQuery does not work and the sidebar is still shown -->
-                <!--                <v-list-item prepend-icon="fa-solid fa-print" @click="openPrintView()">-->
-                <!--                    {{ $t('Print') }}-->
-                <!--                </v-list-item>-->
+                <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true'} }" :active="false" target="_blank" prepend-icon="fa-solid fa-print">
+                    {{ $t('Print') }}
+                </v-list-item>
             </v-list>
         </v-menu>
     </v-btn>
