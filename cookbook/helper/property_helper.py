@@ -56,7 +56,7 @@ class FoodPropertyHelper:
                             if p.property_type == pt and p.property_amount is not None:
                                 has_property_value = True
                                 for c in conversions:
-                                    if c.unit == i.food.properties_food_unit:
+                                    if c.unit == i.food.properties_food_unit and i.food.properties_food_amount != 0:
                                         found_property = True
                                         computed_properties[pt.id]['total_value'] += (c.amount / i.food.properties_food_amount) * p.property_amount
                                         computed_properties[pt.id]['food_values'] = self.add_or_create(
