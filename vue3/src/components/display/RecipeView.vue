@@ -189,7 +189,7 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
+        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
     </template>
 </template>
 
@@ -219,8 +219,11 @@ const {doAiImport, fileApiLoading} = useFileApi()
 
 const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
+const props = defineProps<{
+    servings: {type: Number, required: false},
+}>()
 
-const servings = ref(1)
+const servings = ref(props.servings ?? recipe.value.servings ?? 1)
 const showFullRecipeName = ref(false)
 
 const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
@@ -235,11 +238,13 @@ const ingredientFactor = computed(() => {
 /**
  * change servings when recipe servings are changed
  */
-watch(() => recipe.value.servings, () => {
-    if (recipe.value.servings) {
-        servings.value = recipe.value.servings
-    }
-})
+if (props.servings === undefined) {
+    watch(() => recipe.value.servings, () => {
+        if (recipe.value.servings) {
+            servings.value = recipe.value.servings
+        }
+    })
+}
 
 onMounted(() => {
     //keep screen on while viewing a recipe

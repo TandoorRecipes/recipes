@@ -1,6 +1,6 @@
 <template>
     <v-container :class="{'ps-0 pe-0 pt-0': mobile}">
-        <recipe-view v-model="recipe"></recipe-view>
+        <recipe-view v-model="recipe" :servings="servings"></recipe-view>
 
         <div class="mt-2" v-if="isShared && Object.keys(recipe).length > 0">
             <import-tandoor-dialog></import-tandoor-dialog>
@@ -31,6 +31,13 @@ const title = useTitle()
 
 const isShared = computed(() => {
     return params.share && typeof params.share == "string"
+})
+
+const servings = computed(() => {
+    const value = params.servings
+    if (!value) return undefined
+    const parsed = parseInt(value as string, 10)
+    return parsed > 0 ? parsed : undefined
 })
 
 const recipe = ref({} as Recipe)
