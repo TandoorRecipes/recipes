@@ -307,7 +307,7 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
                 filter = Q(name__icontains=query)
                 if self.request.user.is_authenticated:
                     if any([self.model.__name__.lower() in x for x in
-                            self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                            self.request.user.searchpreference.unaccent.values_list('field', flat=True)]) and (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
                         filter |= Q(name__unaccent__icontains=query)
 
                 self.queryset = (
