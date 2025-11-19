@@ -144,7 +144,7 @@
             <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
         </v-card>
 
-        <property-view v-model="recipe" :servings="servings"></property-view>
+        <property-view v-model="recipe" :ingredientFactor="ingredientFactor"></property-view>
 
         <v-card class="mt-2">
             <v-card-text>
