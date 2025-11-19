@@ -283,8 +283,9 @@ function parseAndInsertIngredients() {
         }
     })
     Promise.allSettled(promises).then(r => {
+        step.value.ingredients = step.value.ingredients.filter(i => i.food != null || i.note != null || i.amount != 0)
+
         r.forEach(i => {
-            console.log(i)
             step.value.ingredients.push({
                 originalText: i.value.originalText,
                 amount: i.value.amount,

@@ -606,7 +606,7 @@ function importFromUrlList() {
                         setTimeout(importFromUrlList, 500)
                     })
                 }).catch(err => {
-
+                    setTimeout(importFromUrlList, 500)
                 }).finally(() => {
                     loading.value = false
                 })

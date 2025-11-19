@@ -75,7 +75,8 @@ class RecipeShoppingEditor():
 
     @staticmethod
     def get_shopping_list_recipe(id, user, space):
-        return ShoppingListRecipe.objects.filter(id=id).filter(entries__space=space).filter(
+        # TODO this sucks since it wont find SLR's that no longer have any entries
+        return ShoppingListRecipe.objects.filter(id=id, space=space).filter(
             Q(entries__created_by=user)
             | Q(entries__created_by__in=list(user.get_shopping_share()))
         ).prefetch_related('entries').first()
@@ -136,7 +137,8 @@ class RecipeShoppingEditor():
             self.servings = servings
 
         self._delete_ingredients(ingredients=ingredients)
-        if self.servings != self._shopping_list_recipe.servings:
+        # need to check if there is a SLR because its possible it cant be found if all entries are deleted
+        if self._shopping_list_recipe and self.servings != self._shopping_list_recipe.servings:
             self.edit_servings()
         self._add_ingredients(ingredients=ingredients)
         return True

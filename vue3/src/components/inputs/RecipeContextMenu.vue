@@ -47,8 +47,10 @@ import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useRouter} from "vue-router";
 import {useFileApi} from "@/composables/useFileApi.ts";
+import {useI18n} from "vue-i18n";
 
 const router = useRouter()
+const {t} = useI18n()
 const {updateRecipeImage} = useFileApi()
 
 const props = defineProps({
@@ -70,7 +72,27 @@ function duplicateRecipe() {
     let api = new ApiApi()
     duplicateLoading.value = true
     api.apiRecipeRetrieve({id: props.recipe.id!}).then(originalRecipe => {
-        api.apiRecipeCreate({recipe: originalRecipe}).then(newRecipe => {
+
+        let recipe = {...originalRecipe, ...{id: undefined, name: originalRecipe.name + `(${t('Copy')})`}}
+        recipe.steps = recipe.steps.map((step) => {
+            return {
+                ...step,
+                ...{
+                    id: undefined,
+                    ingredients: step.ingredients.map((ingredient) => {
+                        return {...ingredient, ...{id: undefined}}
+                    }),
+                },
+            }
+        })
+
+        if (recipe.properties != null) {
+            recipe.properties = recipe.properties.map((p) => {
+                return {...p, ...{id: undefined}}
+            })
+        }
+
+        api.apiRecipeCreate({recipe: recipe}).then(newRecipe => {
 
             if (originalRecipe.image) {
                 updateRecipeImage(newRecipe.id!, null, originalRecipe.image).then(r => {

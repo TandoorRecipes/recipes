@@ -307,7 +307,8 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
                 filter = Q(name__icontains=query)
                 if self.request.user.is_authenticated:
                     if any([self.model.__name__.lower() in x for x in
-                            self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                            self.request.user.searchpreference.unaccent.values_list('field', flat=True)]) and (
+                            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
                         filter |= Q(name__unaccent__icontains=query)
 
                 self.queryset = (
@@ -3056,11 +3057,20 @@ def meal_plans_to_ical(queryset, filename):
     for p in queryset:
         event = Event()
         event['uid'] = p.id
-        event.add('dtstart', p.from_date)
+
+        start_date_time = p.from_date
+        end_date_time = p.from_date
+
         if p.to_date:
-            event.add('dtend', p.to_date)
-        else:
-            event.add('dtend', p.from_date)
+            end_date_time = p.to_date
+
+        if p.meal_type.time:
+            start_date_time = datetime.datetime.combine(p.from_date, p.meal_type.time)
+            end_date_time = datetime.datetime.combine(p.to_date, p.meal_type.time) + datetime.timedelta(minutes=60)
+
+        event.add('dtstart', start_date_time)
+        event.add('dtend', end_date_time)
+
         event['summary'] = f'{p.meal_type.name}: {p.get_label()}'
         event['description'] = p.note
         cal.add_component(event)
