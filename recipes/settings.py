@@ -676,3 +676,15 @@ EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE',
 
 mimetypes.add_type("text/javascript", ".js", True)
 mimetypes.add_type("text/javascript", ".mjs", True)
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'localhost',
+        'PORT': 5432,
+        'USER': 'postgres',
+        'PASSWORD': 'mrDJJpbMC9znd4xwVz2a',
+        'NAME': 'tandoor_test_db',
+        'CONN_MAX_AGE': 60,
+    }
+}
