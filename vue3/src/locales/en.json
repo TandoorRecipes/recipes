@@ -383,6 +383,7 @@
   "NutritionsPerServing": "Nutritions per Serving",
   "NutritionsPerServingHelp": "Some applications do not specify if nutritions are per recipe or per serving. By default Tandoor treats them as per recipe. Check this box to treat them as per serving. ",
   "OfflineAlert": "You are offline, shopping list may not syncronize.",
+  "OfflineMode": "You are offline",
   "Ok": "Ok",
   "OnHand": "Currently On Hand",
   "OnHand_help": "Food is in inventory and will not be automatically added to a shopping list.  Onhand status is shared with shopping users.",
