@@ -33,11 +33,9 @@
 
         <v-row>
             <v-col class="text-center">
-                <v-pagination :model-value="page + 1"
-                              @update:model-value="value => page = Math.max(value - 1, 0)"
-                              :length="totalItems"
-                              @next="page = Math.min(page + (mdAndUp ? 1 : 0), totalItems - 1)"
-                              @prev="page = Math.max(page - (mdAndUp ? 1 : 0), 0)"
+                <v-pagination :model-value="currentPageNumber"
+                              @update:model-value="value => page = (value - 1) * recipesPerPage"
+                              :length="totalPages"
                 ></v-pagination>
             </v-col>
         </v-row>
@@ -99,9 +97,11 @@ const page = ref(0)
 
 const manualItems = ref(0)
 const filterItems = ref(0)
-const totalItems = computed(() => {
-    return manualItems.value + filterItems.value
-})
+
+const recipesPerPage = computed(() => mdAndUp.value ? 2 : 1)
+const totalRecipes = computed(() => manualItems.value + filterItems.value)
+const totalPages = computed(() => Math.ceil(totalRecipes.value / recipesPerPage.value))
+const currentPageNumber = computed(() => Math.floor(page.value / recipesPerPage.value) + 1)
 
 const book = ref({} as RecipeBook)
 const entries = ref([] as RecipeBookEntry[])
@@ -168,7 +168,7 @@ function recLoadFilter(filterId: number, page: number) {
 
     api.apiRecipeList({filter: filterId, page: page, pageSize: 50}).then(r => {
         recipes.value = recipes.value.concat(r.results)
-        manualItems.value = r.count
+        filterItems.value = r.count
         if (r.next) {
             recLoadFilter(filterId, page + 1)
         } else {
