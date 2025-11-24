@@ -1,7 +1,7 @@
 <template>
     <template v-if="!props.loading">
 
-        <router-link :to="{name: 'RecipeViewPage', params: {id: props.recipe.id}}" :target="linkTarget">
+        <router-link :to="dest" :target="linkTarget">
             <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
 
             </recipe-image>
@@ -36,7 +36,7 @@
         </div>
 
 
-        <v-card :to="{name: 'RecipeViewPage', params: {id: props.recipe.id}}" :style="{'height': props.height}" v-if="false">
+        <v-card :to="dest" :style="{'height': props.height}" v-if="false">
             <v-tooltip
                 class="align-center justify-center"
                 location="top center" origin="overlap"
@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import {PropType} from 'vue'
+import {computed, PropType} from 'vue'
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import {Recipe, RecipeOverview} from "@/openapi";
 
@@ -113,20 +113,29 @@ const props = defineProps({
     show_description: {type: Boolean, required: false},
     height: {type: String, required: false, default: '15vh'},
     linkTarget: {type: String, required: false, default: ''},
-    showMenu: {type: Boolean, default: true, required: false}
+    showMenu: {type: Boolean, default: true, required: false},
+    servings: {type: Number, required: false},
 })
 
 const router = useRouter()
+
+const dest = computed(() => {
+    const route: any = { name: 'RecipeViewPage', params: { id: props.recipe.id } };
+    if (props.servings !== undefined) {
+        route.query = { servings: String(props.servings) };
+    }
+    return route;
+})
 
 /**
  * open the recipe either in the same tab or in a new tab depending on the link target prop
  */
 function openRecipe() {
     if (props.linkTarget != '') {
-        const routeData = router.resolve({name: 'RecipeViewPage', params: {id: props.recipe.id}});
+        const routeData = router.resolve(dest.value);
         window.open(routeData.href, props.linkTarget);
     } else {
-        router.push({name: 'RecipeViewPage', params: {id: props.recipe.id}})
+        router.push(dest.value);
     }
 }
 
