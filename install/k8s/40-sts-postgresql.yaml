@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: recipes
+    tier: database
+  name: recipes-postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recipes
+  serviceName: recipes-postgresql
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: data
+      labels:
+        app: recipes
+        tier: database
+      name: recipes-postgresql
+    spec:
+      containers:
+      - name: recipes-db
+        env:
+        - name: BITNAMI_DEBUG
+          value: "false"
+        - name: POSTGRESQL_PORT_NUMBER
+          value: "5432"
+        - name: POSTGRESQL_VOLUME_DIR
+          value: /bitnami/postgresql
+        - name: PGDATA
+          value: /bitnami/postgresql/data
+        - name: POSTGRES_USER
+          value: recipes
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: recipes
+              key: postgresql-password
+        - name: POSTGRESQL_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: recipes
+              key: postgresql-postgres-password
+        - name: POSTGRES_DB
+          value: recipes
+        image: docker.io/bitnami/postgresql:11.5.0-debian-9-r60
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready -U "postgres" -d "wiki" -h 127.0.0.1 -p 5432
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        ports:
+        - containerPort: 5432
+          name: postgresql
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - -e
+            - |
+              pg_isready -U "postgres" -d "wiki" -h 127.0.0.1 -p 5432
+              [ -f /opt/bitnami/postgresql/tmp/.initialized ]
+          failureThreshold: 6
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        securityContext:
+          runAsUser: 1001
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /bitnami/postgresql
+          name: data
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - |
+          mkdir -p /bitnami/postgresql/data
+          chmod 700 /bitnami/postgresql/data
+          find /bitnami/postgresql -mindepth 0 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | \
+            xargs chown -R 1001:1001
+        image: docker.io/bitnami/minideb:stretch
+        imagePullPolicy: Always
+        name: init-chmod-data
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /bitnami/postgresql
+          name: data
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1001
+      serviceAccount: recipes
+      serviceAccountName: recipes
+      terminationGracePeriodSeconds: 30
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+      volumeMode: Filesystem
