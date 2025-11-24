@@ -20,6 +20,7 @@ def test_cooklang_integration(u1_s1):
     space, request = request_generator(u1_s1)
     with scope(space=space):
         cooklang_integration = Cooklang(request, "export")
-        recipe = cooklang_integration.get_recipe_from_file("")
+        with open("cookbook/tests/other/test_data/Cooklang/Butter Swirl Shortbread Cookies.cook") as file:
+            recipe = cooklang_integration.get_recipe_from_file(file)
 
         assert recipe == 5
