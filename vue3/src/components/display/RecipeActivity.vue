@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, CookLog, Recipe} from "@/openapi";
 import {DateTime} from "luxon";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
@@ -82,6 +82,10 @@ const props = defineProps({
         type: Object as PropType<Recipe>,
         required: true
     },
+    servings: {
+        type: Number,
+        required: true
+    }
 })
 
 const newCookLog = ref({} as CookLog);
@@ -121,7 +125,7 @@ function recLoadCookLog(recipeId: number, page: number = 1) {
  */
 function resetForm() {
     newCookLog.value = {} as CookLog
-    newCookLog.value.servings = props.recipe.servings
+    newCookLog.value.servings = props.servings
     newCookLog.value.createdAt = new Date()
     newCookLog.value.recipe = props.recipe.id!
 }
@@ -139,6 +143,13 @@ function saveCookLog() {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })
 }
+
+/**
+ * watch for changes in servings prop and update the servings input field
+ */
+watch(() => props.servings, (newVal) => {
+    newCookLog.value.servings = newVal
+})
 
 </script>
 

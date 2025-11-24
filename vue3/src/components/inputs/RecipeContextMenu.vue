@@ -26,7 +26,7 @@
                         <v-progress-circular v-if="duplicateLoading" indeterminate size="small"></v-progress-circular>
                     </template>
                 </v-list-item>
-                <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true'} }" :active="false" target="_blank" prepend-icon="fa-solid fa-print">
+                <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true', servings: props.servings} }" :active="false" target="_blank" prepend-icon="fa-solid fa-print">
                     {{ $t('Print') }}
                 </v-list-item>
             </v-list>
@@ -55,15 +55,12 @@ const {updateRecipeImage} = useFileApi()
 
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeOverview>, required: true},
+    servings: {type: Number, default: undefined},
     size: {type: String, default: 'medium'},
 })
 
 const mealPlanDialog = ref(false)
 const duplicateLoading = ref(false)
-
-function openPrintView() {
-    print()
-}
 
 /**
  * create a duplicate of the recipe by pulling its current data and creating a new recipe with the same data
