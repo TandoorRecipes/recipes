@@ -96,14 +96,20 @@ class Mealie1(Integration):
                 self.import_log.msg += f"Ignoring {r['name']} because a recipe with this name already exists.\n"
                 self.import_log.save()
             else:
+                servings = 1
+                try:
+                    servings = r['recipe_servings'] if r['recipe_servings'] and r['recipe_servings'] != 0 else 1
+                except KeyError:
+                    pass
+
                 recipe = Recipe.objects.create(
                     waiting_time=parse_time(r['perform_time']),
                     working_time=parse_time(r['prep_time']),
                     description=r['description'][:512],
                     name=r['name'],
                     source_url=r['org_url'],
-                    servings=r['recipe_servings'] if r['recipe_servings'] and r['recipe_servings'] != 0 else 1,
-                    servings_text=r['recipe_yield'].strip() if r['recipe_yield'] else "",
+                    servings=servings,
+                    servings_text=r['recipe_yield'].strip()[:32] if r['recipe_yield'] else "",
                     internal=True,
                     created_at=r['created_at'],
                     space=self.request.space,
@@ -131,7 +137,7 @@ class Mealie1(Integration):
         step_id_dict = {}
         for s in mealie_database['recipe_instructions']:
             if s['recipe_id'] in recipes_dict:
-                step = Step.objects.create(instruction=(s['text'] if s['text'] else "") + (f" \n {s['summary']}" if s['summary'] else ""),
+                step = Step.objects.create(instruction=(s['text'] if s['text'] else "") + (f" \n {s['summary']}" if 'summary' in s and s['summary'] else ""),
                                            order=s['position'],
                                            name=s['title'],
                                            space=self.request.space)
@@ -153,7 +159,7 @@ class Mealie1(Integration):
         for n in mealie_database['notes']:
             if n['recipe_id'] in recipes_dict:
                 step = Step.objects.create(instruction=n['text'],
-                                           name=n['title'],
+                                           name=n['title'][:128] if n['title'] else "",
                                            order=100,
                                            space=self.request.space)
                 steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[n['recipe_id']], step_id=step.pk))
@@ -243,7 +249,7 @@ class Mealie1(Integration):
             for r in mealie_database['recipe_nutrition']:
                 if r['recipe_id'] in recipes_dict:
                     for key in property_types_dict:
-                        if r[key]:
+                        if key in r and r[key]:
                             properties_relation.append(
                                 Property(property_type_id=property_types_dict[key].pk,
                                          property_amount=Decimal(str(r[key])) / (

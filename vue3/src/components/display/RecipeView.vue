@@ -10,7 +10,7 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none">
+        <template class="d-block d-lg-none d-print-none">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -61,7 +61,7 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block">
+        <template class="d-none d-lg-block d-print-block">
             <v-row dense>
                 <v-col cols="8">
                     <recipe-image
@@ -118,13 +118,13 @@
             </v-row>
         </template>
 
-        <template v-if="recipe.filePath">
+        <template v-if="recipe.filePath && !useUserPreferenceStore().isPrintMode">
             <external-recipe-viewer class="mt-2" :recipe="recipe"></external-recipe-viewer>
 
-            <v-card :title="$t('AI')" prepend-icon="$ai"  :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading || !useUserPreferenceStore().activeSpace.aiEnabled"
+            <v-card :title="$t('AI')" prepend-icon="$ai" :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading || !useUserPreferenceStore().activeSpace.aiEnabled"
                     v-if="!recipe.internal">
                 <v-card-text>
-                    {{$t('ConvertUsingAI')}}
+                    {{ $t('ConvertUsingAI') }}
 
                     <model-select model="AiProvider" v-model="selectedAiProvider">
                         <template #append>
@@ -135,7 +135,8 @@
             </v-card>
         </template>
 
-        <v-card class="mt-1" v-if="(recipe.steps.length > 1 || (recipe.steps.length == 1 && !recipe.steps[0].showIngredientsTable)) && recipe.showIngredientOverview">
+        <v-card class="mt-1"
+                v-if="(recipe.steps.length > 1 || (recipe.steps.length == 1 && !recipe.steps[0].showIngredientsTable)) && recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
             <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
         </v-card>
 
@@ -143,12 +144,12 @@
             <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
         </v-card>
 
-        <property-view v-model="recipe" :servings="servings"></property-view>
+        <property-view v-model="recipe" :ingredientFactor="ingredientFactor"></property-view>
 
         <v-card class="mt-2">
             <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="3">
+                <v-row dense>
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
                             :title="$t('CreatedBy')"
@@ -157,7 +158,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}: undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
                             :title="$t('Created')"
@@ -166,7 +167,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ? {name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}} : undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
                             :title="$t('Updated')"
@@ -175,7 +176,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}: undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" md="3" v-if="recipe.sourceUrl">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="recipe.sourceUrl">
                         <v-card
                             variant="outlined"
                             :title="$t('Imported_From')"
@@ -262,7 +263,7 @@ onBeforeUnmount(() => {
 function aiConvertRecipe() {
     let api = new ApiApi()
 
-    doAiImport(selectedAiProvider.value.id!,null, '', recipe.value.id!).then(r => {
+    doAiImport(selectedAiProvider.value.id!, null, '', recipe.value.id!).then(r => {
         if (r.recipe) {
             recipe.value.internal = true
             recipe.value.steps = r.recipe.steps
