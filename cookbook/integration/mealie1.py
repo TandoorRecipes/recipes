@@ -109,7 +109,7 @@ class Mealie1(Integration):
                     name=r['name'],
                     source_url=r['org_url'],
                     servings=servings,
-                    servings_text=r['recipe_yield'].strip() if r['recipe_yield'] else "",
+                    servings_text=r['recipe_yield'].strip()[:32] if r['recipe_yield'] else "",
                     internal=True,
                     created_at=r['created_at'],
                     space=self.request.space,
@@ -159,7 +159,7 @@ class Mealie1(Integration):
         for n in mealie_database['notes']:
             if n['recipe_id'] in recipes_dict:
                 step = Step.objects.create(instruction=n['text'],
-                                           name=n['title'],
+                                           name=n['title'][:128] if n['title'] else "",
                                            order=100,
                                            space=self.request.space)
                 steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[n['recipe_id']], step_id=step.pk))
