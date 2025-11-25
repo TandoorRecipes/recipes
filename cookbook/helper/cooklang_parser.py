@@ -114,6 +114,7 @@ class Recipe:
 
         ingredients = _remove_duplicates(ingredients)
 
+        # todo allow parser to find "---" formatted metadata.
         def _extract_metadata(raw_line: str) -> Optional[Tuple[str, str]]:
             res = re.search(r"^>> ?([^:]+): ?(.*)$", raw_line)
             if not res:
