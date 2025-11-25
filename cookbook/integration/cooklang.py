@@ -1,4 +1,5 @@
 import os
+import re
 from io import BytesIO, StringIO
 from typing import Mapping
 from zipfile import ZipFile
@@ -9,11 +10,23 @@ from cookbook.models import Recipe
 
 
 class Cooklang(Integration):
-    # Helper Functions
+    # ----------------------------------------------------Helper Functions----------------------------------------------------
     def apply_metadata_cooklang_to_tandoor(self, cooklang_metadata: Mapping, tandoor_recipe: Recipe) -> Recipe:
 
         if "description" in cooklang_metadata.keys():
             tandoor_recipe.description = cooklang_metadata["description"]
+
+        # Seperates serving numbers from other servings information
+        # to-do incorporate fuzzy matching
+        serving_metadata = ""
+        if "serves" in cooklang_metadata.keys():
+            serving_metadata = cooklang_metadata["serves"]
+        elif "servings" in cooklang_metadata.keys():
+            serving_metadata = cooklang_metadata["servings"]
+        tandoor_recipe.servings = re.match(r"^\d+", serving_metadata).group(0)
+        tandoor_recipe.servings_text = serving_metadata.replace(tandoor_recipe.servings, "")
+
+        print(f"Serving Information is {tandoor_recipe.servings}, {tandoor_recipe.servings_text}")
 
         # will set source url to any metadata key, with the term "source", "url" or "link" with a prefference to "source"
         def link_preference(key):
@@ -28,7 +41,7 @@ class Cooklang(Integration):
 
         return tandoor_recipe
 
-    # Integration Method Override Functions
+    # ----------------------------------------------------Integration Method Override Functions----------------------------------------------------
     def import_file_name_filter(self, file) -> bool:
         # check file extension, return True if extension is correct
         pass
