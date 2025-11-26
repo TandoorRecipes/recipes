@@ -155,7 +155,7 @@
                         <p class="mt-3">Setting a base unit allows you to name your Unit however you want (e.g. grams, g, G, gram) while allowing Tandoor
                             to automatically convert between the units in the same system (weight/volume, e.g. from g to kg or from cup to pint).
                         </p>
-                        <p class="mt-3">Additionally you can use custom unit conversion to convert between volume and weight trough the specific density
+                        <p class="mt-3">Additionally you can use custom unit conversion to convert between volume and weight through the specific density
                             of a food (e.g. 1 cup of flour = 120 g). These conversions are used to calculate the Properties for a Recipe
                             and might allow cosmetic display changes later.
                         </p>
@@ -189,7 +189,7 @@
                     <v-window-item value="keyword">
                         <p class="mt-3">Keywords are a very flexible Tool to help you organize your recipe collection.
                             Keywords can quickly be created when editing a Recipe by just typing into the Keywords field or they can
-                            be created trough the Keyword Editor.
+                            be created through the Keyword Editor.
                         </p>
 
                         <p class="mt-3">Typical keywords include meal types (breakfast, lunch, dinner, ...), couise (american, italian, ...) or diet (vegan, vegetarian, ..).
@@ -241,7 +241,7 @@
                         </v-btn>
                         <h3>Editor</h3>
                         <p class="mt-3">Adding Properties manually to every food can be cumbersome. To make it easier you can import the Community curated
-                            Open Data Database. If that is not enough you can open the Property Editor trough the context menu on your recipe.
+                            Open Data Database. If that is not enough you can open the Property Editor through the context menu on your recipe.
                         </p>
 
                         <p class="mt-3">Here you can view all Foods in a Recipe and their respective properties. You can also quickly assign FDC ID's to both
@@ -263,7 +263,7 @@
                         </p>
 
                         <p class="mt-3">The global quick search can be opened from any page in Tandoor by pressing the search icon in the top right corner.
-                            Here you can quickly search trough your recipes and open them.
+                            Here you can quickly search through your recipes and open them.
                         </p>
                         <p class="mt-3">
                             If you need a bit more fine tuning for your search you can open the advances search and search for all kinds of different things like keywords,
@@ -289,7 +289,7 @@
                     </v-window-item>
                     <v-window-item value="books">
                         <p class="mt-3">Books are a a way to structure and explore your recipe collection. They are similar to keywords but show you a bit more details when
-                            looking trough them.
+                            looking through them.
                         </p>
 
                         <p class="mt-3">After creating a new Book on the books page you can either add recipes manually or you can add a Saved Search Filter to automatically
@@ -307,7 +307,7 @@
                         </p>
 
                         <p class="mt-3">
-                            You can assign Supermarket Categories to your Foods, either trough the Food Editor or directly by clicking on a Shopping List Entry, to automatically
+                            You can assign Supermarket Categories to your Foods, either through the Food Editor or directly by clicking on a Shopping List Entry, to automatically
                             sort the list
                             according to the Category Order defined in the Supermarket.
                         </p>
@@ -328,7 +328,7 @@
                             The Shopping list automatically syncronizes when multiple people have it open so you can shop with multiple devices.
                         </p>
                         <p class="mt-3">
-                            Trough the menu you can also configure which information you want to be displayed or how the list should be sorted.
+                            Through the menu you can also configure which information you want to be displayed or how the list should be sorted.
                         </p>
                         <v-btn color="primary" variant="tonal" prepend-icon="$shopping" class="me-2" :to="{name: 'ShoppingListPage', }">
                             {{ $t('Shopping') }}
@@ -346,7 +346,7 @@
                         </p>
 
                         <p class="mt-3">
-                            When selecting a Recipe in a Meal Plan you can automatically add its ingredients to the shopping list. You can also manually add more entries trough the
+                            When selecting a Recipe in a Meal Plan you can automatically add its ingredients to the shopping list. You can also manually add more entries through the
                             shopping tab in the Meal Plan editor. When deleting a Meal Plan all Shopping List Entries associated with that Meal Plan are deleted as well. When
                             changing the
                             number of servings in a Meal Plan the Servings of the connected Recipe in the Shopping list are automatically changed as well.
