@@ -854,15 +854,15 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             tree_filter = Q(space=space)
 
         # remove all inherited fields from food
-        trough = Food.inherit_fields.through
-        trough.objects.all().delete()
+        through = Food.inherit_fields.through
+        through.objects.all().delete()
 
         # food is going to inherit attributes
         if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
             for i in inherit:
-                trough.objects.bulk_create([
-                    trough(food_id=x, foodinheritfield_id=i['id'])
+                through.objects.bulk_create([
+                    through(food_id=x, foodinheritfield_id=i['id'])
                     for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
                 ])
 
