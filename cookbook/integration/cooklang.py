@@ -4,14 +4,19 @@ from io import BytesIO, StringIO
 from typing import Mapping
 from zipfile import ZipFile
 
+from recipe_scrapers._utils import get_minutes
+
 from cookbook.helper.cooklang_parser import Recipe as CooklangRecipe
+from cookbook.helper.HelperFunctions import validate_import_url
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
 from cookbook.models import Recipe
 
 
 class Cooklang(Integration):
     # ----------------------------------------------------Helper Functions----------------------------------------------------
-    # todo cover Keywords (tags), working time, waiting time, nutrition
+    # todo cover Keywords (tags), working time, waiting time, nutrition, look for name if there is one.
+    # todo maybe implement it as a Integration class for Fuzzy matching metadata
     def apply_metadata_cooklang_to_tandoor(self, cooklang_metadata: Mapping, tandoor_recipe: Recipe) -> Recipe:
         if "description" in cooklang_metadata.keys():
             tandoor_recipe.description = cooklang_metadata["description"]
@@ -23,9 +28,9 @@ class Cooklang(Integration):
             serving_metadata = cooklang_metadata["serves"]
         elif "servings" in cooklang_metadata.keys():
             serving_metadata = cooklang_metadata["servings"]
-        if serving_numerals := re.match(r"^\d+", serving_metadata):
-            tandoor_recipe.servings = serving_numerals.group(0)
-        tandoor_recipe.servings_text = serving_metadata.replace(tandoor_recipe.servings, "")
+
+        tandoor_recipe.servings = parse_servings(serving_metadata)
+        tandoor_recipe.servings_text = parse_servings_text(serving_metadata)
 
         # will set source url to any metadata key, with the term "source", "url" or "link" with a prefference to "source"
         def link_preference(key):
@@ -53,7 +58,10 @@ class Cooklang(Integration):
         recipe = Recipe.objects.create(
             name=os.path.basename(file.name).split('.')[0], description="", created_by=self.request.user, internal=True, servings=0, space=self.request.space
         )
+
         self.apply_metadata_cooklang_to_tandoor(cooklang_object.metadata, recipe)
+
+        # todo implement Steps and Ingredients
 
         return recipe
 

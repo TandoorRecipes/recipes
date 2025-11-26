@@ -1,4 +1,5 @@
-# Cooklang parser from https://github.com/luizribeiro/py-cooklang cooklang.py as of 11/18/25 - MIT License
+# Cooklang parser forked from on https://github.com/luizribeiro/py-cooklang cooklang.py as of 11/18/25 - MIT License
+# Modifications by doylelew
 
 import itertools
 import re
@@ -74,72 +75,68 @@ class Ingredient:
 
 
 @dataclass
+class StepIngredient:
+    name: str
+    quantity: Optional[Quantity] = None
+
+    def parse(cls, raw: str) -> "StepIngredient":
+        raise NotImplementedError('Method not implemented in Cooklang Parser')
+
+
+@dataclass
+class Step:
+    blocks: list[Union[str, StepIngredient]]
+
+    @classmethod
+    def parse(cls, raw: str) -> "Step":
+        blocks = []
+        raw_blocks = re.split(r'([@#\)}])', raw)
+
+        for block in raw_blocks:
+            i = 0
+            while block:
+                block.pop()
+                print(i)
+                i += 1
+
+        print(raw_blocks)
+        return Step(blocks=blocks)
+
+
+@dataclass
 class Recipe:
     metadata: Mapping[str, str]
-    ingredients: Sequence[Ingredient]
-    steps: Sequence[str]
+    # ingredients: Sequence[Ingredient]
+    steps: Sequence[Step]
 
     @classmethod
     def parse(cls, raw: str) -> "Recipe":
-        raw_without_comments = re.sub(r"(--[^\n]+|\[-.*-\])", "", raw)
-        raw_paragraphs = list(filter(None, map(str.strip, raw_without_comments.split("\n"))))
 
-        raw_steps = list(filter(
-            lambda x: not x.startswith(">>"),
-            raw_paragraphs,
-        ))
-        ingredients = list(
-            itertools.chain(*map(
-                lambda raw_step: list(map(
-                    lambda s: Ingredient.parse(s),
-                    re.findall(
-                        r"@(?:(?:[\w ]+?){[^}]*}|[\w]+)",
-                        raw_step,
-                    ),
-                )),
-                raw_steps,
-            ))
-        )
+        # Separate the Metadata from the rest of the recipe
+        raw_metadata = None
+        raw_no_metadata = raw
+        if len(raw_meta_split := re.split(r'---([\s\S]*?)---\n', raw)) > 1:
+            raw_metadata = raw_meta_split[-2]
+            raw_no_metadata = raw_meta_split[-1]
 
-        def _remove_duplicates(ingredients: Sequence[Ingredient], ) -> Sequence[Ingredient]:
-            name_to_ingredient = {}
-            added_ingredients = set()
-            for i in ingredients:
-                if i.name not in name_to_ingredient.keys():
-                    name_to_ingredient[i.name] = i
-                else:
-                    name_to_ingredient[i.name] += i
-                added_ingredients.add(i.name)
-            return list(name_to_ingredient.values())
+        # todo add other metadata syntax identifying method
 
-        ingredients = _remove_duplicates(ingredients)
+        # Parse the metadata
+        metadata = {}
+        meta_lines = raw_metadata.split('\n')
+        current_key = None
+        for line in meta_lines:
+            if len(key_value_pair := line.split(":")) == 2:
+                current_key, value = key_value_pair
+                metadata[current_key] = value
+            elif re.match(r'^\s*-\s', line) and current_key is not None:
+                metadata[current_key] = metadata[current_key] + f"{re.split(r'^\s*-\s', line)[-1]}, "
 
-        # todo allow parser to find "---" formatted metadata.
-        def _extract_metadata(raw_line: str) -> Optional[Tuple[str, str]]:
-            res = re.search(r"^>> ?([^:]+): ?(.*)$", raw_line)
-            if not res:
-                return None
-            return (res.group(1).strip(), res.group(2).strip())
-
-        raw_metadata = list(filter(
-            lambda x: x.startswith(">>"),
-            raw_paragraphs,
-        ))
-        metadata = dict(filter(
-            None,
-            (_extract_metadata(raw_line) for raw_line in raw_metadata),
-        ))
+        # Parse the Steps recursively Step -> Ingredient -> Quantity
+        raw_steps = re.split(r'\n\n', raw_no_metadata)
+        steps = [Step.parse(step) for step in raw_steps]
 
         return Recipe(
             metadata=metadata,
-            ingredients=ingredients,
-            steps=[re.sub(
-                r"(?:@|#)(\w[\w ]*)({[^}]*})?",
-                r"\1",
-                re.sub(
-                    r"~\{([^}]*)}",
-                    r"\1",
-                    raw_step,
-                ),
-            ) for raw_step in raw_steps],
+            steps=steps,
         )
