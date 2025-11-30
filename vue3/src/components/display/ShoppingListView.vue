@@ -79,15 +79,37 @@
     <v-window v-model="currentTab">
         <v-window-item value="shopping">
             <v-container>
+<!--                <v-row class="pa-0" dense>-->
+<!--                    <v-col class="pa-0">-->
+<!--                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">-->
+<!--                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{ s.name }}</v-chip>-->
+<!--                        </v-chip-group>-->
+<!--                    </v-col>-->
+<!--                </v-row>-->
+
                 <v-row class="pa-0" dense>
-                    <v-col class="pa-0">
-                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">
-                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{ s.name }}</v-chip>
-                        </v-chip-group>
+                    <v-col class="pa-0" cols="6">
+
+                        <v-chip label density="compact" variant="outlined" :prepend-icon="TSupermarket.icon" append-icon="fa-solid fa-caret-down">
+                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
+                                {{useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name}}
+                            </template>
+                            <template v-else>{{ $t('Supermarket') }}</template>
+
+                            <v-menu activator="parent">
+                                <v-list density="compact">
+                                    <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">
+                                        {{ s.name }}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-chip>
+
+
                     </v-col>
                 </v-row>
 
-                <v-row>
+                <v-row class="mt-0">
                     <v-col>
                         <v-alert v-if="useShoppingStore().hasFailedItems()" color="warning" class="mb-2">
                             <template #prepend>
@@ -265,6 +287,7 @@ import {onBeforeRouteLeave} from "vue-router";
 import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
+import {TSupermarket} from "@/types/Models.ts";
 
 const {t} = useI18n()
 

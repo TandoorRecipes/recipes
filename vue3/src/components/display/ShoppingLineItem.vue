@@ -62,6 +62,7 @@ import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
 import {isDelayed, isEntryVisible, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
 import {pluralString} from "@/utils/model_utils.ts";
+import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
 
 const emit = defineEmits(['clicked'])
 

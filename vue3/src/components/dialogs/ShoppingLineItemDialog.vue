@@ -80,7 +80,7 @@
                                 {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil!).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
                             <v-list-item-subtitle v-if="e.shoppingLists.length > 0" class="text-info font-weight-bold">
-                                <v-chip v-for="sl in e.shoppingLists" label size="x-small" variant="outlined" :color="sl.color" :key="sl.id">{{sl.name}}</v-chip>
+                                <shopping-lists-bar :shopping-lists="e.shoppingLists"></shopping-lists-bar>
                             </v-list-item-subtitle>
 
                             <v-btn-group divided border>
@@ -139,6 +139,7 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
 
 const {mobile} = useDisplay()
 
