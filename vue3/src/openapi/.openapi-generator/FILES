@@ -94,6 +94,7 @@ models/PaginatedRecipeBookList.ts
 models/PaginatedRecipeImportList.ts
 models/PaginatedRecipeOverviewList.ts
 models/PaginatedShoppingListEntryList.ts
+models/PaginatedShoppingListList.ts
 models/PaginatedShoppingListRecipeList.ts
 models/PaginatedSpaceList.ts
 models/PaginatedStepList.ts
@@ -140,6 +141,7 @@ models/PatchedRecipeBook.ts
 models/PatchedRecipeBookEntry.ts
 models/PatchedRecipeImport.ts
 models/PatchedSearchPreference.ts
+models/PatchedShoppingList.ts
 models/PatchedShoppingListEntry.ts
 models/PatchedShoppingListRecipe.ts
 models/PatchedSpace.ts
@@ -174,6 +176,7 @@ models/SearchFields.ts
 models/SearchPreference.ts
 models/ServerSettings.ts
 models/ShareLink.ts
+models/ShoppingList.ts
 models/ShoppingListEntry.ts
 models/ShoppingListEntryBulk.ts
 models/ShoppingListEntryBulkCreate.ts
