@@ -19,6 +19,12 @@ import {
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { ShoppingList } from './ShoppingList';
+import {
+    ShoppingListFromJSON,
+    ShoppingListFromJSONTyped,
+    ShoppingListToJSON,
+} from './ShoppingList';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
@@ -56,6 +62,12 @@ export interface ShoppingListEntry {
      * @memberof ShoppingListEntry
      */
     listRecipe?: number;
+    /**
+     * 
+     * @type {Array<ShoppingList>}
+     * @memberof ShoppingListEntry
+     */
+    shoppingLists?: Array<ShoppingList>;
     /**
      * 
      * @type {Food}
@@ -161,6 +173,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         
         'id': json['id'] == null ? undefined : json['id'],
         'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
+        'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
         'food': FoodFromJSON(json['food']),
         'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'],
@@ -185,6 +198,7 @@ export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRec
         
         'id': value['id'],
         'list_recipe': value['listRecipe'],
+        'shopping_lists': value['shoppingLists'] == null ? undefined : ((value['shoppingLists'] as Array<any>).map(ShoppingListToJSON)),
         'food': FoodToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],

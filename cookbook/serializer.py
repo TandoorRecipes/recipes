@@ -1414,6 +1414,7 @@ class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
+    shopping_lists = ShoppingListSerializer(many=True, required=False)
     list_recipe_data = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
     created_by = UserSerializer(read_only=True)
@@ -1482,7 +1483,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     class Meta:
         model = ShoppingListEntry
         fields = (
-            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked', 'ingredient',
+            'id', 'list_recipe', 'shopping_lists', 'food', 'unit', 'amount', 'order', 'checked', 'ingredient',
             'list_recipe_data', 'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until', 'mealplan_id'
         )
         read_only_fields = ('id', 'created_by', 'created_at')

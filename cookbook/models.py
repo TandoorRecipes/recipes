@@ -666,6 +666,7 @@ class Supermarket(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
+    shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -780,6 +781,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     url = models.CharField(max_length=1024, blank=True, null=True, default='')
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
+    shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
     ignore_shopping = models.BooleanField(default=False)  # inherited field
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
@@ -1317,6 +1319,7 @@ class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, Pe
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
+    shopping_lists = models.ManyToManyField(ShoppingList, blank=True)
     list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True, related_name='entries')
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='shopping_entries')
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)

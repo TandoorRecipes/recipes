@@ -8,6 +8,9 @@
                 <v-label>{{ $t('Choose_Category') }}</v-label>
                 <model-select model="SupermarketCategory" @update:modelValue="categoryUpdate" allow-create></model-select>
 
+                <v-label>{{ $t('ShoppingList') }}</v-label>
+                <model-select model="ShoppingList" @update:modelValue="shoppingListUpdate" mode="tags" allow-create></model-select>
+
                 <v-row>
                     <v-col class="pr-0">
                         <v-btn height="80px" color="info" density="compact" size="small" block stacked
@@ -76,6 +79,9 @@
                             <v-list-item-subtitle v-if="isDelayed(e)" class="text-info font-weight-bold">
                                 {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil!).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
+                            <v-list-item-subtitle v-if="e.shoppingLists.length > 0" class="text-info font-weight-bold">
+                                <v-chip v-for="sl in e.shoppingLists" label size="x-small" variant="outlined" :color="sl.color" :key="sl.id">{{sl.name}}</v-chip>
+                            </v-list-item-subtitle>
 
                             <v-btn-group divided border>
                                 <v-btn icon="" @click="e.amount = e.amount / 2; updateEntryAmount(e)" v-if="!e.ingredient">
@@ -122,8 +128,8 @@
 
 <script setup lang="ts">
 
-import {computed} from "vue";
-import {ApiApi, PatchedShoppingListEntry, ShoppingListEntry, SupermarketCategory} from "@/openapi";
+import {computed, ref} from "vue";
+import {ApiApi, PatchedShoppingListEntry, ShoppingList, ShoppingListEntry, SupermarketCategory} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {IShoppingListFood} from "@/types/Shopping";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
@@ -138,6 +144,8 @@ const {mobile} = useDisplay()
 
 const showDialog = defineModel<Boolean>()
 const shoppingListFood = defineModel<IShoppingListFood>('shoppingListFood', {required: true})
+
+const shoppingListUpdateLoading = ref(false)
 
 /**
  * returns a flat list of entries for the given shopping list food
@@ -169,6 +177,26 @@ function categoryUpdate(category: SupermarketCategory) {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     })
+}
+
+/**
+ * change the shopping list for all entries
+ * @param shoppingLists
+ */
+function shoppingListUpdate(shoppingLists: ShoppingList[]) {
+    const api = new ApiApi()
+    const promises: Promise<any>[] = []
+    shoppingListUpdateLoading.value = true
+
+    shoppingListFood.value.entries.forEach(e => {
+        e.shoppingLists = shoppingLists
+        promises.push(api.apiShoppingListEntryUpdate({id: e.id, shoppingListEntry: e}).then(r => {
+
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        }))
+    })
+    Promise.all(promises).finally(() => shoppingListUpdateLoading.value = false)
 }
 
 /**
