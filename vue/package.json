@@ -67,6 +67,7 @@
     "vue-template-compiler": "^2.7.16",
     "webpack-bundle-tracker": "3.2.2",
     "workbox-background-sync": "^7.3.0",
+    "workbox-navigation-preload": "^7.4.0",
     "workbox-expiration": "^7.4.0",
     "workbox-navigation-preload": "^7.3.0",
     "workbox-precaching": "^7.4.0",
