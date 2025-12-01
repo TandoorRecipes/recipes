@@ -42,7 +42,7 @@
     "workbox-background-sync": "^7.3.0",
     "workbox-build": "^7.3.0",
     "workbox-core": "^7.3.0",
-    "workbox-expiration": "^7.3.0",
+    "workbox-expiration": "^7.4.0",
     "workbox-navigation-preload": "^7.3.0",
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
