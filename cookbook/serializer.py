@@ -186,11 +186,29 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             if isinstance(self.context['request'].user, AnonymousUser):
                 data = []
             else:
-                data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+                iterable = data.all() if hasattr(data, 'all') else data
+                if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
+                    data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                else:
+                    if hasattr(self.context['request'], 'space'):
+                        data = data.filter(userspace__space=self.context['request'].space).all()
+                    else:
+                        # not sure why but this branch can be hit (just normal page load, need to see why)
+                        data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+
         elif isinstance(data, list):
             data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
         else:
-            data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
+            iterable = data.all() if hasattr(data, 'all') else data
+            if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
+                keys = self.child.Meta.model.get_space_key()
+                if keys == ('space',):
+                    data = [d for d in iterable if getattr(d, 'space_id') == self.context['request'].space.id]
+                else:
+                    # use cached results here too, just dont have time to test this now, probably obj.get_space()
+                    data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
+            else:
+                data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
 
 
@@ -648,7 +666,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(str)
     def get_label(self, obj):
-        return str(obj)
+        return obj.name
 
     class Meta:
         list_serializer_class = SpaceFilterSerializer
@@ -665,7 +683,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
     @extend_schema_field(str)
     def get_label(self, obj):
-        return str(obj)
+        return obj.name
 
     def create(self, validated_data):
         # since multi select tags dont have id's
@@ -1327,7 +1345,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     @extend_schema_field(bool)
     def in_shopping(self, obj):
-        return ShoppingListRecipe.objects.filter(mealplan=obj.id).exists()
+        return obj.shoppinglistrecipe_set.count() > 0
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1393,7 +1411,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings', 'created_by',)
+        fields = ('id', 'name', 'recipe', 'recipe_data', 'meal_plan_data', 'mealplan', 'servings', 'created_by',)
         read_only_fields = ('id', 'created_by',)
 
 
@@ -1412,7 +1430,7 @@ class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
 
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
-    food = FoodSerializer(allow_null=True)
+    food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
     list_recipe_data = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)

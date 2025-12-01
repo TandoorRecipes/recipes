@@ -50,6 +50,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      * group by selected grouping key
      */
     const getEntriesByGroup = computed(() => {
+        console.log("--> getEntriesByGroup called")
         stats.value = {
             countChecked: 0,
             countUnchecked: 0,
@@ -221,13 +222,16 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      */
     function recLoadShoppingListEntries(requestParameters: ApiShoppingListEntryListRequest) {
         let api = new ApiApi()
-        api.apiShoppingListEntryList(requestParameters).then((r) => {
+        return api.apiShoppingListEntryList(requestParameters).then((r) => {
             r.results.forEach((e) => {
                 entries.value.set(e.id!, e)
             })
-            if (r.next) {
-                requestParameters.page = requestParameters.page + 1
-                recLoadShoppingListEntries(requestParameters)
+
+            if (requestParameters.page == 1 && r.next) {
+                while (Math.ceil(r.count / requestParameters.pageSize) > requestParameters.page) {
+                    requestParameters.page = requestParameters.page + 1
+                    recLoadShoppingListEntries(requestParameters)
+                }
             } else {
                 currentlyUpdating.value = false
                 initialized.value = true

@@ -1,14 +1,17 @@
 <template>
-    <v-list-item class="swipe-container border-t-sm mt-0 mb-0 pt-0 pb-0 pe-0 pa-0" :id="itemContainerId" @touchend="handleSwipe()" @click="dialog = true;"
+    <v-list-item class="swipe-container border-t-sm mt-0 mb-0 pt-0 pb-0 pe-0 pa-0 shopping-border"  :id="itemContainerId" @touchend="handleSwipe()" @click="dialog = true;"
                  v-if="isShoppingListFoodVisible(props.shoppingListFood, useUserPreferenceStore().deviceSettings)"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
         <!--        </div>-->
 
+        <div class="color-marker-container">
+            <span :style="{background: sl.color}" v-for="sl in shoppingList"></span>
+        </div>
 
-        <div class="flex-grow-1 p-2">
-            <div class="d-flex">
+        <div class="flex-grow-1 p-2" >
+            <div class="d-flex" >
                 <div class="d-flex flex-column pr-2 pl-4">
                     <span v-for="a in amounts" v-bind:key="a.key">
                         <span>
@@ -110,6 +113,17 @@ const actionButtonIcon = computed(() => {
         return 'fa-solid fa-plus'
     }
     return 'fa-solid fa-check'
+})
+
+
+const shoppingList = computed(() => {
+    const lists = new Set()
+    for (let entry of entries.value) {
+        if (entry.shoppingLists) {
+            entry.shoppingLists.forEach(l => lists.add(l))
+        }
+    }
+    return Array.from(lists)
 })
 
 
@@ -248,4 +262,22 @@ function handleSwipe() {
 
 <style>
 /* TODO swipe system classes removed because not working (visually, touch detection was working), retrieve from old ShoppingLineItem VCS */
+
+
+/* 2. Container to wrap the color bars and place them to the far left */
+.color-marker-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.color-marker-container span {
+  width: 100%;
+  flex-grow: 1;
+}
+
 </style>

@@ -945,8 +945,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    def __str__(self):
-        return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
+    # def __str__(self):
+    #     return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
 
     class Meta:
         ordering = ['order', 'pk']
@@ -1299,8 +1299,8 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     objects = ScopedManager(space='space')
 
-    def __str__(self):
-        return f'Shopping list recipe {self.id} - {self.recipe}'
+    # def __str__(self):
+    #     return f'Shopping list recipe {self.id} - {self.recipe}'
 
     class Meta:
         ordering = ('pk',)
@@ -1316,6 +1316,9 @@ class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, Pe
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    class Meta:
+        ordering = ('pk',)
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):

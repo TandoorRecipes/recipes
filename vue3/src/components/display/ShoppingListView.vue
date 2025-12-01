@@ -89,7 +89,6 @@
 
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0" cols="6">
-
                         <v-chip label density="compact" variant="outlined" :prepend-icon="TSupermarket.icon" append-icon="fa-solid fa-caret-down">
                             <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
                                 {{useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name}}
@@ -101,11 +100,34 @@
                                     <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">
                                         {{ s.name }}
                                     </v-list-item>
+                                    <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'Supermarket'}}">
+                                        {{$t('Create')}}
+                                    </v-list-item>
                                 </v-list>
                             </v-menu>
                         </v-chip>
+                    </v-col>
+                    <v-col class="pa-0" cols="6">
+                        <v-chip label density="compact" variant="outlined" :prepend-icon="TShoppingList.icon" append-icon="fa-solid fa-caret-down">
+                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list != null">
+                                {{useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.name}}
+                            </template>
+                            <template v-else>{{ $t('ShoppingList') }}</template>
 
-
+                            <v-menu activator="parent">
+                                <v-list density="compact">
+                                    <v-list-item  @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = null">
+                                        {{$t('All')}}
+                                    </v-list-item>
+                                    <v-list-item v-for="s in shoppingLists" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = s">
+                                        {{ s.name }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'ShoppingList'}}">
+                                        {{$t('Create')}}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-chip>
                     </v-col>
                 </v-row>
 
@@ -270,7 +292,7 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Recipe, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
+import {ApiApi, Recipe, ResponseError, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -287,12 +309,13 @@ import {onBeforeRouteLeave} from "vue-router";
 import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
-import {TSupermarket} from "@/types/Models.ts";
+import {TShoppingList, TSupermarket} from "@/types/Models.ts";
 
 const {t} = useI18n()
 
 const currentTab = ref("shopping")
 const supermarkets = ref([] as Supermarket[])
+const shoppingLists = ref([] as ShoppingList[])
 const manualAddRecipe = ref<undefined | Recipe>(undefined)
 
 /**
@@ -327,6 +350,7 @@ onMounted(() => {
     }
 
     loadSupermarkets()
+    loadShoppingLists()
 })
 
 /**
@@ -395,6 +419,20 @@ function loadSupermarkets() {
 
     api.apiSupermarketList().then(r => {
         supermarkets.value = r.results
+        // TODO either recursive or add a "favorite" attribute to supermarkets for them to display at all
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+/**
+ * load a list of supermarkets
+ */
+function loadShoppingLists() {
+    let api = new ApiApi()
+
+    api.apiShoppingListList().then(r => {
+        shoppingLists.value = r.results
         // TODO either recursive or add a "favorite" attribute to supermarkets for them to display at all
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
