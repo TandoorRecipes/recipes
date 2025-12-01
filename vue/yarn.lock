@@ -11608,7 +11608,7 @@ word-wrap@^1.2.5:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.5.tgz#d2c45c6dd4fbce621a66f136cbe328afd0410b34"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
-workbox-background-sync@7.3.0, workbox-background-sync@^7.3.0:
+workbox-background-sync@7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/workbox-background-sync/-/workbox-background-sync-7.3.0.tgz#b6340731a8d5b42b9e75a8a87c8806928e6e6303"
   integrity sha512-PCSk3eK7Mxeuyatb22pcSx9dlgWNv3+M8PqPaYDokks8Y5/FX4soaOqj3yhAZr5k6Q5JWTOMYgaJBpbw11G9Eg==
@@ -11622,6 +11622,14 @@ workbox-background-sync@^5.1.4:
   integrity sha512-AH6x5pYq4vwQvfRDWH+vfOePfPIYQ00nCEB7dJRU1e0n9+9HMRyvI63FlDvtFT2AvXVRsXvUt7DNMEToyJLpSA==
   dependencies:
     workbox-core "^5.1.4"
+
+workbox-background-sync@^7.3.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/workbox-background-sync/-/workbox-background-sync-7.4.0.tgz#5fcf83162b540f799966fdd8df0858f91b787d77"
+  integrity sha512-8CB9OxKAgKZKyNMwfGZ1XESx89GryWTfI+V5yEj8sHjFH8MFelUwYXEyldEK6M6oKMmn807GoJFUEA1sC4XS9w==
+  dependencies:
+    idb "^7.0.1"
+    workbox-core "7.4.0"
 
 workbox-broadcast-update@7.3.0:
   version "7.3.0"
@@ -11958,7 +11966,7 @@ workbox-webpack-plugin@^7.3.0:
     webpack-sources "^1.4.3"
     workbox-build "7.3.0"
 
-workbox-window@7.3.0, workbox-window@^7.3.0:
+workbox-window@7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/workbox-window/-/workbox-window-7.3.0.tgz#e71bb0b4d880d2295c96bf1ccadb6cea0df51c07"
   integrity sha512-qW8PDy16OV1UBaUNGlTVcepzrlzyzNW/ZJvFQQs2j2TzGsg6IKjcpZC1RSquqQnTOafl5pCj5bGfAHlCjOOjdA==
@@ -11972,6 +11980,14 @@ workbox-window@^5.1.4:
   integrity sha512-vXQtgTeMCUq/4pBWMfQX8Ee7N2wVC4Q7XYFqLnfbXJ2hqew/cU1uMTD2KqGEgEpE4/30luxIxgE+LkIa8glBYw==
   dependencies:
     workbox-core "^5.1.4"
+
+workbox-window@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/workbox-window/-/workbox-window-7.4.0.tgz#5399a5261b8c34d9d102f2d832d5857ee4d5748a"
+  integrity sha512-/bIYdBLAVsNR3v7gYGaV4pQW3M3kEPx5E8vDxGvxo6khTrGtSSCS7QiFKv9ogzBgZiy0OXLP9zO28U/1nF1mfw==
+  dependencies:
+    "@types/trusted-types" "^2.0.2"
+    workbox-core "7.4.0"
 
 worker-farm@^1.7.0:
   version "1.7.0"

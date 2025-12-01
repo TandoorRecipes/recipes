@@ -40,7 +40,7 @@
     "vue-simple-calendar": "TandoorRecipes/vue-simple-calendar#lastvue2",
     "vue2-touch-events": "^3.2.3",
     "vuedraggable": "^2.24.3",
-    "workbox-window": "^7.3.0"
+    "workbox-window": "^7.4.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.5",
