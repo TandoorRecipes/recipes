@@ -21,7 +21,7 @@ jobs:
             suffix: ""
             continue-on-error: false
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Get version number
         id: get_version
