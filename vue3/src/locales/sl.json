@@ -872,5 +872,8 @@
     "view_recipe": "Oglejte si recept",
     "warning_duplicate_filter": "Opozorilo: Zaradi tehničnih omejitev lahko uporaba več filtrov iste kombinacije (in/ali/ne) prinese nepričakovane rezultate.",
     "warning_feature_beta": "Ta funkcija je trenutno v stanju BETA (testiranje). Pri uporabi te funkcije pričakujte napake in morebitne prelomne spremembe v prihodnosti (morda izgubite podatke, povezane s to funkcijo).",
-    "warning_space_delete": "Izbrišete lahko svoj prostor, vključno z vsemi recepti, nakupovalnimi seznami, načrti obrokov in vsem drugim, kar ste ustvarili. Tega ni mogoče preklicati! Ste prepričani, da želite to storiti?"
+    "warning_space_delete": "Izbrišete lahko svoj prostor, vključno z vsemi recepti, nakupovalnimi seznami, načrti obrokov in vsem drugim, kar ste ustvarili. Tega ni mogoče preklicati! Ste prepričani, da želite to storiti?",
+    "Shopping": "Nakupovanje",
+    "ShoppingList": "Nakupovalni seznam",
+    "ShoppingListHelp": "Omogoča dodajanje vnosov na različne sezname. Uporablja se lahko za različne supermarkete, posebne ponudbe ali dogodke. "
 }
