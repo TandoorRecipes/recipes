@@ -18,7 +18,7 @@
     "body-parser": "1.20.3",
     "bootstrap-vue": "^2.23.1",
     "brace-expansion": "2.0.2",
-    "core-js": "^3.46.0",
+    "core-js": "^3.47.0",
     "lodash": "^4.17.21",
     "lodash.template": "4.5.0",
     "mavon-editor": "^2.10.4",
