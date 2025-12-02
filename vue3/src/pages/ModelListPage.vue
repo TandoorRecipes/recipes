@@ -154,6 +154,44 @@
 
         <batch-edit-food-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'Food'" activator="model"
                                 @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-edit-food-dialog>
+                <!-- Dialog to show recipes for a selected food -->
+        
+        <v-dialog v-model="showFoodDialog" max-width="600" v-if="genericModel.model.name == 'Food'">
+            <v-card>
+                <v-card-title>
+                    <span v-if="selectedFood">
+                        Recipes using: {{ selectedFood.name }}
+                    </span>
+                </v-card-title>
+
+                <v-card-text>
+                    <div v-if="loadingFoodRecipes">
+                        Loading…
+                    </div>
+
+                    <div v-else-if="!foodRecipes.length">
+                        <p>No recipes currently use this food (or recipes not loaded yet).</p>
+                    </div>
+
+                    <v-list v-else>
+                        <v-list-item
+                            v-for="recipe in foodRecipes"
+                            :key="recipe.id"
+                        >
+                            <v-list-item-title>{{ recipe.name }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer />
+                    <v-btn variant="text" @click="closeFoodUsageDialog">
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
 
     </v-container>
 </template>
@@ -336,5 +374,10 @@ function closeFoodUsageDialog() {
 </script>
 
 <style scoped>
+
+.food-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 </style>
