@@ -75,31 +75,83 @@ class Ingredient:
 
 
 @dataclass
+class Timer:
+    quantity: int
+    unit: str
+
+    @classmethod
+    def parse(cls, raw):
+        return Timer(quantity=1, unit="Minutes")
+
+
+@dataclass
 class StepIngredient:
     name: str
     quantity: Optional[Quantity] = None
 
+    @classmethod
     def parse(cls, raw: str) -> "StepIngredient":
-        raise NotImplementedError('Method not implemented in Cooklang Parser')
+        return StepIngredient(
+            name=raw,
+            quantity=Quantity(amount=1, unit="None"),
+        )
+
+
+@dataclass
+class Block:
+    type: str
+    value: Union[str, Ingredient]
+
+    @classmethod
+    def new(cls):
+        return Block(type="", value="")
 
 
 @dataclass
 class Step:
-    blocks: list[Union[str, StepIngredient]]
+    blocks: list[Block]
 
     @classmethod
     def parse(cls, raw: str) -> "Step":
         blocks = []
-        raw_blocks = re.split(r'([@#\)}])', raw)
+        token_stream = re.split(r'([@#\)}~])', raw)
+        print(token_stream)
 
-        for block in raw_blocks:
-            i = 0
-            while block:
-                block.pop()
-                print(i)
-                i += 1
+        def find_termination(current_token, next_token) -> tuple[str, list[str]]:
+            return_tokens = []
+            if next_token != '}':
+                sub_tokens = re.split(r'\W\s', current_token)
+                current_token = sub_tokens.pop(0)
+                return_tokens = ["".join(sub_tokens), next_token] + return_tokens
+            else:
+                current_token += "}"
+            return current_token, return_tokens
 
-        print(raw_blocks)
+        while token_stream:
+            block = Block.new()
+            token = token_stream.pop(0)
+            stream_return = []
+            match token:
+                case "@":
+                    block.type = "Ingredient"
+                    token, stream_return = find_termination(token_stream.pop(0), token_stream.pop(0))
+                    block.value = StepIngredient.parse(token)
+                case "#":
+                    block.type = "Cookware"
+                    token, stream_return = find_termination(token_stream.pop(0), token_stream.pop(0))
+                    block.value = token
+                case "~":
+                    block.type = "Timer"
+                    token, stream_return = find_termination(token_stream.pop(0), token_stream.pop(0))
+                    block.value = Timer.parse(token)
+                case "}":
+                    raise Exception("Syntax Error: stray '}' found")
+                case _:
+                    block.type = "text"
+                    block.value = token
+            token_stream = stream_return + token_stream
+            blocks.append(block)
+
         return Step(blocks=blocks)
 
 
@@ -135,6 +187,7 @@ class Recipe:
         # Parse the Steps recursively Step -> Ingredient -> Quantity
         raw_steps = re.split(r'\n\n', raw_no_metadata)
         steps = [Step.parse(step) for step in raw_steps]
+        print(steps)
 
         return Recipe(
             metadata=metadata,
