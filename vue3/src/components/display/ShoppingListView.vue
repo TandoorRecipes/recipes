@@ -2,7 +2,7 @@
     <v-tabs v-model="currentTab">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
-            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().stats.countUnchecked }})</span></v-tab>
+            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().totalFoods }})</span></v-tab>
         <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{
                 $t('Recipes')
             }} ({{ useShoppingStore().getAssociatedRecipes().length }})</span></v-tab>
@@ -153,7 +153,7 @@
                         </v-list>
                         <v-list class="mt-3" density="compact" v-else>
                             <template v-for="category in useShoppingStore().getEntriesByGroup" :key="category.name">
-                                <template v-if="isShoppingCategoryVisible(category)">
+
 
                                     <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
                                     <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
@@ -163,7 +163,6 @@
                                         <shopping-line-item :shopping-list-food="value"></shopping-line-item>
                                     </template>
 
-                                </template>
                             </template>
                         </v-list>
 
