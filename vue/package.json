@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@codemirror/autocomplete": "^6.19.1",
+    "@codemirror/autocomplete": "^6.20.0",
     "@codemirror/commands": "^6.10.0",
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/state": "^6.3.3",
