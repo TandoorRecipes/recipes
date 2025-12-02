@@ -95,6 +95,15 @@
                         <v-chip label v-if="item.id == useUserPreferenceStore().activeSpace.id!" color="success">{{ $t('Active') }}</v-chip>
                         <v-chip label v-else color="info" @click="useUserPreferenceStore().switchSpace(item)">{{ $t('Select') }}</v-chip>
                     </template>
+
+                    <!-- Make Food name clickable -->
+                    
+                    <template v-slot:item.name="{ item }" v-if="genericModel.model.name == 'Food'">
+                        <span class="food-link" @click="openFoodUsageDialog(item)">
+                            {{ item.name }}
+                        </span>
+                    </template>
+
                     <template v-slot:item.action="{ item }">
                         <v-btn class="float-right" icon="$menu" variant="plain">
                             <v-icon icon="$menu"></v-icon>
@@ -151,6 +160,7 @@
 
 <script setup lang="ts">
 
+import type { Food, Recipe } from "@/openapi"; 
 
 import {onBeforeMount, PropType, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
@@ -194,6 +204,11 @@ const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
 
 const selectedItems = ref([] as EditorSupportedTypes[])
+
+const selectedFood = ref<Food | null>(null)
+const showFoodDialog = ref(false)
+const foodRecipes = ref<Recipe[]>([])
+const loadingFoodRecipes = ref(false)
 
 const batchDeleteDialog = ref(false)
 const batchMergeDialog = ref(false)
@@ -298,6 +313,25 @@ function leaveSpace(space: Space) {
         }
     })
 }
+
+function openFoodUsageDialog(food: Food) {
+    selectedFood.value = food
+    showFoodDialog.value = true
+    loadingFoodRecipes.value = true
+
+    console.log('Food clicked:', food)
+
+    // Temporary so dialog doesn't stay loading forever
+    loadingFoodRecipes.value = false
+}
+
+function closeFoodUsageDialog() {
+    showFoodDialog.value = false
+    selectedFood.value = null
+    foodRecipes.value = []
+}
+
+
 
 </script>
 
