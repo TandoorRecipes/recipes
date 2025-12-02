@@ -1,11 +1,11 @@
 aiohttp==3.13.2
 beautifulsoup4==4.14.2
-boto3==1.40.75
+boto3==1.41.5
 bleach==6.3.0
 cryptography===46.0.3
 crispy-bootstrap4==2025.6
 Django==4.2.26
-django-allauth==65.13.0
+django-allauth==65.13.1
 django-annoying==0.10.8
 django-auth-ldap==5.2.0
 django-cleanup==9.0.0
@@ -17,7 +17,7 @@ django-oauth-toolkit==3.1.0
 django-prometheus==2.4.1
 django-scopes==2.0.0
 django-storages==1.14.6
-django-tables2==2.7.5
+django-tables2==2.8.0
 django-treebeard==4.7.1
 django-webpack-loader==3.2.2
 djangorestframework==3.16.1
@@ -39,10 +39,10 @@ python-dotenv==1.2.1
 python-ldap==3.4.5
 python3-openid==3.2.0
 python3-saml==1.16.0
-pytubefix==10.3.3
+pytubefix==10.3.5
 pyyaml==6.0.3
 recipe-scrapers==15.10.0
-redis==6.4.0
+redis==7.1.0
 requests==2.32.5
 requests-oauthlib==2.0.0
 six==1.17.0
