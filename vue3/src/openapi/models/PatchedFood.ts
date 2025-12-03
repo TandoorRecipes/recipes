@@ -13,6 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ShoppingList } from './ShoppingList';
+import {
+    ShoppingListFromJSON,
+    ShoppingListFromJSONTyped,
+    ShoppingListToJSON,
+} from './ShoppingList';
 import type { SupermarketCategory } from './SupermarketCategory';
 import {
     SupermarketCategoryFromJSON,
@@ -235,6 +241,12 @@ export interface PatchedFood {
      * @memberof PatchedFood
      */
     openDataSlug?: string;
+    /**
+     * 
+     * @type {Array<ShoppingList>}
+     * @memberof PatchedFood
+     */
+    shoppingLists?: Array<ShoppingList>;
 }
 
 /**
@@ -278,6 +290,7 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'substituteOnhand': json['substitute_onhand'] == null ? undefined : json['substitute_onhand'],
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
     };
 }
 
@@ -306,6 +319,7 @@ export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|
         'substitute_children': value['substituteChildren'],
         'child_inherit_fields': value['childInheritFields'] == null ? undefined : ((value['childInheritFields'] as Array<any>).map(FoodInheritFieldToJSON)),
         'open_data_slug': value['openDataSlug'],
+        'shopping_lists': value['shoppingLists'] == null ? undefined : ((value['shoppingLists'] as Array<any>).map(ShoppingListToJSON)),
     };
 }
 

@@ -19,6 +19,12 @@ import {
     SupermarketCategoryRelationFromJSONTyped,
     SupermarketCategoryRelationToJSON,
 } from './SupermarketCategoryRelation';
+import type { ShoppingList } from './ShoppingList';
+import {
+    ShoppingListFromJSON,
+    ShoppingListFromJSONTyped,
+    ShoppingListToJSON,
+} from './ShoppingList';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
@@ -80,6 +86,12 @@ export interface PatchedSupermarket {
     description?: string;
     /**
      * 
+     * @type {Array<ShoppingList>}
+     * @memberof PatchedSupermarket
+     */
+    shoppingLists?: Array<ShoppingList>;
+    /**
+     * 
      * @type {Array<SupermarketCategoryRelation>}
      * @memberof PatchedSupermarket
      */
@@ -112,6 +124,7 @@ export function PatchedSupermarketFromJSONTyped(json: any, ignoreDiscriminator: 
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
         'categoryToSupermarket': json['category_to_supermarket'] == null ? undefined : ((json['category_to_supermarket'] as Array<any>).map(SupermarketCategoryRelationFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
@@ -126,6 +139,7 @@ export function PatchedSupermarketToJSON(value?: Omit<PatchedSupermarket, 'categ
         'id': value['id'],
         'name': value['name'],
         'description': value['description'],
+        'shopping_lists': value['shoppingLists'] == null ? undefined : ((value['shoppingLists'] as Array<any>).map(ShoppingListToJSON)),
         'open_data_slug': value['openDataSlug'],
     };
 }

@@ -2043,17 +2043,18 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
-            | Q(created_by__in=list(self.request.user.get_shopping_share()))).prefetch_related('created_by', 'food',
-                                                                                               'food__properties',
-                                                                                               'food__properties__property_type',
-                                                                                               'food__inherit_fields',
-                                                                                               'food__supermarket_category',
-                                                                                               'food__onhand_users',
-                                                                                               'food__substitute',
-                                                                                               'food__child_inherit_fields',
-                                                                                               'unit', 'list_recipe',
+            | Q(created_by__in=list(self.request.user.get_shopping_share()))).prefetch_related('created_by',
+                                                                                               'food',
+                                                                                               'shopping_lists',
+                                                                                               'unit',
+                                                                                               'list_recipe',
+                                                                                               'list_recipe__recipe__keywords',
+                                                                                               'list_recipe__recipe__created_by',
                                                                                                'list_recipe__mealplan',
+                                                                                               'list_recipe__mealplan__shared',
+                                                                                               'list_recipe__mealplan__shoppinglistrecipe_set',
                                                                                                'list_recipe__mealplan__recipe',
+                                                                                               'list_recipe__mealplan__recipe__keywords',
                                                                                                ).distinct().all()
 
         updated_after = self.request.query_params.get('updated_after', None)

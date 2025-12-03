@@ -23,7 +23,6 @@ export interface IShoppingList {
 export interface IShoppingListCategory {
     name: string,
     foods: Map<number, IShoppingListFood>,
-    stats: ShoppingListStats,
 }
 
 /**

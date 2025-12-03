@@ -18,6 +18,12 @@ export function isEntryVisible(entry: ShoppingListEntry, deviceSettings: DeviceS
     if (entry.checked && !deviceSettings.shopping_show_checked_entries) {
         entryVisible = false
     }
+
+    if(deviceSettings.shopping_selected_shopping_list.length > 0){
+        if(!deviceSettings.shopping_selected_shopping_list.some(sl => (entry.shoppingLists?.findIndex(eSl => eSl.id == sl) != -1))){
+            entryVisible = false
+        }
+    }
     return entryVisible
 }
 
@@ -60,16 +66,15 @@ export function isShoppingListFoodDelayed(slf: IShoppingListFood) {
  * @param category
  */
 export function isShoppingCategoryVisible(category: IShoppingListCategory) {
-    let entryCount = category.stats.countUnchecked
+    console.log('checking if category is visible')
+    let categoryVisible = false
+    category.foods.forEach(food => {
+        if(isShoppingListFoodVisible(food, useUserPreferenceStore().deviceSettings)){
+            categoryVisible = true
+        }
+    })
 
-    if (useUserPreferenceStore().deviceSettings.shopping_show_checked_entries) {
-        entryCount += category.stats.countChecked
-    }
-    if (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries) {
-        entryCount += category.stats.countUncheckedDelayed
-    }
-
-    return entryCount > 0
+    return categoryVisible
 }
 
 // -------------- SPACE RELATED ----------------------

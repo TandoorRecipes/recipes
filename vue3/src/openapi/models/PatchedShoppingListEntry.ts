@@ -19,6 +19,12 @@ import {
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { ShoppingList } from './ShoppingList';
+import {
+    ShoppingListFromJSON,
+    ShoppingListFromJSONTyped,
+    ShoppingListToJSON,
+} from './ShoppingList';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
@@ -31,12 +37,12 @@ import {
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
-import type { Food } from './Food';
+import type { FoodSimple } from './FoodSimple';
 import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
+    FoodSimpleFromJSON,
+    FoodSimpleFromJSONTyped,
+    FoodSimpleToJSON,
+} from './FoodSimple';
 
 /**
  * Adds nested create feature
@@ -58,10 +64,16 @@ export interface PatchedShoppingListEntry {
     listRecipe?: number;
     /**
      * 
-     * @type {Food}
+     * @type {Array<ShoppingList>}
      * @memberof PatchedShoppingListEntry
      */
-    food?: Food;
+    shoppingLists?: Array<ShoppingList>;
+    /**
+     * 
+     * @type {FoodSimple}
+     * @memberof PatchedShoppingListEntry
+     */
+    food?: FoodSimple;
     /**
      * 
      * @type {Unit}
@@ -155,7 +167,8 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
         
         'id': json['id'] == null ? undefined : json['id'],
         'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
-        'food': json['food'] == null ? undefined : FoodFromJSON(json['food']),
+        'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
+        'food': json['food'] == null ? undefined : FoodSimpleFromJSON(json['food']),
         'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'] == null ? undefined : json['amount'],
         'order': json['order'] == null ? undefined : json['order'],
@@ -179,7 +192,8 @@ export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListE
         
         'id': value['id'],
         'list_recipe': value['listRecipe'],
-        'food': FoodToJSON(value['food']),
+        'shopping_lists': value['shoppingLists'] == null ? undefined : ((value['shoppingLists'] as Array<any>).map(ShoppingListToJSON)),
+        'food': FoodSimpleToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
         'order': value['order'],

@@ -2,7 +2,7 @@
     <v-tabs v-model="currentTab">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
-            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().stats.countUnchecked }})</span></v-tab>
+            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().totalFoods }})</span></v-tab>
         <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{
                 $t('Recipes')
             }} ({{ useShoppingStore().getAssociatedRecipes().length }})</span></v-tab>
@@ -25,9 +25,13 @@
 
             <v-list density="compact">
                 <v-list-item @click="useShoppingStore().undoChange()" prepend-icon="fa-solid fa-arrow-rotate-left">{{ $t('Undo') }}</v-list-item>
+                <v-list-item @click="exportDialog = true" link prepend-icon="fa-solid fa-download">
+                    {{ $t('Export') }}
+                </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item>
-                    <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping" :label="$t('GroupBy')">
+                    <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping"
+                              @update:modelValue="useShoppingStore().updateEntriesStructure()" :label="$t('GroupBy')">
                     </v-select>
                 </v-list-item>
                 <v-list-item v-if="useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY">
@@ -65,29 +69,83 @@
             </v-list>
         </v-menu>
 
-        <v-btn height="100%" rounded="0" variant="plain">
-            <i class="fa-solid fa-download"></i>
-            <shopping-export-dialog></shopping-export-dialog>
-        </v-btn>
+<!--        <v-btn height="100%" rounded="0" variant="plain">-->
+<!--            <i class="fa-solid fa-download"></i>-->
+<!--            <shopping-export-dialog></shopping-export-dialog>-->
+<!--        </v-btn>-->
 
-        <v-btn height="100%" rounded="0" variant="plain" @click="useShoppingStore().undoChange()">
-            <i class="fa-solid fa-arrow-rotate-left"></i>
-        </v-btn>
+<!--        <v-btn height="100%" rounded="0" variant="plain" @click="useShoppingStore().undoChange()">-->
+<!--            <i class="fa-solid fa-arrow-rotate-left"></i>-->
+<!--        </v-btn>-->
 
     </v-tabs>
+
+    <shopping-export-dialog v-model="exportDialog" activator="model"></shopping-export-dialog>
 
     <v-window v-model="currentTab">
         <v-window-item value="shopping">
             <v-container>
+                <!--                <v-row class="pa-0" dense>-->
+                <!--                    <v-col class="pa-0">-->
+                <!--                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">-->
+                <!--                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{ s.name }}</v-chip>-->
+                <!--                        </v-chip-group>-->
+                <!--                    </v-col>-->
+                <!--                </v-row>-->
+
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
-                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">
-                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{ s.name }}</v-chip>
-                        </v-chip-group>
+                        <v-chip label density="compact" variant="outlined" style="max-width: 50%;" :prepend-icon="TSupermarket.icon" append-icon="fa-solid fa-caret-down">
+                            <span v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
+                                {{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}
+                            </span>
+                            <span v-else>{{ $t('Supermarket') }}</span>
+
+                            <v-menu activator="parent">
+                                <v-list density="compact">
+                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = []; useShoppingStore().updateEntriesStructure()">
+                                        {{ $t('SelectNone') }}
+                                    </v-list-item>
+                                    <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">
+                                        {{ s.name }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'Supermarket'}}">
+                                        {{ $t('Create') }}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-chip>
+
+                        <v-chip label density="compact" variant="outlined" style="max-width: 50%;" :prepend-icon="TShoppingList.icon" append-icon="fa-solid fa-caret-down">
+                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.length > 0">
+                                {{ shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ') }}
+                            </template>
+                            <template v-else>{{ $t('ShoppingList') }}</template>
+
+                            <v-menu activator="parent" :close-on-content-click="false">
+                                <v-list density="compact" v-model:selected="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list"
+                                        @update:selected="useShoppingStore().updateEntriesStructure()" select-strategy="leaf">
+                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = []; useShoppingStore().updateEntriesStructure()">
+                                        {{ $t('All') }}
+                                    </v-list-item>
+                                    <v-list-item v-for="s in shoppingLists" :key="s.id" :value="s.id">
+                                        <template v-slot:prepend="{ isSelected, select }">
+                                            <v-list-item-action start>
+                                                <v-checkbox-btn :model-value="isSelected" @update:model-value="select"></v-checkbox-btn>
+                                            </v-list-item-action>
+                                        </template>
+                                        {{ s.name }}
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'ShoppingList'}}">
+                                        {{ $t('Create') }}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-chip>
                     </v-col>
                 </v-row>
 
-                <v-row>
+                <v-row class="mt-0">
                     <v-col>
                         <v-alert v-if="useShoppingStore().hasFailedItems()" color="warning" class="mb-2">
                             <template #prepend>
@@ -108,18 +166,17 @@
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
                         </v-list>
                         <v-list class="mt-3" density="compact" v-else>
-                            <template v-for="category in useShoppingStore().getEntriesByGroup" :key="category.name">
-                                <template v-if="isShoppingCategoryVisible(category)">
+                            <template v-for="category in useShoppingStore().entriesByGroup" :key="category.name">
 
-                                    <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
-                                    <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
-                                    <v-divider></v-divider>
 
-                                    <template v-for="[i, value] in category.foods" :key="value.food.id">
-                                        <shopping-line-item :shopping-list-food="value"></shopping-line-item>
-                                    </template>
+                                <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
+                                <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
+                                <v-divider></v-divider>
 
+                                <template v-for="[i, value] in category.foods" :key="value.food.id">
+                                    <shopping-line-item :shopping-list-food="value"></shopping-line-item>
                                 </template>
+
                             </template>
                         </v-list>
 
@@ -246,9 +303,9 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, toRef} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Recipe, ResponseError, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
+import {ApiApi, Recipe, ResponseError, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -265,11 +322,14 @@ import {onBeforeRouteLeave} from "vue-router";
 import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
+import {TShoppingList, TSupermarket} from "@/types/Models.ts";
 
 const {t} = useI18n()
 
+const exportDialog = ref(false)
 const currentTab = ref("shopping")
 const supermarkets = ref([] as Supermarket[])
+const shoppingLists = ref([] as ShoppingList[])
 const manualAddRecipe = ref<undefined | Recipe>(undefined)
 
 /**
@@ -304,6 +364,7 @@ onMounted(() => {
     }
 
     loadSupermarkets()
+    loadShoppingLists()
 })
 
 /**
@@ -372,6 +433,20 @@ function loadSupermarkets() {
 
     api.apiSupermarketList().then(r => {
         supermarkets.value = r.results
+        // TODO either recursive or add a "favorite" attribute to supermarkets for them to display at all
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+/**
+ * load a list of supermarkets
+ */
+function loadShoppingLists() {
+    let api = new ApiApi()
+
+    api.apiShoppingListList().then(r => {
+        shoppingLists.value = r.results
         // TODO either recursive or add a "favorite" attribute to supermarkets for them to display at all
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

@@ -186,11 +186,29 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             if isinstance(self.context['request'].user, AnonymousUser):
                 data = []
             else:
-                data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+                iterable = data.all() if hasattr(data, 'all') else data
+                if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
+                    data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                else:
+                    if hasattr(self.context['request'], 'space'):
+                        data = data.filter(userspace__space=self.context['request'].space).all()
+                    else:
+                        # not sure why but this branch can be hit (just normal page load, need to see why)
+                        data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+
         elif isinstance(data, list):
             data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
         else:
-            data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
+            iterable = data.all() if hasattr(data, 'all') else data
+            if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
+                keys = self.child.Meta.model.get_space_key()
+                if keys == ('space',):
+                    data = [d for d in iterable if getattr(d, 'space_id') == self.context['request'].space.id]
+                else:
+                    # use cached results here too, just dont have time to test this now, probably obj.get_space()
+                    data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
+            else:
+                data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
 
 
@@ -484,6 +502,20 @@ class SpacedModelSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = ShoppingList.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        return obj
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'name', 'description', 'color',)  # returning dates breaks breaks shopping list deviceSetting save due to date retrieved from local storage as string
+        read_only_fields = ('id',)
+
+
 class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     def create(self, validated_data):
@@ -533,7 +565,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -648,7 +680,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(str)
     def get_label(self, obj):
-        return str(obj)
+        return obj.name
 
     class Meta:
         list_serializer_class = SpaceFilterSerializer
@@ -665,7 +697,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
     @extend_schema_field(str)
     def get_label(self, obj):
-        return str(obj)
+        return obj.name
 
     def create(self, validated_data):
         # since multi select tags dont have id's
@@ -742,6 +774,7 @@ class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
 
 class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataModelMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
+    shopping_lists = ShoppingListSerializer(many=True, required=False)
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -752,7 +785,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataMo
 
     class Meta:
         model = Supermarket
-        fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
+        fields = ('id', 'name', 'description', 'shopping_lists', 'category_to_supermarket', 'open_data_slug')
 
 
 class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, UniqueFieldsMixin):
@@ -836,7 +869,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
     parent = IntegerField(read_only=True)
-
+    shopping_lists = ShoppingListSerializer(many=True, required=False)
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
     properties_food_amount = CustomDecimalField(required=False)
@@ -947,7 +980,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url', 'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
             'food_onhand', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -1327,7 +1360,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     @extend_schema_field(bool)
     def in_shopping(self, obj):
-        return ShoppingListRecipe.objects.filter(mealplan=obj.id).exists()
+        return obj.shoppinglistrecipe_set.count() > 0
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1393,27 +1426,14 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'name', 'recipe', 'recipe_data', 'mealplan', 'meal_plan_data', 'servings', 'created_by',)
+        fields = ('id', 'name', 'recipe', 'recipe_data', 'meal_plan_data', 'mealplan', 'servings', 'created_by',)
         read_only_fields = ('id', 'created_by',)
 
 
-class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-
-    def create(self, validated_data):
-        validated_data['name'] = validated_data['name'].strip()
-        space = validated_data.pop('space', self.context['request'].space)
-        obj, created = ShoppingList.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
-        return obj
-
-    class Meta:
-        model = ShoppingList
-        fields = ('id', 'name', 'description', 'color', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'created_at', 'updated_at',)
-
-
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
-    food = FoodSerializer(allow_null=True)
+    food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
+    shopping_lists = ShoppingListSerializer(many=True, required=False)
     list_recipe_data = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
     created_by = UserSerializer(read_only=True)
@@ -1462,7 +1482,13 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
                                                                                   created_by=self.context['request'].user)
             del validated_data['mealplan_id']
 
-        return super().create(validated_data)
+        obj = super().create(validated_data)
+
+        if self.context['request'].user.userpreference.shopping_update_food_lists:
+            obj.shopping_lists.clear()
+            obj.shopping_lists.set(obj.food.shopping_lists.all())
+
+        return obj
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
@@ -1482,7 +1508,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     class Meta:
         model = ShoppingListEntry
         fields = (
-            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked', 'ingredient',
+            'id', 'list_recipe', 'shopping_lists', 'food', 'unit', 'amount', 'order', 'checked', 'ingredient',
             'list_recipe_data', 'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until', 'mealplan_id'
         )
         read_only_fields = ('id', 'created_by', 'created_at')
