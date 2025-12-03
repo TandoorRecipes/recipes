@@ -551,6 +551,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     show_step_ingredients = models.BooleanField(default=True)
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
+    shopping_update_food_lists = models.BooleanField(default=True)
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
 

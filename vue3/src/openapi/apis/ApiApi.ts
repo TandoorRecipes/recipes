@@ -1972,7 +1972,7 @@ export interface ApiShoppingListCascadingListRequest {
 }
 
 export interface ApiShoppingListCreateRequest {
-    shoppingList?: Omit<ShoppingList, 'createdAt'|'updatedAt'>;
+    shoppingList?: ShoppingList;
 }
 
 export interface ApiShoppingListDestroyRequest {
@@ -2026,7 +2026,7 @@ export interface ApiShoppingListNullingListRequest {
 
 export interface ApiShoppingListPartialUpdateRequest {
     id: number;
-    patchedShoppingList?: Omit<PatchedShoppingList, 'createdAt'|'updatedAt'>;
+    patchedShoppingList?: PatchedShoppingList;
 }
 
 export interface ApiShoppingListProtectingListRequest {
@@ -2075,7 +2075,7 @@ export interface ApiShoppingListRetrieveRequest {
 
 export interface ApiShoppingListUpdateRequest {
     id: number;
-    shoppingList?: Omit<ShoppingList, 'createdAt'|'updatedAt'>;
+    shoppingList?: ShoppingList;
 }
 
 export interface ApiSpaceCreateRequest {

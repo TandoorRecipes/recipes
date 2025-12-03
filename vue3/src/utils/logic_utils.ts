@@ -19,8 +19,10 @@ export function isEntryVisible(entry: ShoppingListEntry, deviceSettings: DeviceS
         entryVisible = false
     }
 
-    if(deviceSettings.shopping_selected_shopping_list != null && entry.shoppingLists?.findIndex(sl => sl.id == deviceSettings.shopping_selected_shopping_list.id) == -1){
-        entryVisible = false
+    if(deviceSettings.shopping_selected_shopping_list.length > 0){
+        if(!deviceSettings.shopping_selected_shopping_list.some(sl => (entry.shoppingLists?.findIndex(eSl => eSl.id == sl) != -1))){
+            entryVisible = false
+        }
     }
     return entryVisible
 }

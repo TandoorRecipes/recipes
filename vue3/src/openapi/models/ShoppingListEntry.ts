@@ -37,12 +37,12 @@ import {
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
-import type { Food } from './Food';
+import type { FoodSimple } from './FoodSimple';
 import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
+    FoodSimpleFromJSON,
+    FoodSimpleFromJSONTyped,
+    FoodSimpleToJSON,
+} from './FoodSimple';
 
 /**
  * Adds nested create feature
@@ -70,10 +70,10 @@ export interface ShoppingListEntry {
     shoppingLists?: Array<ShoppingList>;
     /**
      * 
-     * @type {Food}
+     * @type {FoodSimple}
      * @memberof ShoppingListEntry
      */
-    food: Food | null;
+    food: FoodSimple | null;
     /**
      * 
      * @type {Unit}
@@ -174,7 +174,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'id': json['id'] == null ? undefined : json['id'],
         'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
-        'food': FoodFromJSON(json['food']),
+        'food': FoodSimpleFromJSON(json['food']),
         'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'],
         'order': json['order'] == null ? undefined : json['order'],
@@ -199,7 +199,7 @@ export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRec
         'id': value['id'],
         'list_recipe': value['listRecipe'],
         'shopping_lists': value['shoppingLists'] == null ? undefined : ((value['shoppingLists'] as Array<any>).map(ShoppingListToJSON)),
-        'food': FoodToJSON(value['food']),
+        'food': FoodSimpleToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
         'order': value['order'],

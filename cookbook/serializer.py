@@ -502,6 +502,20 @@ class SpacedModelSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
+class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = ShoppingList.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        return obj
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'name', 'description', 'color',)  # returning dates breaks breaks shopping list deviceSetting save due to date retrieved from local storage as string
+        read_only_fields = ('id',)
+
+
 class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     def create(self, validated_data):
@@ -551,7 +565,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -760,6 +774,7 @@ class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
 
 class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataModelMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
+    shopping_lists = ShoppingListSerializer(many=True, required=False)
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -770,7 +785,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataMo
 
     class Meta:
         model = Supermarket
-        fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
+        fields = ('id', 'name', 'description', 'shopping_lists', 'category_to_supermarket', 'open_data_slug')
 
 
 class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, UniqueFieldsMixin):
@@ -854,7 +869,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
     parent = IntegerField(read_only=True)
-
+    shopping_lists = ShoppingListSerializer(many=True, required=False)
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
     properties_food_amount = CustomDecimalField(required=False)
@@ -965,7 +980,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url', 'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
             'food_onhand', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -1415,20 +1430,6 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by',)
 
 
-class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-
-    def create(self, validated_data):
-        validated_data['name'] = validated_data['name'].strip()
-        space = validated_data.pop('space', self.context['request'].space)
-        obj, created = ShoppingList.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
-        return obj
-
-    class Meta:
-        model = ShoppingList
-        fields = ('id', 'name', 'description', 'color', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'created_at', 'updated_at',)
-
-
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
@@ -1481,7 +1482,13 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
                                                                                   created_by=self.context['request'].user)
             del validated_data['mealplan_id']
 
-        return super().create(validated_data)
+        obj = super().create(validated_data)
+
+        if self.context['request'].user.userpreference.shopping_update_food_lists:
+            obj.shopping_lists.clear()
+            obj.shopping_lists.set(obj.food.shopping_lists.all())
+
+        return obj
 
     def update(self, instance, validated_data):
         user = self.context['request'].user

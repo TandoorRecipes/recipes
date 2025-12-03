@@ -140,6 +140,7 @@ import {useShoppingStore} from "@/stores/ShoppingStore";
 import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const {mobile} = useDisplay()
 
@@ -197,6 +198,15 @@ function shoppingListUpdate(shoppingLists: ShoppingList[]) {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }))
     })
+    if (useUserPreferenceStore().userSettings.shoppingUpdateFoodLists){
+        shoppingListFood.value.food.shoppingLists = shoppingLists
+        promises.push(api.apiFoodUpdate({id: shoppingListFood.value.food.id!, food: shoppingListFood.value.food}).then(r => {
+
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        }))
+    }
+
     Promise.all(promises).finally(() => shoppingListUpdateLoading.value = false)
 }
 
