@@ -37,7 +37,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -1397,6 +1397,20 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by',)
 
 
+class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = ShoppingList.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        return obj
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'name', 'description', 'color', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'created_at', 'updated_at',)
+
+
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     food = FoodSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
@@ -1728,6 +1742,7 @@ class GenericModelReferenceSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     model = serializers.CharField()
     name = serializers.CharField()
+
 
 # Export/Import Serializers
 

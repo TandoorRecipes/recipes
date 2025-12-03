@@ -1157,7 +1157,7 @@ class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionMod
 
     def __str__(self):
         return self.text
-    
+
     class Meta:
         ordering = ('pk',)
 
@@ -1302,6 +1302,18 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     class Meta:
         ordering = ('pk',)
+
+
+class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=32, blank=True, default='')
+    description = models.TextField(blank=True)
+    color = models.CharField(max_length=7, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
