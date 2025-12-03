@@ -14,6 +14,31 @@ class Quantity:
     unit: Optional[str] = None
 
     @classmethod
+    def parse(cls, raw) -> "Quantity":
+        amount = raw
+        unit = ""
+        if len(quantity_tokens := re.split(r'%', raw)) == 2:
+            amount = quantity_tokens[0]
+            unit = quantity_tokens[1]
+
+        if amount != "":
+            try:
+                float(amount)
+            except ValueError:
+                whole_num = 0
+                if len(integer_fraction_tokens := re.split(r' ', amount)) == 2:
+                    whole_num = int(integer_fraction_tokens[0])
+                    amount = integer_fraction_tokens[1]
+
+                if len(fraction := re.split(r'/', amount)) == 2:
+                    amount = int(fraction[0]) / int(fraction[1])
+                    amount += whole_num
+                else:
+                    raise Exception(f"Cooklang:Quantity:parse Syntax Error: measurements must be in float or #/# format, received {amount}")
+
+            return Quantity(amount=amount, unit=unit)
+
+    @classmethod
     def add_optional(cls, a: Optional["Quantity"], b: Optional["Quantity"]) -> Optional["Quantity"]:
         if a and b:
             return a + b
@@ -76,12 +101,32 @@ class Ingredient:
 
 @dataclass
 class Timer:
+    ingredient: str
     quantity: int
     unit: str
 
     @classmethod
-    def parse(cls, raw):
-        return Timer(quantity=1, unit="Minutes")
+    def parse(cls, raw) -> "Timer":
+        if len(timer_tokens := re.split(r'[{%]', raw)) < 3:
+            raise Exception(f"Cooklang:Recipe:Timer Syntax Error: timers must be in {{num%unit}} format, received {raw}")
+        ingredient = timer_tokens[0]
+        quantity = timer_tokens[1]
+        unit = timer_tokens[2]
+
+        try:
+            float(quantity)
+        except ValueError:
+            whole_num = 0
+            if len(integer_fraction_tokens := re.split(r' ', quantity)) == 2:
+                whole_num = int(integer_fraction_tokens[0])
+                quantity = integer_fraction_tokens[1]
+
+            if len(fraction := re.split(r'/', quantity)) == 2:
+                quantity = int(fraction[0]) / int(fraction[1])
+                quantity += whole_num
+            else:
+                raise Exception(f"Cooklang:Timer:parse Syntax Error: measurements must be in float or #/# format, received {quantity}")
+        return Timer(ingredient=ingredient, quantity=quantity, unit=unit)
 
 
 @dataclass
@@ -91,9 +136,15 @@ class StepIngredient:
 
     @classmethod
     def parse(cls, raw: str) -> "StepIngredient":
+        ingredient = raw
+        quantity = ""
+        if len(ingredient_tokens := re.split(r'{', raw)) == 2:
+            ingredient = ingredient_tokens[0]
+            quantity = ingredient_tokens[1].replace('}', '')
+
         return StepIngredient(
-            name=raw,
-            quantity=Quantity(amount=1, unit="None"),
+            name=ingredient,
+            quantity=Quantity.parse(quantity),
         )
 
 
@@ -113,20 +164,29 @@ class Step:
 
     @classmethod
     def parse(cls, raw: str) -> "Step":
+        # split steps into a stream of tokens broken up by delimiters
         blocks = []
-        token_stream = re.split(r'([@#\)}~])', raw)
-        print(token_stream)
+        token_stream = re.split(r'(--|\[-|-\]|[@#}~])', raw)
 
-        def find_termination(current_token, next_token) -> tuple[str, list[str]]:
+        # verify terminating delimiter and return token or if no delimiter then return only first word
+        def find_arbitrary_termination(current_token, next_token, termination_delimiter) -> tuple[str, list[str]]:
             return_tokens = []
-            if next_token != '}':
-                sub_tokens = re.split(r'\W\s', current_token)
+            if next_token != termination_delimiter:
+                sub_tokens = re.split(r'(?=[\W\s])([^-])', current_token)
                 current_token = sub_tokens.pop(0)
                 return_tokens = ["".join(sub_tokens), next_token] + return_tokens
             else:
-                current_token += "}"
+                current_token += termination_delimiter
             return current_token, return_tokens
 
+        # ensure that the correct terminating delimiter is used
+        def find_termination(current_token, next_token, termination_delimiter) -> str:
+            if next_token != termination_delimiter:
+                raise Exception(f"Cooklang:Recipe:parse Syntax Error: expected terminating delimiter {termination_delimiter}, recieved {next_token}")
+            else:
+                return current_token
+
+        # asses tokens in order to identify and denote datatypes into blocks
         while token_stream:
             block = Block.new()
             token = token_stream.pop(0)
@@ -134,23 +194,32 @@ class Step:
             match token:
                 case "@":
                     block.type = "Ingredient"
-                    token, stream_return = find_termination(token_stream.pop(0), token_stream.pop(0))
+                    token, stream_return = find_arbitrary_termination(token_stream.pop(0), token_stream.pop(0), '}')
                     block.value = StepIngredient.parse(token)
                 case "#":
                     block.type = "Cookware"
-                    token, stream_return = find_termination(token_stream.pop(0), token_stream.pop(0))
+                    token, stream_return = find_arbitrary_termination(token_stream.pop(0), token_stream.pop(0), '}')
                     block.value = token
                 case "~":
                     block.type = "Timer"
-                    token, stream_return = find_termination(token_stream.pop(0), token_stream.pop(0))
+                    token, stream_return = find_arbitrary_termination(token_stream.pop(0), token_stream.pop(0), '}')
                     block.value = Timer.parse(token)
+                case "--":
+                    block.type = "inline comment"
+                    block.value = token_stream.pop(0)
+                case "[-":
+                    block.type = "block comment"
+                    block.value = find_termination(token_stream.pop(0), token_stream.pop(0), '-]')
                 case "}":
-                    raise Exception("Syntax Error: stray '}' found")
+                    raise Exception("Cooklang:Recipe:parse Syntax Error: stray '}' found with no delimiting '@', '#' or '~'")
+                case "-]":
+                    raise Exception("Cooklang:Recipe:parse Syntax Error: stray '-]' found with no opening '[-'")
                 case _:
                     block.type = "text"
                     block.value = token
             token_stream = stream_return + token_stream
-            blocks.append(block)
+            if block.value != '':
+                blocks.append(block)
 
         return Step(blocks=blocks)
 
@@ -163,6 +232,8 @@ class Recipe:
 
     @classmethod
     def parse(cls, raw: str) -> "Recipe":
+        # Remove white space at the end of the document
+        raw = re.sub(r'\s+$', '', raw)
 
         # Separate the Metadata from the rest of the recipe
         raw_metadata = None
@@ -187,7 +258,9 @@ class Recipe:
         # Parse the Steps recursively Step -> Ingredient -> Quantity
         raw_steps = re.split(r'\n\n', raw_no_metadata)
         steps = [Step.parse(step) for step in raw_steps]
-        print(steps)
+
+        for step in steps:
+            print(step)
 
         return Recipe(
             metadata=metadata,
