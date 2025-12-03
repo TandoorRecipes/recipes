@@ -68,7 +68,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         // ordering
         let undefinedCategoryGroup = structure.categories.get(UNDEFINED_CATEGORY)
         if (undefinedCategoryGroup != null) {
-            totalFoods.value += undefinedCategoryGroup.foods.size
             orderedStructure.push(undefinedCategoryGroup)
             structure.categories.delete(UNDEFINED_CATEGORY)
         }
@@ -444,6 +443,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             Promise.allSettled(promises).finally(() => {
                 entries.value = new Map([...entries.value, ...updatedEntries])
                 syncQueueRunning.value = false
+                //TODO proper function to splice/update structure as needed
+                useShoppingStore().updateEntriesStructure()
                 if (itemCheckSyncQueue.value.length > 0) {
                     runSyncQueue(500)
                 }

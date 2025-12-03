@@ -31,7 +31,7 @@
                 <v-divider></v-divider>
                 <v-list-item>
                     <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping"
-                              @update:modelValue="useShoppingStore().updateEntriesStructure()" :label="$t('GroupBy')">
+                              :label="$t('GroupBy')">
                     </v-select>
                 </v-list-item>
                 <v-list-item v-if="useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY">
@@ -69,14 +69,14 @@
             </v-list>
         </v-menu>
 
-<!--        <v-btn height="100%" rounded="0" variant="plain">-->
-<!--            <i class="fa-solid fa-download"></i>-->
-<!--            <shopping-export-dialog></shopping-export-dialog>-->
-<!--        </v-btn>-->
+        <!--        <v-btn height="100%" rounded="0" variant="plain">-->
+        <!--            <i class="fa-solid fa-download"></i>-->
+        <!--            <shopping-export-dialog></shopping-export-dialog>-->
+        <!--        </v-btn>-->
 
-<!--        <v-btn height="100%" rounded="0" variant="plain" @click="useShoppingStore().undoChange()">-->
-<!--            <i class="fa-solid fa-arrow-rotate-left"></i>-->
-<!--        </v-btn>-->
+        <!--        <v-btn height="100%" rounded="0" variant="plain" @click="useShoppingStore().undoChange()">-->
+        <!--            <i class="fa-solid fa-arrow-rotate-left"></i>-->
+        <!--        </v-btn>-->
 
     </v-tabs>
 
@@ -117,16 +117,25 @@
                         </v-chip>
 
                         <v-chip label density="compact" variant="outlined" style="max-width: 50%;" :prepend-icon="TShoppingList.icon" append-icon="fa-solid fa-caret-down">
-                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.length > 0">
-                                {{ shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ') }}
+                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.filter(sl => sl != -1).length > 0">
+                                {{
+                                    shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ')
+                                }}
                             </template>
                             <template v-else>{{ $t('ShoppingList') }}</template>
 
                             <v-menu activator="parent" :close-on-content-click="false">
-                                <v-list density="compact" v-model:selected="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list"
-                                        @update:selected="useShoppingStore().updateEntriesStructure()" select-strategy="leaf">
-                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = []; useShoppingStore().updateEntriesStructure()">
+                                <v-list density="compact" v-model:selected="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list" select-strategy="leaf">
+                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = [] ">
                                         {{ $t('All') }}
+                                    </v-list-item>
+                                    <v-list-item :value="-1" @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = [-1];">
+                                        <template v-slot:prepend="{ isSelected, select }">
+                                            <v-list-item-action start>
+                                                <v-checkbox-btn :model-value="isSelected" @update:model-value="select"></v-checkbox-btn>
+                                            </v-list-item-action>
+                                        </template>
+                                        {{ $t('None') }}
                                     </v-list-item>
                                     <v-list-item v-for="s in shoppingLists" :key="s.id" :value="s.id">
                                         <template v-slot:prepend="{ isSelected, select }">
@@ -303,7 +312,7 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, ref, toRef} from "vue";
+import {computed, onMounted, ref, toRef, watch} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {ApiApi, Recipe, ResponseError, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
@@ -342,6 +351,10 @@ const groupingOptionsItems = computed(() => {
     })
     return items
 })
+
+watch(() => useUserPreferenceStore().deviceSettings, () => {
+    useShoppingStore().updateEntriesStructure()
+}, {deep: true})
 
 onMounted(() => {
     addEventListener("visibilitychange", (event) => {

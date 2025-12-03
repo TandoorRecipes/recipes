@@ -775,7 +775,7 @@ class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
         fields = ('id', 'category', 'supermarket', 'order')
 
 
-class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataModelMixin):
+class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, WritableNestedModelSerializer, OpenDataModelMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
 
@@ -1433,8 +1433,17 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by',)
 
 
+class FoodShoppingSerializer(serializers.ModelSerializer):
+    supermarket_category = SupermarketCategorySerializer(read_only=True)
+    shopping_lists = ShoppingListSerializer(read_only=True)
+
+    class Meta:
+        model = Food
+        fields = ('id', 'name', 'plural_name', 'supermarket_category', 'shopping_lists')
+
+
 class ShoppingListEntrySerializer(WritableNestedModelSerializer):
-    food = FoodSimpleSerializer(allow_null=True)
+    food = FoodShoppingSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True, required=False)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
     list_recipe_data = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
