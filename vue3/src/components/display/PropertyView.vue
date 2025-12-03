@@ -39,7 +39,8 @@
         <v-card v-if="dialogProperty" :loading="loading">
             <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${dialogProperty.unit} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
                                    v-model="dialog"></v-closable-card-title>
-            <v-card-text>
+            <v-btn variant="outlined" size="small" class="rounded-pill d-print-none px-3 align-self-start ms-2 text-body-2 text-medium-emphasis">Sort Decreasing</v-btn>
+            <v-card-text>        
                 <v-list>
                     <v-list-item border v-for="fv in dialogProperty.foodValues" :key="`${dialogProperty.id}_${fv.id}`">
                         <template #prepend>
