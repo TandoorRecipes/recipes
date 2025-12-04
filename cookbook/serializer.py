@@ -187,18 +187,14 @@ class SpaceFilterSerializer(serializers.ListSerializer):
                 data = []
             else:
                 iterable = data.all() if hasattr(data, 'all') else data
-                try:
-                    if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
-                        data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
+                    data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                else:
+                    if hasattr(self.context['request'], 'space'):
+                        data = data.filter(userspace__space=self.context['request'].space).all()
                     else:
-                        if hasattr(self.context['request'], 'space'):
-                            data = data.filter(userspace__space=self.context['request'].space).all()
-                        else:
-                            # not sure why but this branch can be hit (just normal page load, need to see why)
-                            data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
-                except Exception:
-                    # not sure why but this branch can be hit (just normal page load, need to see why)
-                    data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+                        # not sure why but this branch can be hit (just normal page load, need to see why)
+                        data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
         elif isinstance(data, list):
             data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
         else:

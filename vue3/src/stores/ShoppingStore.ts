@@ -234,6 +234,9 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 r.results.forEach((e) => {
                     entries.value.set(e.id!, e)
                 })
+                if(r.results.length > 0){
+                    updateEntriesStructure()
+                }
                 currentlyUpdating.value = false
             }).catch((err: any) => {
                 currentlyUpdating.value = false
