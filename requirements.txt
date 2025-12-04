@@ -1,5 +1,5 @@
 aiohttp==3.13.2
-beautifulsoup4==4.14.2
+beautifulsoup4==4.14.3
 boto3==1.41.5
 bleach==6.3.0
 cryptography===46.0.3
