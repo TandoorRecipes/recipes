@@ -1992,19 +1992,22 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         if serializer.is_valid():
             entries = []
             for e in serializer.validated_data['entries']:
-                entries.append(
-                    ShoppingListEntry(
-                        list_recipe_id=obj.pk,
-                        amount=e['amount'],
-                        unit_id=e['unit_id'],
-                        food_id=e['food_id'],
-                        ingredient_id=e['ingredient_id'],
-                        created_by_id=request.user.id,
-                        space_id=request.space.id,
-                    )
+                entry = ShoppingListEntry(
+                    list_recipe_id=obj.pk,
+                    amount=e['amount'],
+                    unit_id=e['unit_id'],
+                    food_id=e['food_id'],
+                    ingredient_id=e['ingredient_id'],
+                    created_by_id=request.user.id,
+                    space_id=request.space.id,
                 )
+                entries.append(entry)
 
             ShoppingListEntry.objects.bulk_create(entries)
+            for e in entries:
+                if e.food.shopping_lists.count() > 0:
+                    e.shopping_lists.set(e.food.shopping_lists.all())
+
             ConnectorManager.add_work(ActionType.CREATED, *entries)
             return Response(serializer.validated_data)
         else:
