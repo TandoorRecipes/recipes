@@ -160,7 +160,7 @@
             <v-card>
                 <v-card-title>
                     <span v-if="selectedFood">
-                        Recipes using: {{ selectedFood.name }}
+                        Recipes Using: {{ selectedFood.name }}
                     </span>
                 </v-card-title>
 
@@ -359,8 +359,22 @@ function openFoodUsageDialog(food: Food) {
 
     console.log('Food clicked:', food)
 
-    // Temporary so dialog doesn't stay loading forever
-    loadingFoodRecipes.value = false
+    const api = new ApiApi()
+    
+    // Query recipes that contain this food item
+    api.apiRecipeList({
+        food: food.id,
+        pageSize: 1000 
+    }).then((response) => {
+        foodRecipes.value = response.results || []
+        console.log(`Found ${foodRecipes.value.length} recipes using food: ${food.name}`)
+    }).catch((err) => {
+        console.error('Error fetching recipes for food:', err)
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        foodRecipes.value = []
+    }).finally(() => {
+        loadingFoodRecipes.value = false
+    })
 }
 
 function closeFoodUsageDialog() {
