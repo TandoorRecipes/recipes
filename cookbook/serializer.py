@@ -1,3 +1,4 @@
+import traceback
 import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -188,7 +189,11 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             else:
                 iterable = data.all() if hasattr(data, 'all') else data
                 if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
-                    data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                    try:
+                        data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                    except Exception:
+                        traceback.print_exc()
+                        data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
                 else:
                     if hasattr(self.context['request'], 'space'):
                         data = data.filter(userspace__space=self.context['request'].space).all()

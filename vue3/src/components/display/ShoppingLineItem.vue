@@ -1,6 +1,9 @@
 <template>
-    <v-list-item class="swipe-container border-t-sm mt-0 mb-0 pt-0 pb-0 pe-0 pa-0 shopping-border" :id="itemContainerId" @touchend="handleSwipe()" @click="dialog = true;"
-
+    <v-list-item class="swipe-container border-t-sm mt-0 mb-0 pt-0 pb-0 pe-0 pa-0 shopping-border"
+                 :id="itemContainerId"
+                 @touchend="handleSwipe()"
+                 @click="dialog = true;"
+                 :value="shoppingListFood"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
@@ -34,13 +37,18 @@
         </div>
 
 
+        <template v-slot:[selectBtnSlot]="{ isSelected, select }">
+            <v-list-item-action class="ps-3 pe-3" start>
+                <v-checkbox-btn :model-value="isSelected" @update:model-value="select" @click.native.stop=""></v-checkbox-btn>
+            </v-list-item-action>
+        </template>
+
         <template v-slot:[checkBtnSlot]>
             <div class="ps-3 pe-3" @click.native.stop="useShoppingStore().setEntriesCheckedState(entries, !isChecked, true);">
                 <v-btn color="success" size="large"
                        :class="{'btn-success': !isChecked, 'btn-warning': isChecked}" :icon="actionButtonIcon" variant="plain">
                 </v-btn>
             </div>
-            <!--                <i class="d-print-none fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
         </template>
 
         <!--        <div class="swipe-action bg-primary justify-content-end">-->
@@ -74,7 +82,9 @@ const props = defineProps({
     hideInfoRow: {type: Boolean, default: false}
 })
 const checkBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'prepend' : 'append')
+const selectBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'append' : 'prepend')
 
+const selectEnabled = ref(true)
 const dialog = ref(false)
 
 const entries = computed(() => {

@@ -174,7 +174,7 @@
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
                         </v-list>
-                        <v-list class="mt-3" density="compact" v-else>
+                        <v-list class="mt-3" density="compact" v-model:selected="selectedLines" select-strategy="leaf" v-else>
                             <template v-for="category in useShoppingStore().entriesByGroup" :key="category.name">
 
 
@@ -312,14 +312,14 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, ref, toRef, watch} from "vue";
+import {computed, onMounted, ref, shallowRef, toRef, watch} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {ApiApi, Recipe, ResponseError, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {ShoppingGroupingOptions} from "@/types/Shopping";
+import {IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
@@ -340,6 +340,8 @@ const currentTab = ref("shopping")
 const supermarkets = ref([] as Supermarket[])
 const shoppingLists = ref([] as ShoppingList[])
 const manualAddRecipe = ref<undefined | Recipe>(undefined)
+
+const selectedLines = shallowRef([] as IShoppingListFood[])
 
 /**
  * VSelect items for shopping list grouping options with localized names

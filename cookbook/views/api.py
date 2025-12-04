@@ -2055,6 +2055,9 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                                                                'list_recipe__recipe__created_by',
                                                                                                'list_recipe__mealplan',
                                                                                                'list_recipe__mealplan__shared',
+
+                                                                                               'list_recipe__mealplan__shared__userpreference',
+                                                                                               'list_recipe__mealplan__shared__userpreference__space',
                                                                                                'list_recipe__mealplan__shoppinglistrecipe_set',
                                                                                                'list_recipe__mealplan__recipe',
                                                                                                'list_recipe__mealplan__recipe__keywords',
