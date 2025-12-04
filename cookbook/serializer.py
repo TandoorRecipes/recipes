@@ -1435,7 +1435,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
 class FoodShoppingSerializer(serializers.ModelSerializer):
     supermarket_category = SupermarketCategorySerializer(read_only=True)
-    shopping_lists = ShoppingListSerializer(read_only=True)
+    shopping_lists = ShoppingListSerializer(read_only=True, many=True)
 
     class Meta:
         model = Food

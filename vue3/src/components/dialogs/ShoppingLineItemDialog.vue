@@ -174,6 +174,7 @@ const isShoppingLineDelayed = computed(() => {
 function categoryUpdate(category: SupermarketCategory) {
     const api = new ApiApi()
     shoppingListFood.value.food.supermarketCategory = category
+    useShoppingStore().updateEntriesStructure()
     api.apiFoodUpdate({id: shoppingListFood.value.food.id, food: shoppingListFood.value.food}).then(r => {
         useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {

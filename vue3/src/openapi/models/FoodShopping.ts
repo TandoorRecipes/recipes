@@ -58,10 +58,10 @@ export interface FoodShopping {
     readonly supermarketCategory: SupermarketCategory;
     /**
      * 
-     * @type {ShoppingList}
+     * @type {Array<ShoppingList>}
      * @memberof FoodShopping
      */
-    readonly shoppingLists: ShoppingList;
+    readonly shoppingLists: Array<ShoppingList>;
 }
 
 /**
@@ -88,7 +88,7 @@ export function FoodShoppingFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'name': json['name'],
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'supermarketCategory': SupermarketCategoryFromJSON(json['supermarket_category']),
-        'shoppingLists': ShoppingListFromJSON(json['shopping_lists']),
+        'shoppingLists': ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
     };
 }
 
