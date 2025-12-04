@@ -1,26 +1,24 @@
 # Cooklang parser forked from on https://github.com/luizribeiro/py-cooklang cooklang.py as of 11/18/25 - MIT License
 # Modifications by doylelew
 
-import itertools
+import copy
 import re
 from dataclasses import dataclass
-from fractions import Fraction
-from typing import Mapping, Optional, Sequence, Tuple, Union
+from typing import Mapping, Optional, Sequence, Union
 
 
 @dataclass
 class Quantity:
-    amount: Union[int, float, Fraction]
+    amount: Union[str, float]
     unit: Optional[str] = None
 
     @classmethod
     def parse(cls, raw) -> "Quantity":
         amount = raw
         unit = ""
-        if len(quantity_tokens := re.split(r'%', raw)) == 2:
+        if len(quantity_tokens := re.split(r'%', amount)) == 2:
             amount = quantity_tokens[0]
             unit = quantity_tokens[1]
-
         if amount != "":
             try:
                 float(amount)
@@ -35,8 +33,8 @@ class Quantity:
                     amount += whole_num
                 else:
                     raise Exception(f"Cooklang:Quantity:parse Syntax Error: measurements must be in float or #/# format, received {amount}")
-
-            return Quantity(amount=amount, unit=unit)
+            amount = float(amount)
+        return Quantity(amount=amount, unit=unit)
 
     @classmethod
     def add_optional(cls, a: Optional["Quantity"], b: Optional["Quantity"]) -> Optional["Quantity"]:
@@ -49,12 +47,7 @@ class Quantity:
     def __add__(self, other: "Quantity") -> "Quantity":
         if self.unit != other.unit:
             raise ValueError(f"Cannot add unit {self.unit} to {other.unit}")
-        if type(self.amount) != type(other.amount):  # noqa: E721
-            raise ValueError("Cannot add quantities with types " + f"{type(self.amount)} and {type(other.amount)}")
-        # pyre-ignore[6]: pyre doesn't refine types on the comparison above
-        new_amount = self.amount + other.amount
-        if isinstance(new_amount, float):
-            new_amount = round(new_amount, 1)
+        new_amount = round(self.amount + other.amount, 3)
         return Quantity(
             amount=new_amount,
             unit=self.unit,
@@ -62,47 +55,9 @@ class Quantity:
 
 
 @dataclass
-class Ingredient:
-    name: str
-    quantity: Optional[Quantity] = None
-
-    @classmethod
-    def parse(cls, raw: str) -> "Ingredient":
-
-        def _get_quantity(matches: Sequence[Sequence[str]], ) -> Optional[Quantity]:
-            if not matches:
-                return None
-
-            match = matches[0]
-            amount_as_str = match[0]
-            if not amount_as_str:
-                return None
-            if "." in amount_as_str:
-                amount = float(amount_as_str)
-            elif "/" in amount_as_str:
-                amount = Fraction(amount_as_str)
-            else:
-                amount = int(amount_as_str)
-            unit = str(match[1]) if match[1] else None
-            return Quantity(amount, unit)
-
-        name, raw_amount = re.findall(r"^@([^{]+)(?:{([^}]*)})?", raw)[0]
-        matches = re.findall(r"([^%}]+)%?([\w]+)?", raw_amount)
-        return Ingredient(name, _get_quantity(matches))
-
-    def __add__(self, other: "Ingredient") -> "Ingredient":
-        if self.name != other.name:
-            raise ValueError(f"Cannot add ingredient {self.name} with {other.name}", )
-        return Ingredient(
-            name=self.name,
-            quantity=Quantity.add_optional(self.quantity, other.quantity),
-        )
-
-
-@dataclass
 class Timer:
     ingredient: str
-    quantity: int
+    quantity: float
     unit: str
 
     @classmethod
@@ -120,31 +75,38 @@ class Timer:
             if len(integer_fraction_tokens := re.split(r' ', quantity)) == 2:
                 whole_num = int(integer_fraction_tokens[0])
                 quantity = integer_fraction_tokens[1]
-
             if len(fraction := re.split(r'/', quantity)) == 2:
                 quantity = int(fraction[0]) / int(fraction[1])
                 quantity += whole_num
             else:
                 raise Exception(f"Cooklang:Timer:parse Syntax Error: measurements must be in float or #/# format, received {quantity}")
+        quantity = float(quantity)
         return Timer(ingredient=ingredient, quantity=quantity, unit=unit)
 
 
 @dataclass
-class StepIngredient:
+class Ingredient:
     name: str
     quantity: Optional[Quantity] = None
 
     @classmethod
-    def parse(cls, raw: str) -> "StepIngredient":
+    def parse(cls, raw: str) -> "Ingredient":
         ingredient = raw
         quantity = ""
         if len(ingredient_tokens := re.split(r'{', raw)) == 2:
             ingredient = ingredient_tokens[0]
             quantity = ingredient_tokens[1].replace('}', '')
-
-        return StepIngredient(
+        return Ingredient(
             name=ingredient,
             quantity=Quantity.parse(quantity),
+        )
+
+    def __add__(self, other: "Ingredient") -> "Ingredient":
+        if self.name != other.name:
+            raise ValueError(f"Cannot add ingredient {self.name} with {other.name}", )
+        return Ingredient(
+            name=self.name,
+            quantity=Quantity.add_optional(self.quantity, other.quantity),
         )
 
 
@@ -195,7 +157,7 @@ class Step:
                 case "@":
                     block.type = "Ingredient"
                     token, stream_return = find_arbitrary_termination(token_stream.pop(0), token_stream.pop(0), '}')
-                    block.value = StepIngredient.parse(token)
+                    block.value = Ingredient.parse(token)
                 case "#":
                     block.type = "Cookware"
                     token, stream_return = find_arbitrary_termination(token_stream.pop(0), token_stream.pop(0), '}')
@@ -227,7 +189,7 @@ class Step:
 @dataclass
 class Recipe:
     metadata: Mapping[str, str]
-    # ingredients: Sequence[Ingredient]
+    ingredients: Sequence[Ingredient]
     steps: Sequence[Step]
 
     @classmethod
@@ -259,10 +221,21 @@ class Recipe:
         raw_steps = re.split(r'\n\n', raw_no_metadata)
         steps = [Step.parse(step) for step in raw_steps]
 
-        for step in steps:
-            print(step)
+        # using the blocks in the steps calculate global ingredients
+        def add_ingredient_to_global(global_dict, ingredient_object) -> dict[str:Ingredient]:
+            if ingredient_object.name in global_dict.keys():
+                global_dict[ingredient_object.name] += ingredient_object
+            else:
+                global_dict[ingredient_object.name] = copy.deepcopy(ingredient_object)
+            return global_dict
+
+        ingredient_dict = {}
+        ingredient_blocks = [item for sublist in [[block.value for block in step.blocks if block.type == "Ingredient"] for step in steps] for item in sublist]
+        for ingredient in ingredient_blocks:
+            ingredient_dict = add_ingredient_to_global(ingredient_dict, ingredient)
 
         return Recipe(
             metadata=metadata,
+            ingredients=[ingredient_dict[key] for key in ingredient_dict.keys()],
             steps=steps,
         )

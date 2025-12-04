@@ -31,6 +31,6 @@ def test_cooklang_parser():
 
     with open("cookbook/tests/other/test_data/Cooklang/American Pancakes.cook") as file:
         recipe_text = file.read()
-    Recipe.parse(recipe_text)
+    recipe = Recipe.parse(recipe_text)
 
     assert False
