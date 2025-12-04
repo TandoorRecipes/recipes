@@ -364,7 +364,7 @@ function openFoodUsageDialog(food: Food) {
     // Query recipes that contain this food item
     api.apiRecipeList({
         food: food.id,
-        pageSize: 1000 
+        pageSize: 300
     }).then((response) => {
         foodRecipes.value = response.results || []
         console.log(`Found ${foodRecipes.value.length} recipes using food: ${food.name}`)
