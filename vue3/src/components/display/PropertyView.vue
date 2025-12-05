@@ -27,7 +27,7 @@
                     <td v-if="sourceSelectedToShow == 'food'">
                         <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small" class="d-print-none"
                                v-if="p.missingValue"></v-btn>
-                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue" class="d-print-none"></v-btn>
+                        <v-btn @click="dialogProperty = p; dialog = true; originalFoodValues = Object.values(toRaw(p.foodValues)); isSorted = false;" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue" class="d-print-none"></v-btn>
                     </td>
                 </tr>
                 </tbody>
@@ -102,22 +102,29 @@ type PropertyWrapper = {
     type: PropertyType,
 }
 
+const originalFoodValues = ref<any[]>([]);
+const isSorted = ref(false);
 
 const sortFoodValues = () => {
-    const rawFoodValues = toRaw(dialogProperty.value?.foodValues);
-    if (rawFoodValues && typeof rawFoodValues === 'object') {
-        const foodValuesArray = Object.values(rawFoodValues);
-        const sorted = [...foodValuesArray].sort((a, b) => {
-            const percentageA = (a.value / dialogProperty.value.propertyAmountTotal) * 100;
-            const percentageB = (b.value / dialogProperty.value.propertyAmountTotal) * 100;
-            return percentageB - percentageA; // Sorting in decreasing order
-        });
-        dialogProperty.value.foodValues = sorted;
-        console.log('Sorted foodValues:', dialogProperty.value.foodValues);
-    } else {
-        console.error('foodValues is not an object or is undefined');
+    if (!dialogProperty.value) return;
+    if (isSorted.value) {
+        dialogProperty.value.foodValues = originalFoodValues.value.slice();
+        isSorted.value = false;
+        return;
     }
+    originalFoodValues.value = Object.values(toRaw(dialogProperty.value.foodValues));
+    const rawFoodValues = toRaw(dialogProperty.value.foodValues);
+    const foodValuesArray = Object.values(rawFoodValues);
+    const sorted = [...foodValuesArray].sort((a, b) => {
+        const percentageA = (a.value / dialogProperty.value.propertyAmountTotal) * 100;
+        const percentageB = (b.value / dialogProperty.value.propertyAmountTotal) * 100;
+        return percentageB - percentageA;
+    });
+
+    dialogProperty.value.foodValues = sorted;
+    isSorted.value = true;
 };
+
 
 
 
