@@ -1,6 +1,4 @@
 import os
-from io import BytesIO, StringIO
-from zipfile import ZipFile
 
 from recipe_scrapers._utils import get_minutes
 
@@ -8,7 +6,10 @@ from cookbook.helper.cooklang_parser import Recipe as CooklangRecipe
 from cookbook.helper.HelperFunctions import match_or_fuzzymatch, validate_import_url
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
-from cookbook.models import Keyword, Recipe, Step
+from cookbook.models import Food, Ingredient, Keyword, Recipe, Step, Unit
+
+# from io import BytesIO, StringIO
+# from zipfile import ZipFile
 
 
 class Cooklang(Integration):
@@ -22,12 +23,9 @@ class Cooklang(Integration):
             "servings": ["serves", "makes", "batch", "yields"],
             "keywords": ["tags", "keys"],
             "working time": ["time", "duration"],
-            "waiting time": ["idle time"],
             "source url": ["source", "url", "link", "website"]
             # "nutrition": ["nutritional", "health information"]
         }
-        for key in cooklang_metadata.keys():
-            print(key, cooklang_metadata[key])
         for key in cooklang_metadata.keys():
             keyword, certainty = match_or_fuzzymatch(key, tandoor_recipe_meta_types)
             if certainty >= 75:
@@ -40,14 +38,10 @@ class Cooklang(Integration):
                             item = item.lstrip()
                             if not item:
                                 continue
-                            try:
-                                tandoor_recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=item)[0])
-                            except:
-                                pass
+                            tandoor_recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=item)[0])
+
                     case "working time":
                         tandoor_recipe.working_time = get_minutes(cooklang_metadata[key])
-                    case "waiting time":
-                        tandoor_recipe.waiting_time = get_minutes(cooklang_metadata[key])
                     case "source url":
                         if validate_import_url(cooklang_metadata[key]):
                             tandoor_recipe.source_url = cooklang_metadata[key]
@@ -56,10 +50,7 @@ class Cooklang(Integration):
                     case _:
                         setattr(tandoor_recipe, keyword, cooklang_metadata[key])
             else:
-                try:
-                    tandoor_recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=cooklang_metadata[key])[0])
-                except:
-                    pass
+                tandoor_recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=cooklang_metadata[key])[0])
 
     # ----------------------------------------------------Integration Method Override Functions----------------------------------------------------
 
@@ -77,13 +68,43 @@ class Cooklang(Integration):
         # specific metadata setup function
         self.apply_metadata_cooklang_to_tandoor(cooklang_object.metadata, recipe)
         # Translate the Steps and their related Ingredients
-        # i = 0
-        # for step in cooklang_object.steps:
-        #     step = Step.objects.create(instruction=None, order=i, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients)
-        #
-
-        # todo implement Ingredients
-
+        i = 0
+        for step in cooklang_object.steps:
+            instruction_string = ""
+            ingredients_list = []
+            for block in step.blocks:
+                match block.type:
+                    case "Ingredient":
+                        ingredients_list.append(
+                            Ingredient.objects.create(
+                                food=Food.objects.get_or_create(name=block.value.name, space=self.request.space)[0],
+                                unit=Unit.objects.get_or_create(name=block.value.quantity.unit, space=self.request.space)[0],
+                                amount=block.value.quantity.amount,
+                                space=self.request.space,
+                            )
+                        )
+                        amount = block.value.quantity.amount
+                        if int(amount) == amount:
+                            amount = int(amount)
+                        instruction_string = instruction_string + f"{amount}" + f"{block.value.quantity.unit} " + block.value.name
+                    case "Timer":
+                        timer_string = f"{int(block.value.quantity)} " + block.value.unit
+                        instruction_string = instruction_string + timer_string
+                        if time := get_minutes(timer_string):
+                            recipe.waiting_time += time
+                    case "inline comment":
+                        instruction_string = instruction_string + "(" + block.value + ")"
+                    case "block comment":
+                        instruction_string = instruction_string + "***" + block.value + "***"
+                    case _:
+                        instruction_string += block.value
+            step = Step.objects.create(
+                instruction=instruction_string, order=i, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients
+            )
+            for step_ingredient in ingredients_list:
+                step.ingredients.add(step_ingredient)
+            recipe.steps.add(step)
+            i += 1
         return recipe
 
     # def get_file_from_recipe(self, recipe) -> tuple[str, str]:

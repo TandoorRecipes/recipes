@@ -87,8 +87,35 @@ def test_cooklang_integration(u1_s1):
         "servings_text": "cookies",
         "keywords": ["DingoDoyle", "Dessert", "Christmas", "Holiday", "From Scratch"],
         "working_time": 25,
-        "waiting_time": 0,
+        "waiting_time": 15,
     }
+    expected_step_strings = [
+        "Preheat the oven to 350°F.",
+        "Place the 1cup unsalted butter, 114g confectioners' sugar and 1tsp vanilla in a large bowl, and beat with an electric mixer until combined, light, and fluffy.",
+        "Add the 240g all-purpose flour and 0.5tsp salt and mix until it’s crumbly and looks like it can’t be mixed more.",
+        "*** Be patient, if it is longer than 15 seconds then keep going for another 15 until before adding any more milk ***\nAdd the 1Tbsp whole milk and keep mixing. The dough should clump together after about 15 seconds.",
+        "Place the dough into a pastry bag fitted with a very large star tip, and pipe onto a silicone mat lined baking sheet, with no more than 12 cookies per sheet.",
+        "Bake the cookies for 15 minutes or until lightly golden.",
+        "Let them cool completely (on the tray is fine), and enjoy! (best still warm)",
+    ]
+
+    expected_step_ingredients = [
+        [],
+        [
+            ("unsalted butter", 1.0, "cup"),
+            ("confectioners' sugar", 114.0, "g"),
+            ("vanilla", 1.0, "tsp"),
+        ],
+        [
+            ("all-purpose flour", 240.0, "g"),
+            ("salt", 0.5, "tsp"),
+        ],
+        [("whole milk", 1.0, "Tbsp")],
+        [],
+        [],
+        [],
+    ]
+
     space, request = request_generator(u1_s1)
     with scope(space=space):
         cooklang_integration = Cooklang(request, "export")
@@ -103,5 +130,15 @@ def test_cooklang_integration(u1_s1):
                         assert tag in keywords
                 case _:
                     assert expected_metadata[key] == recipe.__getattribute__(key)
-
-    # assert False
+        i = 0
+        steps = recipe.steps.all()
+        assert len(expected_step_strings) == len(steps)
+        for line in expected_step_strings:
+            assert line == steps[i].instruction
+            i += 1
+        i = 0
+        for line in expected_step_ingredients:
+            step_ingredients_info = [(ingredient.food.name, float(ingredient.amount), ingredient.unit.name) for ingredient in steps[i].ingredients.all()]
+            assert len(line) == len(step_ingredients_info)
+            assert line == step_ingredients_info
+            i += 1
