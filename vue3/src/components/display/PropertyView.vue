@@ -39,7 +39,7 @@
         <v-card v-if="dialogProperty" :loading="loading">
             <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${dialogProperty.unit} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
                                    v-model="dialog"></v-closable-card-title>
-            <v-btn variant="outlined" size="small" class="rounded-pill d-print-none px-3 align-self-start ms-2 text-body-2 text-medium-emphasis">Sort Decreasing</v-btn>
+            <v-btn @click="sortFoodValues" variant="outlined" size="small" class="rounded-pill d-print-none px-3 align-self-start ms-2 text-body-2 text-medium-emphasis">Sort Decreasing</v-btn>
             <v-card-text>        
                 <v-list>
                     <v-list-item border v-for="fv in dialogProperty.foodValues" :key="`${dialogProperty.id}_${fv.id}`">
@@ -82,24 +82,44 @@
 
 <script setup lang="ts">
 
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {ApiApi, PropertyType, Recipe} from "@/openapi";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {roundDecimals} from "@/utils/number_utils.ts";
+import { toRaw } from 'vue';
 
 type PropertyWrapper = {
     id: number,
     name: string,
     description?: string,
-    foodValues: [],
+    foodValues: any[],
     propertyAmountPerServing: number,
     propertyAmountTotal: number,
     missingValue: boolean,
     unit?: string,
     type: PropertyType,
 }
+
+
+const sortFoodValues = () => {
+    const rawFoodValues = toRaw(dialogProperty.value?.foodValues);
+    if (rawFoodValues && typeof rawFoodValues === 'object') {
+        const foodValuesArray = Object.values(rawFoodValues);
+        const sorted = [...foodValuesArray].sort((a, b) => {
+            const percentageA = (a.value / dialogProperty.value.propertyAmountTotal) * 100;
+            const percentageB = (b.value / dialogProperty.value.propertyAmountTotal) * 100;
+            return percentageB - percentageA; // Sorting in decreasing order
+        });
+        dialogProperty.value.foodValues = sorted;
+        console.log('Sorted foodValues:', dialogProperty.value.foodValues);
+    } else {
+        console.error('foodValues is not an object or is undefined');
+    }
+};
+
+
 
 const props = defineProps({
     servings: {type: Number, required: true,},
