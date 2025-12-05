@@ -2044,10 +2044,12 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
 
+        # select_related("list_recipe")
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
             | Q(created_by__in=list(self.request.user.get_shopping_share()))).prefetch_related('created_by',
                                                                                                'food',
+                                                                                               'food__shopping_lists',
                                                                                                'shopping_lists',
                                                                                                'unit',
                                                                                                'list_recipe',
@@ -2055,9 +2057,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                                                                'list_recipe__recipe__created_by',
                                                                                                'list_recipe__mealplan',
                                                                                                'list_recipe__mealplan__shared',
-
-                                                                                               'list_recipe__mealplan__shared__userpreference',
-                                                                                               'list_recipe__mealplan__shared__userpreference__space',
+                                                                                               'list_recipe__mealplan__shared__userspace_set',
                                                                                                'list_recipe__mealplan__shoppinglistrecipe_set',
                                                                                                'list_recipe__mealplan__recipe',
                                                                                                'list_recipe__mealplan__recipe__keywords',

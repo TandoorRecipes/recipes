@@ -37,7 +37,7 @@
         </div>
 
 
-        <template v-slot:[selectBtnSlot]="{ isSelected, select }">
+        <template v-slot:[selectBtnSlot]="{ isSelected, select }" v-if="selectEnabled">
             <v-list-item-action class="ps-3 pe-3" start>
                 <v-checkbox-btn :model-value="isSelected" @update:model-value="select" @click.native.stop=""></v-checkbox-btn>
             </v-list-item-action>
@@ -79,12 +79,12 @@ const emit = defineEmits(['clicked'])
 
 const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
-    hideInfoRow: {type: Boolean, default: false}
+    hideInfoRow: {type: Boolean, default: false},
+    selectEnabled: {type: Boolean, default: false}
 })
 const checkBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'prepend' : 'append')
 const selectBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'append' : 'prepend')
 
-const selectEnabled = ref(true)
 const dialog = ref(false)
 
 const entries = computed(() => {

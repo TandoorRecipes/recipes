@@ -190,7 +190,12 @@ class SpaceFilterSerializer(serializers.ListSerializer):
                 iterable = data.all() if hasattr(data, 'all') else data
                 if isinstance(iterable, list) or (isinstance(iterable, QuerySet) and getattr(iterable, '_result_cache', None) is not None):
                     try:
-                        data = [d for d in iterable if d.userspace.space.id == self.context['request'].space.id]
+                        new_data = []
+                        for u in iterable:
+                            for us in u.userspace_set.all():
+                                if us.space.id == self.context['request'].space.id:
+                                    new_data.append(u)
+                        data = new_data
                     except Exception:
                         traceback.print_exc()
                         data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
