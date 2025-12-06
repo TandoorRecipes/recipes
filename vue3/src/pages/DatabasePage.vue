@@ -31,6 +31,7 @@
         </v-row>
         <v-row dense>
             <database-model-col model="Supermarket"></database-model-col>
+            <database-model-col model="ShoppingList"></database-model-col>
             <database-model-col model="SupermarketCategory"></database-model-col>
             <database-model-col model="MealType"></database-model-col>
         </v-row>

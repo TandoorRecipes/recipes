@@ -80,3 +80,19 @@ export const routeQueryDateTransformer = {
     get: (value: string | null | Date) => ((value == null) ? null : (new Date(value))),
     set: (value: string | null | Date) => ((value == null) ? null : (DateTime.fromJSDate(new Date(value)).toISODate()))
 }
+
+/**
+ * routeQueryParam transformer for boolean fields converting string bools to real bools
+ */
+export const boolOrUndefinedTransformer = {
+    get: (value: string | null | undefined) => ((value == null) ? undefined : value == 'true'),
+    set: (value: boolean | null | undefined) => ((value == null) ? undefined : value.toString())
+}
+
+/**
+ * routeQueryParam transformer for number fields converting string numbers to real numbers and allowing undefined for resettable parameters
+ */
+export const numberOrUndefinedTransformer = {
+    get: (value: string | null | undefined) => ((value == null) ? undefined : Number(value)),
+    set: (value: string | null | undefined) => ((value == null) ? undefined : value.toString())
+}

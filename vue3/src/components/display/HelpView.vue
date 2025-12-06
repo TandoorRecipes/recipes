@@ -10,15 +10,15 @@
                 <!--                    <v-text-field density="compact" variant="outlined" class="pt-2 pb-2" :label="$t('Search')" hide-details clearable></v-text-field>-->
                 <!--                </v-list-item>-->
                 <!--                <v-divider></v-divider>-->
-                <v-list-item link title="Start" @click="window = 'start'" prepend-icon="fa-solid fa-house"></v-list-item>
-                <v-list-item link title="Space" @click="window = 'space'" prepend-icon="fa-solid fa-database"></v-list-item>
+                <v-list-item link :title="$t('Start')" @click="window = 'start'" prepend-icon="fa-solid fa-house"></v-list-item>
+                <v-list-item link :title="$t('Space')" @click="window = 'space'" prepend-icon="fa-solid fa-database"></v-list-item>
                 <v-list-item link :title="$t('Recipes')" @click="window = 'recipes'" prepend-icon="$recipes"></v-list-item>
                 <v-list-item link :title="$t('Import')" @click="window = 'import'" prepend-icon="$import"></v-list-item>
                 <v-list-item link :title="$t('AI')" @click="window = 'ai'" prepend-icon="$ai"></v-list-item>
                 <v-list-item link :title="$t('Unit')" @click="window = 'unit'" prepend-icon="fa-solid fa-scale-balanced"></v-list-item>
                 <v-list-item link :title="$t('Food')" @click="window = 'food'" prepend-icon="fa-solid fa-carrot"></v-list-item>
                 <v-list-item link :title="$t('Keyword')" @click="window = 'keyword'" prepend-icon="fa-solid fa-tags"></v-list-item>
-                <v-list-item link title="Recipe Structure" @click="window = 'recipe_structure'" prepend-icon="fa-solid fa-diagram-project"></v-list-item>
+                <v-list-item link :title="$t('Recipe Structure')" @click="window = 'recipe_structure'" prepend-icon="fa-solid fa-diagram-project"></v-list-item>
                 <v-list-item link :title="$t('Properties')" @click="window = 'properties'" prepend-icon="fa-solid fa-database"></v-list-item>
                 <v-list-item link :title="$t('Search')" @click="window = 'recipe_search'" prepend-icon="$search"></v-list-item>
                 <v-list-item link :title="$t('SavedSearch')" @click="window = 'search_filter'" prepend-icon="fa-solid fa-sd-card"></v-list-item>
@@ -31,6 +31,8 @@
 
         <v-main>
             <v-container>
+                <v-select v-model="window" :items="mobileMenuItems" class="d-block d-lg-none">  </v-select>
+
                 <v-window v-model="window">
                     <v-window-item value="start">
                         <h2>Welcome to Tandoor 2</h2>
@@ -46,7 +48,8 @@
                         <v-btn class="mt-2 ms-2" color="info" href="https://github.com/TandoorRecipes/recipes" target="_blank" prepend-icon="fa-solid fa-code-branch">GitHub
                         </v-btn>
 
-                        <v-alert class="mt-3" border="start" variant="tonal" color="success" v-if="(!useUserPreferenceStore().serverSettings.hosted && !useUserPreferenceStore().activeSpace.demo)">
+                        <v-alert class="mt-3" border="start" variant="tonal" color="success"
+                                 v-if="(!useUserPreferenceStore().serverSettings.hosted && !useUserPreferenceStore().activeSpace.demo)">
                             <v-alert-title>Did you know?</v-alert-title>
                             Tandoor is Open Source and available to anyone for free to host on their own server. Thousands of hours have been spend
                             making Tandoor what it is today. You can help make Tandoor even better by contributing or helping financing the effort.
@@ -60,10 +63,12 @@
 
                     </v-window-item>
                     <v-window-item value="space">
-                        <p class="mt-3">All your data is stored in a Space where you can invite other people to collaborate on your recipe database. Typcially the members of a space
+                        <p class="mt-3">All your data is stored in a Space where you can invite other people to collaborate on your recipe database. Typcially the members of a
+                            space
                             belong to one family/household/organization.</p>
 
-                        <p class="mt-3">While everyone can access all recipes by default, Books, Shopping Lists and Mealplans are not shared by default. You can share them with other
+                        <p class="mt-3">While everyone can access all recipes by default, Books, Shopping Lists and Mealplans are not shared by default. You can share them with
+                            other
                             members of your space
                             using the settings.
                         </p>
@@ -77,19 +82,24 @@
 
                     </v-window-item>
                     <v-window-item value="recipes">
-                        <p class="mt-3">Recipes are the foundation of your Tandoor space. A Recipe has one or more steps that contain ingredients, instructions and other information.
+                        <p class="mt-3">Recipes are the foundation of your Tandoor space. A Recipe has one or more steps that contain ingredients, instructions and other
+                            information.
                             Ingredients in turn consist of an amount, a unit and a food, allowing recipes to be scaled, nutrition's to be calculated and shopping to be organized.
                         </p>
 
                         <p class="mt-3">Besides manually creating them you can also import them from various different places.
                         </p>
-                        <p class="mt-3">Recipes, by default, are visible to all members of your space. Setting them to private means only you can see it. After setting it to private you
+                        <p class="mt-3">Recipes, by default, are visible to all members of your space. Setting them to private means only you can see it. After setting it to
+                            private you
                             can manually specify the people who should be able to view the recipe.
                             You can also create a share link for the recipe to share it with everyone that has access to the link.
                         </p>
                         <p class="mt-3"></p>
 
-                        <v-btn color="primary" variant="tonal" prepend-icon="$create" class="me-2" :to="{name: 'ModelEditPage', params: {model: 'Recipe'}}">{{ $t('Create') }}</v-btn>
+                        <v-btn color="primary" variant="tonal" prepend-icon="$create" class="me-2" :to="{name: 'ModelEditPage', params: {model: 'Recipe'}}">{{
+                                $t('Create')
+                            }}
+                        </v-btn>
                         <v-btn color="primary" variant="tonal" prepend-icon="$search" class="me-2" :to="{name: 'SearchPage'}">{{ $t('Search') }}</v-btn>
 
                     </v-window-item>
@@ -119,7 +129,8 @@
                         </p>
 
                         <p class="mt-3" v-if="useUserPreferenceStore().serverSettings.hosted">
-                            To prevent accidental AI cost you can review your AI usage using the AI Log. The Server Administrator can also set AI usage limits for your space (either monthly or using a balance).
+                            To prevent accidental AI cost you can review your AI usage using the AI Log. The Server Administrator can also set AI usage limits for your space
+                            (either monthly or using a balance).
                         </p>
                         <p class="mt-3" v-if="!useUserPreferenceStore().serverSettings.hosted">
                             Depending on your subscription you will have different AI Credits available for your space every month. Additionally you might have a Credit balance
@@ -153,7 +164,8 @@
                         <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-scale-balanced" class="me-2" :to="{name: 'ModelListPage', params: {model: 'Unit'}}">
                             {{ $t('Unit') }}
                         </v-btn>
-                        <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-exchange-alt" class="me-2" :to="{name: 'ModelListPage', params: {model: 'UnitConversion'}}">
+                        <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-exchange-alt" class="me-2"
+                               :to="{name: 'ModelListPage', params: {model: 'UnitConversion'}}">
                             {{ $t('Conversion') }}
                         </v-btn>
 
@@ -223,7 +235,8 @@
                             calculate the property amount if a Food is given in a different unit (e.g. 1kg or 1 cup).
                         </p>
 
-                        <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-database" class="me-2 mt-2 mb-2" :to="{name: 'ModelListPage', params: {model: 'PropertyType'}}">
+                        <v-btn color="primary" variant="tonal" prepend-icon="fa-solid fa-database" class="me-2 mt-2 mb-2"
+                               :to="{name: 'ModelListPage', params: {model: 'PropertyType'}}">
                             {{ $t('Property') }}
                         </v-btn>
                         <h3>Editor</h3>
@@ -294,7 +307,8 @@
                         </p>
 
                         <p class="mt-3">
-                            You can assign Supermarket Categories to your Foods, either trough the Food Editor or directly by clicking on a Shopping List Entry, to automatically sort the list
+                            You can assign Supermarket Categories to your Foods, either trough the Food Editor or directly by clicking on a Shopping List Entry, to automatically
+                            sort the list
                             according to the Category Order defined in the Supermarket.
                         </p>
 
@@ -333,7 +347,8 @@
 
                         <p class="mt-3">
                             When selecting a Recipe in a Meal Plan you can automatically add its ingredients to the shopping list. You can also manually add more entries trough the
-                            shopping tab in the Meal Plan editor. When deleting a Meal Plan all Shopping List Entries associated with that Meal Plan are deleted as well. When changing the
+                            shopping tab in the Meal Plan editor. When deleting a Meal Plan all Shopping List Entries associated with that Meal Plan are deleted as well. When
+                            changing the
                             number of servings in a Meal Plan the Servings of the connected Recipe in the Shopping list are automatically changed as well.
 
                         </p>
@@ -368,9 +383,29 @@
 
 import {ref} from "vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const drawer = defineModel()
 const window = ref('start')
+
+const mobileMenuItems = ref([
+    {title: t('Start'), props: {prependIcon: 'fa-solid fa-house'}, value: 'start'},
+    {title: t('Space'), props: {prependIcon: 'fa-solid fa-database'}, value: 'space'},
+    {title: t('Recipes'), props: {prependIcon: '$recipes'}, value: 'recipes'},
+    {title: t('Import'), props: {prependIcon: '$import'}, value: 'import'},
+    {title: t('AI'), props: {prependIcon: '$ai'}, value: 'ai'},
+    {title: t('Unit'), props: {prependIcon: 'fa-solid fa-scale-balanced'}, value: 'unit'},
+    {title: t('Food'), props: {prependIcon: 'fa-solid fa-carrot'}, value: 'food'},
+    {title: t('Keyword'), props: {prependIcon: 'fa-solid fa-tags'}, value: 'keyword'},
+    {title: t('RecipeStructure'), props: {prependIcon: 'fa-solid fa-diagram-project'}, value: 'recipe_structure'},
+    {title: t('Properties'), props: {prependIcon: 'fa-solid fa-database'}, value: 'properties'},
+    {title: t('Search'), props: {prependIcon: '$search'}, value: 'recipe_search'},
+    {title: t('SavedSearch'), props: {prependIcon: 'fa-solid fa-sd-card'}, value: 'search_filter'},
+    {title: t('Books'), props: {prependIcon: '$books'}, value: 'books'},
+    {title: t('Shopping'), props: {prependIcon: '$shopping'}, value: 'shopping'},
+    {title: t('Meal_Plan'), props: {prependIcon: '$mealplan'}, value: 'meal_plan'}
+])
 
 </script>
 

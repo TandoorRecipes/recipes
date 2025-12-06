@@ -43,7 +43,10 @@ def index(request, path=None, resource=None):
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
     if 'signup_token' in request.session:
-        return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
+        value = request.session['signup_token']
+        del request.session['signup_token']
+        request.session.modified = True
+        return HttpResponseRedirect(reverse('view_invite', args=[value]))
 
     if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
         return render(request, 'frontend/tandoor.html', {})

@@ -1,4 +1,4 @@
-import {Supermarket} from "@/openapi";
+import {ShoppingList, Supermarket} from "@/openapi";
 
 export type DeviceSettings = {
     shopping_show_checked_entries: boolean
@@ -6,6 +6,7 @@ export type DeviceSettings = {
     shopping_show_selected_supermarket_only: boolean
     shopping_selected_grouping: string
     shopping_selected_supermarket: Supermarket | null
+    shopping_selected_shopping_list: number[]
     shopping_item_info_created_by: boolean
     shopping_item_info_mealplan: boolean
     shopping_item_info_recipe: boolean

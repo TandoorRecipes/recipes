@@ -4,7 +4,13 @@
       <v-col>
         <v-card>
           <v-card-text class="pt-2 pb-2">
-            <v-btn variant="flat" @click="router.go(-1)" prepend-icon="fa-solid fa-arrow-left">{{ $t("Back") }}</v-btn>
+            <v-btn
+              variant="flat"
+              @click="router.go(-1)"
+              prepend-icon="fa-solid fa-arrow-left"
+            >
+              {{ $t('Back') }}
+            </v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -12,47 +18,78 @@
 
     <v-row dense>
       <v-col>
-        <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)">
+        <v-card
+          :prepend-icon="genericModel.model.icon"
+          :title="$t(genericModel.model.localizationKey)"
+        >
           <template #subtitle v-if="genericModel.model.localizationKeyDescription">
             <div class="text-wrap">
               {{ $t(genericModel.model.localizationKeyDescription) }}
             </div>
           </template>
+
           <template #append>
-            <v-btn class="float-right" icon="$create" color="create" v-if="!genericModel.model.disableCreate">
-              <i class="fa-solid fa-plus"></i>
+            <v-btn
+              class="float-right"
+              icon="$create"
+              color="create"
+              v-if="!genericModel.model.disableCreate"
+            >
+              <i class="fa-solid fa-plus" />
               <model-edit-dialog
                 :close-after-create="false"
                 :model="model"
                 @create="loadItems({ page: page })"
                 @save="loadItems({ page: page })"
                 @delete="loadItems({ page: page })"
-              ></model-edit-dialog>
+              />
             </v-btn>
           </template>
 
           <!-- TODO build customizable model component system -->
           <v-card-actions v-if="genericModel.model.name == 'RecipeImport'">
-            <v-btn prepend-icon="fa-solid fa-rotate" color="success" @click="importAllRecipes()">{{ $t("ImportAll") }}</v-btn>
+            <v-btn
+              prepend-icon="fa-solid fa-rotate"
+              color="success"
+              @click="importAllRecipes()"
+            >
+              {{ $t('ImportAll') }}
+            </v-btn>
           </v-card-actions>
 
           <v-card-text v-if="genericModel.model.name == 'AiLog'">
-            {{ $t("MonthlyCreditsUsed") }} ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} / {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
-            {{ $t("AiCreditsBalance") }} : {{ useUserPreferenceStore().activeSpace.aiCreditsBalance }}
+            {{ $t('MonthlyCreditsUsed') }}
+            ({{ useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed }} /
+            {{ useUserPreferenceStore().activeSpace.aiCreditsMonthly }})
+            {{ $t('AiCreditsBalance') }} :
+            {{ useUserPreferenceStore().activeSpace.aiCreditsBalance }}
             <v-progress-linear
               :model-value="useUserPreferenceStore().activeSpace.aiMonthlyCreditsUsed"
               :max="useUserPreferenceStore().activeSpace.aiCreditsMonthly"
-            ></v-progress-linear>
+            />
           </v-card-text>
+
           <v-card-actions v-if="genericModel.model.name == 'UserSpace'">
-            <v-btn :prepend-icon="TInviteLink.icon" :to="{ name: 'ModelListPage', params: { model: 'InviteLink' } }">{{ $t("Invites") }}</v-btn>
+            <v-btn
+              :prepend-icon="TInviteLink.icon"
+              :to="{ name: 'ModelListPage', params: { model: 'InviteLink' } }"
+            >
+              {{ $t('Invites') }}
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
+
     <v-row>
       <v-col>
-        <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="query" v-if="!genericModel.model.disableSearch" clearable></v-text-field>
+        <v-text-field
+          prepend-inner-icon="$search"
+          :label="$t('Search')"
+          v-model="query"
+          v-if="!genericModel.model.disableSearch"
+          clearable
+        />
 
         <v-data-table-server
           v-model="selectedItems"
@@ -71,36 +108,74 @@
         >
           <template v-slot:header.action v-if="selectedItems.length > 0">
             <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" color="info">
-              <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
+              <v-icon icon="fa-solid fa-ellipsis-v" />
               <v-menu activator="parent" close-on-content-click>
                 <v-list density="compact" class="pt-1 pb-1" activatable>
-                  <v-list-item prepend-icon="fa-solid fa-list-check" @click="batchEditDialog = true" v-if="genericModel.model.name == 'Food'">
-                    {{ $t("BatchEdit") }}
+                  <v-list-item
+                    prepend-icon="fa-solid fa-list-check"
+                    @click="batchEditDialog = true"
+                    v-if="genericModel.model.name == 'Food'"
+                  >
+                    {{ $t('BatchEdit') }}
                   </v-list-item>
-                  <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" @click="batchMergeDialog = true" v-if="genericModel.model.isMerge">
-                    {{ $t("Merge") }}
+                  <v-list-item
+                    prepend-icon="fa-solid fa-arrows-to-dot"
+                    @click="batchMergeDialog = true"
+                    v-if="genericModel.model.isMerge"
+                  >
+                    {{ $t('Merge') }}
                   </v-list-item>
-                  <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true" v-if="!genericModel.model.disableDelete">
-                    {{ $t("Delete_All") }}
+                  <v-list-item
+                    prepend-icon="$delete"
+                    @click="batchDeleteDialog = true"
+                    v-if="!genericModel.model.disableDelete"
+                  >
+                    {{ $t('Delete_All') }}
                   </v-list-item>
                 </v-list>
               </v-menu>
             </v-btn>
           </template>
+
           <template v-slot:item.space="{ item }" v-if="genericModel.model.name == 'AiProvider'">
-            <v-chip label v-if="item.space == null" color="success">{{ $t("Global") }}</v-chip>
-            <v-chip label v-else color="info">{{ $t("Space") }}</v-chip>
+            <v-chip label v-if="item.space == null" color="success">
+              {{ $t('Global') }}
+            </v-chip>
+            <v-chip label v-else color="info">
+              {{ $t('Space') }}
+            </v-chip>
           </template>
+
           <template v-slot:item.groups="{ item }" v-if="genericModel.model.name == 'UserSpace'">
-            {{ item.groups.flatMap((x: Group) => x.name).join(", ") }}
+            {{ item.groups.flatMap((x: Group) => x.name).join(', ') }}
           </template>
+
           <template v-slot:item.active="{ item }" v-if="genericModel.model.name == 'Space'">
-            <v-chip label v-if="item.id == useUserPreferenceStore().activeSpace.id!" color="success">{{ $t("Active") }}</v-chip>
-            <v-chip label v-else color="info" @click="useUserPreferenceStore().switchSpace(item)">{{ $t("Select") }}</v-chip>
+            <v-chip
+              label
+              v-if="item.id == useUserPreferenceStore().activeSpace.id!"
+              color="success"
+            >
+              {{ $t('Active') }}
+            </v-chip>
+            <v-chip
+              label
+              v-else
+              color="info"
+              @click="useUserPreferenceStore().switchSpace(item)"
+            >
+              {{ $t('Select') }}
+            </v-chip>
           </template>
 
-          <!-- Make Food name clickable -->
+          <!-- color chip from develop -->
+          <template v-slot:item.color="{ item }">
+            <v-chip label :color="item.color">
+              {{ item.color }}
+            </v-chip>
+          </template>
 
+          <!-- clickable Food name from your feature -->
           <template v-slot:item.name="{ item }" v-if="genericModel.model.name == 'Food'">
             <span class="food-link" @click="openFoodUsageDialog(item)">
               {{ item.name }}
@@ -109,39 +184,73 @@
 
           <template v-slot:item.action="{ item }">
             <v-btn class="float-right" icon="$menu" variant="plain">
-              <v-icon icon="$menu"></v-icon>
+              <v-icon icon="$menu" />
               <v-menu activator="parent" close-on-content-click>
                 <v-list density="compact">
                   <v-list-item
                     prepend-icon="$edit"
                     :to="{ name: 'ModelEditPage', params: { model: model, id: item.id } }"
-                    v-if="!(genericModel.model.disableCreate && genericModel.model.disableUpdate && genericModel.model.disableDelete)"
+                    v-if="!(
+                      genericModel.model.disableCreate &&
+                      genericModel.model.disableUpdate &&
+                      genericModel.model.disableDelete
+                    )"
                   >
-                    {{ $t("Edit") }}
+                    {{ $t('Edit') }}
                   </v-list-item>
-                  <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
-                    {{ $t("Merge") }}
-                    <model-merge-dialog :model="model" :source="[item]" @change="loadItems({ page: page, itemsPerPage: pageSize, search: query })"></model-merge-dialog>
+
+                  <v-list-item
+                    prepend-icon="fa-solid fa-arrows-to-dot"
+                    v-if="genericModel.model.isMerge"
+                    link
+                  >
+                    {{ $t('Merge') }}
+                    <model-merge-dialog
+                      :model="model"
+                      :source="[item]"
+                      @change="loadItems({ page: page, itemsPerPage: pageSize, search: query })"
+                    />
                   </v-list-item>
-                  <v-list-item prepend-icon="fa-solid fa-table-list" :to="{ name: 'IngredientEditorPage', query: { food_id: item.id } }" v-if="genericModel.model.name == 'Food'">
-                    {{ $t("Ingredient Editor") }}
+
+                  <v-list-item
+                    prepend-icon="fa-solid fa-table-list"
+                    :to="{ name: 'IngredientEditorPage', query: { food_id: item.id } }"
+                    v-if="genericModel.model.name == 'Food'"
+                  >
+                    {{ $t('Ingredient Editor') }}
                   </v-list-item>
-                  <v-list-item prepend-icon="fa-solid fa-table-list" :to="{ name: 'IngredientEditorPage', query: { unit_id: item.id } }" v-if="genericModel.model.name == 'Unit'">
-                    {{ $t("Ingredient Editor") }}
+
+                  <v-list-item
+                    prepend-icon="fa-solid fa-table-list"
+                    :to="{ name: 'IngredientEditorPage', query: { unit_id: item.id } }"
+                    v-if="genericModel.model.name == 'Unit'"
+                  >
+                    {{ $t('Ingredient Editor') }}
                   </v-list-item>
-                  <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'Sync'" link>
-                    {{ $t("Import") }}
-                    <sync-dialog :sync="item"></sync-dialog>
+
+                  <v-list-item
+                    prepend-icon="fa-solid fa-rotate"
+                    v-if="genericModel.model.name == 'Sync'"
+                    link
+                  >
+                    {{ $t('Import') }}
+                    <sync-dialog :sync="item" />
                   </v-list-item>
-                  <v-list-item prepend-icon="fa-solid fa-rotate" v-if="genericModel.model.name == 'RecipeImport'" @click="importRecipe(item)">
-                    {{ $t("Import") }}
+
+                  <v-list-item
+                    prepend-icon="fa-solid fa-rotate"
+                    v-if="genericModel.model.name == 'RecipeImport'"
+                    @click="importRecipe(item)"
+                  >
+                    {{ $t('Import') }}
                   </v-list-item>
+
                   <v-list-item
                     prepend-icon="fa-solid fa-arrow-right-from-bracket"
                     v-if="genericModel.model.name == 'Space' && item.createdBy.id != useUserPreferenceStore().userSettings.user.id!"
                     @click="leaveSpace(item)"
                   >
-                    {{ $t("LeaveSpace") }}
+                    {{ $t('LeaveSpace') }}
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -157,7 +266,7 @@
       v-model="batchDeleteDialog"
       activator="model"
       @change="loadItems({ page: page, itemsPerPage: pageSize, search: query })"
-    ></batch-delete-dialog>
+    />
 
     <model-merge-dialog
       :model="model"
@@ -165,7 +274,7 @@
       v-model="batchMergeDialog"
       activator="model"
       @change="loadItems({ page: page, itemsPerPage: pageSize, search: query })"
-    ></model-merge-dialog>
+    />
 
     <batch-edit-food-dialog
       :items="selectedItems"
@@ -173,13 +282,15 @@
       v-if="model == 'Food'"
       activator="model"
       @change="loadItems({ page: page, itemsPerPage: pageSize, search: query })"
-    ></batch-edit-food-dialog>
-    <!-- Dialog to show recipes for a selected food -->
+    />
 
+    <!-- Dialog to show recipes for a selected food -->
     <v-dialog v-model="showFoodDialog" max-width="600" v-if="genericModel.model.name == 'Food'">
       <v-card>
         <v-card-title>
-          <span v-if="selectedFood"> Recipes Using: {{ selectedFood.name }} </span>
+          <span v-if="selectedFood">
+            Recipes Using: {{ selectedFood.name }}
+          </span>
         </v-card-title>
 
         <v-card-text>
@@ -198,12 +309,15 @@
 
         <v-card-actions>
           <v-spacer />
-          <v-btn variant="text" @click="closeFoodUsageDialog"> Close </v-btn>
+          <v-btn variant="text" @click="closeFoodUsageDialog">
+            Close
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
+
 
 <script setup lang="ts">
 import type { Food, Recipe } from "@/openapi"

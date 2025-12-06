@@ -29,7 +29,7 @@
                                              @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></ModelSelect>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
-                                <recipe-card :recipe="editingObj.recipe" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
+                                <recipe-card :recipe="editingObj.recipe" :servings="editingObj.servings" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
                                 <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate()">
                                     {{$t('Add')}}
                                     <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj" @created="loadShoppingListEntries(); editingObj.shopping = true;"></add-to-shopping-dialog>

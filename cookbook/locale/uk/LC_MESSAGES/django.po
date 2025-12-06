@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-11-14 19:01+0000\n"
+"PO-Revision-Date: 2025-12-02 08:03+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -209,7 +209,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:350
 msgid "Search Method"
-msgstr "Метод пошуку"
+msgstr "Метод Пошуку"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
@@ -225,7 +225,7 @@ msgstr "Частковий збіг"
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
-msgstr "Починається з"
+msgstr "Починається З"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
@@ -357,7 +357,7 @@ msgstr "Нотатки"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr "Харчова цінність"
+msgstr "Інформація про поживність"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
@@ -468,7 +468,7 @@ msgstr "Пошук"
 #: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
 #: .\cookbook\templates\meal_plan.html:7
 msgid "Meal-Plan"
-msgstr "План харчування"
+msgstr "Меню"
 
 #: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
 #: .\cookbook\views\views.py:459
@@ -486,7 +486,7 @@ msgstr " є частиною кроку рецепта та не може бут
 
 #: .\cookbook\models.py:918
 msgid "Nutrition"
-msgstr "Харчова цінніцть"
+msgstr "Поживність"
 
 #: .\cookbook\models.py:918
 msgid "Allergen"
@@ -761,7 +761,7 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
-"Please confirm that\n"
+"Будь ласка, підтвердьте\n"
 "            <a href=\"mailto:%(email)s\">%(email)s</a> e-mail для "
 "користувача %(user_display)s\n"
 "            ."
@@ -769,7 +769,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
-msgstr "Підтвердити"
+msgstr "Підтвердьте"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -778,7 +778,7 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"Цейпосилання для підтвердження електронної пошти прострочено або недійсне. "
+"Це посилання для підтвердження електронної пошти прострочено або недійсне. "
 "Будь ласка,\n"
 "            <a href=\"%(email_url)s\">надішліть новий запит на підтвердження "
 "електронної пошти</a>."
@@ -806,7 +806,7 @@ msgstr "Увійти"
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr "Реєстрація"
+msgstr "Зареєструватись"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
@@ -1085,7 +1085,7 @@ msgstr "Ви використовуєте безкоштовну версію Ta
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
-msgstr "Оновити зараз"
+msgstr "Оновити Зараз"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1447,7 +1447,7 @@ msgstr "Таблиця"
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr "Заголовок"
+msgstr "Шапка"
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
@@ -2241,7 +2241,7 @@ msgstr "Ні існує {self.basename} з id {target}"
 
 #: .\cookbook\views\api.py:250
 msgid "Cannot merge with child object!"
-msgstr ""
+msgstr "Неможливо об'єднати з піделементм!"
 
 #: .\cookbook\views\api.py:288
 #, python-brace-format
@@ -2298,15 +2298,15 @@ msgstr ""
 
 #: .\cookbook\views\api.py:744
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
-msgstr "Фільтруйте меню за Меню ID. Для декількох повторюваних параметрів."
+msgstr "Фільтруйте меню за Меню ID. Дозволено кілька повторів."
 
 #: .\cookbook\views\api.py:872
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
-msgstr ""
+msgstr "ID рецепта, в якому знаходиться цей крок. Дозволено кілька повторів."
 
 #: .\cookbook\views\api.py:873
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "Рядок запиту збігається (нечітко) з назвою об'єкта."
 
 #: .\cookbook\views\api.py:909
 msgid ""
@@ -2321,106 +2321,134 @@ msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
+"ID ключового слова, яке повинно бути в рецепті. Дозволено кілька повторів. "
+"Еквівалентно keywords_or"
 
 #: .\cookbook\views\api.py:911
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
+"ID ключових слів (дозволено кілька повторів). Повертає рецепти, які "
+"відповідають хоча б одному ключовому слову"
 
 #: .\cookbook\views\api.py:912
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
+"ID ключових слів (дозволено кілька повторів). Повертає рецепти, які "
+"відповідають всім ключовомим словам."
 
 #: .\cookbook\views\api.py:913
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
+"ID ключових слів (дозволено кілька повторів). Виключає рецепти, які "
+"відповідають хоча б одному ключовому слову."
 
 #: .\cookbook\views\api.py:914
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
+"ID ключових слів (дозволено кілька повторів). Виключає рецепти, які "
+"відповідають всім ключовомим словам."
 
 #: .\cookbook\views\api.py:915
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"Ідентифікатор продукту, який повинен бути в рецепті. Дозволено кілька "
+"повторів."
 
 #: .\cookbook\views\api.py:916
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
+"ID продукту, дозволено кілька повторів. Повертає рецепти де є будь-який з "
+"продуктів"
 
 #: .\cookbook\views\api.py:917
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
+"ID продукту, дозволено кілька повторів. Повертає рецепти де є всі продукти."
 
 #: .\cookbook\views\api.py:918
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
+"ID продукту, дозволено кілька повторів. Виключає рецепти де є будь-який з "
+"продуктів."
 
 #: .\cookbook\views\api.py:919
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
+"ID продукту, дозволено кілька повторів. Виключає рецепти де є всі продукти."
 
 #: .\cookbook\views\api.py:920
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID одиниці вимірювання яку мусить мати рецепт."
 
 #: .\cookbook\views\api.py:921
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr ""
+"Оцінка рецепту повинна бути не нижче. [0 - 5] Негативне значення фільтрує "
+"оцінки нижче."
 
 #: .\cookbook\views\api.py:922
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
-msgstr ""
+msgstr "ID книги, в якій повинен бути рецепт. Дозволено кілька повторів."
 
 #: .\cookbook\views\api.py:923
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
-msgstr ""
+msgstr "ID книг, дозволено кілька повторів. Повертає рецепти з будь-якою з книг"
 
 #: .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
-msgstr ""
+msgstr "ID книг, дозволено кілька повторів. Повертає рецепти з усіма книгами."
 
 #: .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"ID книг, дозволено кілька повторів. Виключає рецепти з будь-якою з книг."
 
 #: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
-msgstr ""
+msgstr "ID книг, дозволено кілька повторів. Виключає рецепти з усіма книгами."
 
 #: .\cookbook\views\api.py:927
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
-msgstr ""
+msgstr "Якщо повинні повертатися тільки внутрішні рецепти. [true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:928
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr ""
+msgstr "Повертає результати у випадковому порядку. [true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:929
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
+"Повертає нові результати першими в результатах пошуку. [true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:930
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
+"Відфільтрувати рецепти, приготовані X разів або більше.  Від'ємні значення "
+"повертають рецепти, приготовані менше ніж X разів"
 
 #: .\cookbook\views\api.py:931
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Фільтрувати рецепти, приготовані в останній раз в день YYYY-MM-DD або "
+"пізніше. Додавання префікса - фільтрує за датою або раніше."
 
 #: .\cookbook\views\api.py:932
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Фільтрувати рецепти, створені в день YYYY-MM-DD або пізніше. Додавання "
+"префікса - фільтрує за датою або раніше."
 
 #: .\cookbook\views\api.py:933
 msgid ""
@@ -2435,10 +2463,14 @@ msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Фільтрувати рецепти, переглянуті в день або після YYYY-MM-DD. Додавання "
+"префікса - фільтрує за датою або до дати."
 
 #: .\cookbook\views\api.py:935
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
+"Фільтрувати рецепти, які можна приготувати з продуктами, що є в наявності. "
+"[true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:1122
 msgid ""
@@ -2454,240 +2486,260 @@ msgid ""
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
+"Фільтрувати записи у списку покупок за позначкою.  "
+"[true, false, both, <b>нещодавно</b>]<br>                  - нещодавно "
+"включає непозначені елементи та нещодавно виконані елементи."
 
 #: .\cookbook\views\api.py:1128
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
+"Повертає записи списку покупок, відсортовані за категоріями супермаркетів."
 
 #: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "Фільтр для записів із заданим рецептом"
 
 #: .\cookbook\views\api.py:1292
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
+"Повернути автоматизації, що відповідають типу автоматизації.  Допускається "
+"кілька значень."
 
 #: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
-msgstr ""
+msgstr "Нічого робити."
 
 #: .\cookbook\views\api.py:1445
 msgid "Invalid Url"
-msgstr ""
+msgstr "Неправильний URL"
 
 #: .\cookbook\views\api.py:1449
 msgid "Connection Refused."
-msgstr ""
+msgstr "Підключення відхилено."
 
 #: .\cookbook\views\api.py:1451
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Погана схема URL."
 
 #: .\cookbook\views\api.py:1474
 msgid "No usable data could be found."
-msgstr ""
+msgstr "Не вдалося знайти корисних даних."
 
 #: .\cookbook\views\api.py:1549
 msgid "File is above space limit"
-msgstr ""
+msgstr "Файл перевищує обмеження розміру"
 
 #: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
-msgstr ""
+msgstr "Імпорт не реалізований для цього постачальника"
 
 #: .\cookbook\views\api.py:1650 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr ""
+msgstr "Ця функція ще не доступна в хостинговій версії Tandoor!"
 
 #: .\cookbook\views\api.py:1671
 msgid "Sync successful!"
-msgstr ""
+msgstr "Синхронізація успішна!"
 
 #: .\cookbook\views\api.py:1674
 msgid "Error synchronizing with Storage"
-msgstr ""
+msgstr "Помилка синхронізації зі сховищем"
 
 #: .\cookbook\views\data.py:99
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Групове редагування завершено. %(count)d рецепт оновлено."
+msgstr[1] "Групове редагування завершено. %(count)d рецепти оновлено."
+msgstr[2] "Групове редагування завершено. %(count)d рецептів оновлено."
 
 #: .\cookbook\views\delete.py:102
 msgid "Monitor"
-msgstr ""
+msgstr "Моніторінг"
 
 #: .\cookbook\views\delete.py:114 .\cookbook\views\lists.py:61
 #: .\cookbook\views\new.py:69
 msgid "Storage Backend"
-msgstr ""
+msgstr "Сховище (бекенд)"
 
 #: .\cookbook\views\delete.py:122
 msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
 msgstr ""
+"Не вдалося видалити це сховище для бекенду, оскільки воно використовується "
+"принаймні в одному моніторінгу."
 
 #: .\cookbook\views\delete.py:135
 msgid "Connectors Config Backend"
-msgstr ""
+msgstr "Конфігурація коннекторів для бекенду"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
-msgstr ""
+msgstr "Посилання для запрошення"
 
 #: .\cookbook\views\delete.py:168
 msgid "Space Membership"
-msgstr ""
+msgstr "Участь в просторі"
 
 #: .\cookbook\views\edit.py:84
 msgid "You cannot edit this storage!"
-msgstr ""
+msgstr "Ви не можете редагувати це сховище!"
 
 #: .\cookbook\views\edit.py:108
 msgid "Storage saved!"
-msgstr ""
+msgstr "Сховище збережено!"
 
 #: .\cookbook\views\edit.py:110
 msgid "There was an error updating this storage backend!"
-msgstr ""
+msgstr "Сталася помилка під час оновлення цього сховища!"
 
 #: .\cookbook\views\edit.py:134
 msgid "Config saved!"
-msgstr ""
+msgstr "Конфігурація збережена!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "Конфігурація конектора"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
-msgstr ""
+msgstr "Зміни збережені!"
 
 #: .\cookbook\views\edit.py:202
 msgid "Error saving changes!"
-msgstr ""
+msgstr "Помилка під час збереження змін!"
 
 #: .\cookbook\views\import_export.py:101
 msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"PDF експорт не включений на цьому сервері, бо це все ще експериментальна "
+"функція."
 
 #: .\cookbook\views\lists.py:23
 msgid "Import Log"
-msgstr ""
+msgstr "Журнал імпорту"
 
 #: .\cookbook\views\lists.py:36
 msgid "Discovery"
-msgstr ""
+msgstr "Огляд"
 
 #: .\cookbook\views\lists.py:46
 msgid "Shopping List"
-msgstr ""
+msgstr "Список покупок"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
 msgid "Connector Config Backend"
-msgstr ""
+msgstr "Конфігурація коннектора для бекенду"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
-msgstr ""
+msgstr "Посилання для запрошеннь"
 
 #: .\cookbook\views\lists.py:154
 msgid "Supermarkets"
-msgstr ""
+msgstr "Супермаркети"
 
 #: .\cookbook\views\lists.py:170
 msgid "Shopping Categories"
-msgstr ""
+msgstr "Категорії покупок"
 
 #: .\cookbook\views\lists.py:202
 msgid "Custom Filters"
-msgstr ""
+msgstr "Спеціальні фільтри"
 
 #: .\cookbook\views\lists.py:239
 msgid "Steps"
-msgstr ""
+msgstr "Кроки"
 
 #: .\cookbook\views\lists.py:270
 msgid "Property Types"
-msgstr ""
+msgstr "Типи об'єктів"
 
 #: .\cookbook\views\new.py:86
 msgid "This feature is not enabled by the server admin!"
-msgstr ""
+msgstr "Ця функція не включена адміністратором сервера!"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
-msgstr ""
+msgstr "Імпортовано новий рецепт!"
 
 #: .\cookbook\views\new.py:126
 msgid "There was an error importing this recipe!"
-msgstr ""
+msgstr "Сталася помилка під час імпортування цього рецепту!"
 
 #: .\cookbook\views\views.py:69 .\cookbook\views\views.py:177
 #: .\cookbook\views\views.py:204 .\cookbook\views\views.py:423
 msgid "This feature is not available in the demo version!"
-msgstr ""
+msgstr "Ця функція не доступна в демо версії!"
 
 #: .\cookbook\views\views.py:74
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr ""
+msgstr "Ви досягли максимального обсягу місця на дисках, яке може належати вам."
 
 #: .\cookbook\views\views.py:89
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
+"Ви успішно створили власний простір для рецептів. Почніть з додавання "
+"рецептів або запросіть інших людей приєднатися до вас."
 
 #: .\cookbook\views\views.py:138
 msgid "You do not have the required permissions to perform this action!"
-msgstr ""
+msgstr "Ви не маєте необхідних прав для виконання цієї дії!"
 
 #: .\cookbook\views\views.py:149
 msgid "Comment saved!"
-msgstr ""
+msgstr "Коментар збережено!"
 
 #: .\cookbook\views\views.py:240
 msgid "You must select at least one field to search!"
-msgstr ""
+msgstr "Ви мусите обрати хоча б одне поле для пошуку!"
 
 #: .\cookbook\views\views.py:243
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
+"Щоб скористатися цим методом пошуку, ви повинні вибрати принаймні одне поле "
+"для повнотекстового пошуку!"
 
 #: .\cookbook\views\views.py:246
 msgid "Fuzzy search is not compatible with this search method!"
-msgstr ""
+msgstr "Нечіткий пошук не сумісний з цим методом пошуку!"
 
 #: .\cookbook\views\views.py:306
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
+"PostgreSQL %(v)s є застарілим.  Оновіть до повністю підтримуваної версії!"
 
 #: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
 msgstr ""
+"Ви використовуєте PostgreSQL %(v1)s.  Рекомендується використовувати "
+"PostgreSQL %(v2)s"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "Не вдалося визначити версію PostgreSQL."
 
 #: .\cookbook\views\views.py:317
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
+"Ця програма не працює з базою даних Postgres. Це нормально, але не "
+"рекомендується, оскільки деякі функції працюють тільки з базами даних "
+"Postgres."
 
 #: .\cookbook\views\views.py:360
 msgid ""
@@ -2695,32 +2747,38 @@ msgid ""
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
+"Сторінка налаштувань може бути використана тільки для створення першого "
+"користувача!                     Якщо ви забули свої облікові дані "
+"суперкористувача, будь ласка, зверніться до документації Django, щоб "
+"дізнатися, як скинути пароль."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
-msgstr ""
+msgstr "Паролі не збігаються!"
 
 #: .\cookbook\views\views.py:377
 msgid "User has been created, please login!"
-msgstr ""
+msgstr "Користувач створено, будь ласка, увійдіть!"
 
 #: .\cookbook\views\views.py:393
 msgid "Malformed Invite Link supplied!"
-msgstr ""
+msgstr "Надано неправильно сформоване посилання для запрошення!"
 
 #: .\cookbook\views\views.py:410
 msgid "Successfully joined space."
-msgstr ""
+msgstr "Успішно долучились до простору."
 
 #: .\cookbook\views\views.py:416
 msgid "Invite Link not valid or already used!"
-msgstr ""
+msgstr "Посилання для запрошення недійсне або вже використане!"
 
 #: .\cookbook\views\views.py:432
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
+"Повідомлення про посилання для спільного доступу не ввімкнено для цього "
+"екземпляра. Будь ласка, повідомте адміністратора сторінки про проблеми."
 
 #: .\cookbook\views\views.py:437
 msgid ""
@@ -2732,23 +2790,23 @@ msgstr ""
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "Керуйте рецептами, списком покупок, меню тощо."
 
 #: .\cookbook\views\views.py:458
 msgid "Plan"
-msgstr ""
+msgstr "План"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
-msgstr ""
+msgstr "Перегляньте ваше меню"
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "Перегляньте ваші кулінарні книги"
 
 #: .\cookbook\views\views.py:460
 msgid "View your shopping lists"
-msgstr ""
+msgstr "Перегляньте ваші листи покупок"
 
 #~ msgid "user"
 #~ msgstr "користувач"

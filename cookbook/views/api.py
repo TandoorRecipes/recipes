@@ -88,7 +88,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -114,7 +114,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -307,7 +307,8 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
                 filter = Q(name__icontains=query)
                 if self.request.user.is_authenticated:
                     if any([self.model.__name__.lower() in x for x in
-                            self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                            self.request.user.searchpreference.unaccent.values_list('field', flat=True)]) and (
+                            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
                         filter |= Q(name__unaccent__icontains=query)
 
                 self.queryset = (
@@ -1991,23 +1992,37 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         if serializer.is_valid():
             entries = []
             for e in serializer.validated_data['entries']:
-                entries.append(
-                    ShoppingListEntry(
-                        list_recipe_id=obj.pk,
-                        amount=e['amount'],
-                        unit_id=e['unit_id'],
-                        food_id=e['food_id'],
-                        ingredient_id=e['ingredient_id'],
-                        created_by_id=request.user.id,
-                        space_id=request.space.id,
-                    )
+                entry = ShoppingListEntry(
+                    list_recipe_id=obj.pk,
+                    amount=e['amount'],
+                    unit_id=e['unit_id'],
+                    food_id=e['food_id'],
+                    ingredient_id=e['ingredient_id'],
+                    created_by_id=request.user.id,
+                    space_id=request.space.id,
                 )
+                entries.append(entry)
 
             ShoppingListEntry.objects.bulk_create(entries)
+            for e in entries:
+                if e.food.shopping_lists.count() > 0:
+                    e.shopping_lists.set(e.food.shopping_lists.all())
+
             ConnectorManager.add_work(ActionType.CREATED, *entries)
             return Response(serializer.validated_data)
         else:
             return Response(serializer.errors, 400)
+
+
+class ShoppingListViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
+    queryset = ShoppingList.objects
+    serializer_class = ShoppingListSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(space=self.request.space).all()
+        return queryset
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -2029,19 +2044,23 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
 
+        # select_related("list_recipe")
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
-            | Q(created_by__in=list(self.request.user.get_shopping_share()))).prefetch_related('created_by', 'food',
-                                                                                               'food__properties',
-                                                                                               'food__properties__property_type',
-                                                                                               'food__inherit_fields',
-                                                                                               'food__supermarket_category',
-                                                                                               'food__onhand_users',
-                                                                                               'food__substitute',
-                                                                                               'food__child_inherit_fields',
-                                                                                               'unit', 'list_recipe',
+            | Q(created_by__in=list(self.request.user.get_shopping_share()))).prefetch_related('created_by',
+                                                                                               'food',
+                                                                                               'food__shopping_lists',
+                                                                                               'shopping_lists',
+                                                                                               'unit',
+                                                                                               'list_recipe',
+                                                                                               'list_recipe__recipe__keywords',
+                                                                                               'list_recipe__recipe__created_by',
                                                                                                'list_recipe__mealplan',
+                                                                                               'list_recipe__mealplan__shared',
+                                                                                               'list_recipe__mealplan__shared__userspace_set',
+                                                                                               'list_recipe__mealplan__shoppinglistrecipe_set',
                                                                                                'list_recipe__mealplan__recipe',
+                                                                                               'list_recipe__mealplan__recipe__keywords',
                                                                                                ).distinct().all()
 
         updated_after = self.request.query_params.get('updated_after', None)
@@ -3056,11 +3075,20 @@ def meal_plans_to_ical(queryset, filename):
     for p in queryset:
         event = Event()
         event['uid'] = p.id
-        event.add('dtstart', p.from_date)
+
+        start_date_time = p.from_date
+        end_date_time = p.from_date
+
         if p.to_date:
-            event.add('dtend', p.to_date)
-        else:
-            event.add('dtend', p.from_date)
+            end_date_time = p.to_date
+
+        if p.meal_type.time:
+            start_date_time = datetime.datetime.combine(p.from_date, p.meal_type.time)
+            end_date_time = datetime.datetime.combine(p.to_date, p.meal_type.time) + datetime.timedelta(minutes=60)
+
+        event.add('dtstart', start_date_time)
+        event.add('dtend', end_date_time)
+
         event['summary'] = f'{p.meal_type.name}: {p.get_label()}'
         event['description'] = p.note
         cal.add_component(event)
