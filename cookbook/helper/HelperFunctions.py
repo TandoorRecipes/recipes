@@ -56,15 +56,23 @@ def validate_import_url(url):
     ])
 
 
-def match_or_fuzzymatch(word_to_check: str, key_dict: dict) -> tuple[str, int]:
-    # todo add string description of the function
+def match_or_fuzzymatch(check_string: str, key_dict: dict) -> tuple[str, int]:
+    """
+    takes a string and sees if it matches exactly any of the Dictionary keys
+    or any of the alternative strings listed in the value of each key.
+    If there are no matches return the key of the string that returns the best fuzzy match against your check_string.
+
+    :param check_string: A string that you want to attempt to match
+    :param key_dict: key: exact terms you are searching for, value:a list of strings that are alternative terms to check.
+    :return:
+    """
     score = (None, 0)
     for key in key_dict:
         key_dict[key].append(key)
-        if word_to_check.lower() in [match.lower() for match in key_dict[key]]:
+        if check_string.lower() in [match.lower() for match in key_dict[key]]:
             return (key, 100)
     for key in key_dict:
-        key_score = fuzz_process.extract(word_to_check, key_dict[key], limit=1, scorer=fuzz.partial_token_sort_ratio)[0]
+        key_score = fuzz_process.extract(check_string, key_dict[key], limit=1, scorer=fuzz.partial_token_sort_ratio)[0]
         if key_score[1] > score[1]:
             score = (key, key_score[1])
     return score
