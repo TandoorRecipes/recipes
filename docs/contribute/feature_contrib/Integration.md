@@ -25,12 +25,12 @@ from cookbook.models import  Ingredient, Keyword, NutritionInformation, Recipe, 
 
 class YourIntegrationName(Integration):
     
-    def import_file_name_filter(self, file) -> bool:
-        #check file extension, return True if extension is correct
-        pass
-    
     def get_recipe_from_file(self, file) -> Recipe:
         #Import Recipe Logic - convert information from file into Recipe() object
+        pass
+    
+    def import_file_name_filter(self, file) -> bool:
+        #check file extension, return True if extension is correct
         pass
     
     def get_file_from_recipe(self, recipe) -> tuple[str,str]:
@@ -38,7 +38,6 @@ class YourIntegrationName(Integration):
         # return 'Filename.extension', 'file string'
         pass
         
-
     def get_files_from_recipes(self, recipes, el, cookie) -> list[list[str,bytes]]:
         # 'el' and 'cookie' are passed through by the calling function 'do_export'
         export_zip_stream = BytesIO()
@@ -106,13 +105,31 @@ Go to the bottom of the doc and add:
 a little blurb about how it works or anything users should know about how the data needs to be formated.
 ```
 
-Additionally add your integration to the table at the top of the document, or wait until it is integrated and tested before adding to the table.
+Additionally add your integration to the table at the top of the document, marking the state of your integration, or wait until it is integrated and tested before adding to the table.
 
 ### 5. Add to Vue Integration Utils
 In the `/vue3/src/utils/integration_utils.ts` find `export const INTEGRATIONS: Array<Integration>` and in the long list add:
 ```typo3_typoscript
 {id: 'YOURINTEGRATION', name: "Your Integration", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#yourintegration'},
 ```
+be sure to change 'true' or 'false' value for the import and export options to the correct values for your integration. 'true' indicates that it should be listed in the menu for imports or exports respectively.
 
+---
+
+## Integration Test Setup
+
+---
 ## Integration Class Logic
 Now that the setup is complete you need to implement the logic on the new Integration class you created.
+
+### get_recipe_from_file method
+This function is called by the `Integration.do_import()` class method when a file is imported through the web portal. It take 
+
+### import_file_name_filter method
+Documentation to come.
+
+### get_file_from_recipe method
+Documentation to come.
+
+### get_files_from_recipes method
+Documentation to come.
