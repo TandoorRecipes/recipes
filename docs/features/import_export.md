@@ -21,28 +21,29 @@ if your favorite one is missing.
 Overview of the capabilities of the different integrations.
 
 | Integration        | Import | Export | Images |
-| ------------------ | ------ | ------ | ------ |
-| Default            | ✔️     | ✔️     | ✔️     |
-| Nextcloud          | ✔️     | ⌚     | ✔️     |
-| Mealie             | ✔️     | ⌚     | ✔️     |
-| Chowdown           | ✔️     | ⌚     | ✔️     |
-| Safron             | ✔️     | ✔️     | ❌     |
-| Paprika            | ✔️     | ⌚     | ✔️     |
-| ChefTap            | ✔️     | ❌     | ❌     |
-| Pepperplate        | ✔️     | ⌚     | ❌     |
-| RecipeSage         | ✔️     | ✔️     | ✔️     |
-| Rezeptsuite.de     | ✔️     | ❌     | ✔️     |
-| Domestica          | ✔️     | ⌚     | ✔️     |
-| MealMaster         | ✔️     | ❌     | ❌     |
-| RezKonv            | ✔️     | ❌     | ❌     |
-| OpenEats           | ✔️     | ❌     | ⌚     |
-| Plantoeat          | ✔️     | ❌     | ✔      |
-| CookBookApp        | ✔️     | ⌚     | ✔️     |
-| CopyMeThat         | ✔️     | ❌     | ✔️     |
-| Melarecipes        | ✔️     | ⌚     | ✔️     |
-| Cookmate           | ✔️     | ⌚     | ✔️     |
-| PDF (experimental) | ⌚️    | ✔️     | ✔️     |
-| Gourmet            | ✔️     | ❌     | ✔️     |
+|--------------------| ------ | ----- | ----- |
+| Default            | ✔️     | ✔️    | ✔️    |
+| Nextcloud          | ✔️     | ⌚    | ✔️    |
+| Mealie             | ✔️     | ⌚    | ✔️    |
+| Chowdown           | ✔️     | ⌚    | ✔️    |
+| Safron             | ✔️     | ✔️    | ❌     |
+| Paprika            | ✔️     | ⌚    | ✔️    |
+| ChefTap            | ✔️     | ❌    | ❌     |
+| Pepperplate        | ✔️     | ⌚    | ❌     |
+| RecipeSage         | ✔️     | ✔️    | ✔️    |
+| Rezeptsuite.de     | ✔️     | ❌    | ✔️    |
+| Domestica          | ✔️     | ⌚    | ✔️    |
+| MealMaster         | ✔️     | ❌    | ❌     |
+| RezKonv            | ✔️     | ❌    | ❌     |
+| OpenEats           | ✔️     | ❌    | ⌚     |
+| Plantoeat          | ✔️     | ❌    | ✔     |
+| CookBookApp        | ✔️     | ⌚    | ✔️    |
+| Cooklang           | ❌     | ❌     | ❌️     |
+| CopyMeThat         | ✔️     | ❌    | ✔️    |
+| Melarecipes        | ✔️     | ⌚    | ✔️    |
+| Cookmate           | ✔️     | ⌚    | ✔️    |
+| PDF (experimental) | ⌚️    | ✔️    | ✔️    |
+| Gourmet            | ✔️     | ❌    | ✔️    |
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -253,6 +254,9 @@ CopyMeThat can export .zip files containing an `.html` file as well as a folder 
 ## Cookmate
 
 Cookmate allows you to export a `.mcb` file which you can simply upload to tandoor and import all your recipes.
+
+## Cooklang
+Cooklang allows you to export a `.cook` file which you can simply upload to tandoor to import a recipe, or zip multiple `.cook` files together to import all your recipes at once.
 
 ## RecetteTek
 
