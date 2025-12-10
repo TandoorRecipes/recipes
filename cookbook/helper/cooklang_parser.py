@@ -158,28 +158,27 @@ class Step:
             match token:
                 case "@":
                     block.type = "Ingredient"
-                    next_token = token_stream.pop(0)
+                    token_next = token_stream.pop(0)
                     lookahead = None
                     if len(token_stream) > 0:
                         lookahead = token_stream.pop(0)
-                    token, stream_return = find_arbitrary_termination_token(next_token, lookahead, '}')
+                    token, stream_return = find_arbitrary_termination_token(token_next, lookahead, '}')
                     block.value = Ingredient.parse(token)
-
                 case "#":
                     block.type = "Cookware"
-                    next_token = token_stream.pop(0)
+                    token_next = token_stream.pop(0)
                     lookahead = None
                     if len(token_stream) > 0:
                         lookahead = token_stream.pop(0)
-                    token, stream_return = find_arbitrary_termination_token(next_token, lookahead, '}')
+                    token, stream_return = find_arbitrary_termination_token(token_next, lookahead, '}')
                     block.value = token.replace("{}", "")
                 case "~":
                     block.type = "Timer"
-                    next_token = token_stream.pop(0)
+                    token_next = token_stream.pop(0)
                     lookahead = None
                     if len(token_stream) > 0:
                         lookahead = token_stream.pop(0)
-                    token, stream_return = find_arbitrary_termination_token(next_token, lookahead, '}')
+                    token, stream_return = find_arbitrary_termination_token(token_next, lookahead, '}')
                     block.value = Timer.parse(token)
                 case "--":
                     block.type = "inline comment"

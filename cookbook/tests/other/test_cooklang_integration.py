@@ -170,7 +170,6 @@ def test_cooklang_integration(u1_s1):
         "Bake the cookies for 15 minutes or until lightly golden.",
         "Let them cool completely (on the tray is fine), and enjoy! (best still warm)",
     ]
-
     expected_step_ingredients = [
         [],
         [

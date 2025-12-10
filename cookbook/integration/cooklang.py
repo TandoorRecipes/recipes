@@ -60,6 +60,7 @@ class Cooklang(Integration):
         try:
             cooklang_object = CooklangRecipe.parse(file_text)
         except Exception as e:
+            print(f"Cooklang Parser had Exception: {e}")
             raise e
         recipe = Recipe.objects.create(
             name=os.path.basename(file.name).replace('.cook', ""), description="", created_by=self.request.user, internal=True, servings=1, space=self.request.space
