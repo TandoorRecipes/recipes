@@ -19,7 +19,6 @@ def request_generator(u1_s1):
     return space, request
 
 
-# ----------------------------------------------------Test Functions----------------------------------------------------
 def parser_assertions(expected_metadata, expected_ingredients, expected_steps, recipe):
     assert len(expected_metadata) == len(recipe.metadata.keys())
     assert len(expected_ingredients) == len(recipe.ingredients)
@@ -54,6 +53,9 @@ def parser_assertions(expected_metadata, expected_ingredients, expected_steps, r
                     assert expected_block[1] == recipe.steps[i].blocks[j].value
             j += 1
         i += 1
+
+
+# ----------------------------------------------------Test Functions----------------------------------------------------
 
 
 def test_cooklang_parser():
