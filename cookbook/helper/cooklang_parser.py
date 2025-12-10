@@ -136,7 +136,9 @@ class Step:
             if next_token != termination_delimiter:
                 sub_tokens = re.split(r'(?=[\W\s])([^-])', current_token)
                 current_token = sub_tokens.pop(0)
-                return_tokens = ["".join(sub_tokens), next_token] + return_tokens
+                if next_token:
+                    return_tokens.insert(0, next_token)
+                return_tokens.insert(0, "".join(sub_tokens))
             else:
                 current_token += termination_delimiter
             return current_token, return_tokens
@@ -156,15 +158,28 @@ class Step:
             match token:
                 case "@":
                     block.type = "Ingredient"
-                    token, stream_return = find_arbitrary_termination_token(token_stream.pop(0), token_stream.pop(0), '}')
+                    next_token = token_stream.pop(0)
+                    lookahead = None
+                    if len(token_stream) > 0:
+                        lookahead = token_stream.pop(0)
+                    token, stream_return = find_arbitrary_termination_token(next_token, lookahead, '}')
                     block.value = Ingredient.parse(token)
+
                 case "#":
                     block.type = "Cookware"
-                    token, stream_return = find_arbitrary_termination_token(token_stream.pop(0), token_stream.pop(0), '}')
+                    next_token = token_stream.pop(0)
+                    lookahead = None
+                    if len(token_stream) > 0:
+                        lookahead = token_stream.pop(0)
+                    token, stream_return = find_arbitrary_termination_token(next_token, lookahead, '}')
                     block.value = token.replace("{}", "")
                 case "~":
                     block.type = "Timer"
-                    token, stream_return = find_arbitrary_termination_token(token_stream.pop(0), token_stream.pop(0), '}')
+                    next_token = token_stream.pop(0)
+                    lookahead = None
+                    if len(token_stream) > 0:
+                        lookahead = token_stream.pop(0)
+                    token, stream_return = find_arbitrary_termination_token(next_token, lookahead, '}')
                     block.value = Timer.parse(token)
                 case "--":
                     block.type = "inline comment"
@@ -204,25 +219,32 @@ class Recipe:
         # Remove white space at the end of the document
         raw = re.sub(r'\s+$', '', raw)
 
-        # Separate the Metadata from the rest of the recipe
-        raw_metadata = None
+        # Separate the Metadata from the rest of the recipe, "--- metadata ---" format
+        raw_metadata = ""
         raw_no_metadata = raw
         if len(raw_meta_split := re.split(r'---([\s\S]*?)---\n', raw)) > 1:
             raw_metadata = raw_meta_split[-2]
             raw_no_metadata = raw_meta_split[-1]
 
-        # todo add other metadata syntax identifying method ">>"
+        # Separate the Metadata from the rest of the recipe, ">> metadata" format
+        if not raw_metadata:
+            for line in raw.lstrip().splitlines():
+                if not bool(re.match(r'^>>', line)):
+                    break
+                raw_no_metadata = raw_no_metadata.replace(line, "")
+                raw_metadata = raw_metadata + re.sub(r'^>>', "", line).lstrip() + "\n"
+        raw_metadata.rstrip()
 
         # Parse the metadata
         metadata = {}
-        meta_lines = raw_metadata.split('\n')
-        current_key = None
-        for line in meta_lines:
-            if len(key_value_pair := line.split(":")) == 2:
-                current_key, value = key_value_pair
-                metadata[current_key] = value.lstrip()
-            elif re.match(r'^\s*-\s', line) and current_key is not None:
-                metadata[current_key] = metadata[current_key] + f"{re.split(r'^\s*-\s', line)[-1]}, "
+        if raw_metadata:
+            current_key = None
+            for line in raw_metadata.splitlines():
+                if len(key_value_pair := re.split(":", line, maxsplit=1)) > 1:
+                    current_key, value = key_value_pair
+                    metadata[current_key] = value.lstrip()
+                elif re.match(r'^\s*-\s', line) and current_key is not None:
+                    metadata[current_key] = metadata[current_key] + f"{re.split(r'^\s*-\s', line)[-1]}, "
 
         # Parse the Steps recursively Step -> Ingredient -> Quantity
         raw_steps = re.split(r'\n\n', raw_no_metadata.lstrip())
@@ -231,10 +253,16 @@ class Recipe:
             if not step.blocks:
                 steps.remove(step)
 
-        # using the blocks in the steps calculate global ingredients
+        # using the blocks in the steps, calculate global ingredients
         def add_ingredient_to_global(global_dict, ingredient_object) -> dict[str:Ingredient]:
             if ingredient_object.name in global_dict.keys():
-                global_dict[ingredient_object.name] += ingredient_object
+                try:
+                    global_dict[ingredient_object.name] += ingredient_object
+                except ValueError:
+                    new_ingredient_object = copy.deepcopy(ingredient_object)
+                    new_ingredient_object.name = f"{ingredient_object.name}({ingredient_object.quantity.unit})"
+                    global_dict = add_ingredient_to_global(global_dict, new_ingredient_object)
+
             else:
                 global_dict[ingredient_object.name] = copy.deepcopy(ingredient_object)
             return global_dict

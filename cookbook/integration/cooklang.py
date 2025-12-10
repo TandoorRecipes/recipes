@@ -1,4 +1,5 @@
 import os
+from io import BytesIO, StringIO
 
 from recipe_scrapers._utils import get_minutes
 
@@ -8,7 +9,6 @@ from cookbook.helper.recipe_url_import import parse_servings, parse_servings_tex
 from cookbook.integration.integration import Integration
 from cookbook.models import Food, Ingredient, Keyword, Recipe, Step, Unit
 
-# from io import BytesIO, StringIO
 # from zipfile import ZipFile
 
 
@@ -52,18 +52,17 @@ class Cooklang(Integration):
             else:
                 tandoor_recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=cooklang_metadata[key])[0])
 
-    # ----------------------------------------------------Integration Method Override Functions----------------------------------------------------
-
-    # def import_file_name_filter(self, file) -> bool:
-    #     # check file extension, return True if extension is correct
-    #     pass
+    # ------------------------------------------Integration Method Override Functions------------------------------------------
 
     def get_recipe_from_file(self, file) -> Recipe:
         # Import Recipe Logic - convert information from file into Recipe() object
-        file_text = file.read()
-        cooklang_object = CooklangRecipe.parse(file_text)
+        file_text = file.getvalue().decode("utf-8")
+        try:
+            cooklang_object = CooklangRecipe.parse(file_text)
+        except Exception as e:
+            raise e
         recipe = Recipe.objects.create(
-            name=os.path.basename(file.name).split('.')[0], description="", created_by=self.request.user, internal=True, servings=0, space=self.request.space
+            name=os.path.basename(file.name).replace('.cook', ""), description="", created_by=self.request.user, internal=True, servings=1, space=self.request.space
         )
         # specific metadata setup function
         self.apply_metadata_cooklang_to_tandoor(cooklang_object.metadata, recipe)
@@ -75,6 +74,8 @@ class Cooklang(Integration):
             for block in step.blocks:
                 match block.type:
                     case "Ingredient":
+                        if not block.value.quantity.amount:
+                            block.value.quantity.amount = 1
                         ingredients_list.append(
                             Ingredient.objects.create(
                                 food=Food.objects.get_or_create(name=block.value.name, space=self.request.space)[0],
@@ -88,10 +89,14 @@ class Cooklang(Integration):
                             amount = int(amount)
                         instruction_string = instruction_string + f"{amount}" + f"{block.value.quantity.unit} " + block.value.name
                     case "Timer":
+                        # assumes that any timers are waiting time
                         timer_string = f"{int(block.value.quantity)} " + block.value.unit
                         instruction_string = instruction_string + timer_string
                         if time := get_minutes(timer_string):
                             recipe.waiting_time += time
+                        # treat working time as a total time
+                        if recipe.working_time < recipe.waiting_time:
+                            recipe.working_time = recipe.waiting_time
                     case "inline comment":
                         instruction_string = instruction_string + "(" + block.value + ")"
                     case "block comment":
@@ -105,7 +110,12 @@ class Cooklang(Integration):
                 step.ingredients.add(step_ingredient)
             recipe.steps.add(step)
             i += 1
+        recipe.save()
         return recipe
+
+    # def import_file_name_filter(self, file) -> bool:
+    #     # check file extension, return True if extension is correct
+    #     pass
 
     # def get_file_from_recipe(self, recipe) -> tuple[str, str]:
     #     # Export Recipe Logic - convert from Recipe() object to a writable string in your integration's format
