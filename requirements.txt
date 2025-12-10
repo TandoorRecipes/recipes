@@ -18,7 +18,7 @@ django-prometheus==2.4.1
 django-scopes==2.0.0
 django-storages==1.14.6
 django-tables2==2.8.0
-django-treebeard==4.7.1
+django-treebeard==4.8.0
 django-webpack-loader==3.2.2
 djangorestframework==3.16.1
 drf-writable-nested==0.7.2
