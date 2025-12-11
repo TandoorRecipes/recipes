@@ -74,7 +74,7 @@ Then you will find under that the following declaration:
 `
 type = forms.ChoiceField(choices=())
 `
-the choices will have a long list of tuples. add to the list of tuples the following:
+the choices will have a long list of tuples. Add to the list of tuples the following:
 
 ```python
 (YOURINTEGRATION, 'Your Integration'),
@@ -97,7 +97,7 @@ if export_type == ImportExportBase.YOURINTEGRATION:
 be careful to use the exact all caps name of your integration that you used in the `cookbook/forms.py` or else it won't recognize it as a type. the snake case is the class that you defined in `/cookbook/integration`
 
 ## 4. Add to the Documentation
-If nothing else you at least have to add one slugline about your integration in the `/docs/features/import_export.md` because the Vue pages require a link to send the send the user to if they hit the information button on the import/export form.
+If nothing else, you at least have to add one slugline about your integration in the `/docs/features/import_export.md` because the Vue pages require a link to send the send the user to if they hit the information button on the import/export form.
 
 Go to the bottom of the doc and add:
 ```markdown
@@ -114,6 +114,8 @@ In the `/vue3/src/utils/integration_utils.ts` find `export const INTEGRATIONS: A
 ```
 be sure to change 'true' or 'false' value for the import and export options to the correct values for your integration. 'true' indicates that it should be listed in the menu for imports or exports respectively.
 
+### Be sure to update vue using `yarn` after to be sure the html files get updated
+
 ---
 
 # Integration Test Setup
@@ -122,14 +124,14 @@ Tandoor uses Pytest to implement its testing features. To add tests and test doc
 ```
 cookbook/tests/other/
 ``` 
-There you can create a test file `test_yourintegration.py` it is very important that it starts with "test_" as that is how pytest knows to run it as a test.
+There you can create a test file `test_yourintegration.py`. It is very important that it starts with "test_" as that is how pytest knows to run it as a test.
 
 For the text files that you will want to parse and test for your integration you can put them at:
 
 ```
 cookbook/test/other/test_data/your_integration/
 ```
-making your own folder for your test inputs there. When directing your tests to pull the files from that folder make sure to include the whole path starting at `cookbook`
+making your own folder for your test inputs there. When directing your tests to pull the files from that folder make sure to include the whole path starting at `cookbook/`
 
 ## Creating an Integration Test with a Request object
 Like the filename, inside the file `test_yourintegration.py` pytest looks specifically for the functions that start with the string `test_` any function that does not have that prefex won't be run. This is useful if you want to define helper methods to your tests.
@@ -138,6 +140,8 @@ Since your integration is a child of the `Integration` class you must pass your 
 
 You can accomplish this with the following code:
 ```python
+from io import BytesIO
+
 from django.contrib import auth
 from django.test import RequestFactory
 from django_scopes import scope
@@ -152,7 +156,13 @@ def test_yourintegration(u1_s1):
     request.space = space
     
     with scope(space=space):
-        recipe_object = YourIntegrationClass(request, "export")
+        integration_object = YourIntegrationClass(request, "export")
+        with open("cookbook/test/other/test_data/your_integration/recipe_file.txt", "rb") as file:
+            recipe_bytes = file.read()
+            recipe_name = file.name
+        buffer = BytesIO(recipe_bytes)
+        buffer.name = recipe_name
+        recipe_object = integration_object.get_recipe_from_file(buffer)
         # all of your test function logic inside this with clause 
 ```
 though it is not important for you to understand, the u1_s1 is a pytest fixture that can be passed into your tests. By adding it as an argument for the test, pytest will fill that fixture in and you can use it to get a test user using the `auth.get_user()` method
@@ -241,7 +251,7 @@ def get_recipe_from_file(self, file)-> Recipe:
 ### Other Models You Need To Know
 The 3 main models other than `Recipe` you will need to use are the `Step`, `Ingredient`(also `Food` and `Unit`- They all go hand in hand), and `Keyword`. The rough structure of these object in a `Recipe` are:
 
-(Not that the `Recipe` object is not a `Json` object, the below is just a representation of the data)
+(Note that the `Recipe` object is not a `Json` object, the below is just a representation of the data)
 ```json
 {Recipe: 
     [{"steps": 
@@ -251,7 +261,7 @@ The 3 main models other than `Recipe` you will need to use are the `Step`, `Ingr
                   {"food": 
                     {Food:
                       [{"name": "food name"},
-                        {Unit: "unit name"},
+                        {Unit: {"name": "unit name"}},
                         {"amount": int}
                     ]}}}]},
             {"instruction": "recipe step text"}
@@ -273,17 +283,17 @@ def get_recipe_from_file(self, file)-> Recipe:
         name = your_recipe_name,
         created_by = self.request.user,
         internal = True,
-        space = self.request.space,
-    )
-    i = 0
-    #logic for creating a list of keywords
+        space = self.request.space,)
     
+    #logic for creating a list of keywords
+
     for keyword in parsed_file.keywords:
         recipe_object.keywords.add(
             Keyword.objects.get_or_create(
                 space=self.request.space, 
                 name=keyword)[0])
     
+    i = 0
     for line in parsed_file:
         #logic for creating a list of ingredients
         #logic for instructions
