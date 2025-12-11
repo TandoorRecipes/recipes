@@ -116,20 +116,159 @@ be sure to change 'true' or 'false' value for the import and export options to t
 
 ---
 
-## Integration Test Setup
+# Integration Test Setup
 
 ---
-## Integration Class Logic
+# Integration Class Logic
 Now that the setup is complete you need to implement the logic on the new Integration class you created.
 
-### get_recipe_from_file method
-This function is called by the `Integration.do_import()` class method when a file is imported through the web portal. It take 
+## get_recipe_from_file method
+This function is called by the `Integration.do_import()` class method when a file is imported through the web portal. The `get_recipe_from_file(self, file)` takes only a file as an argument, which is passed from the `Integration.do_import()` as an `IOByte` binary object containing only the binary characters of the contents of the file, as well as a property called `name` that has a "utf-8" string of what the file name was.
 
-### import_file_name_filter method
+### Reading the File
+To get the string values of the contents of the file, you must call the following methods:
+
+```python
+file_text = file.getvalue().decode("utf-8")
+```
+Then you can parse the file_text however you see fit for your integration. no need to do a `with open()` statement. The `Integration` parent class handles the opening and the closing of the file.
+
+If your recipe name is dependent on the filename you can access the file name with:
+```python
+filename = file.name
+```
+
+### Managing the Tandoor 'Recipe' Object
+The `Recipe` class has many properties, and it is recommended to view all of them [here](https://github.com/TandoorRecipes/recipes/blob/develop/cookbook/models.py) in order to determine specifically how your integration will organize its data into the `Recipe` object data structure. The important ones to know are:
+```python
+name = models.CharField(max_length=128)
+description = models.CharField(max_length=512, blank=True, null=True)
+servings = models.IntegerField(default=1)
+servings_text = models.CharField(default='', blank=True, max_length=32)
+image = models.ImageField(upload_to='recipes/', blank=True, null=True)
+keywords = models.ManyToManyField(Keyword, blank=True)
+steps = models.ManyToManyField(Step, blank=True)
+internal = models.BooleanField(default=False)
+
+created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+
+space = models.ForeignKey(Space, on_delete=models.CASCADE)
+```
+You can define as many of these variables as you like at the time of creating the Recipe object but the bare minimum should be:
+
+```python
+from cookbook.models import Recipe
+
+def get_recipe_from_file(self, file)-> Recipe:
+    #opening the file and parsing it
+    
+    recipe_object = Recipe.objects.create(
+        name = your_recipe_name,
+        created_by = self.request.user,
+        internal = True,
+        space = self.request.space,
+    )
+    
+    #translating the parsed file into th recipe object
+    
+    return recipe_object
+```
+Both `created_by` and `space` require the request object from the webpage or API that initiated the request, the `Integration` parent class handles both of those and they can be retrieved through the `self.request` property. The `name` allows the recipe to be identifiable from the other recipes, making it uniquely identifiable from other newly instantiated `Recipe` objects. lasty `True` is the default value for `internal` only change it to false if that is what you intend.
+
+After the `Recipe` object is created you can change or add data to its properties, these changes will show up in tests and work as expected until the program drops it from memory. Then all those changes will be lost unless you use the `.save()` method. It is recommended not to use the `.save()` after every change, but instead to make all your changes and call `.save()` once at the end of the `get_recipe_from_file` method before the object gets returned back to the `Integration.do_import()` method.
+
+```python
+from cookbook.models import Recipe
+
+def get_recipe_from_file(self, file)-> Recipe:
+    #opening the file and parsing it
+    
+    recipe_object = Recipe.objects.create(
+        name = your_recipe_name,
+        created_by = self.request.user,
+        internal = True,
+        space = self.request.space,
+    )
+    
+    # Integration logic, making many changes to the recipe_object
+    
+    recipe_object.description = "A yummy treat for any day!"
+    recipe_object.save()
+    return recipe_object
+```
+
+### Other Models You Need To Know
+The 3 main models other than `Recipe` you will need to use are the `Step`, `Ingredient`(also `Food` and `Unit`- They all go hand in hand), and `Keyword`. The rough structure of these object in a `Recipe` are:
+
+(Not that the `Recipe` object is not a `Json` object, the below is just a representation of the data)
+```json
+{Recipe: 
+    [{"steps": 
+        [{Step: [
+            {"ingredients": [
+                {Ingredient: 
+                  {"food": 
+                    {Food:
+                      [{"name": "food name"},
+                        {Unit: "unit name"},
+                        {"amount": int}
+                    ]}}}]},
+            {"instruction": "recipe step text"}
+        ]}]},
+    {"keywords": [
+        {Keyword: 
+          {"name": "keyword name"}
+        }]}]}
+```
+Below are their bare-bones implementations in regard to creating a `Recipe` object integration.
+
+```python
+from cookbook.models import Recipe, Keyword, Step, Ingredient, Food, Unit
+
+def get_recipe_from_file(self, file)-> Recipe:
+    #opening the file and parsing it
+    
+    recipe_object = Recipe.objects.create(
+        name = your_recipe_name,
+        created_by = self.request.user,
+        internal = True,
+        space = self.request.space,
+    )
+    i = 0
+    #logic for creating a list of keywords
+    
+    for keyword in parsed_file.keywords:
+        recipe_object.keywords.add(
+            Keyword.objects.get_or_create(
+                space=self.request.space, 
+                name=keyword)[0])
+    
+    for line in parsed_file:
+        #logic for creating a list of ingredients
+        #logic for instructions
+        step = Step.objects.create(
+            instruction=line.instruction_string, 
+            order=i, 
+            space=self.request.space, 
+            show_ingredients_table=self.request.user.userpreference.show_step_ingredients)
+        for ingredient in line.ingredients:
+            step.ingredients.add(
+                Ingredient.objects.create(
+                    food=Food.objects.get_or_create(name=ingredient.name, space=self.request.space)[0],
+                    unit=Unit.objects.get_or_create(name=ingredient.quantity.unit, space=self.request.space)[0],
+                    amount=ingredient.quantity.amount,
+                    space=self.request.space, ))
+        recipe_object.steps.add(step)
+        i+=1
+    recipe_object.save()
+    return recipe_object
+```
+
+## import_file_name_filter method
 Documentation to come.
 
-### get_file_from_recipe method
+## get_file_from_recipe method
 Documentation to come.
 
-### get_files_from_recipes method
+## get_files_from_recipes method
 Documentation to come.
