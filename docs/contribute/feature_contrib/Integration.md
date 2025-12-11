@@ -1,6 +1,6 @@
 # Import / Export Integration Contribution Guide
 
-## Setup
+# Setup
 There are 5 files you need to configure in order create a new integration
 1. Create a new integration class in `/cookbook/integration/`
 2. Include integration in `/cookbook/forms.py` 
@@ -9,7 +9,7 @@ There are 5 files you need to configure in order create a new integration
 5. Include integration and docs link in `/vue3/src/utils/integration_utils.ts`
 
 
-### 1. Creating a New Integration Class
+## 1. Creating a New Integration Class
 Your integration class should be named after what you are integrating with and should inherit from the `Integration` class. Use the template below to setup your class.
 
 `/cookbook/integration/yourintegration.py`
@@ -64,7 +64,7 @@ class YourIntegrationName(Integration):
     
 ```
 
-### 2. including in Forms.py
+## 2. including in Forms.py
 In the `/cookbook/forms.py` find the `ImportExportBase` class and add to it the following amoung the others:
 ```python
 YOURINTEGRATION = "YOURINTEGRATION"
@@ -80,7 +80,7 @@ the choices will have a long list of tuples. add to the list of tuples the follo
 (YOURINTEGRATION, 'Your Integration'),
 ```
 
-### 3. Including in Views
+## 3. Including in Views
 In the `/cookbook/views/import_export.py` import your integration
 
 ```python
@@ -96,7 +96,7 @@ if export_type == ImportExportBase.YOURINTEGRATION:
 
 be careful to use the exact all caps name of your integration that you used in the `cookbook/forms.py` or else it won't recognize it as a type. the snake case is the class that you defined in `/cookbook/integration`
 
-### 4. Add to the Documentation
+## 4. Add to the Documentation
 If nothing else you at least have to add one slugline about your integration in the `/docs/features/import_export.md` because the Vue pages require a link to send the send the user to if they hit the information button on the import/export form.
 
 Go to the bottom of the doc and add:
@@ -107,7 +107,7 @@ a little blurb about how it works or anything users should know about how the da
 
 Additionally add your integration to the table at the top of the document, marking the state of your integration, or wait until it is integrated and tested before adding to the table.
 
-### 5. Add to Vue Integration Utils
+## 5. Add to Vue Integration Utils
 In the `/vue3/src/utils/integration_utils.ts` find `export const INTEGRATIONS: Array<Integration>` and in the long list add:
 ```typo3_typoscript
 {id: 'YOURINTEGRATION', name: "Your Integration", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#yourintegration'},
@@ -117,6 +117,47 @@ be sure to change 'true' or 'false' value for the import and export options to t
 ---
 
 # Integration Test Setup
+## File Structure and Files
+Tandoor uses Pytest to implement its testing features. To add tests and test documents navigate to 
+```
+cookbook/tests/other/
+``` 
+There you can create a test file `test_yourintegration.py` it is very important that it starts with "test_" as that is how pytest knows to run it as a test.
+
+For the text files that you will want to parse and test for your integration you can put them at:
+
+```
+cookbook/test/other/test_data/your_integration/
+```
+making your own folder for your test inputs there. When directing your tests to pull the files from that folder make sure to include the whole path starting at `cookbook`
+
+## Creating an Integration Test with a Request object
+Like the filename, inside the file `test_yourintegration.py` pytest looks specifically for the functions that start with the string `test_` any function that does not have that prefex won't be run. This is useful if you want to define helper methods to your tests.
+
+Since your integration is a child of the `Integration` class you must pass your integration the required arguments: `request` and `export_type`. Unless your test has a specific export_type you are trying to test, it is not consequential what you put for `export_type`, so long as it is a string. I generally just use "export" in my test. For request though we need to generate one
+
+You can accomplish this with the following code:
+```python
+from django.contrib import auth
+from django.test import RequestFactory
+from django_scopes import scope
+
+from cookbook.integration.cooklang import YourIntegrationClass
+
+def test_yourintegration(u1_s1):
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    
+    with scope(space=space):
+        recipe_object = YourIntegrationClass(request, "export")
+        # all of your test function logic inside this with clause 
+```
+though it is not important for you to understand, the u1_s1 is a pytest fixture that can be passed into your tests. By adding it as an argument for the test, pytest will fill that fixture in and you can use it to get a test user using the `auth.get_user()` method
+
+with that you can add your assertions and test it using pytest.
 
 ---
 # Integration Class Logic
