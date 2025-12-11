@@ -167,10 +167,17 @@
             </div>
 
             <v-list v-else>
-                <v-list-item v-for="recipe in foodRecipes" :key="recipe.id">
-                <v-list-item-title>{{ recipe.name }}</v-list-item-title>
+                <v-list-item
+                    v-for="recipe in foodRecipes"
+                    :key="recipe.id"
+                    @click="goToRecipe(recipe)"
+                    class="recipe-link"
+                >
+                    <v-list-item-title>{{ recipe.name }}</v-list-item-title>
                 </v-list-item>
             </v-list>
+
+
             </v-card-text>
 
             <v-card-actions>
@@ -367,6 +374,9 @@ function closeFoodUsageDialog() {
   showFoodDialog.value = false
   selectedFood.value = null
   foodRecipes.value = []
+}
+function goToRecipe(recipe: Recipe) {
+  router.push(`/recipe/${recipe.id}`)
 }
 
 </script>
