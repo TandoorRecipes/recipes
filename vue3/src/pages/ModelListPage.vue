@@ -182,9 +182,6 @@
         </v-card>
         </v-dialog>
 
-        </v-container>
-        </template>
-
     </v-container>
 </template>
 
