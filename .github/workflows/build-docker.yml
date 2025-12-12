@@ -19,7 +19,7 @@ jobs:
           # Standard build config
           - name: Standard
             dockerfile: Dockerfile
-            platforms: linux/amd64,linux/arm64,linux/arm/v7
+            platforms: linux/amd64,linux/arm64
             suffix: ""
             continue-on-error: false
     steps:
