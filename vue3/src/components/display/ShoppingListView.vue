@@ -116,7 +116,9 @@
                             </v-menu>
                         </v-chip>
 
-                        <v-chip label density="compact" variant="outlined" style="max-width: 50%;" :prepend-icon="TShoppingList.icon" append-icon="fa-solid fa-caret-down">
+                        <v-chip label density="compact" class="ms-1" variant="outlined"
+                                :color="(useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.length == 0 ? '' : 'secondary')" :prepend-icon="TShoppingList.icon"
+                                append-icon="fa-solid fa-caret-down">
                             <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.filter(sl => sl != -1).length > 0">
                                 {{
                                     shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ')
