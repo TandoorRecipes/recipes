@@ -2,6 +2,7 @@ import base64
 import datetime
 import io
 import json
+import logging
 import mimetypes
 import pathlib
 import re
@@ -120,6 +121,8 @@ from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
+
+logger = logging.getLogger("recipes")
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -1163,7 +1166,13 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
             except BadRequestError as err:
-                pass
+                logger.exception(
+                    "ai_request_error provider_id=%s provider_name=%s model=%s function=%s",
+                    getattr(ai_provider, "id", None),
+                    getattr(ai_provider, "name", None),
+                    getattr(ai_provider, "model_name", None),
+                    AiLog.F_FOOD_PROPERTIES,
+                )
         response = {
             'error': True,
             'msg': 'The AI could not process your request. \n\n' + err.message,
@@ -1880,7 +1889,13 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
             except BadRequestError as err:
-                pass
+                logger.exception(
+                    "ai_request_error provider_id=%s provider_name=%s model=%s function=%s",
+                    getattr(ai_provider, "id", None),
+                    getattr(ai_provider, "name", None),
+                    getattr(ai_provider, "model_name", None),
+                    AiLog.F_RECIPE_PROPERTIES,
+                )
         response = {
             'error': True,
             'msg': 'The AI could not process your request. \n\n' + err.message,
@@ -2552,6 +2567,13 @@ class AiImportView(APIView):
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
             except BadRequestError as err:
+                logger.exception(
+                    "ai_request_error provider_id=%s provider_name=%s model=%s function=%s",
+                    getattr(ai_provider, "id", None),
+                    getattr(ai_provider, "name", None),
+                    getattr(ai_provider, "model_name", None),
+                    AiLog.F_FILE_IMPORT,
+                )
                 response = {
                     'error': True,
                     'msg': 'The AI could not process your request. \n\n' + err.message,
@@ -2575,14 +2597,26 @@ class AiImportView(APIView):
                     response['duplicates'] = Recipe.objects.filter(space=request.space, name=recipe['name']).values('id', 'name').all()
                     return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
             except JSONDecodeError:
-                traceback.print_exc()
+                logger.exception(
+                    "ai_response_parse_error provider_id=%s provider_name=%s model=%s function=%s",
+                    getattr(ai_provider, "id", None),
+                    getattr(ai_provider, "name", None),
+                    getattr(ai_provider, "model_name", None),
+                    AiLog.F_FILE_IMPORT,
+                )
                 response = {
                     'error': True,
                     'msg': "Error parsing AI results. Response Text:\n\n" + response_text
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
             except Exception:
-                traceback.print_exc()
+                logger.exception(
+                    "ai_response_processing_error provider_id=%s provider_name=%s model=%s function=%s",
+                    getattr(ai_provider, "id", None),
+                    getattr(ai_provider, "name", None),
+                    getattr(ai_provider, "model_name", None),
+                    AiLog.F_FILE_IMPORT,
+                )
                 response = {
                     'error': True,
                     'msg': "Error processing AI results. Response Text:\n\n" + response_text + "\n\n" + traceback.format_exc()
@@ -2663,6 +2697,13 @@ class AiStepSortView(APIView):
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
             except BadRequestError as err:
+                logger.exception(
+                    "ai_request_error provider_id=%s provider_name=%s model=%s function=%s",
+                    getattr(ai_provider, "id", None),
+                    getattr(ai_provider, "name", None),
+                    getattr(ai_provider, "model_name", None),
+                    AiLog.F_STEP_SORT,
+                )
                 response = {
                     'error': True,
                     'msg': 'The AI could not process your request. \n\n' + err.message,
