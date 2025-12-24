@@ -67,7 +67,7 @@ class CookBookApp(Integration):
         if 'source' in recipe_json and recipe_json['source'] is not None:
             recipe.source_url = recipe_json['source']
             
-        # Attempt to parse through nutrition list
+        # Attempt to parse through nutrition multi-line string
         if 'nutrition' in recipe_json:
             nutrition = {}
             nutrition_list = recipe_json['nutrition'].lower().splitlines()
@@ -75,20 +75,18 @@ class CookBookApp(Integration):
                 try:
                     if 'calories' in item:
                         nutrition['calories'] = int(re.search(r'\d+', item).group())
-                    if 'protein' in item:
+                    elif 'protein' in item:
                         nutrition['proteins'] = int(re.search(r'\d+', item).group())
-                    if 'fat' in item:
+                    elif 'fat' in item:
                         nutrition['fats'] = int(re.search(r'\d+', item).group())
-                    if 'carb' in item:
+                    elif 'carb' in item:
                         nutrition['carbohydrates'] = int(re.search(r'\d+', item).group())
-
-                    if nutrition != {}:
-                        recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
-                        recipe.save()
                 except Exception:
                     pass
-    
-        # Attempt to parse through each ingredient (these are free-form so anything goes)
+            if nutrition != {}:
+                recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
+                
+        # Attempt to parse through each ingredient (free-input so anything goes)
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in recipe_json['ingredients']:
             if not ingredient:
