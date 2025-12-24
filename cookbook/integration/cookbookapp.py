@@ -5,9 +5,12 @@ from typing import Any
 import requests
 import yaml
 
-from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
+from cookbook.helper.recipe_url_import import (
+    parse_servings,
+    parse_servings_text,
+    parse_time,
+)
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, NutritionInformation, Recipe, Step
 
@@ -21,9 +24,12 @@ class CookBookApp(Integration):
         # Load in yaml file as python dict
         recipe_json: dict[str, Any] = yaml.safe_load(file.getvalue())
 
+        description = ""
+        if 'description' in recipe_json and len(recipe_json['description']) > 0:
+            description = str(recipe_json['description'].strip())
+            description = description[:500] if len(description) > 500 else description
+
         # Initialize recipe class
-        description = str(recipe_json['description'].strip())
-        description = description[:500] if len(description) > 500 else description
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(),
             description=description,
@@ -113,14 +119,14 @@ class CookBookApp(Integration):
             if nutrition != {}:
                 recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
 
-        # Try to import an image link, this may be blocked by cors
-        try:
-            url = recipe_json["image"]
-            if validate_import_url(url):
+        # Try to import an image link, this may be blocked by cors or rate-limits
+        if 'image' in recipe_json and len(recipe_json['image']) > 0:
+            try:
+                url = recipe_json["image"]
                 response = requests.get(url)
                 self.import_recipe_image(recipe, BytesIO(response.content))
-        except Exception as e:
-            print('failed to import image ', str(e))
+            except Exception as e:
+                print(f'Failed to import image for {recipe.name}', str(e))
 
         recipe.save()
         return recipe
