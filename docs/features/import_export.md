@@ -37,7 +37,7 @@ Overview of the capabilities of the different integrations.
 | RezKonv            | ✔️     | ❌     | ❌     |
 | OpenEats           | ✔️     | ❌     | ⌚     |
 | Plantoeat          | ✔️     | ❌     | ✔      |
-| CookBookApp        | ✔️     | ⌚     | ✔️     |
+| CookBook Manager   | ✔️     | ⌚     | ✔️     |
 | CopyMeThat         | ✔️     | ❌     | ✔️     |
 | Melarecipes        | ✔️     | ⌚     | ✔️     |
 | Cookmate           | ✔️     | ⌚     | ✔️     |
@@ -82,7 +82,7 @@ Follow these steps to import your recipes
 !!! WARNING "Folder Structure"
 Importing only works if the folder structure is correct. If you do not use the standard path or create the
 zip file in any other way make sure the structure is as follows
-` Recipes.zip/
+`Recipes.zip/
         └── Recipes/
             ├── Recipe1/
             │   ├── recipe.json
@@ -90,7 +90,7 @@ zip file in any other way make sure the structure is as follows
             └── Recipe2/
                 ├── recipe.json
                 └── full.jpg
-   `
+  `
 
 ## Mealie
 
@@ -243,7 +243,7 @@ Plan to eat allows you to export a text file containing all your recipes. Simply
 
 ## CookBook Manager
 
-CookBook Manager (previously called CookBookApp) can export .zip files containing YAML files. In Settings -> Backup, select the YAML option when exporting. Upload the entire ZIP to Tandoor to import all included recipes.
+CookBook Manager (previously named CookBookApp) can export .zip files containing YAML files. In Settings -> Backup, select the YAML option when exporting. Upload the entire ZIP to Tandoor to import all included recipes.
 
 ## CopyMeThat
 
