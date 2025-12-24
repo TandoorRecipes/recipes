@@ -7,9 +7,9 @@ import yaml
 
 from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.integration.integration import Integration
-from cookbook.models import NutritionInformation, Keyword, Ingredient, Recipe, Step
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
+from cookbook.integration.integration import Integration
+from cookbook.models import Ingredient, Keyword, NutritionInformation, Recipe, Step
 
 
 class CookBookApp(Integration):
@@ -19,7 +19,7 @@ class CookBookApp(Integration):
 
     def get_recipe_from_file(self, file):
         # Load in yaml file as python dict
-        recipe_json: dict[str,Any] = yaml.safe_load(file.getvalue())
+        recipe_json: dict[str, Any] = yaml.safe_load(file.getvalue())
 
         # Initialize recipe class
         description = str(recipe_json['description'].strip())
@@ -42,7 +42,7 @@ class CookBookApp(Integration):
             recipe.steps.add(step)
 
         # Append ingredients to the first step (or create one if empty)
-        step = recipe.steps.first() # Pointer to first step
+        step = recipe.steps.first()  # Pointer to first step
         if not step:  # Create pointer if there are no steps
             step = Step.objects.create(
                 instruction='',
@@ -66,7 +66,7 @@ class CookBookApp(Integration):
                 original_text=ingredient,
                 space=self.request.space,
             ))
-            
+
         # Tandoor doesn't have notes, append it as the last step
         if 'notes' in recipe_json and len(recipe_json['notes']) > 0:
             notes_text = f"#### Notes\n\n{recipe_json['notes']}"
