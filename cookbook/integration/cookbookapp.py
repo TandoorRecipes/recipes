@@ -1,5 +1,6 @@
 import re
 from io import BytesIO
+from typing import Any
 
 import requests
 import yaml
@@ -17,38 +18,64 @@ class CookBookApp(Integration):
         return zip_info_object.filename.endswith('.yml')
 
     def get_recipe_from_file(self, file):
-        recipe_json = yaml.safe_load(file.getvalue())
+        # Load in yaml file as python dict
+        recipe_json: dict[str,Any] = yaml.safe_load(file.getvalue())
 
-        description = recipe_json['description'].strip()
-        description = recipe_json['description'][:500] if len(description) > 500 else description
-
+        # Initialize recipe class
+        description = str(recipe_json['description'].strip())
+        description = description[:500] if len(description) > 500 else description
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(),
             description=description,
-            created_by=self.request.user, 
+            created_by=self.request.user,
             internal=True,
             space=self.request.space,
-            )
+        )
 
-        # Start by appending all instructions into steps
+        # Start by converting all instructions into steps
         for s in recipe_json['directions']:
-            step = Step.objects.create(instruction=s, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
+            step = Step.objects.create(
+                instruction=s,
+                space=self.request.space,
+                show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+            )
             recipe.steps.add(step)
 
-        # Append everything after to the first step (or create one if empty)
-        step = recipe.steps.first()
-        if not step:  # if there is no step in the exported data
-            step = Step.objects.create(instruction='', space=self.request.space, )
+        # Append ingredients to the first step (or create one if empty)
+        step = recipe.steps.first() # Pointer to first step
+        if not step:  # Create pointer if there are no steps
+            step = Step.objects.create(
+                instruction='',
+                space=self.request.space,
+            )
             recipe.steps.add(step)
 
-        # Tandoor doesn't have notes, append it to the end of steps
+        # Attempt to parse through each ingredient (user freeform so anything goes)
+        ingredient_parser = IngredientParser(self.request, True)
+        for ingredient in recipe_json['ingredients']:
+            if not ingredient:
+                continue
+            amount, unit, food, note = ingredient_parser.parse(ingredient)
+            f = ingredient_parser.get_food(food)
+            u = ingredient_parser.get_unit(unit)
+            step.ingredients.add(Ingredient.objects.create(
+                food=f,
+                unit=u,
+                amount=amount,
+                note=note,
+                original_text=ingredient,
+                space=self.request.space,
+            ))
+            
+        # Tandoor doesn't have notes, append it as the last step
         if 'notes' in recipe_json and len(recipe_json['notes']) > 0:
             notes_text = f"#### Notes\n\n{recipe_json['notes']}"
             step = Step.objects.create(
-                instruction=notes_text, space=self.request.space,
+                instruction=notes_text,
+                space=self.request.space,
             )
             recipe.steps.add(step)
-            
+
         if 'tags' in recipe_json and len(recipe_json['tags']) > 0:
             for tag in recipe_json['tags']:
                 keyword, _ = Keyword.objects.get_or_create(name=tag.strip(), space=self.request.space)
@@ -56,17 +83,17 @@ class CookBookApp(Integration):
 
         if 'prep_time' in recipe_json and recipe_json['prep_time'] is not None:
             recipe.waiting_time = parse_time(recipe_json['prep_time'])
-            
+
         if 'cook_time' in recipe_json and recipe_json['cook_time'] is not None:
             recipe.working_time = parse_time(recipe_json['cook_time'])
-            
+
         if 'servings' in recipe_json and recipe_json['servings'] is not None:
             recipe.servings = parse_servings(recipe_json['servings'])
             recipe.servings_text = parse_servings_text(recipe_json['servings'])
 
         if 'source' in recipe_json and recipe_json['source'] is not None:
             recipe.source_url = recipe_json['source']
-            
+
         # Attempt to parse through nutrition multi-line string
         if 'nutrition' in recipe_json:
             nutrition = {}
@@ -85,16 +112,6 @@ class CookBookApp(Integration):
                     pass
             if nutrition != {}:
                 recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
-                
-        # Attempt to parse through each ingredient (free-input so anything goes)
-        ingredient_parser = IngredientParser(self.request, True)
-        for ingredient in recipe_json['ingredients']:
-            if not ingredient:
-                continue
-            amount, unit, food, note = ingredient_parser.parse(ingredient)
-            step.ingredients.add(Ingredient.objects.create(
-                food=food, unit=unit, amount=amount, note=note, original_text=ingredient, space=self.request.space,
-            ))
 
         # Try to import an image link, this may be blocked by cors
         try:

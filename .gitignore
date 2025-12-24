@@ -85,6 +85,7 @@ vue3/.vite
 
 # Configs
 vetur.config.js
+.venv/
 venv/
 .idea/easy-i18n.xml
 cookbook/static/vue3
