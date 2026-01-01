@@ -336,6 +336,15 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     ai_credits_balance = models.DecimalField(default=0, max_digits=16, decimal_places=4)
     ai_default_provider = models.ForeignKey("AiProvider", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_ai_default_provider')
 
+    default_unit = models.ForeignKey(
+        "Unit",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='space_default_unit',
+        help_text=_('Default unit for ingredients without a unit (used in property calculations)')
+    )
+
     internal_note = models.TextField(blank=True, null=True)
 
     def safe_delete(self):

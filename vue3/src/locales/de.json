@@ -153,6 +153,8 @@
   "Default": "Standard",
   "DefaultPage": "Standardseite",
   "DefaultShoppingListHelp": "Standard Liste wenn dieses Lebensmittel auf die Einkaufsliste gesetzt wird.",
+  "DefaultUnit": "Standardeinheit",
+  "DefaultUnitHelp": "Einheit für Nährwertberechnungen, wenn Zutaten keine Einheit haben.",
   "Default_Unit": "Standardeinheit",
   "DelayFor": "Um {hours} Stunden verschieben",
   "DelayUntil": "Verzögerung bis",

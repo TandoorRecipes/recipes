@@ -2,7 +2,7 @@ from django.core.cache import caches
 
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
-from cookbook.models import PropertyType
+from cookbook.models import Ingredient, PropertyType
 
 
 class FoodPropertyHelper:
@@ -66,11 +66,43 @@ class FoodPropertyHelper:
                         if i.amount == 0 or i.no_amount:
                             if i.food.id not in computed_properties[pt.id]['food_values']:
                                 computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
-                        # if amount is present but unit is missing indicate it in the result
+                        # if amount is present but unit is missing, try using space default unit
                         elif i.unit is None:
-                            if i.food.id not in computed_properties[pt.id]['food_values']:
-                                computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
-                            computed_properties[pt.id]['food_values'][i.food.id]['missing_unit'] = True
+                            default_unit_property_found = False
+                            default_unit_has_property_value = False
+                            # Try to use space default unit if available
+                            if self.space.default_unit is not None:
+                                # Create a temporary ingredient with the default unit for conversion
+                                temp_ingredient = Ingredient(amount=i.amount, unit=self.space.default_unit, food=i.food, space=self.space)
+                                temp_conversions = uch.get_conversions(temp_ingredient)
+                                for p in i.food.properties.all():
+                                    if p.property_type == pt and p.property_amount is not None:
+                                        default_unit_has_property_value = True
+                                        for c in temp_conversions:
+                                            if c.unit == i.food.properties_food_unit and i.food.properties_food_amount != 0:
+                                                default_unit_property_found = True
+                                                prop_value = (c.amount / i.food.properties_food_amount) * p.property_amount
+                                                computed_properties[pt.id]['total_value'] += prop_value
+                                                computed_properties[pt.id]['food_values'] = self.add_or_create(
+                                                    computed_properties[p.property_type.id]['food_values'],
+                                                    c.food.id, prop_value, c.food)
+
+                            if not default_unit_property_found:
+                                # No default unit set - mark as missing_unit
+                                if self.space.default_unit is None:
+                                    if i.food.id not in computed_properties[pt.id]['food_values']:
+                                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': 0}
+                                    computed_properties[pt.id]['food_values'][i.food.id]['missing_unit'] = True
+                                # Default unit is set but conversion failed - treat like explicit unit case
+                                else:
+                                    computed_properties[pt.id]['missing_value'] = True
+                                    if i.food.id not in computed_properties[pt.id]['food_values']:
+                                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': {'id': i.food.id, 'name': i.food.name}, 'value': None}
+                                    if default_unit_has_property_value and i.food.properties_food_unit is not None:
+                                        computed_properties[pt.id]['food_values'][i.food.id]['missing_conversion'] = {
+                                            'base_unit': {'id': self.space.default_unit.id, 'name': self.space.default_unit.name},
+                                            'converted_unit': {'id': i.food.properties_food_unit.id, 'name': i.food.properties_food_unit.name}
+                                        }
                         else:
                             computed_properties[pt.id]['missing_value'] = True
                             if i.food.id not in computed_properties[pt.id]['food_values']:

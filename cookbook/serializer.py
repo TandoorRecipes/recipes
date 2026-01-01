@@ -404,6 +404,38 @@ class AiLogSerializer(serializers.ModelSerializer):
         read_only_fields = ('__all__',)
 
 
+class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin):
+    recipe_filter = 'steps__ingredients__unit'
+
+    def create(self, validated_data):
+        #  get_or_create drops any field that contains '__' when creating so values must be included in validated data
+        space = validated_data.pop('space', self.context['request'].space)
+        if x := validated_data.get('name', None):
+            validated_data['name'] = x.strip()
+        if x := validated_data.get('name', None):
+            validated_data['plural_name'] = x.strip()
+
+        if unit := Unit.objects.filter(
+                Q(name__iexact=validated_data['name']) | Q(plural_name__iexact=validated_data['name']),
+                space=space).first():
+            return unit
+
+        obj, created = Unit.objects.get_or_create(name__iexact=validated_data['name'], space=space,
+                                                  defaults=validated_data)
+        return obj
+
+    def update(self, instance, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        if plural_name := validated_data.get('plural_name', None):
+            validated_data['plural_name'] = plural_name.strip()
+        return super(UnitSerializer, self).update(instance, validated_data)
+
+    class Meta:
+        model = Unit
+        fields = ('id', 'name', 'plural_name', 'description', 'base_unit', 'numrecipe', 'image', 'open_data_slug')
+        read_only_fields = ('id', 'numrecipe', 'image')
+
+
 class SpaceSerializer(WritableNestedModelSerializer):
     created_by = UserSerializer(read_only=True)
     user_count = serializers.SerializerMethodField('get_user_count', read_only=True)
@@ -411,6 +443,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb', read_only=True)
     ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used', read_only=True)
     ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
+    default_unit = UnitSerializer(required=False, allow_null=True)
     food_inherit = FoodInheritFieldSerializer(many=True, required=False)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -481,7 +514,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'default_unit', 'space_setup_completed')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_monthly_credits_used')
@@ -722,38 +755,6 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
             'id', 'name', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
             'updated_at', 'full_name')
         read_only_fields = ('id', 'label', 'numchild', 'numrecipe', 'parent', 'image')
-
-
-class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin):
-    recipe_filter = 'steps__ingredients__unit'
-
-    def create(self, validated_data):
-        #  get_or_create drops any field that contains '__' when creating so values must be included in validated data
-        space = validated_data.pop('space', self.context['request'].space)
-        if x := validated_data.get('name', None):
-            validated_data['name'] = x.strip()
-        if x := validated_data.get('name', None):
-            validated_data['plural_name'] = x.strip()
-
-        if unit := Unit.objects.filter(
-                Q(name__iexact=validated_data['name']) | Q(plural_name__iexact=validated_data['name']),
-                space=space).first():
-            return unit
-
-        obj, created = Unit.objects.get_or_create(name__iexact=validated_data['name'], space=space,
-                                                  defaults=validated_data)
-        return obj
-
-    def update(self, instance, validated_data):
-        validated_data['name'] = validated_data['name'].strip()
-        if plural_name := validated_data.get('plural_name', None):
-            validated_data['plural_name'] = plural_name.strip()
-        return super(UnitSerializer, self).update(instance, validated_data)
-
-    class Meta:
-        model = Unit
-        fields = ('id', 'name', 'plural_name', 'description', 'base_unit', 'numrecipe', 'image', 'open_data_slug')
-        read_only_fields = ('id', 'numrecipe', 'image')
 
 
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer, OpenDataModelMixin):
