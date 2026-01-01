@@ -12,7 +12,7 @@
     "@codemirror/commands": "^6.10.0",
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/state": "^6.3.3",
-    "@codemirror/view": "^6.38.8",
+    "@codemirror/view": "^6.39.7",
     "@popperjs/core": "^2.11.7",
     "axios": "^1.13.2",
     "body-parser": "1.20.3",
