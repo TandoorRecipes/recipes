@@ -60,7 +60,7 @@
                                 <v-number-input :label="$t('Servings')" v-model="editingObj.servings"></v-number-input>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText"></v-text-field>
+                                <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText" clearable></v-text-field>
                             </v-col>
                         </v-row>
 
@@ -200,7 +200,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Recipe>('Recipe', emit)
+const modelEditorFunctions = useModelEditorFunctions<Recipe>('Recipe', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = modelEditorFunctions
+
+const model = defineModel<typeof modelEditorFunctions>()
+model.value = modelEditorFunctions
 
 /**
  * watch prop changes and re-initialize editor
