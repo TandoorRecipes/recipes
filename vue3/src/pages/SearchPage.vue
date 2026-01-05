@@ -142,7 +142,7 @@
                               @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
                               v-if="filters['sortOrder'].modelValue != 'random'"
                 ></v-pagination>
-                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes()">
+                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes({page: 1})">
                     {{ $t('Random Recipes') }}
                 </v-btn>
             </v-col>
