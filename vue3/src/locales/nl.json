@@ -877,5 +877,10 @@
     "Shopping": "Boodschappen",
     "ShoppingList": "Boodschappenlijst",
     "ShoppingListHelp": "Hiermee kun je items op verschillende lijsten plaatsen. Dit kan worden gebruikt voor verschillende supermarkten, speciale aanbiedingen of evenementen. ",
-    "Finish": "Eind"
+    "Finish": "Eind",
+    "All": "Alles",
+    "DefaultShoppingListHelp": "Standaard lijst als dit voedingsmiddel wordt toegevoegd aan de boodschappenlijst.",
+    "None": "Geen",
+    "UpdateFoodLists": "Update voedingsmiddelen boodschappenlijsten",
+    "UpdateFoodListsHelp": "Update de standaard boodschappenlijsten in het voedingsmiddel als er tijdens het winkelen van boodschappenlijst wordt gewisseld."
 }
