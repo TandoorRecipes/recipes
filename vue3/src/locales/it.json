@@ -38,7 +38,7 @@
     "AiProvider": "Fornitore AI",
     "AiProviderHelp": "Puoi configurare più fornitori AI in base alle tue preferenze. Possono essere configurati anche per lavorare tra più spazi.",
     "Alignment": "Allineamento",
-    "All": "",
+    "All": "Tutti",
     "AllRecipes": "Tutte le ricette",
     "Amount": "Quantità",
     "App": "Applicazione",
@@ -510,7 +510,7 @@
     "Shopping_Categories": "Categorie di spesa",
     "Shopping_Category": "Categoria di spesa",
     "Shopping_List_Empty": "La tua lista della spesa è vuota, puoi aggiungere elementi dal menù contestuale di una voce nel piano alimentare (fai clic con il tasto destro sulla scheda o fai clic con il tasto sinistro sull'icona del menù)",
-    "Shopping_input_placeholder": "ad es. patata/100 patate/100 g patate",
+    "Shopping_input_placeholder": "ad es. 100 g patate",
     "Shopping_list": "Lista della spesa",
     "ShowDelayed": "Mostra elementi ritardati",
     "ShowIngredients": "Mostra ingredienti",
@@ -873,5 +873,12 @@
     "view_recipe": "Mostra ricetta",
     "warning_duplicate_filter": "Avviso: a causa di limitazioni tecniche, usare più filtri di ricerca della stessa combinazione (and/or/not) potrebbe portare a risultati inaspettati.",
     "warning_feature_beta": "Questa funzione è attualmente in BETA (fase di test). Potrebbero verificarsi delle anomalie e modifiche che in futuro potrebbero bloccare la funzionalità stessa o rimuove i dati correlati ad essa.",
-    "warning_space_delete": "Stai per eliminare la tua istanza che include tutte le ricette, liste della spesa, piani alimentari e tutto ciò che hai creato. Questa azione non può essere annullata! Sei sicuro di voler procedere?"
+    "warning_space_delete": "Stai per eliminare la tua istanza che include tutte le ricette, liste della spesa, piani alimentari e tutto ciò che hai creato. Questa azione non può essere annullata! Sei sicuro di voler procedere?",
+    "DefaultShoppingListHelp": "Elenco predefinito quando questo alimento viene aggiunto alla lista della spesa.",
+    "None": "Nessuno",
+    "Shopping": "Spesa",
+    "ShoppingList": "Lista della spesa",
+    "ShoppingListHelp": "Ti consente di inserire voci in elenchi diversi. Può essere utilizzata per diversi supermercati, offerte speciali o eventi. ",
+    "UpdateFoodLists": "Aggiorna le liste della spesa",
+    "UpdateFoodListsHelp": "Aggiorna le liste della spesa predefinite nell'alimento quando modifichi le liste durante la spesa."
 }
