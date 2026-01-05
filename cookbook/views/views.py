@@ -18,7 +18,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.utils.datetime_safe import date
+from datetime import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 

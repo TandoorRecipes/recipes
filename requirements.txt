@@ -4,7 +4,7 @@ boto3==1.42.19
 bleach==6.3.0
 cryptography===46.0.3
 crispy-bootstrap4==2025.6
-Django==4.2.27
+Django==5.2.9
 django-allauth==65.13.1
 django-annoying==0.10.8
 django-auth-ldap==5.3.0
