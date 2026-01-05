@@ -184,7 +184,7 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
-import {numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
+import {boolOrUndefinedTransformer, numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
@@ -739,10 +739,10 @@ const filters = ref({
         label: t('Hide_External'),
         hint: t('searchFilterHideExternalHelp'),
         enabled: false,
-        default: "false",
+        default: undefined,
         is: VSelect,
-        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-        modelValue: useRouteQuery('internal', "false")
+        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
+        modelValue: useRouteQuery('internal', undefined, {transform: boolOrUndefinedTransformer})
     },
     // random: {
     //     id: 'random',
