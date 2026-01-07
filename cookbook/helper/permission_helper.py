@@ -491,3 +491,15 @@ def create_space_for_user(user, name=None):
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space
+
+def add_social_user_default_space(user, active=True):
+    # If enabled, add a user that has logged in with a social account to the default group
+    # Group is defined by settings.SOCIAL_DEFAULT_ACCESS
+    # Access group to add the user to is defined by settings.SOCIAL_DEFAULT_GROUP
+    user_space = None
+
+    if settings.SOCIAL_DEFAULT_ACCESS:
+        user_space = UserSpace.objects.create(space=Space.objects.first(), user=user, active=active)
+        user_space.groups.add(Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get())
+    
+    return user_space

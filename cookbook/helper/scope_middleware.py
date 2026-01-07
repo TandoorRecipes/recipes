@@ -8,7 +8,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 import random
 
-from cookbook.helper.permission_helper import create_space_for_user
+from cookbook.helper.permission_helper import create_space_for_user, add_social_user_default_space
 from cookbook.models import Space, UserSpace
 from cookbook.views import views
 from recipes import settings
@@ -55,7 +55,10 @@ class ScopeMiddleware:
                     user_space.save()
 
             if not user_space:
-                if 'signup_token' in request.session:
+                if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
+                    # If user authenticated, has no space but SOCIAL_DEFAULT_ACCESS is configured, add them to that space
+                    user_space = add_social_user_default_space(user=request.user, active=True)
+                elif 'signup_token' in request.session:
                     # if user is authenticated, has no space but a signup token (InviteLink) is present, redirect to invite link logic
                     return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
                 else:
