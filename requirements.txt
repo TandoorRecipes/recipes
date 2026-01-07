@@ -1,4 +1,4 @@
-aiohttp==3.13.2
+aiohttp==3.13.3
 beautifulsoup4==4.14.3
 boto3==1.42.21
 bleach==6.3.0
