@@ -1654,8 +1654,12 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 try:
                     url = serializer.validated_data['image_url']
                     if validate_import_url(url):
+                        # Use modern headers for better compatibility
                         response = requests.get(url, headers={
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
+                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                            "Accept-Language": "en-US,en;q=0.9",
+                            "Referer": url})
                         image = File(io.BytesIO(response.content))
                         filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
                 except UnidentifiedImageError as e:
@@ -2387,12 +2391,11 @@ class RecipeUrlImportView(APIView):
                 else:
                     try:
                         if validate_import_url(url):
-                            html = requests.get(
-                                url,
-                                headers={
-                                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
-                            ).content
-                            scrape = scrape_html(org_url=url, html=html, supported_only=False)
+                            # Use scrape_html with online=True to let recipe_scrapers handle
+                            # the HTTP request with proper User-Agent and site-specific logic.
+                            # This fixes imports from sites where the old requests.get() approach
+                            # returned different content than what recipe_scrapers expects.
+                            scrape = scrape_html(html=None, org_url=url, online=True, supported_only=False)
                         else:
                             response['error'] = True
                             response['msg'] = _('Invalid Url')
