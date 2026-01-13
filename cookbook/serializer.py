@@ -521,7 +521,7 @@ class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
     class Meta:
         model = ShoppingList
-        fields = ('id', 'name', 'description', 'color',)  # returning dates breaks breaks shopping list deviceSetting save due to date retrieved from local storage as string
+        fields = ('id', 'name', 'description', 'color',)
         read_only_fields = ('id',)
 
 
@@ -1507,7 +1507,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
         obj = super().create(validated_data)
 
-        if self.context['request'].user.userpreference.shopping_update_food_lists:
+        if self.context['request'].user.userpreference.shopping_update_food_lists and obj.shopping_lists.count() == 0:
             obj.shopping_lists.clear()
             obj.shopping_lists.set(obj.food.shopping_lists.all())
 

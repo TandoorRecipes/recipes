@@ -35,6 +35,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     let entries = ref(new Map<number, ShoppingListEntry>)
     let supermarketCategories = ref([] as SupermarketCategory[])
     let supermarkets = ref([] as Supermarket[])
+    let shoppingLists = ref([] as ShoppingList[])
 
     // internal
     let currentlyUpdating = ref(false)
@@ -674,6 +675,20 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         //TODO if food update that as well
     }
 
+    /**
+     * load a list of supermarkets
+     */
+    function loadShoppingLists() {
+        let api = new ApiApi()
+
+        api.apiShoppingListList().then(r => {
+            shoppingLists.value = r.results
+            // TODO recursive load
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
+    }
+
     return {
         UNDEFINED_CATEGORY,
         entries,
@@ -691,6 +706,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         itemCheckSyncQueue,
         undoStack,
         totalFoods,
+        shoppingLists,
         refreshFromAPI,
         autoSync,
         createObject,
@@ -704,6 +720,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         getMealPlanEntries,
         updateCategories,
         updateEntryShoppingLists,
+        loadShoppingLists,
     }
 })
 

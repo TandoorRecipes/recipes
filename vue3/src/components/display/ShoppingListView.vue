@@ -86,11 +86,11 @@
 
         <shopping-list-select-chip
             v-model="selectedShoppingLists"
-            :shopping-lists="shoppingLists"
+            :shopping-lists="useShoppingStore().shoppingLists"
             show-update
             hide-edit
             hide-create
-            @refresh="loadShoppingLists()"
+            @refresh="useShoppingStore().loadShoppingLists()"
             @update="batchUpdateShoppingLists"
         ></shopping-list-select-chip>
 
@@ -128,7 +128,7 @@
 
                             <v-menu activator="parent">
                                 <v-list density="compact">
-                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = []; useShoppingStore().updateEntriesStructure()">
+                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists = []; useShoppingStore().updateEntriesStructure()">
                                         {{ $t('SelectNone') }}
                                     </v-list-item>
                                     <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">
@@ -142,9 +142,9 @@
                         </v-chip>
 
                         <shopping-list-select-chip
-                            v-model:ids="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list"
-                            :shopping-lists="shoppingLists"
-                            @refresh="loadShoppingLists"
+                            v-model:ids="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists"
+                            :shopping-lists="useShoppingStore().shoppingLists"
+                            @refresh="useShoppingStore().loadShoppingLists()"
                         ></shopping-list-select-chip>
                     </v-col>
                 </v-row>
@@ -334,7 +334,6 @@ const {t} = useI18n()
 const exportDialog = ref(false)
 const currentTab = ref("shopping")
 const supermarkets = ref([] as Supermarket[])
-const shoppingLists = ref([] as ShoppingList[])
 const manualAddRecipe = ref<undefined | Recipe>(undefined)
 
 const selectEnabled = ref(false)
@@ -381,7 +380,7 @@ onMounted(() => {
     }
 
     loadSupermarkets()
-    loadShoppingLists()
+    useShoppingStore().loadShoppingLists()
 })
 
 /**
@@ -456,19 +455,7 @@ function loadSupermarkets() {
     })
 }
 
-/**
- * load a list of supermarkets
- */
-function loadShoppingLists() {
-    let api = new ApiApi()
 
-    api.apiShoppingListList().then(r => {
-        shoppingLists.value = r.results
-        // TODO either recursive or add a "favorite" attribute to supermarkets for them to display at all
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-    })
-}
 
 function batchUpdateShoppingLists() {
     const selectedEntries = selectedLines.value.flatMap(slf => Array.from(slf.entries.values()))
