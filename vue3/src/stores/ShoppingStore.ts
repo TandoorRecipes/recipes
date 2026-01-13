@@ -653,12 +653,25 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     function updateEntryShoppingLists(entries: ShoppingListEntry[], shoppingLists: ShoppingList[]) {
         const api = new ApiApi()
-
+        console.log('updating entries ', entries, ' with lists ', shoppingLists)
         entries.forEach(sLE => {
             sLE.shoppingLists = shoppingLists
-
-
         })
+
+        updateEntriesStructure()
+
+        api.apiShoppingListEntryBulkCreate({
+            shoppingListEntryBulk: {
+                ids: entries.map(e => e.id!),
+                shoppingListsSet: shoppingLists.map(sl => sl.id!)
+            }
+        }).then(r => {
+            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        })
+
+        //TODO if food update that as well
     }
 
     return {
@@ -690,6 +703,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         getAssociatedRecipes,
         getMealPlanEntries,
         updateCategories,
+        updateEntryShoppingLists,
     }
 })
 

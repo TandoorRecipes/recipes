@@ -84,35 +84,20 @@
             <v-btn icon="$close" variant="plain" @click="selectEnabled = false" lines="1"></v-btn>
         </template>
 
-         <v-chip label density="compact" class="ms-1" variant="outlined"
-                                :color="(useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.length == 0 ? '' : 'secondary')" :prepend-icon="TShoppingList.icon"
-                                append-icon="fa-solid fa-caret-down">
-                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.filter(sl => sl != -1).length > 0">
-                                {{
-                                    shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ')
-                                }}
-                            </template>
-                            <template v-else>{{ $t('ShoppingList') }}</template>
+        <shopping-list-select-chip
+            v-model="selectedShoppingLists"
+            :shopping-lists="shoppingLists"
+            show-update
+            hide-edit
+            hide-create
+            @refresh="loadShoppingLists()"
+            @update="batchUpdateShoppingLists"
+        ></shopping-list-select-chip>
 
-                            <v-menu activator="parent" :close-on-content-click="true">
-                                <v-list density="compact" >
-
-                                    <v-list-item  @click="">
-                                        {{ $t('None') }}
-                                    </v-list-item>
-                                    <v-list-item v-for="s in shoppingLists" :key="s.id" :value="s.id">
-                                        {{ s.name }}
-                                        <template #append>
-                                            <v-btn variant="plain" icon>
-                                                <v-icon icon="$edit"></v-icon>
-                                                <model-edit-dialog activator="parent" :item="s" @delete="loadShoppingLists()" @create="loadShoppingLists()"
-                                                                   @save="loadShoppingLists()" model="ShoppingList"></model-edit-dialog>
-                                            </v-btn>
-                                        </template>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </v-chip>
+        <category-select-chip
+            :categories="useShoppingStore().supermarketCategories"
+            @update="batchUpdateCategories"
+        ></category-select-chip>
     </v-banner>
 
     <shopping-export-dialog v-model="exportDialog" activator="model"></shopping-export-dialog>
@@ -130,9 +115,11 @@
 
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
-                        <v-btn label density="compact" variant="outlined" icon="fa-solid fa-square-check" @click="selectEnabled = !selectEnabled"></v-btn>
+                        <v-btn label size="small" variant="outlined"  @click="selectEnabled = !selectEnabled">
+                            <v-icon icon="fa-solid fa-list-check"></v-icon>
+                        </v-btn>
 
-                        <v-chip label density="compact" variant="outlined" class="ms-1" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
+                        <v-chip label size="small" variant="outlined" class="ms-1" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
                                 append-icon="fa-solid fa-caret-down">
                             <span v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
                                 {{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}
@@ -154,52 +141,11 @@
                             </v-menu>
                         </v-chip>
 
-                        <v-chip label density="compact" class="ms-1" variant="outlined"
-                                :color="(useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.length == 0 ? '' : 'secondary')" :prepend-icon="TShoppingList.icon"
-                                append-icon="fa-solid fa-caret-down">
-                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.filter(sl => sl != -1).length > 0">
-                                {{
-                                    shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ')
-                                }}
-                            </template>
-                            <template v-else>{{ $t('ShoppingList') }}</template>
-
-                            <v-menu activator="parent" :close-on-content-click="false">
-                                <v-list density="compact" v-model:selected="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list" select-strategy="leaf">
-                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = [] ">
-                                        {{ $t('All') }}
-                                    </v-list-item>
-                                    <v-list-item :value="-1" @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list = [-1];">
-                                        <template v-slot:prepend="{ isSelected, select }">
-                                            <v-list-item-action start>
-                                                <v-checkbox-btn :model-value="isSelected" @update:model-value="select"></v-checkbox-btn>
-                                            </v-list-item-action>
-                                        </template>
-                                        {{ $t('None') }}
-                                    </v-list-item>
-                                    <v-list-item v-for="s in shoppingLists" :key="s.id" :value="s.id">
-                                        <template v-slot:prepend="{ isSelected, select }">
-                                            <v-list-item-action start>
-                                                <v-checkbox-btn :model-value="isSelected" @update:model-value="select" :color="s.color" :baseColor="s.color"></v-checkbox-btn>
-                                            </v-list-item-action>
-                                        </template>
-                                        {{ s.name }}
-                                        <template #append>
-                                            <v-btn variant="plain" icon>
-                                                <v-icon icon="$edit"></v-icon>
-                                                <model-edit-dialog activator="parent" :item="s" @delete="loadShoppingLists()" @create="loadShoppingLists()"
-                                                                   @save="loadShoppingLists()" model="ShoppingList"></model-edit-dialog>
-                                            </v-btn>
-                                        </template>
-                                    </v-list-item>
-                                    <v-list-item prepend-icon="$create" link>
-                                        {{ $t('Create') }}
-                                        <model-edit-dialog activator="parent" @delete="loadShoppingLists()" @create="loadShoppingLists()" @save="loadShoppingLists()"
-                                                           model="ShoppingList"></model-edit-dialog>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </v-chip>
+                        <shopping-list-select-chip
+                            v-model:ids="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list"
+                            :shopping-lists="shoppingLists"
+                            @refresh="loadShoppingLists"
+                        ></shopping-list-select-chip>
                     </v-col>
                 </v-row>
 
@@ -363,7 +309,7 @@
 
 import {computed, onMounted, ref, shallowRef, toRef, watch} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Recipe, ResponseError, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Supermarket} from "@/openapi";
+import {ApiApi, Recipe, ResponseError, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Supermarket, SupermarketCategory} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -379,7 +325,9 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {onBeforeRouteLeave} from "vue-router";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
-import {TShoppingList, TSupermarket} from "@/types/Models.ts";
+import { TSupermarket} from "@/types/Models.ts";
+import ShoppingListSelectChip from "@/components/inputs/ShoppingListSelectChip.vue";
+import CategorySelectChip from "@/components/inputs/CategorySelectChip.vue";
 
 const {t} = useI18n()
 
@@ -391,6 +339,7 @@ const manualAddRecipe = ref<undefined | Recipe>(undefined)
 
 const selectEnabled = ref(false)
 const selectedLines = shallowRef([] as IShoppingListFood[])
+const selectedShoppingLists = ref([] as ShoppingList[])
 
 /**
  * VSelect items for shopping list grouping options with localized names
@@ -406,6 +355,10 @@ const groupingOptionsItems = computed(() => {
 watch(() => useUserPreferenceStore().deviceSettings, () => {
     useShoppingStore().updateEntriesStructure()
 }, {deep: true})
+
+watch(() => useShoppingStore().entriesByGroup, () => {
+    selectedLines.value = []
+})
 
 onMounted(() => {
     addEventListener("visibilitychange", (event) => {
@@ -517,8 +470,15 @@ function loadShoppingLists() {
     })
 }
 
-function updateSelectionShoppingList(shoppingList: ShoppingList){
+function batchUpdateShoppingLists() {
+    const selectedEntries = selectedLines.value.flatMap(slf => Array.from(slf.entries.values()))
+    useShoppingStore().updateEntryShoppingLists(selectedEntries, selectedShoppingLists.value)
+    selectedLines.value = []
+}
 
+function batchUpdateCategories(category: SupermarketCategory) {
+    useShoppingStore().updateCategories(selectedLines.value, category)
+    selectedLines.value = []
 }
 
 </script>
