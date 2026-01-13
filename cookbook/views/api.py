@@ -1245,6 +1245,20 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             if 'child_inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['child_inherit_fields_remove_all']:
                 remove_all_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids)
 
+            # ---------- shopping lists -------------
+            if 'shopping_lists_add' in serializer.validated_data:
+                add_to_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_add'])
+
+            if 'shopping_lists_remove' in serializer.validated_data:
+                remove_from_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id',
+                                     serializer.validated_data['shopping_lists_remove'])
+
+            if 'shopping_lists_set' in serializer.validated_data and len(serializer.validated_data['shopping_lists_set']) > 0:
+                set_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_set'])
+
+            if 'shopping_lists_remove_all' in serializer.validated_data and serializer.validated_data['shopping_lists_remove_all']:
+                remove_all_from_relation(Food.shopping_lists.through, 'food_id', safe_food_ids)
+
             # ------- parent --------
             if self.model.node_order_by:
                 node_location = 'sorted'
@@ -2099,23 +2113,44 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                 space=request.space, id__in=serializer.validated_data['ids']
             )
 
+            safe_entry_ids = ShoppingListEntry.objects.filter(
+                Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
+            ).filter(
+                space=request.space, id__in=serializer.validated_data['ids']
+            ).values_list('id', flat=True)
+
             update_timestamp = timezone.now()
             checked = serializer.validated_data['checked']
-            if checked:
-                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
-            else:
-                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=None)
-            serializer.validated_data['timestamp'] = update_timestamp
-
-            # update the onhand for food if shopping_add_onhand is True
-            if request.user.userpreference.shopping_add_onhand:
-                foods = Food.objects.filter(id__in=bulk_entries.values('food'))
+            if checked is not None:
                 if checked:
-                    for f in foods:
-                        f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
-                elif checked == False:
-                    for f in foods:
-                        f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
+                    bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
+                else:
+                    bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=None)
+                serializer.validated_data['timestamp'] = update_timestamp
+
+                # update the onhand for food if shopping_add_onhand is True
+                if request.user.userpreference.shopping_add_onhand:
+                    foods = Food.objects.filter(id__in=bulk_entries.values('food'))
+                    if checked:
+                        for f in foods:
+                            f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
+                    elif checked == False:
+                        for f in foods:
+                            f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
+
+            # ---------- shopping lists -------------
+            if 'shopping_lists_add' in serializer.validated_data:
+                add_to_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_add'])
+
+            if 'shopping_lists_remove' in serializer.validated_data:
+                remove_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
+                                     serializer.validated_data['shopping_lists_remove'])
+
+            if 'shopping_lists_set' in serializer.validated_data and len(serializer.validated_data['shopping_lists_set']) > 0:
+                set_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_set'])
+
+            if 'shopping_lists_remove_all' in serializer.validated_data and serializer.validated_data['shopping_lists_remove_all']:
+                remove_all_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids)
 
             return Response(serializer.validated_data)
         else:

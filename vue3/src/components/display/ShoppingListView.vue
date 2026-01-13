@@ -1,5 +1,5 @@
 <template>
-    <v-tabs v-model="currentTab">
+    <v-tabs v-model="currentTab" v-if="!selectEnabled">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
             class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().totalFoods }})</span></v-tab>
@@ -79,6 +79,41 @@
         <!--        </v-btn>-->
 
     </v-tabs>
+    <v-banner class="pt-0 pb-0 bg-info" v-if="selectEnabled">
+        <template #prepend>
+            <v-btn icon="$close" variant="plain" @click="selectEnabled = false" lines="1"></v-btn>
+        </template>
+
+         <v-chip label density="compact" class="ms-1" variant="outlined"
+                                :color="(useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.length == 0 ? '' : 'secondary')" :prepend-icon="TShoppingList.icon"
+                                append-icon="fa-solid fa-caret-down">
+                            <template v-if="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.filter(sl => sl != -1).length > 0">
+                                {{
+                                    shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_list.includes(sl.id)).flatMap(sl => sl.name).join(', ')
+                                }}
+                            </template>
+                            <template v-else>{{ $t('ShoppingList') }}</template>
+
+                            <v-menu activator="parent" :close-on-content-click="true">
+                                <v-list density="compact" >
+
+                                    <v-list-item  @click="">
+                                        {{ $t('None') }}
+                                    </v-list-item>
+                                    <v-list-item v-for="s in shoppingLists" :key="s.id" :value="s.id">
+                                        {{ s.name }}
+                                        <template #append>
+                                            <v-btn variant="plain" icon>
+                                                <v-icon icon="$edit"></v-icon>
+                                                <model-edit-dialog activator="parent" :item="s" @delete="loadShoppingLists()" @create="loadShoppingLists()"
+                                                                   @save="loadShoppingLists()" model="ShoppingList"></model-edit-dialog>
+                                            </v-btn>
+                                        </template>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-chip>
+    </v-banner>
 
     <shopping-export-dialog v-model="exportDialog" activator="model"></shopping-export-dialog>
 
@@ -95,7 +130,10 @@
 
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
-                        <v-chip label density="compact" variant="outlined" style="max-width: 50%;" :prepend-icon="TSupermarket.icon" append-icon="fa-solid fa-caret-down">
+                        <v-btn label density="compact" variant="outlined" icon="fa-solid fa-square-check" @click="selectEnabled = !selectEnabled"></v-btn>
+
+                        <v-chip label density="compact" variant="outlined" class="ms-1" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
+                                append-icon="fa-solid fa-caret-down">
                             <span v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
                                 {{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}
                             </span>
@@ -194,7 +232,7 @@
                                 <v-divider></v-divider>
 
                                 <template v-for="[i, value] in category.foods" :key="value.food.id">
-                                    <shopping-line-item :shopping-list-food="value"></shopping-line-item>
+                                    <shopping-line-item :shopping-list-food="value" :select-enabled="selectEnabled"></shopping-line-item>
                                 </template>
 
                             </template>
@@ -339,11 +377,9 @@ import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.v
 import {DateTime} from "luxon";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {onBeforeRouteLeave} from "vue-router";
-import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import {TShoppingList, TSupermarket} from "@/types/Models.ts";
-import {load} from "esbuild-register/dist/loader";
 
 const {t} = useI18n()
 
@@ -353,6 +389,7 @@ const supermarkets = ref([] as Supermarket[])
 const shoppingLists = ref([] as ShoppingList[])
 const manualAddRecipe = ref<undefined | Recipe>(undefined)
 
+const selectEnabled = ref(false)
 const selectedLines = shallowRef([] as IShoppingListFood[])
 
 /**
@@ -478,6 +515,10 @@ function loadShoppingLists() {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
+}
+
+function updateSelectionShoppingList(shoppingList: ShoppingList){
+
 }
 
 </script>

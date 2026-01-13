@@ -1,5 +1,16 @@
 import {acceptHMRUpdate, defineStore} from "pinia"
-import {ApiApi, ApiShoppingListEntryListRequest, Food, Recipe, ShoppingListEntry, ShoppingListEntryBulk, ShoppingListRecipe, Supermarket, SupermarketCategory} from "@/openapi";
+import {
+    ApiApi,
+    ApiShoppingListEntryListRequest,
+    Food,
+    Recipe,
+    ShoppingList,
+    ShoppingListEntry,
+    ShoppingListEntryBulk,
+    ShoppingListRecipe,
+    Supermarket,
+    SupermarketCategory
+} from "@/openapi";
 import {computed, ref, shallowRef, triggerRef} from "vue";
 import {
     IShoppingExportEntry,
@@ -12,7 +23,7 @@ import {
     ShoppingOperationHistoryEntry,
     ShoppingOperationHistoryType
 } from "@/types/Shopping";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {isDelayed, isEntryVisible} from "@/utils/logic_utils";
 import {DateTime} from "luxon";
@@ -81,6 +92,38 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         entriesByGroup.value = orderedStructure
     }
 
+    /**
+     * updates a given entry within the precalculated shopping list structure
+     * CANNOT handle anything besides checked state and shopping lists (e.g. category does not work)
+     * @param entry
+     */
+    function updateEntryInShoppingList(entry: ShoppingListEntry) {
+        //TODO this only works well when checking and even then the render thread seems to be faster
+        // TODO showing the different render state before this code is able to remove the entry
+
+
+        // predictive update of entry directly in render structure
+        entriesByGroup.value.forEach((sLC, sLCIndex) => {
+            sLC.foods.forEach(sLF => {
+                sLF.entries.forEach(sLE => {
+                    if (sLE.id == entry.id) {
+                        sLE.checked = entry.checked
+                        sLE.shoppingLists = entry.shoppingLists
+
+                        if (!isEntryVisible(sLE, useUserPreferenceStore().deviceSettings)) {
+                            sLF.entries.delete(sLE.id!)
+                        }
+                    }
+                })
+                if (sLF.entries.size == 0) {
+                    sLC.foods.delete(sLF.food.id!)
+                }
+            })
+            if (sLC.foods.size == 0) {
+                entriesByGroup.value.splice(sLCIndex, 1)
+            }
+        })
+    }
 
     /**
      * get the total number of foods in the shopping list
@@ -234,7 +277,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 r.results.forEach((e) => {
                     entries.value.set(e.id!, e)
                 })
-                if(r.results.length > 0){
+                if (r.results.length > 0) {
                     updateEntriesStructure()
                 }
                 currentlyUpdating.value = false
@@ -301,7 +344,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             entriesByGroup.value.forEach(category => {
                 if (category.name == categoryName) {
                     category.foods.get(object.food!.id!)?.entries.delete(object.id!)
-                    if(category.foods.get(object.food!.id!)?.entries.size == 0) {
+                    if (category.foods.get(object.food!.id!)?.entries.size == 0) {
                         category.foods.delete(object.food!.id!)
                         triggerRef(entriesByGroup)
                     }
@@ -447,7 +490,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 entries.value = new Map([...entries.value, ...updatedEntries])
                 syncQueueRunning.value = false
                 //TODO proper function to splice/update structure as needed
-                useShoppingStore().updateEntriesStructure()
+                //useShoppingStore().updateEntriesStructure()
                 if (itemCheckSyncQueue.value.length > 0) {
                     runSyncQueue(500)
                 }
@@ -590,6 +633,34 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         }
     }
 
+    function updateCategories(shoppingListFoods: IShoppingListFood[], category: SupermarketCategory) {
+        const api = new ApiApi()
+        const foodIds: number[] = []
+        shoppingListFoods.forEach(sLF => {
+            sLF.food.supermarketCategory = category
+            sLF.entries.forEach(e => e.food.supermarketCategory = category)
+            foodIds.push(sLF.food.id!)
+        })
+
+        useShoppingStore().updateEntriesStructure()
+
+        api.apiFoodBatchUpdateUpdate({foodBatchUpdate: {foods: foodIds, category: category.id!}}).then(r => {
+            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        })
+    }
+
+    function updateEntryShoppingLists(entries: ShoppingListEntry[], shoppingLists: ShoppingList[]) {
+        const api = new ApiApi()
+
+        entries.forEach(sLE => {
+            sLE.shoppingLists = shoppingLists
+
+
+        })
+    }
+
     return {
         UNDEFINED_CATEGORY,
         entries,
@@ -618,6 +689,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         delayEntries: setEntriesDelayedState,
         getAssociatedRecipes,
         getMealPlanEntries,
+        updateCategories,
     }
 })
 
