@@ -142,13 +142,22 @@
                                     <v-list-item v-for="s in shoppingLists" :key="s.id" :value="s.id">
                                         <template v-slot:prepend="{ isSelected, select }">
                                             <v-list-item-action start>
-                                                <v-checkbox-btn :model-value="isSelected" @update:model-value="select"></v-checkbox-btn>
+                                                <v-checkbox-btn :model-value="isSelected" @update:model-value="select" :color="s.color" :baseColor="s.color"></v-checkbox-btn>
                                             </v-list-item-action>
                                         </template>
                                         {{ s.name }}
+                                        <template #append>
+                                            <v-btn variant="plain" icon>
+                                                <v-icon icon="$edit"></v-icon>
+                                                <model-edit-dialog activator="parent" :item="s" @delete="loadShoppingLists()" @create="loadShoppingLists()"
+                                                                   @save="loadShoppingLists()" model="ShoppingList"></model-edit-dialog>
+                                            </v-btn>
+                                        </template>
                                     </v-list-item>
-                                    <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'ShoppingList'}}">
+                                    <v-list-item prepend-icon="$create" link>
                                         {{ $t('Create') }}
+                                        <model-edit-dialog activator="parent" @delete="loadShoppingLists()" @create="loadShoppingLists()" @save="loadShoppingLists()"
+                                                           model="ShoppingList"></model-edit-dialog>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -334,6 +343,7 @@ import {isShoppingCategoryVisible} from "@/utils/logic_utils.ts";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import {TShoppingList, TSupermarket} from "@/types/Models.ts";
+import {load} from "esbuild-register/dist/loader";
 
 const {t} = useI18n()
 
