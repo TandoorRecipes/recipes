@@ -2120,8 +2120,9 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             ).values_list('id', flat=True)
 
             update_timestamp = timezone.now()
-            checked = serializer.validated_data['checked']
-            if checked is not None:
+            if 'checked' in serializer.validated_data and serializer.validated_data['checked'] is not None:
+                checked = serializer.validated_data['checked']
+
                 if checked:
                     bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
                 else:

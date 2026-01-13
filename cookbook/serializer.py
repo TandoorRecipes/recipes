@@ -1287,9 +1287,9 @@ class FoodBatchUpdateSerializer(serializers.Serializer):
     child_inherit_fields_set = serializers.ListField(child=serializers.IntegerField())
     child_inherit_fields_remove_all = serializers.BooleanField(default=False)
 
-    shopping_lists_add = serializers.ListField(child=serializers.IntegerField())
-    shopping_lists_remove = serializers.ListField(child=serializers.IntegerField())
-    shopping_lists_set = serializers.ListField(child=serializers.IntegerField())
+    shopping_lists_add = serializers.ListField(child=serializers.IntegerField(),required=False)
+    shopping_lists_remove = serializers.ListField(child=serializers.IntegerField(),required=False)
+    shopping_lists_set = serializers.ListField(child=serializers.IntegerField(),required=False)
     shopping_lists_remove_all = serializers.BooleanField(default=False)
 
     substitute_children = serializers.BooleanField(required=False, allow_null=True)
@@ -1553,9 +1553,9 @@ class ShoppingListEntryBulkSerializer(serializers.Serializer):
     checked = serializers.BooleanField(required=False, allow_null=True)
     timestamp = serializers.DateTimeField(read_only=True, required=False)
 
-    shopping_lists_add = serializers.ListField(child=serializers.IntegerField())
-    shopping_lists_remove = serializers.ListField(child=serializers.IntegerField())
-    shopping_lists_set = serializers.ListField(child=serializers.IntegerField())
+    shopping_lists_add = serializers.ListField(child=serializers.IntegerField(), required=False)
+    shopping_lists_remove = serializers.ListField(child=serializers.IntegerField(), required=False)
+    shopping_lists_set = serializers.ListField(child=serializers.IntegerField(), required=False)
     shopping_lists_remove_all = serializers.BooleanField(default=False)
 
 
