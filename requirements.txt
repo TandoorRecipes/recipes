@@ -54,7 +54,7 @@ litellm==1.64.1
 
 # Development
 pytest==8.4.2
-pytest-django==4.11.0
+pytest-django==4.11.1
 pytest-cov===6.2.1
 pytest-factoryboy==2.8.1
 pytest-html==4.1.1
