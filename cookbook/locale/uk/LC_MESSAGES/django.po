@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2025-11-22 20:03+0000\n"
+"PO-Revision-Date: 2026-01-13 06:40+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -468,7 +468,7 @@ msgstr "Пошук"
 #: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
 #: .\cookbook\templates\meal_plan.html:7
 msgid "Meal-Plan"
-msgstr "План харчування"
+msgstr "Меню"
 
 #: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
 #: .\cookbook\views\views.py:459
@@ -563,7 +563,7 @@ msgstr "Рецепт"
 
 #: .\cookbook\models.py:1504
 msgid "Food"
-msgstr "Їжа"
+msgstr "Інгредієнти"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -2790,7 +2790,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr "Керуйте рецептами, списком покупок, планами харчування тощо."
+msgstr "Керуйте рецептами, списком покупок, меню тощо."
 
 #: .\cookbook\views\views.py:458
 msgid "Plan"

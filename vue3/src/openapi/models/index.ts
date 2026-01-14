@@ -29,6 +29,7 @@ export * from './FdcQueryFoods';
 export * from './Food';
 export * from './FoodBatchUpdate';
 export * from './FoodInheritField';
+export * from './FoodShopping';
 export * from './FoodShoppingUpdate';
 export * from './FoodSimple';
 export * from './GenericModelReference';

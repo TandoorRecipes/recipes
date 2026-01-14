@@ -43,18 +43,6 @@ export interface PatchedShoppingList {
      * @memberof PatchedShoppingList
      */
     color?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof PatchedShoppingList
-     */
-    readonly createdAt?: Date;
-    /**
-     * 
-     * @type {Date}
-     * @memberof PatchedShoppingList
-     */
-    readonly updatedAt?: Date;
 }
 
 /**
@@ -78,12 +66,10 @@ export function PatchedShoppingListFromJSONTyped(json: any, ignoreDiscriminator:
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'color': json['color'] == null ? undefined : json['color'],
-        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
-        'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
     };
 }
 
-export function PatchedShoppingListToJSON(value?: Omit<PatchedShoppingList, 'createdAt'|'updatedAt'> | null): any {
+export function PatchedShoppingListToJSON(value?: PatchedShoppingList | null): any {
     if (value == null) {
         return value;
     }

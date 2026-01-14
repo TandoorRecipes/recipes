@@ -205,6 +205,12 @@ export interface UserPreference {
      * @type {boolean}
      * @memberof UserPreference
      */
+    shoppingUpdateFoodLists?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
     filterToSupermarket?: boolean;
     /**
      * 
@@ -276,6 +282,7 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
         'shoppingRecentDays': json['shopping_recent_days'] == null ? undefined : json['shopping_recent_days'],
         'csvDelim': json['csv_delim'] == null ? undefined : json['csv_delim'],
         'csvPrefix': json['csv_prefix'] == null ? undefined : json['csv_prefix'],
+        'shoppingUpdateFoodLists': json['shopping_update_food_lists'] == null ? undefined : json['shopping_update_food_lists'],
         'filterToSupermarket': json['filter_to_supermarket'] == null ? undefined : json['filter_to_supermarket'],
         'shoppingAddOnhand': json['shopping_add_onhand'] == null ? undefined : json['shopping_add_onhand'],
         'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
@@ -312,6 +319,7 @@ export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'foodIn
         'shopping_recent_days': value['shoppingRecentDays'],
         'csv_delim': value['csvDelim'],
         'csv_prefix': value['csvPrefix'],
+        'shopping_update_food_lists': value['shoppingUpdateFoodLists'],
         'filter_to_supermarket': value['filterToSupermarket'],
         'shopping_add_onhand': value['shoppingAddOnhand'],
         'left_handed': value['leftHanded'],

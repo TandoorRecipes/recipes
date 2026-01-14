@@ -197,7 +197,7 @@ class Mealie1(Integration):
                         space=self.request.space,
                     )
                     ingredients_relation.append(Step.ingredients.through(step_id=get_step_id(i, first_step_of_recipe_dict, step_id_dict,recipe_ingredient_ref_link_dict), ingredient_id=ingredient.pk))
-                elif i['note'].strip():
+                elif i['note'] and i['note'].strip():
                     amount, unit, food, note = ingredient_parser.parse(i['note'].strip())
                     f = ingredient_parser.get_food(food)
                     u = ingredient_parser.get_unit(unit)

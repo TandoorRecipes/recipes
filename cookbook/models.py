@@ -551,6 +551,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     show_step_ingredients = models.BooleanField(default=True)
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
+    shopping_update_food_lists = models.BooleanField(default=True)
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
 
@@ -666,6 +667,7 @@ class Supermarket(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
+    shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -780,6 +782,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     url = models.CharField(max_length=1024, blank=True, null=True, default='')
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
+    shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
     ignore_shopping = models.BooleanField(default=False)  # inherited field
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
@@ -943,8 +946,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    def __str__(self):
-        return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
+    # def __str__(self):
+    #     return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
 
     class Meta:
         ordering = ['order', 'pk']
@@ -1297,8 +1300,8 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     objects = ScopedManager(space='space')
 
-    def __str__(self):
-        return f'Shopping list recipe {self.id} - {self.recipe}'
+    # def __str__(self):
+    #     return f'Shopping list recipe {self.id} - {self.recipe}'
 
     class Meta:
         ordering = ('pk',)
@@ -1315,8 +1318,12 @@ class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, Pe
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
+    class Meta:
+        ordering = ('pk',)
+
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
+    shopping_lists = models.ManyToManyField(ShoppingList, blank=True)
     list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True, related_name='entries')
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='shopping_entries')
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)

@@ -27,6 +27,7 @@
         <v-checkbox :label="$t('mealplan_autoinclude_related')" :hint="$t('mealplan_autoinclude_related_desc')" persistent-hint v-model="useUserPreferenceStore().userSettings.mealplanAutoincludeRelated"></v-checkbox>
         <v-checkbox :label="$t('shopping_add_onhand')" :hint="$t('shopping_add_onhand_desc')" persistent-hint v-model="useUserPreferenceStore().userSettings.shoppingAddOnhand"></v-checkbox>
         <v-checkbox :label="$t('filter_to_supermarket')" :hint="$t('filter_to_supermarket_desc')" persistent-hint v-model="useUserPreferenceStore().userSettings.filterToSupermarket"></v-checkbox>
+        <v-checkbox :label="$t('UpdateFoodLists')" :hint="$t('UpdateFoodListsHelp')" persistent-hint v-model="useUserPreferenceStore().userSettings.shoppingUpdateFoodLists"></v-checkbox>
 
         <v-number-input
             class="mt-2"
