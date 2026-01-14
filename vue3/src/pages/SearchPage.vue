@@ -142,7 +142,7 @@
                               @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
                               v-if="filters['sortOrder'].modelValue != 'random'"
                 ></v-pagination>
-                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes()">
+                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes({page: 1})">
                     {{ $t('Random Recipes') }}
                 </v-btn>
             </v-col>
@@ -184,7 +184,7 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
-import {numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
+import {boolOrUndefinedTransformer, numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
@@ -739,10 +739,10 @@ const filters = ref({
         label: t('Hide_External'),
         hint: t('searchFilterHideExternalHelp'),
         enabled: false,
-        default: "false",
+        default: undefined,
         is: VSelect,
-        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-        modelValue: useRouteQuery('internal', "false")
+        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
+        modelValue: useRouteQuery('internal', undefined, {transform: boolOrUndefinedTransformer})
     },
     // random: {
     //     id: 'random',

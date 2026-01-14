@@ -64,16 +64,16 @@ export interface ShoppingListRecipe {
     readonly recipeData: RecipeOverview;
     /**
      * 
-     * @type {number}
-     * @memberof ShoppingListRecipe
-     */
-    mealplan?: number;
-    /**
-     * 
      * @type {MealPlan}
      * @memberof ShoppingListRecipe
      */
     readonly mealPlanData: MealPlan;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipe
+     */
+    mealplan?: number;
     /**
      * 
      * @type {number}
@@ -113,8 +113,8 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
         'name': json['name'] == null ? undefined : json['name'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
         'recipeData': RecipeOverviewFromJSON(json['recipe_data']),
-        'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'mealPlanData': MealPlanFromJSON(json['meal_plan_data']),
+        'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'servings': json['servings'],
         'createdBy': UserFromJSON(json['created_by']),
     };
