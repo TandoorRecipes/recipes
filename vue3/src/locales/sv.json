@@ -36,6 +36,7 @@
     "AiProvider": "",
     "AiProviderHelp": "",
     "Alignment": "Orientering",
+    "All": "",
     "AllRecipes": "Alla recept",
     "Amount": "Mängd",
     "App": "App",
@@ -150,11 +151,13 @@
     "DelayFor": "Fördröjning på {hours} timmar",
     "DelayUntil": "Fördröjning till",
     "Delete": "Radera",
+    "DeleteConfirmQuestion": "Är du säker på att du vill ta bort detta objekt?",
     "DeleteShoppingConfirm": "Är du säker på att du vill ta bort all {food} från inköpslistan?",
     "DeleteSomething": "",
     "Delete_All": "Radera alla",
     "Delete_Food": "Ta bort livsmedel",
     "Delete_Keyword": "Ta bort nyckelord",
+    "Deleted": "Borttagen",
     "Description": "Beskrivning",
     "Description_Replace": "Ersätt beskrivning",
     "Disable": "Inaktivera",
@@ -695,7 +698,5 @@
     "view_recipe": "Visa recept",
     "warning_duplicate_filter": "Varning: På grund av tekniska begränsningar kan flera filter av samma kombination (och/eller/inte) ge oväntade resultat.",
     "warning_feature_beta": "Den här funktionen är för närvarande i ett BETA-läge (testning). Förvänta dig buggar och eventuellt större ändringar i framtiden (möjligtvis framtida data kan gå förlorad) när du använder den här funktionen.",
-    "warning_space_delete": "Du kan ta bort ditt utrymme inklusive alla recept, inköpslistor, måltidsplaner och allt annat du har skapat. Detta kan inte ångras! Är du säker på att du vill göra detta?",
-    "Deleted": "Borttagen",
-    "DeleteConfirmQuestion": "Är du säker på att du vill ta bort detta objekt?"
+    "warning_space_delete": "Du kan ta bort ditt utrymme inklusive alla recept, inköpslistor, måltidsplaner och allt annat du har skapat. Detta kan inte ångras! Är du säker på att du vill göra detta?"
 }

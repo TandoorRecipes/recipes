@@ -199,6 +199,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 emit('create', r)
                 editingObj.value = r
                 useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+                title.value = editingObjName()
                 return r
             }).catch((err: any) => {
                 console.error(err)
