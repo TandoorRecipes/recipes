@@ -136,8 +136,8 @@
         </template>
 
         <v-card class="mt-1"
-                v-if="(recipe.steps.length > 1 || (recipe.steps.length == 1 && !recipe.steps[0].showIngredientsTable)) && recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
-            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
+                v-if="recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
+            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor" @scale="(factor: number) => {servings = recipe.servings * factor}"></steps-overview>
         </v-card>
 
         <v-card class="mt-1" v-for="(step, index) in recipe.steps" :key="step.id">

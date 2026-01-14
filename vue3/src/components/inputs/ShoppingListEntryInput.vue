@@ -36,7 +36,7 @@
 
 
 import {PropType, ref} from "vue";
-import {ApiApi, Food, IngredientString, MealPlan, ShoppingListEntry, ShoppingListRecipe, Unit} from "@/openapi";
+import {ApiApi, Food, IngredientString, MealPlan, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Unit} from "@/openapi";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import Multiselect from "@vueform/multiselect";
@@ -65,6 +65,7 @@ function addIngredient(amount: number, unit: Unit|null, food: Food|null) {
         amount: Math.max(amount, 1),
         unit: unit,
         food: food,
+        shoppingLists: useShoppingStore().shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists.includes(sl.id))
     } as ShoppingListEntry
 
     if (props.mealPlan) {
