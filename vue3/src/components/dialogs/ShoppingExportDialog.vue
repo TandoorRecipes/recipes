@@ -1,6 +1,6 @@
 <template>
 
-    <v-dialog v-model="dialog" activator="parent" style="max-width: 75vw;">
+    <v-dialog v-model="dialog" :activator="props.activator" style="max-width: 75vw;">
         <v-card>
 
             <v-closable-card-title :title="$t('Export')" v-model="dialog"></v-closable-card-title>
@@ -48,7 +48,7 @@
 <script setup lang="ts">
 
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {computed, ref} from "vue";
+import {computed, PropType, ref, shallowRef} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore.ts";
 import {isEntryVisible, isShoppingCategoryVisible, isShoppingListFoodVisible} from "@/utils/logic_utils.ts";
 import {useI18n} from "vue-i18n";
@@ -56,9 +56,14 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ShoppingListEntry} from "@/openapi";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {useClipboard} from "@vueuse/core";
+import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models.ts";
 
 const {t} = useI18n()
 const {copy} = useClipboard()
+
+const props = defineProps({
+    activator: {default: 'parent'},
+})
 
 const dialog = defineModel<boolean>()
 const mode = ref<'md_list' | 'md_table' | 'csv'>('md_list')
@@ -78,7 +83,7 @@ const exportText = computed(() => {
 
     textArray.push(formatHeader())
 
-    useShoppingStore().getEntriesByGroup.forEach(category => {
+    useShoppingStore().entriesByGroup.forEach(category => {
         if (isShoppingCategoryVisible(category)) {
             if (category.name === useShoppingStore().UNDEFINED_CATEGORY) {
                 textArray.push(formatCategory(t('NoCategory')))

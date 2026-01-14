@@ -5,8 +5,8 @@
                 <v-closable-card-title :title="title" v-model="dialog"></v-closable-card-title>
 
                 <v-card-text>
-
-                    <v-number-input precision="2" v-model="mutableNumber" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
+                    <p v-if="props.text">{{ props.text}}</p>
+                    <v-number-input :precision="2" v-model="mutableNumber" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
                     </v-number-input>
 
                     <v-btn-group divided class="d-flex">
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 
 import {defineComponent, onMounted, ref, watch} from 'vue'
-import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue"; //TODO remove once component is out of labs
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 
 const emit = defineEmits({
     change(payload: number) {
@@ -44,7 +44,8 @@ const emit = defineEmits({
 
 const props = defineProps({
     number: {type: Number, default: 0},
-    title: {type: String, default: 'Number'}
+    title: {type: String, default: 'Number'},
+    text: {type: String, default: ''},
 })
 
 const dialog = ref(false)

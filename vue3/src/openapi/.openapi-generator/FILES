@@ -31,6 +31,7 @@ models/FdcQueryFoods.ts
 models/Food.ts
 models/FoodBatchUpdate.ts
 models/FoodInheritField.ts
+models/FoodShopping.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
 models/GenericModelReference.ts
