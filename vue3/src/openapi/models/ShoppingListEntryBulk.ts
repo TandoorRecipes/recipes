@@ -42,19 +42,19 @@ export interface ShoppingListEntryBulk {
      * @type {Array<number>}
      * @memberof ShoppingListEntryBulk
      */
-    shoppingListsAdd: Array<number>;
+    shoppingListsAdd?: Array<number>;
     /**
      * 
      * @type {Array<number>}
      * @memberof ShoppingListEntryBulk
      */
-    shoppingListsRemove: Array<number>;
+    shoppingListsRemove?: Array<number>;
     /**
      * 
      * @type {Array<number>}
      * @memberof ShoppingListEntryBulk
      */
-    shoppingListsSet: Array<number>;
+    shoppingListsSet?: Array<number>;
     /**
      * 
      * @type {boolean}
@@ -69,9 +69,6 @@ export interface ShoppingListEntryBulk {
 export function instanceOfShoppingListEntryBulk(value: object): value is ShoppingListEntryBulk {
     if (!('ids' in value) || value['ids'] === undefined) return false;
     if (!('timestamp' in value) || value['timestamp'] === undefined) return false;
-    if (!('shoppingListsAdd' in value) || value['shoppingListsAdd'] === undefined) return false;
-    if (!('shoppingListsRemove' in value) || value['shoppingListsRemove'] === undefined) return false;
-    if (!('shoppingListsSet' in value) || value['shoppingListsSet'] === undefined) return false;
     return true;
 }
 
@@ -88,9 +85,9 @@ export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminato
         'ids': json['ids'],
         'checked': json['checked'] == null ? undefined : json['checked'],
         'timestamp': (new Date(json['timestamp'])),
-        'shoppingListsAdd': json['shopping_lists_add'],
-        'shoppingListsRemove': json['shopping_lists_remove'],
-        'shoppingListsSet': json['shopping_lists_set'],
+        'shoppingListsAdd': json['shopping_lists_add'] == null ? undefined : json['shopping_lists_add'],
+        'shoppingListsRemove': json['shopping_lists_remove'] == null ? undefined : json['shopping_lists_remove'],
+        'shoppingListsSet': json['shopping_lists_set'] == null ? undefined : json['shopping_lists_set'],
         'shoppingListsRemoveAll': json['shopping_lists_remove_all'] == null ? undefined : json['shopping_lists_remove_all'],
     };
 }

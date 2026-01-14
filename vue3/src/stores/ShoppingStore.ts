@@ -32,7 +32,7 @@ const _STORE_ID = "shopping_store"
 const UNDEFINED_CATEGORY = 'shopping_undefined_category'
 
 export const useShoppingStore = defineStore(_STORE_ID, () => {
-    let entries = ref(new Map<number, ShoppingListEntry>)
+    let globalEntriesMap = ref(new Map<number, ShoppingListEntry>)
     let supermarketCategories = ref([] as SupermarketCategory[])
     let supermarkets = ref([] as Supermarket[])
     let shoppingLists = ref([] as ShoppingList[])
@@ -45,7 +45,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     let autoSyncHasFocus = ref(true)
     let autoSyncTimeoutId = ref(0)
 
-    let undoStack = shallowRef([] as ShoppingOperationHistoryEntry[])
+    let undoStack = ref([] as ShoppingOperationHistoryEntry[])
     let queueTimeoutId = ref(-1)
     let itemCheckSyncQueue = shallowRef([] as IShoppingSyncQueueEntry[])
     let syncQueueRunning = ref(false)
@@ -71,7 +71,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let orderedStructure = [] as IShoppingListCategory[]
 
         // build structure
-        entries.value.forEach(shoppingListEntry => {
+        globalEntriesMap.value.forEach(shoppingListEntry => {
             if (isEntryVisible(shoppingListEntry, deviceSettings)) {
                 structure = updateEntryInStructure(structure, shoppingListEntry)
             }
@@ -170,7 +170,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function getMealPlanEntries(mealPlanId: number) {
         let items: IShoppingListFood[] = []
 
-        entries.value.forEach(shoppingListEntry => {
+        globalEntriesMap.value.forEach(shoppingListEntry => {
             if (shoppingListEntry.listRecipe && shoppingListEntry.listRecipeData.mealplan == mealPlanId) {
                 items.push({
                     food: shoppingListEntry.food,
@@ -209,7 +209,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 requestParameters.mealplan = mealPlanId
             } else {
                 // only clear local entries when not given a meal plan to not accidentally filter the shopping list
-                entries.value = new Map<number, ShoppingListEntry>
+                globalEntriesMap.value = new Map<number, ShoppingListEntry>
                 initialized.value = false
             }
 
@@ -242,7 +242,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 newMap.set(e.id!, e)
             })
             // bulk assign to avoid unnecessary reactivity updates
-            entries.value = new Map([...entries.value, ...newMap])
+            globalEntriesMap.value = new Map([...globalEntriesMap.value, ...newMap])
 
             if (requestParameters.page == 1) {
                 if (r.next) {
@@ -276,7 +276,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             api.apiShoppingListEntryList({updatedAfter: autoSyncLastTimestamp.value}).then((r) => {
                 autoSyncLastTimestamp.value = r.timestamp!
                 r.results.forEach((e) => {
-                    entries.value.set(e.id!, e)
+                    globalEntriesMap.value.set(e.id!, e)
                 })
                 if (r.results.length > 0) {
                     updateEntriesStructure()
@@ -296,7 +296,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function createObject(object: ShoppingListEntry, undo: boolean) {
         const api = new ApiApi()
         return api.apiShoppingListEntryCreate({shoppingListEntry: object}).then((r) => {
-            entries.value.set(r.id!, r)
+            globalEntriesMap.value.set(r.id!, r)
             updateEntriesStructure()
             if (undo) {
                 registerChange("CREATE", [r])
@@ -324,7 +324,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         // TODO setting timestamp on the client does not make sense because client and server clock might be out of sync and field will be overridden by server anyway
 
         return api.apiShoppingListEntryUpdate({id: object.id!, shoppingListEntry: object}).then((r) => {
-            entries.value.set(r.id!, r)
+            globalEntriesMap.value.set(r.id!, r)
         }).catch((err) => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         })
@@ -339,7 +339,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function deleteObject(object: ShoppingListEntry, undo: boolean) {
         const api = new ApiApi()
         return api.apiShoppingListEntryDestroy({id: object.id!}).then((r) => {
-            entries.value.delete(object.id!)
+            globalEntriesMap.value.delete(object.id!)
             let categoryName = getEntryCategoryKey(object)
 
             entriesByGroup.value.forEach(category => {
@@ -367,7 +367,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function getAssociatedRecipes(): ShoppingListRecipe[] {
         let recipes = [] as ShoppingListRecipe[]
 
-        entries.value.forEach(e => {
+        globalEntriesMap.value.forEach(e => {
             if (e.listRecipe != null && recipes.findIndex(x => x.id == e.listRecipe) == -1 && isEntryVisible(e, useUserPreferenceStore().deviceSettings)) {
                 recipes.push(e.listRecipeData)
             }
@@ -441,8 +441,14 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let entryIdList: number[] = []
         entries.forEach(entry => {
             entry.checked = checked
+            globalEntriesMap.value.set(entry.id!, entry)
             entryIdList.push(entry.id!)
         })
+
+        // not ideal to recalculate everything but its a quick fix
+        // TODO special function just for checked state refreshing
+        updateEntriesStructure()
+
         itemCheckSyncQueue.value.push({
             ids: entryIdList,
             checked: checked,
@@ -469,7 +475,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 syncQueueRunning.value = true
                 let p = api.apiShoppingListEntryBulkCreate({shoppingListEntryBulk: entry}, {}).then((r) => {
                     entry.ids.forEach(id => {
-                        let e = entries.value.get(id)
+                        let e = globalEntriesMap.value.get(id)
                         if (e) {
                             e.updatedAt = r.timestamp
                             updatedEntries.set(id, e)
@@ -488,7 +494,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             })
 
             Promise.allSettled(promises).finally(() => {
-                entries.value = new Map([...entries.value, ...updatedEntries])
+                globalEntriesMap.value = new Map([...globalEntriesMap.value, ...updatedEntries])
                 syncQueueRunning.value = false
                 //TODO proper function to splice/update structure as needed
                 //useShoppingStore().updateEntriesStructure()
@@ -577,9 +583,9 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function deleteShoppingListRecipe(shopping_list_recipe_id: number) {
         const api = new ApiApi()
 
-        entries.value.forEach(entry => {
+        globalEntriesMap.value.forEach(entry => {
             if (entry.listRecipe == shopping_list_recipe_id) {
-                entries.value.delete(entry.id!)
+                globalEntriesMap.value.delete(entry.id!)
             }
         })
 
@@ -691,7 +697,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     return {
         UNDEFINED_CATEGORY,
-        entries,
+        entries: globalEntriesMap,
         supermarkets,
         supermarketCategories,
         updateEntriesStructure,

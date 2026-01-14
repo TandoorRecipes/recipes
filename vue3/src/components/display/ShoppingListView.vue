@@ -24,11 +24,6 @@
             </template>
 
             <v-list density="compact">
-                <v-list-item @click="useShoppingStore().undoChange()" prepend-icon="fa-solid fa-arrow-rotate-left">{{ $t('Undo') }}</v-list-item>
-                <v-list-item @click="exportDialog = true" link prepend-icon="fa-solid fa-download">
-                    {{ $t('Export') }}
-                </v-list-item>
-                <v-divider></v-divider>
                 <v-list-item>
                     <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping"
                               :label="$t('GroupBy')">
@@ -48,6 +43,10 @@
                 <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')"
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item @click="exportDialog = true" link prepend-icon="fa-solid fa-download">
+                    {{ $t('Export') }}
                 </v-list-item>
                 <v-list-subheader>{{ $t('Information') }}</v-list-subheader>
                 <v-list-item>
@@ -115,37 +114,46 @@
 
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
-                        <v-btn label size="small" variant="outlined"  @click="selectEnabled = !selectEnabled">
-                            <v-icon icon="fa-solid fa-list-check"></v-icon>
-                        </v-btn>
+                        <v-chip-group>
+                            <v-btn label size="small" variant="outlined" @click="selectEnabled = !selectEnabled">
+                                <v-icon icon="fa-solid fa-list-check"></v-icon>
+                            </v-btn>
 
-                        <v-chip label size="small" variant="outlined" class="ms-1" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
-                                append-icon="fa-solid fa-caret-down">
+                            <v-btn label size="small" class="ms-1" variant="outlined" @click="useShoppingStore().undoChange()" :disabled="useShoppingStore().undoStack.length == 0">
+                                <v-icon icon="fa-solid fa-rotate-left"></v-icon>
+                            </v-btn>
+
+                            <v-chip label size="small" variant="outlined" class="ms-1 me-0 mt-0 mb-0 h-100" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
+                                    append-icon="fa-solid fa-caret-down">
                             <span v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
                                 {{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}
                             </span>
-                            <span v-else>{{ $t('Supermarket') }}</span>
+                                <span v-else>{{ $t('Supermarket') }}</span>
 
-                            <v-menu activator="parent">
-                                <v-list density="compact">
-                                    <v-list-item @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists = []; useShoppingStore().updateEntriesStructure()">
-                                        {{ $t('SelectNone') }}
-                                    </v-list-item>
-                                    <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">
-                                        {{ s.name }}
-                                    </v-list-item>
-                                    <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'Supermarket'}}">
-                                        {{ $t('Create') }}
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                        </v-chip>
+                                <v-menu activator="parent">
+                                    <v-list density="compact">
+                                        <v-list-item
+                                            @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists = []; useShoppingStore().updateEntriesStructure()">
+                                            {{ $t('SelectNone') }}
+                                        </v-list-item>
+                                        <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">
+                                            {{ s.name }}
+                                        </v-list-item>
+                                        <v-list-item prepend-icon="$create" :to="{name: 'ModelEditPage', params: {model: 'Supermarket'}}">
+                                            {{ $t('Create') }}
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+                            </v-chip>
 
-                        <shopping-list-select-chip
-                            v-model:ids="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists"
-                            :shopping-lists="useShoppingStore().shoppingLists"
-                            @refresh="useShoppingStore().loadShoppingLists()"
-                        ></shopping-list-select-chip>
+                            <shopping-list-select-chip
+                                class="ms-1 mt-0 mb-0 h-100"
+                                v-model:ids="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists"
+                                :shopping-lists="useShoppingStore().shoppingLists"
+                                @refresh="useShoppingStore().loadShoppingLists()"
+                            ></shopping-list-select-chip>
+                        </v-chip-group>
+
                     </v-col>
                 </v-row>
 
@@ -325,7 +333,7 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {onBeforeRouteLeave} from "vue-router";
 import ShoppingExportDialog from "@/components/dialogs/ShoppingExportDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
-import { TSupermarket} from "@/types/Models.ts";
+import {TSupermarket} from "@/types/Models.ts";
 import ShoppingListSelectChip from "@/components/inputs/ShoppingListSelectChip.vue";
 import CategorySelectChip from "@/components/inputs/CategorySelectChip.vue";
 
@@ -454,7 +462,6 @@ function loadSupermarkets() {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 }
-
 
 
 function batchUpdateShoppingLists() {

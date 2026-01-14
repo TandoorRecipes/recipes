@@ -108,19 +108,19 @@ export interface FoodBatchUpdate {
      * @type {Array<number>}
      * @memberof FoodBatchUpdate
      */
-    shoppingListsAdd: Array<number>;
+    shoppingListsAdd?: Array<number>;
     /**
      * 
      * @type {Array<number>}
      * @memberof FoodBatchUpdate
      */
-    shoppingListsRemove: Array<number>;
+    shoppingListsRemove?: Array<number>;
     /**
      * 
      * @type {Array<number>}
      * @memberof FoodBatchUpdate
      */
-    shoppingListsSet: Array<number>;
+    shoppingListsSet?: Array<number>;
     /**
      * 
      * @type {boolean}
@@ -179,9 +179,6 @@ export function instanceOfFoodBatchUpdate(value: object): value is FoodBatchUpda
     if (!('childInheritFieldsAdd' in value) || value['childInheritFieldsAdd'] === undefined) return false;
     if (!('childInheritFieldsRemove' in value) || value['childInheritFieldsRemove'] === undefined) return false;
     if (!('childInheritFieldsSet' in value) || value['childInheritFieldsSet'] === undefined) return false;
-    if (!('shoppingListsAdd' in value) || value['shoppingListsAdd'] === undefined) return false;
-    if (!('shoppingListsRemove' in value) || value['shoppingListsRemove'] === undefined) return false;
-    if (!('shoppingListsSet' in value) || value['shoppingListsSet'] === undefined) return false;
     return true;
 }
 
@@ -209,9 +206,9 @@ export function FoodBatchUpdateFromJSONTyped(json: any, ignoreDiscriminator: boo
         'childInheritFieldsRemove': json['child_inherit_fields_remove'],
         'childInheritFieldsSet': json['child_inherit_fields_set'],
         'childInheritFieldsRemoveAll': json['child_inherit_fields_remove_all'] == null ? undefined : json['child_inherit_fields_remove_all'],
-        'shoppingListsAdd': json['shopping_lists_add'],
-        'shoppingListsRemove': json['shopping_lists_remove'],
-        'shoppingListsSet': json['shopping_lists_set'],
+        'shoppingListsAdd': json['shopping_lists_add'] == null ? undefined : json['shopping_lists_add'],
+        'shoppingListsRemove': json['shopping_lists_remove'] == null ? undefined : json['shopping_lists_remove'],
+        'shoppingListsSet': json['shopping_lists_set'] == null ? undefined : json['shopping_lists_set'],
         'shoppingListsRemoveAll': json['shopping_lists_remove_all'] == null ? undefined : json['shopping_lists_remove_all'],
         'substituteChildren': json['substitute_children'] == null ? undefined : json['substitute_children'],
         'substituteSiblings': json['substitute_siblings'] == null ? undefined : json['substitute_siblings'],
