@@ -5,16 +5,43 @@
                 <v-card>
                     <v-card-text class="pt-2 pb-2">
                         <v-btn variant="flat" @click="router.go(-1)" prepend-icon="fa-solid fa-arrow-left">{{ $t('Back') }}</v-btn>
-                        <v-btn variant="flat" @click="router.push({name : 'RecipeViewPage', params: {id: props.id}})" class="float-right" prepend-icon="fa-solid fa-eye" v-if="props.id && model.toLowerCase() == 'recipe'">{{$t('View')}}</v-btn>
+                        <v-btn variant="flat" @click="router.push({name : 'RecipeViewPage', params: {id: props.id}})" class="float-right" prepend-icon="fa-solid fa-eye"
+                               v-if="props.id && model.toLowerCase() == 'recipe'">{{ $t('View') }}
+                        </v-btn>
                     </v-card-text>
                 </v-card>
             </v-col>
         </v-row>
         <v-row dense>
             <v-col>
-                <component :is="editorComponent" :item-id="id" @delete="objectDeleted" @create="(obj: any) => objectCreated(obj)"></component>
+                <component :is="editorComponent" v-model="modelEditorFunctions" :item-id="id" @delete="objectDeleted" @create="(obj: any) => objectCreated(obj)"></component>
             </v-col>
         </v-row>
+
+        <v-fab app location="bottom right" color="tandoor" style="margin-bottom: 50px" v-if="model.toLowerCase() == 'recipe' && mobile" icon>
+            <v-icon>{{ speedDialOpen ? '$close' : '$create' }}</v-icon>
+            <v-speed-dial v-model="speedDialOpen" location="top center" activator="parent">
+                <v-btn key="1" color="save" icon @click="modelEditorFunctions.saveObject()">
+                    <v-icon icon="$save"></v-icon>
+                </v-btn>
+                 <v-btn key="1" color="info" icon @click="modelEditorFunctions.saveObject().then(router.push({name : 'RecipeViewPage', params: {id: props.id}}))">
+                    <v-icon icon="fa-solid fa-eye"></v-icon>
+                </v-btn>
+                <v-btn color="delete" icon
+                       v-if="modelEditorFunctions.isUpdate && !modelEditorFunctions.modelClass.model.disableDelete && !modelEditorFunctions.modelClass.model.isAdvancedDelete"
+                       :disabled="modelEditorFunctions.loading">
+                    <v-icon icon="$delete"></v-icon>
+                    <delete-confirm-dialog :object-name="modelEditorFunctions.objectName" :model-name="$t(modelEditorFunctions.modelClass.model.localizationKey)"
+                                           @delete="objectDeleted"></delete-confirm-dialog>
+                </v-btn>
+                <v-btn color="delete" icon
+                       v-if="modelEditorFunctions.isUpdate && !modelEditorFunctions.modelClass.model.disableDelete && modelEditorFunctions.modelClass.model.isAdvancedDelete"
+                       :to="{name: 'ModelDeletePage', params: {model: modelEditorFunctions.modelClass.model.name, id: props.id!}}" :disabled="modelEditorFunctions.loading">
+                    <v-icon icon="$delete"></v-icon>
+                </v-btn>
+            </v-speed-dial>
+        </v-fab>
+
     </v-container>
 </template>
 
@@ -22,10 +49,16 @@
 
 import {useRouter} from "vue-router";
 import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models";
-import {defineAsyncComponent, onMounted, PropType, shallowRef, watch} from "vue";
+import {defineAsyncComponent, onMounted, PropType, ref, shallowRef, watch} from "vue";
 import {useI18n} from "vue-i18n";
+import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions.ts";
+import {Recipe} from "@/openapi";
+import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
+import {useDisplay} from "vuetify";
 
 const {t} = useI18n()
+const router = useRouter()
+const {mobile} = useDisplay()
 
 const props = defineProps({
     model: {type: String as PropType<EditorSupportedModels>, required: true},
@@ -34,11 +67,12 @@ const props = defineProps({
 
 const editorComponent = shallowRef(getGenericModelFromString(props.model, t).model.editorComponent)
 
-const router = useRouter()
+const speedDialOpen = ref(false)
+const modelEditorFunctions = ref<any>(undefined)
 
 //TODO quick hack for some edge cases, move to proper reinitialization of all model editors should this case occur (currently only recipe editor create new via navigation btn)
 watch(() => props.id, (newValue, oldValue) => {
-    if(newValue != oldValue){
+    if (newValue != oldValue) {
         location.reload()
     }
 })
@@ -56,9 +90,9 @@ function objectCreated(obj: any) {
 /**
  * determines where to redirect user after object deletion based on selected model
  */
-function objectDeleted(){
-    if (props.model.toLowerCase() == 'recipe'){
-        router.push({name : 'StartPage'})
+function objectDeleted() {
+    if (props.model.toLowerCase() == 'recipe') {
+        router.push({name: 'StartPage'})
     } else {
         router.go(-1)
     }
