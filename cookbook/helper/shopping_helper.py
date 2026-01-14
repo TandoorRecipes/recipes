@@ -177,8 +177,9 @@ class RecipeShoppingEditor():
         existing = self._shopping_list_recipe.entries.filter(ingredient__in=ingredients).values_list('ingredient__pk', flat=True)
         add_ingredients = ingredients.exclude(id__in=existing)
 
+        entries = []
         for i in [x for x in add_ingredients if x.food]:
-            ShoppingListEntry.objects.create(
+            entry =  ShoppingListEntry(
                 list_recipe=self._shopping_list_recipe,
                 food=i.food,
                 unit=i.unit,
@@ -187,6 +188,12 @@ class RecipeShoppingEditor():
                 created_by=self.created_by,
                 space=self.space,
             )
+            entries.append(entry)
+
+        ShoppingListEntry.objects.bulk_create(entries)
+        for e in entries:
+            if e.food.shopping_lists.count() > 0:
+                e.shopping_lists.set(e.food.shopping_lists.all())
 
     # deletes shopping list entries not in ingredients list
     def _delete_ingredients(self, ingredients=None):
