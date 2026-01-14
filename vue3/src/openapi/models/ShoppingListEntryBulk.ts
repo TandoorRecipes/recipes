@@ -30,13 +30,37 @@ export interface ShoppingListEntryBulk {
      * @type {boolean}
      * @memberof ShoppingListEntryBulk
      */
-    checked: boolean;
+    checked?: boolean;
     /**
      * 
      * @type {Date}
      * @memberof ShoppingListEntryBulk
      */
     readonly timestamp: Date;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof ShoppingListEntryBulk
+     */
+    shoppingListsAdd?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof ShoppingListEntryBulk
+     */
+    shoppingListsRemove?: Array<number>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof ShoppingListEntryBulk
+     */
+    shoppingListsSet?: Array<number>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShoppingListEntryBulk
+     */
+    shoppingListsRemoveAll?: boolean;
 }
 
 /**
@@ -44,7 +68,6 @@ export interface ShoppingListEntryBulk {
  */
 export function instanceOfShoppingListEntryBulk(value: object): value is ShoppingListEntryBulk {
     if (!('ids' in value) || value['ids'] === undefined) return false;
-    if (!('checked' in value) || value['checked'] === undefined) return false;
     if (!('timestamp' in value) || value['timestamp'] === undefined) return false;
     return true;
 }
@@ -60,8 +83,12 @@ export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'ids': json['ids'],
-        'checked': json['checked'],
+        'checked': json['checked'] == null ? undefined : json['checked'],
         'timestamp': (new Date(json['timestamp'])),
+        'shoppingListsAdd': json['shopping_lists_add'] == null ? undefined : json['shopping_lists_add'],
+        'shoppingListsRemove': json['shopping_lists_remove'] == null ? undefined : json['shopping_lists_remove'],
+        'shoppingListsSet': json['shopping_lists_set'] == null ? undefined : json['shopping_lists_set'],
+        'shoppingListsRemoveAll': json['shopping_lists_remove_all'] == null ? undefined : json['shopping_lists_remove_all'],
     };
 }
 
@@ -73,6 +100,10 @@ export function ShoppingListEntryBulkToJSON(value?: Omit<ShoppingListEntryBulk, 
         
         'ids': value['ids'],
         'checked': value['checked'],
+        'shopping_lists_add': value['shoppingListsAdd'],
+        'shopping_lists_remove': value['shoppingListsRemove'],
+        'shopping_lists_set': value['shoppingListsSet'],
+        'shopping_lists_remove_all': value['shoppingListsRemoveAll'],
     };
 }
 

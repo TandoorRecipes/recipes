@@ -11,18 +11,18 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-01-26 05:58+0000\n"
-"Last-Translator: Dominik Ruczajewski <slick.moose.dev@gmail.com>\n"
-"Language-Team: Polish <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/pl/>\n"
+"PO-Revision-Date: 2026-01-05 22:15+0000\n"
+"Last-Translator: tei444 <mmok444@gmail.com>\n"
+"Language-Team: Polish <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
-"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
-"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.8.4\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -135,11 +135,11 @@ msgstr "Ostatnio przyrządzane"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr ""
+msgstr "jajowar"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "czajnik"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
@@ -155,7 +155,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr ""
+msgstr "Ryżowar"
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
@@ -163,7 +163,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr ""
+msgstr "obieraczka"
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
@@ -171,11 +171,11 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "tarka"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
-msgstr ""
+msgstr "spiralizer"
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
@@ -237,7 +237,7 @@ msgstr "Węglowodany"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "Cholesterol"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -246,7 +246,7 @@ msgstr "Tłuszcze"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Błonnik"
 
 #: .\cookbook\integration\mealie1.py:215
 #, fuzzy
@@ -256,33 +256,31 @@ msgstr "Białka"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Tłuszcze nasycone"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Sód"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Cukry"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr ""
+msgstr "Tłuszcze Trans"
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Tłuszcze nienasycone"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
 msgstr "Źródło przepisu:"
 
 #: .\cookbook\integration\paprika.py:49
-#, fuzzy
-#| msgid "Note"
 msgid "Notes"
-msgstr "Notatka"
+msgstr "Notatki"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
@@ -399,14 +397,12 @@ msgid "Nutrition"
 msgstr "Wartość odżywcza"
 
 #: .\cookbook\models.py:968
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Połącz"
+msgstr "Alergeny"
 
 #: .\cookbook\models.py:969
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #: .\cookbook\models.py:970
 msgid "Goal"
@@ -430,7 +426,7 @@ msgstr ""
 
 #: .\cookbook\models.py:1525
 msgid "Food Alias"
-msgstr ""
+msgstr "Alias produktu"
 
 #: .\cookbook\models.py:1526
 msgid "Unit Alias"
@@ -499,7 +495,7 @@ msgstr "Zapełniłeś maksymalną przestrzeń, która jest przypisana do Ciebie.
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Nazwa Przestrzeni musi być unikalna."
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
@@ -507,7 +503,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1596
 msgid "Hello"
-msgstr ""
+msgstr "Cześć"
 
 #: .\cookbook\serializer.py:1596
 msgid "You have been invited by "
@@ -585,29 +581,27 @@ msgstr "Raportuj błąd"
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:10
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "Adresy Email"
 
 #: .\cookbook\templates\account\email.html:12
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "Poniższe adresy email są połączone z twoim kontem:"
 
 #: .\cookbook\templates\account\email.html:29
 msgid "Verified"
-msgstr ""
+msgstr "Potwierdzony"
 
 #: .\cookbook\templates\account\email.html:31
 msgid "Unverified"
-msgstr ""
+msgstr "Niepotwierdzony"
 
 #: .\cookbook\templates\account\email.html:33
 msgid "Primary"
-msgstr ""
+msgstr "Główny"
 
 #: .\cookbook\templates\account\email.html:40
-#, fuzzy
-#| msgid "Make Header"
 msgid "Make Primary"
-msgstr "Utwórz nagłówek"
+msgstr "Ustaw jako główny"
 
 #: .\cookbook\templates\account\email.html:42
 msgid "Re-send Verification"
@@ -627,23 +621,25 @@ msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Aktualnie nie masz powiązanego adresu email. Powinieneś powiązać adres email "
+"by móc dostawać powiadomienia, resetować hasło itp."
 
 #: .\cookbook\templates\account\email.html:57
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Dodaj Adres Email"
 
 #: .\cookbook\templates\account\email.html:62
 msgid "Add E-mail"
-msgstr ""
+msgstr "Dodaj Email"
 
 #: .\cookbook\templates\account\email.html:72
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Czy na pewno chcesz usunąć wybrany adres email?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Potwierdź adres email"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -688,10 +684,8 @@ msgstr "Zaloguj się"
 #: .\cookbook\templates\account\password_reset_done.html:33
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:56
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign Up"
-msgstr "Zaloguj się"
+msgstr "Zarejestruj się"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
@@ -733,7 +727,7 @@ msgstr "Zmień hasło"
 
 #: .\cookbook\templates\account\password_change.html:16
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Nie pamiętasz hasła?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
@@ -747,6 +741,8 @@ msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Zapomniane hasło? Wpisz swój adres email poniżej, a my wyślemy Ci wiadomość, "
+"która pozwoli je zresetować."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
@@ -757,12 +753,12 @@ msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Wysłano email. Proszę skontaktuj się z nami jeśli nie przyjdzie w ciągu "
+"kilku minut."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "Token dla API"
+msgstr "Niepoprawny token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -780,44 +776,40 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Hasło zostało zmienione."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:10
 #: .\cookbook\templates\account\password_set.html:15
-#, fuzzy
-#| msgid "Password Reset"
 msgid "Set Password"
-msgstr "Reset hasła"
+msgstr "Ustaw Hasło"
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
 msgstr "Zarejestruj się"
 
 #: .\cookbook\templates\account\signup.html:11
-#, fuzzy
-#| msgid "Create your Account"
 msgid "Create an Account"
 msgstr "Utwórz konto"
 
 #: .\cookbook\templates\account\signup.html:41
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Akceptuję poniższe"
 
 #: .\cookbook\templates\account\signup.html:44
 #: .\cookbook\templates\socialaccount\signup.html:35
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Regulamin"
 
 #: .\cookbook\templates\account\signup.html:47
 #: .\cookbook\templates\socialaccount\signup.html:38
 msgid "and"
-msgstr ""
+msgstr "oraz"
 
 #: .\cookbook\templates\account\signup.html:51
 #: .\cookbook\templates\socialaccount\signup.html:42
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Polityka Prywatności"
 
 #: .\cookbook\templates\account\signup.html:64
 msgid "Create User"
@@ -825,16 +817,16 @@ msgstr "Utwórz użytkownika"
 
 #: .\cookbook\templates\account\signup.html:68
 msgid "Already have an account?"
-msgstr ""
+msgstr "Masz już konto?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Rejestracja Wyłączona"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "Przepraszamy, ale rejestracja jest aktualnie zamknięta."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
 msgid "Tandoor Recipe Manager"
@@ -921,8 +913,6 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr ""
 "lub poprzez pozostawienie pustej linii pomiędzy tekstem, który ma zostać "
@@ -948,10 +938,6 @@ msgid "Lists"
 msgstr "Listy"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1042,26 +1028,18 @@ msgid "No Permissions"
 msgstr "Brak uprawnień"
 
 #: .\cookbook\templates\no_groups_info.html:17
-#, fuzzy
-#| msgid ""
-#| "You do not have any groups and therefor cannot use this application. "
-#| "Please contact your administrator."
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr ""
-"Nie masz żadnych grup i dlatego nie możesz korzystać z tej aplikacji. "
-"Skontaktuj się z administratorem."
+msgstr "Nie masz żadnych grup i dlatego nie możesz korzystać z tej aplikacji."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Proszę skontaktuj się z administratorem."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
-#, fuzzy
-#| msgid "No Permissions"
 msgid "No Permission"
-msgstr "Brak uprawnień"
+msgstr "Brak uprawnienia"
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
@@ -1078,7 +1056,7 @@ msgstr "Nie podłączone"
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Wstecz"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
@@ -1090,10 +1068,8 @@ msgstr "Dokumentacja API"
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
-#, fuzzy
-#| msgid "Search String"
 msgid "Search Settings"
-msgstr "Wyszukaj ciąg"
+msgstr "Wyszukaj ustawienia"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1108,10 +1084,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:19
-#, fuzzy
-#| msgid "Search"
 msgid "Search Methods"
-msgstr "Szukaj"
+msgstr "Metody Wyszukiwania"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1193,10 +1167,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
-#, fuzzy
-#| msgid "Search Recipe"
 msgid "Search Fields"
-msgstr "Szukaj przepisu"
+msgstr "Szukaj w polach"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1234,10 +1206,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Szukaj"
+msgstr "Indeks Wyszukiwania"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1273,10 +1243,8 @@ msgstr "Utwórz konto super użytkownika"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Logowanie społecznościowe"
+msgstr "Błąd logowania społecznościowego"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
@@ -1309,10 +1277,8 @@ msgstr "Dodaj konto firmy zewnętrznej"
 
 #: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
-#, fuzzy
-#| msgid "Sign Out"
 msgid "Signup"
-msgstr "Wyloguj"
+msgstr "Zarejestruj"
 
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
@@ -1336,7 +1302,7 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Dalej"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -1364,10 +1330,8 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign in using"
-msgstr "Zaloguj się"
+msgstr "Zaloguj się za pomocą"
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
@@ -1413,10 +1377,8 @@ msgstr ""
 
 #: .\cookbook\templates\space_overview.html:91
 #: .\cookbook\templates\space_overview.html:100
-#, fuzzy
-#| msgid "Create User"
 msgid "Create Space"
-msgstr "Utwórz użytkownika"
+msgstr "Utwórz przestrzeń roboczą"
 
 #: .\cookbook\templates\space_overview.html:94
 msgid "Create your own recipe space."
@@ -1598,21 +1560,19 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:238
 msgid "False"
-msgstr ""
+msgstr "Fałsz"
 
 #: .\cookbook\templates\system.html:238
 msgid "True"
-msgstr ""
+msgstr "Prawda"
 
 #: .\cookbook\templates\system.html:268
 msgid "Hide"
-msgstr ""
+msgstr "Ukryj"
 
 #: .\cookbook\templates\system.html:271
-#, fuzzy
-#| msgid "Show help"
 msgid "Show"
-msgstr "Wyświetl pomoc"
+msgstr "Pokaż"
 
 #: .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
@@ -1623,10 +1583,8 @@ msgid "Export"
 msgstr "Eksportuj"
 
 #: .\cookbook\views\api.py:198 .\cookbook\views\api.py:326
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "Nieprawidłowo sformatowany parametr filter_list"
+msgstr "Nieprawidłowo sformatowany parametr updated_at"
 
 #: .\cookbook\views\api.py:351 .\cookbook\views\api.py:484
 #, python-brace-format
@@ -1643,10 +1601,8 @@ msgid "No {self.basename} with id {target} exists"
 msgstr ""
 
 #: .\cookbook\views\api.py:367
-#, fuzzy
-#| msgid "Cannot merge with the same object!"
 msgid "Cannot merge with child object!"
-msgstr "Nie można scalić tego samego obiektu!"
+msgstr "Nie można scalić tego obiektu z jego dzieckiem!"
 
 #: .\cookbook\views\api.py:405
 #, python-brace-format
@@ -1940,6 +1896,8 @@ msgid ""
 "You don't have any credits remaining to use AI or AI features are not "
 "enabled for your space."
 msgstr ""
+"Osiągnięto limit użyć AI lub funkcje AI nie są włączone w tej przestrzeni "
+"roboczej."
 
 #: .\cookbook\views\api.py:2499 .\cookbook\views\api.py:2667
 msgid "File is above space limit"
@@ -1995,7 +1953,7 @@ msgstr "Używasz PostgreSQL %(v1)s. Zalecany jest PostgreSQL %(v2)s"
 
 #: .\cookbook\views\views.py:178
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "Nie udało się ustalić wersji PostgreSQL."
 
 #: .\cookbook\views\views.py:182
 msgid ""
@@ -2050,10 +2008,8 @@ msgid "View your meal Plan"
 msgstr ""
 
 #: .\cookbook\views\views.py:418
-#, fuzzy
-#| msgid "Shopping Lists"
 msgid "View your shopping lists"
-msgstr "Lista zakupów"
+msgstr "Zobacz twoją listę zakupów"
 
 #~ msgid ""
 #~ "Both fields are optional. If none are given the username will be "

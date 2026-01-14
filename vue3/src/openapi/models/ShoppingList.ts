@@ -43,26 +43,12 @@ export interface ShoppingList {
      * @memberof ShoppingList
      */
     color?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof ShoppingList
-     */
-    readonly createdAt: Date;
-    /**
-     * 
-     * @type {Date}
-     * @memberof ShoppingList
-     */
-    readonly updatedAt: Date;
 }
 
 /**
  * Check if a given object implements the ShoppingList interface.
  */
 export function instanceOfShoppingList(value: object): value is ShoppingList {
-    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
-    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     return true;
 }
 
@@ -80,12 +66,10 @@ export function ShoppingListFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'color': json['color'] == null ? undefined : json['color'],
-        'createdAt': (new Date(json['created_at'])),
-        'updatedAt': (new Date(json['updated_at'])),
     };
 }
 
-export function ShoppingListToJSON(value?: Omit<ShoppingList, 'createdAt'|'updatedAt'> | null): any {
+export function ShoppingListToJSON(value?: ShoppingList | null): any {
     if (value == null) {
         return value;
     }

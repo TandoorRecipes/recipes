@@ -5,37 +5,47 @@
                 <i class="far fa-list-alt fa-fw me-2"></i> {{ $t('StepsOverview') }}
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-                    <v-row>
-                        <v-col>
-                            <v-btn-toggle density="compact" v-model="useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview" border divided>
-                                <v-btn :value="false" prepend-icon="fa-solid fa-folder-tree">{{ $t('Structured') }}</v-btn>
-                                <v-btn :value="true" prepend-icon="fa-solid fa-arrows-to-circle">{{ $t('Summary') }}</v-btn>
-                            </v-btn-toggle>
-                        </v-col>
-                    </v-row>
-                    <v-row v-for="(s, i) in props.steps" v-if="!useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
-                        <v-col class="pa-1" cols="12" md="6">
-                            <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
-                            <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor"></ingredients-table>
+                <v-row>
+                    <v-col>
+                        <v-btn-toggle density="compact" v-model="useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview" border divided>
+                            <v-btn :value="false" prepend-icon="fa-solid fa-folder-tree">
+                                <span class="d-none d-md-block">
+                                    {{ $t('Structured') }}
+                                </span>
+                            </v-btn>
+                            <v-btn :value="true" prepend-icon="fa-solid fa-arrows-to-circle">
+                                <span class="d-none d-md-block">
+                                    {{ $t('Summary') }}
+                                </span>
+                            </v-btn>
+                        </v-btn-toggle>
+                    </v-col>
+                </v-row>
+                <v-row v-for="(s, i) in props.steps" v-if="!useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
+                    <v-col class="pa-1" cols="12" md="6">
+                        <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
+                        <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor" show-actions
+                                           @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
 
-                            <template v-if="s.stepRecipe">
-                                <v-card class="ma-2 border-md" prepend-icon="$recipes" :title="s.stepRecipeData.name"
-                                        :to="{name: 'RecipeViewPage', params: {id: s.stepRecipeData.id}}" target="_blank">
-                                    <v-row v-for="subRecipeStep in s.stepRecipeData.steps">
-                                        <v-col>
-                                            <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor"></ingredients-table>
-                                        </v-col>
-                                    </v-row>
-                                </v-card>
-                            </template>
-                        </v-col>
-                    </v-row>
+                        <template v-if="s.stepRecipe">
+                            <v-card class="ma-2 border-md" prepend-icon="$recipes" :title="s.stepRecipeData.name"
+                                    :to="{name: 'RecipeViewPage', params: {id: s.stepRecipeData.id}}" target="_blank">
+                                <v-row v-for="subRecipeStep in s.stepRecipeData.steps">
+                                    <v-col>
+                                        <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor" show-actions
+                                        @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
+                        </template>
+                    </v-col>
+                </v-row>
 
-                    <v-row v-if="useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
-                        <v-col class="pa-1" cols="12" md="6">
-                            <ingredients-table v-model="mergedIngredients" :ingredient-factor="props.ingredientFactor" :show-checkbox="false"></ingredients-table>
-                        </v-col>
-                    </v-row>
+                <v-row v-if="useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
+                    <v-col class="pa-1" cols="12" md="6">
+                        <ingredients-table v-model="mergedIngredients" :ingredient-factor="props.ingredientFactor" :show-checkbox="false"></ingredients-table>
+                    </v-col>
+                </v-row>
 
             </v-expansion-panel-text>
         </v-expansion-panel>
@@ -49,6 +59,9 @@ import {computed, PropType, ref} from 'vue'
 import {Ingredient, Step} from "@/openapi";
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {useDisplay} from "vuetify";
+
+const emit = defineEmits(['scale'])
 
 const props = defineProps({
     steps: {
@@ -61,8 +74,6 @@ const props = defineProps({
     },
 })
 
-const showMergedIngredients = ref(false)
-
 const mergedIngredients = computed(() => {
     // Function to collect all ingredients from recipe steps
     const getAllIngredients = () => {
@@ -71,7 +82,7 @@ const mergedIngredients = computed(() => {
         // Add ingredients from steps
         props.steps.forEach(step => {
             step.ingredients.forEach(ingredient => {
-                if (ingredient.food && !ingredient.isHeader ) {
+                if (ingredient.food && !ingredient.isHeader) {
                     ingredients.push(ingredient);
                 }
             });
