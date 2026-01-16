@@ -13,7 +13,7 @@ django-cors-headers==4.9.0
 django-crispy-forms==2.5
 django-debug-toolbar==5.2.0
 django-hCaptcha==0.2.0
-django-oauth-toolkit==3.1.0
+django-oauth-toolkit==3.2.0
 django-prometheus==2.4.1
 django-scopes==2.0.0
 django-storages==1.14.6
