@@ -1500,7 +1500,7 @@ class SupermarketCategoryExportSerializer(SupermarketCategorySerializer):
 
     class Meta:
         model = SupermarketCategory
-        fields = ('name')
+        fields = ('name',)
 
 
 class UnitExportSerializer(UnitSerializer):
