@@ -31,8 +31,9 @@
                                 <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="editingObj.recipe" :servings="editingObj.servings" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
                                 <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate()">
-                                    {{$t('Add')}}
-                                    <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj" @created="loadShoppingListEntries(); editingObj.shopping = true;"></add-to-shopping-dialog>
+                                    {{ $t('Add') }}
+                                    <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj"
+                                                            @created="loadShoppingListEntries(); editingObj.shopping = true;"></add-to-shopping-dialog>
                                 </v-btn>
 
                                 <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details v-if="editingObj.recipe && !isUpdate()"></v-checkbox>
@@ -79,19 +80,7 @@
                 <v-tabs-window-item value="shopping">
                     <closable-help-alert class="mb-2" :text="$t('MealPlanShoppingHelp')"></closable-help-alert>
 
-                    <v-row v-if="isUpdate()" dense style="max-height: 75vh; min-height: 30vh" class="overflow-y-scroll">
-                        <v-col>
-                            <shopping-list-entry-input :loading="useShoppingStore().currentlyUpdating" :meal-plan="editingObj"></shopping-list-entry-input>
-                            <v-list v-if="editingObj.id">
-                                <shopping-line-item
-                                    v-for="slf in useShoppingStore().getMealPlanEntries(editingObj.id)"
-                                    :shopping-list-food="slf"
-                                    hide-info-row
-                                    :key="slf.food.id"
-                                ></shopping-line-item>
-                            </v-list>
-                        </v-col>
-                    </v-row>
+                    <shopping-list-view :meal-plan-id="editingObj.id"></shopping-list-view>
 
                 </v-tabs-window-item>
             </v-tabs-window>
@@ -102,7 +91,7 @@
 
 <script setup lang="ts">
 
-import {nextTick, onMounted, PropType, ref, toRaw, watch} from "vue";
+import {nextTick, onMounted, onUnmounted, PropType, ref, toRaw, watch} from "vue";
 import {ApiApi, MealPlan, MealType, ShoppingListRecipe} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -119,6 +108,7 @@ import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.v
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
+import ShoppingListView from "@/components/display/ShoppingListView.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<MealPlan>, required: false, default: null},
@@ -158,10 +148,16 @@ onMounted(() => {
     initializeEditor()
 })
 
+onUnmounted(() => {
+    if (useShoppingStore().selectedMealPlan == editingObj.value.id) {
+        useShoppingStore().selectedMealPlan = undefined
+    }
+})
+
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     const api = new ApiApi()
 
     // load meal types and create new object based on default type when initially loading
@@ -203,7 +199,9 @@ function initializeEditor(){
             }, existingItemFunction: () => {
                 editingObj.value = structuredClone(toRaw(editingObj.value))
                 initializeDateRange()
-                loadShoppingListEntries()
+
+                useShoppingStore().selectedMealPlan = editingObj.value.id
+                useShoppingStore().updateEntriesStructure()
             }
         },)
     })
@@ -224,13 +222,6 @@ function updateDate() {
     } else {
         useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
     }
-}
-
-/**
- * load all shopping list entries associated with meal plan
- */
-function loadShoppingListEntries() {
-    useShoppingStore().refreshFromAPI(editingObj.value.id!)
 }
 
 /**

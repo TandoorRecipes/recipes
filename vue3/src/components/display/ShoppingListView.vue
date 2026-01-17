@@ -1,5 +1,5 @@
 <template>
-    <v-tabs v-model="currentTab" v-if="!selectEnabled">
+    <v-tabs v-model="currentTab" v-if="!selectEnabled && props.mealPlanId == undefined">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
             class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().totalFoods }})</span></v-tab>
@@ -124,7 +124,7 @@
                             </v-btn>
 
                             <v-chip label size="small" variant="outlined" class="ms-1 me-0 mt-0 mb-0 h-100" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
-                                    append-icon="fa-solid fa-caret-down">
+                                    append-icon="fa-solid fa-caret-down" v-if="props.mealPlanId == undefined">
                             <span v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
                                 {{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}
                             </span>
@@ -169,7 +169,7 @@
                             </template>
                         </v-alert>
 
-                        <shopping-list-entry-input></shopping-list-entry-input>
+                        <shopping-list-entry-input :meal-plan-id="props.mealPlanId"></shopping-list-entry-input>
 
                         <v-list class="mt-3" density="compact" v-if="!useShoppingStore().initialized">
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
@@ -178,7 +178,7 @@
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
                         </v-list>
                         <v-list class="mt-3" density="compact" v-model:selected="selectedLines" select-strategy="leaf" v-else>
-                            <template v-for="category in useShoppingStore().entriesByGroup" :key="category.name">
+                            <template v-for="category in shoppingListItems" :key="category.name">
 
 
                                 <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
@@ -197,6 +197,7 @@
                     </v-col>
                 </v-row>
 
+                <!-- DEBUG views -->
                 <v-row v-if="useUserPreferenceStore().deviceSettings.shopping_show_debug">
                     <v-col cols="12" md="4">
                         <v-card>
@@ -339,6 +340,10 @@ import CategorySelectChip from "@/components/inputs/CategorySelectChip.vue";
 
 const {t} = useI18n()
 
+const props = defineProps({
+    mealPlanId: {type: Number, required: false}
+})
+
 const exportDialog = ref(false)
 const currentTab = ref("shopping")
 const supermarkets = ref([] as Supermarket[])
@@ -357,6 +362,14 @@ const groupingOptionsItems = computed(() => {
         items.push({'title': t(x), 'value': x})
     })
     return items
+})
+
+const shoppingListItems = computed(() => {
+    if(props.mealPlanId != undefined) {
+        return useShoppingStore().entriesByGroupMealPlan
+    } else {
+        return useShoppingStore().entriesByGroup
+    }
 })
 
 watch(() => useUserPreferenceStore().deviceSettings, () => {

@@ -45,7 +45,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const props = defineProps({
     shoppingListRecipe: {type: {} as PropType<ShoppingListRecipe>, required: false},
-    mealPlan: {type: {} as PropType<MealPlan>, required: false},
+    mealPlanId: {type: Number, required: false},
     loading: {type: Boolean, required: false},
 })
 
@@ -68,8 +68,8 @@ function addIngredient(amount: number, unit: Unit|null, food: Food|null) {
         shoppingLists: useShoppingStore().shoppingLists.filter(sl => useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists.includes(sl.id))
     } as ShoppingListEntry
 
-    if (props.mealPlan) {
-        sle.mealplanId = props.mealPlan.id
+    if (props.mealPlanId) {
+        sle.mealplanId = props.mealPlanId
     }
 
     useShoppingStore().createObject(sle, true).finally(() => {
