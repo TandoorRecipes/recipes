@@ -46,7 +46,8 @@ class Local(Provider):
 
     @staticmethod
     def get_file(recipe):
-        file = io.BytesIO(open(recipe.file_path, 'rb').read())
+        with open(recipe.file_path, 'rb') as f:
+            file = io.BytesIO(f.read())
 
         return file
 

@@ -121,7 +121,8 @@ class Nextcloud(Provider):
             local_path=tmp_file_path
         )
 
-        file = io.BytesIO(open(tmp_file_path, 'rb').read())
+        with open(tmp_file_path, 'rb') as f:
+            file = io.BytesIO(f.read())
         os.remove(tmp_file_path)
 
         return file
