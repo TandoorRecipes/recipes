@@ -80,7 +80,7 @@
     </v-tabs>
     <v-banner class="pt-0 pb-0 bg-info" v-if="selectEnabled">
         <template #prepend>
-            <v-btn icon="$close" variant="plain" @click="selectEnabled = false" lines="1"></v-btn>
+            <v-btn icon="$close" variant="plain" @click="selectEnabled = false; selectedLines = [];" lines="1"></v-btn>
         </template>
 
         <shopping-list-select-chip
@@ -115,10 +115,20 @@
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
                         <v-chip-group>
-                            <v-btn label size="small" variant="outlined" @click="selectEnabled = !selectEnabled">
+                            <!-- enable selection -->
+                            <v-btn label size="small" variant="outlined" @click="selectEnabled = true;  selectedLines= []" v-if="!selectEnabled">
                                 <v-icon icon="fa-solid fa-list-check"></v-icon>
                             </v-btn>
 
+                            <!-- select all/none -->
+                            <v-btn label size="small" variant="outlined" @click="selectAll(); " v-if="!isAllSelected() && selectEnabled">
+                                <v-icon icon="fa-solid fa-square-check"></v-icon>
+                            </v-btn>
+                            <v-btn label size="small" variant="outlined" @click="selectedLines = []; " v-if="isAllSelected() && selectEnabled">
+                                <v-icon icon="fa-regular fa-square"></v-icon>
+                            </v-btn>
+
+                            <!-- undo -->
                             <v-btn label size="small" class="ms-1" variant="outlined" @click="useShoppingStore().undoChange()" :disabled="useShoppingStore().undoStack.length == 0">
                                 <v-icon icon="fa-solid fa-rotate-left"></v-icon>
                             </v-btn>
@@ -181,8 +191,23 @@
                             <template v-for="category in shoppingListItems" :key="category.name">
 
 
-                                <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
-                                <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
+                                <v-list-subheader :style="subheaderStyle" v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY">
+
+                                    <v-btn color="secondary" variant="text" icon="fa-regular fa-square" @click="selectAll(category)"
+                                           v-if="selectEnabled && !isAllSelected(category)"></v-btn>
+                                    <v-btn color="secondary" variant="text" icon="fa-solid fa-square-check" @click="deselectCategory(category)"
+                                           v-if="selectEnabled && isAllSelected(category)"></v-btn>
+                                    <i>{{ $t('NoCategory') }}</i>
+
+                                </v-list-subheader>
+
+                                <v-list-subheader :style="subheaderStyle" v-else>
+                                    <v-btn color="secondary" variant="text" icon="fa-regular fa-square" @click="selectAll(category)"
+                                           v-if="selectEnabled && !isAllSelected(category)"></v-btn>
+                                    <v-btn color="secondary" variant="text" icon="fa-solid fa-square-check" @click="deselectCategory(category)"
+                                           v-if="selectEnabled && isAllSelected(category)"></v-btn>
+                                    {{ category.name }}
+                                </v-list-subheader>
                                 <v-divider></v-divider>
 
                                 <template v-for="[i, value] in category.foods" :key="value.food.id">
@@ -323,7 +348,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
+import {IShoppingListCategory, IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
@@ -364,12 +389,25 @@ const groupingOptionsItems = computed(() => {
     return items
 })
 
+/**
+ * return the correct pre-cached entries structure depending on where the shopping lsit view is shown
+ */
 const shoppingListItems = computed(() => {
-    if(props.mealPlanId != undefined) {
+    if (props.mealPlanId != undefined) {
         return useShoppingStore().entriesByGroupMealPlan
     } else {
         return useShoppingStore().entriesByGroup
     }
+})
+
+/**
+ * change style of subheaders depending on select mode
+ */
+const subheaderStyle = computed(() => {
+    if (selectEnabled.value) {
+        return 'padding-inline-start: 0!important'
+    }
+    return ''
 })
 
 watch(() => useUserPreferenceStore().deviceSettings, () => {
@@ -486,6 +524,49 @@ function batchUpdateShoppingLists() {
 function batchUpdateCategories(category: SupermarketCategory) {
     useShoppingStore().updateCategories(selectedLines.value, category)
     selectedLines.value = []
+}
+
+/**
+ * select all entries or all entries of a given category
+ * @param category
+ */
+function selectAll(category: IShoppingListCategory | undefined = undefined) {
+    shoppingListItems.value.forEach(sLC => {
+        if (category != undefined && sLC.name !== category.name) return
+        selectedLines.value = selectedLines.value.concat(Array.from(sLC.foods.values()))
+    })
+}
+
+/**
+ * remove the foods that are within a given category from the selected lines array
+ * @param category
+ */
+function deselectCategory(category: IShoppingListCategory) {
+    const categoryFoodIds = new Set(Array.from(category.foods.values()).map(f => f.food.id));
+    selectedLines.value = selectedLines.value.filter(f => !categoryFoodIds.has(f.food.id));
+}
+
+/**
+ * check if all foods of a certain category are included in the selected lines array
+ * @param category
+ */
+function isAllSelected(category: IShoppingListCategory | undefined = undefined) {
+    let selected = true
+    if (category) {
+        category.foods.forEach(f => {
+            if (!selectedLines.value.includes(f)) {
+                selected = false
+                return selected
+            }
+        })
+    } else {
+        let count = 0
+        shoppingListItems.value.forEach(category => {
+            count += category.foods.size
+        })
+        selected = selectedLines.value.length === count
+    }
+    return selected
 }
 
 </script>
