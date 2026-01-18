@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/tandoor-preview
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -43,9 +43,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
-            type=sha,prefix=
-            type=raw,value={{date 'YYYYMMDD'}}
+            type=raw,value=preview
+            type=sha,prefix=preview-
+            type=raw,value=preview-{{date 'YYYYMMDD'}}
 
       - name: Build and push
         uses: docker/build-push-action@v5
