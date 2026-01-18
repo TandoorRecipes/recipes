@@ -92,8 +92,14 @@ class Mealie1(Integration):
         recipes = []
         recipe_keyword_relation = []
         for r in mealie_database['recipes']:
-            if Recipe.objects.filter(space=self.request.space, name=r['name']).exists() and not self.import_duplicates:
-                self.import_log.msg += f"Ignoring {r['name']} because a recipe with this name already exists.\n"
+            raw_name = r.get('name') or ""
+            clean_name = raw_name.strip()
+            if not clean_name:
+                clean_name = "Untitled Recipe"
+            if len(clean_name) > 128:
+                clean_name = clean_name[:128]
+            if Recipe.objects.filter(space=self.request.space, name=clean_name).exists() and not self.import_duplicates:
+                self.import_log.msg += f"Ignoring {clean_name} because a recipe with this name already exists.\n"
                 self.import_log.save()
             else:
                 servings = 1
@@ -106,7 +112,7 @@ class Mealie1(Integration):
                     waiting_time=parse_time(r['perform_time']),
                     working_time=parse_time(r['prep_time']),
                     description=r['description'][:512],
-                    name=r['name'],
+                    name=clean_name,
                     source_url=r['org_url'],
                     servings=servings,
                     servings_text=r['recipe_yield'].strip()[:32] if r['recipe_yield'] else "",
