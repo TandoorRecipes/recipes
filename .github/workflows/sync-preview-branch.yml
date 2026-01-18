@@ -1,0 +1,103 @@
+name: Sync Preview Branch
+
+on:
+  # Manual trigger
+  workflow_dispatch:
+
+  # When any of our PR branches are updated
+  push:
+    branches:
+      - 'fix/ingredient-api-n-plus-1-queries'
+      - 'fix/3781-ical-uid-format'
+      - 'fix/unrated-recipe-search-null-rating'
+      - 'feature/include-children-search'
+
+  # Check for upstream changes daily
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+
+jobs:
+  sync-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/TandoorRecipes/recipes.git || true
+          git fetch upstream develop
+          git fetch origin --prune
+
+      - name: Rebuild preview branch
+        run: |
+          # Start from upstream/develop
+          git checkout -B preview upstream/develop
+
+          # PR branches to merge (in order)
+          BRANCHES=(
+            "fix/3781-ical-uid-format"
+            "fix/unrated-recipe-search-null-rating"
+            "feature/include-children-search"
+            "fix/ingredient-api-n-plus-1-queries"
+          )
+
+          MERGED_COUNT=0
+          FAILED_BRANCHES=""
+
+          for branch in "${BRANCHES[@]}"; do
+            echo "----------------------------------------"
+            echo "Attempting to merge origin/$branch..."
+
+            # Check if branch exists
+            if ! git rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
+              echo "Branch origin/$branch does not exist (PR may have been merged). Skipping."
+              continue
+            fi
+
+            if git merge "origin/$branch" --no-edit -m "Merge $branch into preview"; then
+              echo "Merged $branch successfully"
+              MERGED_COUNT=$((MERGED_COUNT + 1))
+            else
+              echo "Conflict merging $branch - aborting this merge"
+              git merge --abort
+              FAILED_BRANCHES="$FAILED_BRANCHES $branch"
+            fi
+          done
+
+          echo "----------------------------------------"
+          echo "Summary: Merged $MERGED_COUNT branches"
+          if [ -n "$FAILED_BRANCHES" ]; then
+            echo "Failed branches:$FAILED_BRANCHES"
+          fi
+
+      - name: Push preview branch
+        run: |
+          git push origin preview --force
+
+      - name: Create summary
+        run: |
+          echo "## Preview Branch Updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Base:** upstream/develop (\`$(git rev-parse upstream/develop | head -c 7)\`)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Preview HEAD:** \`$(git rev-parse HEAD | head -c 7)\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Included PRs:" >> $GITHUB_STEP_SUMMARY
+          echo "- #4362 - RFC 5545 compliant UID format in ICS export" >> $GITHUB_STEP_SUMMARY
+          echo "- #4361 - Include null-rated cook logs in unrated search" >> $GITHUB_STEP_SUMMARY
+          echo "- #4345 - Add include_children parameter to v2 search API" >> $GITHUB_STEP_SUMMARY
+          echo "- #4367 - Fix N+1 queries in ingredient API" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Recent commits:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          git log --oneline -10 >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
