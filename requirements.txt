@@ -1,6 +1,6 @@
-aiohttp==3.13.2
+aiohttp==3.13.3
 beautifulsoup4==4.14.3
-boto3==1.42.19
+boto3==1.42.26
 bleach==6.3.0
 cryptography===46.0.3
 crispy-bootstrap4==2025.6
@@ -13,7 +13,7 @@ django-cors-headers==4.9.0
 django-crispy-forms==2.5
 django-debug-toolbar==5.2.0
 django-hCaptcha==0.2.0
-django-oauth-toolkit==3.1.0
+django-oauth-toolkit==3.2.0
 django-prometheus==2.4.1
 django-scopes==2.0.0
 django-storages==1.14.6
@@ -31,7 +31,7 @@ lxml==6.0.2
 Markdown==3.10
 microdata==0.8.0
 mock==5.2.0
-Pillow==12.0.0
+Pillow==12.1.0
 psycopg2-binary==2.9.11
 pyjwt==2.10.1
 pyppeteer==2.0.0
