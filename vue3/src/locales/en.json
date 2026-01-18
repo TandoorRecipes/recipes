@@ -739,6 +739,8 @@
   "hide_step_ingredients": "Hide Step Ingredients",
   "hours": "hours",
   "ignore_shopping_help": "Never add food to the shopping list (e.g. water)",
+  "Include Children": "Include Children",
+  "Include child keywords and foods in search results": "Include child keywords and foods in search results",
   "imperial_fluid_ounce": "imperial fluid ounce [imp fl oz] (UK, volume)",
   "imperial_gallon": "imperial gal [imp gal] (UK, volume)",
   "imperial_pint": "imperial pint [imp pt] (UK, volume)",
