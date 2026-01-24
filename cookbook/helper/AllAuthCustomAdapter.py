@@ -1,4 +1,5 @@
 import datetime
+import logging
 from gettext import gettext as _
 
 from allauth.account.adapter import DefaultAccountAdapter
@@ -7,6 +8,8 @@ from django.contrib import messages
 from django.core.cache import caches
 
 from cookbook.models import InviteLink
+
+logger = logging.getLogger(__name__)
 
 
 class AllAuthCustomAdapter(DefaultAccountAdapter):
@@ -35,9 +38,9 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
             if c == default:
                 try:
                     super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
-                except Exception:  # dont fail signup just because confirmation mail could not be send
-                    pass
+                except Exception as e:  # dont fail signup just because confirmation mail could not be send
+                    logger.error(f"Failed to send {template_prefix} email to {email}: {type(e).__name__}: {e}")
             else:
                 messages.add_message(self.request, messages.ERROR, _('In order to prevent spam, the requested email was not send. Please wait a few minutes and try again.'))
         else:
-            pass
+            logger.debug(f"Email not sent (EMAIL_HOST not configured): {template_prefix} to {email}")
