@@ -1,5 +1,4 @@
 import json
-import logging
 from smtplib import SMTPException
 from unittest.mock import patch
 
@@ -215,27 +214,27 @@ def test_invite_link_created_even_when_email_fails(a1_s1, space_1):
         assert InviteLink.objects.count() == initial_count + 1
 
 
-def test_invite_link_email_failure_is_logged(a1_s1, space_1, caplog):
-    """Email failures should be logged for admin visibility."""
+def test_invite_link_email_failure_is_printed(a1_s1, space_1, capsys):
+    """Email failures should be printed for admin visibility."""
     with scopes_disabled():
         space_1.created_by = auth.get_user(a1_s1)
         space_1.save()
 
         # Patch EMAIL_HOST at serializer module level
         with patch('cookbook.serializer.EMAIL_HOST', 'localhost'):
-            with caplog.at_level(logging.ERROR, logger='cookbook.serializer'):
-                with patch('cookbook.serializer.send_mail', side_effect=SMTPException('Auth failed')):
-                    r = a1_s1.post(
-                        reverse(LIST_URL),
-                        {'group': {'id': 3, 'name': 'admin'}, 'email': 'test@example.com'},
-                        content_type='application/json'
-                    )
+            with patch('cookbook.serializer.send_mail', side_effect=SMTPException('Auth failed')):
+                r = a1_s1.post(
+                    reverse(LIST_URL),
+                    {'group': {'id': 3, 'name': 'admin'}, 'email': 'test@example.com'},
+                    content_type='application/json'
+                )
 
         assert r.status_code == 201
 
-        # Failure should be logged
-        assert 'Failed to send invite email' in caplog.text
-        assert 'test@example.com' in caplog.text
+        # Failure should be printed to stdout
+        captured = capsys.readouterr()
+        assert 'Failed to send invite email' in captured.out
+        assert 'test@example.com' in captured.out
 
 
 def test_invite_link_email_sent_false_when_no_email_provided(a1_s1, space_1):

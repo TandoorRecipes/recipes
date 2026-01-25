@@ -1,4 +1,3 @@
-import logging
 import traceback
 import uuid
 from datetime import datetime, timedelta
@@ -8,7 +7,6 @@ from html import escape
 from smtplib import SMTPException
 from drf_spectacular.utils import extend_schema_field
 
-logger = logging.getLogger(__name__)
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
@@ -1656,6 +1654,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
     group = GroupSerializer()
     email_sent = serializers.SerializerMethodField()
 
+    @extend_schema_field(bool)
     def get_email_sent(self, obj):
         """Return whether the invite email was successfully sent."""
         return getattr(obj, '_email_sent', False)
@@ -1693,7 +1692,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
                     )
                     obj._email_sent = True
             except (SMTPException, BadHeaderError, TimeoutError, OSError) as e:
-                logger.error(f"Failed to send invite email to {obj.email}: {type(e).__name__}: {e}")
+                print(f"Failed to send invite email to {obj.email}: {type(e).__name__}: {e}")
                 obj._email_sent = False
 
         return obj

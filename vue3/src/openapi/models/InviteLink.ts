@@ -86,6 +86,12 @@ export interface InviteLink {
      * @memberof InviteLink
      */
     readonly createdAt: Date;
+    /**
+     * Return whether the invite email was successfully sent.
+     * @type {boolean}
+     * @memberof InviteLink
+     */
+    readonly emailSent: boolean;
 }
 
 /**
@@ -97,6 +103,7 @@ export function instanceOfInviteLink(value: object): value is InviteLink {
     if (!('usedBy' in value) || value['usedBy'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('emailSent' in value) || value['emailSent'] === undefined) return false;
     return true;
 }
 
@@ -120,10 +127,11 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
+        'emailSent': json['email_sent'],
     };
 }
 
-export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'> | null): any {
+export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'> | null): any {
     if (value == null) {
         return value;
     }
