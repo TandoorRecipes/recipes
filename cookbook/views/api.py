@@ -2018,9 +2018,17 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                 entries.append(entry)
 
             ShoppingListEntry.objects.bulk_create(entries)
+
+            list_relations = []
             for e in entries:
-                if e.food.shopping_lists.count() > 0:
-                    e.shopping_lists.set(e.food.shopping_lists.all())
+                if serializer.validated_data['shopping_lists_ids']:
+                    for sLId in serializer.validated_data['shopping_lists_ids']:
+                        list_relations.append(ShoppingListEntry.shopping_lists.through(shoppinglistentry_id=e.pk, shoppinglist_id=sLId))
+                else:
+                    if e.food.shopping_lists.count() > 0:
+                        e.shopping_lists.set(e.food.shopping_lists.all())
+
+            ShoppingListEntry.shopping_lists.through.objects.bulk_create(list_relations, ignore_conflicts=True, unique_fields=('shoppinglistentry_id', 'shoppinglist_id',))
 
             ConnectorManager.add_work(ActionType.CREATED, *entries)
             return Response(serializer.validated_data)

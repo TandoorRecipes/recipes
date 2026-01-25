@@ -1546,6 +1546,7 @@ class ShoppingListEntrySimpleCreateSerializer(serializers.Serializer):
 
 class ShoppingListEntryBulkCreateSerializer(serializers.Serializer):
     entries = serializers.ListField(child=ShoppingListEntrySimpleCreateSerializer())
+    shopping_lists_ids = serializers.ListField(child=serializers.IntegerField(), required=False)
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
