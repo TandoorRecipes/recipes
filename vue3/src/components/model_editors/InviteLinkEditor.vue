@@ -33,13 +33,15 @@
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
 import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Group, InviteLink} from "@/openapi";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore"
 import {DateTime} from "luxon";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 
 const props = defineProps({
     item: {type: {} as PropType<InviteLink>, required: false, default: null},
@@ -49,7 +51,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<InviteLink>('InviteLink', emit)
+const {setupState, deleteObject, saveObject: baseSaveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<InviteLink>('InviteLink', emit)
 
 /**
  * watch prop changes and re-initialize editor
@@ -96,6 +98,26 @@ function inviteLinkUrl(inviteLink: InviteLink) {
     return useDjangoUrls().getDjangoUrl(`/invite/${inviteLink.uuid}`)
 }
 
+/**
+ * Custom save handler that shows warning when email fails for new invite links.
+ * Base saveObject already shows CREATE_SUCCESS, so we only add a warning for failures.
+ */
+function saveObject() {
+    const wasCreate = !isUpdate()
+    const emailProvided = !!editingObj.value.email
+
+    return baseSaveObject()?.then((r: InviteLink) => {
+        // Show warning only when email was expected but failed
+        if (wasCreate && emailProvided && r && !r.emailSent) {
+            useMessageStore().addMessage(
+                MessageType.WARNING,
+                t('InviteLinkCreatedEmailFailed'),
+                8000
+            )
+        }
+        return r
+    })
+}
 
 </script>
 

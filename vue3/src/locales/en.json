@@ -290,6 +290,7 @@
   "InstructionsEditHelp": "Click here to add instructions. ",
   "Internal": "Internal",
   "InviteLinkHelp": "Links to invite new people to your space. ",
+  "InviteLinkCreatedEmailFailed": "Invite link created, but email failed. Details logged — contact your admin if this persists.",
   "Invite_Link": "Invite Link",
   "Invites": "Invites",
   "Key_Ctrl": "Ctrl",
