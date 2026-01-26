@@ -1,11 +1,11 @@
 aiohttp==3.13.3
 beautifulsoup4==4.14.3
-boto3==1.42.26
+boto3==1.42.33
 bleach==6.3.0
 cryptography===46.0.3
 crispy-bootstrap4==2025.6
 Django==5.2.9
-django-allauth==65.13.1
+django-allauth==65.14.0
 django-annoying==0.10.8
 django-auth-ldap==5.3.0
 django-cleanup==9.0.0
@@ -28,7 +28,7 @@ icalendar==6.3.2
 inflection==0.5.1
 Jinja2==3.1.6
 lxml==6.0.2
-Markdown==3.10
+Markdown==3.10.1
 microdata==0.8.0
 mock==5.2.0
 Pillow==12.1.0
