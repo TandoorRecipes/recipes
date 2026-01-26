@@ -18,13 +18,14 @@
             </v-col>
         </v-row>
 
-        <v-fab app location="bottom right" color="secondary" style="margin-bottom: 50px" v-if="model.toLowerCase() == 'recipe' && mobile" icon>
+        <template v-if="modelEditorFunctions != undefined">
+        <v-fab app location="bottom right" color="secondary" style="margin-bottom: 50px" v-if="model.toLowerCase() == 'recipe' && mobile" :loading="modelEditorFunctions.loading" icon>
             <v-icon>{{ speedDialOpen ? '$close' : '$save' }}</v-icon>
             <v-speed-dial v-model="speedDialOpen" location="top center" activator="parent">
                 <v-btn key="1" color="save" icon @click="modelEditorFunctions.saveObject()">
                     <v-icon icon="$save"></v-icon>
                 </v-btn>
-                 <v-btn key="1" color="info" icon @click="modelEditorFunctions.saveObject().then(router.push({name : 'RecipeViewPage', params: {id: props.id}}))">
+                 <v-btn key="1" color="info" icon @click="modelEditorFunctions.saveObject().then(() => router.push({name : 'RecipeViewPage', params: {id: props.id}}))">
                     <v-icon icon="fa-solid fa-eye fa-fw"></v-icon>
                 </v-btn>
                 <v-btn color="delete" icon
@@ -41,6 +42,7 @@
                 </v-btn>
             </v-speed-dial>
         </v-fab>
+            </template>
 
     </v-container>
 </template>
