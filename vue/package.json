@@ -19,7 +19,7 @@
     "bootstrap-vue": "^2.23.1",
     "brace-expansion": "2.0.2",
     "core-js": "^3.47.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "lodash.template": "4.5.0",
     "mavon-editor": "^2.10.4",
     "moment": "^2.30.1",
