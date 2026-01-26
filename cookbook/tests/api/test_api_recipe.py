@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Recipe, ShareLink
+from cookbook.models import Food, Recipe, Unit
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
 
 LIST_URL = 'api:recipe-list'
@@ -204,3 +204,36 @@ def test_delete(u1_s1, u1_s2, u2_s1, recipe_1_s1, recipe_2_s1):
 
         r = u1_s1.delete(reverse(DETAIL_URL, args={recipe_2_s1.id}))
         assert r.status_code == 204
+
+
+def test_food_properties_skipped_on_create(u1_s1, space_1):
+    """
+    Issue #4356: food_properties skipped on CREATE, returned on GET.
+
+    CREATE skips expensive food_properties computation (returns {}) to avoid
+    N+1 query timeouts. GET returns full computed values.
+    """
+    from cookbook.models import PropertyType, Property
+
+    with scopes_disabled():
+        unit = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+        prop_type = PropertyType.objects.create(name='Calories', unit='kcal', space=space_1)
+        food = Food.objects.create(name='Test Food', space=space_1, properties_food_amount=100, properties_food_unit=unit)
+        Property.objects.create(food=food, property_type=prop_type, property_amount=50, space=space_1)
+
+    recipe_data = {
+        "name": "Test Recipe",
+        "steps": [{"instruction": "Mix", "ingredients": [{"food": {"name": "Test Food"}, "unit": {"name": "gram"}, "amount": 100}]}]
+    }
+
+    # CREATE returns empty food_properties
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    assert response['food_properties'] == {}
+
+    # GET returns computed food_properties
+    r = u1_s1.get(reverse(DETAIL_URL, args=[response['id']]))
+    assert r.status_code == 200
+    get_response = json.loads(r.content)
+    assert len(get_response['food_properties']) > 0
