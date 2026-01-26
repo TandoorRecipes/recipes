@@ -55,29 +55,49 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
 
 
-# def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u):
-#     assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
-#     assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 404
-#
-#     with scopes_disabled():
-#         r = u1_s1.get(reverse('new_share_link', kwargs={'pk': recipe_1_s1.pk}))
-#         assert r.status_code == 302
-#         r = u1_s2.get(reverse('new_share_link', kwargs={'pk': recipe_1_s1.pk}))
-#         assert r.status_code == 404
-#         share = ShareLink.objects.filter(recipe=recipe_1_s1).first()
-#         assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         # TODO fix in https://github.com/TandoorRecipes/recipes/issues/1238
-#         assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 404
-#
-#         recipe_1_s1.created_by = auth.get_user(u1_s1)
-#         recipe_1_s1.private = True
-#         recipe_1_s1.save()
-#
-#         assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 403
+def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
+    # Same space user can access
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
+    # Different space user cannot access without share link
+    assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 404
+
+    with scopes_disabled():
+        # Create share link via API
+        r = u1_s1.get(reverse('api_share_link', args=[recipe_1_s1.pk]))
+        assert r.status_code == 200
+        share = ShareLink.objects.filter(recipe=recipe_1_s1).first()
+
+    # Anonymous can access with share link
+    assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    # Same space can access with share link
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    # CORE FIX: Different space can access with share link (issue #1238)
+    assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+
+    # Test private recipe scenarios
+    with scopes_disabled():
+        recipe_1_s1.created_by = auth.get_user(u1_s1)
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+    # Private recipe still accessible with share link
+    assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    # Private recipe NOT accessible without share link (non-owner)
+    assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 403
+
+
+def test_share_permission_invalid(recipe_1_s1, u1_s2):
+    """Test that invalid share links are properly rejected with 404 to avoid leaking existence."""
+    import uuid
+    # Invalid UUID format - cross-space user should get 404 (not 403, to avoid leaking existence)
+    r = u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + '?share=invalid-uuid')
+    assert r.status_code == 404
+
+    # Valid UUID but non-existent share link - also 404
+    r = u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={uuid.uuid4()}')
+    assert r.status_code == 404
 
 
 @pytest.mark.parametrize("arg", [
