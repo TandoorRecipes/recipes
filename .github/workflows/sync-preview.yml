@@ -1,0 +1,180 @@
+name: Sync Preview Branch
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:       # Manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: generate_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.generate_token.outputs.token }}
+
+      - name: Setup remotes
+        run: |
+          git remote add upstream https://github.com/TandoorRecipes/recipes.git || true
+          git fetch upstream develop
+          git fetch origin --prune
+
+      - name: Get branches based on upstream/develop
+        id: get-branches
+        run: |
+          # Exclude system branches and auto-generated PR branches
+          EXCLUDE_PATTERN="HEAD|preview|working|develop|main|master|tandoor-1|upstream-pr-|preview-candidate-"
+
+          ALL_BRANCHES=$(git branch -r | grep 'origin/' | grep -vE "origin/($EXCLUDE_PATTERN)" | sed 's|origin/||' | tr -d ' ')
+
+          echo "All origin branches (excluding system/auto branches):"
+          echo "$ALL_BRANCHES"
+
+          # Calculate cutoff date (1 year ago)
+          ONE_YEAR_AGO=$(date -d '1 year ago' +%s)
+
+          # Filter to branches that are based on upstream/develop and active within last year
+          VALID_BRANCHES=""
+          for branch in $ALL_BRANCHES; do
+            # Check branch age (last commit date)
+            LAST_COMMIT_DATE=$(git log -1 --format=%ct "origin/$branch" 2>/dev/null || echo "0")
+            if [ "$LAST_COMMIT_DATE" -lt "$ONE_YEAR_AGO" ]; then
+              echo "  $branch: older than 1 year, skipping"
+              continue
+            fi
+
+            # Get merge-base between the branch and upstream/develop
+            MERGE_BASE=$(git merge-base "origin/$branch" upstream/develop 2>/dev/null || echo "")
+
+            if [ -z "$MERGE_BASE" ]; then
+              echo "  $branch: no common ancestor with upstream/develop, skipping"
+              continue
+            fi
+
+            # Check if merge-base is an ancestor of upstream/develop (branch is based on develop)
+            if git merge-base --is-ancestor "$MERGE_BASE" upstream/develop 2>/dev/null; then
+              echo "  $branch: based on upstream/develop, active"
+              VALID_BRANCHES="$VALID_BRANCHES $branch"
+            else
+              echo "  $branch: not based on upstream/develop, skipping"
+            fi
+          done
+
+          echo ""
+          echo "Valid branches (based on upstream/develop, active within 1 year):"
+          echo "$VALID_BRANCHES"
+
+          echo "branches<<EOF" >> $GITHUB_OUTPUT
+          echo "$VALID_BRANCHES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create PRs for each branch
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          BRANCHES="${{ steps.get-branches.outputs.branches }}"
+
+          for branch in $BRANCHES; do
+            echo "========================================"
+            echo "Processing: $branch"
+
+            # Check if branch exists on origin
+            if ! git rev-parse --verify "origin/$branch" >/dev/null 2>&1; then
+              echo "Branch origin/$branch not found, skipping"
+              continue
+            fi
+
+            # Check if PR already exists (open or merged) from this branch to preview
+            EXISTING_PR=$(gh pr list \
+              --repo smilerz/recipes \
+              --head "$branch" \
+              --base preview \
+              --state all \
+              --json number,state \
+              --jq '.[] | select(.state == "OPEN" or .state == "MERGED") | .number' | head -1)
+
+            if [ -n "$EXISTING_PR" ]; then
+              echo "PR already exists or was merged for $branch -> preview"
+              continue
+            fi
+
+            # Check if branch has commits not already in preview
+            COMMITS_AHEAD=$(git rev-list --count "origin/preview..origin/$branch" 2>/dev/null || echo "0")
+            if [ "$COMMITS_AHEAD" -eq 0 ]; then
+              echo "Branch $branch has no new commits compared to preview, skipping"
+              continue
+            fi
+            echo "Branch has $COMMITS_AHEAD commits ahead of preview"
+
+            # Create PR from branch to preview
+            echo "Creating PR: $branch -> preview"
+            if ! PR_URL=$(gh pr create \
+              --repo smilerz/recipes \
+              --base preview \
+              --head "$branch" \
+              --title "Preview: $branch" \
+              --body "Auto-sync $branch to preview branch for testing." 2>&1); then
+              echo "Could not create PR: $PR_URL"
+              echo "Branch may already be merged or have no new commits, skipping"
+              continue
+            fi
+
+            PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
+            echo "Created PR #$PR_NUMBER"
+
+            # Try auto-merge with rebase
+            if gh pr merge "$PR_NUMBER" --repo smilerz/recipes --auto --rebase 2>&1; then
+              echo "Enabled auto-merge for PR #$PR_NUMBER"
+            else
+              echo "Auto-merge not available, PR #$PR_NUMBER left open (may have conflicts)"
+            fi
+          done
+
+          echo "========================================"
+
+      - name: Approve open preview PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get all open PRs to preview that need approval
+          OPEN_PRS=$(gh pr list \
+            --repo smilerz/recipes \
+            --base preview \
+            --state open \
+            --json number \
+            --jq '.[].number')
+
+          for pr in $OPEN_PRS; do
+            echo "Approving PR #$pr"
+            gh pr review "$pr" \
+              --repo smilerz/recipes \
+              --approve \
+              --body "Auto-approved: Preview sync" || echo "Already approved or cannot approve"
+          done
+
+          echo "========================================"
+
+      - name: Create summary
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Preview Branch Sync" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### v2 PRs (targeting upstream/develop):" >> $GITHUB_STEP_SUMMARY
+          gh pr list --repo TandoorRecipes/recipes --author smilerz --base develop --state open --json number,title --jq '.[] | "- #\(.number): \(.title)"' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Open PRs to preview:" >> $GITHUB_STEP_SUMMARY
+          gh pr list --repo smilerz/recipes --base preview --state open --json number,title,headRefName --jq '.[] | "- #\(.number): \(.headRefName)"' >> $GITHUB_STEP_SUMMARY
