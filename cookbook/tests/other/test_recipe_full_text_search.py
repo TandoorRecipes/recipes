@@ -190,6 +190,17 @@ def found_recipe(request, space_1, accent, unaccent, u1_s1, u2_s1):
             recipe=recipe2, created_by=user1, rating=1.0, space=space_1)
         CookLogFactory.create(
             recipe=recipe3, created_by=user2, rating=3.0, space=space_1)
+    if request.param.get('rating_null', None):
+        # recipe1: has cook log with explicit rating (should NOT appear in rating=0 search)
+        CookLogFactory.create(
+            recipe=recipe1, created_by=user1, rating=5.0, space=space_1)
+        # recipe2: has cook log with rating=None (SHOULD appear in rating=0 search - bug #1939)
+        from cookbook.models import CookLog
+        CookLog.objects.create(
+            recipe=recipe2, created_by=user1, rating=None, space=space_1)
+        # recipe3: has cook log with rating=0 (should appear in rating=0 search)
+        CookLog.objects.create(
+            recipe=recipe3, created_by=user1, rating=0, space=space_1)
 
     return (recipe1, recipe2, recipe3, obj1, obj2, request.param)
 
@@ -397,3 +408,69 @@ def test_search_count(found_recipe, recipes, param_type, u1_s1, u2_s1, space_1):
     r = json.loads(u2_s1.get(reverse(LIST_URL) + param2).content)
     assert r['count'] == 1
     assert found_recipe[2].id in [x['id'] for x in r['results']]
+
+
+@pytest.mark.parametrize("found_recipe", [
+    ({'rating_null': True}),
+], indirect=['found_recipe'])
+def test_search_unrated_includes_null_ratings(found_recipe, recipes, u1_s1, space_1):
+    """
+    Test that recipes with CookLog entries where rating=None are considered unrated.
+
+    This is a regression test for GitHub issue #1939:
+    https://github.com/TandoorRecipes/recipes/issues/1939
+
+    Setup (from found_recipe fixture with rating_null=True):
+    - recipe1 (found_recipe[0]): has CookLog with rating=5.0 (should NOT appear in rating=0)
+    - recipe2 (found_recipe[1]): has CookLog with rating=None (SHOULD appear in rating=0)
+    - recipe3 (found_recipe[2]): has CookLog with rating=0 (should appear in rating=0)
+    - recipes: 10 recipes with no CookLogs (should appear in rating=0)
+
+    Expected: 12 recipes in rating=0 search (10 + recipe2 + recipe3)
+    """
+    with scope(space=space_1):
+        # Search for unrated recipes (rating=0)
+        r = json.loads(u1_s1.get(reverse(LIST_URL) + '?rating=0').content)
+        result_ids = [x['id'] for x in r['results']]
+
+        # recipe1 has rating=5, should NOT be in unrated results
+        assert found_recipe[0].id not in result_ids, \
+            "Recipe with rating=5 should not appear in rating=0 search"
+
+        # recipe2 has rating=None, SHOULD be in unrated results (this is the bug fix)
+        assert found_recipe[1].id in result_ids, \
+            "Recipe with rating=None should appear in rating=0 search (issue #1939)"
+
+        # recipe3 has rating=0, should be in unrated results
+        assert found_recipe[2].id in result_ids, \
+            "Recipe with rating=0 should appear in rating=0 search"
+
+        # Total count: 10 recipes (no cook logs) + recipe2 (null) + recipe3 (zero) = 12
+        assert r['count'] == 12, \
+            f"Expected 12 unrated recipes, got {r['count']}"
+
+
+@pytest.mark.parametrize("found_recipe", [
+    ({'rating_null': True}),
+], indirect=['found_recipe'])
+def test_search_rated_excludes_null_ratings(found_recipe, recipes, u1_s1, space_1):
+    """
+    Test that null ratings are excluded when calculating average rating.
+
+    A recipe with rating=5 and rating=None should have average rating=5 (null is ignored),
+    not rating=2.5 (if null were treated as 0).
+
+    This ensures null ratings don't pollute the average calculation.
+    """
+    with scope(space=space_1):
+        # Search for recipes with rating >= 5
+        r = json.loads(u1_s1.get(reverse(LIST_URL) + '?rating_gte=5').content)
+        result_ids = [x['id'] for x in r['results']]
+
+        # recipe1 has rating=5, should appear
+        assert found_recipe[0].id in result_ids, \
+            "Recipe with rating=5 should appear in rating_gte=5 search"
+
+        # recipe2 has only null rating, should NOT appear in rated search
+        assert found_recipe[1].id not in result_ids, \
+            "Recipe with only null rating should not appear in rating_gte=5 search"

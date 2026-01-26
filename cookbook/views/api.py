@@ -1471,6 +1471,8 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
+        # Use Prefetch with select_related for UnitConversion ForeignKeys to avoid N+1 queries
+        unit_conversion_qs = UnitConversion.objects.select_related('base_unit', 'converted_unit', 'food')
         queryset = self.queryset.prefetch_related('food',
                                                   'food__properties',
                                                   'food__properties__property_type',
@@ -1479,11 +1481,10 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                   'food__onhand_users',
                                                   'food__substitute',
                                                   'food__child_inherit_fields',
-                                                  'unit',
-                                                  'unit__unit_conversion_base_relation',
-                                                  'unit__unit_conversion_base_relation__base_unit',
-                                                  'unit__unit_conversion_converted_relation',
-                                                  'unit__unit_conversion_converted_relation__converted_unit', ).filter(step__recipe__space=self.request.space)
+                                                  Prefetch('unit__unit_conversion_base_relation', queryset=unit_conversion_qs),
+                                                  Prefetch('unit__unit_conversion_converted_relation', queryset=unit_conversion_qs),
+                                                  'step_set',
+                                                  'step_set__recipe_set', ).filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
@@ -1492,7 +1493,7 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         if unit and re.match(r'^(\d)+$', unit):
             queryset = queryset.filter(unit_id=unit)
 
-        return queryset.select_related('food')
+        return queryset.select_related('food', 'unit')
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -1588,6 +1589,7 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='num_recent', description=_('Returns the given number of recently viewed recipes before search results (if given)'), type=int),
     OpenApiParameter(name='filter', description=_('ID of a custom filter. Returns all recipes matched by that filter.'), type=int),
     OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
+    OpenApiParameter(name='include_children', description=_('Include child keywords and foods in search results. [''<b>true</b>''/''false'']'), type=bool),
 ]))
 class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Recipe.objects
@@ -3132,7 +3134,7 @@ def meal_plans_to_ical(queryset, filename):
 
     for p in queryset:
         event = Event()
-        event['uid'] = p.id
+        event['uid'] = f'mealplan-{p.id}@tandoor.recipes'
 
         start_date_time = p.from_date
         end_date_time = p.from_date
