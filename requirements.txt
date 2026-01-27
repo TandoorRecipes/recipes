@@ -63,3 +63,4 @@ pytest-xdist==3.8.0
 autopep8==2.3.2
 flake8==7.3.0
 yapf==0.40.2
+isort==7.0.0

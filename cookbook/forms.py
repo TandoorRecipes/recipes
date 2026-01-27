@@ -5,22 +5,27 @@ from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import NumberInput, widgets
+from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
-from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
+from django_scopes.forms import SafeModelChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import Comment, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig
+from .models import InviteLink, Recipe, Space, User, UserPreference
+
 
 class SelectWidget(widgets.Select):
+
     class Media:
-        js = ('custom/js/form_select.js',)
+        js = ('custom/js/form_select.js', )
 
 
 class MultiSelectWidget(widgets.SelectMultiple):
+
     class Media:
-        js = ('custom/js/form_multiselect.js',)
+        js = ('custom/js/form_multiselect.js', )
+
+
 class ImportExportBase(forms.Form):
     DEFAULT = 'DEFAULT'
     PAPRIKA = 'PAPRIKA'
@@ -47,11 +52,14 @@ class ImportExportBase(forms.Form):
     PDF = 'PDF'
     GOURMET = 'GOURMET'
 
-    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (MEALIE1, 'Mealie1'), (CHOWDOWN, 'Chowdown'),
-                                      (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'), (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'),
-                                      (DOMESTICA, 'Domestica'), (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
-                                      (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
-                                      (COOKMATE, 'Cookmate'), (REZEPTSUITEDE, 'Recipesuite.de'), (GOURMET, 'Gourmet')))
+    type = forms.ChoiceField(
+        choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (MEALIE1, 'Mealie1'), (CHOWDOWN, 'Chowdown'),
+                 (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'), (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
+                 (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'), (PLANTOEAT,
+                                                                                                                             'Plantoeat'), (COOKBOOKAPP, 'CookBook Manager'),
+                 (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'), (COOKMATE, 'Cookmate'), (REZEPTSUITEDE, 'Recipesuite.de'), (GOURMET, 'Gourmet'))
+    )
+
 
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -74,11 +82,12 @@ class MultipleFileField(forms.FileField):
 
 class ImportForm(ImportExportBase):
     files = MultipleFileField(required=True)
-    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'),
-                                    required=False)
+    duplicates = forms.BooleanField(
+        help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'), required=False
+    )
     meal_plans = forms.BooleanField(required=False)
     shopping_lists = forms.BooleanField(required=False)
-    nutrition_per_serving = forms.BooleanField(required=False) # some managers (e.g. mealie) do not specify what the nutrition's relate to so we let the user choose
+    nutrition_per_serving = forms.BooleanField(required=False)  # some managers (e.g. mealie) do not specify what the nutrition's relate to so we let the user choose
 
 
 class ExportForm(ImportExportBase):
@@ -91,8 +100,6 @@ class ExportForm(ImportExportBase):
         super().__init__(*args, **kwargs)
         self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
 
-from .models import InviteLink, SearchPreference, Space, User, UserPreference
-
 
 class InviteLinkForm(forms.ModelForm):
 
@@ -103,8 +110,9 @@ class InviteLinkForm(forms.ModelForm):
 
     def clean(self):
         space = self.cleaned_data['space']
-        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count()
-                                     + InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=space).count()) >= space.max_users:
+        if space.max_users != 0 and (
+            UserPreference.objects.filter(space=space).count() + InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=space).count()
+        ) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
@@ -118,8 +126,12 @@ class InviteLinkForm(forms.ModelForm):
     class Meta:
         model = InviteLink
         fields = ('email', 'group', 'valid_until', 'space')
-        help_texts = {'email': _('An email address is not required but if present the invite link will be sent to the user.'), }
-        field_classes = {'space': SafeModelChoiceField, }
+        help_texts = {
+            'email': _('An email address is not required but if present the invite link will be sent to the user.'),
+        }
+        field_classes = {
+            'space': SafeModelChoiceField,
+        }
 
 
 class SpaceCreateForm(forms.Form):
