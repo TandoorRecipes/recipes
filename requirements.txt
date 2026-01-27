@@ -59,7 +59,7 @@ pytest-asyncio==1.3.0
 pytest-cov===7.0.0
 pytest-django==4.11.1
 pytest-factoryboy==2.8.1
-pytest-html==4.1.1
+pytest-html==4.2.0
 pytest-xdist==3.8.0
 pytz==2025.2
 yapf==0.43.0
