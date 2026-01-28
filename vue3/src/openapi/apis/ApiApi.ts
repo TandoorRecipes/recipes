@@ -2567,11 +2567,6 @@ export interface ApiUserRetrieveRequest {
     id: number;
 }
 
-export interface ApiUserSpaceAllPersonalListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
 export interface ApiUserSpaceDestroyRequest {
     id: number;
 }
@@ -19574,16 +19569,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalListRaw(requestParameters: ApiUserSpaceAllPersonalListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
+    async apiUserSpaceAllPersonalListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserSpace>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -19598,14 +19585,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUserSpaceListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserSpaceFromJSON));
     }
 
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalList(requestParameters: ApiUserSpaceAllPersonalListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserSpaceList> {
-        const response = await this.apiUserSpaceAllPersonalListRaw(requestParameters, initOverrides);
+    async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
+        const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
         return await response.value();
     }
 

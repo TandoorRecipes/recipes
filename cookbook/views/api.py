@@ -713,12 +713,13 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwner) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
     def destroy(self, request, *args, **kwargs):
-        if request.space.created_by == UserSpace.objects.get(pk=kwargs['pk']).user:
+        userspace = UserSpace.objects.get(pk=kwargs['pk'])
+        if userspace.space.created_by == userspace.user:
             raise APIException('Cannot delete Space owner permission.')
         return super().destroy(request, *args, **kwargs)
 
@@ -734,7 +735,7 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset.filter(space=self.request.space, user=self.request.user)
 
     @extend_schema(responses=UserSpaceSerializer(many=True))
-    @decorators.action(detail=False, pagination_class=DefaultPagination, methods=['GET'], serializer_class=UserSpaceSerializer, )
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=UserSpaceSerializer, )
     def all_personal(self, request):
         """
         return all userspaces for the user requesting the endpoint

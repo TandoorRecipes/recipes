@@ -486,8 +486,11 @@ def create_space_for_user(user, name=None):
                               space_setup_completed=False, )
         created_space.save()
 
-        UserSpace.objects.filter(user=user).update(active=False)
-        user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
+        new_space_active = False
+        if UserSpace.objects.filter(user=user).count() == 0:
+            new_space_active = True
+
+        user_space = UserSpace.objects.create(space=created_space, user=user, active=new_space_active)
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space
