@@ -32,6 +32,12 @@ export interface ShoppingListEntryBulkCreate {
      * @memberof ShoppingListEntryBulkCreate
      */
     entries: Array<ShoppingListEntrySimpleCreate>;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof ShoppingListEntryBulkCreate
+     */
+    shoppingListsIds?: Array<number>;
 }
 
 /**
@@ -53,6 +59,7 @@ export function ShoppingListEntryBulkCreateFromJSONTyped(json: any, ignoreDiscri
     return {
         
         'entries': ((json['entries'] as Array<any>).map(ShoppingListEntrySimpleCreateFromJSON)),
+        'shoppingListsIds': json['shopping_lists_ids'] == null ? undefined : json['shopping_lists_ids'],
     };
 }
 
@@ -63,6 +70,7 @@ export function ShoppingListEntryBulkCreateToJSON(value?: ShoppingListEntryBulkC
     return {
         
         'entries': ((value['entries'] as Array<any>).map(ShoppingListEntrySimpleCreateToJSON)),
+        'shopping_lists_ids': value['shoppingListsIds'],
     };
 }
 

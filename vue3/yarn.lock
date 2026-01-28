@@ -1434,19 +1434,19 @@
   dependencies:
     upath "^2.0.1"
 
-"@vueuse/core@^13.6.0":
-  version "13.6.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-13.6.0.tgz#4137f63dc4cef2ff8ae74ee146d6b6070d707878"
-  integrity sha512-DJbD5fV86muVmBgS9QQPddVX7d9hWYswzlf4bIyUD2dj8GC46R1uNClZhVAmsdVts4xb2jwp1PbpuiA50Qee1A==
+"@vueuse/core@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-14.1.0.tgz#274e98e591a505333b7dfb2bcaf7b4530a10b9c9"
+  integrity sha512-rgBinKs07hAYyPF834mDTigH7BtPqvZ3Pryuzt1SD/lg5wEcWqvwzXXYGEDb2/cP0Sj5zSvHl3WkmMELr5kfWw==
   dependencies:
     "@types/web-bluetooth" "^0.0.21"
-    "@vueuse/metadata" "13.6.0"
-    "@vueuse/shared" "13.6.0"
+    "@vueuse/metadata" "14.1.0"
+    "@vueuse/shared" "14.1.0"
 
-"@vueuse/metadata@13.6.0":
-  version "13.6.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-13.6.0.tgz#49196025c96c7daeb591c20a54b61cc336af99b6"
-  integrity sha512-rnIH7JvU7NjrpexTsl2Iwv0V0yAx9cw7+clymjKuLSXG0QMcLD0LDgdNmXic+qL0SGvgSVPEpM9IDO/wqo1vkQ==
+"@vueuse/metadata@14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.1.0.tgz#70fc2e94775e4a07369f11f86f6f0a465b04a381"
+  integrity sha512-7hK4g015rWn2PhKcZ99NyT+ZD9sbwm7SGvp7k+k+rKGWnLjS/oQozoIZzWfCewSUeBmnJkIb+CNr7Zc/EyRnnA==
 
 "@vueuse/router@^13.9.0":
   version "13.9.0"
@@ -1455,15 +1455,15 @@
   dependencies:
     "@vueuse/shared" "13.9.0"
 
-"@vueuse/shared@13.6.0":
-  version "13.6.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-13.6.0.tgz#872fdbd725fb4e3a12bd5aab85af9a5db0b1e481"
-  integrity sha512-pDykCSoS2T3fsQrYqf9SyF0QXWHmcGPQ+qiOVjlYSzlWd9dgppB2bFSM1GgKKkt7uzn0BBMV3IbJsUfHG2+BCg==
-
 "@vueuse/shared@13.9.0":
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-13.9.0.tgz#7168b4ed647e625b05eb4e7e80fe8aabd00e3923"
   integrity sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==
+
+"@vueuse/shared@14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.1.0.tgz#49b2face86a9c0c52e20eaf4c732a0223276c11f"
+  integrity sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==
 
 acorn@^8.14.0:
   version "8.15.0"
@@ -2532,9 +2532,9 @@ lodash.sortby@^4.7.0:
   integrity sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==
 
 lodash@^4.17.20:
-  version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
-  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+  version "4.17.23"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.23.tgz#f113b0378386103be4f6893388c73d0bde7f2c5a"
+  integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
 
 lru-cache@^10.4.3:
   version "10.4.3"
@@ -3348,10 +3348,10 @@ vite-plugin-vuetify@^2.1.1:
     debug "^4.3.3"
     upath "^2.0.1"
 
-vite@7.1.11:
-  version "7.1.11"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.11.tgz#4d006746112fee056df64985191e846ebfb6007e"
-  integrity sha512-uzcxnSDVjAopEUjljkWh8EIrg6tlzrjFUfMcR1EVsRDGwf/ccef0qQPRyOrROwhrTDaApueq+ja+KLPlzR/zdg==
+vite@7.2.4:
+  version "7.2.4"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.2.4.tgz#a3a09c7e25487612ecc1119c7d412c73da35bd4e"
+  integrity sha512-NL8jTlbo0Tn4dUEXEsUg8KeyG/Lkmc4Fnzb8JXN/Ykm9G4HNImjtABMJgkQoVjOBN/j2WAwDTRytdqJbZsah7w==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
@@ -3592,18 +3592,31 @@ workbox-cacheable-response@7.3.0:
   dependencies:
     workbox-core "7.3.0"
 
-workbox-core@7.3.0, workbox-core@^7.3.0:
+workbox-core@7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-7.3.0.tgz#f24fb92041a0b7482fe2dd856544aaa9fa105248"
   integrity sha512-Z+mYrErfh4t3zi7NVTvOuACB0A/jA3bgxUN3PwtAVHvfEsZxV9Iju580VEETug3zYJRc0Dmii/aixI/Uxj8fmw==
 
-workbox-expiration@7.3.0, workbox-expiration@^7.3.0:
+workbox-core@7.4.0, workbox-core@^7.3.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-7.4.0.tgz#5cb59ae7655f2727423268fb1ba698f37809189d"
+  integrity sha512-6BMfd8tYEnN4baG4emG9U0hdXM4gGuDU3ectXuVHnj71vwxTFI7WOpQJC4siTOlVtGqCUtj0ZQNsrvi6kZZTAQ==
+
+workbox-expiration@7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/workbox-expiration/-/workbox-expiration-7.3.0.tgz#2c1ee1fdada34aa7e7474f706d5429c914bd10d2"
   integrity sha512-lpnSSLp2BM+K6bgFCWc5bS1LR5pAwDWbcKt1iL87/eTSJRdLdAwGQznZE+1czLgn/X05YChsrEegTNxjM067vQ==
   dependencies:
     idb "^7.0.1"
     workbox-core "7.3.0"
+
+workbox-expiration@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/workbox-expiration/-/workbox-expiration-7.4.0.tgz#f7162a45ad8b28de84acea478df421b4d0065e61"
+  integrity sha512-V50p4BxYhtA80eOvulu8xVfPBgZbkxJ1Jr8UUn0rvqjGhLDqKNtfrDfjJKnLz2U8fO2xGQJTx/SKXNTzHOjnHw==
+  dependencies:
+    idb "^7.0.1"
+    workbox-core "7.4.0"
 
 workbox-google-analytics@7.3.0:
   version "7.3.0"

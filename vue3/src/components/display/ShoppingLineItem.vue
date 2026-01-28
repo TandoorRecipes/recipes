@@ -1,11 +1,17 @@
 <template>
-    <v-list-item class="swipe-container border-t-sm mt-0 mb-0 pt-0 pb-0 pe-0 pa-0" :id="itemContainerId" @touchend="handleSwipe()" @click="dialog = true;"
-                 v-if="isShoppingListFoodVisible(props.shoppingListFood, useUserPreferenceStore().deviceSettings)"
+    <v-list-item class="swipe-container border-t-sm mt-0 mb-0 pt-0 pb-0 pe-0 pa-0 shopping-border"
+                 :id="itemContainerId"
+                 @touchend="handleSwipe()"
+                 @click="dialog = true;"
+                 :value="shoppingListFood"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
         <!--        </div>-->
 
+        <div class="color-marker-container">
+            <span :style="{background: sl.color}" v-for="sl in shoppingList"></span>
+        </div>
 
         <div class="flex-grow-1 p-2">
             <div class="d-flex">
@@ -31,13 +37,18 @@
         </div>
 
 
+        <template v-slot:[selectBtnSlot]="{ isSelected, select }" v-if="selectEnabled">
+            <v-list-item-action class="ps-3 pe-3" start>
+                <v-checkbox-btn :model-value="isSelected" @update:model-value="select" @click.native.stop=""></v-checkbox-btn>
+            </v-list-item-action>
+        </template>
+
         <template v-slot:[checkBtnSlot]>
             <div class="ps-3 pe-3" @click.native.stop="useShoppingStore().setEntriesCheckedState(entries, !isChecked, true);">
                 <v-btn color="success" size="large"
                        :class="{'btn-success': !isChecked, 'btn-warning': isChecked}" :icon="actionButtonIcon" variant="plain">
                 </v-btn>
             </div>
-            <!--                <i class="d-print-none fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
         </template>
 
         <!--        <div class="swipe-action bg-primary justify-content-end">-->
@@ -56,20 +67,23 @@ import {computed, PropType, ref} from "vue";
 import {DateTime} from "luxon";
 import {useShoppingStore} from "@/stores/ShoppingStore.js";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.js";
-import {ApiApi, Food, ShoppingListEntry} from '@/openapi'
+import {ApiApi, Food, ShoppingList, ShoppingListEntry} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
 import {isDelayed, isEntryVisible, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
 import {pluralString} from "@/utils/model_utils.ts";
+import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
 
 const emit = defineEmits(['clicked'])
 
 const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
-    hideInfoRow: {type: Boolean, default: false}
+    hideInfoRow: {type: Boolean, default: false},
+    selectEnabled: {type: Boolean, default: false}
 })
 const checkBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'prepend' : 'append')
+const selectBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'append' : 'prepend')
 
 const dialog = ref(false)
 
@@ -82,9 +96,7 @@ const entries = computed(() => {
  */
 const itemContainerId = computed(() => {
     let id = 'id_sli_'
-    for (let i in entries.value) {
-        id += i + '_'
-    }
+    entries.value.forEach(e => id += e.id + '_')
     return id
 })
 
@@ -112,6 +124,22 @@ const actionButtonIcon = computed(() => {
 })
 
 
+const shoppingList = computed(() => {
+    const lists = [] as ShoppingList[]
+    entries.value.forEach(e => {
+        if (e.shoppingLists) {
+            e.shoppingLists.forEach(l => {
+                if (lists.findIndex(sl => sl.id == l.id) == -1) {
+                    lists.push(l)
+                }
+            })
+        }
+    })
+
+    return lists
+})
+
+
 /**
  * calculate the amounts for the given line
  * can combine 1 to n entries with the same unit
@@ -123,34 +151,34 @@ const amounts = computed((): ShoppingLineAmount[] => {
     for (let i in entries.value) {
         let e = entries.value[i]
 
-        if (isEntryVisible(e, useUserPreferenceStore().deviceSettings)) {
-            let unit = -1
-            if (e.unit !== undefined && e.unit !== null) {
-                unit = e.unit.id!
-            }
 
-            if (e.amount > 0) {
+        let unit = -1
+        if (e.unit !== undefined && e.unit !== null) {
+            unit = e.unit.id!
+        }
 
-                let uaMerged = false
-                unitAmounts.forEach(ua => {
-                    if (((ua.unit == null && e.unit == null) || (ua.unit != null && ua.unit.id! == unit)) && ua.checked == e.checked && ua.delayed == isDelayed(e)) {
-                        ua.amount += e.amount
-                        uaMerged = true
-                    }
-                })
+        if (e.amount > 0) {
 
-                if (!uaMerged) {
-                    unitAmounts.push({
-                        key: `${unit}_${e.checked}_${isDelayed(e)}`,
-                        amount: e.amount,
-                        unit: e.unit,
-                        checked: e.checked,
-                        delayed: isDelayed(e)
-                    } as ShoppingLineAmount)
+            let uaMerged = false
+            unitAmounts.forEach(ua => {
+                if (((ua.unit == null && e.unit == null) || (ua.unit != null && ua.unit.id! == unit)) && ua.checked == e.checked && ua.delayed == isDelayed(e)) {
+                    ua.amount += e.amount
+                    uaMerged = true
                 }
+            })
+
+            if (!uaMerged) {
+                unitAmounts.push({
+                    key: `${unit}_${e.checked}_${isDelayed(e)}`,
+                    amount: e.amount,
+                    unit: e.unit,
+                    checked: e.checked,
+                    delayed: isDelayed(e)
+                } as ShoppingLineAmount)
             }
         }
     }
+
     return unitAmounts
 })
 
@@ -171,29 +199,28 @@ const infoRow = computed(() => {
     for (let i in entries.value) {
         let e = entries.value[i]
 
-        if (isEntryVisible(e, useUserPreferenceStore().deviceSettings)) {
 
-            if (authors.indexOf(e.createdBy.displayName) === -1) {
-                authors.push(e.createdBy.displayName)
-            }
-
-            if (e.listRecipe != null) {
-                if (e.listRecipeData.recipe != null) {
-                    let recipe_name = e.listRecipeData.recipeData.name
-                    if (recipes.indexOf(recipe_name) === -1) {
-                        recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
-                    }
-                }
-
-                if (e.listRecipeData.mealplan != null) {
-                    let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + (e.listRecipeData.mealPlanData.mealType.name.length > 8 ? '..' : '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
-                    if (meal_pans.indexOf(meal_plan_entry) === -1) {
-                        meal_pans.push(meal_plan_entry)
-                    }
-                }
-            }
-
+        if (authors.indexOf(e.createdBy.displayName) === -1) {
+            authors.push(e.createdBy.displayName)
         }
+
+        if (e.listRecipe != null) {
+            if (e.listRecipeData.recipe != null) {
+                let recipe_name = e.listRecipeData.recipeData.name
+                if (recipes.indexOf(recipe_name) === -1) {
+                    recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
+                }
+            }
+
+            if (e.listRecipeData.mealplan != null) {
+                let meal_plan_entry = (e.listRecipeData.mealPlanData.mealType.name.substring(0, 8) || '') + (e.listRecipeData.mealPlanData.mealType.name.length > 8 ? '..' : '') + ' (' + DateTime.fromJSDate(e.listRecipeData.mealPlanData.fromDate).toLocaleString(DateTime.DATE_SHORT) + ')'
+                if (meal_pans.indexOf(meal_plan_entry) === -1) {
+                    meal_pans.push(meal_plan_entry)
+                }
+            }
+        }
+
+
     }
 
     if (useUserPreferenceStore().deviceSettings.shopping_item_info_created_by && authors.length > 0) {
@@ -247,4 +274,22 @@ function handleSwipe() {
 
 <style>
 /* TODO swipe system classes removed because not working (visually, touch detection was working), retrieve from old ShoppingLineItem VCS */
+
+
+/* 2. Container to wrap the color bars and place them to the far left */
+.color-marker-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 3px;
+    display: flex;
+    flex-direction: column;
+}
+
+.color-marker-container span {
+    width: 100%;
+    flex-grow: 1;
+}
+
 </style>
