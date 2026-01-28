@@ -1188,7 +1188,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         #                     'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent']
         read_only_fields = ['image', 'keywords', 'working_time',
                             'waiting_time', 'created_by', 'created_at', 'updated_at',
-                            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent']
+                            'internal', 'servings', 'servings_text', 'diameter', 'diameter_text', 'rating', 'last_cooked', 'new', 'recent']
 
 
 class RecipeSerializer(RecipeBaseSerializer):
@@ -1211,7 +1211,7 @@ class RecipeSerializer(RecipeBaseSerializer):
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'rating',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
             'last_cooked', 'private', 'shared'
         )
         read_only_fields = ['image', 'created_by', 'created_at', 'food_properties']
@@ -1295,9 +1295,9 @@ class FoodBatchUpdateSerializer(serializers.Serializer):
     child_inherit_fields_set = serializers.ListField(child=serializers.IntegerField())
     child_inherit_fields_remove_all = serializers.BooleanField(default=False)
 
-    shopping_lists_add = serializers.ListField(child=serializers.IntegerField(),required=False)
-    shopping_lists_remove = serializers.ListField(child=serializers.IntegerField(),required=False)
-    shopping_lists_set = serializers.ListField(child=serializers.IntegerField(),required=False)
+    shopping_lists_add = serializers.ListField(child=serializers.IntegerField(), required=False)
+    shopping_lists_remove = serializers.ListField(child=serializers.IntegerField(), required=False)
+    shopping_lists_set = serializers.ListField(child=serializers.IntegerField(), required=False)
     shopping_lists_remove_all = serializers.BooleanField(default=False)
 
     substitute_children = serializers.BooleanField(required=False, allow_null=True)
@@ -2062,6 +2062,7 @@ class ImportOpenDataMetaDataSerializer(serializers.Serializer):
 class IngredientParserRequestSerializer(serializers.Serializer):
     ingredient = serializers.CharField(required=False)
     ingredients = serializers.ListField(child=serializers.CharField(), required=False)
+
 
 class IngredientParserResponseSerializer(serializers.Serializer):
     ingredient = IngredientSimpleSerializer(many=False, allow_null=True)

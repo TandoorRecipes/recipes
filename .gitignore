@@ -93,3 +93,4 @@ cookbook/tests/other/docs/reports/tests/tests.html
 cookbook/tests/other/docs/reports/tests/pytest.xml
 vue3/src/plugins
 .idea/vcs.xml
+.idea/db-forest-config.xml
