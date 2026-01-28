@@ -545,7 +545,7 @@
   "SpaceMembers": "Space Members",
   "SpaceMembersHelp": "Users and their permissions in a space. Add additional users using invite links.",
   "SpaceName": "Space Name",
-  "SpacePrivateObjectsHelp": " Some things are private by default an can be shared with members of your space.",
+  "SpacePrivateObjectsHelp": "Some things are private by default and can be shared with members of your space.",
   "SpaceSettings": "Space Settings",
   "Space_Cosmetic_Settings": "Some cosmetic settings can be changed by space administrators and will override client settings for that space.",
   "Split": "Split",
