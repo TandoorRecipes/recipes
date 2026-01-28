@@ -39,7 +39,8 @@ import type {
   ImportOpenDataMetaData,
   ImportOpenDataResponse,
   Ingredient,
-  IngredientString,
+  IngredientParserRequest,
+  IngredientParserResponse,
   InviteLink,
   Keyword,
   Localization,
@@ -100,7 +101,6 @@ import type {
   PaginatedUserFileList,
   PaginatedUserSpaceList,
   PaginatedViewLogList,
-  ParsedIngredient,
   PatchedAccessToken,
   PatchedAiProvider,
   PatchedAutomation,
@@ -235,8 +235,10 @@ import {
     ImportOpenDataResponseToJSON,
     IngredientFromJSON,
     IngredientToJSON,
-    IngredientStringFromJSON,
-    IngredientStringToJSON,
+    IngredientParserRequestFromJSON,
+    IngredientParserRequestToJSON,
+    IngredientParserResponseFromJSON,
+    IngredientParserResponseToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
     KeywordFromJSON,
@@ -357,8 +359,6 @@ import {
     PaginatedUserSpaceListToJSON,
     PaginatedViewLogListFromJSON,
     PaginatedViewLogListToJSON,
-    ParsedIngredientFromJSON,
-    ParsedIngredientToJSON,
     PatchedAccessTokenFromJSON,
     PatchedAccessTokenToJSON,
     PatchedAiProviderFromJSON,
@@ -1221,15 +1221,15 @@ export interface ApiIngredientDestroyRequest {
     id: number;
 }
 
-export interface ApiIngredientFromStringCreateRequest {
-    ingredientString: IngredientString;
-}
-
 export interface ApiIngredientListRequest {
     food?: number;
     page?: number;
     pageSize?: number;
     unit?: number;
+}
+
+export interface ApiIngredientParserPostCreateRequest {
+    ingredientParserRequest?: IngredientParserRequest;
 }
 
 export interface ApiIngredientPartialUpdateRequest {
@@ -8455,44 +8455,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     */
-    async apiIngredientFromStringCreateRaw(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ParsedIngredient>> {
-        if (requestParameters['ingredientString'] == null) {
-            throw new runtime.RequiredError(
-                'ingredientString',
-                'Required parameter "ingredientString" was null or undefined when calling apiIngredientFromStringCreate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/ingredient-from-string/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: IngredientStringToJSON(requestParameters['ingredientString']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ParsedIngredientFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiIngredientFromStringCreate(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ParsedIngredient> {
-        const response = await this.apiIngredientFromStringCreateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
      * logs request counts to redis cache total/per user/
      */
     async apiIngredientListRaw(requestParameters: ApiIngredientListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedIngredientList>> {
@@ -8535,6 +8497,37 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientList(requestParameters: ApiIngredientListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedIngredientList> {
         const response = await this.apiIngredientListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreateRaw(requestParameters: ApiIngredientParserPostCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IngredientParserResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ingredient-parser/post/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: IngredientParserRequestToJSON(requestParameters['ingredientParserRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IngredientParserResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreate(requestParameters: ApiIngredientParserPostCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngredientParserResponse> {
+        const response = await this.apiIngredientParserPostCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

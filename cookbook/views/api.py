@@ -114,7 +114,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer,
+                                 IngredientParserRequestSerializer, IngredientParserResponseSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -3019,6 +3020,47 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         return Response(ServerSettingsSerializer(s, many=False).data)
 
 
+class IngredientParserView(viewsets.GenericViewSet):
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+
+    @extend_schema(request=IngredientParserRequestSerializer(many=False), responses=IngredientParserResponseSerializer(many=False))
+    @decorators.action(detail=False, pagination_class=None, methods=['POST'])
+    def post(self, request, *args, **kwargs):
+        serializer = IngredientParserRequestSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            response_obj = {'ingredient': None, 'ingredients': []}
+            ingredient_parser = IngredientParser(request, False)
+
+            if 'ingredient' in serializer.validated_data and serializer.validated_data['ingredient'].strip():
+                response_obj['ingredient'] = ingredient_parser.parse_as_ingredient(serializer.validated_data['ingredient'])
+
+            if 'ingredients' in serializer.validated_data:
+                for ing in serializer.validated_data['ingredients']:
+                    if ing.strip():
+                        response_obj['ingredients'].append(ingredient_parser.parse_as_ingredient(ing))
+
+            return Response(IngredientParserResponseSerializer(context={'request': request}).to_representation(response_obj))
+
+        return Response({'error': True, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(
+    request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
+    responses=inline_serializer(name="ParsedIngredientSerializer",
+                                fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(),
+                                        'note': CharField(), 'original_text': CharField()})
+)
+@api_view(['POST'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
+def ingredient_from_string(request):
+    text = request.data['text']
+
+    ingredient_parser = IngredientParser(request, False)
+    ingredient =  ingredient_parser.parse_as_ingredient(text)
+
+    return JsonResponse(ingredient, status=200)
+
+
 def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:
         return Dropbox
@@ -3143,33 +3185,3 @@ def meal_plans_to_ical(queryset, filename):
     return response
 
 
-@extend_schema(
-    request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
-    responses=inline_serializer(name="ParsedIngredientSerializer",
-                                fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(),
-                                        'note': CharField(), 'original_text': CharField()})
-)
-@api_view(['POST'])
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-def ingredient_from_string(request):
-    text = request.data['text']
-
-    ingredient_parser = IngredientParser(request, False)
-    amount, unit, food, note = ingredient_parser.parse(text)
-
-    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note, 'original_text': text}
-    if food:
-        if food_obj := Food.objects.filter(space=request.space).filter(Q(name=food) | Q(plural_name=food)).first():
-            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
-        else:
-            food_obj = Food.objects.create(space=request.space, name=food)
-            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
-
-    if unit:
-        if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
-            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
-        else:
-            unit_obj = Unit.objects.create(space=request.space, name=unit)
-            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
-
-    return JsonResponse(ingredient, status=200)

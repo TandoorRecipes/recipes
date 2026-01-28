@@ -997,10 +997,30 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 class IngredientSimpleSerializer(WritableNestedModelSerializer):
     food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True)
-    used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
     amount = CustomDecimalField()
-    conversions = serializers.SerializerMethodField('get_conversions')
     checked = serializers.BooleanField(read_only=True, default=False, help_text='Just laziness to have a checked field on the frontend API client')
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('original_text', None)
+        return super().update(instance, validated_data)
+
+    class Meta:
+        model = Ingredient
+        fields = (
+            'id', 'food', 'unit', 'amount', 'note', 'order',
+            'is_header', 'no_amount', 'original_text', 'checked',
+            'always_use_plural_unit', 'always_use_plural_food',
+        )
+
+
+class IngredientSerializer(IngredientSimpleSerializer):
+    food = FoodSerializer(allow_null=True)
+    used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
+    conversions = serializers.SerializerMethodField('get_conversions')
 
     @extend_schema_field(list)
     def get_used_in_recipes(self, obj):
@@ -1022,14 +1042,6 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         else:
             return []
 
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
-
-    def update(self, instance, validated_data):
-        validated_data.pop('original_text', None)
-        return super().update(instance, validated_data)
-
     class Meta:
         model = Ingredient
         fields = (
@@ -1038,10 +1050,6 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
             'always_use_plural_unit', 'always_use_plural_food',
         )
         read_only_fields = ['conversions', ]
-
-
-class IngredientSerializer(IngredientSimpleSerializer):
-    food = FoodSerializer(allow_null=True)
 
 
 class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
@@ -2049,3 +2057,12 @@ class ImportOpenDataMetaDataSerializer(serializers.Serializer):
     sk = ImportOpenDataVersionMetaDataSerializer()
     sl = ImportOpenDataVersionMetaDataSerializer()
     zh_Hans = ImportOpenDataVersionMetaDataSerializer()
+
+
+class IngredientParserRequestSerializer(serializers.Serializer):
+    ingredient = serializers.CharField(required=False)
+    ingredients = serializers.ListField(child=serializers.CharField(), required=False)
+
+class IngredientParserResponseSerializer(serializers.Serializer):
+    ingredient = IngredientSimpleSerializer(many=False, allow_null=True)
+    ingredients = IngredientSimpleSerializer(many=True)
