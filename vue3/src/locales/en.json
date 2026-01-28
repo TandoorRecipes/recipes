@@ -191,6 +191,7 @@
   "Energy": "Energy",
   "Entries": "Entries",
   "Error": "Error",
+  "ErrorUpdatingImage": "Error updating image. Supported file formats are .jpg, .png, .webp.",
   "ErrorUrlListImport": "An error occured during import of the first URL in the list. All URLs no longer shown have been imported successfully. ",
   "Events": "Events",
   "Export": "Export",

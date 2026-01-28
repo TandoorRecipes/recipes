@@ -196,9 +196,10 @@ import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {mergeAllSteps, mergeStep, splitAllSteps} from "@/utils/step_utils.ts";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {ErrorMessageType, MessageType, StructuredMessage, useMessageStore} from "@/stores/MessageStore.ts";
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
+import {useI18n} from "vue-i18n";
 
 
 const props = defineProps({
@@ -225,6 +226,7 @@ watch([() => props.item, () => props.itemId], () => {
 
 // object specific data (for selects/display)
 const {mobile} = useDisplay()
+const {t} = useI18n()
 
 const tab = ref("recipe")
 const dialogStepManager = ref(false)
@@ -263,9 +265,14 @@ function initializeEditor() {
 function saveRecipe() {
     saveObject().then(() => {
         if (file.value != null && editingObj.value.id) {
+            loading.value = true
             updateRecipeImage(editingObj.value.id, file.value).then(r => {
                 file.value = null
                 setupState(props.item, props.itemId)
+            }).catch(err => {
+                useMessageStore().addMessage(MessageType.ERROR, {title: t('UPDATE_ERROR'), text: t('ErrorUpdatingImage')} as StructuredMessage, 8000)
+            }).finally(() => {
+                loading.value = false
             })
         }
     })

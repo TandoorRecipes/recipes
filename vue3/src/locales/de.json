@@ -193,6 +193,7 @@
   "Energy": "Energie",
   "Entries": "Einträge",
   "Error": "Fehler",
+  "ErrorUpdatingImage": "Fehler beim aktualisieren des Fotos. Unterstützte Dateiformate .jpg, .png, .webp.",
   "ErrorUrlListImport": "Beim importieren der obersten URL in der Liste ist ein Fehler aufgetreten. Alle URLs die nicht mehr in der Liste sind wurden importiert. ",
   "Events": "Ereignisse",
   "Export": "Exportieren",
