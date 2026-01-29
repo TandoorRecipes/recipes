@@ -1,6 +1,6 @@
 import traceback
 import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
 from html import escape
@@ -1247,12 +1247,6 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
         fields = ['image', 'image_url', ]
 
 
-class RecipeImportSerializer(SpacedModelSerializer):
-    class Meta:
-        model = RecipeImport
-        fields = '__all__'
-
-
 class RecipeBatchUpdateSerializer(serializers.Serializer):
     recipes = serializers.ListField(child=serializers.IntegerField())
     keywords_add = serializers.ListField(child=serializers.IntegerField())
@@ -1669,7 +1663,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         if obj.email and EMAIL_HOST != '':
             try:
                 if InviteLink.objects.filter(space=self.context['request'].space,
-                                             created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
+                                             created_at__gte=timezone.now() - timedelta(hours=4)).count() < 20:
                     message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(
                         self.context['request'].user.get_user_display_name())
                     message += _(' to join their Tandoor Recipes space ') + escape(
