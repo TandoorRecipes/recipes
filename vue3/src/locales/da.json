@@ -661,5 +661,6 @@
     "view_recipe": "Vis opskrift",
     "warning_duplicate_filter": "Advarsel: På grund af tekniske begrænsninger, kan det give uforventede resultater at have flere filtre med den samme kombination af (og/eller/not).",
     "warning_feature_beta": "Denne funktion er i øjeblikket i BETA (test)-stadie. Forvent fejl og fremtidige ændringer (hvor data kan mistes) ved brug af denne funktion.",
-    "warning_space_delete": "Du kan slette dit rum inklusiv alle opskrifter, indkøbslister, madplaner og alt andet du har oprettet. Dette kan ikke gøres om! Er du sikker på at du vil gøre dette?"
+    "warning_space_delete": "Du kan slette dit rum inklusiv alle opskrifter, indkøbslister, madplaner og alt andet du har oprettet. Dette kan ikke gøres om! Er du sikker på at du vil gøre dette?",
+    "AI": "AI"
 }
