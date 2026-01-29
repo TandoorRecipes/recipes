@@ -151,6 +151,8 @@
   "Default": "Default",
   "DefaultPage": "Default Page",
   "DefaultShoppingListHelp": "Default List when this Food is added to the Shoppinglist.",
+  "DefaultUnit": "Default Unit",
+  "DefaultUnitHelp": "Unit used for property calculations when ingredients have no unit specified.",
   "Default_Unit": "Default Unit",
   "DelayFor": "Delay for {hours} hours",
   "DelayUntil": "Delay Until",
