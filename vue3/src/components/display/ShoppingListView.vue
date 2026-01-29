@@ -103,7 +103,7 @@
 
     <v-window v-model="currentTab">
         <v-window-item value="shopping">
-            <v-container>
+            <v-container :class="{'pa-1': props.mealPlanId != undefined}">
                 <!--                <v-row class="pa-0" dense>-->
                 <!--                    <v-col class="pa-0">-->
                 <!--                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">-->

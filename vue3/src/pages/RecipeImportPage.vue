@@ -512,7 +512,7 @@
 
                             <v-stepper-window-item value="url_list_import">
 
-                                <v-progress-linear :height="16" :model-value="urlListImportedRecipes.length / urlListImportInput.split('\n').length * 100">
+                                <v-progress-linear color="primary" :height="24" :model-value="urlListImportedRecipes.length / urlListImportInput.split('\n').length * 100">
                                     {{ urlListImportedRecipes.length }} / {{ urlListImportInput.split('\n').length }}
                                 </v-progress-linear>
 

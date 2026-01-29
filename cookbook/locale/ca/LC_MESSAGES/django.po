@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-04-29 02:39+0000\n"
-"Last-Translator: Nico G <aprops@gmail.com>\n"
+"PO-Revision-Date: 2026-01-18 02:57+0000\n"
+"Last-Translator: Oitantksi <oitantksi+tandoortranslate@posteo.net>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
 "Language: ca\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -127,10 +127,8 @@ msgid "ferment"
 msgstr "fermentar"
 
 #: .\cookbook\helper\recipe_url_import.py:325
-#, fuzzy
-#| msgid "Last cooked"
 msgid "slow cook"
-msgstr "Darrera cocció"
+msgstr "cocció lenta"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
@@ -138,7 +136,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "tetera"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
@@ -150,27 +148,27 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr ""
+msgstr "alta temperatura"
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr ""
+msgstr "arrossera"
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
-msgstr ""
+msgstr "caramelitzar"
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr ""
+msgstr "pelador"
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
-msgstr ""
+msgstr "mandolina"
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "ratllador"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
@@ -236,7 +234,7 @@ msgstr "Hidrats de carboni"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "colesterol"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -245,33 +243,31 @@ msgstr "Greix"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Fibra"
 
 #: .\cookbook\integration\mealie1.py:215
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
-msgstr "Proteïnes"
+msgstr "Proteïna"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Greixos Saturats"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Sodi"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Sucre"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr ""
+msgstr "Greixos Trans"
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Greixos Insaturats"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -485,7 +481,7 @@ msgstr "Límit de càrrega de fitxers Assolit."
 
 #: .\cookbook\serializer.py:281
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Aquest tipus de fitxer no està permès."
 
 #: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
 msgid ""
@@ -494,7 +490,7 @@ msgstr "Has assolit la quantitat màxima d'espais que pots tenir."
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "El nom de l'espai ha de ser únic."
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
@@ -842,10 +838,8 @@ msgid "We are sorry, but the sign up is currently closed."
 msgstr "Inicis de Sessió tancats temporalment."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
-#, fuzzy
-#| msgid "Tandoor Recipes Invite"
 msgid "Tandoor Recipe Manager"
-msgstr "Invitació de receptes Tandoor"
+msgstr "Gestor de receptes Tandoor"
 
 #: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
@@ -1052,7 +1046,7 @@ msgstr "Contacta amb l'administrador."
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
 msgid "No Permission"
-msgstr "Sense Permisos"
+msgstr "Sense Permis"
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
@@ -1436,10 +1430,8 @@ msgstr ""
 "formulari:"
 
 #: .\cookbook\templates\socialaccount\signup.html:32
-#, fuzzy
-#| msgid "I accept the follwoing"
 msgid "I accept the following"
-msgstr "Accepto el Següent"
+msgstr "Accepto el següent"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -1522,15 +1514,6 @@ msgid "System"
 msgstr "Sistema"
 
 #: .\cookbook\templates\system.html:24
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "        Django Recipes is an open source free software application. It "
-#| "can be found on\n"
-#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-#| "recipes/releases\">here</a>.\n"
-#| "    "
 msgid ""
 "\n"
 "        Tandoor Recipes is an open source free software application. It can "
@@ -1541,11 +1524,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Django Recipes és una aplicació de programari lliure de codi obert. "
+"        Tandoor Recipes és una aplicació de programari lliure de codi obert. "
 "Es pot trobar a\n"
-"          <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"          Els registres de canvis es poden trobar <a href=\"https://github."
-"com/vabene1111/recipes/releases\">aquí</a>.\n"
+"          <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>.\n"
+"          Els registres de canvis es poden trobar <a href="
+"\"https://github.com/TandoorRecipes/recipes/releases\">aquí</a>.\n"
 "    "
 
 #: .\cookbook\templates\system.html:30
@@ -1567,7 +1550,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:56
 msgid "Plugins"
-msgstr ""
+msgstr "Connectors"
 
 #: .\cookbook\templates\system.html:67
 msgid "Media Serving"
@@ -1794,17 +1777,12 @@ msgid "{obj.name} was added to the shopping list."
 msgstr "Afegit {obj.name} a la llista de la compra."
 
 #: .\cookbook\views\api.py:1239
-#, fuzzy
-#| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgid "Filter meal plans from date (inclusive)."
-msgstr ""
-"Filtrar els plans d'àpats des de la data (inclosa) en el format AAAA-MM-DD."
+msgstr "Filtrar els plans d'àpats des de la data (inclosa)."
 
 #: .\cookbook\views\api.py:1241
-#, fuzzy
-#| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgid "Filter meal plans to date (inclusive)."
-msgstr "Filtreu els plans de menús actuals (inclosos) en el format AAAA-MM-DD."
+msgstr "Filtreu els plans d'àpats fins la data (inclosa)."
 
 #: .\cookbook\views\api.py:1244
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -1946,90 +1924,54 @@ msgstr "Valoració que hauria de tenir una recepta. [0 - 5]"
 
 #: .\cookbook\views\api.py:1468
 msgid "Filter recipes cooked X times."
-msgstr ""
+msgstr "Filtra les receptes cuinades X vegades."
 
 #: .\cookbook\views\api.py:1469
-#, fuzzy
-#| msgid ""
-#| "Filter recipes cooked X times or more.  Negative values returns cooked "
-#| "less than X times"
 msgid "Filter recipes cooked X times or more."
-msgstr ""
-"Filtra les receptes cuinades X vegades o més.   Els valors negatius retornen "
-"les receptes cuinades menys de X vegades"
+msgstr "Filtra les receptes cuinades X vegades o més."
 
 #: .\cookbook\views\api.py:1470
 msgid "Filter recipes cooked X times or less."
-msgstr ""
+msgstr "Filtra les receptes cuinades X vegades o menys."
 
 #: .\cookbook\views\api.py:1472
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes created on the given date."
-msgstr "Filtrar les entrades amb la recepta especificada"
+msgstr "Filtrar les receptes creades en la data especificada."
 
 #: .\cookbook\views\api.py:1473
-#, fuzzy
-#| msgid ""
-#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-#| "before date."
 msgid "Filter recipes created on the given date or after."
-msgstr ""
-"Filtra les receptes que s'han creat el AAAA-MM-DD o després. Prefixació: "
-"filtra la data exacta o abans de la data."
+msgstr "Filtra les receptes creades en una data determinada o posteriorment."
 
 #: .\cookbook\views\api.py:1474
-#, fuzzy
-#| msgid ""
-#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-#| "before date."
 msgid "Filter recipes created on the given date or before."
-msgstr ""
-"Filtra les receptes que s'han creat el AAAA-MM-DD o després. Prefixació: "
-"filtra la data exacta o abans de la data."
+msgstr "Filtra les receptes creades en una data determinada o anteriorment."
 
 #: .\cookbook\views\api.py:1476 .\cookbook\views\api.py:1477
 #: .\cookbook\views\api.py:1478
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes updated on the given date."
-msgstr "Filtrar les entrades amb la recepta especificada"
+msgstr "Filtrar les receptes actualitzades en la data especificada."
 
 #: .\cookbook\views\api.py:1480
-#, fuzzy
-#| msgid ""
-#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
 msgid "Filter recipes last cooked on the given date or after."
 msgstr ""
-"Filtra les receptes que s'han cuinat per última vegada el AAAA-MM-DD o "
-"després. Prefixació: filtra la data exacta o abans de la data."
+"Filtra les receptes cuinades per darrera vegada en una data determinada o "
+"posteriorment."
 
 #: .\cookbook\views\api.py:1481
-#, fuzzy
-#| msgid ""
-#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
 msgid "Filter recipes last cooked on the given date or before."
 msgstr ""
-"Filtra les receptes que s'han cuinat per última vegada el AAAA-MM-DD o "
-"després. Prefixació: filtra la data exacta o abans de la data."
+"Filtra les receptes cuinades per darrera vegada en una data determinada o "
+"anteriorment."
 
 #: .\cookbook\views\api.py:1483 .\cookbook\views\api.py:1484
-#, fuzzy
-#| msgid ""
-#| "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
 msgid "Filter recipes lasts viewed on the given date."
 msgstr ""
-"Filtra les receptes que s'han visitat per última vegada el AAAA-MM-DD o "
-"després. Prefixació: filtra la data exacta o abans de la data."
+"Filtra les receptes que s'han visitat per darrera vegada en la data "
+"determinada."
 
 #: .\cookbook\views\api.py:1486
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes for ones created by the given user ID"
-msgstr "Filtrar les entrades amb la recepta especificada"
+msgstr "Filtrar les receptes creades per l'usuari amb un ID determinat"
 
 #: .\cookbook\views\api.py:1487
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
@@ -2075,10 +2017,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\api.py:1804 .\cookbook\views\api.py:1860
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Returns only entries associated with the given mealplan id"
-msgstr "Filtrar les entrades amb la recepta especificada"
+msgstr "Retorna només entrades asociades amb l'id de pla d'àpats determinat"
 
 #: .\cookbook\views\api.py:1858
 msgid ""
@@ -2086,15 +2026,11 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\api.py:2031
-#, fuzzy
-#| msgid ""
-#| "Return the Automations matching the automation type.  Multiple values "
-#| "allowed."
 msgid ""
 "Return the Automations matching the automation type.  Repeat for multiple."
 msgstr ""
-"Retorna l'entrada de la llista de la compra amb una clau primària de "
-"l'identificador. Es permeten múltiples valors."
+"Retorna les automatitzacions que coincideixen amb el tipus d'automatització.·"
+" ·Repeteix per a múltiples."
 
 #: .\cookbook\views\api.py:2048
 msgid ""
@@ -2107,14 +2043,10 @@ msgid "Only return InviteLinks that have not been used yet."
 msgstr ""
 
 #: .\cookbook\views\api.py:2076
-#, fuzzy
-#| msgid ""
-#| "Return the Automations matching the automation type.  Multiple values "
-#| "allowed."
 msgid "Return the CustomFilters matching the model type.  Repeat for multiple."
 msgstr ""
-"Retorna l'entrada de la llista de la compra amb una clau primària de "
-"l'identificador. Es permeten múltiples valors."
+"Retorna els filtres personalitzats que coincideixen amb el tipus de model.· ·"
+"Repeteix per a múltiples."
 
 #: .\cookbook\views\api.py:2176
 msgid "Nothing to do."

@@ -2,7 +2,7 @@
     <model-editor-base
         :loading="loading"
         :dialog="dialog"
-        @save="saveObject().then((obj:MealPlan) => { useMealPlanStore().plans.set(obj.id, obj); loadShoppingListEntries()})"
+        @save="saveObject().then((obj:MealPlan) => { useMealPlanStore().plans.set(obj.id, obj);})"
         @delete="useMealPlanStore().plans.delete(editingObj.id); deleteObject()"
         @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
@@ -33,7 +33,7 @@
                                 <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate()">
                                     {{ $t('Add') }}
                                     <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj"
-                                                            @created="loadShoppingListEntries(); editingObj.shopping = true;"></add-to-shopping-dialog>
+                                                            @created="editingObj.shopping = true;"></add-to-shopping-dialog>
                                 </v-btn>
 
                                 <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details v-if="editingObj.recipe && !isUpdate()"></v-checkbox>
@@ -144,6 +144,16 @@ const tab = ref('plan')
 
 const dateRangeValue = ref([] as Date[])
 
+/**
+ * update shopping list when switching to shopping tab
+ */
+watch(() => tab.value, (newVal, oldVal) => {
+    if (newVal == 'shopping') {
+        useShoppingStore().selectedMealPlan = editingObj.value.id
+        useShoppingStore().updateEntriesStructure()
+    }
+})
+
 onMounted(() => {
     initializeEditor()
 })
@@ -199,9 +209,6 @@ function initializeEditor() {
             }, existingItemFunction: () => {
                 editingObj.value = structuredClone(toRaw(editingObj.value))
                 initializeDateRange()
-
-                useShoppingStore().selectedMealPlan = editingObj.value.id
-                useShoppingStore().updateEntriesStructure()
             }
         },)
     })
