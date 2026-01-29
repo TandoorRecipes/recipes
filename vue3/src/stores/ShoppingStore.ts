@@ -51,12 +51,27 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     let syncQueueRunning = ref(false)
 
     let entriesByGroup = shallowRef([] as IShoppingListCategory[])
+    let entriesByGroupMealPlan = shallowRef([] as IShoppingListCategory[])
+    let selectedMealPlan = ref<number|undefined>(undefined)
+
+    /**
+     * update the variable that displays the shopping list
+     * split from getEntriesStructure so its reusable for meal plan
+     */
+    function updateEntriesStructure() {
+        entriesByGroup.value = getEntriesStructure()
+
+        if(selectedMealPlan.value != undefined) {
+            console.log("updateEntriesStructure for meal plan " + selectedMealPlan.value)
+            entriesByGroupMealPlan.value = getEntriesStructure(selectedMealPlan.value)
+        }
+    }
 
     /**
      * build a multi-level data structure ready for display from shopping list entries
      * group by selected grouping key
      */
-    function updateEntriesStructure() {
+    function getEntriesStructure(mealPlanId: number | undefined = undefined) {
         let structure = {} as IShoppingList
         structure.categories = new Map<string, IShoppingListCategory>
 
@@ -73,7 +88,9 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         // build structure
         globalEntriesMap.value.forEach(shoppingListEntry => {
             if (isEntryVisible(shoppingListEntry, deviceSettings)) {
-                structure = updateEntryInStructure(structure, shoppingListEntry)
+                if (mealPlanId == undefined || shoppingListEntry.listRecipe && shoppingListEntry.listRecipeData.mealplan == mealPlanId) {
+                    structure = updateEntryInStructure(structure, shoppingListEntry)
+                }
             }
         })
 
@@ -90,7 +107,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             }
         })
 
-        entriesByGroup.value = orderedStructure
+        return orderedStructure
     }
 
     /**
@@ -158,25 +175,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                     })
                 })
             })
-        })
-
-        return items
-    }
-
-    /**
-     * very simple list of shopping list entries as IShoppingListFood array filtered by a certain mealplan
-     * @param mealPlanId ID of mealplan
-     */
-    function getMealPlanEntries(mealPlanId: number) {
-        let items: IShoppingListFood[] = []
-
-        globalEntriesMap.value.forEach(shoppingListEntry => {
-            if (shoppingListEntry.listRecipe && shoppingListEntry.listRecipeData.mealplan == mealPlanId) {
-                items.push({
-                    food: shoppingListEntry.food,
-                    entries: new Map<number, ShoppingListEntry>().set(shoppingListEntry.id!, shoppingListEntry)
-                } as IShoppingListFood)
-            }
         })
 
         return items
@@ -713,6 +711,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         undoStack,
         totalFoods,
         shoppingLists,
+        selectedMealPlan,
         refreshFromAPI,
         autoSync,
         createObject,
@@ -723,7 +722,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         setFoodIgnoredState,
         delayEntries: setEntriesDelayedState,
         getAssociatedRecipes,
-        getMealPlanEntries,
+        getEntriesStructure,
+        entriesByGroupMealPlan,
         updateCategories,
         updateEntryShoppingLists,
         loadShoppingLists,

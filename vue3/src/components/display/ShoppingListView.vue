@@ -1,5 +1,5 @@
 <template>
-    <v-tabs v-model="currentTab" v-if="!selectEnabled">
+    <v-tabs v-model="currentTab" v-if="!selectEnabled && props.mealPlanId == undefined">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
             class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{ useShoppingStore().totalFoods }})</span></v-tab>
@@ -80,7 +80,7 @@
     </v-tabs>
     <v-banner class="pt-0 pb-0 bg-info" v-if="selectEnabled">
         <template #prepend>
-            <v-btn icon="$close" variant="plain" @click="selectEnabled = false" lines="1"></v-btn>
+            <v-btn icon="$close" variant="plain" @click="selectEnabled = false; selectedLines = [];" lines="1"></v-btn>
         </template>
 
         <shopping-list-select-chip
@@ -103,7 +103,7 @@
 
     <v-window v-model="currentTab">
         <v-window-item value="shopping">
-            <v-container>
+            <v-container :class="{'pa-1': props.mealPlanId != undefined}">
                 <!--                <v-row class="pa-0" dense>-->
                 <!--                    <v-col class="pa-0">-->
                 <!--                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">-->
@@ -115,16 +115,26 @@
                 <v-row class="pa-0" dense>
                     <v-col class="pa-0">
                         <v-chip-group>
-                            <v-btn label size="small" variant="outlined" @click="selectEnabled = !selectEnabled">
+                            <!-- enable selection -->
+                            <v-btn label size="small" variant="outlined" @click="selectEnabled = true;  selectedLines= []" v-if="!selectEnabled">
                                 <v-icon icon="fa-solid fa-list-check"></v-icon>
                             </v-btn>
 
+                            <!-- select all/none -->
+                            <v-btn label size="small" variant="outlined" @click="selectAll(); " v-if="!isAllSelected() && selectEnabled">
+                                <v-icon icon="fa-solid fa-square-check"></v-icon>
+                            </v-btn>
+                            <v-btn label size="small" variant="outlined" @click="selectedLines = []; " v-if="isAllSelected() && selectEnabled">
+                                <v-icon icon="fa-regular fa-square"></v-icon>
+                            </v-btn>
+
+                            <!-- undo -->
                             <v-btn label size="small" class="ms-1" variant="outlined" @click="useShoppingStore().undoChange()" :disabled="useShoppingStore().undoStack.length == 0">
                                 <v-icon icon="fa-solid fa-rotate-left"></v-icon>
                             </v-btn>
 
                             <v-chip label size="small" variant="outlined" class="ms-1 me-0 mt-0 mb-0 h-100" style="max-width: 50%;" :prepend-icon="TSupermarket.icon"
-                                    append-icon="fa-solid fa-caret-down">
+                                    append-icon="fa-solid fa-caret-down" v-if="props.mealPlanId == undefined">
                             <span v-if="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null">
                                 {{ useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.name }}
                             </span>
@@ -169,7 +179,7 @@
                             </template>
                         </v-alert>
 
-                        <shopping-list-entry-input></shopping-list-entry-input>
+                        <shopping-list-entry-input :meal-plan-id="props.mealPlanId"></shopping-list-entry-input>
 
                         <v-list class="mt-3" density="compact" v-if="!useShoppingStore().initialized">
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
@@ -178,11 +188,26 @@
                             <v-skeleton-loader type="list-item"></v-skeleton-loader>
                         </v-list>
                         <v-list class="mt-3" density="compact" v-model:selected="selectedLines" select-strategy="leaf" v-else>
-                            <template v-for="category in useShoppingStore().entriesByGroup" :key="category.name">
+                            <template v-for="category in shoppingListItems" :key="category.name">
 
 
-                                <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
-                                <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
+                                <v-list-subheader :style="subheaderStyle" v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY">
+
+                                    <v-btn color="secondary" variant="text" icon="fa-regular fa-square" @click="selectAll(category)"
+                                           v-if="selectEnabled && !isAllSelected(category)"></v-btn>
+                                    <v-btn color="secondary" variant="text" icon="fa-solid fa-square-check" @click="deselectCategory(category)"
+                                           v-if="selectEnabled && isAllSelected(category)"></v-btn>
+                                    <i>{{ $t('NoCategory') }}</i>
+
+                                </v-list-subheader>
+
+                                <v-list-subheader :style="subheaderStyle" v-else>
+                                    <v-btn color="secondary" variant="text" icon="fa-regular fa-square" @click="selectAll(category)"
+                                           v-if="selectEnabled && !isAllSelected(category)"></v-btn>
+                                    <v-btn color="secondary" variant="text" icon="fa-solid fa-square-check" @click="deselectCategory(category)"
+                                           v-if="selectEnabled && isAllSelected(category)"></v-btn>
+                                    {{ category.name }}
+                                </v-list-subheader>
                                 <v-divider></v-divider>
 
                                 <template v-for="[i, value] in category.foods" :key="value.food.id">
@@ -197,6 +222,7 @@
                     </v-col>
                 </v-row>
 
+                <!-- DEBUG views -->
                 <v-row v-if="useUserPreferenceStore().deviceSettings.shopping_show_debug">
                     <v-col cols="12" md="4">
                         <v-card>
@@ -322,7 +348,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
+import {IShoppingListCategory, IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
@@ -338,6 +364,10 @@ import ShoppingListSelectChip from "@/components/inputs/ShoppingListSelectChip.v
 import CategorySelectChip from "@/components/inputs/CategorySelectChip.vue";
 
 const {t} = useI18n()
+
+const props = defineProps({
+    mealPlanId: {type: Number, required: false}
+})
 
 const exportDialog = ref(false)
 const currentTab = ref("shopping")
@@ -357,6 +387,27 @@ const groupingOptionsItems = computed(() => {
         items.push({'title': t(x), 'value': x})
     })
     return items
+})
+
+/**
+ * return the correct pre-cached entries structure depending on where the shopping lsit view is shown
+ */
+const shoppingListItems = computed(() => {
+    if (props.mealPlanId != undefined) {
+        return useShoppingStore().entriesByGroupMealPlan
+    } else {
+        return useShoppingStore().entriesByGroup
+    }
+})
+
+/**
+ * change style of subheaders depending on select mode
+ */
+const subheaderStyle = computed(() => {
+    if (selectEnabled.value) {
+        return 'padding-inline-start: 0!important'
+    }
+    return ''
 })
 
 watch(() => useUserPreferenceStore().deviceSettings, () => {
@@ -473,6 +524,49 @@ function batchUpdateShoppingLists() {
 function batchUpdateCategories(category: SupermarketCategory) {
     useShoppingStore().updateCategories(selectedLines.value, category)
     selectedLines.value = []
+}
+
+/**
+ * select all entries or all entries of a given category
+ * @param category
+ */
+function selectAll(category: IShoppingListCategory | undefined = undefined) {
+    shoppingListItems.value.forEach(sLC => {
+        if (category != undefined && sLC.name !== category.name) return
+        selectedLines.value = selectedLines.value.concat(Array.from(sLC.foods.values()))
+    })
+}
+
+/**
+ * remove the foods that are within a given category from the selected lines array
+ * @param category
+ */
+function deselectCategory(category: IShoppingListCategory) {
+    const categoryFoodIds = new Set(Array.from(category.foods.values()).map(f => f.food.id));
+    selectedLines.value = selectedLines.value.filter(f => !categoryFoodIds.has(f.food.id));
+}
+
+/**
+ * check if all foods of a certain category are included in the selected lines array
+ * @param category
+ */
+function isAllSelected(category: IShoppingListCategory | undefined = undefined) {
+    let selected = true
+    if (category) {
+        category.foods.forEach(f => {
+            if (!selectedLines.value.includes(f)) {
+                selected = false
+                return selected
+            }
+        })
+    } else {
+        let count = 0
+        shoppingListItems.value.forEach(category => {
+            count += category.foods.size
+        })
+        selected = selectedLines.value.length === count
+    }
+    return selected
 }
 
 </script>

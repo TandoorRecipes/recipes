@@ -1,5 +1,5 @@
 <template>
-    <v-chip label density="compact" class="ms-1" variant="outlined"
+    <v-chip label size="small" class="ms-1" variant="outlined"
             append-icon="fa-solid fa-caret-down" :prepend-icon="TSupermarketCategory.icon">
         {{ $t('Category') }}
 

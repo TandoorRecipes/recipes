@@ -39,7 +39,8 @@ import type {
   ImportOpenDataMetaData,
   ImportOpenDataResponse,
   Ingredient,
-  IngredientString,
+  IngredientParserRequest,
+  IngredientParserResponse,
   InviteLink,
   Keyword,
   Localization,
@@ -100,7 +101,6 @@ import type {
   PaginatedUserFileList,
   PaginatedUserSpaceList,
   PaginatedViewLogList,
-  ParsedIngredient,
   PatchedAccessToken,
   PatchedAiProvider,
   PatchedAutomation,
@@ -235,8 +235,10 @@ import {
     ImportOpenDataResponseToJSON,
     IngredientFromJSON,
     IngredientToJSON,
-    IngredientStringFromJSON,
-    IngredientStringToJSON,
+    IngredientParserRequestFromJSON,
+    IngredientParserRequestToJSON,
+    IngredientParserResponseFromJSON,
+    IngredientParserResponseToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
     KeywordFromJSON,
@@ -357,8 +359,6 @@ import {
     PaginatedUserSpaceListToJSON,
     PaginatedViewLogListFromJSON,
     PaginatedViewLogListToJSON,
-    ParsedIngredientFromJSON,
-    ParsedIngredientToJSON,
     PatchedAccessTokenFromJSON,
     PatchedAccessTokenToJSON,
     PatchedAiProviderFromJSON,
@@ -1221,15 +1221,15 @@ export interface ApiIngredientDestroyRequest {
     id: number;
 }
 
-export interface ApiIngredientFromStringCreateRequest {
-    ingredientString: IngredientString;
-}
-
 export interface ApiIngredientListRequest {
     food?: number;
     page?: number;
     pageSize?: number;
     unit?: number;
+}
+
+export interface ApiIngredientParserPostCreateRequest {
+    ingredientParserRequest?: IngredientParserRequest;
 }
 
 export interface ApiIngredientPartialUpdateRequest {
@@ -2565,11 +2565,6 @@ export interface ApiUserPreferenceRetrieveRequest {
 
 export interface ApiUserRetrieveRequest {
     id: number;
-}
-
-export interface ApiUserSpaceAllPersonalListRequest {
-    page?: number;
-    pageSize?: number;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -8455,44 +8450,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     */
-    async apiIngredientFromStringCreateRaw(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ParsedIngredient>> {
-        if (requestParameters['ingredientString'] == null) {
-            throw new runtime.RequiredError(
-                'ingredientString',
-                'Required parameter "ingredientString" was null or undefined when calling apiIngredientFromStringCreate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/ingredient-from-string/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: IngredientStringToJSON(requestParameters['ingredientString']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ParsedIngredientFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiIngredientFromStringCreate(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ParsedIngredient> {
-        const response = await this.apiIngredientFromStringCreateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
      * logs request counts to redis cache total/per user/
      */
     async apiIngredientListRaw(requestParameters: ApiIngredientListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedIngredientList>> {
@@ -8535,6 +8492,37 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientList(requestParameters: ApiIngredientListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedIngredientList> {
         const response = await this.apiIngredientListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreateRaw(requestParameters: ApiIngredientParserPostCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IngredientParserResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ingredient-parser/post/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: IngredientParserRequestToJSON(requestParameters['ingredientParserRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IngredientParserResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreate(requestParameters: ApiIngredientParserPostCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngredientParserResponse> {
+        const response = await this.apiIngredientParserPostCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -19581,16 +19569,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalListRaw(requestParameters: ApiUserSpaceAllPersonalListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
+    async apiUserSpaceAllPersonalListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserSpace>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -19605,14 +19585,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUserSpaceListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserSpaceFromJSON));
     }
 
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalList(requestParameters: ApiUserSpaceAllPersonalListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserSpaceList> {
-        const response = await this.apiUserSpaceAllPersonalListRaw(requestParameters, initOverrides);
+    async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
+        const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
         return await response.value();
     }
 

@@ -1,11 +1,11 @@
 {
     "AI": "IA",
     "AIImportSubtitle": "Utiliser l'IA pour importer des images de recettes.",
-    "AISettingsHostedHelp": "",
+    "AISettingsHostedHelp": "Vous pouvez activer les fonctionnalité d'IA ou modifier les crédits disponible depuis les paramètres de votre abonnement.",
     "API": "API",
-    "API_Browser": "",
-    "API_Documentation": "",
-    "AboutTandoor": "",
+    "API_Browser": "Navigateur d'API",
+    "API_Documentation": "Documentation d'API",
+    "AboutTandoor": "Tandoor est une plaforme libre pour gérer vos recettes, agenda de repas, liste de courses, et plus encore.",
     "AccessTokenHelp": "Clé d'accès pour l'API REST.",
     "Access_Token": "Jeton d'accès",
     "Account": "Compte",
@@ -14,7 +14,7 @@
     "Activity": "Activité",
     "Add": "Ajouter",
     "AddAll": "Tout ajouter",
-    "AddChild": "",
+    "AddChild": "Ajouter une sous-entré",
     "AddFilter": "Ajouter un filtre",
     "AddFoodToShopping": "Ajouter l’aliment {food} à votre liste de courses",
     "AddMany": "Ajouter plusieurs",
@@ -866,5 +866,6 @@
     "view_recipe": "Voir la recette",
     "warning_duplicate_filter": "Attention : en raison de limitations techniques, l'emploi de multiples filtres (and/or/not) peut mener à des résultats inattendus.",
     "warning_feature_beta": "Cette fonctionnalité est actuellement en phase BETA (de test). Veuillez vous attendre à des bogues et éventuellement à des modifications majeures à l'avenir (pouvant entraîner une perte de données liées à la fonctionnalité) lors de l'utilisation de cette fonctionnalité.",
-    "warning_space_delete": "Vous pouvez supprimer votre groupe ainsi que toutes les recettes, listes de courses, menus et autres choses que vous avez créés. Vous ne pourrez pas revenir sur cette suppression ! Êtes-vous sûr de vouloir le faire ?"
+    "warning_space_delete": "Vous pouvez supprimer votre groupe ainsi que toutes les recettes, listes de courses, menus et autres choses que vous avez créés. Vous ne pourrez pas revenir sur cette suppression ! Êtes-vous sûr de vouloir le faire ?",
+    "APIKey": "Clés d'API"
 }
