@@ -131,6 +131,7 @@
                             <v-btn @click="aiConvertRecipe()" icon="fa-solid fa-person-running" color="success"></v-btn>
                         </template>
                     </model-select>
+                    <v-spacer class="mt-10"></v-spacer>
                 </v-card-text>
             </v-card>
         </template>
