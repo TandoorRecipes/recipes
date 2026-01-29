@@ -1,7 +1,7 @@
 import io
 import os
 import tempfile
-from datetime import datetime
+from django.utils import timezone
 
 import requests
 import webdav3.client as wc
@@ -63,7 +63,7 @@ class Nextcloud(Provider):
         )
         log_entry.save()
 
-        monitor.last_checked = datetime.now()
+        monitor.last_checked = timezone.now()
         monitor.save()
 
         return log_entry

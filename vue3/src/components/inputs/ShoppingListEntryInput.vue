@@ -36,11 +36,10 @@
 
 
 import {PropType, ref} from "vue";
-import {ApiApi, Food, IngredientString, MealPlan, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Unit} from "@/openapi";
+import {ApiApi, Food, FoodSimple,  ShoppingListEntry, ShoppingListRecipe, Unit} from "@/openapi";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import Multiselect from "@vueform/multiselect";
-import {fa} from "vuetify/iconsets/fa";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const props = defineProps({
@@ -60,7 +59,7 @@ const loading = ref(false)
 /**
  * add new ingredient from ingredient text input
  */
-function addIngredient(amount: number, unit: Unit|null, food: Food|null) {
+function addIngredient(amount: number, unit: Unit | null, food: Food|FoodSimple | null) {
     let sle = {
         amount: Math.max(amount, 1),
         unit: unit,
@@ -87,8 +86,10 @@ function parseIngredient() {
     const api = new ApiApi()
     loading.value = true
 
-    api.apiIngredientFromStringCreate({ingredientString: {text: ingredientInput.value} as IngredientString}).then(r => {
-        addIngredient(r.amount, r.unit, r.food)
+    api.apiIngredientParserPostCreate({ingredientParserRequest: {ingredient: ingredientInput.value}}).then(r => {
+        if (r.ingredient) {
+            addIngredient(r.ingredient.amount, r.ingredient.unit, r.ingredient.food)
+        }
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         loading.value = false

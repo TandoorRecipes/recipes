@@ -170,7 +170,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function loadUserSpaces() {
         let api = new ApiApi()
         return api.apiUserSpaceAllPersonalList().then(r => {
-            userSpaces.value = r.results
+            userSpaces.value = r
         }).catch(err => {
             if (err.response.status != 403) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

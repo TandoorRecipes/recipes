@@ -111,6 +111,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
 
             loading.value = false
             title.value = editingObjName()
+            editingObjChanged.value = false
             return Promise.resolve(editingObj.value)
         } else if (item !== null) {
             // item is given so return that
@@ -118,6 +119,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
             existingItemFunction()
             loading.value = false
             title.value = editingObjName()
+            editingObjChanged.value = false
             return Promise.resolve(editingObj.value)
         } else if (itemId !== undefined && itemId != '') {
             // itemId is given => fetch from server and return item
@@ -141,6 +143,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 return Promise.resolve(undefined)
             }).finally(() => {
                 loading.value = false
+                editingObjChanged.value = false
             })
         }
         return Promise.resolve(undefined)
