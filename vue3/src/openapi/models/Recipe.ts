@@ -175,6 +175,18 @@ export interface Recipe {
      * @type {number}
      * @memberof Recipe
      */
+    diameter?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recipe
+     */
+    diameterText?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Recipe
+     */
     readonly rating: number | null;
     /**
      * 
@@ -242,6 +254,8 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         'servings': json['servings'] == null ? undefined : json['servings'],
         'filePath': json['file_path'] == null ? undefined : json['file_path'],
         'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
+        'diameter': json['diameter'] == null ? undefined : json['diameter'],
+        'diameterText': json['diameter_text'] == null ? undefined : json['diameter_text'],
         'rating': json['rating'],
         'lastCooked': (json['last_cooked'] == null ? null : new Date(json['last_cooked'])),
         '_private': json['private'] == null ? undefined : json['private'],
@@ -270,6 +284,8 @@ export function RecipeToJSON(value?: Omit<Recipe, 'image'|'createdBy'|'createdAt
         'servings': value['servings'],
         'file_path': value['filePath'],
         'servings_text': value['servingsText'],
+        'diameter': value['diameter'],
+        'diameter_text': value['diameterText'],
         'private': value['_private'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
