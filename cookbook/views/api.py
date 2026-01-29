@@ -114,7 +114,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer, ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer,
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer
+                                 AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer,
+                                 IngredientParserRequestSerializer, IngredientParserResponseSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -712,12 +713,13 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwner) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
     def destroy(self, request, *args, **kwargs):
-        if request.space.created_by == UserSpace.objects.get(pk=kwargs['pk']).user:
+        userspace = UserSpace.objects.get(pk=kwargs['pk'])
+        if userspace.space.created_by == userspace.user:
             raise APIException('Cannot delete Space owner permission.')
         return super().destroy(request, *args, **kwargs)
 
@@ -733,7 +735,7 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset.filter(space=self.request.space, user=self.request.user)
 
     @extend_schema(responses=UserSpaceSerializer(many=True))
-    @decorators.action(detail=False, pagination_class=DefaultPagination, methods=['GET'], serializer_class=UserSpaceSerializer, )
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=UserSpaceSerializer, )
     def all_personal(self, request):
         """
         return all userspaces for the user requesting the endpoint
@@ -1244,6 +1246,20 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
             if 'child_inherit_fields_remove_all' in serializer.validated_data and serializer.validated_data['child_inherit_fields_remove_all']:
                 remove_all_from_relation(Food.child_inherit_fields.through, 'food_id', safe_food_ids)
+
+            # ---------- shopping lists -------------
+            if 'shopping_lists_add' in serializer.validated_data:
+                add_to_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_add'])
+
+            if 'shopping_lists_remove' in serializer.validated_data:
+                remove_from_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id',
+                                     serializer.validated_data['shopping_lists_remove'])
+
+            if 'shopping_lists_set' in serializer.validated_data and len(serializer.validated_data['shopping_lists_set']) > 0:
+                set_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_set'])
+
+            if 'shopping_lists_remove_all' in serializer.validated_data and serializer.validated_data['shopping_lists_remove_all']:
+                remove_all_from_relation(Food.shopping_lists.through, 'food_id', safe_food_ids)
 
             # ------- parent --------
             if self.model.node_order_by:
@@ -2005,9 +2021,17 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                 entries.append(entry)
 
             ShoppingListEntry.objects.bulk_create(entries)
+
+            list_relations = []
             for e in entries:
-                if e.food.shopping_lists.count() > 0:
-                    e.shopping_lists.set(e.food.shopping_lists.all())
+                if serializer.validated_data['shopping_lists_ids']:
+                    for sLId in serializer.validated_data['shopping_lists_ids']:
+                        list_relations.append(ShoppingListEntry.shopping_lists.through(shoppinglistentry_id=e.pk, shoppinglist_id=sLId))
+                else:
+                    if e.food.shopping_lists.count() > 0:
+                        e.shopping_lists.set(e.food.shopping_lists.all())
+
+            ShoppingListEntry.shopping_lists.through.objects.bulk_create(list_relations, ignore_conflicts=True, unique_fields=('shoppinglistentry_id', 'shoppinglist_id',))
 
             ConnectorManager.add_work(ActionType.CREATED, *entries)
             return Response(serializer.validated_data)
@@ -2100,23 +2124,45 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                 space=request.space, id__in=serializer.validated_data['ids']
             )
 
-            update_timestamp = timezone.now()
-            checked = serializer.validated_data['checked']
-            if checked:
-                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
-            else:
-                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=None)
-            serializer.validated_data['timestamp'] = update_timestamp
+            safe_entry_ids = ShoppingListEntry.objects.filter(
+                Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
+            ).filter(
+                space=request.space, id__in=serializer.validated_data['ids']
+            ).values_list('id', flat=True)
 
-            # update the onhand for food if shopping_add_onhand is True
-            if request.user.userpreference.shopping_add_onhand:
-                foods = Food.objects.filter(id__in=bulk_entries.values('food'))
+            update_timestamp = timezone.now()
+            if 'checked' in serializer.validated_data and serializer.validated_data['checked'] is not None:
+                checked = serializer.validated_data['checked']
+
                 if checked:
-                    for f in foods:
-                        f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
-                elif checked == False:
-                    for f in foods:
-                        f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
+                    bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
+                else:
+                    bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=None)
+                serializer.validated_data['timestamp'] = update_timestamp
+
+                # update the onhand for food if shopping_add_onhand is True
+                if request.user.userpreference.shopping_add_onhand:
+                    foods = Food.objects.filter(id__in=bulk_entries.values('food'))
+                    if checked:
+                        for f in foods:
+                            f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
+                    elif checked == False:
+                        for f in foods:
+                            f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
+
+            # ---------- shopping lists -------------
+            if 'shopping_lists_add' in serializer.validated_data:
+                add_to_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_add'])
+
+            if 'shopping_lists_remove' in serializer.validated_data:
+                remove_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
+                                     serializer.validated_data['shopping_lists_remove'])
+
+            if 'shopping_lists_set' in serializer.validated_data and len(serializer.validated_data['shopping_lists_set']) > 0:
+                set_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_set'])
+
+            if 'shopping_lists_remove_all' in serializer.validated_data and serializer.validated_data['shopping_lists_remove_all']:
+                remove_all_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids)
 
             return Response(serializer.validated_data)
         else:
@@ -2391,7 +2437,7 @@ class RecipeUrlImportView(APIView):
                             html = requests.get(
                                 url,
                                 headers={
-                                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
+                                    "User-Agent": request.META['HTTP_USER_AGENT']}
                             ).content
                             scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
@@ -2976,6 +3022,47 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         return Response(ServerSettingsSerializer(s, many=False).data)
 
 
+class IngredientParserView(viewsets.GenericViewSet):
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+
+    @extend_schema(request=IngredientParserRequestSerializer(many=False), responses=IngredientParserResponseSerializer(many=False))
+    @decorators.action(detail=False, pagination_class=None, methods=['POST'])
+    def post(self, request, *args, **kwargs):
+        serializer = IngredientParserRequestSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            response_obj = {'ingredient': None, 'ingredients': []}
+            ingredient_parser = IngredientParser(request, False)
+
+            if 'ingredient' in serializer.validated_data and serializer.validated_data['ingredient'].strip():
+                response_obj['ingredient'] = ingredient_parser.parse_as_ingredient(serializer.validated_data['ingredient'])
+
+            if 'ingredients' in serializer.validated_data:
+                for ing in serializer.validated_data['ingredients']:
+                    if ing.strip():
+                        response_obj['ingredients'].append(ingredient_parser.parse_as_ingredient(ing))
+
+            return Response(IngredientParserResponseSerializer(context={'request': request}).to_representation(response_obj))
+
+        return Response({'error': True, 'msg': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@extend_schema(
+    request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
+    responses=inline_serializer(name="ParsedIngredientSerializer",
+                                fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(),
+                                        'note': CharField(), 'original_text': CharField()})
+)
+@api_view(['POST'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
+def ingredient_from_string(request):
+    text = request.data['text']
+
+    ingredient_parser = IngredientParser(request, False)
+    ingredient =  ingredient_parser.parse_as_ingredient(text)
+
+    return JsonResponse(ingredient, status=200)
+
+
 def get_recipe_provider(recipe):
     if recipe.storage.method == Storage.DROPBOX:
         return Dropbox
@@ -3100,33 +3187,3 @@ def meal_plans_to_ical(queryset, filename):
     return response
 
 
-@extend_schema(
-    request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
-    responses=inline_serializer(name="ParsedIngredientSerializer",
-                                fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(),
-                                        'note': CharField(), 'original_text': CharField()})
-)
-@api_view(['POST'])
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-def ingredient_from_string(request):
-    text = request.data['text']
-
-    ingredient_parser = IngredientParser(request, False)
-    amount, unit, food, note = ingredient_parser.parse(text)
-
-    ingredient = {'amount': amount, 'unit': None, 'food': None, 'note': note, 'original_text': text}
-    if food:
-        if food_obj := Food.objects.filter(space=request.space).filter(Q(name=food) | Q(plural_name=food)).first():
-            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
-        else:
-            food_obj = Food.objects.create(space=request.space, name=food)
-            ingredient['food'] = {'name': food_obj.name, 'id': food_obj.id}
-
-    if unit:
-        if unit_obj := Unit.objects.filter(space=request.space).filter(Q(name=unit) | Q(plural_name=unit)).first():
-            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
-        else:
-            unit_obj = Unit.objects.create(space=request.space, name=unit)
-            ingredient['unit'] = {'name': unit_obj.name, 'id': unit_obj.id}
-
-    return JsonResponse(ingredient, status=200)

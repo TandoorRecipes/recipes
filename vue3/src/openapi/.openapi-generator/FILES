@@ -36,7 +36,9 @@ models/ImportOpenDataResponse.ts
 models/ImportOpenDataResponseDetail.ts
 models/ImportOpenDataVersionMetaData.ts
 models/Ingredient.ts
-models/IngredientString.ts
+models/IngredientParserRequest.ts
+models/IngredientParserResponse.ts
+models/IngredientSimple.ts
 models/InviteLink.ts
 models/Keyword.ts
 models/KeywordLabel.ts
@@ -83,7 +85,6 @@ models/PaginatedUnitList.ts
 models/PaginatedUserFileList.ts
 models/PaginatedUserSpaceList.ts
 models/PaginatedViewLogList.ts
-models/ParsedIngredient.ts
 models/PatchedAccessToken.ts
 models/PatchedAiProvider.ts
 models/PatchedAutomation.ts

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2026-01-05 15:03+0000\n"
+"PO-Revision-Date: 2026-01-05 22:15+0000\n"
 "Last-Translator: tei444 <mmok444@gmail.com>\n"
 "Language-Team: Polish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/pl/>\n"
@@ -135,7 +135,7 @@ msgstr "Ostatnio przyrządzane"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr ""
+msgstr "jajowar"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
@@ -171,7 +171,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "tarka"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
@@ -495,7 +495,7 @@ msgstr "Zapełniłeś maksymalną przestrzeń, która jest przypisana do Ciebie.
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Nazwa Przestrzeni musi być unikalna."
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
@@ -503,7 +503,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1596
 msgid "Hello"
-msgstr ""
+msgstr "Cześć"
 
 #: .\cookbook\serializer.py:1596
 msgid "You have been invited by "
@@ -789,8 +789,6 @@ msgid "Register"
 msgstr "Zarejestruj się"
 
 #: .\cookbook\templates\account\signup.html:11
-#, fuzzy
-#| msgid "Create your Account"
 msgid "Create an Account"
 msgstr "Utwórz konto"
 
@@ -915,8 +913,6 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr ""
 "lub poprzez pozostawienie pustej linii pomiędzy tekstem, który ma zostać "
@@ -942,10 +938,6 @@ msgid "Lists"
 msgstr "Listy"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1046,10 +1038,8 @@ msgstr "Proszę skontaktuj się z administratorem."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
-#, fuzzy
-#| msgid "No Permissions"
 msgid "No Permission"
-msgstr "Brak uprawnień"
+msgstr "Brak uprawnienia"
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
@@ -1216,10 +1206,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Szukaj"
+msgstr "Indeks Wyszukiwania"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1255,10 +1243,8 @@ msgstr "Utwórz konto super użytkownika"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Logowanie społecznościowe"
+msgstr "Błąd logowania społecznościowego"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
@@ -1291,10 +1277,8 @@ msgstr "Dodaj konto firmy zewnętrznej"
 
 #: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
-#, fuzzy
-#| msgid "Sign Out"
 msgid "Signup"
-msgstr "Wyloguj"
+msgstr "Zarejestruj"
 
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
@@ -1346,10 +1330,8 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign in using"
-msgstr "Zaloguj się"
+msgstr "Zaloguj się za pomocą"
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
@@ -1578,21 +1560,19 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:238
 msgid "False"
-msgstr ""
+msgstr "Fałsz"
 
 #: .\cookbook\templates\system.html:238
 msgid "True"
-msgstr ""
+msgstr "Prawda"
 
 #: .\cookbook\templates\system.html:268
 msgid "Hide"
-msgstr ""
+msgstr "Ukryj"
 
 #: .\cookbook\templates\system.html:271
-#, fuzzy
-#| msgid "Show help"
 msgid "Show"
-msgstr "Wyświetl pomoc"
+msgstr "Pokaż"
 
 #: .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
@@ -1603,10 +1583,8 @@ msgid "Export"
 msgstr "Eksportuj"
 
 #: .\cookbook\views\api.py:198 .\cookbook\views\api.py:326
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "Nieprawidłowo sformatowany parametr filter_list"
+msgstr "Nieprawidłowo sformatowany parametr updated_at"
 
 #: .\cookbook\views\api.py:351 .\cookbook\views\api.py:484
 #, python-brace-format
@@ -1623,10 +1601,8 @@ msgid "No {self.basename} with id {target} exists"
 msgstr ""
 
 #: .\cookbook\views\api.py:367
-#, fuzzy
-#| msgid "Cannot merge with the same object!"
 msgid "Cannot merge with child object!"
-msgstr "Nie można scalić tego samego obiektu!"
+msgstr "Nie można scalić tego obiektu z jego dzieckiem!"
 
 #: .\cookbook\views\api.py:405
 #, python-brace-format
@@ -2032,10 +2008,8 @@ msgid "View your meal Plan"
 msgstr ""
 
 #: .\cookbook\views\views.py:418
-#, fuzzy
-#| msgid "Shopping Lists"
 msgid "View your shopping lists"
-msgstr "Lista zakupów"
+msgstr "Zobacz twoją listę zakupów"
 
 #~ msgid ""
 #~ "Both fields are optional. If none are given the username will be "

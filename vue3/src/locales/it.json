@@ -38,7 +38,7 @@
     "AiProvider": "Fornitore AI",
     "AiProviderHelp": "Puoi configurare più fornitori AI in base alle tue preferenze. Possono essere configurati anche per lavorare tra più spazi.",
     "Alignment": "Allineamento",
-    "All": "Tutti",
+    "All": "Tutto",
     "AllRecipes": "Tutte le ricette",
     "Amount": "Quantità",
     "App": "Applicazione",
@@ -880,5 +880,7 @@
     "ShoppingList": "Lista della spesa",
     "ShoppingListHelp": "Ti consente di inserire voci in elenchi diversi. Può essere utilizzata per diversi supermercati, offerte speciali o eventi. ",
     "UpdateFoodLists": "Aggiorna le liste della spesa",
-    "UpdateFoodListsHelp": "Aggiorna le liste della spesa predefinite nell'alimento quando modifichi le liste durante la spesa."
+    "UpdateFoodListsHelp": "Aggiorna le liste della spesa predefinite nell'alimento quando modifichi le liste durante la spesa.",
+    "Scale": "Bilancia",
+    "ScaleRecipeHelp": "Aumenta o diminuisci tutte le quantità degli ingredienti in modo che venga creato il numero di porzioni indicato quando si prepara la ricetta. "
 }

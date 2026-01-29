@@ -22,8 +22,8 @@ export function isEntryVisible(entry: ShoppingListEntry, deviceSettings: DeviceS
     // if no list is selected show all entries
     // if -1 is selected show entries without shopping lists
     // otherwise check if at least one of the entries lists is selected
-    if(deviceSettings.shopping_selected_shopping_list.length > 0){
-        if(!(deviceSettings.shopping_selected_shopping_list.includes(-1) && entry.shoppingLists?.length == 0) && !deviceSettings.shopping_selected_shopping_list.some(sl => (entry.shoppingLists?.findIndex(eSl => eSl.id == sl) != -1))){
+    if(deviceSettings.shopping_selected_shopping_lists.length > 0){
+        if(!(deviceSettings.shopping_selected_shopping_lists.includes(-1) && entry.shoppingLists?.length == 0) && !deviceSettings.shopping_selected_shopping_lists.some(sl => (entry.shoppingLists?.findIndex(eSl => eSl.id == sl) != -1))){
             entryVisible = false
         }
     }

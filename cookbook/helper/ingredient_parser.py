@@ -1,6 +1,7 @@
 import re
 import string
 import unicodedata
+from django.db.models import Q
 
 from cookbook.helper.automation_helper import AutomationEngine
 from cookbook.models import Food, Ingredient, Unit
@@ -23,36 +24,40 @@ class IngredientParser:
         if not self.ignore_rules:
             self.automation = AutomationEngine(self.request, use_cache=cache_mode)
 
-    def get_unit(self, unit):
+    def get_unit(self, unit_name):
         """
         Get or create a unit for given space respecting possible automations
-        :param unit: string unit
+        :param unit_name: string unit
         :return: None if unit passed is invalid, Unit object otherwise
         """
-        if not unit:
+        if not unit_name:
             return None
-        if len(unit) > 0:
-            if self.ignore_rules:
-                u, created = Unit.objects.get_or_create(name=unit.strip(), space=self.request.space)
+        if len(unit_name) > 0:
+            if not self.ignore_rules:
+                unit_name = self.automation.apply_unit_automation(unit_name)
+
+            if unit_obj := Unit.objects.filter(space=self.request.space).filter(Q(name=unit_name) | Q(plural_name=unit_name)).first():
+                return unit_obj
             else:
-                u, created = Unit.objects.get_or_create(name=self.automation.apply_unit_automation(unit), space=self.request.space)
-            return u
+                return Unit.objects.create(space=self.request.space, name=unit_name)
         return None
 
-    def get_food(self, food):
+    def get_food(self, food_name):
         """
         Get or create a food for given space respecting possible automations
-        :param food: string food
+        :param food_name: string food
         :return: None if food passed is invalid, Food object otherwise
         """
-        if not food:
+        if not food_name:
             return None
-        if len(food) > 0:
-            if self.ignore_rules:
-                f, created = Food.objects.get_or_create(name=food.strip(), space=self.request.space)
+        if len(food_name) > 0:
+            if not self.ignore_rules:
+                food_name = self.automation.apply_food_automation(food_name)
+
+            if food_obj := Food.objects.filter(space=self.request.space).filter(Q(name=food_name) | Q(plural_name=food_name)).first():
+                return food_obj
             else:
-                f, created = Food.objects.get_or_create(name=self.automation.apply_food_automation(food), space=self.request.space)
-            return f
+                return Food.objects.create(space=self.request.space, name=food_name)
         return None
 
     def parse_fraction(self, x):
@@ -284,3 +289,27 @@ class IngredientParser:
             raise ValueError(f'Error parsing string {ingredient}, food cannot be empty')
 
         return amount, unit, food, note[:Ingredient._meta.get_field('note').max_length].strip()
+
+    def parse_as_ingredient(self, text):
+        """
+        Parse ingredient string into ingredient object with nested food information
+        :param text: ingredient string
+        :return: ingredient object
+        """
+        amount, unit, food, note = self.parse(text)
+
+        ingredient = Ingredient(
+            amount=amount,
+            unit=None,
+            food=None,
+            space=self.request.space,
+            note=note,
+            original_text=text
+        )
+        if food:
+            ingredient.food = self.get_food(food)
+
+        if unit:
+            ingredient.unit = self.get_unit(unit)
+
+        return ingredient

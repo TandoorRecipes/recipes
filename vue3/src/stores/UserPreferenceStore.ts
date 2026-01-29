@@ -170,7 +170,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function loadUserSpaces() {
         let api = new ApiApi()
         return api.apiUserSpaceAllPersonalList().then(r => {
-            userSpaces.value = r.results
+            userSpaces.value = r
         }).catch(err => {
             if (err.response.status != 403) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
@@ -228,7 +228,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             shopping_show_selected_supermarket_only: false,
             shopping_selected_grouping: ShoppingGroupingOptions.CATEGORY,
             shopping_selected_supermarket: null,
-            shopping_selected_shopping_list: [],
+            shopping_selected_shopping_lists: [],
             shopping_item_info_created_by: false,
             shopping_item_info_mealplan: true,
             shopping_item_info_recipe: true,

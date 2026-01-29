@@ -6,7 +6,7 @@
             <v-card-text class="pt-0 pr-4 pl-4">
 
                 <v-label>{{ $t('Choose_Category') }}</v-label>
-                <model-select model="SupermarketCategory" @update:modelValue="categoryUpdate" allow-create></model-select>
+                <model-select model="SupermarketCategory" @update:modelValue="category => useShoppingStore().updateCategories([shoppingListFood], category)" allow-create></model-select>
 
                 <v-label>{{ $t('ShoppingList') }}</v-label>
                 <model-select model="ShoppingList" @update:modelValue="shoppingListUpdate" mode="tags" allow-create></model-select>
@@ -166,22 +166,6 @@ const entriesList = computed(() => {
 const isShoppingLineDelayed = computed(() => {
     return isShoppingListFoodDelayed(shoppingListFood.value)
 })
-
-/**
- * change category of food and update via API
- * @param category
- */
-function categoryUpdate(category: SupermarketCategory) {
-    const api = new ApiApi()
-    shoppingListFood.value.food.supermarketCategory = category
-    shoppingListFood.value.entries.forEach(e => e.food.supermarketCategory = category)
-    useShoppingStore().updateEntriesStructure()
-    api.apiFoodUpdate({id: shoppingListFood.value.food.id, food: shoppingListFood.value.food}).then(r => {
-        useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-    })
-}
 
 /**
  * change the shopping list for all entries

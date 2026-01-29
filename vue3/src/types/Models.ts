@@ -491,7 +491,7 @@ export const TShoppingList = {
     name: 'ShoppingList',
     localizationKey: 'ShoppingList',
     localizationKeyDescription: 'ShoppingListHelp',
-    icon: 'fa-solid fa-list-check',
+    icon: 'fa-solid fa-file-lines',
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ShoppingListEditor.vue`)),
 
