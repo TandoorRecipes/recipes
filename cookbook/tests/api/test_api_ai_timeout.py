@@ -1,9 +1,12 @@
 import json
+from io import BytesIO
 from unittest.mock import patch
 
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from litellm.exceptions import Timeout
+from PIL import Image
 
 from cookbook.models import AiProvider, PropertyType
 from cookbook.tests.factories import FoodFactory, RecipeFactory, StepFactory
@@ -115,13 +118,21 @@ class TestAiImportTimeout:
     def test_timeout_returns_408(self, mock_completion, ai_space, a1_s1):
         mock_completion.side_effect = TIMEOUT_SIDE_EFFECT
 
+        # Create a small valid PNG image for the file upload
+        img = Image.new('RGB', (1, 1), color='red')
+        buf = BytesIO()
+        img.save(buf, format='PNG')
+        buf.seek(0)
+        test_file = SimpleUploadedFile('test.png', buf.read(), content_type='image/png')
+
         url = reverse('api_ai_import')
         response = a1_s1.post(
             url,
             {
                 'ai_provider_id': ai_space.ai_provider.pk,
-                'text': 'Some recipe text to import',
+                'text': '',
                 'recipe_id': '',
+                'file': test_file,
             },
         )
 
