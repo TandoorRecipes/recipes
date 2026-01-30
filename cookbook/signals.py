@@ -11,6 +11,7 @@ from django_scopes import scope, scopes_disabled
 
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
+from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, MealPlan, PropertyType, Recipe, SearchFields, SearchPreference,
                              Step, Unit, UserPreference)
@@ -124,6 +125,8 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
 def clear_unit_cache(sender, instance=None, created=False, **kwargs):
     if instance:
         caches['default'].delete(CacheHelper(instance.space).BASE_UNITS_CACHE_KEY)
+        # Also clear class-level cache used by UnitConversionHelper
+        UnitConversionHelper._base_units_cache.pop(instance.space.id, None)
 
 
 @receiver(post_save, sender=PropertyType)

@@ -1047,7 +1047,7 @@ class IngredientSerializer(IngredientSimpleSerializer):
         fields = (
             'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
-            'always_use_plural_unit', 'always_use_plural_food',
+            'always_use_plural_unit', 'always_use_plural_food', 'checked',
         )
         read_only_fields = ['conversions', ]
 
@@ -1204,6 +1204,13 @@ class RecipeSerializer(RecipeBaseSerializer):
 
     @extend_schema_field(serializers.JSONField)
     def get_food_properties(self, obj):
+        # Skip expensive computation on CREATE - UI doesn't display it after create
+        # User navigates to view page which triggers GET with full data
+        # Fixes issue #4356 - N+1 queries causing gunicorn worker timeout
+        view = self.context.get('view')
+        if view and getattr(view, 'action', None) == 'create':
+            return {}
+
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 
