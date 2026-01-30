@@ -69,6 +69,15 @@
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText" clearable></v-text-field>
                             </v-col>
+                            <v-col cols="12">
+                                <closable-help-alert :text="$t('ScalingHelp')"></closable-help-alert>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-number-input :label="$t('Diameter')" v-model="editingObj.diameter"></v-number-input>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field :label="$t('DiameterUnit')" v-model="editingObj.diameterText"></v-text-field>
+                            </v-col>
                         </v-row>
 
                         <!--                        <closable-help-alert :text="$t('RecipeStepsHelp')" :action-text="$t('Steps')" @click="tab='steps'"></closable-help-alert>-->

@@ -1086,6 +1086,8 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     description = models.CharField(max_length=512, blank=True, null=True)
     servings = models.IntegerField(default=1)
     servings_text = models.CharField(default='', blank=True, max_length=32)
+    diameter = models.IntegerField(default=0)
+    diameter_text = models.CharField(default='', blank=True, max_length=32)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="", blank=True)
