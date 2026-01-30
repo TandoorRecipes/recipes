@@ -12,4 +12,5 @@ def context_settings(request):
         'IMPRINT_URL': settings.IMPRINT_URL,
         'SHOPPING_MIN_AUTOSYNC_INTERVAL': settings.SHOPPING_MIN_AUTOSYNC_INTERVAL,
         'DISABLE_EXTERNAL_CONNECTORS': settings.DISABLE_EXTERNAL_CONNECTORS,
+        'HIDE_LOGIN_FORM': settings.HIDE_LOGIN_FORM,
     }
