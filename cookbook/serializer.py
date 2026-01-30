@@ -1,11 +1,12 @@
 import traceback
 import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 from drf_spectacular.utils import extend_schema_field
+
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
@@ -1047,7 +1048,7 @@ class IngredientSerializer(IngredientSimpleSerializer):
         fields = (
             'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
-            'always_use_plural_unit', 'always_use_plural_food',
+            'always_use_plural_unit', 'always_use_plural_food', 'checked',
         )
         read_only_fields = ['conversions', ]
 
@@ -1204,6 +1205,13 @@ class RecipeSerializer(RecipeBaseSerializer):
 
     @extend_schema_field(serializers.JSONField)
     def get_food_properties(self, obj):
+        # Skip expensive computation on CREATE - UI doesn't display it after create
+        # User navigates to view page which triggers GET with full data
+        # Fixes issue #4356 - N+1 queries causing gunicorn worker timeout
+        view = self.context.get('view')
+        if view and getattr(view, 'action', None) == 'create':
+            return {}
+
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 
@@ -1246,11 +1254,6 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
         model = Recipe
         fields = ['image', 'image_url', ]
 
-
-class RecipeImportSerializer(SpacedModelSerializer):
-    class Meta:
-        model = RecipeImport
-        fields = '__all__'
 
 
 class RecipeBatchUpdateSerializer(serializers.Serializer):
@@ -1352,8 +1355,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not self.context[
-                                                                            'request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
@@ -1660,16 +1662,25 @@ class AutomationSerializer(serializers.ModelSerializer):
 
 class InviteLinkSerializer(WritableNestedModelSerializer):
     group = GroupSerializer()
+    email_sent = serializers.SerializerMethodField()
+
+    @extend_schema_field(bool)
+    def get_email_sent(self, obj):
+        """Return whether the invite email was successfully sent."""
+        return getattr(obj, '_email_sent', False)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         obj = super().create(validated_data)
 
+        # Track email status - default to False
+        obj._email_sent = False
+
         if obj.email and EMAIL_HOST != '':
             try:
                 if InviteLink.objects.filter(space=self.context['request'].space,
-                                             created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
+                                             created_at__gte=timezone.now() - timedelta(hours=4)).count() < 20:
                     message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(
                         self.context['request'].user.get_user_display_name())
                     message += _(' to join their Tandoor Recipes space ') + escape(
@@ -1687,10 +1698,12 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
                         message,
                         None,
                         [obj.email],
-                        fail_silently=True,
+                        fail_silently=False,
                     )
-            except (SMTPException, BadHeaderError, TimeoutError):
-                pass
+                    obj._email_sent = True
+            except (SMTPException, BadHeaderError, TimeoutError, OSError) as e:
+                print(f"Failed to send invite email to {obj.email}: {type(e).__name__}: {e}")
+                obj._email_sent = False
 
         return obj
 
@@ -1698,8 +1711,8 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         model = InviteLink
         fields = (
             'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
-            'created_at',)
-        read_only_fields = ('id', 'uuid', 'used_by', 'created_by', 'created_at',)
+            'created_at', 'email_sent',)
+        read_only_fields = ('id', 'uuid', 'used_by', 'created_by', 'created_at', 'email_sent',)
 
 
 # CORS, REST and Scopes aren't currently working
