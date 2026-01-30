@@ -225,7 +225,15 @@ class CustomIsOwnerReadOnly(CustomIsOwner):
         return super().has_permission(request, view) and request.method in SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
-        return super().has_object_permission(request, view) and request.method in SAFE_METHODS
+        return super().has_object_permission(request, view, obj) and request.method in SAFE_METHODS
+
+
+class CustomIsOwnerDestroyOnly(CustomIsOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) and request.method == 'DELETE'
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj) and request.method == 'DELETE'
 
 
 class CustomIsSpaceOwner(permissions.BasePermission):

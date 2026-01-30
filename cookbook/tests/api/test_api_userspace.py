@@ -103,9 +103,25 @@ def test_add(arg, request, u1_s1, space_1):
     assert r.status_code == arg[1]
 
 
-def test_delete(u1_s1, u1_s2, a1_s1, space_1):
+def test_delete_user(u1_s1, u2_s1, u1_s2, a1_s1, space_1):
     space_1.created_by = auth.get_user(a1_s1)
     space_1.save()
+
+    r = u2_s1.delete(
+        reverse(
+            DETAIL_URL,
+            args={auth.get_user(u1_s1).userspace_set.first().id}
+        )
+    )
+    assert r.status_code == 404
+
+    r = u1_s2.delete(
+        reverse(
+            DETAIL_URL,
+            args={auth.get_user(u1_s1).userspace_set.first().id}
+        )
+    )
+    assert r.status_code == 404
 
     r = u1_s1.delete(
         reverse(
@@ -113,7 +129,12 @@ def test_delete(u1_s1, u1_s2, a1_s1, space_1):
             args={auth.get_user(u1_s1).userspace_set.first().id}
         )
     )
-    assert r.status_code == 403
+    assert r.status_code == 204
+
+
+def test_delete_admin(u1_s1, u2_s1, u1_s2, a1_s1, space_1):
+    space_1.created_by = auth.get_user(a1_s1)
+    space_1.save()
 
     r = a1_s1.delete(
         reverse(
