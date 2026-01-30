@@ -47,6 +47,8 @@ from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
+
+from cookbook.helper.ai_schema import Recipe, PropertyExtractionResult
 from rest_framework import decorators, status, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
@@ -1154,7 +1156,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": PropertyExtractionResult.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -1166,6 +1168,12 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
             except BadRequestError as err:
                 pass
+            except (JSONDecodeError, ValueError) as err:
+                response = {
+                    'error': True,
+                    'msg': 'The AI response could not be parsed as valid JSON. Please try again.',
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
         response = {
             'error': True,
             'msg': 'The AI could not process your request. \n\n' + err.message,
@@ -1885,7 +1893,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": PropertyExtractionResult.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -1897,6 +1905,12 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
             except BadRequestError as err:
                 pass
+            except (JSONDecodeError, ValueError) as err:
+                response = {
+                    'error': True,
+                    'msg': 'The AI response could not be parsed as valid JSON. Please try again.',
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
         response = {
             'error': True,
             'msg': 'The AI could not process your request. \n\n' + err.message,
@@ -2591,7 +2605,7 @@ class AiImportView(APIView):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": Recipe.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -2697,7 +2711,7 @@ class AiStepSortView(APIView):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": Recipe.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -2712,6 +2726,12 @@ class AiStepSortView(APIView):
                 response = {
                     'error': True,
                     'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            except (JSONDecodeError, ValueError) as err:
+                response = {
+                    'error': True,
+                    'msg': 'The AI response could not be parsed as valid JSON. Please try again.',
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
