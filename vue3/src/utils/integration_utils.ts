@@ -30,7 +30,7 @@ export const INTEGRATIONS: Array<Integration> = [
     {id: 'RECIPEKEEPER', name: "Recipekeeper", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#recipekeeper'},
     {id: 'RECIPESAGE', name: "Recipesage", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#recipesage'},
     {id: 'REZKONV', name: "Rezkonv", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#rezkonv'},
-    {id: 'SAFRON', name: "Safron", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#safron'},
+    {id: 'SAFFRON', name: "Saffron", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#safron'},
     {id: 'REZEPTSUITEDE', name: "Rezeptsuite.de", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#rezeptsuitede'},
     {id: 'GOURMET', name: "Gourmet", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#gourmet'},
 ]
