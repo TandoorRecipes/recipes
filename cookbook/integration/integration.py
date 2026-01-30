@@ -195,7 +195,8 @@ class Integration:
                                     il.save()
                                 except Exception as e:
                                     traceback.print_exc()
-                                    self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
+                                    fn = "" if not hasattr(z, 'filename') else f'IMPORTING {z.filename}'
+                                    self.handle_exception(e, log=il, message=f'-------------------- \nERROR {fn}\n{e}\n--------------------\n')
                         import_zip.close()
                     elif '.json' in f['name'] or '.xml' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name']:
                         data_list = self.split_recipe_file(f['file'])

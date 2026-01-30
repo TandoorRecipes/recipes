@@ -27,11 +27,32 @@ class Default(Integration):
         return recipe
 
     def decode_recipe(self, string):
+        def extract_error_messages(data, path=""):
+            errors = []
+            if isinstance(data, dict):
+                for key, value in data.items():
+                    new_path = f"{path}.{key}" if path else key
+                    errors.extend(extract_error_messages(value, new_path))
+            elif isinstance(data, list):
+                for i, item in enumerate(data):
+                    new_path = f"{path}[{i}]"
+                    errors.extend(extract_error_messages(item, new_path))
+            else:
+                if hasattr(data, 'title'):
+                    if path.endswith(']') and '[' in path:
+                        last_bracket = path.rindex('[')
+                        path = path[:last_bracket]
+                    errors.append(f"{path}: {data.title()}")
+            return errors
+
         data = json.loads(string)
         serialized_recipe = RecipeExportSerializer(data=data, context={'request': self.request})
         if serialized_recipe.is_valid():
             recipe = serialized_recipe.save()
             return recipe
+        else:
+            errors = extract_error_messages(serialized_recipe.errors)
+            raise Exception("\n".join(errors))
 
         return None
 
