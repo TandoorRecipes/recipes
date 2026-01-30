@@ -36,7 +36,7 @@ jobs:
         id: get-branches
         run: |
           # Exclude system branches and auto-generated PR branches
-          EXCLUDE_PATTERN="HEAD|preview|working|develop|main|master|tandoor-1|upstream-pr-|preview-candidate-"
+          EXCLUDE_PATTERN="HEAD|preview|working|develop|main|master|tandoor-1|upstream-pr-|preview-candidate-|dependabot/"
 
           ALL_BRANCHES=$(git branch -r | grep 'origin/' | grep -vE "origin/($EXCLUDE_PATTERN)" | sed 's|origin/||' | tr -d ' ')
 
