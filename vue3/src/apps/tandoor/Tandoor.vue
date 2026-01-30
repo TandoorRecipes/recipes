@@ -236,6 +236,30 @@ router.afterEach((to, from) => {
     .d01 .cv-day-number {
         background-color: #b98766 !important;
     }
+
+    /* mavon-editor link/image dialog */
+
+    .add-image-link {
+        background-color: #212121 !important;
+        color: #fff !important;
+    }
+
+    .add-image-link > i {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .add-image-link .input-wrapper {
+        border-color: #555 !important;
+    }
+
+    .add-image-link .input-wrapper input {
+        background-color: #212121 !important;
+        color: #fff !important;
+    }
+
+    .add-image-link .op-btn {
+        color: #fff !important;
+    }
 }
 
 .v-theme--light {
