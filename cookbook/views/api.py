@@ -77,7 +77,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF
+                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -713,7 +713,7 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwner) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsSpaceOwner | (IsReadOnlyDRF & CustomIsUser) | CustomIsOwnerReadOnly | CustomIsOwnerDestroyOnly) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
@@ -3022,7 +3022,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
 
 
 class IngredientParserView(viewsets.GenericViewSet):
-    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsGuest & CustomTokenHasReadWriteScope]
 
     @extend_schema(request=IngredientParserRequestSerializer(many=False), responses=IngredientParserResponseSerializer(many=False))
     @decorators.action(detail=False, pagination_class=None, methods=['POST'])
