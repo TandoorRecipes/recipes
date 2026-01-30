@@ -1,3 +1,10 @@
+# set paths to writable location as non-root by default
+proxy_temp_path /tmp/proxy_temp;
+client_body_temp_path /tmp/client_temp;
+fastcgi_temp_path /tmp/fastcgi_temp;
+uwsgi_temp_path /tmp/uwsgi_temp;
+scgi_temp_path /tmp/scgi_temp;
+
 server {
   listen ${TANDOOR_PORT};
   listen [::]:${TANDOOR_PORT} ipv6only=on;
@@ -19,7 +26,7 @@ server {
   # pass requests for dynamic content to gunicorn
   location / {
     proxy_set_header Host $http_host;
-    proxy_pass http://unix:/run/tandoor.sock;
+    proxy_pass http://unix:/tmp/tandoor.sock;
 
     # param needed by django allauth sessions to log IP
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
