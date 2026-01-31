@@ -40,17 +40,34 @@
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('Title')" v-model="editingObj.title"></v-text-field>
-                                <v-date-input
-                                    v-model="dateRangeValue"
-                                    @update:modelValue="updateDate()"
-                                    :first-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
-                                    :show-week="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
-                                    :label="$t('Date')"
-                                    multiple="range"
-                                    prepend-icon=""
-                                    prepend-inner-icon="$calendar"
-                                    hide-details
-                                ></v-date-input>
+                                <v-row no-gutters class="datetime-joined-group">
+                                    <v-col cols="12" sm="7">
+                                        <v-date-input
+                                            v-model="dateRangeValue"
+                                            @update:modelValue="updateDate()"
+                                            :first-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
+                                            :show-week="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
+                                            :label="$t('Date')"
+                                            multiple="range"
+                                            prepend-icon=""
+                                            prepend-inner-icon="$calendar"
+                                            hide-details
+                                        ></v-date-input>
+                                    </v-col>
+                                    <v-col cols="12" sm="5">
+                                        <v-text-field v-model="mealPlanTime"
+                                            :active="timePickerMenu" :focus="timePickerMenu"
+                                            :label="$t('Time')" prepend-inner-icon="fa-solid fa-clock" readonly
+                                            hide-details>
+                                            <v-menu v-model="timePickerMenu" :close-on-content-click="false"
+                                                    activator="parent" transition="scale-transition">
+                                                <v-time-picker v-if="timePickerMenu" format="24hr"
+                                                               v-model="mealPlanTime"
+                                                               @update:modelValue="applyTimeToEditingDates"></v-time-picker>
+                                            </v-menu>
+                                        </v-text-field>
+                                    </v-col>
+                                </v-row>
 
                                 <v-input>
                                     <v-btn-group elevation="1" class="w-100" divided border>
@@ -143,6 +160,28 @@ watch([() => props.item, () => props.itemId], () => {
 const tab = ref('plan')
 
 const dateRangeValue = ref([] as Date[])
+const timePickerMenu = ref(false)
+const mealPlanTime = ref('12:00')
+
+watch(() => editingObj.value.mealType, (newType, oldType) => {
+    if (newType?.time && newType?.time !== oldType?.time) {
+        mealPlanTime.value = newType.time.substring(0, 5)
+        applyTimeToEditingDates()
+    }
+})
+
+function applyTimeToEditingDates() {
+    if (!mealPlanTime.value) return
+    const [hours, minutes] = mealPlanTime.value.split(':').map(Number)
+    if (editingObj.value.fromDate) {
+        editingObj.value.fromDate = DateTime.fromJSDate(editingObj.value.fromDate)
+            .set({hour: hours, minute: minutes, second: 0, millisecond: 0}).toJSDate()
+    }
+    if (editingObj.value.toDate) {
+        editingObj.value.toDate = DateTime.fromJSDate(editingObj.value.toDate)
+            .set({hour: hours, minute: minutes, second: 0, millisecond: 0}).toJSDate()
+    }
+}
 
 /**
  * update shopping list when switching to shopping tab
@@ -187,15 +226,22 @@ function initializeEditor() {
 
         setupState(props.item, props.itemId, {
             newItemFunction: () => {
-                editingObj.value.fromDate = DateTime.now().toJSDate()
-                editingObj.value.toDate = DateTime.now().toJSDate()
+                const noonToday = DateTime.now().set({hour: 12, minute: 0, second: 0, millisecond: 0})
+                editingObj.value.fromDate = noonToday.toJSDate()
+                editingObj.value.toDate = noonToday.toJSDate()
+                mealPlanTime.value = '12:00'
+
                 editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
                 editingObj.value.servings = 1
                 editingObj.value.mealType = defaultMealType
-
                 editingObj.value.addshopping = useUserPreferenceStore().userSettings.mealplanAutoaddShopping
 
                 applyItemDefaults(props.itemDefaults)
+
+                if (defaultMealType?.time) {
+                    mealPlanTime.value = defaultMealType.time.substring(0, 5)
+                }
+                applyTimeToEditingDates()
 
                 if (editingObj.value.toDate < editingObj.value.fromDate) {
                     editingObj.value.toDate = editingObj.value.fromDate
@@ -208,6 +254,9 @@ function initializeEditor() {
                 })
             }, existingItemFunction: () => {
                 editingObj.value = structuredClone(toRaw(editingObj.value))
+                if (editingObj.value.fromDate) {
+                    mealPlanTime.value = DateTime.fromJSDate(editingObj.value.fromDate).toFormat('HH:mm')
+                }
                 initializeDateRange()
             }
         },)
@@ -226,6 +275,7 @@ function updateDate() {
         } else {
             editingObj.value.toDate = editingObj.value.fromDate
         }
+        applyTimeToEditingDates()
     } else {
         useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
     }
@@ -250,5 +300,22 @@ function initializeDateRange() {
 </script>
 
 <style scoped>
-
+@media (min-width: 600px) {
+    .datetime-joined-group {
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 4px 4px 0 0;
+    }
+    .datetime-joined-group :deep(.v-field__overlay) {
+        display: none;
+    }
+    .datetime-joined-group :deep(.v-field) {
+        border-radius: 0;
+    }
+    .datetime-joined-group > :first-child :deep(.v-field) {
+        border-top-left-radius: 4px;
+    }
+    .datetime-joined-group > :last-child :deep(.v-field) {
+        border-top-right-radius: 4px;
+    }
+}
 </style>

@@ -1384,11 +1384,39 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     def in_shopping(self, obj):
         return obj.shoppinglistrecipe_set.count() > 0
 
+    @staticmethod
+    def _apply_default_time(dt, meal_type_obj):
+        """Apply default time to a datetime that has no explicit time (midnight local).
+
+        Priority: explicit time > meal_type.time > noon fallback.
+        Returns the datetime unchanged if it already has a non-midnight local time.
+        """
+        local_dt = timezone.localtime(dt)
+        if local_dt.hour != 0 or local_dt.minute != 0 or local_dt.second != 0:
+            return local_dt
+
+        if meal_type_obj and meal_type_obj.time:
+            return local_dt.replace(hour=meal_type_obj.time.hour, minute=meal_type_obj.time.minute, second=0)
+        return local_dt.replace(hour=12, minute=0, second=0)
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
 
+        meal_type_obj = None
+        meal_type_data = self.context['request'].data.get('meal_type')
+        if isinstance(meal_type_data, dict):
+            meal_type_id = meal_type_data.get('id')
+        else:
+            meal_type_id = meal_type_data
+        if meal_type_id:
+            meal_type_obj = MealType.objects.filter(pk=meal_type_id, space=self.context['request'].space).first()
+
+        validated_data['from_date'] = self._apply_default_time(validated_data['from_date'], meal_type_obj)
+
         if 'to_date' not in validated_data or validated_data['to_date'] is None:
             validated_data['to_date'] = validated_data['from_date']
+        else:
+            validated_data['to_date'] = self._apply_default_time(validated_data['to_date'], meal_type_obj)
 
         add_to_shopping = False
         try:
