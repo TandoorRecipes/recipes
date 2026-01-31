@@ -130,17 +130,18 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         )
 
         conversions = uch.get_conversions(ingredient_food_1_pcs)
-        assert len(conversions) == 3
+        # pcs + gram (direct) + kg (base) + fantasy (multi-step via gram→fantasy)
+        assert len(conversions) == 4
         assert abs(next(x for x in conversions if x.unit == unit_gram).amount - Decimal(1000)) < 0.0001
         assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(1)) < 0.0001
+        assert next(x for x in conversions if x.unit == unit_fantasy) is not None
         print(conversions)
 
         assert len(uch.get_conversions(ingredient_food_2_pcs)) == 1
         print(uch.get_conversions(ingredient_food_2_pcs))
 
-        print('\n----------- TEST CUSTOM CONVERSION - CONVERT MULTI STEP ---------------')
-
-        # TODO add test for multi step conversion ... do I even do or want to support this ?
+        print('\n----------- TEST CUSTOM CONVERSION - MULTI STEP (via get_conversions BFS) ---------------')
+        # multi-step is now tested in dedicated test_multi_step_conversion tests
 
         print('\n----------- TEST CUSTOM CONVERSION - REVERSE CONVERSION ---------------')
         uc2 = UnitConversion.objects.create(
@@ -154,13 +155,15 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         )
 
         conversions = uch.get_conversions(ingredient_food_1_pcs)
-        assert len(conversions) == 3
+        # pcs + gram (direct) + kg (base) + fantasy (multi-step via gram→fantasy)
+        assert len(conversions) == 4
         assert abs(next(x for x in conversions if x.unit == unit_gram).amount - Decimal(1000)) < 0.0001
         assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(1)) < 0.0001
         print(conversions)
 
         conversions = uch.get_conversions(ingredient_food_2_pcs)
-        assert len(conversions) == 3
+        # pcs + gram (direct) + kg (base) + fantasy (multi-step via gram→fantasy, generic)
+        assert len(conversions) == 4
         assert abs(next(x for x in conversions if x.unit == unit_gram).amount - Decimal(1000)) < 0.0001
         assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(1)) < 0.0001
         print(conversions)
