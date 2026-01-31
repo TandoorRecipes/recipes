@@ -378,10 +378,12 @@ def test_search_count(found_recipe, recipes, param_type, u1_s1, u2_s1, space_1):
     assert r['count'] == 1
     assert found_recipe[0].id in [x['id'] for x in r['results']]
 
-    # this changed to fail after search api update but logic seems fine, disabling for now
-    # r = json.loads(u1_s1.get(reverse(LIST_URL) + param2).content)
-    # assert r['count'] == 1
-    # assert found_recipe[1].id in [x['id'] for x in r['results']]
+    # test lte filter (e.g. rating_lte=3).
+    # should match recipe with rating 1.0 (found_recipe[1])
+    # should not match recipe with rating 5.0 (found_recipe[0])
+    r = json.loads(u1_s1.get(reverse(LIST_URL) + param2).content)
+    assert r['count'] == 1
+    assert found_recipe[1].id in [x['id'] for x in r['results']]
 
     # test search for not rated/cooked
     r = json.loads(u1_s1.get(reverse(LIST_URL) + param3).content)
