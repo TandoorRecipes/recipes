@@ -186,6 +186,156 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         assert abs(next(x for x in conversions if x.unit == unit_kg_space_2).amount - Decimal(0.1)) < 0.0001
         print(conversions)
 
+def test_multi_step_conversion(space_1, u1_s1):
+    """
+    Multi-step conversion: pinch → teaspoon → gram should yield pinch → gram.
+    Verifies that the conversion system traverses intermediate units.
+    See: https://github.com/TandoorRecipes/recipes/issues/4163
+    """
+    with scopes_disabled():
+        uch = UnitConversionHelper(space_1)
+
+        unit_pinch = Unit.objects.create(name='pinch', base_unit='', space=space_1)
+        unit_tsp = Unit.objects.create(name='teaspoon', base_unit='tsp', space=space_1)
+        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+
+        food = Food.objects.create(name='Chili Powder', space=space_1)
+
+        # pinch → teaspoon: 16 pinches = 1 teaspoon
+        UnitConversion.objects.create(
+            base_amount=16,
+            base_unit=unit_pinch,
+            converted_amount=1,
+            converted_unit=unit_tsp,
+            food=food,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+
+        # teaspoon → gram: 1 teaspoon = 2.3 grams (for chili powder)
+        UnitConversion.objects.create(
+            base_amount=1,
+            base_unit=unit_tsp,
+            converted_amount=Decimal('2.3'),
+            converted_unit=unit_gram,
+            food=food,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+
+        ingredient_pinch = Ingredient.objects.create(
+            food=food,
+            unit=unit_pinch,
+            amount=16,
+            space=space_1,
+        )
+
+        conversions = uch.get_conversions(ingredient_pinch)
+
+        # Should find: original (pinch) + teaspoon (direct) + gram (multi-step) = 3 conversions minimum
+        unit_names = [c.unit.name for c in conversions]
+        assert 'gram' in unit_names, f"Expected 'gram' in conversions via multi-step, got: {unit_names}"
+
+        gram_conversion = next(x for x in conversions if x.unit == unit_gram)
+        # 16 pinches = 1 tsp, 1 tsp = 2.3g → 16 pinches = 2.3g
+        assert abs(gram_conversion.amount - Decimal('2.3')) < Decimal('0.001'), \
+            f"Expected ~2.3g, got {gram_conversion.amount}"
+
+
+def test_multi_step_conversion_no_food(space_1, u1_s1):
+    """
+    Multi-step conversion without food-specific conversions (generic).
+    """
+    with scopes_disabled():
+        uch = UnitConversionHelper(space_1)
+
+        unit_a = Unit.objects.create(name='unit_a', base_unit='', space=space_1)
+        unit_b = Unit.objects.create(name='unit_b', base_unit='', space=space_1)
+        unit_c = Unit.objects.create(name='unit_c', base_unit='', space=space_1)
+
+        food = Food.objects.create(name='Test Food', space=space_1)
+
+        # A → B: 2 A = 1 B (generic, no food)
+        UnitConversion.objects.create(
+            base_amount=2,
+            base_unit=unit_a,
+            converted_amount=1,
+            converted_unit=unit_b,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+
+        # B → C: 1 B = 5 C (generic, no food)
+        UnitConversion.objects.create(
+            base_amount=1,
+            base_unit=unit_b,
+            converted_amount=5,
+            converted_unit=unit_c,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+
+        ingredient = Ingredient.objects.create(
+            food=food,
+            unit=unit_a,
+            amount=4,
+            space=space_1,
+        )
+
+        conversions = uch.get_conversions(ingredient)
+
+        unit_names = [c.unit.name for c in conversions]
+        assert 'unit_c' in unit_names, f"Expected 'unit_c' in conversions via multi-step, got: {unit_names}"
+
+        c_conversion = next(x for x in conversions if x.unit == unit_c)
+        # 4 A → 2 B → 10 C
+        assert abs(c_conversion.amount - Decimal('10')) < Decimal('0.001'), \
+            f"Expected 10, got {c_conversion.amount}"
+
+
+def test_multi_step_no_cycle(space_1, u1_s1):
+    """
+    Ensure multi-step conversion doesn't loop infinitely with circular conversions.
+    """
+    with scopes_disabled():
+        uch = UnitConversionHelper(space_1)
+
+        unit_a = Unit.objects.create(name='unit_a', base_unit='', space=space_1)
+        unit_b = Unit.objects.create(name='unit_b', base_unit='', space=space_1)
+        unit_c = Unit.objects.create(name='unit_c', base_unit='', space=space_1)
+
+        food = Food.objects.create(name='Test Food', space=space_1)
+
+        # A → B
+        UnitConversion.objects.create(
+            base_amount=1, base_unit=unit_a,
+            converted_amount=2, converted_unit=unit_b,
+            space=space_1, created_by=auth.get_user(u1_s1),
+        )
+        # B → C
+        UnitConversion.objects.create(
+            base_amount=1, base_unit=unit_b,
+            converted_amount=3, converted_unit=unit_c,
+            space=space_1, created_by=auth.get_user(u1_s1),
+        )
+        # C → A (cycle!)
+        UnitConversion.objects.create(
+            base_amount=6, base_unit=unit_c,
+            converted_amount=1, converted_unit=unit_a,
+            space=space_1, created_by=auth.get_user(u1_s1),
+        )
+
+        ingredient = Ingredient.objects.create(
+            food=food, unit=unit_a, amount=1, space=space_1,
+        )
+
+        # Should complete without infinite loop
+        conversions = uch.get_conversions(ingredient)
+        unit_names = [c.unit.name for c in conversions]
+        assert 'unit_b' in unit_names
+        assert 'unit_c' in unit_names
+
+
 def test_conversion_with_zero(space_1, space_2, u1_s1):
     with scopes_disabled():
         uch = UnitConversionHelper(space_1)
