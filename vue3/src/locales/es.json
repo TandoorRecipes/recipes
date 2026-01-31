@@ -848,5 +848,6 @@
     "warning_feature_beta": "Esta función está en fase BETA de pruebas. Podrían aparecer fallos y cambios importantes en un futuro (pudiendo perder información relacionada con la funcionalidad) cuando uses esta función.",
     "warning_space_delete": "Puedes eliminar tu espacio, incluyendo todas las recetas, listas de la compra, regímenes de comidas y cualquier otra cosa creada. ¡Esto no se puede deshacer! ¿Estás seguro de que quieres hacerlo?",
     "Apply": "Aplicar",
-    "APIKey": "Clave  API"
+    "APIKey": "Clave API",
+    "Comment": "Comentario"
 }
