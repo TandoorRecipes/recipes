@@ -104,22 +104,32 @@ class UnitConversionHelper:
     def get_conversions(self, ingredient):
         """
         Converts an ingredient to all possible conversions based on the custom unit conversion database.
+        Uses BFS to discover multi-step conversions (e.g. pinch → tsp → gram).
         After that passes conversion to UnitConversionHelper.base_conversions() to get all base conversions possible.
         :param ingredient: Ingredient object
         :return: list of ingredients with all possible custom and base conversions
         """
         conversions = [ingredient]
         if ingredient.unit:
-            for c in ingredient.unit.unit_conversion_base_relation.all():
-                if c.space == self.space:
-                    r = self._uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
-                    if r and r not in conversions:
-                        conversions.append(r)
-            for c in ingredient.unit.unit_conversion_converted_relation.all():
-                if c.space == self.space:
-                    r = self._uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
-                    if r and r not in conversions:
-                        conversions.append(r)
+            visited_unit_ids = {ingredient.unit.id}
+            queue = [ingredient]
+
+            while queue:
+                current = queue.pop(0)
+                for c in current.unit.unit_conversion_base_relation.all():
+                    if c.space == self.space:
+                        r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
+                        if r and r.unit.id not in visited_unit_ids:
+                            visited_unit_ids.add(r.unit.id)
+                            conversions.append(r)
+                            queue.append(r)
+                for c in current.unit.unit_conversion_converted_relation.all():
+                    if c.space == self.space:
+                        r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
+                        if r and r.unit.id not in visited_unit_ids:
+                            visited_unit_ids.add(r.unit.id)
+                            conversions.append(r)
+                            queue.append(r)
 
         conversions = self.base_conversions(conversions)
 
