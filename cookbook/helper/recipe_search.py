@@ -430,7 +430,7 @@ class RecipeSearch():
         elif self._rating_gte:
             self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
         elif self._rating_lte:
-            self._queryset = self._queryset.filter(rating__gte=int(self._rating_lte)).exclude(rating=0)
+            self._queryset = self._queryset.filter(rating__lte=int(self._rating_lte)).exclude(rating=0)
 
     def internal_filter(self, internal=None):
         if not internal:
