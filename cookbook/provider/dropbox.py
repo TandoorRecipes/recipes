@@ -1,7 +1,7 @@
 import io
 import json
 import os
-from datetime import datetime
+from django.utils import timezone
 
 import requests
 
@@ -56,7 +56,7 @@ class Dropbox(Provider):
         )
         log_entry.save()
 
-        monitor.last_checked = datetime.now()
+        monitor.last_checked = timezone.now()
         monitor.save()
 
         return log_entry

@@ -1,6 +1,6 @@
 import itertools
 import json
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 import pytest
 from django.conf import settings
@@ -344,7 +344,8 @@ def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, sp
             Recipe.objects.filter(id=recipe.id).update(
                 updated_at=recipe.created_at)
 
-    date = (datetime.now() - timedelta(days=15)).strftime("%Y-%m-%d")
+    # use the same reference point as the fixture to avoid date boundary flakiness
+    date = (timezone.now() - timedelta(days=15)).strftime("%Y-%m-%d")
     param1 = f"?{param_type}_gte={date}"
     param2 = f"?{param_type}_lte={date}"
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param1}').content)

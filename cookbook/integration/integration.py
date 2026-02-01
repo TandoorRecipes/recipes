@@ -1,4 +1,3 @@
-import datetime
 import traceback
 import uuid
 from io import BytesIO
@@ -10,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.db import IntegrityError
 from django.http import HttpResponse
+from django.utils import timezone
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django_scopes import scope
@@ -42,7 +42,7 @@ class Integration:
         self.export_type = export_type
         self.ignored_recipes = []
 
-        description = f'Imported by {request.user.get_user_display_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
+        description = f'Imported by {request.user.get_user_display_name()} at {date_format(timezone.now(), "DATETIME_FORMAT")}. Type: {export_type}'
 
         try:
             last_kw = Keyword.objects.filter(name__regex=r'^(Import [0-9]+)', space=request.space).latest('created_at')
@@ -172,7 +172,7 @@ class Integration:
 
                         if isinstance(self, cookbook.integration.mealie1.Mealie1):
                             # since the mealie 1.0 export is a backup and not a classic recipe export we treat it a bit differently
-                            recipes = self.get_recipe_from_file(import_zip)
+                            self.get_recipe_from_file(import_zip)
                         else:
                             for z in file_list:
                                 try:
@@ -311,7 +311,7 @@ class Integration:
             traceback.print_exc()
 
     def get_export_file_name(self, format='zip'):
-        return "export_{}.{}".format(datetime.datetime.now().strftime("%Y-%m-%d"), format)
+        return "export_{}.{}".format(timezone.now().strftime("%Y-%m-%d"), format)
 
     def get_recipe_processed_msg(self, recipe):
         return f'{recipe.pk} - {recipe.name} \n'
