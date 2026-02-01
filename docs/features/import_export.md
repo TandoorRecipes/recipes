@@ -21,7 +21,7 @@ if your favorite one is missing.
 Overview of the capabilities of the different integrations.
 
 | Integration        | Import | Export | Images |
-| ------------------ | ------ | ------ | ------ |
+| ------------------ |--------| ------ | ------ |
 | Default            | ✔️     | ✔️     | ✔️     |
 | Nextcloud          | ✔️     | ⌚     | ✔️     |
 | Mealie             | ✔️     | ⌚     | ✔️     |
@@ -37,11 +37,11 @@ Overview of the capabilities of the different integrations.
 | RezKonv            | ✔️     | ❌     | ❌     |
 | OpenEats           | ✔️     | ❌     | ⌚     |
 | Plantoeat          | ✔️     | ❌     | ✔      |
-| CookBookApp        | ✔️     | ⌚     | ✔️     |
+| CookBook Manager   | ✔️     | ⌚     | ✔️     |
 | CopyMeThat         | ✔️     | ❌     | ✔️     |
 | Melarecipes        | ✔️     | ⌚     | ✔️     |
 | Cookmate           | ✔️     | ⌚     | ✔️     |
-| PDF (experimental) | ⌚️    | ✔️     | ✔️     |
+| PDF (experimental) | ⌚️     | ✔️     | ✔️     |
 | Gourmet            | ✔️     | ❌     | ✔️     |
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
@@ -242,9 +242,10 @@ To import your images you'll need to create the folder `openeats-import` in your
 
 Plan to eat allows you to export a text file containing all your recipes. Simply upload that text file to Tandoor to import all recipes
 
-## CookBookApp
+## CookBook Manager
 
-CookBookApp can export .zip files containing .html files. Upload the entire ZIP to Tandoor to import all included recipes.
+CookBook Manager (previously named CookBookApp) can export .zip files containing YAML files. 
+In Settings -> Backup, select the YAML option when exporting. Upload the entire ZIP to Tandoor to import all included recipes.
 
 ## CopyMeThat
 
