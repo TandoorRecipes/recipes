@@ -27,7 +27,12 @@ from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db import DEFAULT_DB_ALIAS
+
+from django.db.models import Case, Count, Exists, OuterRef, Prefetch, ProtectedError, Q, Subquery, Value, When, QuerySet
+from django.db.models.deletion import Collector
+
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
+
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -1480,6 +1485,8 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
+        # Use Prefetch with select_related for UnitConversion ForeignKeys to avoid N+1 queries
+        unit_conversion_qs = UnitConversion.objects.select_related('base_unit', 'converted_unit', 'food')
         queryset = self.queryset.prefetch_related('food',
                                                   'food__properties',
                                                   'food__properties__property_type',
@@ -1488,11 +1495,10 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                   'food__onhand_users',
                                                   'food__substitute',
                                                   'food__child_inherit_fields',
-                                                  'unit',
-                                                  'unit__unit_conversion_base_relation',
-                                                  'unit__unit_conversion_base_relation__base_unit',
-                                                  'unit__unit_conversion_converted_relation',
-                                                  'unit__unit_conversion_converted_relation__converted_unit', ).filter(step__recipe__space=self.request.space)
+                                                  Prefetch('unit__unit_conversion_base_relation', queryset=unit_conversion_qs),
+                                                  Prefetch('unit__unit_conversion_converted_relation', queryset=unit_conversion_qs),
+                                                  'step_set',
+                                                  'step_set__recipe_set', ).filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
@@ -1501,7 +1507,7 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         if unit and re.match(r'^(\d)+$', unit):
             queryset = queryset.filter(unit_id=unit)
 
-        return queryset.select_related('food')
+        return queryset.select_related('food', 'unit')
 
 
 @extend_schema_view(list=extend_schema(parameters=[

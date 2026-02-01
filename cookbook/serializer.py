@@ -1048,7 +1048,7 @@ class IngredientSerializer(IngredientSimpleSerializer):
         fields = (
             'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
-            'always_use_plural_unit', 'always_use_plural_food',
+            'always_use_plural_unit', 'always_use_plural_food', 'checked',
         )
         read_only_fields = ['conversions', ]
 
