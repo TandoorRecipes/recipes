@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
@@ -225,7 +225,15 @@ class CustomIsOwnerReadOnly(CustomIsOwner):
         return super().has_permission(request, view) and request.method in SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
-        return super().has_object_permission(request, view) and request.method in SAFE_METHODS
+        return super().has_object_permission(request, view, obj) and request.method in SAFE_METHODS
+
+
+class CustomIsOwnerDestroyOnly(CustomIsOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) and request.method == 'DELETE'
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj) and request.method == 'DELETE'
 
 
 class CustomIsSpaceOwner(permissions.BasePermission):
@@ -324,13 +332,18 @@ class CustomRecipePermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         share = request.query_params.get('share', None)
         if share:
-            return share_link_valid(obj, share)
+            if share_link_valid(obj, share):
+                return True
+            # Invalid share link - check if user has normal access
+            # If not, raise 404 to avoid leaking recipe existence
+            if obj.space != request.space:
+                raise Http404()
+            # User is in same space, fall through to normal permission check
+        if obj.private:
+            return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
         else:
-            if obj.private:
-                return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
-            else:
-                return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
-                        or has_group_permission(request.user, ['user'])) and obj.space == request.space
+            return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
+                    or has_group_permission(request.user, ['user'])) and obj.space == request.space
 
 
 class CustomAiProviderPermission(permissions.BasePermission):
@@ -486,8 +499,11 @@ def create_space_for_user(user, name=None):
                               space_setup_completed=False, )
         created_space.save()
 
-        UserSpace.objects.filter(user=user).update(active=False)
-        user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
+        new_space_active = False
+        if UserSpace.objects.filter(user=user).count() == 0:
+            new_space_active = True
+
+        user_space = UserSpace.objects.create(space=created_space, user=user, active=new_space_active)
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space

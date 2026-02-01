@@ -380,7 +380,7 @@
                                         <v-col cols="12" md="6">
                                             <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name" :rules="[['maxLength',128]]"></v-text-field>
                                             <v-number-input :label="$t('Servings')" v-model="importResponse.recipe.servings" :precision="2"></v-number-input>
-                                            <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText"></v-text-field>
+                                            <v-text-field :label="$t('ServingsText')" v-model="importResponse.recipe.servingsText" servings></v-text-field>
                                             <v-textarea :label="$t('Description')" v-model="importResponse.recipe.description" :rules="[['maxLength',512]]" counter
                                                         clearable></v-textarea>
 
@@ -512,7 +512,7 @@
 
                             <v-stepper-window-item value="url_list_import">
 
-                                <v-progress-linear :height="16" :model-value="urlListImportedRecipes.length / urlListImportInput.split('\n').length * 100">
+                                <v-progress-linear color="primary" :height="24" :model-value="urlListImportedRecipes.length / urlListImportInput.split('\n').length * 100">
                                     {{ urlListImportedRecipes.length }} / {{ urlListImportInput.split('\n').length }}
                                 </v-progress-linear>
 
@@ -606,7 +606,7 @@ function importFromUrlList() {
                         setTimeout(importFromUrlList, 500)
                     })
                 }).catch(err => {
-
+                    setTimeout(importFromUrlList, 500)
                 }).finally(() => {
                     loading.value = false
                 })

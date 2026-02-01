@@ -37,15 +37,15 @@
 
     <v-dialog max-width="900px" v-model="dialog">
         <v-card v-if="dialogProperty" :loading="loading">
-            <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${dialogProperty.unit} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
+            <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${(dialogProperty.unit != null) ? dialogProperty.unit : ''} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
                                    v-model="dialog"></v-closable-card-title>
             <v-card-text>
                 <v-list>
                     <v-list-item border v-for="fv in dialogProperty.foodValues" :key="`${dialogProperty.id}_${fv.id}`">
                         <template #prepend>
-                            <v-progress-circular size="55" width="5" :model-value="(fv.value/dialogProperty.propertyAmountTotal)*100"
-                                                 :color="colorScale((fv.value/dialogProperty.propertyAmountTotal)*100)" v-if="fv.value != null && dialogProperty.propertyAmountTotal > 0">
-                                {{ Math.round((fv.value / dialogProperty.propertyAmountTotal) * 100) }}%
+                            <v-progress-circular size="55" width="5" :model-value="(fv.value* props.ingredientFactor/dialogProperty.propertyAmountTotal)*100"
+                                                 :color="colorScale((fv.value* props.ingredientFactor/dialogProperty.propertyAmountTotal)*100)" v-if="fv.value != null && dialogProperty.propertyAmountTotal > 0">
+                                {{ Math.round((fv.value* props.ingredientFactor / dialogProperty.propertyAmountTotal) * 100) }}%
                             </v-progress-circular>
                             <v-progress-circular size="55" width="5" v-if="fv.value == null">?</v-progress-circular>
                         </template>
@@ -59,7 +59,7 @@
                                 <model-edit-dialog model="UnitConversion" @create="refreshRecipe()"
                                                    :item-defaults="{baseAmount: 1, baseUnit: fv.missing_conversion.base_unit,  convertedUnit: fv.missing_conversion.converted_unit, food: fv.food}"></model-edit-dialog>
                             </v-chip>
-                            <v-chip v-else-if="fv.value != undefined">{{ $n(fv.value) }} {{ dialogProperty.unit }}</v-chip>
+                            <v-chip v-else-if="fv.value != undefined">{{ $n(fv.value * props.ingredientFactor) }} {{ dialogProperty.unit }}</v-chip>
                             <v-chip color="warning" prepend-icon="$edit" class="cursor-pointer" :to="{name: 'ModelEditPage', params: {model: 'Recipe', id: recipe.id}}" v-else-if="fv.missing_unit">
                                 {{ $t('NoUnit') }}
                             </v-chip>
@@ -101,7 +101,10 @@ type PropertyWrapper = {
 }
 
 const props = defineProps({
-    servings: {type: Number, required: true,},
+    ingredientFactor: {
+        type: Number,
+        required: true,
+    },
 })
 
 const recipe = defineModel<Recipe>({required: true})
@@ -143,7 +146,7 @@ const propertyList = computed(() => {
                         description: rp.propertyType.description,
                         foodValues: [],
                         propertyAmountPerServing: rp.propertyAmount,
-                        propertyAmountTotal: rp.propertyAmount * recipe.value.servings * (props.servings / recipe.value.servings),
+                        propertyAmountTotal: rp.propertyAmount * recipe.value.servings * props.ingredientFactor,
                         missingValue: false,
                         unit: rp.propertyType.unit,
                         type: rp.propertyType,
@@ -161,7 +164,7 @@ const propertyList = computed(() => {
                     icon: fp.icon,
                     foodValues: fp.food_values,
                     propertyAmountPerServing: fp.total_value / recipe.value.servings,
-                    propertyAmountTotal: fp.total_value * (props.servings / recipe.value.servings),
+                    propertyAmountTotal: fp.total_value * props.ingredientFactor,
                     missingValue: fp.missing_value,
                     unit: fp.unit,
                     type: fp,

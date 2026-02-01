@@ -377,6 +377,21 @@ Allows you to set up external OAuth providers.
 SOCIAL_PROVIDERS = allauth.socialaccount.providers.github, allauth.socialaccount.providers.nextcloud,
 ```
 
+> default `0` - options `0`, `1`
+
+If you enable Social Auth, you can also disable the display of the regular login form by setting:
+```
+HIDE_LOGIN_FORM=1
+```
+
+If you chose to enable this, the login page will only display the button to login with the configured social providers.
+
+To force the display of the login form (so you can login with a local admin account), you can add `form=1`
+as a parameter to the login URL - for example:
+```
+http://localhost/accounts/login/?form=1
+```
+
 #### Remote User Auth
 > default `0` - options `0`, `1`
 
@@ -488,7 +503,7 @@ S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/Tandoor
 
 #### AI Integration
 
-Most AI features are configured trough the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
+Most AI features are configured through the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
 
 Enables AI features for spaces by default
 ```

@@ -22,10 +22,10 @@
             <timer :seconds="step.time != undefined ? step.time*60 : 0" @stop="timerRunning = false" v-if="timerRunning"></timer>
             <v-card-text v-if="step.ingredients.length > 0 || step.instruction != ''">
                 <v-row>
-                    <v-col cols="12" md="6" v-if="step.ingredients.length > 0 && (step.showIngredientsTable || step.show_ingredients_table)">
+                    <v-col :cols="(useUserPreferenceStore().isPrintMode) ? 6 : 12" md="6" v-if="step.ingredients.length > 0 && (step.showIngredientsTable || step.show_ingredients_table)">
                         <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"></ingredients-table>
                     </v-col>
-                    <v-col cols="12" md="6" class="markdown-body">
+                    <v-col :cols="(useUserPreferenceStore().isPrintMode) ? 6 : 12" md="6" class="markdown-body">
                         <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="ingredientFactor"
                                       v-if="step.instructionsMarkdown != undefined"></instructions>
                         <!-- sub recipes dont have a correct schema, thus they use different variable naming -->
@@ -62,6 +62,7 @@ import {Step} from "@/openapi";
 
 import Instructions from "@/components/display/Instructions.vue";
 import Timer from "@/components/display/Timer.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const step = defineModel<Step>({required: true})
 

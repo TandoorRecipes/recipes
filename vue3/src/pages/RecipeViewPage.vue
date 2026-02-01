@@ -1,11 +1,14 @@
 <template>
     <v-container :class="{'ps-0 pe-0 pt-0': mobile}">
-        <recipe-view v-model="recipe"></recipe-view>
+        <v-defaults-provider :defaults="(useUserPreferenceStore().isPrintMode ? {VCard: {variant: 'flat'}} : {})">
 
-        <div class="mt-2" v-if="isShared && Object.keys(recipe).length > 0">
-            <import-tandoor-dialog></import-tandoor-dialog>
-        </div>
 
+           <recipe-view v-model="recipe" :servings="servings"></recipe-view>
+
+            <div class="mt-2" v-if="isShared && Object.keys(recipe).length > 0">
+                <import-tandoor-dialog></import-tandoor-dialog>
+            </div>
+        </v-defaults-provider>
 
     </v-container>
 
@@ -33,6 +36,13 @@ const isShared = computed(() => {
     return params.share && typeof params.share == "string"
 })
 
+const servings = computed(() => {
+    const value = params.servings
+    if (!value) return undefined
+    const parsed = parseInt(value as string, 10)
+    return parsed > 0 ? parsed : undefined
+})
+
 const recipe = ref({} as Recipe)
 
 watch(() => props.id, () => {
@@ -55,6 +65,12 @@ function refreshData(recipeId: string) {
     api.apiRecipeRetrieve(requestParameters).then(r => {
         recipe.value = r
         title.value = recipe.value.name
+
+        setTimeout(() => {
+            if (useUserPreferenceStore().isPrintMode) {
+                window.print()
+            }
+        }, 500)
 
         if (useUserPreferenceStore().isAuthenticated) {
             api.apiViewLogCreate({viewLog: {recipe: Number(recipeId)} as ViewLog})

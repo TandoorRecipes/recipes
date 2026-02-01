@@ -12,7 +12,7 @@ jobs:
                 python-version: ["3.12"]
                 node-version: ["22"]
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
             - uses: awalsh128/cache-apt-pkgs-action@v1.6.0
               with:
                   packages: libsasl2-dev python3-dev libxml2-dev libxmlsec1-dev libxslt-dev libxmlsec1-openssl libxslt-dev libldap2-dev libssl-dev gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl
@@ -31,7 +31,7 @@ jobs:
                   pip install -r requirements.txt
 
             - name: Cache StaticFiles
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               id: django_cache
               with:
                   path: |
@@ -64,7 +64,7 @@ jobs:
               run: |
                   python3 manage.py collectstatic --noinput
 
-            - uses: actions/cache/save@v4
+            - uses: actions/cache/save@v5
               if: steps.django_cache.outputs.cache-hit != 'true'
               with:
                   path: |

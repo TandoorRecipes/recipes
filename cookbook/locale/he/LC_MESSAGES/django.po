@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-03-07 15:08+0000\n"
-"Last-Translator: yonatan ben-menachem <2bmyonatan@gmail.com>\n"
-"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/he/>\n"
+"PO-Revision-Date: 2026-02-01 16:03+0000\n"
+"Last-Translator: timycool <tal.sitton04@gmail.com>\n"
+"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
-"n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.8.4\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : "
+"((n > 10 && n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -58,12 +58,12 @@ msgstr "הסכם לתנאים ולפרטיות"
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
-msgstr ""
+msgstr "למניעת ספאם, המייל לא נשלח. נסה שוב עוד מספר דקות."
 
 #: .\cookbook\helper\permission_helper.py:165
 #: .\cookbook\helper\permission_helper.py:186 .\cookbook\views\views.py:138
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "אין באפשרותך לראות עמוד זה, כי אינך מחובר!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:173
@@ -76,7 +76,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:343
 #: .\cookbook\helper\permission_helper.py:359
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "אין לך הרשאות לראות דף זה!"
 
 #: .\cookbook\helper\permission_helper.py:191
 #: .\cookbook\helper\permission_helper.py:214
@@ -87,11 +87,11 @@ msgstr "אינך יכול/ה לפעול על אובייקט זה כיוון שה
 
 #: .\cookbook\helper\permission_helper.py:420
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "הגעת למכסת המתכונים במרחב זה."
 
 #: .\cookbook\helper\permission_helper.py:432
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "יש לך יותר משתמשים מהמותר במרחב שלך."
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "reverse rotation"
@@ -99,23 +99,23 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "careful rotation"
-msgstr ""
+msgstr "סיבוב זהיר"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "knead"
-msgstr ""
+msgstr "ללוש"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "thicken"
-msgstr ""
+msgstr "לעבות"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "warm up"
-msgstr ""
+msgstr "לחמם"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "ferment"
-msgstr ""
+msgstr "תסיסה"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "slow cook"
@@ -167,57 +167,57 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
-msgstr ""
+msgstr "תחת ווקום"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "עליך לספק גודל מנות"
 
 #: .\cookbook\helper\template_helper.py:97
 #: .\cookbook\helper\template_helper.py:99
 #: .\cookbook\helper\template_helper.py:101
 msgid "Could not parse template code."
-msgstr ""
+msgstr "לא ניתן לנתח קוד מהתבנית."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "אהובים"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "הכנתי את זה"
 
 #: .\cookbook\integration\integration.py:238
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
-msgstr ""
+msgstr "המייבא ציפה לקובץ zip. האם בחרת את המייבא הנכון עבור המידע שלך?"
 
 #: .\cookbook\integration\integration.py:241
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
-msgstr ""
+msgstr "שגיאה לא צפויה קרתה בזמן הייבוא. אנא ודא שהעלת קובץ תקף."
 
 #: .\cookbook\integration\integration.py:246
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "התעלמו מהמתכונים הנ\"ל כיוון שהם כבר קיימים:"
 
 #: .\cookbook\integration\integration.py:250
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "יובאו %s מתכונים."
 
 #: .\cookbook\integration\mealie1.py:210
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "קלוריות"
 
 #: .\cookbook\integration\mealie1.py:211
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "פחמימות"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
@@ -226,7 +226,7 @@ msgstr ""
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "שומן"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
@@ -258,44 +258,44 @@ msgstr ""
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr ""
+msgstr "מקור המתכון:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
-msgstr ""
+msgstr "הערות"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr ""
+msgstr "מידע תזונתי"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
-msgstr ""
+msgstr "מקור"
 
 #: .\cookbook\integration\recettetek.py:55
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr ""
+msgstr "יובא מ"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr ""
+msgstr "מנות"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "זמן המתנה"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "זמן הכנה"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:6
 msgid "Cookbook"
-msgstr ""
+msgstr "ספר מתכונים"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "חלק"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
@@ -319,33 +319,33 @@ msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "ארוחת בוקר"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "אורחת צהריים"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "ארוחת ערב"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:971
 msgid "Other"
-msgstr ""
+msgstr "אחר"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "ג"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "חלבונים"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "קק\"ל"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -355,15 +355,15 @@ msgstr ""
 
 #: .\cookbook\models.py:513
 msgid "Search"
-msgstr ""
+msgstr "חיפוש"
 
 #: .\cookbook\models.py:514
 msgid "Meal-Plan"
-msgstr ""
+msgstr "תכנון מנה"
 
 #: .\cookbook\models.py:515
 msgid "Books"
-msgstr ""
+msgstr "ספרים"
 
 #: .\cookbook\models.py:516 .\cookbook\views\views.py:416
 #: .\cookbook\views\views.py:417
@@ -372,27 +372,27 @@ msgstr "קניות"
 
 #: .\cookbook\models.py:967
 msgid "Nutrition"
-msgstr ""
+msgstr "תזונה"
 
 #: .\cookbook\models.py:968
 msgid "Allergen"
-msgstr ""
+msgstr "אלרגנים"
 
 #: .\cookbook\models.py:969
 msgid "Price"
-msgstr ""
+msgstr "מחיר"
 
 #: .\cookbook\models.py:970
 msgid "Goal"
-msgstr ""
+msgstr "מטרה"
 
 #: .\cookbook\models.py:1467 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "פשוט"
 
 #: .\cookbook\models.py:1468 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "משפט"
 
 #: .\cookbook\models.py:1469 .\cookbook\templates\search_info.html:38
 msgid "Web"
@@ -400,7 +400,7 @@ msgstr ""
 
 #: .\cookbook\models.py:1470 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "נא"
 
 #: .\cookbook\models.py:1525
 msgid "Food Alias"
@@ -416,11 +416,11 @@ msgstr ""
 
 #: .\cookbook\models.py:1528
 msgid "Description Replace"
-msgstr ""
+msgstr "החלפת תיאור"
 
 #: .\cookbook\models.py:1529
 msgid "Instruction Replace"
-msgstr ""
+msgstr "החלפת הוראות"
 
 #: .\cookbook\models.py:1530
 msgid "Never Unit"
@@ -444,7 +444,7 @@ msgstr ""
 
 #: .\cookbook\models.py:1564
 msgid "Recipe"
-msgstr ""
+msgstr "מתכון"
 
 #: .\cookbook\models.py:1565
 msgid "Food"
@@ -452,7 +452,7 @@ msgstr "אוכל"
 
 #: .\cookbook\models.py:1566
 msgid "Keyword"
-msgstr ""
+msgstr "מילת מפתח"
 
 #: .\cookbook\serializer.py:262
 msgid "File uploads are not enabled for this Space."
@@ -460,7 +460,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:273
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "הגעת למכסת הקבצים."
 
 #: .\cookbook\serializer.py:281
 msgid "The given file type is not allowed."

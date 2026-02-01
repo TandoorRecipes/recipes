@@ -40,6 +40,7 @@ router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'unit-conversion', api.UnitConversionViewSet)
 router.register(r'property-type', api.PropertyTypeViewSet)  # NOTE: if regenerating the legacy API these need renamed to food-property
 router.register(r'property', api.PropertyViewSet)
+router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'space', api.SpaceViewSet)
@@ -66,6 +67,7 @@ router.register(r'ai-log', api.AiLogViewSet)
 
 router.register(r'localization', api.LocalizationViewSet, basename='localization')
 router.register(r'server-settings', api.ServerSettingsViewSet, basename='server-settings')
+router.register(r'ingredient-parser', api.IngredientParserView, basename='ingredient-parser')
 
 for p in PLUGINS:
     if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):
@@ -106,7 +108,7 @@ urlpatterns = [
     path('api/ai-import/', api.AiImportView.as_view(), name='api_ai_import'),
     path('api/ai-step-sort/', api.AiStepSortView.as_view(), name='api_ai_step_sort'),
     path('api/import-open-data/', api.ImportOpenData.as_view(), name='api_import_open_data'),
-    path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
+    #path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/fdc-search/', api.FdcSearchView.as_view(), name='api_fdc_search'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),

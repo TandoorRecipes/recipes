@@ -40,6 +40,7 @@ class ConversionException(Exception):
 
 class UnitConversionHelper:
     space = None
+    _base_units_cache = {}  # Class-level cache for base units by space_id
 
     def __init__(self, space):
         """
@@ -84,10 +85,15 @@ class UnitConversionHelper:
                     conversion_unit = i.unit.base_unit
 
                 # TODO allow setting which units to convert to? possibly only once conversions become visible
-                units = caches['default'].get(CacheHelper(self.space).BASE_UNITS_CACHE_KEY, None)
-                if not units:
-                    units = Unit.objects.filter(space=self.space, base_unit__in=(BASE_UNITS_VOLUME + BASE_UNITS_WEIGHT)).all()
-                    caches['default'].set(CacheHelper(self.space).BASE_UNITS_CACHE_KEY, units, 60 * 60)  # cache is cleared on unit save signal so long duration is fine
+                # Use class-level cache first (faster, works in tests), then Django cache
+                space_id = self.space.id
+                if space_id not in UnitConversionHelper._base_units_cache:
+                    units = caches['default'].get(CacheHelper(self.space).BASE_UNITS_CACHE_KEY, None)
+                    if not units:
+                        units = list(Unit.objects.filter(space=self.space, base_unit__in=(BASE_UNITS_VOLUME + BASE_UNITS_WEIGHT)).all())
+                        caches['default'].set(CacheHelper(self.space).BASE_UNITS_CACHE_KEY, units, 60 * 60)  # cache is cleared on unit save signal so long duration is fine
+                    UnitConversionHelper._base_units_cache[space_id] = units
+                units = UnitConversionHelper._base_units_cache[space_id]
 
                 for u in units:
                     try:
@@ -104,22 +110,32 @@ class UnitConversionHelper:
     def get_conversions(self, ingredient):
         """
         Converts an ingredient to all possible conversions based on the custom unit conversion database.
+        Uses BFS to discover multi-step conversions (e.g. pinch → tsp → gram).
         After that passes conversion to UnitConversionHelper.base_conversions() to get all base conversions possible.
         :param ingredient: Ingredient object
         :return: list of ingredients with all possible custom and base conversions
         """
         conversions = [ingredient]
         if ingredient.unit:
-            for c in ingredient.unit.unit_conversion_base_relation.all():
-                if c.space == self.space:
-                    r = self._uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
-                    if r and r not in conversions:
-                        conversions.append(r)
-            for c in ingredient.unit.unit_conversion_converted_relation.all():
-                if c.space == self.space:
-                    r = self._uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
-                    if r and r not in conversions:
-                        conversions.append(r)
+            visited_unit_ids = {ingredient.unit.id}
+            queue = [ingredient]
+
+            while queue:
+                current = queue.pop(0)
+                for c in current.unit.unit_conversion_base_relation.all():
+                    if c.space == self.space:
+                        r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
+                        if r and r.unit.id not in visited_unit_ids:
+                            visited_unit_ids.add(r.unit.id)
+                            conversions.append(r)
+                            queue.append(r)
+                for c in current.unit.unit_conversion_converted_relation.all():
+                    if c.space == self.space:
+                        r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
+                        if r and r.unit.id not in visited_unit_ids:
+                            visited_unit_ids.add(r.unit.id)
+                            conversions.append(r)
+                            queue.append(r)
 
         conversions = self.base_conversions(conversions)
 

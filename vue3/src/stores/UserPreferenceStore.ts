@@ -7,6 +7,7 @@ import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
 import {useTheme} from "vuetify";
 import {useRouter} from "vue-router";
+import {useRouteQuery} from "@vueuse/router";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
@@ -54,6 +55,11 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * load the default unit to the store for easy use in editors and more
      */
     const defaultUnitObj = ref<Unit | null>(null)
+
+    /**
+     * detect if print mode is activated by checking for "print" query parameter
+     */
+    const isPrintMode = useRouteQuery('print', false, {transform: Boolean})
 
     const theme = useTheme()
     const router = useRouter()
@@ -164,7 +170,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     function loadUserSpaces() {
         let api = new ApiApi()
         return api.apiUserSpaceAllPersonalList().then(r => {
-            userSpaces.value = r.results
+            userSpaces.value = r
         }).catch(err => {
             if (err.response.status != 403) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
@@ -222,6 +228,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             shopping_show_selected_supermarket_only: false,
             shopping_selected_grouping: ShoppingGroupingOptions.CATEGORY,
             shopping_selected_supermarket: null,
+            shopping_selected_shopping_lists: [],
             shopping_item_info_created_by: false,
             shopping_item_info_mealplan: true,
             shopping_item_info_recipe: true,
@@ -250,10 +257,10 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * applies user settings regarding themes/styling
      */
     function updateTheme() {
-        if (userSettings.value.theme == 'TANDOOR') {
-            theme.change('light')
-        } else if (userSettings.value.theme == 'TANDOOR_DARK') {
+        if (userSettings.value.theme == 'TANDOOR_DARK' && !isPrintMode.value) {
             theme.change('dark')
+        } else {
+            theme.change('light')
         }
     }
 
@@ -281,6 +288,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         spaces,
         activeUserSpace,
         isAuthenticated,
+        isPrintMode,
         initCompleted,
         defaultUnitObj,
         loadUserSettings,

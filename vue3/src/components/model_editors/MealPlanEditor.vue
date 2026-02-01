@@ -2,7 +2,7 @@
     <model-editor-base
         :loading="loading"
         :dialog="dialog"
-        @save="saveObject().then((obj:MealPlan) => { useMealPlanStore().plans.set(obj.id, obj); loadShoppingListEntries()})"
+        @save="saveObject().then((obj:MealPlan) => { useMealPlanStore().plans.set(obj.id, obj);})"
         @delete="useMealPlanStore().plans.delete(editingObj.id); deleteObject()"
         @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
@@ -29,27 +29,45 @@
                                              @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></ModelSelect>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
-                                <recipe-card :recipe="editingObj.recipe" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
+                                <recipe-card :recipe="editingObj.recipe" :servings="editingObj.servings" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
                                 <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate()">
-                                    {{$t('Add')}}
-                                    <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj" @created="loadShoppingListEntries(); editingObj.shopping = true;"></add-to-shopping-dialog>
+                                    {{ $t('Add') }}
+                                    <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj"
+                                                            @created="editingObj.shopping = true;"></add-to-shopping-dialog>
                                 </v-btn>
 
                                 <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details v-if="editingObj.recipe && !isUpdate()"></v-checkbox>
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('Title')" v-model="editingObj.title"></v-text-field>
-                                <v-date-input
-                                    v-model="dateRangeValue"
-                                    @update:modelValue="updateDate()"
-                                    :first-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
-                                    :show-week="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
-                                    :label="$t('Date')"
-                                    multiple="range"
-                                    prepend-icon=""
-                                    prepend-inner-icon="$calendar"
-                                    hide-details
-                                ></v-date-input>
+                                <v-row no-gutters class="datetime-joined-group">
+                                    <v-col cols="12" sm="7">
+                                        <v-date-input
+                                            v-model="dateRangeValue"
+                                            @update:modelValue="updateDate()"
+                                            :first-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
+                                            :show-week="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
+                                            :label="$t('Date')"
+                                            multiple="range"
+                                            prepend-icon=""
+                                            prepend-inner-icon="$calendar"
+                                            hide-details
+                                        ></v-date-input>
+                                    </v-col>
+                                    <v-col cols="12" sm="5">
+                                        <v-text-field v-model="mealPlanTime"
+                                            :active="timePickerMenu" :focus="timePickerMenu"
+                                            :label="$t('Time')" prepend-inner-icon="fa-solid fa-clock" readonly
+                                            hide-details>
+                                            <v-menu v-model="timePickerMenu" :close-on-content-click="false"
+                                                    activator="parent" transition="scale-transition">
+                                                <v-time-picker v-if="timePickerMenu" format="24hr"
+                                                               v-model="mealPlanTime"
+                                                               @update:modelValue="applyTimeToEditingDates"></v-time-picker>
+                                            </v-menu>
+                                        </v-text-field>
+                                    </v-col>
+                                </v-row>
 
                                 <v-input>
                                     <v-btn-group elevation="1" class="w-100" divided border>
@@ -79,19 +97,7 @@
                 <v-tabs-window-item value="shopping">
                     <closable-help-alert class="mb-2" :text="$t('MealPlanShoppingHelp')"></closable-help-alert>
 
-                    <v-row v-if="isUpdate()" dense style="max-height: 75vh; min-height: 30vh" class="overflow-y-scroll">
-                        <v-col>
-                            <shopping-list-entry-input :loading="useShoppingStore().currentlyUpdating" :meal-plan="editingObj"></shopping-list-entry-input>
-                            <v-list v-if="editingObj.id">
-                                <shopping-line-item
-                                    v-for="slf in useShoppingStore().getMealPlanEntries(editingObj.id)"
-                                    :shopping-list-food="slf"
-                                    hide-info-row
-                                    :key="slf.food.id"
-                                ></shopping-line-item>
-                            </v-list>
-                        </v-col>
-                    </v-row>
+                    <shopping-list-view :meal-plan-id="editingObj.id"></shopping-list-view>
 
                 </v-tabs-window-item>
             </v-tabs-window>
@@ -102,7 +108,7 @@
 
 <script setup lang="ts">
 
-import {nextTick, onMounted, PropType, ref, toRaw, watch} from "vue";
+import {nextTick, onMounted, onUnmounted, PropType, ref, toRaw, watch} from "vue";
 import {ApiApi, MealPlan, MealType, ShoppingListRecipe} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
@@ -119,6 +125,7 @@ import ShoppingListEntryInput from "@/components/inputs/ShoppingListEntryInput.v
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
+import ShoppingListView from "@/components/display/ShoppingListView.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<MealPlan>, required: false, default: null},
@@ -153,15 +160,53 @@ watch([() => props.item, () => props.itemId], () => {
 const tab = ref('plan')
 
 const dateRangeValue = ref([] as Date[])
+const timePickerMenu = ref(false)
+const mealPlanTime = ref('12:00')
+
+watch(() => editingObj.value.mealType, (newType, oldType) => {
+    if (newType?.time && newType?.time !== oldType?.time) {
+        mealPlanTime.value = newType.time.substring(0, 5)
+        applyTimeToEditingDates()
+    }
+})
+
+function applyTimeToEditingDates() {
+    if (!mealPlanTime.value) return
+    const [hours, minutes] = mealPlanTime.value.split(':').map(Number)
+    if (editingObj.value.fromDate) {
+        editingObj.value.fromDate = DateTime.fromJSDate(editingObj.value.fromDate)
+            .set({hour: hours, minute: minutes, second: 0, millisecond: 0}).toJSDate()
+    }
+    if (editingObj.value.toDate) {
+        editingObj.value.toDate = DateTime.fromJSDate(editingObj.value.toDate)
+            .set({hour: hours, minute: minutes, second: 0, millisecond: 0}).toJSDate()
+    }
+}
+
+/**
+ * update shopping list when switching to shopping tab
+ */
+watch(() => tab.value, (newVal, oldVal) => {
+    if (newVal == 'shopping') {
+        useShoppingStore().selectedMealPlan = editingObj.value.id
+        useShoppingStore().updateEntriesStructure()
+    }
+})
 
 onMounted(() => {
     initializeEditor()
 })
 
+onUnmounted(() => {
+    if (useShoppingStore().selectedMealPlan == editingObj.value.id) {
+        useShoppingStore().selectedMealPlan = undefined
+    }
+})
+
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     const api = new ApiApi()
 
     // load meal types and create new object based on default type when initially loading
@@ -181,15 +226,22 @@ function initializeEditor(){
 
         setupState(props.item, props.itemId, {
             newItemFunction: () => {
-                editingObj.value.fromDate = DateTime.now().toJSDate()
-                editingObj.value.toDate = DateTime.now().toJSDate()
+                const noonToday = DateTime.now().set({hour: 12, minute: 0, second: 0, millisecond: 0})
+                editingObj.value.fromDate = noonToday.toJSDate()
+                editingObj.value.toDate = noonToday.toJSDate()
+                mealPlanTime.value = '12:00'
+
                 editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
                 editingObj.value.servings = 1
                 editingObj.value.mealType = defaultMealType
-
                 editingObj.value.addshopping = useUserPreferenceStore().userSettings.mealplanAutoaddShopping
 
                 applyItemDefaults(props.itemDefaults)
+
+                if (defaultMealType?.time) {
+                    mealPlanTime.value = defaultMealType.time.substring(0, 5)
+                }
+                applyTimeToEditingDates()
 
                 if (editingObj.value.toDate < editingObj.value.fromDate) {
                     editingObj.value.toDate = editingObj.value.fromDate
@@ -202,8 +254,10 @@ function initializeEditor(){
                 })
             }, existingItemFunction: () => {
                 editingObj.value = structuredClone(toRaw(editingObj.value))
+                if (editingObj.value.fromDate) {
+                    mealPlanTime.value = DateTime.fromJSDate(editingObj.value.fromDate).toFormat('HH:mm')
+                }
                 initializeDateRange()
-                loadShoppingListEntries()
             }
         },)
     })
@@ -221,16 +275,10 @@ function updateDate() {
         } else {
             editingObj.value.toDate = editingObj.value.fromDate
         }
+        applyTimeToEditingDates()
     } else {
         useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
     }
-}
-
-/**
- * load all shopping list entries associated with meal plan
- */
-function loadShoppingListEntries() {
-    useShoppingStore().refreshFromAPI(editingObj.value.id!)
 }
 
 /**
@@ -252,5 +300,22 @@ function initializeDateRange() {
 </script>
 
 <style scoped>
-
+@media (min-width: 600px) {
+    .datetime-joined-group {
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 4px 4px 0 0;
+    }
+    .datetime-joined-group :deep(.v-field__overlay) {
+        display: none;
+    }
+    .datetime-joined-group :deep(.v-field) {
+        border-radius: 0;
+    }
+    .datetime-joined-group > :first-child :deep(.v-field) {
+        border-top-left-radius: 4px;
+    }
+    .datetime-joined-group > :last-child :deep(.v-field) {
+        border-top-right-radius: 4px;
+    }
+}
 </style>

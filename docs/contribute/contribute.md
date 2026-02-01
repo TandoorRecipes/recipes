@@ -28,10 +28,13 @@ Or you can write how-to guides using some of Tandoor's advanced features such as
 
 See [here](/contribute/documentation/) for more information on how to add documentation to Tandoor.
 
+
 ## Contributing Code
 
 For the truly ambitious, you can help write code to fix issues, add additional features, or write your own scripts using
 Tandoor's extensive API and share your work with the community.
+
+Guides for contributing specific types of features can be found [here](/contribute/feature_contrib/featureguides/)
 
 Before writing any code, please make sure that you review [contribution guidelines](/contribute/guidelines/) and
 [VSCode](/contribute/vscode) or [PyCharm](/contribute/pycharm) specific configurations.

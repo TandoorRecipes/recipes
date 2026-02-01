@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Recipe, ShareLink
+from cookbook.models import Food, Recipe, ShareLink, Unit
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
 
 LIST_URL = 'api:recipe-list'
@@ -55,29 +55,49 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
 
 
-# def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u):
-#     assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
-#     assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 404
-#
-#     with scopes_disabled():
-#         r = u1_s1.get(reverse('new_share_link', kwargs={'pk': recipe_1_s1.pk}))
-#         assert r.status_code == 302
-#         r = u1_s2.get(reverse('new_share_link', kwargs={'pk': recipe_1_s1.pk}))
-#         assert r.status_code == 404
-#         share = ShareLink.objects.filter(recipe=recipe_1_s1).first()
-#         assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         # TODO fix in https://github.com/TandoorRecipes/recipes/issues/1238
-#         assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 404
-#
-#         recipe_1_s1.created_by = auth.get_user(u1_s1)
-#         recipe_1_s1.private = True
-#         recipe_1_s1.save()
-#
-#         assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-#         assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 403
+def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
+    # Same space user can access
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
+    # Different space user cannot access without share link
+    assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 404
+
+    with scopes_disabled():
+        # Create share link via API
+        r = u1_s1.get(reverse('api_share_link', args=[recipe_1_s1.pk]))
+        assert r.status_code == 200
+        share = ShareLink.objects.filter(recipe=recipe_1_s1).first()
+
+    # Anonymous can access with share link
+    assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    # Same space can access with share link
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    # CORE FIX: Different space can access with share link (issue #1238)
+    assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+
+    # Test private recipe scenarios
+    with scopes_disabled():
+        recipe_1_s1.created_by = auth.get_user(u1_s1)
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+    # Private recipe still accessible with share link
+    assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+    # Private recipe NOT accessible without share link (non-owner)
+    assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 403
+
+
+def test_share_permission_invalid(recipe_1_s1, u1_s2):
+    """Test that invalid share links are properly rejected with 404 to avoid leaking existence."""
+    import uuid
+    # Invalid UUID format - cross-space user should get 404 (not 403, to avoid leaking existence)
+    r = u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + '?share=invalid-uuid')
+    assert r.status_code == 404
+
+    # Valid UUID but non-existent share link - also 404
+    r = u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={uuid.uuid4()}')
+    assert r.status_code == 404
 
 
 @pytest.mark.parametrize("arg", [
@@ -184,3 +204,36 @@ def test_delete(u1_s1, u1_s2, u2_s1, recipe_1_s1, recipe_2_s1):
 
         r = u1_s1.delete(reverse(DETAIL_URL, args={recipe_2_s1.id}))
         assert r.status_code == 204
+
+
+def test_food_properties_skipped_on_create(u1_s1, space_1):
+    """
+    Issue #4356: food_properties skipped on CREATE, returned on GET.
+
+    CREATE skips expensive food_properties computation (returns {}) to avoid
+    N+1 query timeouts. GET returns full computed values.
+    """
+    from cookbook.models import PropertyType, Property
+
+    with scopes_disabled():
+        unit = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+        prop_type = PropertyType.objects.create(name='Calories', unit='kcal', space=space_1)
+        food = Food.objects.create(name='Test Food', space=space_1, properties_food_amount=100, properties_food_unit=unit)
+        Property.objects.create(food=food, property_type=prop_type, property_amount=50, space=space_1)
+
+    recipe_data = {
+        "name": "Test Recipe",
+        "steps": [{"instruction": "Mix", "ingredients": [{"food": {"name": "Test Food"}, "unit": {"name": "gram"}, "amount": 100}]}]
+    }
+
+    # CREATE returns empty food_properties
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    assert response['food_properties'] == {}
+
+    # GET returns computed food_properties
+    r = u1_s1.get(reverse(DETAIL_URL, args=[response['id']]))
+    assert r.status_code == 200
+    get_response = json.loads(r.content)
+    assert len(get_response['food_properties']) > 0

@@ -1,5 +1,5 @@
 import json
-from datetime import timedelta
+from datetime import time, timedelta
 from django.utils import timezone
 
 import pytest
@@ -238,8 +238,137 @@ def test_ical_event(obj_1, u1_s1):
     assert len(events) == 1
 
     event = events[0]
-    assert int(event['uid']) == obj_1.id
+    # UID must be RFC 5545 compliant (format: identifier@domain)
+    assert event['uid'] == f'mealplan-{obj_1.id}@tandoor.recipes'
     assert event['summary'] == f'{obj_1.meal_type.name}: {obj_1.get_label()}'
     assert event['description'] == obj_1.note
     assert event.decoded('dtstart').date() == timezone.now().date()
     assert event.decoded('dtend').date() == timezone.now().date()
+
+
+def test_ical_event_timezone_aware(space_1, recipe_1_s1, u1_s1):
+    """iCal events should have timezone-aware datetimes with correct time from from_date."""
+    specific_time = timezone.now().replace(hour=14, minute=30, second=0, microsecond=0)
+    with scopes_disabled():
+        meal_type = MealType.objects.get_or_create(
+            name='lunch', space=space_1, created_by=auth.get_user(u1_s1),
+            defaults={'time': time(12, 0)}
+        )[0]
+        MealPlan.objects.create(
+            recipe=recipe_1_s1, space=space_1, meal_type=meal_type,
+            from_date=specific_time, to_date=specific_time,
+            created_by=auth.get_user(u1_s1)
+        )
+
+    r = u1_s1.get(f'{reverse(ICAL_URL)}')
+    cal = Calendar.from_ical(r.getvalue().decode('UTF-8'))
+    events = cal.walk('VEVENT')
+    assert len(events) == 1
+
+    event = events[0]
+    dtstart = event.decoded('dtstart')
+    # Must be timezone-aware
+    assert dtstart.tzinfo is not None
+    # Time should come from from_date (14:30), not meal_type.time (12:00)
+    assert dtstart.hour == 14
+    assert dtstart.minute == 30
+
+
+def test_ical_event_minimum_duration(space_1, recipe_1_s1, u1_s1):
+    """iCal events with same from_date and to_date should have minimum 1-hour duration."""
+    now = timezone.now().replace(second=0, microsecond=0)
+    with scopes_disabled():
+        meal_type = MealType.objects.get_or_create(
+            name='test_dur', space=space_1, created_by=auth.get_user(u1_s1)
+        )[0]
+        MealPlan.objects.create(
+            recipe=recipe_1_s1, space=space_1, meal_type=meal_type,
+            from_date=now, to_date=now,
+            created_by=auth.get_user(u1_s1)
+        )
+
+    r = u1_s1.get(f'{reverse(ICAL_URL)}')
+    cal = Calendar.from_ical(r.getvalue().decode('UTF-8'))
+    events = cal.walk('VEVENT')
+    assert len(events) == 1
+
+    event = events[0]
+    dtstart = event.decoded('dtstart')
+    dtend = event.decoded('dtend')
+    duration = dtend - dtstart
+    assert duration >= timedelta(minutes=60)
+
+
+def test_create_date_only_gets_noon_default(u1_s1, recipe_1_s1, meal_type):
+    """Creating a meal plan with date-only string should default to noon local time."""
+    r = u1_s1.post(reverse(LIST_URL), {
+        'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []},
+        'meal_type': {'id': meal_type.id, 'name': meal_type.name},
+        'from_date': '2026-06-15',
+        'to_date': '2026-06-15',
+        'servings': 1,
+        'title': 'noon default test',
+        'shared': []
+    }, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    with scopes_disabled():
+        mp = MealPlan.objects.get(pk=response['id'])
+    local_from = timezone.localtime(mp.from_date)
+    local_to = timezone.localtime(mp.to_date)
+    assert local_from.hour == 12
+    assert local_from.minute == 0
+    assert local_to.hour == 12
+    assert local_to.minute == 0
+
+
+def test_create_date_only_with_meal_type_time(u1_s1, recipe_1_s1, space_1):
+    """Creating a meal plan with date-only string and meal type with time should use meal type time."""
+    with scopes_disabled():
+        dinner_type = MealType.objects.create(
+            name='dinner_test', space=space_1,
+            created_by=auth.get_user(u1_s1), time=time(17, 0)
+        )
+    r = u1_s1.post(reverse(LIST_URL), {
+        'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []},
+        'meal_type': {'id': dinner_type.id, 'name': dinner_type.name},
+        'from_date': '2026-06-15',
+        'to_date': '2026-06-15',
+        'servings': 1,
+        'title': 'dinner time test',
+        'shared': []
+    }, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    with scopes_disabled():
+        mp = MealPlan.objects.get(pk=response['id'])
+    local_from = timezone.localtime(mp.from_date)
+    local_to = timezone.localtime(mp.to_date)
+    assert local_from.hour == 17
+    assert local_from.minute == 0
+    assert local_to.hour == 17
+    assert local_to.minute == 0
+
+
+def test_create_explicit_time_preserved(u1_s1, recipe_1_s1, space_1):
+    """Creating a meal plan with explicit datetime should preserve that time, ignoring meal type time."""
+    with scopes_disabled():
+        dinner_type = MealType.objects.create(
+            name='dinner_explicit', space=space_1,
+            created_by=auth.get_user(u1_s1), time=time(17, 0)
+        )
+    r = u1_s1.post(reverse(LIST_URL), {
+        'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []},
+        'meal_type': {'id': dinner_type.id, 'name': dinner_type.name},
+        'from_date': '2026-06-15T19:30:00Z',
+        'to_date': '2026-06-15T19:30:00Z',
+        'servings': 1,
+        'title': 'explicit time test',
+        'shared': []
+    }, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    with scopes_disabled():
+        mp = MealPlan.objects.get(pk=response['id'])
+    assert mp.from_date.hour == 19
+    assert mp.from_date.minute == 30

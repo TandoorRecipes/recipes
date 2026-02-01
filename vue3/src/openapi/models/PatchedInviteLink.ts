@@ -86,6 +86,12 @@ export interface PatchedInviteLink {
      * @memberof PatchedInviteLink
      */
     readonly createdAt?: Date;
+    /**
+     * Return whether the invite email was successfully sent.
+     * @type {boolean}
+     * @memberof PatchedInviteLink
+     */
+    readonly emailSent?: boolean;
 }
 
 /**
@@ -115,10 +121,11 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'emailSent': json['email_sent'] == null ? undefined : json['email_sent'],
     };
 }
 
-export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'> | null): any {
+export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'> | null): any {
     if (value == null) {
         return value;
     }

@@ -1,7 +1,7 @@
 import os
 import re
 import subprocess
-from datetime import datetime, timedelta
+from datetime import timedelta
 from io import StringIO
 from uuid import UUID
 
@@ -43,7 +43,10 @@ def index(request, path=None, resource=None):
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
     if 'signup_token' in request.session:
-        return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
+        value = request.session['signup_token']
+        del request.session['signup_token']
+        request.session.modified = True
+        return HttpResponseRedirect(reverse('view_invite', args=[value]))
 
     if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
         return render(request, 'frontend/tandoor.html', {})
@@ -250,9 +253,9 @@ def system(request):
                     space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
                 api_space_stats.append(space_stats)
 
-    cache_response = caches['default'].get(f'system_view_test_cache_entry', None)
+    cache_response = caches['default'].get('system_view_test_cache_entry', None)
     if not cache_response:
-        caches['default'].set(f'system_view_test_cache_entry', datetime.now(), 10)
+        caches['default'].set('system_view_test_cache_entry', timezone.now(), 10)
 
     return render(
         request, 'system.html', {
@@ -276,7 +279,7 @@ def plugin_update(request):
     if not request.user.is_superuser:
         raise PermissionDenied
 
-    if not 'module' in request.GET:
+    if 'module' not in request.GET:
         raise BadRequest
 
     for p in PLUGINS:
@@ -328,7 +331,7 @@ def invite_link(request, token):
             print('Malformed Invite Link supplied!')
             return HttpResponseRedirect(reverse('index'))
 
-        if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
+        if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
             if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
                 if not link.reusable:
                     link.used_by = request.user
