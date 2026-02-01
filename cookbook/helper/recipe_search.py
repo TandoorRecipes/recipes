@@ -413,7 +413,9 @@ class RecipeSearch():
 
     def rating_filter(self):
         if self._rating or self._rating_lte or self._rating_gte or self._sort_includes('rating'):
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=0))))
+            # Only consider CookLogs with non-null ratings to avoid null ratings
+            # affecting the average calculation (fixes GitHub issue #1939)
+            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, cooklog__rating__isnull=False, then='cooklog__rating'), default=0))))
 
         if self._rating:
             self._queryset = self._queryset.filter(rating=round(int(self._rating)))
