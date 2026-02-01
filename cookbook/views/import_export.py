@@ -12,10 +12,12 @@ from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.cooklang import Cooklang
 from cookbook.integration.cookmate import Cookmate
 from cookbook.integration.copymethat import CopyMeThat
 from cookbook.integration.default import Default
 from cookbook.integration.domestica import Domestica
+from cookbook.integration.gourmet import Gourmet
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.mealie1 import Mealie1
 from cookbook.integration.mealmaster import MealMaster
@@ -32,7 +34,6 @@ from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.rezeptsuitede import Rezeptsuitede
 from cookbook.integration.rezkonv import RezKonv
 from cookbook.integration.saffron import Saffron
-from cookbook.integration.gourmet import Gourmet
 from cookbook.models import ExportLog, Recipe
 from recipes import settings
 
@@ -74,6 +75,8 @@ def get_integration(request, export_type):
         return Plantoeat(request, export_type)
     if export_type == ImportExportBase.COOKBOOKAPP:
         return CookBookApp(request, export_type)
+    if export_type == ImportExportBase.COOKLANG:
+        return Cooklang(request, export_type)
     if export_type == ImportExportBase.COPYMETHAT:
         return CopyMeThat(request, export_type)
     if export_type == ImportExportBase.PDF:
