@@ -12,7 +12,7 @@ export type Integration = {
 export const INTEGRATIONS: Array<Integration> = [
     {id: 'DEFAULT', name: "Tandoor", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#default', imgSrc: 'https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg'},
     {id: 'CHEFTAP', name: "Cheftap", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cheftap'},
-    {id: 'CHOWDOWN', name: "Chowdown", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#chowdown'},
+    {id: 'CHOWDOWN', name: "Chowdown", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#chowdown'},
     {id: 'COOKBOOKAPP', name: "CookBookApp", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookbookapp'},
     {id: 'COOKLANG', name: "Cooklang Markdown", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cooklang'},
     {id: 'COOKMATE', name: "Cookmate", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookmate'},
