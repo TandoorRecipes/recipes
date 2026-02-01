@@ -1364,11 +1364,11 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
         queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct().all()
 
-        from_date = self.request.query_params.get('from_date', None)
+        from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
         if from_date is not None:
             queryset = queryset.filter(to_date__date__gte=from_date)
 
-        to_date = self.request.query_params.get('to_date', None)
+        to_date = self.request.query_params.get('to_date', timezone.now() + datetime.timedelta(days=360))
         if to_date is not None:
             queryset = queryset.filter(to_date__date__lte=to_date)
 
@@ -1380,8 +1380,8 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     @decorators.action(detail=False)
     def ical(self, request):
-        from_date = self.request.query_params.get('from_date', None)
-        to_date = self.request.query_params.get('to_date', None)
+        from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
+        to_date = self.request.query_params.get('to_date', timezone.now() + datetime.timedelta(days=360))
         return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
 
 
