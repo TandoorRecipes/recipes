@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Recipe, Unit
+from cookbook.models import Food, Recipe, ShareLink, Unit
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
 
 LIST_URL = 'api:recipe-list'
