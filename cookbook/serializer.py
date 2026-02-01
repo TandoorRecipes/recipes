@@ -6,6 +6,7 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 from drf_spectacular.utils import extend_schema_field
+
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
@@ -1682,11 +1683,20 @@ class AutomationSerializer(serializers.ModelSerializer):
 
 class InviteLinkSerializer(WritableNestedModelSerializer):
     group = GroupSerializer()
+    email_sent = serializers.SerializerMethodField()
+
+    @extend_schema_field(bool)
+    def get_email_sent(self, obj):
+        """Return whether the invite email was successfully sent."""
+        return getattr(obj, '_email_sent', False)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         obj = super().create(validated_data)
+
+        # Track email status - default to False
+        obj._email_sent = False
 
         if obj.email and EMAIL_HOST != '':
             try:
@@ -1709,10 +1719,12 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
                         message,
                         None,
                         [obj.email],
-                        fail_silently=True,
+                        fail_silently=False,
                     )
-            except (SMTPException, BadHeaderError, TimeoutError):
-                pass
+                    obj._email_sent = True
+            except (SMTPException, BadHeaderError, TimeoutError, OSError) as e:
+                print(f"Failed to send invite email to {obj.email}: {type(e).__name__}: {e}")
+                obj._email_sent = False
 
         return obj
 
@@ -1720,8 +1732,8 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         model = InviteLink
         fields = (
             'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
-            'created_at',)
-        read_only_fields = ('id', 'uuid', 'used_by', 'created_by', 'created_at',)
+            'created_at', 'email_sent',)
+        read_only_fields = ('id', 'uuid', 'used_by', 'created_by', 'created_at', 'email_sent',)
 
 
 # CORS, REST and Scopes aren't currently working
