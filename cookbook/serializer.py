@@ -1247,6 +1247,7 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
         fields = ['image', 'image_url', ]
 
 
+
 class RecipeBatchUpdateSerializer(serializers.Serializer):
     recipes = serializers.ListField(child=serializers.IntegerField())
     keywords_add = serializers.ListField(child=serializers.IntegerField())
@@ -1346,8 +1347,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not self.context[
-                                                                            'request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
