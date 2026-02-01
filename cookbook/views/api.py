@@ -27,12 +27,8 @@ from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db import DEFAULT_DB_ALIAS
-
-from django.db.models import Case, Count, Exists, OuterRef, Prefetch, ProtectedError, Q, Subquery, Value, When, QuerySet
-from django.db.models.deletion import Collector
-
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
-
+from django.db.models import Prefetch
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -53,6 +49,7 @@ from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
+from rest_framework import mixins
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
@@ -60,11 +57,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.serializers import CharField, IntegerField, UUIDField
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
-from rest_framework import mixins
 from rest_framework.viewsets import ViewSetMixin
-from rest_framework.serializers import CharField, IntegerField, UUIDField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.connectors.connector_manager import ConnectorManager, ActionType
