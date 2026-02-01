@@ -1779,8 +1779,8 @@ class AccessTokenSerializer(serializers.ModelSerializer):
     def get_token(self, obj):
         if (timezone.now() - obj.created).seconds < 15:
             return obj.token
-        if obj.scope == 'bookmarklet':
-            # bookmarklet only tokens are always returned because they have very limited access and are needed for the bookmarklet function to work
+        if obj.scope == 'bookmarklet' or obj.scope == 'mealplan':
+            # bookmarklet and mealplan only tokens are always returned because they have very limited access and are needed for the bookmarklet function to work
             return obj.token
         return f'tda_************_******_***********{obj.token[len(obj.token) - 4:]}'
 

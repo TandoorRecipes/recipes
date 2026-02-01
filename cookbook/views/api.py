@@ -1349,16 +1349,13 @@ MealPlanViewQueryParameters = [
                      description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str,
                      many=True),
 ]
-
-
-@extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters),
-                    ical=extend_schema(parameters=MealPlanViewQueryParameters,
-                                       responses={(200, 'text/calendar'): OpenApiTypes.STR}))
+@extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters))
 class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+    required_scopes = ['mealplan']
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
@@ -1378,6 +1375,23 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return queryset
 
+    def get_serializer_class(self):
+        if self.action == 'ical':
+            return MealPlanSerializer
+        return super().get_serializer_class()
+
+    def get_permissions(self):
+        if self.action == 'ical':
+            permission_classes = [(CustomIsOwner | CustomIsShared | CustomIsUser) & CustomTokenHasScope]
+            # need to return instances for get_permissions
+            # however, DRF doesn't support bitwise operators on instances
+            # but it does support them on classes.
+            # When using classes, DRF instantiates them.
+            return [permission() for permission in permission_classes]
+        return super().get_permissions()
+
+    @extend_schema(parameters=MealPlanViewQueryParameters,
+                   responses={(200, 'text/calendar'): OpenApiTypes.STR})
     @decorators.action(detail=False)
     def ical(self, request):
         from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))

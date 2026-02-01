@@ -73,6 +73,8 @@
   "Books": "Kochbücher",
   "CREATE_ERROR": "Fehler beim Erstellen",
   "Calculator": "Rechner",
+  "Calendar": "Kalender",
+  "CalendarIcsHelp": "Benutze die folgende Url um deinen Speiseplan mit deinem Kalender zu syncronisieren. ",
   "Calories": "Kalorien",
   "Cancel": "Abbrechen",
   "Cannot_Add_Notes_To_Shopping": "Notizen können nicht auf die Einkaufsliste gesetzt werden",
