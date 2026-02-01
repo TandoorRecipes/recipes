@@ -31,6 +31,7 @@ models/FdcQueryFoods.ts
 models/Food.ts
 models/FoodBatchUpdate.ts
 models/FoodInheritField.ts
+models/FoodShopping.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
 models/GenericModelReference.ts
@@ -42,7 +43,9 @@ models/ImportOpenDataResponse.ts
 models/ImportOpenDataResponseDetail.ts
 models/ImportOpenDataVersionMetaData.ts
 models/Ingredient.ts
-models/IngredientString.ts
+models/IngredientParserRequest.ts
+models/IngredientParserResponse.ts
+models/IngredientSimple.ts
 models/InviteLink.ts
 models/Keyword.ts
 models/KeywordLabel.ts
@@ -94,6 +97,7 @@ models/PaginatedRecipeBookList.ts
 models/PaginatedRecipeImportList.ts
 models/PaginatedRecipeOverviewList.ts
 models/PaginatedShoppingListEntryList.ts
+models/PaginatedShoppingListList.ts
 models/PaginatedShoppingListRecipeList.ts
 models/PaginatedSpaceList.ts
 models/PaginatedStepList.ts
@@ -108,7 +112,6 @@ models/PaginatedUnitList.ts
 models/PaginatedUserFileList.ts
 models/PaginatedUserSpaceList.ts
 models/PaginatedViewLogList.ts
-models/ParsedIngredient.ts
 models/PatchedAccessToken.ts
 models/PatchedAiProvider.ts
 models/PatchedAutomation.ts
@@ -140,6 +143,7 @@ models/PatchedRecipeBook.ts
 models/PatchedRecipeBookEntry.ts
 models/PatchedRecipeImport.ts
 models/PatchedSearchPreference.ts
+models/PatchedShoppingList.ts
 models/PatchedShoppingListEntry.ts
 models/PatchedShoppingListRecipe.ts
 models/PatchedSpace.ts
@@ -174,6 +178,7 @@ models/SearchFields.ts
 models/SearchPreference.ts
 models/ServerSettings.ts
 models/ShareLink.ts
+models/ShoppingList.ts
 models/ShoppingListEntry.ts
 models/ShoppingListEntryBulk.ts
 models/ShoppingListEntryBulkCreate.ts

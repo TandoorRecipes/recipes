@@ -39,7 +39,8 @@ import type {
   ImportOpenDataMetaData,
   ImportOpenDataResponse,
   Ingredient,
-  IngredientString,
+  IngredientParserRequest,
+  IngredientParserResponse,
   InviteLink,
   Keyword,
   Localization,
@@ -85,6 +86,7 @@ import type {
   PaginatedRecipeImportList,
   PaginatedRecipeOverviewList,
   PaginatedShoppingListEntryList,
+  PaginatedShoppingListList,
   PaginatedShoppingListRecipeList,
   PaginatedSpaceList,
   PaginatedStepList,
@@ -99,7 +101,6 @@ import type {
   PaginatedUserFileList,
   PaginatedUserSpaceList,
   PaginatedViewLogList,
-  ParsedIngredient,
   PatchedAccessToken,
   PatchedAiProvider,
   PatchedAutomation,
@@ -131,6 +132,7 @@ import type {
   PatchedRecipeBookEntry,
   PatchedRecipeImport,
   PatchedSearchPreference,
+  PatchedShoppingList,
   PatchedShoppingListEntry,
   PatchedShoppingListRecipe,
   PatchedSpace,
@@ -163,6 +165,7 @@ import type {
   SearchPreference,
   ServerSettings,
   ShareLink,
+  ShoppingList,
   ShoppingListEntry,
   ShoppingListEntryBulk,
   ShoppingListEntryBulkCreate,
@@ -232,8 +235,10 @@ import {
     ImportOpenDataResponseToJSON,
     IngredientFromJSON,
     IngredientToJSON,
-    IngredientStringFromJSON,
-    IngredientStringToJSON,
+    IngredientParserRequestFromJSON,
+    IngredientParserRequestToJSON,
+    IngredientParserResponseFromJSON,
+    IngredientParserResponseToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
     KeywordFromJSON,
@@ -324,6 +329,8 @@ import {
     PaginatedRecipeOverviewListToJSON,
     PaginatedShoppingListEntryListFromJSON,
     PaginatedShoppingListEntryListToJSON,
+    PaginatedShoppingListListFromJSON,
+    PaginatedShoppingListListToJSON,
     PaginatedShoppingListRecipeListFromJSON,
     PaginatedShoppingListRecipeListToJSON,
     PaginatedSpaceListFromJSON,
@@ -352,8 +359,6 @@ import {
     PaginatedUserSpaceListToJSON,
     PaginatedViewLogListFromJSON,
     PaginatedViewLogListToJSON,
-    ParsedIngredientFromJSON,
-    ParsedIngredientToJSON,
     PatchedAccessTokenFromJSON,
     PatchedAccessTokenToJSON,
     PatchedAiProviderFromJSON,
@@ -416,6 +421,8 @@ import {
     PatchedRecipeImportToJSON,
     PatchedSearchPreferenceFromJSON,
     PatchedSearchPreferenceToJSON,
+    PatchedShoppingListFromJSON,
+    PatchedShoppingListToJSON,
     PatchedShoppingListEntryFromJSON,
     PatchedShoppingListEntryToJSON,
     PatchedShoppingListRecipeFromJSON,
@@ -480,6 +487,8 @@ import {
     ServerSettingsToJSON,
     ShareLinkFromJSON,
     ShareLinkToJSON,
+    ShoppingListFromJSON,
+    ShoppingListToJSON,
     ShoppingListEntryFromJSON,
     ShoppingListEntryToJSON,
     ShoppingListEntryBulkFromJSON,
@@ -1212,15 +1221,15 @@ export interface ApiIngredientDestroyRequest {
     id: number;
 }
 
-export interface ApiIngredientFromStringCreateRequest {
-    ingredientString: IngredientString;
-}
-
 export interface ApiIngredientListRequest {
     food?: number;
     page?: number;
     pageSize?: number;
     unit?: number;
+}
+
+export interface ApiIngredientParserPostCreateRequest {
+    ingredientParserRequest?: IngredientParserRequest;
 }
 
 export interface ApiIngredientPartialUpdateRequest {
@@ -1955,6 +1964,21 @@ export interface ApiShareLinkRetrieveRequest {
     id: number;
 }
 
+export interface ApiShoppingListCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiShoppingListCreateRequest {
+    shoppingList?: ShoppingList;
+}
+
+export interface ApiShoppingListDestroyRequest {
+    id: number;
+}
+
 export interface ApiShoppingListEntryBulkCreateRequest {
     shoppingListEntryBulk: Omit<ShoppingListEntryBulk, 'timestamp'>;
 }
@@ -1988,6 +2012,30 @@ export interface ApiShoppingListEntryUpdateRequest {
     shoppingListEntry: Omit<ShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'>;
 }
 
+export interface ApiShoppingListListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiShoppingListNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiShoppingListPartialUpdateRequest {
+    id: number;
+    patchedShoppingList?: PatchedShoppingList;
+}
+
+export interface ApiShoppingListProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiShoppingListRecipeBulkCreateEntriesCreateRequest {
     id: number;
     shoppingListEntryBulkCreate: ShoppingListEntryBulkCreate;
@@ -2019,6 +2067,15 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
     shoppingListRecipe: Omit<ShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'>;
+}
+
+export interface ApiShoppingListRetrieveRequest {
+    id: number;
+}
+
+export interface ApiShoppingListUpdateRequest {
+    id: number;
+    shoppingList?: ShoppingList;
 }
 
 export interface ApiSpaceCreateRequest {
@@ -2508,11 +2565,6 @@ export interface ApiUserPreferenceRetrieveRequest {
 
 export interface ApiUserRetrieveRequest {
     id: number;
-}
-
-export interface ApiUserSpaceAllPersonalListRequest {
-    page?: number;
-    pageSize?: number;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -8398,44 +8450,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     */
-    async apiIngredientFromStringCreateRaw(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ParsedIngredient>> {
-        if (requestParameters['ingredientString'] == null) {
-            throw new runtime.RequiredError(
-                'ingredientString',
-                'Required parameter "ingredientString" was null or undefined when calling apiIngredientFromStringCreate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/ingredient-from-string/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: IngredientStringToJSON(requestParameters['ingredientString']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ParsedIngredientFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiIngredientFromStringCreate(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ParsedIngredient> {
-        const response = await this.apiIngredientFromStringCreateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
      * logs request counts to redis cache total/per user/
      */
     async apiIngredientListRaw(requestParameters: ApiIngredientListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedIngredientList>> {
@@ -8478,6 +8492,37 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientList(requestParameters: ApiIngredientListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedIngredientList> {
         const response = await this.apiIngredientListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreateRaw(requestParameters: ApiIngredientParserPostCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IngredientParserResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/ingredient-parser/post/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: IngredientParserRequestToJSON(requestParameters['ingredientParserRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IngredientParserResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreate(requestParameters: ApiIngredientParserPostCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngredientParserResponse> {
+        const response = await this.apiIngredientParserPostCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -14552,6 +14597,124 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiShoppingListCascadingListRaw(requestParameters: ApiShoppingListCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiShoppingListCascadingList(requestParameters: ApiShoppingListCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiShoppingListCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListCreateRaw(requestParameters: ApiShoppingListCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ShoppingListToJSON(requestParameters['shoppingList']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListCreate(requestParameters: ApiShoppingListCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
+        const response = await this.apiShoppingListCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListDestroyRaw(requestParameters: ApiShoppingListDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListDestroy(requestParameters: ApiShoppingListDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiShoppingListDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
      * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryBulkCreateRaw(requestParameters: ApiShoppingListEntryBulkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntryBulk>> {
@@ -14834,6 +14997,182 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiShoppingListEntryUpdate(requestParameters: ApiShoppingListEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListListRaw(requestParameters: ApiShoppingListListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedShoppingListListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListList(requestParameters: ApiShoppingListListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedShoppingListList> {
+        const response = await this.apiShoppingListListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiShoppingListNullingListRaw(requestParameters: ApiShoppingListNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiShoppingListNullingList(requestParameters: ApiShoppingListNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiShoppingListNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListPartialUpdateRaw(requestParameters: ApiShoppingListPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedShoppingListToJSON(requestParameters['patchedShoppingList']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListPartialUpdate(requestParameters: ApiShoppingListPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
+        const response = await this.apiShoppingListPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiShoppingListProtectingListRaw(requestParameters: ApiShoppingListProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiShoppingListProtectingList(requestParameters: ApiShoppingListProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiShoppingListProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -15123,6 +15462,83 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiShoppingListRecipeUpdate(requestParameters: ApiShoppingListRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipeUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListRetrieveRaw(requestParameters: ApiShoppingListRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListRetrieve(requestParameters: ApiShoppingListRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
+        const response = await this.apiShoppingListRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListUpdateRaw(requestParameters: ApiShoppingListUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiShoppingListUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ShoppingListToJSON(requestParameters['shoppingList']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiShoppingListUpdate(requestParameters: ApiShoppingListUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
+        const response = await this.apiShoppingListUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -19153,16 +19569,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalListRaw(requestParameters: ApiUserSpaceAllPersonalListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
+    async apiUserSpaceAllPersonalListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserSpace>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -19177,14 +19585,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUserSpaceListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserSpaceFromJSON));
     }
 
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalList(requestParameters: ApiUserSpaceAllPersonalListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserSpaceList> {
-        const response = await this.apiUserSpaceAllPersonalListRaw(requestParameters, initOverrides);
+    async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
+        const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
         return await response.value();
     }
 

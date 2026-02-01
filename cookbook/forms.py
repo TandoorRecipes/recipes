@@ -5,13 +5,15 @@ from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import NumberInput, widgets
+from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
-from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
+from django_scopes.forms import SafeModelChoiceField
+from django.contrib.auth.models import Group
 from hcaptcha.fields import hCaptchaField
 
-from .models import Comment, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig
+from .models import InviteLink, Recipe, Space, User, UserPreference, UserSpace
+
 
 class SelectWidget(widgets.Select):
     class Media:
@@ -21,6 +23,8 @@ class SelectWidget(widgets.Select):
 class MultiSelectWidget(widgets.SelectMultiple):
     class Media:
         js = ('custom/js/form_multiselect.js',)
+
+
 class ImportExportBase(forms.Form):
     DEFAULT = 'DEFAULT'
     PAPRIKA = 'PAPRIKA'
@@ -53,6 +57,7 @@ class ImportExportBase(forms.Form):
                                       (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
                                       (COOKMATE, 'Cookmate'), (REZEPTSUITEDE, 'Recipesuite.de'), (GOURMET, 'Gourmet')))
 
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -78,7 +83,7 @@ class ImportForm(ImportExportBase):
                                     required=False)
     meal_plans = forms.BooleanField(required=False)
     shopping_lists = forms.BooleanField(required=False)
-    nutrition_per_serving = forms.BooleanField(required=False) # some managers (e.g. mealie) do not specify what the nutrition's relate to so we let the user choose
+    nutrition_per_serving = forms.BooleanField(required=False)  # some managers (e.g. mealie) do not specify what the nutrition's relate to so we let the user choose
 
 
 class ExportForm(ImportExportBase):
@@ -90,8 +95,6 @@ class ExportForm(ImportExportBase):
         space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
         self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
-
-from .models import InviteLink, SearchPreference, Space, User, UserPreference
 
 
 class InviteLinkForm(forms.ModelForm):
@@ -163,7 +166,16 @@ class AllAuthSocialSignupForm(SocialSignupForm):
             self.fields.pop('terms')
 
     def signup(self, request, user):
-        pass
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            with scopes_disabled():
+                space = Space.objects.first()
+                if space:
+                    user_space = UserSpace.objects.create(
+                        space=space, user=user, active=True
+                    )
+                    user_space.groups.add(
+                        Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get()
+                    )
 
 
 class CustomPasswordResetForm(ResetPasswordForm):

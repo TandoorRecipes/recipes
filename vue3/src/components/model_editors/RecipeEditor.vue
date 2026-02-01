@@ -2,7 +2,7 @@
     <model-editor-base
         :loading="loading || fileApiLoading"
         :dialog="dialog"
-        @save="saveRecipe"
+        @save="saveObject"
         @delete="deleteObject"
         @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
@@ -57,10 +57,26 @@
                                 <v-number-input :label="$t('WorkingTime')" v-model="editingObj.workingTime" :step="5"></v-number-input>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-number-input :label="$t('Servings')" v-model="editingObj.servings"></v-number-input>
+                                <v-number-input :label="$t('Servings')" v-model="editingObj.servings">
+                                    <template #append-inner>
+                                        <v-btn icon variant="plain">
+                                            <v-icon icon="fa-solid fa-sort-numeric-up"></v-icon>
+                                            <number-scaler-dialog :number="editingObj.servings" @confirm="scaleRecipe" :text="$t('ScaleRecipeHelp')"></number-scaler-dialog>
+                                        </v-btn>
+                                    </template>
+                                </v-number-input>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText"></v-text-field>
+                                <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText" clearable></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <closable-help-alert :text="$t('ScalingHelp')"></closable-help-alert>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-number-input :label="$t('Diameter')" v-model="editingObj.diameter"></v-number-input>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field :label="$t('DiameterUnit')" v-model="editingObj.diameterText"></v-text-field>
                             </v-col>
                         </v-row>
 
@@ -71,7 +87,7 @@
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
                     <v-row>
-                        <v-col >
+                        <v-col>
                             <v-btn-group density="compact" divided border>
 
                                 <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps" :disabled="editingObj.steps.length < 1"><span
@@ -95,7 +111,8 @@
 
                         <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
                             <v-col>
-                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)" @move="dialogStepManager = true"></step-editor>
+                                <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)"
+                                             @move="dialogStepManager = true"></step-editor>
 
                                 <div class="text-center mt-2">
                                     <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
@@ -188,8 +205,10 @@ import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {mergeAllSteps, mergeStep, splitAllSteps} from "@/utils/step_utils.ts";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {ErrorMessageType, MessageType, StructuredMessage, useMessageStore} from "@/stores/MessageStore.ts";
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
+import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
+import {useI18n} from "vue-i18n";
 
 
 const props = defineProps({
@@ -200,7 +219,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<Recipe>('Recipe', emit)
+const modelEditorFunctions = useModelEditorFunctions<Recipe>('Recipe', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = modelEditorFunctions
+
+const model = defineModel<typeof modelEditorFunctions>()
+model.value = modelEditorFunctions
 
 /**
  * watch prop changes and re-initialize editor
@@ -212,6 +235,7 @@ watch([() => props.item, () => props.itemId], () => {
 
 // object specific data (for selects/display)
 const {mobile} = useDisplay()
+const {t} = useI18n()
 
 const tab = ref("recipe")
 const dialogStepManager = ref(false)
@@ -241,21 +265,27 @@ function initializeEditor() {
             editingObj.value.internal = true //TODO make database default after v2
         },
         itemDefaults: props.itemDefaults,
+        onAfterSave: () => {
+            saveRecipeImage()
+        }
     })
 }
 
 /**
- * save recipe via normal saveMethod and update image afterward if it was changed
+ * checks if a file has been selected and upload it
  */
-function saveRecipe() {
-    saveObject().then(() => {
-        if (file.value != null && editingObj.value.id) {
+function saveRecipeImage(){
+    if (file.value != null && editingObj.value.id) {
+            loading.value = true
             updateRecipeImage(editingObj.value.id, file.value).then(r => {
                 file.value = null
                 setupState(props.item, props.itemId)
+            }).catch(err => {
+                useMessageStore().addMessage(MessageType.ERROR, {title: t('UPDATE_ERROR'), text: t('ErrorUpdatingImage')} as StructuredMessage, 8000)
+            }).finally(() => {
+                loading.value = false
             })
         }
-    })
 }
 
 /**
@@ -344,6 +374,25 @@ function aiStepSort(providerId: number) {
     }).finally(() => {
         aiStepSortLoading.value = false
     })
+}
+
+/**
+ * change all ingredient amounts of a recipe to the given number of servings
+ * based on the current servings
+ * @param targetServings
+ */
+function scaleRecipe(targetServings: number) {
+    if (!editingObj.value.servings) {
+        editingObj.value.servings = 1
+    }
+
+    let scalingFactor = targetServings / editingObj.value.servings
+    editingObj.value.steps.forEach(s => {
+        s.ingredients.forEach(i => {
+            i.amount *= scalingFactor
+        })
+    })
+    editingObj.value.servings = targetServings
 }
 
 </script>
