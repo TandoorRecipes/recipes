@@ -2,7 +2,7 @@
     <model-editor-base
         :loading="loading || fileApiLoading"
         :dialog="dialog"
-        @save="saveRecipe"
+        @save="saveObject"
         @delete="deleteObject"
         @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
@@ -265,22 +265,17 @@ function initializeEditor() {
             editingObj.value.internal = true //TODO make database default after v2
         },
         itemDefaults: props.itemDefaults,
-        onBeforeSave: () => {
-            console.log('before save')
-            return Promise.resolve()
-        },
         onAfterSave: () => {
-            console.log('after save')
+            saveRecipeImage()
         }
     })
 }
 
 /**
- * save recipe via normal saveMethod and update image afterward if it was changed
+ * checks if a file has been selected and upload it
  */
-function saveRecipe() {
-    saveObject().then(() => {
-        if (file.value != null && editingObj.value.id) {
+function saveRecipeImage(){
+    if (file.value != null && editingObj.value.id) {
             loading.value = true
             updateRecipeImage(editingObj.value.id, file.value).then(r => {
                 file.value = null
@@ -291,7 +286,6 @@ function saveRecipe() {
                 loading.value = false
             })
         }
-    })
 }
 
 /**

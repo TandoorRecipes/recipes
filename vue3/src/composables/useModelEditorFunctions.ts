@@ -17,8 +17,8 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     const modelClass = ref({} as GenericModel)
 
     const editingObjChanged = ref(false)
-    let onBeforeSaveCallback: (() => Promise<any>) | undefined = undefined
-    let onAfterSaveCallback: (() => void) | undefined = undefined
+    let onBeforeSaveCallback: (() => Promise<any> | any) | undefined = undefined
+    let onAfterSaveCallback: (() => Promise<any> | any) | undefined = undefined
 
     const {t} = useI18n()
     const title = useTitle()
@@ -83,16 +83,19 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
      * @param item item object to set as editingObj
      * @param itemId id of object to be retrieved and set as editingObj
      * @param options optional parameters
+     *                      itemDefaults: defaults to be applied to the item if no item is given (type of item)
      *                      newItemFunction: called when no item is given. When overriding you must implement applyItemDefaults if you want them to be applied.
      *                      existingItemFunction: called when some kind of item is passed
+     *                      onBeforeSave: called before saving the object. Can return a promise for async operations
+     *                      onAfterSave: called after saving the object. Can return a promise for async operations
      * @return promise resolving to either the editingObj or undefined if errored
      */
     function setupState(item: T | null, itemId: number | string | undefined, options: {
                             itemDefaults?: T,
                             newItemFunction?: () => void,
                             existingItemFunction?: () => void,
-                            onBeforeSave?: () => Promise<any>,
-                            onAfterSave?: () => void
+                            onBeforeSave?: () => Promise<any> | any,
+                            onAfterSave?: () => Promise<any> | any
                         } = {}
     ): Promise<T | undefined> {
 
@@ -201,7 +204,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                     editingObj.value = r
                     useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
                     if (onAfterSaveCallback) {
-                        onAfterSaveCallback()
+                        return Promise.resolve(onAfterSaveCallback()).then(() => r)
                     }
                     return r
                 }).catch((err: any) => {
@@ -218,7 +221,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                     useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
                     title.value = editingObjName()
                     if (onAfterSaveCallback) {
-                        onAfterSaveCallback()
+                        return Promise.resolve(onAfterSaveCallback()).then(() => r)
                     }
                     return r
                 }).catch((err: any) => {
@@ -232,7 +235,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         }
 
         if (onBeforeSaveCallback) {
-            return onBeforeSaveCallback().then(() => {
+            return Promise.resolve(onBeforeSaveCallback()).then(() => {
                 return executeSave()
             })
         } else {
