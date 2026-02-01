@@ -198,7 +198,7 @@ const {mdAndUp} = useDisplay()
 
 const query = useRouteQuery('query', "")
 const page = useRouteQuery('page', 1, {transform: Number})
-const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
+const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.search_itemsPerPage, {transform: Number})
 
 /**
  * filters that are not yet enabled
@@ -287,6 +287,8 @@ function searchRecipes(options: VDataTableUpdateOptions) {
         page: options.page,
         pageSize: pageSize.value,
     } as ApiRecipeListRequest
+    
+     useUserPreferenceStore().deviceSettings.search_itemsPerPage = pageSize.value
 
     Object.values(filters.value).forEach((filter) => {
         if (!isFilterDefaultValue(filter)) {
