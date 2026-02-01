@@ -13,8 +13,15 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Storage } from './Storage';
+import {
+    StorageFromJSON,
+    StorageFromJSONTyped,
+    StorageToJSON,
+} from './Storage';
+
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface RecipeImport
  */
@@ -25,6 +32,12 @@ export interface RecipeImport {
      * @memberof RecipeImport
      */
     id?: number;
+    /**
+     * 
+     * @type {Storage}
+     * @memberof RecipeImport
+     */
+    storage: Storage;
     /**
      * 
      * @type {string}
@@ -49,28 +62,15 @@ export interface RecipeImport {
      * @memberof RecipeImport
      */
     readonly createdAt: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof RecipeImport
-     */
-    storage: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof RecipeImport
-     */
-    space: number;
 }
 
 /**
  * Check if a given object implements the RecipeImport interface.
  */
 export function instanceOfRecipeImport(value: object): value is RecipeImport {
+    if (!('storage' in value) || value['storage'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
-    if (!('storage' in value) || value['storage'] === undefined) return false;
-    if (!('space' in value) || value['space'] === undefined) return false;
     return true;
 }
 
@@ -85,12 +85,11 @@ export function RecipeImportFromJSONTyped(json: any, ignoreDiscriminator: boolea
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
+        'storage': StorageFromJSON(json['storage']),
         'name': json['name'],
         'fileUid': json['file_uid'] == null ? undefined : json['file_uid'],
         'filePath': json['file_path'] == null ? undefined : json['file_path'],
         'createdAt': (new Date(json['created_at'])),
-        'storage': json['storage'],
-        'space': json['space'],
     };
 }
 
@@ -101,11 +100,10 @@ export function RecipeImportToJSON(value?: Omit<RecipeImport, 'createdAt'> | nul
     return {
         
         'id': value['id'],
+        'storage': StorageToJSON(value['storage']),
         'name': value['name'],
         'file_uid': value['fileUid'],
         'file_path': value['filePath'],
-        'storage': value['storage'],
-        'space': value['space'],
     };
 }
 

@@ -940,6 +940,7 @@ export interface ApiEnterpriseSocialRecipeListRequest {
     foodsAndNot?: Array<number>;
     foodsOr?: Array<number>;
     foodsOrNot?: Array<number>;
+    includeChildren?: boolean;
     internal?: boolean;
     keyword?: number;
     keywords?: Array<number>;
@@ -1247,7 +1248,7 @@ export interface ApiIngredientUpdateRequest {
 }
 
 export interface ApiInviteLinkCreateRequest {
-    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
+    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
 }
 
 export interface ApiInviteLinkDestroyRequest {
@@ -1267,7 +1268,7 @@ export interface ApiInviteLinkListRequest {
 
 export interface ApiInviteLinkPartialUpdateRequest {
     id: number;
-    patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
+    patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
 }
 
 export interface ApiInviteLinkRetrieveRequest {
@@ -1276,7 +1277,7 @@ export interface ApiInviteLinkRetrieveRequest {
 
 export interface ApiInviteLinkUpdateRequest {
     id: number;
-    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
+    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
 }
 
 export interface ApiKeywordCascadingListRequest {
@@ -1881,6 +1882,7 @@ export interface ApiRecipeListRequest {
     foodsAndNot?: Array<number>;
     foodsOr?: Array<number>;
     foodsOrNot?: Array<number>;
+    includeChildren?: boolean;
     internal?: boolean;
     keywords?: Array<number>;
     keywordsAnd?: Array<number>;
@@ -6056,6 +6058,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['foodsOrNot'] != null) {
             queryParameters['foods_or_not'] = requestParameters['foodsOrNot'];
+        }
+
+        if (requestParameters['includeChildren'] != null) {
+            queryParameters['include_children'] = requestParameters['includeChildren'];
         }
 
         if (requestParameters['internal'] != null) {
@@ -13890,6 +13896,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['foodsOrNot'] != null) {
             queryParameters['foods_or_not'] = requestParameters['foodsOrNot'];
+        }
+
+        if (requestParameters['includeChildren'] != null) {
+            queryParameters['include_children'] = requestParameters['includeChildren'];
         }
 
         if (requestParameters['internal'] != null) {

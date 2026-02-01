@@ -12,8 +12,9 @@ export type Integration = {
 export const INTEGRATIONS: Array<Integration> = [
     {id: 'DEFAULT', name: "Tandoor", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#default', imgSrc: 'https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg'},
     {id: 'CHEFTAP', name: "Cheftap", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cheftap'},
-    {id: 'CHOWDOWN', name: "Chowdown", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#chowdown'},
+    {id: 'CHOWDOWN', name: "Chowdown", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#chowdown'},
     {id: 'COOKBOOKAPP', name: "CookBookApp", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookbookapp'},
+    {id: 'COOKLANG', name: "Cooklang Markdown", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cooklang'},
     {id: 'COOKMATE', name: "Cookmate", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookmate'},
     {id: 'COPYMETHAT', name: "CopyMeThat", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#copymethat'},
     {id: 'DOMESTICA', name: "Domestica", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#domestica'},
@@ -30,7 +31,7 @@ export const INTEGRATIONS: Array<Integration> = [
     {id: 'RECIPEKEEPER', name: "Recipekeeper", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#recipekeeper'},
     {id: 'RECIPESAGE', name: "Recipesage", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#recipesage'},
     {id: 'REZKONV', name: "Rezkonv", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#rezkonv'},
-    {id: 'SAFRON', name: "Safron", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#safron'},
+    {id: 'SAFFRON', name: "Saffron", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#safron'},
     {id: 'REZEPTSUITEDE', name: "Rezeptsuite.de", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#rezeptsuitede'},
     {id: 'GOURMET', name: "Gourmet", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#gourmet'},
 ]

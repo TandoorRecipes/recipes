@@ -43,6 +43,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from litellm import completion, BadRequestError
+from litellm.exceptions import Timeout as LitellmTimeout
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
@@ -1164,13 +1165,19 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 response_text = ai_response.choices[0].message.content
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
-                pass
-        response = {
-            'error': True,
-            'msg': 'The AI could not process your request. \n\n' + err.message,
-        }
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, *args, **kwargs):
         try:
@@ -1591,6 +1598,7 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='num_recent', description=_('Returns the given number of recently viewed recipes before search results (if given)'), type=int),
     OpenApiParameter(name='filter', description=_('ID of a custom filter. Returns all recipes matched by that filter.'), type=int),
     OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
+    OpenApiParameter(name='include_children', description=_('Include child keywords and foods in search results. [''<b>true</b>''/''false'']'), type=bool),
 ]))
 class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Recipe.objects
@@ -1895,13 +1903,19 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 response_text = ai_response.choices[0].message.content
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
-                pass
-        response = {
-            'error': True,
-            'msg': 'The AI could not process your request. \n\n' + err.message,
-        }
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(responses=RecipeSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
@@ -2597,6 +2611,12 @@ class AiImportView(APIView):
                 if ai_provider.url:
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
                 response = {
                     'error': True,
@@ -2708,12 +2728,19 @@ class AiStepSortView(APIView):
                 # TODO validate by loading/dumping using serializer ?
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
                 response = {
                     'error': True,
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AppImportView(APIView):
@@ -3161,17 +3188,13 @@ def meal_plans_to_ical(queryset, filename):
 
     for p in queryset:
         event = Event()
-        event['uid'] = p.id
+        event['uid'] = f'mealplan-{p.id}@tandoor.recipes'
 
         start_date_time = p.from_date
-        end_date_time = p.from_date
+        end_date_time = p.to_date if p.to_date else p.from_date
 
-        if p.to_date:
-            end_date_time = p.to_date
-
-        if p.meal_type.time:
-            start_date_time = datetime.datetime.combine(p.from_date, p.meal_type.time)
-            end_date_time = datetime.datetime.combine(p.to_date, p.meal_type.time) + datetime.timedelta(minutes=60)
+        if end_date_time <= start_date_time:
+            end_date_time = start_date_time + datetime.timedelta(minutes=60)
 
         event.add('dtstart', start_date_time)
         event.add('dtend', end_date_time)

@@ -2,10 +2,10 @@ This application features a very versatile import and export feature in order
 to offer the best experience possible and allow you to freely choose where your data goes.
 
 !!! WARNING "WIP"
-    The Module is relatively new. There is a known issue with [Timeouts](https://github.com/vabene1111/recipes/issues/417) on large exports.
+    The module is relatively new. There is a known issue with [timeouts](https://github.com/vabene1111/recipes/issues/417) on large exports.
     A fix is being developed and will likely be released with the next version.
 
-The Module is built with maximum flexibility and expandability in mind and allows to easily add new
+The module is built with maximum flexibility and expandability in mind and allows to easily add new
 integrations to allow you to both import and export your recipes into whatever format you desire.
 
 Feel like there is an important integration missing? Just take a look at the [integration issues](https://github.com/vabene1111/recipes/issues?q=is%3Aissue+is%3Aopen+label%3Aintegration) or open a new one
@@ -14,14 +14,14 @@ if your favorite one is missing.
 !!! info "Export"
     I strongly believe in everyone's right to use their data as they please and therefore want to give you
     the best possible flexibility with your recipes.
-    That said for most of the people getting this application running with their recipes is the biggest priority.
-    Because of this importing as many formats as possible is prioritized over exporting.
-    Exporter for the different formats will follow over time.
+    That said, for most of the people getting this application running with their recipes is the biggest priority.
+    Because of this, importing as many formats as possible is prioritized over exporting.
+    An exporter for the different formats will follow over time.
 
 Overview of the capabilities of the different integrations.
 
 | Integration        | Import | Export | Images |
-| ------------------ | ------ | ------ | ------ |
+| ------------------ |--------| ------ | ------ |
 | Default            | ✔️     | ✔️     | ✔️     |
 | Nextcloud          | ✔️     | ⌚     | ✔️     |
 | Mealie             | ✔️     | ⌚     | ✔️     |
@@ -37,18 +37,20 @@ Overview of the capabilities of the different integrations.
 | RezKonv            | ✔️     | ❌     | ❌     |
 | OpenEats           | ✔️     | ❌     | ⌚     |
 | Plantoeat          | ✔️     | ❌     | ✔      |
-| CookBookApp        | ✔️     | ⌚     | ✔️     |
+| CookBook Manager   | ✔️     | ⌚     | ✔️     |
+| Cooklang           | ✔️    | ⌚    | ⌚    |
 | CopyMeThat         | ✔️     | ❌     | ✔️     |
-| Melarecipes        | ✔️     | ⌚     | ✔️     |
+| Mela               | ✔️     | ⌚     | ✔️     |
 | Cookmate           | ✔️     | ⌚     | ✔️     |
-| PDF (experimental) | ⌚️    | ✔️     | ✔️     |
+| PDF (experimental) | ⌚️     | ✔️     | ✔️     |
 | Gourmet            | ✔️     | ❌     | ✔️     |
+
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
 ## Default
 
-The default integration is the built in (and preferred) way to import and export recipes.
+The default integration is the built-in (and preferred) way to import and export recipes.
 It is maintained with new fields added and contains all data to transfer your recipes from one installation to another.
 
 It is also one of the few recipe formats that is actually structured in a way that allows for
@@ -59,7 +61,7 @@ easy machine readability if you want to use the data for any other purpose.
 Go to Settings > Export Recipe Data and select `EXPORT AS JSON-LD (BEST)`. Then simply upload the exported file
 to Tandoor.
 
-The RecipeSage integration also allows exporting. To migrate from Tandoor to RecipeSage simply export with Recipe Sage
+The RecipeSage integration also allows exporting. To migrate from Tandoor to RecipeSage simply export with RecipeSage
 selected and import the json file in RecipeSage. Images are currently not supported for exporting.
 
 ## Domestica
@@ -69,20 +71,20 @@ to Tandoor.
 
 ## Nextcloud
 
-Importing recipes from Nextcloud cookbook is very easy and since Nextcloud Cookbook provides nice, standardized and
+Importing recipes from Nextcloud Cookbook is very easy and since Nextcloud Cookbook provides nice, standardized and
 structured information most of your recipe is going to be intact.
 
 Follow these steps to import your recipes
 
-1. Go to your Nextcloud Webinterface
+1. Go to your Nextcloud web interface
 2. Find the `Recipes` folder (usually located in the root directory of your account)
 3. Download that folder to get your `Recipes.zip` which includes the folder `Recipes` and in that a folder for each recipe
 4. Upload the `Recipes.zip` to Tandoor and import it
 
 
-!!! WARNING "Folder Structure"
+!!! WARNING "Folder structure"
     Importing only works if the folder structure is correct. If you do not use the standard path or create the
-    zip file in any other way make sure the structure is as follows
+    zip file in any other way, make sure the structure is as follows
     `  Recipes.zip/
         └── Recipes/
             ├── Recipe1/
@@ -95,18 +97,18 @@ Follow these steps to import your recipes
 
 ## Mealie
 
-Mealie provides structured data similar to nextcloud.
+Mealie provides structured data similar to Nextcloud.
 
 !!! WARNING "Versions"
-    There are two different versions of the Mealie importer. One for all backups created prior to Version 1.0 and one for all after. 
+    There are two different versions of the Mealie importer: one for all backups created prior to Version 1.0 and another one for all backups created from Version 1.0 onwards. 
 
 !!! INFO "Versions"
-    The Mealie UI does not indicate weather or not nutrition information is stored per serving or per recipe. This choice is left to the user. During the import you will have to choose 
+    The Mealie UI does not indicate whether or not nutrition information is stored per serving or per recipe. This choice is left to the user. During the import you will have to choose 
     how Tandoor should treat your nutrition data.
 
 To migrate your recipes
 
-1. Go to your Mealie admin settings and create a new backup.
+1. Go to your Mealie admin settings and create a new backup (note that exporting only recipe data from Mealie's data management section will result in an incomplete import).
 2. Download the backup.
 3. Upload the entire `.zip` file to the importer page and import everything.
 
@@ -116,10 +118,10 @@ Chowdown stores all your recipes in plain text markdown files in a directory cal
 Images are saved in a directory called `images`.
 
 In order to import your Chowdown recipes simply create a `.zip` file from those two folders and import them.
-The folder structure should look as follows
+The folder structure should look as follows:
 
 !!! info "_recipes"
-    For some reason chowdown uses `_`before the`recipes`folder. To avoid confusion the import supports both `\_recipes`and`recipes`
+    For some reason chowdown uses `_` before the `recipes` folder. To avoid confusion, the import supports both `\_recipes` and `recipes`.
 
 ```
 Recipes.zip/
@@ -135,15 +137,15 @@ Recipes.zip/
 
 ## Safron
 
-Go to your safron settings page and export your recipes.
+Go to your Safron settings page and export your recipes.
 Then simply upload the entire `.zip` file to the importer.
 
 !!! warning "Images"
-Safron exports do not contain any images. They will be lost during import.
+    Safron exports do not contain any images. They will be lost during the import.
 
 ## Paprika
 
-A Paprika export contains a folder with a html representation of your recipes and a `.paprikarecipes` file.
+A Paprika export contains a folder with an html representation of your recipes and a `.paprikarecipes` file.
 
 The `.paprikarecipes` file is basically just a zip with gzipped contents. Simply upload the whole file and import
 all your recipes.
@@ -172,34 +174,34 @@ As ChefTap cannot import these files anyway there won't be an exporter implement
 
 ## MealMaster
 
-Meal master can be imported by uploading one or more meal master files.
-The files should either be `.txt`, `.MMF` or `.MM` files.
+MealMaster can be imported by uploading one or more MealMaster files.
+Files should be in `.txt`, `.MMF` or `.MM` format.
 
-The MealMaster spec allows for many variations. Currently, only the one column format for ingredients is supported.
-Second line notes to ingredients are currently also not imported as a note but simply put into the instructions.
-If you have MealMaster recipes that cannot be imported feel free to raise an issue.
+The MealMaster spec allows for many variations. Currently, only the one-column format for ingredients is supported.
+Second-line notes to ingredients are currently also not imported as a note but simply put into the instructions.
+If you have MealMaster recipes that cannot be imported, feel free to raise an issue.
 
 ## RezKonv
 
-The RezKonv format is primarily used in the german recipe manager RezKonv Suite.
-To migrate from RezKonv Suite to Tandoor select `Export > Gesamtes Kochbuch exportieren` (the last option in the export menu).
+The RezKonv format is primarily used in the German recipe manager RezKonv Suite.
+To migrate from RezKonv Suite to Tandoor, select `Export > Gesamtes Kochbuch exportieren` (the last option in the export menu).
 The generated file can simply be imported into Tandoor.
 
-As I only had limited sample data feel free to open an issue if your RezKonv export cannot be imported.
+As I only had limited sample data, feel free to open an issue if your RezKonv export cannot be imported.
 
-## Recipekeeper
+## Recipe Keeper
 
-Recipe keeper allows you to export a zip file containing recipes and images using its apps.
+Recipe Keeper allows you to export a zip file containing recipes and images using its apps.
 This zip file can simply be imported into Tandoor.
 
 ## OpenEats
 
 OpenEats does not provide any way to export the data using the interface. Luckily it is relatively easy to export it from the command line.
-You need to run the command `python manage.py dumpdata recipe ingredient` inside of the application api container.
-If you followed the default installation method you can use the following command `docker-compose -f docker-prod.yml run --rm --entrypoint 'sh' api ./manage.py dumpdata recipe ingredient`.
+You need to run the command `python manage.py dumpdata recipe ingredient` inside the application API container.
+If you followed the default installation method, you can use the following command `docker-compose -f docker-prod.yml run --rm --entrypoint 'sh' api ./manage.py dumpdata recipe ingredient`.
 This command might also work `docker exec -it openeats_api_1 ./manage.py dumpdata recipe ingredient rating recipe_groups > recipe_ingredients.json`
 
-Store the outputted json string in a `.json` file and simply import it using the importer. The file should look something like this
+Store the outputted json string in a `.json` file and simply import it using the importer. The file should look something like this:
 
 ```json
 [
@@ -236,59 +238,63 @@ Store the outputted json string in a `.json` file and simply import it using the
 
 ```
 
-To import your images you'll need to create the folder `openeats-import` in your Tandoor's `recipes` media folder (which is usually found inside `/opt/recipes/mediafiles`). After that you'll need to copy the `/code/site-media/upload` folder from the openeats API docker container to the `openeats` folder you created. You should now have the file path `/opt/recipes/mediafiles/recipes/openeats-import/upload/...` in Tandoor.
+To import your images, you will need to create the folder `openeats-import` in your Tandoor `recipes` media folder (which is usually found inside `/opt/recipes/mediafiles`). After that you will need to copy the `/code/site-media/upload` folder from the OpenEats API Docker container to the `openeats` folder you created. You should now have the file path `/opt/recipes/mediafiles/recipes/openeats-import/upload/...` in Tandoor.
 
-## Plantoeat
+## Plan to Eat
 
-Plan to eat allows you to export a text file containing all your recipes. Simply upload that text file to Tandoor to import all recipes
+Plan to Eat allows you to export a text file containing all your recipes. Simply upload that text file to Tandoor to import all recipes
 
-## CookBookApp
+## CookBook Manager
 
-CookBookApp can export .zip files containing .html files. Upload the entire ZIP to Tandoor to import all included recipes.
+CookBook Manager (previously named CookBookApp) can export .zip files containing YAML files. 
+In Settings -> Backup, select the YAML option when exporting. Upload the entire ZIP to Tandoor to import all included recipes.
 
 ## CopyMeThat
 
-CopyMeThat can export .zip files containing an `.html` file as well as a folder containing all the images. Upload the entire ZIP to Tandoor to import all included recipes.
+CopyMeThat can export `.zip` files containing an `.html` file as well as a folder containing all the images. Upload the entire `.zip` file to Tandoor to import all included recipes.
 
 ## Cookmate
 
-Cookmate allows you to export a `.mcb` file which you can simply upload to tandoor and import all your recipes.
+Cookmate allows you to export a `.mcb` file which you can simply upload to Tandoor and import all your recipes.
+
+## Cooklang
+Cooklang allows you to import a `.cook` file into tandoor. Does not yet support attaching images or importing a zip file.
 
 ## RecetteTek
 
-RecetteTek exports are `.rtk` files which can simply be uploaded to tandoor to import all your recipes.
+RecetteTek exports are `.rtk` files which can simply be uploaded to Tandoor to import all your recipes.
 
 ## Rezeptsuite.de
 
-Rezeptsuite.de exports are `.xml` files which can simply be uploaded to tandoor to import all your recipes.
+Rezeptsuite.de exports are `.xml` files which can simply be uploaded to Tandoor to import all your recipes.
 
-It appears that Reptsuite, depending on the client, might export a `.zip` file containing a `.cml` file.
-If this happens just unzip the zip file and change `.cml` to `.xml` to import your recipes.
+It appears that Rezeptsuite.de, depending on the client, might export a `.zip` file containing a `.cml` file.
+If this happens, just unzip the `.zip` file and change `.cml` to `.xml` to import your recipes.
 
-## Melarecipes
+## Mela
 
-Melarecipes provides multiple export formats but only the `MelaRecipes` format can export the complete collection.
-Perform this export and open the `.melarecipes` file using your favorite archive opening program (e.g 7zip).
+Mela provides multiple export formats, but only the `MelaRecipes` format can export the complete collection.
+Perform this export and open the `.melarecipes` file using your favorite archive opening program (e.g. 7-Zip).
 Repeat this if the file contains another `.melarecipes` file until you get a list of one or many `.melarecipe` files.
-Upload all `.melarecipe` files you want to import to tandoor and start the import.
+Upload all `.melarecipe` files you want to import to Tandoor and start the import.
 
 ## PDF
 
-The PDF Exporter is an experimental feature that uses the puppeteer browser renderer to render each recipe and export it to PDF.
-For that to work it downloads a chromium binary of about 140 MB to your server and then renders the PDF files using that.
+The PDF exporter is an experimental feature that uses the Puppeteer browser renderer to render each recipe and export it to PDF.
+For that to work, it downloads a Chromium binary of about 140 MB to your server and then renders the PDF files using that.
 
-Since that is something some server administrators might not want there the PDF exporter is disabled by default and can be enabled with `ENABLE_PDF_EXPORT=1` in `.env`.
+As that is something some server administrators might not want, the PDF exporter is disabled by default and can be enabled with `ENABLE_PDF_EXPORT=1` in `.env`.
 
 See [this issue](https://github.com/TandoorRecipes/recipes/pull/1211) for more discussion on this and
-[this issue](https://github.com/TandoorRecipes/recipes/issues/781) for the future plans to support server side rendering.
+[this issue](https://github.com/TandoorRecipes/recipes/issues/781) for the future plans to support server-side rendering.
 
 ## Gourmet
 
 An importer for files from [Gourmet](https://github.com/thinkle/gourmet/). As the `.grmt` files appears to lack the unit for ingredients
-a file with `.zip` file with `.htm` and `.jpg`is expected.
+a file with `.zip` file with `.htm` and `.jpg` is expected.
 
-To generate the file export to 'html' in Gourmet and zip the folder generated.
+To generate the file, export to HTML in Gourmet and zip the generated folder.
 
-The import of menues is not supported
+The import of menus is not supported.
 
-Export is not supported due to problems with `.grmt` format.
+Export is not supported due to problems with the `.grmt` format.

@@ -1,6 +1,6 @@
 import itertools
 import json
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 import pytest
 from django.conf import settings
@@ -355,7 +355,8 @@ def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, sp
             Recipe.objects.filter(id=recipe.id).update(
                 updated_at=recipe.created_at)
 
-    date = (datetime.now() - timedelta(days=15)).strftime("%Y-%m-%d")
+    # use the same reference point as the fixture to avoid date boundary flakiness
+    date = (timezone.now() - timedelta(days=15)).strftime("%Y-%m-%d")
     param1 = f"?{param_type}_gte={date}"
     param2 = f"?{param_type}_lte={date}"
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param1}').content)
@@ -386,28 +387,28 @@ def test_search_count(found_recipe, recipes, param_type, u1_s1, u2_s1, space_1):
     param3 = f'?{param_type}=0'
 
     r = json.loads(u1_s1.get(reverse(LIST_URL) + param1).content)
-    assert r['count'] == 1
-    assert found_recipe[0].id in [x['id'] for x in r['results']]
+    result_ids = {x['id'] for x in r['results']}
+    assert result_ids == {found_recipe[0].id}
 
-    # this changed to fail after search api update but logic seems fine, disabling for now
-    # r = json.loads(u1_s1.get(reverse(LIST_URL) + param2).content)
-    # assert r['count'] == 1
-    # assert found_recipe[1].id in [x['id'] for x in r['results']]
+    r = json.loads(u1_s1.get(reverse(LIST_URL) + param2).content)
+    result_ids = {x['id'] for x in r['results']}
+    assert result_ids == {found_recipe[1].id}
 
     # test search for not rated/cooked
     r = json.loads(u1_s1.get(reverse(LIST_URL) + param3).content)
+    result_ids = {x['id'] for x in r['results']}
     assert r['count'] == 11
-    assert (found_recipe[0].id or found_recipe[1].id) not in [
-        x['id'] for x in r['results']]
+    assert found_recipe[0].id not in result_ids
+    assert found_recipe[1].id not in result_ids
 
     # test matched returns for lte and gte searches
     r = json.loads(u2_s1.get(reverse(LIST_URL) + param1).content)
-    assert r['count'] == 1
-    assert found_recipe[2].id in [x['id'] for x in r['results']]
+    result_ids = {x['id'] for x in r['results']}
+    assert result_ids == {found_recipe[2].id}
 
     r = json.loads(u2_s1.get(reverse(LIST_URL) + param2).content)
-    assert r['count'] == 1
-    assert found_recipe[2].id in [x['id'] for x in r['results']]
+    result_ids = {x['id'] for x in r['results']}
+    assert result_ids == {found_recipe[2].id}
 
 
 @pytest.mark.parametrize("found_recipe", [

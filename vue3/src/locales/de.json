@@ -490,6 +490,7 @@
   "Scale": "Skalieren",
   "ScaleRecipeHelp": "Erhöhe oder veringere alle Zutatenmengen so, dass die angegebene Menge Portionen erreicht wird. ",
   "Scaling": "Skalieren",
+  "ScalingHelp": "Füge einen Durchmesser für ein Rezept hinzu, um Skalieren nach Durchmesser zusätzlich zu Portionen zu aktivieren.",
   "Search": "Suchen",
   "Search Settings": "Sucheinstellungen",
   "SearchMethod": "Suchmethode",
