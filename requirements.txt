@@ -32,7 +32,7 @@ django-allauth[mfa,socialaccount]==65.13.1
 recipe-scrapers==15.11.0
 django-scopes==2.0.0
 django-treebeard==4.7.1
-django-cors-headers==4.6.0
+django-cors-headers==4.9.0
 django-storages==1.14.6
 boto3==1.41.5
 django-prometheus==2.4.1
