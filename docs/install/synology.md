@@ -43,10 +43,10 @@ volume1/docker/
 - Paste the `docker-compose.yml` into the `source` textbox. 
 - This file tells docker how to setup recipes. Docker will create two containers for recipes to work, `web_recipes` and `db_recipes`. They are all required and need to store and share data through the folders you created before.
 - Under the `web_recipes` section, you can add `ports` . This line specifies which external synology port will point to which internal docker port. Chose a free port to use and replace the first number with it. You will open recipes by browsing to http://your.synology.ip:chosen.port, e.g. http://192.168.1.1:2000
-- If you want to use port 2000 you would edit the `ports` to `2000:8080`
+- If you want to use port 2000 you would edit the `ports` to `2000:80`
 	```
 	ports:
-		- "2000:8080"
+		- "2000:80"
  	```
 
 ### 5. Finishing up
