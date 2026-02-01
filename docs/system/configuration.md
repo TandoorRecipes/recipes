@@ -377,6 +377,8 @@ Allows you to set up external OAuth providers.
 SOCIAL_PROVIDERS = allauth.socialaccount.providers.github, allauth.socialaccount.providers.nextcloud,
 ```
 
+> default `0` - options `0`, `1`
+
 If you enable Social Auth, you can also disable the display of the regular login form by setting:
 ```
 HIDE_LOGIN_FORM=1
