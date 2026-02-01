@@ -110,7 +110,8 @@ export default createVuetify({
             import: 'fa-solid fa-globe',
             properties: 'fa-solid fa-database',
             automation: 'fa-solid fa-robot',
-            ai: 'fa-solid fa-wand-magic-sparkles'
+            ai: 'fa-solid fa-wand-magic-sparkles',
+            reset: 'fa-solid fa-circle-xmark'
         },
         sets: {
             fa,
