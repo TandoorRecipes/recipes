@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
@@ -332,13 +332,18 @@ class CustomRecipePermission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         share = request.query_params.get('share', None)
         if share:
-            return share_link_valid(obj, share)
+            if share_link_valid(obj, share):
+                return True
+            # Invalid share link - check if user has normal access
+            # If not, raise 404 to avoid leaking recipe existence
+            if obj.space != request.space:
+                raise Http404()
+            # User is in same space, fall through to normal permission check
+        if obj.private:
+            return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
         else:
-            if obj.private:
-                return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
-            else:
-                return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
-                        or has_group_permission(request.user, ['user'])) and obj.space == request.space
+            return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
+                    or has_group_permission(request.user, ['user'])) and obj.space == request.space
 
 
 class CustomAiProviderPermission(permissions.BasePermission):

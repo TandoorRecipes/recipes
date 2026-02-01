@@ -2,7 +2,10 @@
     <template v-if="loading || recipes.length > 0">
         <v-row justify="space-between">
             <v-col>
-                <h4><i :class="icon + ' fa-fw'"></i> {{ title }}</h4>
+
+                    <h4 @click="openSearch()" class="cursor-pointer"><i :class="icon + ' fa-fw'"></i> {{ title }} <i class="ms-2 fa-solid fa-up-right-from-square"></i></h4>
+
+
             </v-col>
         </v-row>
 
@@ -38,14 +41,15 @@
 
 
 <script lang="ts" setup>
-import {computed, onMounted, PropType, ref, toRefs} from 'vue'
+import {computed, onMounted, PropType, ref} from 'vue'
 import RecipeCard from "@/components/display/RecipeCard.vue";
-import {DisplayBreakpoint, useDisplay} from "vuetify";
+import {useDisplay} from "vuetify";
 import {ApiApi, ApiRecipeListRequest, Keyword, Recipe, RecipeOverview, User} from "@/openapi";
 import {homePageCols} from "@/utils/breakpoint_utils";
 import {useI18n} from "vue-i18n";
 import {DateTime} from "luxon";
 import {tr} from "vuetify/locale";
+import {useRouter} from "vue-router";
 
 //TODO mode ideas "last year/month/cooked long ago"
 const props = defineProps(
@@ -56,12 +60,15 @@ const props = defineProps(
 )
 
 const {t} = useI18n()
+const router = useRouter()
 const {name} = useDisplay()
 
 const loading = ref(true)
 const recipes = ref([] as Recipe[] | RecipeOverview[])
 const keyword = ref({} as Keyword)
 const createdByUser = ref({} as User)
+
+const queryParams = ref({})
 
 /**
  * determine title based on type
@@ -130,21 +137,28 @@ function loadRecipes() {
     switch (props.mode) {
         case 'recent':
             requestParameters.numRecent = 16
+            queryParams.value = {sortOrder: '-created_at'}
             break;
         case 'random':
             requestParameters.random = 'true'
+            queryParams.value = {sortOrder: 'random'}
             break;
         case 'new':
             requestParameters._new = 'true'
+            queryParams.value = {sortOrder: '-created_at', createdonGte: DateTime.now().minus({days: 14}).toISODate()}
             break;
         case 'rating':
             requestParameters.rating = 4
+            queryParams.value = {ratingGte: 4}
             break;
         case 'keyword':
             api.apiKeywordList({random: "true", limit: "1"}).then((r) => {
                 if (r.count > 0) {
                     keyword.value = r.results[0]
                     requestParameters.keywords = [keyword.value.id!]
+
+                    queryParams.value = {keywords: keyword.value.id!}
+
                     doRecipeRequest(requestParameters)
                 } else {
                     loading.value = false
@@ -157,6 +171,9 @@ function loadRecipes() {
                     createdByUser.value = r[Math.floor(Math.random() * r.length)]
                     requestParameters.createdby = createdByUser.value.id
                     requestParameters.random = "true"
+
+                    queryParams.value = {createdby: createdByUser.value.id!}
+
                     doRecipeRequest(requestParameters)
                 } else {
                     loading.value = false
@@ -208,6 +225,13 @@ let recipeWindows = computed(() => {
     }
     return windows
 })
+
+/**
+ * open the advanced search page with the fitting query parameters
+ */
+function openSearch() {
+    router.push({name: 'SearchPage', query: queryParams.value})
+}
 
 </script>
 

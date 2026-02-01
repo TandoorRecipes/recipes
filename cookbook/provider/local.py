@@ -1,6 +1,6 @@
 import io
 import os
-from datetime import datetime
+from django.utils import timezone
 from os import listdir
 from os.path import isfile, join
 
@@ -39,7 +39,7 @@ class Local(Provider):
         )
         log_entry.save()
 
-        monitor.last_checked = datetime.now()
+        monitor.last_checked = timezone.now()
         monitor.save()
 
         return log_entry
