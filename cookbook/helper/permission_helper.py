@@ -225,7 +225,15 @@ class CustomIsOwnerReadOnly(CustomIsOwner):
         return super().has_permission(request, view) and request.method in SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
-        return super().has_object_permission(request, view) and request.method in SAFE_METHODS
+        return super().has_object_permission(request, view, obj) and request.method in SAFE_METHODS
+
+
+class CustomIsOwnerDestroyOnly(CustomIsOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) and request.method == 'DELETE'
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj) and request.method == 'DELETE'
 
 
 class CustomIsSpaceOwner(permissions.BasePermission):
@@ -486,8 +494,11 @@ def create_space_for_user(user, name=None):
                               space_setup_completed=False, )
         created_space.save()
 
-        UserSpace.objects.filter(user=user).update(active=False)
-        user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
+        new_space_active = False
+        if UserSpace.objects.filter(user=user).count() == 0:
+            new_space_active = True
+
+        user_space = UserSpace.objects.create(space=created_space, user=user, active=new_space_active)
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space

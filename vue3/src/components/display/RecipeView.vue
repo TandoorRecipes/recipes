@@ -10,7 +10,7 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none">
+        <template class="d-block d-lg-none d-print-none">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -25,7 +25,7 @@
                     <span class="ps-2 text-h5  flex-grow-1 pa-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
                         {{ recipe.name }}
                     </span>
-                        <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
+                        <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </v-sheet>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
                     <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
@@ -52,8 +52,8 @@
                             <div class="cursor-pointer">
                                 <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
                                 <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                                <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                                </number-scaler-dialog>
+                                <recipe-scaling-dialog :recipe="recipe" :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                                </recipe-scaling-dialog>
                             </div>
                         </v-col>
                     </v-row>
@@ -61,7 +61,7 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block">
+        <template class="d-none d-lg-block d-print-block">
             <v-row dense>
                 <v-col cols="8">
                     <recipe-image
@@ -75,7 +75,7 @@
                         <v-card-text class="flex-grow-1">
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" v-if="useUserPreferenceStore().isAuthenticated"
+                                <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"
                                                      class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
                             </div>
                             <p>
@@ -106,8 +106,8 @@
                                 <div class="cursor-pointer">
                                     <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
                                     <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                                    <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                                    </number-scaler-dialog>
+                                    <recipe-scaling-dialog :recipe="recipe" :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                                    </recipe-scaling-dialog>
                                 </div>
                             </v-col>
                         </v-row>
@@ -118,37 +118,39 @@
             </v-row>
         </template>
 
-        <template v-if="recipe.filePath">
+        <template v-if="recipe.filePath && !useUserPreferenceStore().isPrintMode">
             <external-recipe-viewer class="mt-2" :recipe="recipe"></external-recipe-viewer>
 
-            <v-card :title="$t('AI')" prepend-icon="$ai"  :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading || !useUserPreferenceStore().activeSpace.aiEnabled"
+            <v-card :title="$t('AI')" prepend-icon="$ai" :loading="fileApiLoading || loading" :disabled="fileApiLoading || loading || !useUserPreferenceStore().activeSpace.aiEnabled"
                     v-if="!recipe.internal">
                 <v-card-text>
-                    {{$t('ConvertUsingAI')}}
+                    {{ $t('ConvertUsingAI') }}
 
                     <model-select model="AiProvider" v-model="selectedAiProvider">
                         <template #append>
                             <v-btn @click="aiConvertRecipe()" icon="fa-solid fa-person-running" color="success"></v-btn>
                         </template>
                     </model-select>
+                    <v-spacer class="mt-10"></v-spacer>
                 </v-card-text>
             </v-card>
         </template>
 
-        <v-card class="mt-1" v-if="(recipe.steps.length > 1 || (recipe.steps.length == 1 && !recipe.steps[0].showIngredientsTable)) && recipe.showIngredientOverview">
-            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
+        <v-card class="mt-1"
+                v-if="recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
+            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor" @scale="(factor: number) => {servings = recipe.servings * factor}"></steps-overview>
         </v-card>
 
         <v-card class="mt-1" v-for="(step, index) in recipe.steps" :key="step.id">
             <step-view v-model="recipe.steps[index]" :step-number="index+1" :ingredientFactor="ingredientFactor"></step-view>
         </v-card>
 
-        <property-view v-model="recipe" :servings="servings"></property-view>
+        <property-view v-model="recipe" :ingredientFactor="ingredientFactor"></property-view>
 
         <v-card class="mt-2">
             <v-card-text>
-                <v-row>
-                    <v-col cols="12" md="3">
+                <v-row dense>
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
                             :title="$t('CreatedBy')"
@@ -157,7 +159,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}: undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
                             :title="$t('Created')"
@@ -166,7 +168,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ? {name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}} : undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" md="3">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
                             :title="$t('Updated')"
@@ -175,7 +177,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}: undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" md="3" v-if="recipe.sourceUrl">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="recipe.sourceUrl">
                         <v-card
                             variant="outlined"
                             :title="$t('Imported_From')"
@@ -189,7 +191,7 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
+        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
     </template>
 </template>
 
@@ -213,14 +215,18 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
 
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()
 
 const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
+const props = defineProps<{
+    servings: {type: Number, required: false},
+}>()
 
-const servings = ref(1)
+const servings = ref(props.servings ?? recipe.value.servings ?? 1)
 const showFullRecipeName = ref(false)
 
 const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
@@ -235,11 +241,13 @@ const ingredientFactor = computed(() => {
 /**
  * change servings when recipe servings are changed
  */
-watch(() => recipe.value.servings, () => {
-    if (recipe.value.servings) {
-        servings.value = recipe.value.servings
-    }
-})
+if (props.servings === undefined) {
+    watch(() => recipe.value.servings, () => {
+        if (recipe.value.servings) {
+            servings.value = recipe.value.servings
+        }
+    })
+}
 
 onMounted(() => {
     //keep screen on while viewing a recipe
@@ -257,7 +265,7 @@ onBeforeUnmount(() => {
 function aiConvertRecipe() {
     let api = new ApiApi()
 
-    doAiImport(selectedAiProvider.value.id!,null, '', recipe.value.id!).then(r => {
+    doAiImport(selectedAiProvider.value.id!, null, '', recipe.value.id!).then(r => {
         if (r.recipe) {
             recipe.value.internal = true
             recipe.value.steps = r.recipe.steps

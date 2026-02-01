@@ -17,6 +17,9 @@
     </div>
 
 
+    {% get_providers as socialaccount_providers %}
+
+    {% if not HIDE_LOGIN_FORM or 'form' in request.GET or not socialaccount_providers %}
     <div class="row">
         <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
             <hr>
@@ -41,8 +44,7 @@
             </form>
         </div>
     </div>
-
-    {% get_providers as socialaccount_providers %}
+    {% endif %}
 
     {% if socialaccount_providers %}
         <div class="row" style="margin-top: 2vh">

@@ -3,6 +3,7 @@
         <v-card :loading="loading">
             <v-closable-card-title :title="$t('Add_Servings_to_Shopping', {servings: servings})" v-model="dialog"></v-closable-card-title>
             <v-card-text>
+                <model-select model="ShoppingList" mode="tags" :hint="$t('LeaveEmptyForDefaultList')" v-model="selectedShoppingLists"></model-select>
                 <v-expansion-panels variant="accordion" v-model="panel">
                     <v-expansion-panel v-for="r in dialogRecipes" :key="r.recipe.id!" :value="r.recipe.id!">
                         <v-expansion-panel-title>{{ r.recipe.name }}</v-expansion-panel-title>
@@ -40,12 +41,13 @@
 
 import {computed, onMounted, PropType, ref} from "vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {ApiApi, MealPlan, Recipe, RecipeFlat, RecipeOverview, type ShoppingListEntryBulkCreate, ShoppingListRecipe} from "@/openapi";
+import {ApiApi, MealPlan, Recipe, RecipeFlat, RecipeOverview, ShoppingList, type ShoppingListEntryBulkCreate, ShoppingListRecipe} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {ShoppingDialogRecipe, ShoppingDialogRecipeEntry} from "@/types/Shopping";
 import {calculateFoodAmount} from "@/utils/number_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ingredientToUnitString, ingredientToFoodString} from "@/utils/model_utils.ts";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const emit = defineEmits(['created'])
 
@@ -59,6 +61,7 @@ const loading = ref(false)
 const panel = ref(0)
 
 const servings = ref(1)
+const selectedShoppingLists = ref([] as ShoppingList[])
 const recipe = ref({} as Recipe)
 const relatedRecipes = ref([] as Recipe[])
 
@@ -145,7 +148,8 @@ function createShoppingListRecipe() {
     }
 
     let shoppingListEntries = {
-        entries: []
+        entries: [],
+        shoppingListsIds: selectedShoppingLists.value.map(sl => sl.id!)
     } as ShoppingListEntryBulkCreate
 
     dialogRecipes.value.forEach(dialogRecipe => {

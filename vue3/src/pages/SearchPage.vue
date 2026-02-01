@@ -65,7 +65,7 @@
                         </v-expansion-panel-text>
 
                         <v-card-actions v-if="panel == 'search'">
-                            <v-btn @click="reset()" prepend-icon="fa-solid fa-circle-xmark">{{ $t('Reset') }}</v-btn>
+                            <v-btn @click="reset()" prepend-icon="$reset">{{ $t('Reset') }}</v-btn>
                             <v-btn @click="searchRecipes({page: 1})" prepend-icon="$search">{{ $t('Search') }}</v-btn>
                         </v-card-actions>
                     </v-expansion-panel>
@@ -142,7 +142,7 @@
                               @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
                               v-if="filters['sortOrder'].modelValue != 'random'"
                 ></v-pagination>
-                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes()">
+                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes({page: 1})">
                     {{ $t('Random Recipes') }}
                 </v-btn>
             </v-col>
@@ -184,7 +184,7 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
-import {routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
+import {boolOrUndefinedTransformer, numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
@@ -198,7 +198,7 @@ const {mdAndUp} = useDisplay()
 
 const query = useRouteQuery('query', "")
 const page = useRouteQuery('page', 1, {transform: Number})
-const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
+const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.search_itemsPerPage, {transform: Number})
 
 /**
  * filters that are not yet enabled
@@ -287,6 +287,8 @@ function searchRecipes(options: VDataTableUpdateOptions) {
         page: options.page,
         pageSize: pageSize.value,
     } as ApiRecipeListRequest
+
+     useUserPreferenceStore().deviceSettings.search_itemsPerPage = pageSize.value
 
     Object.values(filters.value).forEach((filter) => {
         if (!isFilterDefaultValue(filter)) {
@@ -739,10 +741,10 @@ const filters = ref({
         label: t('Hide_External'),
         hint: t('searchFilterHideExternalHelp'),
         enabled: false,
-        default: "false",
+        default: undefined,
         is: VSelect,
-        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-        modelValue: useRouteQuery('internal', "false")
+        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
+        modelValue: useRouteQuery('internal', undefined, {transform: boolOrUndefinedTransformer})
     },
     // random: {
     //     id: 'random',
@@ -759,27 +761,30 @@ const filters = ref({
         label: `${t('Rating')} (${t('exact')})`,
         hint: '',
         enabled: false,
+        clearable: true,
         default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('rating', undefined, {transform: Number}),
+        modelValue: useRouteQuery('rating', undefined, {transform: numberOrUndefinedTransformer}),
     },
     ratingGte: {
         id: 'ratingGte',
         label: `${t('Rating')} (>=)`,
         hint: '',
         enabled: false,
+        clearable: true,
         default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('ratingGte', undefined, {transform: Number}),
+        modelValue: useRouteQuery('ratingGte', undefined, {transform: numberOrUndefinedTransformer}),
     },
     ratingLte: {
         id: 'ratingLte',
         label: `${t('Rating')} (<=)`,
         hint: '',
         enabled: false,
+        clearable: true,
         default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('ratingLte', undefined, {transform: Number}),
+        modelValue: useRouteQuery('ratingLte', undefined, {transform: numberOrUndefinedTransformer}),
     },
     timescooked: {
         id: 'timescooked',
@@ -787,26 +792,29 @@ const filters = ref({
         hint: 'Recipes that were cooked at least X times',
         enabled: false,
         default: undefined,
+        clearable: true,
         is: VNumberInput,
-        modelValue: useRouteQuery('timescooked', undefined, {transform: Number}),
+        modelValue: useRouteQuery('timescooked', undefined, {transform: numberOrUndefinedTransformer}),
     },
     timescookedGte: {
         id: 'timescookedGte',
         label: `${t('times_cooked')} (>=)`,
         hint: '',
         enabled: false,
+        clearable: true,
         default: undefined,
         is: VNumberInput,
-        modelValue: useRouteQuery('timescookedGte', undefined, {transform: Number}),
+        modelValue: useRouteQuery('timescookedGte', undefined, {transform: numberOrUndefinedTransformer}),
     },
     timescookedLte: {
         id: 'timescookedLte',
         label: `${t('times_cooked')} (<=)`,
         hint: '',
         enabled: false,
+        clearable: true,
         default: undefined,
         is: VNumberInput,
-        modelValue: useRouteQuery('timescookedLte', undefined, {transform: Number}),
+        modelValue: useRouteQuery('timescookedLte', undefined, {transform: numberOrUndefinedTransformer}),
     },
     makenow: {
         id: 'makenow',

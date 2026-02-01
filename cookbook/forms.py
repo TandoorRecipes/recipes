@@ -5,13 +5,14 @@ from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.forms import NumberInput, widgets
+from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
-from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
+from django_scopes.forms import SafeModelChoiceField
+from django.contrib.auth.models import Group
 from hcaptcha.fields import hCaptchaField
 
-from .models import Comment, ConnectorConfig, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference
+from .models import Comment, ConnectorConfig, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference, InviteLink, Recipe, Space, User, UserPreference, UserSpace
 
 
 class SelectWidget(widgets.Select):
@@ -62,6 +63,7 @@ class ImportExportBase(forms.Form):
     )
 
 
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -100,9 +102,6 @@ class ExportForm(ImportExportBase):
         space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
         self.fields['recipes'].queryset = Recipe.objects.filter(space=space).all()
-
-
-from .models import InviteLink, SearchPreference, Space, User, UserPreference
 
 
 class InviteLinkForm(forms.ModelForm):
@@ -179,7 +178,16 @@ class AllAuthSocialSignupForm(SocialSignupForm):
             self.fields.pop('terms')
 
     def signup(self, request, user):
-        pass
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            with scopes_disabled():
+                space = Space.objects.first()
+                if space:
+                    user_space = UserSpace.objects.create(
+                        space=space, user=user, active=True
+                    )
+                    user_space.groups.add(
+                        Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get()
+                    )
 
 
 class CustomPasswordResetForm(ResetPasswordForm):

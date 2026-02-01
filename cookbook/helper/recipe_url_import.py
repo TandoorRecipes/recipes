@@ -69,16 +69,8 @@ def get_from_scraper(scrape, request):
     recipe_json['description'] = parse_description(description)
     recipe_json['description'] = automation_engine.apply_regex_replace_automation(recipe_json['description'], Automation.DESCRIPTION_REPLACE)
 
-    # assign servings attributes
-    try:
-        # dont use scrape.yields() as this will always return "x servings" or "x items", should be improved in scrapers directly
-        # max(x,1) to prevent 0 servings which breaks scaling
-        servings = max(scrape.schema.data.get('recipeYield') or 1, 1)
-    except Exception:
-        servings = 1
-
-    recipe_json['servings'] = parse_servings(servings)
-    recipe_json['servings_text'] = parse_servings_text(servings)
+    recipe_json['servings'] = parse_servings(scrape.schema.data.get('recipeYield'))
+    recipe_json['servings_text'] = parse_servings_text(scrape.schema.data.get('recipeYield'))
 
     # assign time attributes
     try:
@@ -407,7 +399,7 @@ def parse_servings(servings):
 def parse_servings_text(servings):
     if isinstance(servings, str):
         try:
-            servings = re.sub("\\d+", '', servings).strip()
+            servings = re.sub("\\d+", '', servings, 1).strip()
         except Exception:
             servings = ''
     if isinstance(servings, list):

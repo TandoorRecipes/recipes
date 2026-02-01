@@ -146,7 +146,11 @@ onMounted(() => {
 
 function clickMealPlan(plan: MealPlan) {
     if (plan.recipe) {
-        router.push({name: 'RecipeViewPage', params: {id: plan.recipe.id}})
+        router.push({
+            name: 'RecipeViewPage',
+            params: { id: String(plan.recipe.id) },          // keep id in params
+            query: { servings: String(plan.servings ?? '') } // pass servings as query
+        })
     }
 }
 

@@ -34,7 +34,7 @@ urlpatterns = [
     ),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG and settings.DEBUG_TOOLBAR:
     urlpatterns += path('__debug__/', include('debug_toolbar.urls')),
 
 if settings.ENABLE_METRICS:

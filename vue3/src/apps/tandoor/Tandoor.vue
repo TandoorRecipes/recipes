@@ -1,10 +1,10 @@
 <template>
     <v-app>
-        <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated">
+        <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
 
         </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor"
-                   flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated" :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? '' : 'hide'">
+                   flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode" :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? '' : 'hide'">
             <router-link :to="{ name: 'StartPage', params: {} }">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"
                        v-if="useUserPreferenceStore().userSettings.navShowLogo && !useUserPreferenceStore().activeSpace.navLogo"></v-img>
@@ -58,7 +58,7 @@
             </p>
         </v-app-bar>
 
-        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != ''">
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
             <p class="text-center w-100">
                 {{ useUserPreferenceStore().activeSpace.message }}
             </p>
@@ -69,7 +69,7 @@
         </v-main>
 
         <!-- completely hide in print mode because setting d-print-node keeps layout -->
-        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !isPrintMode">
+        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
             <v-list nav>
                 <v-list-item :to="{ name: 'SettingsPage', params: {} }">
                     <template #prepend>
@@ -96,7 +96,7 @@
 
         </v-navigation-drawer>
 
-        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp">
+        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp && !useUserPreferenceStore().isPrintMode">
             <v-btn value="recent" :to="{ name: 'StartPage', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
@@ -131,29 +131,23 @@
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
-import {useDisplay} from "vuetify"
+import {useDisplay, useLocale} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
-import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
-import {useDjangoUrls} from "@/composables/useDjangoUrls";
-import {nextTick, onMounted} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
-import {useMediaQuery, useTitle} from "@vueuse/core";
+import {useTitle} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
-import {NAVIGATION_DRAWER} from "@/utils/navigation.ts";
 import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
 
 const {lgAndUp} = useDisplay()
-const {getDjangoUrl} = useDjangoUrls()
 const {t} = useI18n()
 
 const title = useTitle()
 const router = useRouter()
-
-const isPrintMode = useMediaQuery('print')
 
 onMounted(() => {
     useUserPreferenceStore().init().then(() => {
@@ -161,13 +155,20 @@ onMounted(() => {
             router.push({name: 'WelcomePage'})
         }
     })
+
+
+    const {current} = useLocale()
+    let locale = document.querySelector('html')!.getAttribute('lang')
+    if (locale != null) {
+        current.value = locale
+    }
 })
 
 /**
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
-    if(to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined &&!useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!){
+    if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
     }
     nextTick(() => {
@@ -234,6 +235,30 @@ router.afterEach((to, from) => {
 
     .d01 .cv-day-number {
         background-color: #b98766 !important;
+    }
+
+    /* mavon-editor link/image dialog */
+
+    .add-image-link {
+        background-color: #212121 !important;
+        color: #fff !important;
+    }
+
+    .add-image-link > i {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .add-image-link .input-wrapper {
+        border-color: #555 !important;
+    }
+
+    .add-image-link .input-wrapper input {
+        background-color: #212121 !important;
+        color: #fff !important;
+    }
+
+    .add-image-link .op-btn {
+        color: #fff !important;
     }
 }
 

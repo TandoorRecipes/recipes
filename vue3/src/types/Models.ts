@@ -7,7 +7,7 @@ import {
     MealPlan,
     MealType,
     Property, PropertyType,
-    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingListEntry, Space,
+    Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingList, ShoppingListEntry, Space,
     Step,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
@@ -144,6 +144,7 @@ export type EditorSupportedModels =
     | 'Automation'
     | 'Keyword'
     | 'UserFile'
+    | 'ShoppingList'
     | 'ShoppingListEntry'
     | 'User'
     | 'RecipeBook'
@@ -182,6 +183,7 @@ export type EditorSupportedTypes =
     | Automation
     | Keyword
     | UserFile
+    | ShoppingList
     | ShoppingListEntry
     | User
     | RecipeBook
@@ -483,6 +485,28 @@ export const TSupermarketCategory = {
     ]
 } as Model
 registerModel(TSupermarketCategory)
+
+
+export const TShoppingList = {
+    name: 'ShoppingList',
+    localizationKey: 'ShoppingList',
+    localizationKeyDescription: 'ShoppingListHelp',
+    icon: 'fa-solid fa-file-lines',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ShoppingListEditor.vue`)),
+
+    disableListView: true,
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Color', key: 'color'},
+        {title: 'Description', key: 'description'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TShoppingList)
 
 export const TShoppingListEntry = {
     name: 'ShoppingListEntry',

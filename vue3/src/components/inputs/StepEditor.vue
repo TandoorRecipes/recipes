@@ -68,7 +68,8 @@
                                 <div class="d-flex flex-nowrap">
                                     <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
                                         <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" density="compact"
-                                                      hide-details control-variant="hidden" :disabled="ingredient.noAmount" :precision="useUserPreferenceStore().userSettings.ingredientDecimals">
+                                                        hide-details control-variant="hidden" :disabled="ingredient.noAmount"
+                                                        :precision="useUserPreferenceStore().userSettings.ingredientDecimals">
 
                                             <template #prepend>
                                                 <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
@@ -76,7 +77,8 @@
                                         </v-number-input>
                                     </div>
                                     <div class="flex-col flex-grow-0  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader ">
-                                        <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details :disabled="ingredient.noAmount"></model-select>
+                                        <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details
+                                                      :disabled="ingredient.noAmount"></model-select>
                                     </div>
                                     <div class="flex-col flex-grow-1  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
                                         <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
@@ -173,13 +175,13 @@
         v-model="dialogIngredientParser"
         :max-width="(mobile) ? '100vw': '75vw'"
         :fullscreen="mobile">
-        <v-card>
+        <v-card :loading="ingredientParserLoading">
             <v-closable-card-title :title="$t('Ingredients')" v-model="dialogIngredientParser"></v-closable-card-title>
             <v-card-text>
                 <v-textarea v-model="ingredientTextInput" :placeholder="$t('paste_ingredients_placeholder')"></v-textarea>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="parseAndInsertIngredients()" color="save">{{ $t('Add') }}</v-btn>
+                <v-btn @click="parseAndInsertIngredients()" color="save" :loading="ingredientParserLoading">{{ $t('Add') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -195,7 +197,8 @@
                     <v-text-field :label="$t('Original_Text')" readonly v-model="step.ingredients[editingIngredientIndex].originalText"
                                   v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
-                                    :min="0" :precision="useUserPreferenceStore().userSettings.ingredientDecimals" v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
+                                    :min="0" :precision="useUserPreferenceStore().userSettings.ingredientDecimals"
+                                    v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
                                   allow-create></model-select>
                     <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
@@ -224,8 +227,8 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, ref} from 'vue'
-import {ApiApi, Ingredient, ParsedIngredient, Recipe, Step, Unit} from "@/openapi";
+import {nextTick, ref} from 'vue'
+import {ApiApi, Ingredient, ParsedIngredient, Recipe, Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useDisplay} from "vuetify";
@@ -234,9 +237,7 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import IngredientString from "@/components/display/IngredientString.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {ingredientToString} from "@/utils/model_utils";
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
-import {mergeStep} from "@/utils/step_utils.ts";
 
 const emit = defineEmits(['delete', 'move'])
 
@@ -252,6 +253,7 @@ const showName = ref(false)
 const showTime = ref(false)
 const showRecipe = ref(false)
 const showFile = ref(false)
+const ingredientParserLoading = ref(false)
 
 const dialogMarkdownEditor = ref(false)
 const dialogIngredientEditor = ref(false)
@@ -275,26 +277,22 @@ function sortIngredients() {
  */
 function parseAndInsertIngredients() {
     let api = new ApiApi()
-    let promises: Promise<ParsedIngredient>[] = []
     let ingredientList = ingredientTextInput.value.split(/\r?\n/)
-    ingredientList.forEach(ingredientString => {
-        if (ingredientString.trim() != "") {
-            promises.push(api.apiIngredientFromStringCreate({ingredientString: {text: ingredientString}}))
-        }
-    })
-    Promise.allSettled(promises).then(r => {
-        r.forEach(i => {
-            console.log(i)
-            step.value.ingredients.push({
-                originalText: i.value.originalText,
-                amount: i.value.amount,
-                food: i.value.food,
-                unit: i.value.unit,
-                note: i.value.note
-            } as Ingredient)
-        })
+    ingredientParserLoading.value = true
+
+    api.apiIngredientParserPostCreate({ingredientParserRequest: {ingredients: ingredientList}}).then(r => {
+        // clear out empty ingredients when pasting stuff (in part to remove initial ingredient)
+        step.value.ingredients = step.value.ingredients.filter(i => i.food != null || i.note != null || i.amount != 0)
+
+        step.value.ingredients = step.value.ingredients.concat(r.ingredients)
+
         ingredientTextInput.value = ""
         dialogIngredientParser.value = false
+
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        ingredientParserLoading.value = false
     })
 }
 

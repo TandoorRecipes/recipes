@@ -33,4 +33,4 @@ Convert pictures of recipes to a structure that can be imported to Tandoor with 
 
 Maintained by [smilerz](https://github.com/smilerz/tandoor-menu-generator)
 
-Generate a mealplan tbased on complex criteria and optionally insert it into an SVG menu template.
+Generate a meal plan based on complex criteria and optionally insert it into an SVG menu template.
