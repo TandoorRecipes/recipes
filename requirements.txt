@@ -51,6 +51,7 @@ python3-openid==3.2.0
 python3-saml==1.16.0
 django-vite==3.1.0
 litellm==1.64.1
+thefuzz==0.22.1
 
 # Development
 pytest==8.4.2

@@ -38,11 +38,13 @@ Overview of the capabilities of the different integrations.
 | OpenEats           | ✔️     | ❌     | ⌚     |
 | Plantoeat          | ✔️     | ❌     | ✔      |
 | CookBook Manager   | ✔️     | ⌚     | ✔️     |
+| Cooklang           | ✔️    | ⌚    | ⌚    |
 | CopyMeThat         | ✔️     | ❌     | ✔️     |
 | Mela               | ✔️     | ⌚     | ✔️     |
 | Cookmate           | ✔️     | ⌚     | ✔️     |
 | PDF (experimental) | ⌚️     | ✔️     | ✔️     |
 | Gourmet            | ✔️     | ❌     | ✔️     |
+
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
 
@@ -254,6 +256,9 @@ CopyMeThat can export `.zip` files containing an `.html` file as well as a folde
 ## Cookmate
 
 Cookmate allows you to export a `.mcb` file which you can simply upload to Tandoor and import all your recipes.
+
+## Cooklang
+Cooklang allows you to import a `.cook` file into tandoor. Does not yet support attaching images or importing a zip file.
 
 ## RecetteTek
 

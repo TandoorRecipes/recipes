@@ -52,17 +52,9 @@ class Integration:
 
         parent, created = Keyword.objects.get_or_create(name='Import', space=request.space)
         try:
-            self.keyword = parent.add_child(
-                name=name,
-                description=description,
-                space=request.space
-            )
+            self.keyword = parent.add_child(name=name, description=description, space=request.space)
         except (IntegrityError, ValueError):  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
-            self.keyword = parent.add_child(
-                name=f'{name} {str(uuid.uuid4())[0:8]}',
-                description=description,
-                space=request.space
-            )
+            self.keyword = parent.add_child(name=f'{name} {str(uuid.uuid4())[0:8]}', description=description, space=request.space)
 
     def do_export(self, recipes, el):
 
@@ -230,22 +222,21 @@ class Integration:
                                         self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
                     else:
-                        recipe = self.get_recipe_from_file(f['file'])
+
+                        buffer = f['file']
+                        buffer.name = f['name']  # preserve file name in case integrations use them for naming
+                        recipe = self.get_recipe_from_file(buffer)
                         recipe.keywords.add(self.keyword)
                         il.msg += self.get_recipe_processed_msg(recipe)
                         self.handle_duplicates(recipe, import_duplicates)
             except BadZipFile:
-                il.msg += 'ERROR ' + _(
-                    'Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
+                il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
             except Exception as e:
-                msg = 'ERROR ' + _(
-                    'An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n'
+                msg = 'ERROR ' + _('An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n'
                 self.handle_exception(e, log=il, message=msg)
 
             if len(self.ignored_recipes) > 0:
-                il.msg += '\n' + _(
-                    'The following recipes were ignored because they already existed:') + ' ' + ', '.join(
-                    self.ignored_recipes) + '\n\n'
+                il.msg += '\n' + _('The following recipes were ignored because they already existed:') + ' ' + ', '.join(self.ignored_recipes) + '\n\n'
 
             il.keyword = self.keyword
             il.msg += (_('Imported %s recipes.') % Recipe.objects.filter(keywords=self.keyword).count()) + '\n'
