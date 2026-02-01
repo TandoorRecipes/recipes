@@ -3164,14 +3164,10 @@ def meal_plans_to_ical(queryset, filename):
         event['uid'] = p.id
 
         start_date_time = p.from_date
-        end_date_time = p.from_date
+        end_date_time = p.to_date if p.to_date else p.from_date
 
-        if p.to_date:
-            end_date_time = p.to_date
-
-        if p.meal_type.time:
-            start_date_time = datetime.datetime.combine(p.from_date, p.meal_type.time)
-            end_date_time = datetime.datetime.combine(p.to_date, p.meal_type.time) + datetime.timedelta(minutes=60)
+        if end_date_time <= start_date_time:
+            end_date_time = start_date_time + datetime.timedelta(minutes=60)
 
         event.add('dtstart', start_date_time)
         event.add('dtend', end_date_time)
