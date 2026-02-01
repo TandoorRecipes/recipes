@@ -43,6 +43,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from litellm import completion, BadRequestError
+from litellm.exceptions import Timeout as LitellmTimeout
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
@@ -1164,13 +1165,19 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 response_text = ai_response.choices[0].message.content
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
-                pass
-        response = {
-            'error': True,
-            'msg': 'The AI could not process your request. \n\n' + err.message,
-        }
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, *args, **kwargs):
         try:
@@ -1895,13 +1902,19 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 response_text = ai_response.choices[0].message.content
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
-                pass
-        response = {
-            'error': True,
-            'msg': 'The AI could not process your request. \n\n' + err.message,
-        }
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(responses=RecipeSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
@@ -2597,6 +2610,12 @@ class AiImportView(APIView):
                 if ai_provider.url:
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
                 response = {
                     'error': True,
@@ -2708,12 +2727,19 @@ class AiStepSortView(APIView):
                 # TODO validate by loading/dumping using serializer ?
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
                 response = {
                     'error': True,
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AppImportView(APIView):
