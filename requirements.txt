@@ -44,7 +44,7 @@ pytubefix==9.2.2
 aiohttp==3.13.3
 inflection==0.5.1
 redis==7.1.0
-hiredis==3.2.1
+hiredis==3.3.0
 requests-oauthlib==2.0.0
 pyjwt==2.10.1
 python3-openid==3.2.0
