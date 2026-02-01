@@ -3187,7 +3187,7 @@ def meal_plans_to_ical(queryset, filename):
 
     for p in queryset:
         event = Event()
-        event['uid'] = p.id
+        event['uid'] = f'mealplan-{p.id}@tandoor.recipes'
 
         start_date_time = p.from_date
         end_date_time = p.to_date if p.to_date else p.from_date
