@@ -1205,6 +1205,13 @@ class RecipeSerializer(RecipeBaseSerializer):
 
     @extend_schema_field(serializers.JSONField)
     def get_food_properties(self, obj):
+        # Skip expensive computation on CREATE - UI doesn't display it after create
+        # User navigates to view page which triggers GET with full data
+        # Fixes issue #4356 - N+1 queries causing gunicorn worker timeout
+        view = self.context.get('view')
+        if view and getattr(view, 'action', None) == 'create':
+            return {}
+
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 

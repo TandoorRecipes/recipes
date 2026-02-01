@@ -20,7 +20,7 @@ import redis
 import requests
 from PIL import UnidentifiedImageError
 from django.contrib import messages
-from django.contrib.admin.utils import get_deleted_objects, NestedObjects
+from django.contrib.admin.utils import NestedObjects
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import caches
@@ -28,7 +28,6 @@ from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db import DEFAULT_DB_ALIAS
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
-from django.db.models.deletion import Collector
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -67,7 +66,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
-from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request, AiCallbackHandler
+from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -82,7 +81,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
-from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
+from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, FoodProperty, ImportLog, Ingredient,
                              InviteLink, Keyword, MealPlan, MealType, Property, PropertyType, Recipe, RecipeBook,
@@ -157,12 +156,12 @@ class LoggingMixin(object):
 
                 # Use a sorted set to store the user stats, with the score representing
                 # the number of queries the user made total or on a given day.
-                pipe.zincrby(f'api:space-request-count', 1, space.pk)
+                pipe.zincrby('api:space-request-count', 1, space.pk)
                 pipe.zincrby(f'api:space-request-count:{d}', 1, space.pk)
 
                 # Use a sorted set to store all the endpoints with score representing
                 # the number of queries the endpoint received total or on a given day.
-                pipe.zincrby(f'api:endpoint-request-count', 1, endpoint)
+                pipe.zincrby('api:endpoint-request-count', 1, endpoint)
                 pipe.zincrby(f'api:endpoint-request-count:{d}', 1, endpoint)
 
                 pipe.execute()
@@ -1629,8 +1628,12 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                                                                'steps__ingredients__unit',
                                                                'steps__ingredients__unit__unit_conversion_base_relation',
                                                                'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
+                                                               'steps__ingredients__unit__unit_conversion_base_relation__food',
+                                                               'steps__ingredients__unit__unit_conversion_base_relation__space',
                                                                'steps__ingredients__unit__unit_conversion_converted_relation',
                                                                'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+                                                               'steps__ingredients__unit__unit_conversion_converted_relation__food',
+                                                               'steps__ingredients__unit__unit_conversion_converted_relation__space',
                                                                'cooklog_set',
                                                                ).select_related('nutrition')
 
@@ -1655,6 +1658,17 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         if self.action == 'list':
             return RecipeOverviewSerializer
         return self.serializer_class
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+
+        # Minimal refetch - no need for food_properties prefetches since we skip that on create
+        # (fixes issue #4356)
+        serializer = self.get_serializer(instance)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=RecipeImageSerializer,
                        parser_classes=[MultiPartParser], )
@@ -2159,7 +2173,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                     if checked:
                         for f in foods:
                             f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
-                    elif checked == False:
+                    elif not checked:
                         for f in foods:
                             f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
 
@@ -2994,8 +3008,8 @@ class LocalizationViewSet(viewsets.GenericViewSet):
 
     def list(self, request, *args, **kwargs):
         langs = []
-        for l in settings.LANGUAGES:
-            langs.append({'code': l[0], 'language': f'{l[1]} ({l[0]})'})
+        for lang in settings.LANGUAGES:
+            langs.append({'code': lang[0], 'language': f'{lang[1]} ({lang[0]})'})
         return Response(LocalizationSerializer(langs, many=True).data)
 
 
