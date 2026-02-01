@@ -265,6 +265,13 @@ function initializeEditor() {
             editingObj.value.internal = true //TODO make database default after v2
         },
         itemDefaults: props.itemDefaults,
+        onBeforeSave: () => {
+            console.log('before save')
+            return Promise.resolve()
+        },
+        onAfterSave: () => {
+            console.log('after save')
+        }
     })
 }
 

@@ -1,5 +1,5 @@
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {onBeforeMount, onMounted, ref, watch} from "vue";
+import {onBeforeMount, onMounted, ref, shallowRef, watch} from "vue";
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models";
 import {useI18n} from "vue-i18n";
 import {ResponseError} from "@/openapi";
@@ -17,6 +17,8 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     const modelClass = ref({} as GenericModel)
 
     const editingObjChanged = ref(false)
+    let onBeforeSaveCallback: (() => Promise<any>) | undefined = undefined
+    let onAfterSaveCallback: (() => void) | undefined = undefined
 
     const {t} = useI18n()
     const title = useTitle()
@@ -89,6 +91,8 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                             itemDefaults?: T,
                             newItemFunction?: () => void,
                             existingItemFunction?: () => void,
+                            onBeforeSave?: () => Promise<any>,
+                            onAfterSave?: () => void
                         } = {}
     ): Promise<T | undefined> {
 
@@ -98,8 +102,13 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 applyItemDefaults(itemDefaults)
             },
             existingItemFunction = () => {
-            }
+            },
+            onBeforeSave = undefined,
+            onAfterSave = undefined
         } = options
+
+        onBeforeSaveCallback = onBeforeSave
+        onAfterSaveCallback = onAfterSave
 
         if (item === null && (itemId === undefined || itemId == '')) {
             // neither item nor itemId given => new item
@@ -168,7 +177,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         let name = ''
 
         if (editingObj.value.id) {
-            name =  modelClass.value.getLabel(editingObj.value)
+            name = modelClass.value.getLabel(editingObj.value)
         }
 
         if (name == '') {
@@ -184,33 +193,50 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
      */
     function saveObject() {
         loading.value = true
-        if (isUpdate()) {
-            return modelClass.value.update(editingObj.value.id, editingObj.value).then((r: T) => {
-                emit('save', r)
-                editingObj.value = r
-                useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-                return r
-            }).catch((err: any) => {
-                console.error(err)
-                useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-            }).finally(() => {
-                editingObjChanged.value = false
-                loading.value = false
+
+        const executeSave = () => {
+            if (isUpdate()) {
+                return modelClass.value.update(editingObj.value.id, editingObj.value).then((r: T) => {
+                    emit('save', r)
+                    editingObj.value = r
+                    useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+                    if (onAfterSaveCallback) {
+                        onAfterSaveCallback()
+                    }
+                    return r
+                }).catch((err: any) => {
+                    console.error(err)
+                    useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+                }).finally(() => {
+                    editingObjChanged.value = false
+                    loading.value = false
+                })
+            } else {
+                return modelClass.value.create(editingObj.value).then((r: T) => {
+                    emit('create', r)
+                    editingObj.value = r
+                    useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+                    title.value = editingObjName()
+                    if (onAfterSaveCallback) {
+                        onAfterSaveCallback()
+                    }
+                    return r
+                }).catch((err: any) => {
+                    console.error(err)
+                    useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+                }).finally(() => {
+                    editingObjChanged.value = false
+                    loading.value = false
+                })
+            }
+        }
+
+        if (onBeforeSaveCallback) {
+            return onBeforeSaveCallback().then(() => {
+                return executeSave()
             })
         } else {
-            return modelClass.value.create(editingObj.value).then((r: T) => {
-                emit('create', r)
-                editingObj.value = r
-                useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
-                title.value = editingObjName()
-                return r
-            }).catch((err: any) => {
-                console.error(err)
-                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-            }).finally(() => {
-                editingObjChanged.value = false
-                loading.value = false
-            })
+            return executeSave()
         }
     }
 
