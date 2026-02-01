@@ -12,6 +12,8 @@ services:
     image: vabene1111/recipes
     env_file:
       - ./.env
+    ports:
+      - 80:80
     volumes:
       - staticfiles:/opt/recipes/staticfiles
       - ./mediafiles:/opt/recipes/mediafiles
