@@ -61,7 +61,7 @@
     "babel-loader": "^9.1.0",
     "eslint": "^8.46.0",
     "eslint-plugin-vue": "^8.7.1",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "vue-cli-plugin-i18n": "^2.3.2",
     "vue-template-compiler": "^2.7.16",
