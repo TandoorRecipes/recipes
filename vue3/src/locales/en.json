@@ -488,6 +488,7 @@
   "Scale": "Scale",
   "ScaleRecipeHelp": "Increase or decrese all ingredient amounts so that the given number of servings are created when making the recipe. ",
   "Scaling": "Scaling",
+  "ScalingHelp": "Add a diameter to a recipe to enable scaling based on diameter in addtion to serving based scaling. ",
   "Search": "Search",
   "Search Settings": "Search Settings",
   "SearchMethod": "Search method",
