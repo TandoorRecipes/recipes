@@ -88,7 +88,7 @@ type DeleteRelationRequestParameter = {
  *
  * converted to VDataTableHeaders by the GenericModel instance
  */
-type ModelTableHeaders = {
+export type ModelTableHeaders = {
     title: string,
     key: string,
     align?: 'end' | 'start',

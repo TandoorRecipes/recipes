@@ -251,7 +251,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             general_tableItemsPerPage: 10,
             general_closedHelpAlerts: [],
 
-            food_hiddenColumns: [],
+            food_hiddenColumns: null,
             food_columnDisplayModes: {},
             food_quickActions: ['onhand', 'shopping', 'edit'],
             food_treeView: false,

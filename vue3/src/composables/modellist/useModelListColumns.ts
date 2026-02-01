@@ -16,7 +16,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * This is the single owner of header computation for ALL models —
  * replaces GenericModel.getTableHeaders() entirely.
  */
-export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (key: string) => string) {
+export function useModelListColumns(model: ComputedRef<Model | undefined>, t: Function) {
     const deviceSettings = useUserPreferenceStore().deviceSettings
 
     const listSettings = computed(() => model.value?.listSettings)
@@ -38,7 +38,7 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
             return headers.value.filter(h => h.hidden).map(h => h.key)
         }
 
-        const storageKey = `${settingsKey.value}_hiddenColumns`
+        const storageKey = `${settingsKey.value}_hiddenColumns` as keyof DeviceSettings
         const stored = deviceSettings[storageKey] as string[] | null
 
         if (stored === null) {
@@ -91,7 +91,7 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
     function toggleColumn(key: string): void {
         if (!settingsKey.value) return
 
-        const storageKey = `${settingsKey.value}_hiddenColumns`
+        const storageKey = `${settingsKey.value}_hiddenColumns` as keyof DeviceSettings
         let current = deviceSettings[storageKey] as string[] | null
 
         // Initialize from defaults if still using sentinel
@@ -100,9 +100,9 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
         }
 
         if (current.includes(key)) {
-            deviceSettings[storageKey] = current.filter(k => k !== key)
+            (deviceSettings[storageKey] as any) = current.filter(k => k !== key)
         } else {
-            deviceSettings[storageKey] = [...current, key]
+            (deviceSettings[storageKey] as any) = [...current, key]
         }
     }
 
@@ -110,7 +110,7 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
     function getDisplayMode(key: string): 'icon' | 'text' {
         if (!settingsKey.value) return 'icon'
 
-        const modesKey = `${settingsKey.value}_columnDisplayModes`
+        const modesKey = `${settingsKey.value}_columnDisplayModes` as keyof DeviceSettings
         const modes = deviceSettings[modesKey] as Record<string, 'icon' | 'text'> | undefined
 
         if (modes && modes[key]) {
@@ -126,9 +126,9 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
     function setDisplayMode(key: string, mode: 'icon' | 'text'): void {
         if (!settingsKey.value) return
 
-        const modesKey = `${settingsKey.value}_columnDisplayModes`
+        const modesKey = `${settingsKey.value}_columnDisplayModes` as keyof DeviceSettings
         const current = (deviceSettings[modesKey] as Record<string, 'icon' | 'text'>) ?? {}
-        deviceSettings[modesKey] = {...current, [key]: mode}
+        ;(deviceSettings[modesKey] as any) = {...current, [key]: mode}
     }
 
     return {

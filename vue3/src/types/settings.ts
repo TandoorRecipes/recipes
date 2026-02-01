@@ -30,7 +30,7 @@ export type DeviceSettings = {
     general_closedHelpAlerts: String[]
 
     // Food list settings
-    food_hiddenColumns: string[]
+    food_hiddenColumns: string[] | null
     food_columnDisplayModes: Record<string, 'icon' | 'text'>
     food_quickActions: string[]
     food_treeView: boolean
