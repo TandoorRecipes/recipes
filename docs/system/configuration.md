@@ -503,7 +503,7 @@ S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/Tandoor
 
 #### AI Integration
 
-Most AI features are configured trough the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
+Most AI features are configured through the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
 
 Enables AI features for spaces by default
 ```
