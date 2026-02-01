@@ -1341,9 +1341,9 @@ class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 
 MealPlanViewQueryParameters = [
-    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive).'), type=str,
+    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive). If nothing is given its today - 90 days.'), type=str,
                      examples=[DateExample]),
-    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive).'), type=str,
+    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive). If nothing is given its today + 360 days.'), type=str,
                      examples=[DateExample]),
     OpenApiParameter(name='meal_type',
                      description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str,
