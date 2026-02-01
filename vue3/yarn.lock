@@ -3670,12 +3670,19 @@ workbox-routing@7.3.0, workbox-routing@^7.3.0:
   dependencies:
     workbox-core "7.3.0"
 
-workbox-strategies@7.3.0, workbox-strategies@^7.3.0:
+workbox-strategies@7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/workbox-strategies/-/workbox-strategies-7.3.0.tgz#bb1530f205806895aacdea3639e6cf6bfb3a6cb0"
   integrity sha512-tmZydug+qzDFATwX7QiEL5Hdf7FrkhjaF9db1CbB39sDmEZJg3l9ayDvPxy8Y18C3Y66Nrr9kkN1f/RlkDgllg==
   dependencies:
     workbox-core "7.3.0"
+
+workbox-strategies@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/workbox-strategies/-/workbox-strategies-7.4.0.tgz#59130734400722d39ce4a0a1a22a363e99913946"
+  integrity sha512-T4hVqIi5A4mHi92+5EppMX3cLaVywDp8nsyUgJhOZxcfSV/eQofcOA6/EMo5rnTNmNTpw0rUgjAI6LaVullPpg==
+  dependencies:
+    workbox-core "7.4.0"
 
 workbox-streams@7.3.0:
   version "7.3.0"
