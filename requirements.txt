@@ -5,7 +5,7 @@ django-cleanup==9.0.0
 django-crispy-forms==2.4
 crispy-bootstrap4==2025.6
 djangorestframework==3.16.1
-drf-spectacular==0.28.0
+drf-spectacular==0.29.0
 drf-spectacular-sidecar==2025.10.1
 drf-writable-nested==0.7.2
 django-oauth-toolkit==2.4.0
