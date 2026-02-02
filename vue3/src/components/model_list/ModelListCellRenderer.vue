@@ -6,6 +6,11 @@
     <template v-else-if="header.type === 'status-chip'">
         <v-chip v-if="value" label>{{ value }}</v-chip>
     </template>
+    <template v-else-if="header.type === 'number'">
+        <span v-if="value != null">
+            <span v-if="!showHeaders" class="text-medium-emphasis">{{ t(header.title) }}: </span>{{ value }}
+        </span>
+    </template>
     <template v-else>
         {{ value }}
     </template>
@@ -19,11 +24,14 @@ import {getNestedProperty} from '@/utils/utils'
 
 const {t} = useI18n()
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     item: any
     header: ModelTableHeaders
     displayMode: 'icon' | 'text'
-}>()
+    showHeaders?: boolean
+}>(), {
+    showHeaders: true,
+})
 
 const value = computed(() => {
     const path = props.header.field ?? props.header.key

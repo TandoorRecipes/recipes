@@ -251,8 +251,8 @@ export const TFood = {
     tableHeaders: [
         {title: 'Name', key: 'name', type: 'text'},
         {title: 'Category', key: 'supermarketCategory.name', type: 'text', hidden: true},
-        {title: 'Recipes', key: 'numrecipe', type: 'number', hidden: true},
-        {title: 'Children', key: 'numchild', type: 'number', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
         {title: 'Substitutes', key: 'substitute', type: 'boolean-indicator', trueIcon: 'fa-solid fa-right-left', hidden: true, hasDisplayMode: true, field: 'substitute.length'},
         {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
