@@ -1,13 +1,14 @@
 <script lang="ts">
-import {defineComponent, h, useSlots} from 'vue'
+import {type Component, defineComponent, h} from 'vue'
 import {VDataTableServer} from 'vuetify/components'
 
 /**
  * Thin wrapper around VDataTableServer that merges static template slots
- * with dynamically generated slots (passed as `dynamicSlots` prop).
+ * with programmatic slots (passed via `dynamicSlots` prop).
  *
- * Static template slots (from parent) take priority over dynamic ones
- * for the same key, so there's no conflict.
+ * Needed because Vue 3 templates cannot generate multiple named slots
+ * via iteration (v-for + v-slot is a compiler error), but the column
+ * system requires dynamic per-column cell slots driven by model config.
  */
 export default defineComponent({
     name: 'ModelListDataTable',
@@ -22,7 +23,7 @@ export default defineComponent({
         return () => {
             // Merge: static template slots override dynamic ones
             const mergedSlots = {...props.dynamicSlots, ...slots}
-            return h(VDataTableServer, attrs, mergedSlots)
+            return h(VDataTableServer as Component, attrs, mergedSlots)
         }
     },
 })
