@@ -20,7 +20,7 @@ import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {defineAsyncComponent, shallowRef} from "vue";
-import type {ModelFilterDef, ModelActionDef, ModelListSettings, ModelColumnType} from "@/composables/modellist/types";
+import type {ModelFilterDef, ModelActionDef, ModelListSettings, ModelColumnType, ModelSortDef} from "@/composables/modellist/types";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
@@ -33,7 +33,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  */
 export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false | GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
-        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
+        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase())!, t)
     } else {
         return false
     }
@@ -142,6 +142,7 @@ export type Model = {
     filterDefs?: ModelFilterDef[],
     actionDefs?: ModelActionDef[],
     listSettings?: ModelListSettings,
+    sortDefs?: ModelSortDef[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
@@ -231,7 +232,7 @@ export type EditorSupportedTypes =
     | InventoryLog
     | Household
 
-import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_LIST_SETTINGS} from "@/composables/modellist/FoodList";
+import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
 
 export const TFood = {
     name: 'Food',
@@ -259,6 +260,7 @@ export const TFood = {
     filterDefs: FOOD_FILTER_DEFS,
     actionDefs: FOOD_ACTION_DEFS,
     listSettings: FOOD_LIST_SETTINGS,
+    sortDefs: FOOD_SORT_OPTIONS,
 } as Model
 registerModel(TFood)
 
@@ -1080,7 +1082,7 @@ registerModel(TSearchFields)
  */
 export class GenericModel {
 
-    api: Object
+    api: ApiApi & Record<string, (...args: any[]) => any>
     model: Model
     // TODO find out the type of the t useI18n object and use it here
     // TODO decouple context from Generic model so t does not need to be passed

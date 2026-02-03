@@ -206,3 +206,16 @@ export function getAncestorPath(item: ModelItem): string | null {
     const lastSep = fn.lastIndexOf(' > ')
     return lastSep > 0 ? fn.substring(0, lastSep) : null
 }
+
+/**
+ * Sort option definition for a model list.
+ * Each option maps to a backend `ordering` query parameter value.
+ */
+export type ModelSortDef = {
+    /** Value sent as the `ordering` query param (e.g. 'name', '-name') */
+    key: string,
+    /** Localization key for the display label */
+    labelKey: string,
+    /** Icon (FontAwesome class), optional */
+    icon?: string,
+}
