@@ -888,5 +888,9 @@
     "ErrorUpdatingImage": "Napaka pri posodabljanju slike. Podprte oblike zapisa datotek so .jpg, .png, .webp.",
     "LeaveEmptyForDefaultList": "Za privzeti seznam pustite prazno.",
     "Linear": "Linearno",
-    "Scaling": "Skaliranje"
+    "Scaling": "Skaliranje",
+    "InviteLinkCreatedEmailFailed": "Povezava za povabilo je bila ustvarjena, vendar pošiljanje e-pošte ni uspelo. Podrobnosti so zabeležene – če se težava nadaljuje, se obrnite na skrbnika.",
+    "ScalingHelp": "Receptu dodajte premer, da omogočite prilagajanje glede na premer in prilagajanje glede na porcije. ",
+    "Include Children": "Vključi podrejene",
+    "Include child keywords and foods in search results": "V rezultate iskanja vključite podrejene ključne besede in živila"
 }
