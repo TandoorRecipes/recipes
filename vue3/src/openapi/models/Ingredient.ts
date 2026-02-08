@@ -110,6 +110,12 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     alwaysUsePluralFood?: boolean;
+    /**
+     * Just laziness to have a checked field on the frontend API client
+     * @type {boolean}
+     * @memberof Ingredient
+     */
+    readonly checked: boolean;
 }
 
 /**
@@ -121,6 +127,7 @@ export function instanceOfIngredient(value: object): value is Ingredient {
     if (!('amount' in value) || value['amount'] === undefined) return false;
     if (!('conversions' in value) || value['conversions'] === undefined) return false;
     if (!('usedInRecipes' in value) || value['usedInRecipes'] === undefined) return false;
+    if (!('checked' in value) || value['checked'] === undefined) return false;
     return true;
 }
 
@@ -147,10 +154,11 @@ export function IngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'usedInRecipes': json['used_in_recipes'],
         'alwaysUsePluralUnit': json['always_use_plural_unit'] == null ? undefined : json['always_use_plural_unit'],
         'alwaysUsePluralFood': json['always_use_plural_food'] == null ? undefined : json['always_use_plural_food'],
+        'checked': json['checked'],
     };
 }
 
-export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'usedInRecipes'> | null): any {
+export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'> | null): any {
     if (value == null) {
         return value;
     }

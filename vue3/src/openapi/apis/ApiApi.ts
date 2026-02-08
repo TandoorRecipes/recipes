@@ -41,6 +41,9 @@ import type {
   Ingredient,
   IngredientParserRequest,
   IngredientParserResponse,
+  InventoryEntry,
+  InventoryLocation,
+  InventoryLog,
   InviteLink,
   Keyword,
   Localization,
@@ -68,6 +71,9 @@ import type {
   PaginatedGenericModelReferenceList,
   PaginatedImportLogList,
   PaginatedIngredientList,
+  PaginatedInventoryEntryList,
+  PaginatedInventoryLocationList,
+  PaginatedInventoryLogList,
   PaginatedInviteLinkList,
   PaginatedKeywordList,
   PaginatedMealPlanList,
@@ -114,6 +120,8 @@ import type {
   PatchedFood,
   PatchedImportLog,
   PatchedIngredient,
+  PatchedInventoryEntry,
+  PatchedInventoryLocation,
   PatchedInviteLink,
   PatchedKeyword,
   PatchedMealPlan,
@@ -239,6 +247,12 @@ import {
     IngredientParserRequestToJSON,
     IngredientParserResponseFromJSON,
     IngredientParserResponseToJSON,
+    InventoryEntryFromJSON,
+    InventoryEntryToJSON,
+    InventoryLocationFromJSON,
+    InventoryLocationToJSON,
+    InventoryLogFromJSON,
+    InventoryLogToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
     KeywordFromJSON,
@@ -293,6 +307,12 @@ import {
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
     PaginatedIngredientListToJSON,
+    PaginatedInventoryEntryListFromJSON,
+    PaginatedInventoryEntryListToJSON,
+    PaginatedInventoryLocationListFromJSON,
+    PaginatedInventoryLocationListToJSON,
+    PaginatedInventoryLogListFromJSON,
+    PaginatedInventoryLogListToJSON,
     PaginatedInviteLinkListFromJSON,
     PaginatedInviteLinkListToJSON,
     PaginatedKeywordListFromJSON,
@@ -385,6 +405,10 @@ import {
     PatchedImportLogToJSON,
     PatchedIngredientFromJSON,
     PatchedIngredientToJSON,
+    PatchedInventoryEntryFromJSON,
+    PatchedInventoryEntryToJSON,
+    PatchedInventoryLocationFromJSON,
+    PatchedInventoryLocationToJSON,
     PatchedInviteLinkFromJSON,
     PatchedInviteLinkToJSON,
     PatchedKeywordFromJSON,
@@ -1215,7 +1239,7 @@ export interface ApiImportOpenDataCreateRequest {
 }
 
 export interface ApiIngredientCreateRequest {
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'>;
+    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
 }
 
 export interface ApiIngredientDestroyRequest {
@@ -1235,7 +1259,7 @@ export interface ApiIngredientParserPostCreateRequest {
 
 export interface ApiIngredientPartialUpdateRequest {
     id: number;
-    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'>;
+    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'>;
 }
 
 export interface ApiIngredientRetrieveRequest {
@@ -1244,7 +1268,118 @@ export interface ApiIngredientRetrieveRequest {
 
 export interface ApiIngredientUpdateRequest {
     id: number;
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'>;
+    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
+}
+
+export interface ApiInventoryEntryCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryCreateRequest {
+    inventoryEntry: InventoryEntry;
+}
+
+export interface ApiInventoryEntryDestroyRequest {
+    id: number;
+}
+
+export interface ApiInventoryEntryListRequest {
+    code?: string;
+    empty?: boolean;
+    foodId?: number;
+    inventoryLocationId?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryPartialUpdateRequest {
+    id: number;
+    patchedInventoryEntry?: PatchedInventoryEntry;
+}
+
+export interface ApiInventoryEntryProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInventoryEntryUpdateRequest {
+    id: number;
+    inventoryEntry: InventoryEntry;
+}
+
+export interface ApiInventoryLocationCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationCreateRequest {
+    inventoryLocation: InventoryLocation;
+}
+
+export interface ApiInventoryLocationDestroyRequest {
+    id: number;
+}
+
+export interface ApiInventoryLocationListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationPartialUpdateRequest {
+    id: number;
+    patchedInventoryLocation?: PatchedInventoryLocation;
+}
+
+export interface ApiInventoryLocationProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInventoryLocationUpdateRequest {
+    id: number;
+    inventoryLocation: InventoryLocation;
+}
+
+export interface ApiInventoryLogListRequest {
+    entryId?: number;
+    foodId?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLogRetrieveRequest {
+    id: number;
 }
 
 export interface ApiInviteLinkCreateRequest {
@@ -8653,6 +8788,875 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientUpdate(requestParameters: ApiIngredientUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryEntryCascadingListRaw(requestParameters: ApiInventoryEntryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryEntryCascadingList(requestParameters: ApiInventoryEntryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryCreateRaw(requestParameters: ApiInventoryEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['inventoryEntry'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryEntry',
+                'Required parameter "inventoryEntry" was null or undefined when calling apiInventoryEntryCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryEntryToJSON(requestParameters['inventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryCreate(requestParameters: ApiInventoryEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryDestroyRaw(requestParameters: ApiInventoryEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryDestroy(requestParameters: ApiInventoryEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiInventoryEntryDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryListRaw(requestParameters: ApiInventoryEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryEntryList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['code'] != null) {
+            queryParameters['code'] = requestParameters['code'];
+        }
+
+        if (requestParameters['empty'] != null) {
+            queryParameters['empty'] = requestParameters['empty'];
+        }
+
+        if (requestParameters['foodId'] != null) {
+            queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['inventoryLocationId'] != null) {
+            queryParameters['inventory_location_id'] = requestParameters['inventoryLocationId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryEntryListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryList(requestParameters: ApiInventoryEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryEntryList> {
+        const response = await this.apiInventoryEntryListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryEntryNullingListRaw(requestParameters: ApiInventoryEntryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryEntryNullingList(requestParameters: ApiInventoryEntryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryPartialUpdateRaw(requestParameters: ApiInventoryEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedInventoryEntryToJSON(requestParameters['patchedInventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryPartialUpdate(requestParameters: ApiInventoryEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryEntryProtectingListRaw(requestParameters: ApiInventoryEntryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryEntryProtectingList(requestParameters: ApiInventoryEntryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryProtectingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryRetrieveRaw(requestParameters: ApiInventoryEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryRetrieve(requestParameters: ApiInventoryEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryUpdateRaw(requestParameters: ApiInventoryEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryUpdate().'
+            );
+        }
+
+        if (requestParameters['inventoryEntry'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryEntry',
+                'Required parameter "inventoryEntry" was null or undefined when calling apiInventoryEntryUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryEntryToJSON(requestParameters['inventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryUpdate(requestParameters: ApiInventoryEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryLocationCascadingListRaw(requestParameters: ApiInventoryLocationCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryLocationCascadingList(requestParameters: ApiInventoryLocationCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationCreateRaw(requestParameters: ApiInventoryLocationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['inventoryLocation'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryLocation',
+                'Required parameter "inventoryLocation" was null or undefined when calling apiInventoryLocationCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryLocationToJSON(requestParameters['inventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationCreate(requestParameters: ApiInventoryLocationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationDestroyRaw(requestParameters: ApiInventoryLocationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationDestroy(requestParameters: ApiInventoryLocationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiInventoryLocationDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationListRaw(requestParameters: ApiInventoryLocationListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryLocationList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryLocationListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationList(requestParameters: ApiInventoryLocationListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryLocationList> {
+        const response = await this.apiInventoryLocationListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryLocationNullingListRaw(requestParameters: ApiInventoryLocationNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryLocationNullingList(requestParameters: ApiInventoryLocationNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationPartialUpdateRaw(requestParameters: ApiInventoryLocationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedInventoryLocationToJSON(requestParameters['patchedInventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationPartialUpdate(requestParameters: ApiInventoryLocationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryLocationProtectingListRaw(requestParameters: ApiInventoryLocationProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryLocationProtectingList(requestParameters: ApiInventoryLocationProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationProtectingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationRetrieveRaw(requestParameters: ApiInventoryLocationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationRetrieve(requestParameters: ApiInventoryLocationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationUpdateRaw(requestParameters: ApiInventoryLocationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationUpdate().'
+            );
+        }
+
+        if (requestParameters['inventoryLocation'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryLocation',
+                'Required parameter "inventoryLocation" was null or undefined when calling apiInventoryLocationUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryLocationToJSON(requestParameters['inventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationUpdate(requestParameters: ApiInventoryLocationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogListRaw(requestParameters: ApiInventoryLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryLogList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['entryId'] != null) {
+            queryParameters['entry_id'] = requestParameters['entryId'];
+        }
+
+        if (requestParameters['foodId'] != null) {
+            queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-log/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryLogListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogList(requestParameters: ApiInventoryLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryLogList> {
+        const response = await this.apiInventoryLogListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogRetrieveRaw(requestParameters: ApiInventoryLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLog>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLogRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLogFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogRetrieve(requestParameters: ApiInventoryLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLog> {
+        const response = await this.apiInventoryLogRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

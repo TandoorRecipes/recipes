@@ -386,6 +386,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SupermarketCategory.objects.filter(space=self).delete()
         Supermarket.objects.filter(space=self).delete()
 
+        StorageEntry.objects.filter(space=self).delete()
+        StorageLocation.objects.filter(space=self).delete()
+
         UserFile.objects.filter(space=self).delete()
         UserSpace.objects.filter(space=self).delete()
         Automation.objects.filter(space=self).delete()
@@ -1358,6 +1361,70 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     class Meta:
         ordering = ('pk',)
 
+
+class InventoryLocation(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=64)
+    is_freezer = models.BooleanField(default=False)
+
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+
+class InventoryEntry(models.Model, PermissionModelMixin):
+    storage_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE)
+    sub_location = models.CharField(max_length=64, blank=True, null=True)
+    code = models.CharField(max_length=16, null=True, blank=True)
+
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
+
+    expires = models.DateField(null=True, blank=True)
+    expires_frozen = models.DateField(null=True, blank=True)
+
+    note = models.CharField(max_length=256, null=True, blank=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'code'], name='code_unique_per_space'),
+        ]
+        ordering = ('id',)
+
+
+class InventoryLog(models.Model, PermissionModelMixin):
+    B_ADD = 'add'
+    B_REMOVE = 'remove'
+    B_MOVE = 'move'
+    BOOKING_TYPES = [
+        (B_ADD, _('Add')),
+        (B_REMOVE, _('Remove')),
+        (B_MOVE, _('Move')),
+    ]
+
+    entry = models.ForeignKey(InventoryEntry, on_delete=models.CASCADE)
+    booking_type = models.CharField(max_length=10, choices=BOOKING_TYPES, default=B_ADD)
+    old_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    new_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+
+    old_storage_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='old_storage_location')
+    new_storage_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='new_storage_location')
+
+    note = models.CharField(max_length=256, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

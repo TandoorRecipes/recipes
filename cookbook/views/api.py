@@ -89,7 +89,8 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList
+                             UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
+                             InventoryLocation, InventoryEntry, InventoryLog
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -108,6 +109,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  RecipeSimpleSerializer, ShoppingListEntryBulkSerializer,
                                  ShoppingListEntrySerializer, ShoppingListRecipeSerializer, SpaceSerializer,
                                  StepSerializer, StorageSerializer,
+                                 InventoryLocationSerializer, InventoryEntrySerializer, InventoryLogSerializer,
                                  SupermarketCategoryRelationSerializer, SupermarketCategorySerializer,
                                  SupermarketSerializer, SyncLogSerializer, SyncSerializer,
                                  UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
@@ -815,6 +817,74 @@ class StorageViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
+
+
+class InventoryLocationViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
+    queryset = InventoryLocation.objects
+    serializer_class = InventoryLocationSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+    @extend_schema(parameters=[
+        OpenApiParameter(name='empty', description=_('If true also return empty entries, if false (default) only return entries with amount > 0.'), type=bool),
+        OpenApiParameter(name='code', description=_('Returns all entries with the same food as the given code. If code is given food parameter is ignored'), type=str),
+        OpenApiParameter(name='food', description=_('Returns all entries with the given food id'), type=int),
+        OpenApiParameter(name='inventory_location', description=_('Returns all entries with the given inventory location id'), type=int),
+    ])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(space=self.request.space)
+
+        if self.action == 'list':
+            if str2bool(self.request.query_params.get('empty', False)) is False:
+                queryset = queryset.filter(amount__gt=0)
+
+            if code := self.request.query_params.get('code'):
+                # find first food that has this code in this space
+                entry = InventoryEntry.objects.filter(space=self.request.space, code=code).first()
+                if entry:
+                    queryset = queryset.filter(food=entry.food)
+                else:
+                    queryset = queryset.none()
+            elif food := self.request.query_params.get('food'):
+                queryset = queryset.filter(food_id=food)
+
+            if inventory_location := self.request.query_params.get('inventory_location'):
+                queryset = queryset.filter(storage_location_id=inventory_location)
+
+        return queryset
+
+
+@extend_schema(parameters=[
+        OpenApiParameter(name='food', description=_('Returns all entries with the given food id'), type=int),
+        OpenApiParameter(name='entry', description=_('Returns all entries with the given entry id'), type=int),
+    ])
+class InventoryLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = InventoryLog.objects
+    serializer_class = InventoryLogSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(space=self.request.space).order_by('-created_at')
+
+        if entry := self.request.query_params.get('entry'):
+            queryset = queryset.filter(entry__id=entry)
+
+        if food := self.request.query_params.get('food'):
+            queryset = queryset.filter(entry__food_id=food)
+
+        return queryset
 
 
 class SyncViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):

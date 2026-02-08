@@ -39,7 +39,8 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
+                             InventoryLocation, InventoryEntry, InventoryLog)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -658,6 +659,84 @@ class StorageSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
         }
 
 
+class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = InventoryLocation
+        fields = ('id', 'name', 'is_freezer')
+
+
+class InventoryEntrySerializer(SpacedModelSerializer):
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+
+        instance = super().create(validated_data)
+
+        if not instance.code:
+            instance.code = hex(instance.id)[2:].upper()
+            instance.save()
+
+        InventoryLog.objects.create(
+            space=instance.space,
+            entry=instance,
+            booking_type=InventoryLog.B_ADD,
+            old_amount=0,
+            new_amount=instance.amount,
+            old_storage_location=instance.storage_location,
+            new_storage_location=instance.storage_location,
+        )
+
+        return instance
+
+    def update(self, instance, validated_data):
+        old_amount = instance.amount
+        old_storage_location = instance.storage_location
+
+        instance = super().update(instance, validated_data)
+
+        if old_amount != instance.amount or old_storage_location != instance.storage_location:
+            booking_type = InventoryLog.B_MOVE if old_storage_location != instance.storage_location else InventoryLog.B_REMOVE
+            InventoryLog.objects.create(
+                space=instance.space,
+                entry=instance,
+                booking_type=booking_type,
+                old_amount=old_amount,
+                new_amount=instance.amount,
+                old_storage_location=old_storage_location,
+                new_storage_location=instance.storage_location,
+            )
+
+        return instance
+
+    class Meta:
+        model = InventoryEntry
+        fields = (
+            'id', 'storage_location', 'sub_location', 'code',
+            'food', 'unit', 'amount', 'expires', 'expires_frozen', 'note'
+        )
+        read_only_fields = ('id', 'code')
+
+
+class InventoryLogSerializer(SpacedModelSerializer):
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        raise ValidationError('Cannot update using this endpoint')
+
+    class Meta:
+        model = InventoryLog
+        fields = ('id', 'entry', 'booking_type', 'old_amount', 'new_amount', 'old_storage_location', 'new_storage_location', 'note', 'created_at')
+        read_only_fields = ('id', 'entry', 'booking_type', 'old_amount', 'new_amount', 'old_storage_location', 'new_storage_location', 'note', 'created_at')
+
+
 class RecipeImportSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
     storage = StorageSerializer()
 
@@ -1253,7 +1332,6 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Recipe
         fields = ['image', 'image_url', ]
-
 
 
 class RecipeBatchUpdateSerializer(serializers.Serializer):

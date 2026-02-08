@@ -9,6 +9,7 @@ import {
     Property, PropertyType,
     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingList, ShoppingListEntry, Space,
     Step,
+    Storage, InventoryLocation, InventoryEntry, InventoryLog,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
     Unit,
@@ -162,6 +163,9 @@ export type EditorSupportedModels =
     | 'AiLog'
     | 'Space'
     | 'FoodInheritField'
+    | 'InventoryLocation'
+    | 'InventoryEntry'
+    | 'InventoryLog'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -201,6 +205,9 @@ export type EditorSupportedTypes =
     | AiLog
     | Space
     | FoodInheritField
+    | InventoryLocation
+    | InventoryEntry
+    | InventoryLog
 
 export const TFood = {
     name: 'Food',
@@ -772,6 +779,71 @@ export const TStorage = {
     ]
 } as Model
 registerModel(TStorage)
+
+export const TInventoryLocation = {
+    name: 'InventoryLocation',
+    localizationKey: 'InventoryLocation',
+    localizationKeyDescription: 'InventoryLocationHelp',
+    icon: 'fa-solid fa-warehouse',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/InventoryLocationEditor.vue`)),
+
+    isPaginated: true,
+    isAdvancedDelete: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Freezer', key: 'isFreezer'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TInventoryLocation)
+
+export const TInventoryEntry = {
+    name: 'InventoryEntry',
+    localizationKey: 'InventoryEntry',
+    localizationKeyDescription: 'InventoryEntryHelp',
+    icon: 'fa-solid fa-jar-wheat',
+
+    isPaginated: true,
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+    toStringKeys: ['food.name'],
+
+    tableHeaders: [
+        {title: 'Food', key: 'food.name'},
+        {title: 'Amount', key: 'amount'},
+        {title: 'Unit', key: 'unit.name'},
+        {title: 'Location', key: 'storageLocation.name'},
+        {title: 'Expires', key: 'expires'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TInventoryEntry)
+
+export const TInventoryLog = {
+    name: 'InventoryLog',
+    localizationKey: 'InventoryLog',
+    localizationKeyDescription: 'InventoryLogHelp',
+    icon: 'fa-solid fa-clipboard-list',
+
+    isPaginated: true,
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+
+    tableHeaders: [
+        {title: 'Food', key: 'entry.food.name'},
+        {title: 'Type', key: 'bookingType'},
+        {title: 'Old Amount', key: 'oldAmount'},
+        {title: 'New Amount', key: 'newAmount'},
+        {title: 'Date', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TInventoryLog)
 
 export const TSync = {
     name: 'Sync',

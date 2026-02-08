@@ -38,6 +38,22 @@
 
         <v-row>
             <v-col>
+                <h2>{{ $t('Inventory') }}</h2>
+            </v-col>
+        </v-row>
+        <v-row dense>
+            <database-link-col :to="{name: 'InventoryBookingPage'}"
+                               prepend-icon="fa-solid fa-boxes-stacked"
+                               :title="$t('Inventory Booking')"
+                               :subtitle="$t('InventoryBookingHelp')">
+            </database-link-col>
+            <database-model-col model="InventoryLocation"></database-model-col>
+            <database-model-col model="InventoryEntry"></database-model-col>
+            <database-model-col model="InventoryLog"></database-model-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
                 <h2>{{ $t('Space') }}</h2>
             </v-col>
         </v-row>
