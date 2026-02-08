@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-01-26 05:58+0000\n"
-"Last-Translator: Ole Martin Ruud <nett@barskern.no>\n"
+"PO-Revision-Date: 2026-02-09 00:29+0000\n"
+"Last-Translator: Sigurd Fyllingsnes <tilsigurd@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -33,31 +33,35 @@ msgstr ""
 
 #: .\cookbook\forms.py:108
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Maksimalt antall brukere for dette området er nådd."
 
 #: .\cookbook\forms.py:114
 msgid "Email address already taken!"
-msgstr ""
+msgstr "E‑postadressen er allerede i bruk!"
 
 #: .\cookbook\forms.py:121
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"En e‑postadresse er ikke påkrevd, men hvis den oppgis, vil invitasjonslenken "
+"bli sendt til brukeren."
 
 #: .\cookbook\forms.py:133
 msgid "Name already taken."
-msgstr ""
+msgstr "Navnet er allerede i bruk."
 
 #: .\cookbook\forms.py:144 .\cookbook\forms.py:158
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Godta vilkår og personvern"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"For å forhindre spam ble den forespurte e‑posten ikke sendt. Vent noen "
+"minutter og prøv igjen."
 
 #: .\cookbook\helper\permission_helper.py:165
 #: .\cookbook\helper\permission_helper.py:186 .\cookbook\views\views.py:138
@@ -86,89 +90,87 @@ msgstr "Du kan ikke samhandle med dette objektet, da det ikke tilhører deg!"
 
 #: .\cookbook\helper\permission_helper.py:420
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Du har nådd det maksimale antallet oppskrifter for området ditt."
 
 #: .\cookbook\helper\permission_helper.py:432
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Du har flere brukere enn det som er tillatt i området ditt."
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "reverse rotation"
-msgstr ""
+msgstr "reversert rotasjon"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "careful rotation"
-msgstr ""
+msgstr "forsiktig rotasjon"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "knead"
-msgstr ""
+msgstr "elte"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "thicken"
-msgstr ""
+msgstr "tykne"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "warm up"
-msgstr ""
+msgstr "varm opp"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "ferment"
-msgstr ""
+msgstr "fermentere"
 
 #: .\cookbook\helper\recipe_url_import.py:325
-#, fuzzy
-#| msgid "Last cooked"
 msgid "slow cook"
-msgstr "Forrige tilbereding"
+msgstr "langtidskoke"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr ""
+msgstr "eggkoker"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "vannkoker"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
-msgstr ""
+msgstr "blande"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "pre-clean"
-msgstr ""
+msgstr "forhåndsrengjøre"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr ""
+msgstr "høy temperatur"
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr ""
+msgstr "riskoker"
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
-msgstr ""
+msgstr "karamellisere"
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr ""
+msgstr "skreller"
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
-msgstr ""
+msgstr "skjæremaskin"
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "rivjern"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
-msgstr ""
+msgstr "spiralisering"
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
