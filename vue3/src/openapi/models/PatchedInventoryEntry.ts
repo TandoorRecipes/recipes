@@ -13,8 +13,27 @@
  */
 
 import { mapValues } from '../runtime';
+import type { InventoryLocation } from './InventoryLocation';
+import {
+    InventoryLocationFromJSON,
+    InventoryLocationFromJSONTyped,
+    InventoryLocationToJSON,
+} from './InventoryLocation';
+import type { Unit } from './Unit';
+import {
+    UnitFromJSON,
+    UnitFromJSONTyped,
+    UnitToJSON,
+} from './Unit';
+import type { Food } from './Food';
+import {
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
+
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface PatchedInventoryEntry
  */
@@ -27,10 +46,10 @@ export interface PatchedInventoryEntry {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {InventoryLocation}
      * @memberof PatchedInventoryEntry
      */
-    storageLocation?: number;
+    inventoryLocation?: InventoryLocation;
     /**
      * 
      * @type {string}
@@ -45,16 +64,16 @@ export interface PatchedInventoryEntry {
     code?: string;
     /**
      * 
-     * @type {number}
+     * @type {Food}
      * @memberof PatchedInventoryEntry
      */
-    food?: number;
+    food?: Food;
     /**
      * 
-     * @type {number}
+     * @type {Unit}
      * @memberof PatchedInventoryEntry
      */
-    unit?: number;
+    unit?: Unit;
     /**
      * 
      * @type {number}
@@ -99,11 +118,11 @@ export function PatchedInventoryEntryFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'storageLocation': json['storage_location'] == null ? undefined : json['storage_location'],
+        'inventoryLocation': json['inventory_location'] == null ? undefined : InventoryLocationFromJSON(json['inventory_location']),
         'subLocation': json['sub_location'] == null ? undefined : json['sub_location'],
         'code': json['code'] == null ? undefined : json['code'],
-        'food': json['food'] == null ? undefined : json['food'],
-        'unit': json['unit'] == null ? undefined : json['unit'],
+        'food': json['food'] == null ? undefined : FoodFromJSON(json['food']),
+        'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'] == null ? undefined : json['amount'],
         'expires': json['expires'] == null ? undefined : (new Date(json['expires'])),
         'expiresFrozen': json['expires_frozen'] == null ? undefined : (new Date(json['expires_frozen'])),
@@ -118,11 +137,11 @@ export function PatchedInventoryEntryToJSON(value?: PatchedInventoryEntry | null
     return {
         
         'id': value['id'],
-        'storage_location': value['storageLocation'],
+        'inventory_location': InventoryLocationToJSON(value['inventoryLocation']),
         'sub_location': value['subLocation'],
         'code': value['code'],
-        'food': value['food'],
-        'unit': value['unit'],
+        'food': FoodToJSON(value['food']),
+        'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
         'expires': value['expires'] == null ? undefined : ((value['expires'] as any).toISOString().substring(0,10)),
         'expires_frozen': value['expiresFrozen'] == null ? undefined : ((value['expiresFrozen'] as any).toISOString().substring(0,10)),

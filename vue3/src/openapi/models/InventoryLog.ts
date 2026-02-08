@@ -61,13 +61,13 @@ export interface InventoryLog {
      * @type {number}
      * @memberof InventoryLog
      */
-    oldStorageLocation: number;
+    oldInventoryLocation: number;
     /**
      * 
      * @type {number}
      * @memberof InventoryLog
      */
-    newStorageLocation: number;
+    newInventoryLocation: number;
     /**
      * 
      * @type {string}
@@ -87,8 +87,8 @@ export interface InventoryLog {
  */
 export function instanceOfInventoryLog(value: object): value is InventoryLog {
     if (!('entry' in value) || value['entry'] === undefined) return false;
-    if (!('oldStorageLocation' in value) || value['oldStorageLocation'] === undefined) return false;
-    if (!('newStorageLocation' in value) || value['newStorageLocation'] === undefined) return false;
+    if (!('oldInventoryLocation' in value) || value['oldInventoryLocation'] === undefined) return false;
+    if (!('newInventoryLocation' in value) || value['newInventoryLocation'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
@@ -108,8 +108,8 @@ export function InventoryLogFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'bookingType': json['booking_type'] == null ? undefined : BookingTypeEnumFromJSON(json['booking_type']),
         'oldAmount': json['old_amount'] == null ? undefined : json['old_amount'],
         'newAmount': json['new_amount'] == null ? undefined : json['new_amount'],
-        'oldStorageLocation': json['old_storage_location'],
-        'newStorageLocation': json['new_storage_location'],
+        'oldInventoryLocation': json['old_inventory_location'],
+        'newInventoryLocation': json['new_inventory_location'],
         'note': json['note'] == null ? undefined : json['note'],
         'createdAt': (new Date(json['created_at'])),
     };
@@ -126,8 +126,8 @@ export function InventoryLogToJSON(value?: Omit<InventoryLog, 'createdAt'> | nul
         'booking_type': BookingTypeEnumToJSON(value['bookingType']),
         'old_amount': value['oldAmount'],
         'new_amount': value['newAmount'],
-        'old_storage_location': value['oldStorageLocation'],
-        'new_storage_location': value['newStorageLocation'],
+        'old_inventory_location': value['oldInventoryLocation'],
+        'new_inventory_location': value['newInventoryLocation'],
         'note': value['note'],
     };
 }

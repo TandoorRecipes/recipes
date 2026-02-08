@@ -13,8 +13,27 @@
  */
 
 import { mapValues } from '../runtime';
+import type { InventoryLocation } from './InventoryLocation';
+import {
+    InventoryLocationFromJSON,
+    InventoryLocationFromJSONTyped,
+    InventoryLocationToJSON,
+} from './InventoryLocation';
+import type { Unit } from './Unit';
+import {
+    UnitFromJSON,
+    UnitFromJSONTyped,
+    UnitToJSON,
+} from './Unit';
+import type { Food } from './Food';
+import {
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
+
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface InventoryEntry
  */
@@ -27,10 +46,10 @@ export interface InventoryEntry {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {InventoryLocation}
      * @memberof InventoryEntry
      */
-    storageLocation: number;
+    inventoryLocation: InventoryLocation;
     /**
      * 
      * @type {string}
@@ -45,16 +64,16 @@ export interface InventoryEntry {
     code?: string;
     /**
      * 
-     * @type {number}
+     * @type {Food}
      * @memberof InventoryEntry
      */
-    food?: number;
+    food: Food;
     /**
      * 
-     * @type {number}
+     * @type {Unit}
      * @memberof InventoryEntry
      */
-    unit?: number;
+    unit: Unit;
     /**
      * 
      * @type {number}
@@ -85,7 +104,9 @@ export interface InventoryEntry {
  * Check if a given object implements the InventoryEntry interface.
  */
 export function instanceOfInventoryEntry(value: object): value is InventoryEntry {
-    if (!('storageLocation' in value) || value['storageLocation'] === undefined) return false;
+    if (!('inventoryLocation' in value) || value['inventoryLocation'] === undefined) return false;
+    if (!('food' in value) || value['food'] === undefined) return false;
+    if (!('unit' in value) || value['unit'] === undefined) return false;
     return true;
 }
 
@@ -100,11 +121,11 @@ export function InventoryEntryFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'storageLocation': json['storage_location'],
+        'inventoryLocation': InventoryLocationFromJSON(json['inventory_location']),
         'subLocation': json['sub_location'] == null ? undefined : json['sub_location'],
         'code': json['code'] == null ? undefined : json['code'],
-        'food': json['food'] == null ? undefined : json['food'],
-        'unit': json['unit'] == null ? undefined : json['unit'],
+        'food': FoodFromJSON(json['food']),
+        'unit': UnitFromJSON(json['unit']),
         'amount': json['amount'] == null ? undefined : json['amount'],
         'expires': json['expires'] == null ? undefined : (new Date(json['expires'])),
         'expiresFrozen': json['expires_frozen'] == null ? undefined : (new Date(json['expires_frozen'])),
@@ -119,11 +140,11 @@ export function InventoryEntryToJSON(value?: InventoryEntry | null): any {
     return {
         
         'id': value['id'],
-        'storage_location': value['storageLocation'],
+        'inventory_location': InventoryLocationToJSON(value['inventoryLocation']),
         'sub_location': value['subLocation'],
         'code': value['code'],
-        'food': value['food'],
-        'unit': value['unit'],
+        'food': FoodToJSON(value['food']),
+        'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
         'expires': value['expires'] == null ? undefined : ((value['expires'] as any).toISOString().substring(0,10)),
         'expires_frozen': value['expiresFrozen'] == null ? undefined : ((value['expiresFrozen'] as any).toISOString().substring(0,10)),

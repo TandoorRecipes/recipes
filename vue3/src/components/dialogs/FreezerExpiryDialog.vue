@@ -39,15 +39,15 @@
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 
 const props = defineProps({
-    modelValue: Boolean
+    modelValue: { type: Boolean, default: false }
 });
 
 const emit = defineEmits(['update:modelValue', 'select']);
 
 const categories = [
     { name: 'Meat (Beef/Pork)', months: 12, icon: 'fa-solid fa-drumstick-bite' },
-    { name: 'Poultry', months: 9, icon: 'fa-solid fa-kiwi-bird' }, // kiwibird is closest to poultry icon in some sets, but let's use drumstick-bite for meat/poultry
-    { name: 'Ground Meat', months: 4, icon: 'fa-solid fa-meat' }, // meat icon if available
+    { name: 'Poultry', months: 9, icon: 'fa-solid fa-dove' },
+    { name: 'Ground Meat', months: 4, icon: 'fa-solid fa-hamburger' },
     { name: 'Fish (Lean)', months: 6, icon: 'fa-solid fa-fish' },
     { name: 'Fish (Fatty)', months: 3, icon: 'fa-solid fa-fish-fins' },
     { name: 'Vegetables', months: 10, icon: 'fa-solid fa-carrot' },
@@ -56,10 +56,6 @@ const categories = [
     { name: 'Pre-cooked Meals', months: 3, icon: 'fa-solid fa-utensils' },
     { name: 'Soup/Stew', months: 3, icon: 'fa-solid fa-bowl-food' },
 ];
-
-// Update icons where specialized ones are better
-categories[1].icon = 'fa-solid fa-dove'; // poultry
-categories[2].icon = 'fa-solid fa-hamburger'; // ground meat
 
 const selectCategory = (category: any) => {
     emit('select', category.months * 30); // Approximate months to days

@@ -813,10 +813,9 @@ export const TInventoryEntry = {
     toStringKeys: ['food.name'],
 
     tableHeaders: [
-        {title: 'Food', key: 'food.name'},
+        {title: 'Food', key: 'food'},
         {title: 'Amount', key: 'amount'},
-        {title: 'Unit', key: 'unit.name'},
-        {title: 'Location', key: 'storageLocation.name'},
+        {title: 'Location', key: 'inventoryLocation'},
         {title: 'Expires', key: 'expires'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
@@ -835,7 +834,7 @@ export const TInventoryLog = {
     disableUpdate: true,
 
     tableHeaders: [
-        {title: 'Food', key: 'entry.food.name'},
+        {title: 'Food', key: 'entry.food'},
         {title: 'Type', key: 'bookingType'},
         {title: 'Old Amount', key: 'oldAmount'},
         {title: 'New Amount', key: 'newAmount'},

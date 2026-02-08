@@ -829,20 +829,23 @@ class InventoryLocationViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelati
         return self.queryset.filter(space=self.request.space)
 
 
-    @extend_schema(parameters=[
-        OpenApiParameter(name='empty', description=_('If true also return empty entries, if false (default) only return entries with amount > 0.'), type=bool),
-        OpenApiParameter(name='code', description=_('Returns all entries with the same food as the given code. If code is given food parameter is ignored'), type=str),
-        OpenApiParameter(name='food', description=_('Returns all entries with the given food id'), type=int),
-        OpenApiParameter(name='inventory_location', description=_('Returns all entries with the given inventory location id'), type=int),
-    ])
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='empty', description=_('If true also return empty entries, if false (default) only return entries with amount > 0.'), type=bool),
+    OpenApiParameter(name='code', description=_('Returns all entries with the same food as the given code. If code is given food parameter is ignored'), type=str),
+    OpenApiParameter(name='food_id', description=_('Returns all entries with the given food id'), type=int),
+    OpenApiParameter(name='inventory_location_id', description=_('Returns all entries with the given inventory location id'), type=int),
+]))
+class InventoryEntryViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
+    queryset = InventoryEntry.objects
+    serializer_class = InventoryEntrySerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = self.queryset.filter(space=self.request.space)
 
         if self.action == 'list':
-            if str2bool(self.request.query_params.get('empty', False)) is False:
+            if 'empty' not in self.request.query_params:
                 queryset = queryset.filter(amount__gt=0)
 
             if code := self.request.query_params.get('code'):
@@ -852,37 +855,34 @@ class InventoryLocationViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelati
                     queryset = queryset.filter(food=entry.food)
                 else:
                     queryset = queryset.none()
-            elif food := self.request.query_params.get('food'):
-                queryset = queryset.filter(food_id=food)
+            elif food_id := self.request.query_params.get('food_id'):
+                queryset = queryset.filter(food_id=food_id)
 
-            if inventory_location := self.request.query_params.get('inventory_location'):
-                queryset = queryset.filter(storage_location_id=inventory_location)
+            if inventory_location_id := self.request.query_params.get('inventory_location_id'):
+                queryset = queryset.filter(inventory_location_id=inventory_location_id)
 
         return queryset
 
 
-@extend_schema(parameters=[
-        OpenApiParameter(name='food', description=_('Returns all entries with the given food id'), type=int),
-        OpenApiParameter(name='entry', description=_('Returns all entries with the given entry id'), type=int),
-    ])
+
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='food_id', description=_('Returns all entries with the given food id'), type=int),
+    OpenApiParameter(name='entry_id', description=_('Returns all entries with the given entry id'), type=int),
+]))
 class InventoryLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     queryset = InventoryLog.objects
     serializer_class = InventoryLogSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
     def get_queryset(self):
         queryset = self.queryset.filter(space=self.request.space).order_by('-created_at')
 
-        if entry := self.request.query_params.get('entry'):
-            queryset = queryset.filter(entry__id=entry)
+        if entry_id := self.request.query_params.get('entry_id'):
+            queryset = queryset.filter(entry__id=entry_id)
 
-        if food := self.request.query_params.get('food'):
-            queryset = queryset.filter(entry__food_id=food)
+        if food_id := self.request.query_params.get('food_id'):
+            queryset = queryset.filter(entry__food_id=food_id)
 
         return queryset
 

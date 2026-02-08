@@ -386,8 +386,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SupermarketCategory.objects.filter(space=self).delete()
         Supermarket.objects.filter(space=self).delete()
 
-        StorageEntry.objects.filter(space=self).delete()
-        StorageLocation.objects.filter(space=self).delete()
+        InventoryEntry.objects.filter(space=self).delete()
+        InventoryLocation.objects.filter(space=self).delete()
 
         UserFile.objects.filter(space=self).delete()
         UserSpace.objects.filter(space=self).delete()
@@ -1375,7 +1375,7 @@ class InventoryLocation(models.Model, PermissionModelMixin):
 
 
 class InventoryEntry(models.Model, PermissionModelMixin):
-    storage_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE)
+    inventory_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE)
     sub_location = models.CharField(max_length=64, blank=True, null=True)
     code = models.CharField(max_length=16, null=True, blank=True)
 
@@ -1417,8 +1417,8 @@ class InventoryLog(models.Model, PermissionModelMixin):
     old_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     new_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
 
-    old_storage_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='old_storage_location')
-    new_storage_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='new_storage_location')
+    old_inventory_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='old_inventory_location')
+    new_inventory_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='new_inventory_location')
 
     note = models.CharField(max_length=256, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

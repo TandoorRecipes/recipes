@@ -26,13 +26,13 @@
                             </div>
                         </td>
                         <td>
-                            <div v-if="log.oldStorageLocation !== log.newStorageLocation">
-                                {{ locationMap.get(log.oldStorageLocation) }}
+                            <div v-if="log.oldInventoryLocation !== log.newInventoryLocation">
+                                {{ locationMap.get(log.oldInventoryLocation) }}
                                 <v-icon icon="fa-solid fa-arrow-right" size="x-small" class="mx-1"></v-icon>
-                                {{ locationMap.get(log.newStorageLocation) }}
+                                {{ locationMap.get(log.newInventoryLocation) }}
                             </div>
                             <div v-else>
-                                {{ locationMap.get(log.newStorageLocation) }}
+                                {{ locationMap.get(log.newInventoryLocation) }}
                             </div>
                         </td>
                         <td>{{ log.note }}</td>
@@ -53,8 +53,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ApiApi, InventoryLog, InventoryEntry } from "@/openapi";
+
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import { ApiApi, InventoryEntry, InventoryLog } from "@/openapi";
 
 const props = defineProps<{
     modelValue: boolean;
@@ -63,12 +64,31 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue']);
 
+const api = new ApiApi();
+
 const dialog = ref(props.modelValue);
 const loading = ref(false);
 const logs = ref<InventoryLog[]>([]);
 const locationMap = ref(new Map<number, string>());
 
-const api = new ApiApi();
+const fetchLogs = () => {
+    if (!props.entry?.id) return;
+    loading.value = true;
+
+    api.apiInventoryLogList({ entryId: props.entry.id } as any).then(r => {
+        logs.value = r.results || [];
+
+        // Fetch locations to show names
+        api.apiInventoryLocationList({ limit: 1000 }).then(locationsResponse => {
+            const locations = locationsResponse.results || [];
+            locationMap.value = new Map(locations.map(l => [l.id!, l.name]));
+        });
+    }).catch(e => {
+        console.error(e);
+    }).finally(() => {
+        loading.value = false;
+    });
+};
 
 watch(() => props.modelValue, (val) => {
     dialog.value = val;
@@ -80,23 +100,5 @@ watch(() => props.modelValue, (val) => {
 watch(dialog, (val) => {
     emit('update:modelValue', val);
 });
-
-const fetchLogs = async () => {
-    if (!props.entry?.id) return;
-    loading.value = true;
-    try {
-        const response = await api.apiInventoryLogList({ entry: props.entry.id });
-        logs.value = response.results || [];
-
-        // Fetch locations to show names
-        const locationsResponse = await api.apiInventoryLocationList({ limit: 1000 });
-        const locations = locationsResponse.results || [];
-        locationMap.value = new Map(locations.map(l => [l.id!, l.name]));
-    } catch (e) {
-        console.error(e);
-    } finally {
-        loading.value = false;
-    }
-};
 
 </script>
