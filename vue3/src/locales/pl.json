@@ -779,5 +779,8 @@
     "DatabaseHelp": "Tandoor wykorzystuje wiele różnych elementów, które umożliwiają tworzenie przepisów, list zakupów, planów posiłków i nie tylko. W tym miejscu możesz zarządzać wszystkimi tymi modelami.",
     "active": "aktywny",
     "SyncLogHelp": "Protokół dla zewnętrznej synchronizacji przepisów.",
-    "StepHelp": "Kroki zawierają składniki (składające się z ilości, jednostki i produktu), instrukcje, obrazy oraz inne informacje dotyczące danego etapu przepisu. "
+    "StepHelp": "Kroki zawierają składniki (składające się z ilości, jednostki i produktu), instrukcje, obrazy oraz inne informacje dotyczące danego etapu przepisu. ",
+    "Shopping": "Zakupy",
+    "PropertyTypeHelp": "Właściwości pozwalają na śledzenie różnych wartości (cena, wartość odżywcza, ...) dla każdego dania lub produktu spożywczego. ",
+    "PerPage": "Ilość wyników na stronę"
 }

@@ -95,9 +95,9 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
 }
 
 /**
- * loop trough translation files to determine for which locales a translation is available
+ * loop through translation files to determine for which locales a translation is available
  * @return string[] of supported locales
- * @param localeFiles module import of locale files to loop trough
+ * @param localeFiles module import of locale files to loop through
  */
 function getSupportedLocales(localeFiles = import.meta.glob('@/locales/*.json')) {
     let supportedLocales: string[] = []

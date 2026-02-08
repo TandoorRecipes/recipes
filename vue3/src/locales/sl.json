@@ -536,7 +536,7 @@
     "SpaceMembers": "Člani prostora",
     "SpaceMembersHelp": "Uporabniki in njihova dovoljenja v prostoru. Dodajte dodatne uporabnike s povezavami za povabilo.",
     "SpaceName": "Ime prostora",
-    "SpacePrivateObjectsHelp": " Nekatere stvari so privzeto zasebne in jih je mogoče deliti s člani vašega prostora.",
+    "SpacePrivateObjectsHelp": "Nekatere stvari so privzeto zasebne in jih je mogoče deliti s člani vašega prostora.",
     "SpaceSettings": "Nastavitve prostora",
     "Space_Cosmetic_Settings": "Nekatere kozmetične nastavitve lahko spremenijo skrbniki prostora in bodo preglasile nastavitve odjemalca za ta prostor.",
     "Split": "Razdelitev",
@@ -882,5 +882,15 @@
     "Scale": "Lestvica",
     "ScaleRecipeHelp": "Količine vseh sestavin povečajte ali zmanjšajte, da boste pri pripravi recepta ustvarili dano število porcij. ",
     "UpdateFoodLists": "Posodobi sezname za nakupovanje hrane",
-    "UpdateFoodListsHelp": "Posodobite privzete nakupovalne sezname v hrani, ko jih spreminjate med nakupovanjem."
+    "UpdateFoodListsHelp": "Posodobite privzete nakupovalne sezname v hrani, ko jih spreminjate med nakupovanjem.",
+    "Diameter": "Premer",
+    "DiameterUnit": "Enota premera",
+    "ErrorUpdatingImage": "Napaka pri posodabljanju slike. Podprte oblike zapisa datotek so .jpg, .png, .webp.",
+    "LeaveEmptyForDefaultList": "Za privzeti seznam pustite prazno.",
+    "Linear": "Linearno",
+    "Scaling": "Skaliranje",
+    "InviteLinkCreatedEmailFailed": "Povezava za povabilo je bila ustvarjena, vendar pošiljanje e-pošte ni uspelo. Podrobnosti so zabeležene – če se težava nadaljuje, se obrnite na skrbnika.",
+    "ScalingHelp": "Receptu dodajte premer, da omogočite prilagajanje glede na premer in prilagajanje glede na porcije. ",
+    "Include Children": "Vključi podrejene",
+    "Include child keywords and foods in search results": "V rezultate iskanja vključite podrejene ključne besede in živila"
 }

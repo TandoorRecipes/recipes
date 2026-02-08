@@ -1,15 +1,13 @@
-from django.contrib.auth.models import Group
+import re
+
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
-from psycopg2.errors import UniqueViolation
 from rest_framework.exceptions import AuthenticationFailed
 
-import random
 
 from cookbook.helper.permission_helper import create_space_for_user
-from cookbook.models import Space, UserSpace
 from cookbook.views import views
 from recipes import settings
 
@@ -24,6 +22,16 @@ class ScopeMiddleware:
         # need to disable scopes for writing requests into userpref and enable for loading ?
         if request.path.startswith(prefix + '/api/user-preference/'):
             with scopes_disabled():
+                return self.get_response(request)
+
+        # Disable scopes for recipe detail requests with share link
+        # This allows users from different spaces to access shared recipes
+        # Security is maintained by CustomRecipePermission which validates the share link
+        if (request.GET.get('share')
+                and re.match(rf'^{re.escape(prefix)}/api/recipe/\d+/?$', request.path)
+                and request.method in ('GET', 'HEAD', 'OPTIONS')):
+            with scopes_disabled():
+                request.space = None
                 return self.get_response(request)
 
         if request.user.is_authenticated:

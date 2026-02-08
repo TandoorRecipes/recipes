@@ -20,7 +20,7 @@ import redis
 import requests
 from PIL import UnidentifiedImageError
 from django.contrib import messages
-from django.contrib.admin.utils import get_deleted_objects, NestedObjects
+from django.contrib.admin.utils import NestedObjects
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import caches
@@ -28,7 +28,7 @@ from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db import DEFAULT_DB_ALIAS
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
-from django.db.models.deletion import Collector
+from django.db.models import Prefetch
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -43,11 +43,13 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from litellm import completion, BadRequestError
+from litellm.exceptions import Timeout as LitellmTimeout
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
+from rest_framework import mixins
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
@@ -55,18 +57,17 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.serializers import CharField, IntegerField, UUIDField
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
-from rest_framework import mixins
 from rest_framework.viewsets import ViewSetMixin
-from rest_framework.serializers import CharField, IntegerField, UUIDField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, validate_import_url
-from cookbook.helper.ai_helper import has_monthly_token, can_perform_ai_request, AiCallbackHandler
+from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -81,7 +82,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
-from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
+from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, FoodProperty, ImportLog, Ingredient,
                              InviteLink, Keyword, MealPlan, MealType, Property, PropertyType, Recipe, RecipeBook,
@@ -156,12 +157,12 @@ class LoggingMixin(object):
 
                 # Use a sorted set to store the user stats, with the score representing
                 # the number of queries the user made total or on a given day.
-                pipe.zincrby(f'api:space-request-count', 1, space.pk)
+                pipe.zincrby('api:space-request-count', 1, space.pk)
                 pipe.zincrby(f'api:space-request-count:{d}', 1, space.pk)
 
                 # Use a sorted set to store all the endpoints with score representing
                 # the number of queries the endpoint received total or on a given day.
-                pipe.zincrby(f'api:endpoint-request-count', 1, endpoint)
+                pipe.zincrby('api:endpoint-request-count', 1, endpoint)
                 pipe.zincrby(f'api:endpoint-request-count:{d}', 1, endpoint)
 
                 pipe.execute()
@@ -1164,13 +1165,19 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 response_text = ai_response.choices[0].message.content
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
-                pass
-        response = {
-            'error': True,
-            'msg': 'The AI could not process your request. \n\n' + err.message,
-        }
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, *args, **kwargs):
         try:
@@ -1334,34 +1341,31 @@ class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 
 MealPlanViewQueryParameters = [
-    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive).'), type=str,
+    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive). If nothing is given its today - 90 days.'), type=str,
                      examples=[DateExample]),
-    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive).'), type=str,
+    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive). If nothing is given its today + 360 days.'), type=str,
                      examples=[DateExample]),
     OpenApiParameter(name='meal_type',
                      description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str,
                      many=True),
 ]
-
-
-@extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters),
-                    ical=extend_schema(parameters=MealPlanViewQueryParameters,
-                                       responses={(200, 'text/calendar'): OpenApiTypes.STR}))
+@extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters))
 class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+    required_scopes = ['mealplan']
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct().all()
 
-        from_date = self.request.query_params.get('from_date', None)
+        from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
         if from_date is not None:
             queryset = queryset.filter(to_date__date__gte=from_date)
 
-        to_date = self.request.query_params.get('to_date', None)
+        to_date = self.request.query_params.get('to_date', timezone.now() + datetime.timedelta(days=360))
         if to_date is not None:
             queryset = queryset.filter(to_date__date__lte=to_date)
 
@@ -1371,10 +1375,27 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return queryset
 
+    def get_serializer_class(self):
+        if self.action == 'ical':
+            return MealPlanSerializer
+        return super().get_serializer_class()
+
+    def get_permissions(self):
+        if self.action == 'ical':
+            permission_classes = [(CustomIsOwner | CustomIsShared | CustomIsUser) & CustomTokenHasScope]
+            # need to return instances for get_permissions
+            # however, DRF doesn't support bitwise operators on instances
+            # but it does support them on classes.
+            # When using classes, DRF instantiates them.
+            return [permission() for permission in permission_classes]
+        return super().get_permissions()
+
+    @extend_schema(parameters=MealPlanViewQueryParameters,
+                   responses={(200, 'text/calendar'): OpenApiTypes.STR})
     @decorators.action(detail=False)
     def ical(self, request):
-        from_date = self.request.query_params.get('from_date', None)
-        to_date = self.request.query_params.get('to_date', None)
+        from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
+        to_date = self.request.query_params.get('to_date', timezone.now() + datetime.timedelta(days=360))
         return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
 
 
@@ -1474,6 +1495,8 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
+        # Use Prefetch with select_related for UnitConversion ForeignKeys to avoid N+1 queries
+        unit_conversion_qs = UnitConversion.objects.select_related('base_unit', 'converted_unit', 'food')
         queryset = self.queryset.prefetch_related('food',
                                                   'food__properties',
                                                   'food__properties__property_type',
@@ -1482,11 +1505,10 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                   'food__onhand_users',
                                                   'food__substitute',
                                                   'food__child_inherit_fields',
-                                                  'unit',
-                                                  'unit__unit_conversion_base_relation',
-                                                  'unit__unit_conversion_base_relation__base_unit',
-                                                  'unit__unit_conversion_converted_relation',
-                                                  'unit__unit_conversion_converted_relation__converted_unit', ).filter(step__recipe__space=self.request.space)
+                                                  Prefetch('unit__unit_conversion_base_relation', queryset=unit_conversion_qs),
+                                                  Prefetch('unit__unit_conversion_converted_relation', queryset=unit_conversion_qs),
+                                                  'step_set',
+                                                  'step_set__recipe_set', ).filter(step__recipe__space=self.request.space)
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
@@ -1495,7 +1517,7 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
         if unit and re.match(r'^(\d)+$', unit):
             queryset = queryset.filter(unit_id=unit)
 
-        return queryset.select_related('food')
+        return queryset.select_related('food', 'unit')
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -1591,6 +1613,7 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='num_recent', description=_('Returns the given number of recently viewed recipes before search results (if given)'), type=int),
     OpenApiParameter(name='filter', description=_('ID of a custom filter. Returns all recipes matched by that filter.'), type=int),
     OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
+    OpenApiParameter(name='include_children', description=_('Include child keywords and foods in search results. [''<b>true</b>''/''false'']'), type=bool),
 ]))
 class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Recipe.objects
@@ -1621,8 +1644,12 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                                                                'steps__ingredients__unit',
                                                                'steps__ingredients__unit__unit_conversion_base_relation',
                                                                'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
+                                                               'steps__ingredients__unit__unit_conversion_base_relation__food',
+                                                               'steps__ingredients__unit__unit_conversion_base_relation__space',
                                                                'steps__ingredients__unit__unit_conversion_converted_relation',
                                                                'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+                                                               'steps__ingredients__unit__unit_conversion_converted_relation__food',
+                                                               'steps__ingredients__unit__unit_conversion_converted_relation__space',
                                                                'cooklog_set',
                                                                ).select_related('nutrition')
 
@@ -1647,6 +1674,17 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         if self.action == 'list':
             return RecipeOverviewSerializer
         return self.serializer_class
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+
+        # Minimal refetch - no need for food_properties prefetches since we skip that on create
+        # (fixes issue #4356)
+        serializer = self.get_serializer(instance)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=RecipeImageSerializer,
                        parser_classes=[MultiPartParser], )
@@ -1895,13 +1933,19 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 response_text = ai_response.choices[0].message.content
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
-                pass
-        response = {
-            'error': True,
-            'msg': 'The AI could not process your request. \n\n' + err.message,
-        }
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'error': True,
+                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(responses=RecipeSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
@@ -2145,7 +2189,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                     if checked:
                         for f in foods:
                             f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
-                    elif checked == False:
+                    elif not checked:
                         for f in foods:
                             f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
 
@@ -2597,6 +2641,12 @@ class AiImportView(APIView):
                 if ai_provider.url:
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
                 response = {
                     'error': True,
@@ -2708,12 +2758,19 @@ class AiStepSortView(APIView):
                 # TODO validate by loading/dumping using serializer ?
 
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
+            except LitellmTimeout:
+                response = {
+                    'error': True,
+                    'msg': 'The AI request timed out. Please try again later.',
+                }
+                return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
                 response = {
                     'error': True,
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AppImportView(APIView):
@@ -2967,8 +3024,8 @@ class LocalizationViewSet(viewsets.GenericViewSet):
 
     def list(self, request, *args, **kwargs):
         langs = []
-        for l in settings.LANGUAGES:
-            langs.append({'code': l[0], 'language': f'{l[1]} ({l[0]})'})
+        for lang in settings.LANGUAGES:
+            langs.append({'code': lang[0], 'language': f'{lang[1]} ({lang[0]})'})
         return Response(LocalizationSerializer(langs, many=True).data)
 
 
@@ -3161,17 +3218,13 @@ def meal_plans_to_ical(queryset, filename):
 
     for p in queryset:
         event = Event()
-        event['uid'] = p.id
+        event['uid'] = f'mealplan-{p.id}@tandoor.recipes'
 
         start_date_time = p.from_date
-        end_date_time = p.from_date
+        end_date_time = p.to_date if p.to_date else p.from_date
 
-        if p.to_date:
-            end_date_time = p.to_date
-
-        if p.meal_type.time:
-            start_date_time = datetime.datetime.combine(p.from_date, p.meal_type.time)
-            end_date_time = datetime.datetime.combine(p.to_date, p.meal_type.time) + datetime.timedelta(minutes=60)
+        if end_date_time <= start_date_time:
+            end_date_time = start_date_time + datetime.timedelta(minutes=60)
 
         event.add('dtstart', start_date_time)
         event.add('dtend', end_date_time)
