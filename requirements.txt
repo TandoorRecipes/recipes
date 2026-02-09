@@ -33,7 +33,7 @@ microdata==0.8.0
 mock==5.2.0
 Pillow==12.1.0
 psycopg2-binary==2.9.11
-pyjwt==2.10.1
+pyjwt==2.11.0
 pyppeteer==2.0.0
 python-dotenv==1.2.1
 python-ldap==3.4.5
