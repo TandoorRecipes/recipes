@@ -882,5 +882,19 @@
     "DefaultShoppingListHelp": "Standaard lijst als dit voedingsmiddel wordt toegevoegd aan de boodschappenlijst.",
     "None": "Geen",
     "UpdateFoodLists": "Update voedingsmiddelen boodschappenlijsten",
-    "UpdateFoodListsHelp": "Update de standaard boodschappenlijsten in het voedingsmiddel als er tijdens het winkelen van boodschappenlijst wordt gewisseld."
+    "UpdateFoodListsHelp": "Update de standaard boodschappenlijsten in het voedingsmiddel als er tijdens het winkelen van boodschappenlijst wordt gewisseld.",
+    "Calendar": "Kalender",
+    "Diameter": "Diameter",
+    "DiameterUnit": "Diameter eenheid",
+    "Linear": "Lineair",
+    "ScalingHelp": "Voeg een diameter toe aan een recept om schalen op basis van diameter mogelijk te maken, naast schalen op basis van porties. ",
+    "CalendarIcsHelp": "Gebruik de volgende URL om je maaltijdplan met je agenda te synchroniseren. ",
+    "ErrorUpdatingImage": "Fout bij het bijwerken van de afbeelding. Ondersteunde bestandsindelingen zijn .jpg, .png en .webp.",
+    "Include Children": "Onderliggende items opnemen",
+    "Include child keywords and foods in search results": "Onderliggende trefwoorden en voedingsmiddelen opnemen in de zoekresultaten",
+    "InviteLinkCreatedEmailFailed": "Uitnodigingslink aangemaakt, maar het verzenden van de e-mail is mislukt. Details zijn gelogd — neem contact op met je beheerder als dit blijft gebeuren.",
+    "LeaveEmptyForDefaultList": "Laat leeg voor de standaardlijst.",
+    "Scale": "Schaal",
+    "ScaleRecipeHelp": "Verhoog of verlaag alle hoeveelheden ingrediënten zodat het opgegeven aantal porties wordt gemaakt bij het bereiden van het recept. ",
+    "Scaling": "Schalen"
 }

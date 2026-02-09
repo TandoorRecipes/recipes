@@ -892,5 +892,7 @@
     "Include child keywords and foods in search results": "Includi le parole chiave secondarie e gli alimenti nei risultati di ricerca",
     "InviteLinkCreatedEmailFailed": "Collegamento di invito creato, ma l'invio dell'email non è riuscito. Dettagli registrati: contatta l'amministratore se il problema persiste.",
     "ScalingHelp": "Aggiungi un diametro a una ricetta per abilitare la scalabilità in base al diametro, oltre alla scalabilità in base alle porzioni. ",
-    "Scaling": "Scalabilità"
+    "Scaling": "Scalabilità",
+    "CalendarIcsHelp": "Utilizza l'URL seguente per sincronizzare il tuo piano alimentare con il tuo calendario. ",
+    "Calendar": "Calendario"
 }
