@@ -25,6 +25,7 @@
 
                 <v-text-field :label="$t('Path')" v-model="editingObj.path"></v-text-field>
 
+                <p v-if="editingObj.method === 'LOCAL'">{{$t('LocalStoragePathHelp')}} <a href="https://docs.tandoor.dev/system/configuration/#local-storage-paths" target="_blank" rel="nofollow noreferrer">{{$t('Help')}}</a></p>
             </v-form>
         </v-card-text>
     </model-editor-base>

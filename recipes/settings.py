@@ -635,6 +635,7 @@ if os.getenv('S3_ACCESS_KEY', ''):
 
 MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
 MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
+LOCAL_STORAGE_PATHS = extract_comma_list('LOCAL_STORAGE_PATHS', os.path.join(MEDIA_ROOT, 'local_provider'))
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
