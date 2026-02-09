@@ -12,3 +12,26 @@ def test_url_validator():
 
     assert not validate_import_url('https://localhost')
     assert not validate_import_url('http://127.0.0.1')
+
+def test_url_normalization():
+    # URL with spaces and parentheses (USDA API style)
+    assert validate_import_url("https://api.nal.usda.gov/fdc/v1/foods/search?api_key=DEMO_KEY&query=potato&dataType=Foundation,Survey (FNDDS),SR Legacy")
+    
+    # URL with brackets
+    assert validate_import_url("https://example.com/search?q=[test]")
+
+    # URL with control characters should be rejected
+    assert not validate_import_url("https://example.com/path\nwith\rchars")
+
+def test_url_encoded_ips():
+    # SSRF bypass attempts with various IP encodings
+    assert not validate_import_url('http://2130706433/')       # DWORD
+    assert not validate_import_url('http://0x7f000001/')      # Hex
+    assert not validate_import_url('http://017700000001/')    # Octal
+    assert not validate_import_url('http://127.1/')           # Shortened
+    assert not validate_import_url('http://0x7f.0x0.0x0.0x1/')# Hex dots
+    assert not validate_import_url('http://0177.0.0.1/')      # Octal dots
+    
+    # Non-local encoded IPs (e.g. 8.8.8.8)
+    assert validate_import_url('http://134744072/')           # 8.8.8.8 as DWORD
+    assert validate_import_url('http://0x08080808/')          # 8.8.8.8 as Hex

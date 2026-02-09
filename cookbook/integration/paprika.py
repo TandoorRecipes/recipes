@@ -5,9 +5,7 @@ import re
 from gettext import gettext as _
 from io import BytesIO
 
-import requests
-
-from cookbook.helper.HelperFunctions import validate_import_url
+from cookbook.helper.HelperFunctions import validate_import_url, safe_request
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
@@ -93,7 +91,7 @@ class Paprika(Integration):
                 if recipe_json.get("image_url", None):
                     url = recipe_json.get("image_url", None)
                     if validate_import_url(url):
-                        response = requests.get(url)
+                        response = safe_request('GET', url)
                         if response.status_code == 200 and len(response.content) > 0:
                             self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception:

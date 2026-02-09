@@ -66,7 +66,7 @@ from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathO
 from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
-from cookbook.helper.HelperFunctions import str2bool, validate_import_url
+from cookbook.helper.HelperFunctions import str2bool, validate_import_url, safe_request
 from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
@@ -1023,7 +1023,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         if not food.fdc_id:
             return JsonResponse({'msg': 'Food has no FDC ID associated.'}, status=400, json_dumps_params={'indent': 4})
 
-        response = requests.get(f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
+        response = safe_request('GET', f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
         if response.status_code == 429:
             return JsonResponse(
                 {
@@ -1708,7 +1708,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 try:
                     url = serializer.validated_data['image_url']
                     if validate_import_url(url):
-                        response = requests.get(url, headers={
+                        response = safe_request('GET', url, headers={
                             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
                         image = File(io.BytesIO(response.content))
                         filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
@@ -2457,7 +2457,7 @@ class RecipeUrlImportView(APIView):
                     tandoor_url = (url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1], '') + '?share=' +
                                    re.split('/recipe/[0-9]+', url)[1].replace('/', ''))
                 if tandoor_url and validate_import_url(tandoor_url):
-                    recipe_json = requests.get(tandoor_url).json()
+                    recipe_json = safe_request('GET', tandoor_url).json()
                     recipe_json = clean_dict(recipe_json, 'id')
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                     if serialized_recipe.is_valid():
@@ -2468,7 +2468,7 @@ class RecipeUrlImportView(APIView):
                             else:
                                 filetype = pathlib.Path(recipe_json["image"]).suffix
                             recipe.image = File(handle_image(request,
-                                                             File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'),
+                                                             File(io.BytesIO(safe_request('GET', recipe_json['image']).content), name='image'),
                                                              filetype=filetype),
                                                 name=f'{uuid.uuid4()}_{recipe.pk}.{filetype}')
                         recipe.save()
@@ -2477,7 +2477,8 @@ class RecipeUrlImportView(APIView):
                 else:
                     try:
                         if validate_import_url(url):
-                            html = requests.get(
+                            html = safe_request(
+                                'GET',
                                 url,
                                 headers={
                                     "User-Agent": request.META['HTTP_USER_AGENT']}
@@ -2855,7 +2856,7 @@ class FdcSearchView(APIView):
         if query is not None:
             data_types = self.request.query_params.getlist('dataType', ['Foundation'])
 
-            response = requests.get(f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}')
+            response = safe_request('GET', f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}')
 
             if response.status_code == 429:
                 return JsonResponse(
@@ -2979,7 +2980,7 @@ class ImportOpenData(APIView):
     @extend_schema(responses=ImportOpenDataMetaDataSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['GET'])
     def get(self, request, format=None):
-        response = requests.get(
+        response = safe_request('GET',
             'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/meta.json')
         metadata = json.loads(response.content)
         return Response(metadata)
@@ -2989,7 +2990,7 @@ class ImportOpenData(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ImportOpenDataSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            response = requests.get(
+            response = safe_request('GET',
                 f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{serializer.validated_data["selected_version"]}.json')  # TODO catch 404, timeout, ...
             data = json.loads(response.content)
 

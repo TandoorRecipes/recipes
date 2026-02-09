@@ -3,9 +3,7 @@ import json
 import os
 from django.utils import timezone
 
-import requests
-
-from cookbook.helper.HelperFunctions import validate_import_url
+from cookbook.helper.HelperFunctions import validate_import_url, safe_request
 from cookbook.models import Recipe, RecipeImport, SyncLog
 from cookbook.provider.provider import Provider
 
@@ -25,7 +23,7 @@ class Dropbox(Provider):
             "path": monitor.path
         }
 
-        r = requests.post(url, headers=headers, data=json.dumps(data))
+        r = safe_request('POST', url, headers=headers, data=json.dumps(data))
         try:
             recipes = r.json()
         except ValueError:
@@ -74,7 +72,7 @@ class Dropbox(Provider):
             "path": recipe.file_uid
         }
 
-        r = requests.post(url, headers=headers, data=json.dumps(data))
+        r = safe_request('POST', url, headers=headers, data=json.dumps(data))
 
         return r.json()
 
@@ -91,7 +89,7 @@ class Dropbox(Provider):
             "path": recipe.file_path,
         }
 
-        r = requests.post(url, headers=headers, data=json.dumps(data))
+        r = safe_request('POST', url, headers=headers, data=json.dumps(data))
         p = r.json()
 
         for link in p['links']:
@@ -108,7 +106,7 @@ class Dropbox(Provider):
 
         url = recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.')
         if validate_import_url(url):
-            response = requests.get(url)
+            response = safe_request('GET', url)
 
             return io.BytesIO(response.content)
 
@@ -130,7 +128,7 @@ class Dropbox(Provider):
             )
         }
 
-        r = requests.post(url, headers=headers, data=json.dumps(data))
+        r = safe_request('POST', url, headers=headers, data=json.dumps(data))
 
         return r.json()
 
@@ -147,6 +145,6 @@ class Dropbox(Provider):
             "path": recipe.file_path
         }
 
-        r = requests.post(url, headers=headers, data=json.dumps(data))
+        r = safe_request('POST', url, headers=headers, data=json.dumps(data))
 
         return r.json()

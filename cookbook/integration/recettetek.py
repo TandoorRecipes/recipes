@@ -3,12 +3,9 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
-import requests
-from PIL import Image
-
 from django.utils.translation import gettext as _
 
-from cookbook.helper.HelperFunctions import validate_import_url
+from cookbook.helper.HelperFunctions import validate_import_url, safe_request
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
@@ -127,7 +124,8 @@ class RecetteTek(Integration):
                 if file['originalPicture'] != '':
                     url = file['originalPicture']
                     if validate_import_url(url):
-                        response = requests.get(url)
+                        response = safe_request('GET', url)
+                        from PIL import Image
                         if Image.open(BytesIO(response.content)).verify():
                             self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
                         else:
