@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2026-02-09 08:57+0000\n"
+"PO-Revision-Date: 2026-02-09 13:07+0000\n"
 "Last-Translator: Sigurd Fyllingsnes <tilsigurd@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/nb_NO/>\n"
@@ -647,8 +647,9 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
-"%(email)sVennligst bekreft at\n"
-"mailto:%(email)s%(email)s er en e‑postadresse for bruker %(user_display)s.\n"
+"Vennligst bekreft at\n"
+"            <a href=\"mailto:%(email)s\">%(email)s</a> er en e‑postadresse "
+"for bruker %(user_display)s\n"
 "            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
@@ -662,9 +663,8 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"enne e-postbekreftelseslenken er utløpt eller ugyldig. Vennligst\n"
-"             <a href=\"%(email_url)s\">  <a href=\\\"%(email_url)s\\\">be om "
-"en ny e-postbekreftelse</a>."
+"Denne e-postbekreftelseslenken er utløpt eller ugyldig. Vennligst\n"
+"            <a href=\"%(email_url)s\">be om en ny e-postbekreftelse</a>."
 
 #: .\cookbook\templates\account\login.html:8
 #: .\cookbook\templates\openid\login.html:8
@@ -1136,6 +1136,13 @@ msgid ""
 "selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Enkle søk ignorerer tegnsetting og vanlige ord som «the», «a» og "
+"«and», og behandler separate ord som nødvendige.\n"
+"            Søk etter «eple or mel» vil returnere alle oppskrifter som "
+"inneholder både «eple» og «mel» et eller annet sted i feltene som er valgt "
+"for fulltekstsøk.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:34
 msgid ""
@@ -1147,6 +1154,13 @@ msgid ""
 "been selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Frasesøk ignorerer tegnsetting, men søker etter alle ordene i "
+"nøyaktig den rekkefølgen de er oppgitt.\n"
+"            Søk etter «epple eller mel» vil bare returnere en oppskrift som "
+"inneholder den eksakte frasen «epple eller mel» i et av feltene som er valgt "
+"for fulltekstsøk.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:39
 msgid ""
@@ -1166,6 +1180,22 @@ msgid ""
 "recipe that has the word 'butter' in any field included.\n"
 "            "
 msgstr ""
+" \n"
+"            Web‑søk simulerer funksjonalitet som finnes på mange nettsøk‑"
+"tjenester og støtter spesialsyntaks.\n"
+"            Å sette anførselstegn rundt flere ord gjør disse ordene om til "
+"en frase.\n"
+"            'eller' gjenkjennes som et søk etter ordet (eller frasen) rett "
+"før «eller» ELLER ordet (eller frasen) rett etter.\n"
+"            '-' gjenkjennes som et søk etter oppskrifter som ikke inneholder "
+"ordet (eller frasen) som kommer rett etter. \n"
+"            For eksempel vil et søk etter \"apple pie\" or cherry -butter "
+"returnere alle oppskrifter som inneholder frasen \"apple pie\" eller ordet "
+"\"cherry\" \n"
+"            i et hvilket som helst felt som er inkludert i fulltekstsøket, "
+"men utelat alle oppskrifter som har ordet «butter» i et hvilket som helst av "
+"de inkluderte feltene.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:48
 msgid ""
@@ -1174,6 +1204,10 @@ msgid ""
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
+" \n"
+"            Rå‑søk ligner på Web‑søk, men tar også hensyn til "
+"tegnsettingsoperatorer som |, & og ().\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:59
 msgid ""
@@ -1191,10 +1225,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
-#, fuzzy
-#| msgid "Search Recipe"
 msgid "Search Fields"
-msgstr "Søk oppskrift"
+msgstr "Søke Felt"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1232,10 +1264,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Søk"
+msgstr "Søke Index"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1269,10 +1299,8 @@ msgstr "Opprett superbruker-konto"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Sosial innlogging"
+msgstr "Sosial innlogging Feilet"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
@@ -1282,7 +1310,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
 msgid "Account Connections"
-msgstr ""
+msgstr "Kontotilkoblinger"
 
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid ""
@@ -1301,10 +1329,8 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
-#, fuzzy
-#| msgid "Sign Out"
 msgid "Signup"
-msgstr "Logg ut"
+msgstr "Logg inn"
 
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
@@ -1356,10 +1382,8 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign in using"
-msgstr "Opprett bruker"
+msgstr "Logg inn med"
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
@@ -1405,10 +1429,8 @@ msgstr ""
 
 #: .\cookbook\templates\space_overview.html:91
 #: .\cookbook\templates\space_overview.html:100
-#, fuzzy
-#| msgid "Create User"
 msgid "Create Space"
-msgstr "Opprett bruker"
+msgstr "Opprett område"
 
 #: .\cookbook\templates\space_overview.html:94
 msgid "Create your own recipe space."
@@ -1563,10 +1585,8 @@ msgid "Hide"
 msgstr ""
 
 #: .\cookbook\templates\system.html:271
-#, fuzzy
-#| msgid "Show help"
 msgid "Show"
-msgstr "Vis hjelp"
+msgstr "Vis"
 
 #: .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
@@ -1987,10 +2007,8 @@ msgid "View your meal Plan"
 msgstr ""
 
 #: .\cookbook\views\views.py:418
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "View your shopping lists"
-msgstr "Åpne handlelisten"
+msgstr "Vis din handleliste"
 
 #~ msgid ""
 #~ "Both fields are optional. If none are given the username will be "
