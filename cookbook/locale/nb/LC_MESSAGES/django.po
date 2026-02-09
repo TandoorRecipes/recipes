@@ -1363,11 +1363,11 @@ msgstr "Opprett bruker"
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Oversikt"
 
 #: .\cookbook\templates\space_overview.html:13
 msgid "Space"
-msgstr ""
+msgstr "Område"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -1382,11 +1382,11 @@ msgstr ""
 
 #: .\cookbook\templates\space_overview.html:25
 msgid "Your Spaces"
-msgstr ""
+msgstr "Dine Områder"
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr ""
+msgstr "Eier"
 
 #: .\cookbook\templates\space_overview.html:73
 #: .\cookbook\templates\space_overview.html:83
