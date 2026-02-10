@@ -123,14 +123,14 @@ class UnitConversionHelper:
             while queue:
                 current = queue.pop(0)
                 for c in current.unit.unit_conversion_base_relation.all():
-                    if c.space_id == self.space.id:
+                    if self.space and c.space_id == self.space.id:
                         r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
                         if r and r.unit.id not in visited_unit_ids:
                             visited_unit_ids.add(r.unit.id)
                             conversions.append(r)
                             queue.append(r)
                 for c in current.unit.unit_conversion_converted_relation.all():
-                    if c.space_id == self.space.id:
+                    if self.space and c.space_id == self.space.id:
                         r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
                         if r and r.unit.id not in visited_unit_ids:
                             visited_unit_ids.add(r.unit.id)
@@ -151,7 +151,7 @@ class UnitConversionHelper:
         :param food: base food
         :return: converted ingredient object from base amount/unit/food
         """
-        if (uc.food_id is None or uc.food_id == food.id) and uc.converted_amount > 0 and uc.base_amount > 0:
+        if (uc.food_id is None or (food and uc.food_id == food.id)) and uc.converted_amount > 0 and uc.base_amount > 0:
             if unit.id == uc.base_unit_id:
                 return Ingredient(amount=amount * (uc.converted_amount / uc.base_amount), unit=uc.converted_unit, food=food, space=self.space)
             else:
