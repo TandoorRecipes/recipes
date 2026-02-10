@@ -123,14 +123,14 @@ class UnitConversionHelper:
             while queue:
                 current = queue.pop(0)
                 for c in current.unit.unit_conversion_base_relation.all():
-                    if c.space == self.space:
+                    if c.space_id == self.space.id:
                         r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
                         if r and r.unit.id not in visited_unit_ids:
                             visited_unit_ids.add(r.unit.id)
                             conversions.append(r)
                             queue.append(r)
                 for c in current.unit.unit_conversion_converted_relation.all():
-                    if c.space == self.space:
+                    if c.space_id == self.space.id:
                         r = self._uc_convert(c, current.amount, current.unit, ingredient.food)
                         if r and r.unit.id not in visited_unit_ids:
                             visited_unit_ids.add(r.unit.id)
