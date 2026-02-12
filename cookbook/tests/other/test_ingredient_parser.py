@@ -78,8 +78,17 @@ def test_ingredient_parser(arg, u1_s1):
             1.0, None, 'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingeli',
             'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl'),
         "砂糖 50g": (50, "g", "砂糖", ""),
-        "卵 4個": (4, "個", "卵", "")
-
+        "卵 4個": (4, "個", "卵", ""),
+        ', Lemon wedges,': (0, None, 'Lemon wedges', ''),
+        '... Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '. Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '- Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '| Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '= Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '+ Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '# Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '* Lemon wedges': (0, None, 'Lemon wedges', ''),
+        '_ Lemon wedges': (0, None, 'Lemon wedges', ''),
     }
     # for German you could say that if an ingredient does not have
     # an amount # and it starts with a lowercase letter, then that

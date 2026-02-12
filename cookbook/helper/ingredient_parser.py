@@ -171,11 +171,16 @@ class IngredientParser:
         note = ''
         unit_note = ''
 
+        ingredient = ingredient.strip()
+
         if len(ingredient) == 0:
             raise ValueError('string to parse cannot be empty')
 
         if len(ingredient) > 512:
             raise ValueError('cannot parse ingredients with more than 512 characters')
+
+        # remove leading commas, dots and other symbols that typically do not occur at the start of an ingredient string
+        ingredient = re.sub(r"^[,.\-_=+#*|\\/]+", "", ingredient)
 
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
