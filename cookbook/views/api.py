@@ -3209,6 +3209,8 @@ def share_link(request, pk):
 
 def meal_plans_to_ical(queryset, filename):
     cal = Calendar()
+    cal.add('prodid', f'-//Tandoor Recipes//')
+    cal.add('version', TANDOOR_VERSION)
 
     for p in queryset:
         event = Event()
@@ -3227,8 +3229,8 @@ def meal_plans_to_ical(queryset, filename):
         event['description'] = p.note
         cal.add_component(event)
 
-    response = FileResponse(io.BytesIO(cal.to_ical()))
-    response["Content-Disposition"] = f'attachment; filename={filename}'  # noqa: E501
+    response = HttpResponse(cal.to_ical(), content_type='text/calendar')
+    response["Content-Disposition"] = f'inline; filename={filename}'
 
     return response
 
