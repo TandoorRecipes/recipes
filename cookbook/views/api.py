@@ -66,7 +66,7 @@ from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathO
 from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
-from cookbook.helper.HelperFunctions import str2bool, validate_import_url, safe_request
+from cookbook.helper.HelperFunctions import str2bool, safe_request
 from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
@@ -1707,11 +1707,10 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             elif 'image_url' in serializer.validated_data:
                 try:
                     url = serializer.validated_data['image_url']
-                    if validate_import_url(url):
-                        response = safe_request('GET', url, headers={
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
-                        image = File(io.BytesIO(response.content))
-                        filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
+                    response = safe_request('GET', url, headers={
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
+                    image = File(io.BytesIO(response.content))
+                    filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
                 except UnidentifiedImageError as e:
                     print(e)
                     pass
@@ -2444,11 +2443,10 @@ class RecipeUrlImportView(APIView):
 
             elif url and not data:
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
-                    if validate_import_url(url):
-                        response['recipe'] = get_from_youtube_scraper(url, request)
-                        if url and url.strip() != '':
-                            response['duplicates'] = Recipe.objects.filter(space=request.space, source_url=url.strip()).values('id', 'name').all()
-                        return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
+                    response['recipe'] = get_from_youtube_scraper(url, request)
+                    if url and url.strip() != '':
+                        response['duplicates'] = Recipe.objects.filter(space=request.space, source_url=url.strip()).values('id', 'name').all()
+                    return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
 
                 tandoor_url = None
                 if re.match(r'^(.)*/recipe/[0-9]+/\?share=[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
@@ -2456,38 +2454,32 @@ class RecipeUrlImportView(APIView):
                 elif re.match(r'^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     tandoor_url = (url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/recipe/[0-9]+', url)[1], '') + '?share=' +
                                    re.split('/recipe/[0-9]+', url)[1].replace('/', ''))
-                if tandoor_url and validate_import_url(tandoor_url):
+                if tandoor_url:
                     recipe_json = safe_request('GET', tandoor_url).json()
                     recipe_json = clean_dict(recipe_json, 'id')
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                     if serialized_recipe.is_valid():
                         recipe = serialized_recipe.save()
-                        if validate_import_url(recipe_json['image']):
-                            if '?' in recipe_json['image']:
-                                filetype = pathlib.Path(recipe_json['image'].split('?')[0]).suffix
-                            else:
-                                filetype = pathlib.Path(recipe_json["image"]).suffix
-                            recipe.image = File(handle_image(request,
-                                                             File(io.BytesIO(safe_request('GET', recipe_json['image']).content), name='image'),
-                                                             filetype=filetype),
-                                                name=f'{uuid.uuid4()}_{recipe.pk}.{filetype}')
+                        if '?' in recipe_json['image']:
+                            filetype = pathlib.Path(recipe_json['image'].split('?')[0]).suffix
+                        else:
+                            filetype = pathlib.Path(recipe_json["image"]).suffix
+                        recipe.image = File(handle_image(request,
+                                                         File(io.BytesIO(safe_request('GET', recipe_json['image']).content), name='image'),
+                                                         filetype=filetype),
+                                            name=f'{uuid.uuid4()}_{recipe.pk}.{filetype}')
                         recipe.save()
                         response['recipe_id'] = recipe.pk
                         return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
                 else:
                     try:
-                        if validate_import_url(url):
-                            html = safe_request(
-                                'GET',
-                                url,
-                                headers={
-                                    "User-Agent": request.META['HTTP_USER_AGENT']}
-                            ).content
-                            scrape = scrape_html(org_url=url, html=html, supported_only=False)
-                        else:
-                            response['error'] = True
-                            response['msg'] = _('Invalid Url')
-                            return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+                        html = safe_request(
+                            'GET',
+                            url,
+                            headers={
+                                "User-Agent": request.META['HTTP_USER_AGENT']}
+                        ).content
+                        scrape = scrape_html(org_url=url, html=html, supported_only=False)
                     except NoSchemaFoundInWildMode:
                         pass
                     except requests.exceptions.ConnectionError:
@@ -2856,7 +2848,8 @@ class FdcSearchView(APIView):
         if query is not None:
             data_types = self.request.query_params.getlist('dataType', ['Foundation'])
 
-            response = safe_request('GET', f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}')
+            url = f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}'
+            response = safe_request('GET', url)
 
             if response.status_code == 429:
                 return JsonResponse(

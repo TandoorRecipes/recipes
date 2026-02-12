@@ -6,7 +6,6 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
 
-from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time, iso_duration_to_minutes
 from cookbook.integration.integration import Integration

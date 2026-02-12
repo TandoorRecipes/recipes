@@ -4,7 +4,7 @@ import tempfile
 from django.utils import timezone
 
 import webdav3.client as wc
-from cookbook.helper.HelperFunctions import validate_import_url, safe_request
+from cookbook.helper.HelperFunctions import safe_request
 from cookbook.models import Recipe, RecipeImport, SyncLog
 from cookbook.provider.provider import Provider
 from requests.auth import HTTPBasicAuth
@@ -92,21 +92,20 @@ class Nextcloud(Provider):
             "Content-Type": "application/json"
         }
 
-        if validate_import_url(url):
-            r = safe_request('GET',
-                url,
-                headers=headers,
-                auth=HTTPBasicAuth(
-                    recipe.storage.username, recipe.storage.password
-                )
+        r = safe_request('GET',
+            url,
+            headers=headers,
+            auth=HTTPBasicAuth(
+                recipe.storage.username, recipe.storage.password
             )
+        )
 
-            response_json = r.json()
-            for element in response_json['ocs']['data']:
-                if element['share_type'] == '3':
-                    return element['url']
+        response_json = r.json()
+        for element in response_json['ocs']['data']:
+            if element['share_type'] == '3':
+                return element['url']
 
-            return Nextcloud.create_share_link(recipe)
+        return Nextcloud.create_share_link(recipe)
 
     @staticmethod
     def get_file(recipe):

@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.HelperFunctions import validate_import_url, safe_request
+from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import ShoppingListEntry, TelegramBot
 

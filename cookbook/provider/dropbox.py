@@ -3,7 +3,7 @@ import json
 import os
 from django.utils import timezone
 
-from cookbook.helper.HelperFunctions import validate_import_url, safe_request
+from cookbook.helper.HelperFunctions import safe_request
 from cookbook.models import Recipe, RecipeImport, SyncLog
 from cookbook.provider.provider import Provider
 
@@ -105,10 +105,10 @@ class Dropbox(Provider):
             recipe.save()
 
         url = recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.')
-        if validate_import_url(url):
-            response = safe_request('GET', url)
 
-            return io.BytesIO(response.content)
+        response = safe_request('GET', url)
+
+        return io.BytesIO(response.content)
 
     @staticmethod
     def rename_file(recipe, new_name):

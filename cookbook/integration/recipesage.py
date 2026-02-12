@@ -1,7 +1,7 @@
 import json
 from io import BytesIO
 
-from cookbook.helper.HelperFunctions import validate_import_url, safe_request
+from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
@@ -54,9 +54,8 @@ class RecipeSage(Integration):
         if len(file['image']) > 0:
             try:
                 url = file['image'][0]
-                if validate_import_url(url):
-                    response = safe_request('GET', url)
-                    self.import_recipe_image(recipe, BytesIO(response.content))
+                response = safe_request('GET', url)
+                self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:
                 print('failed to import image ', str(e))
 
