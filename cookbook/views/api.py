@@ -55,7 +55,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer, BaseRenderer
+
 from rest_framework.response import Response
 from rest_framework.serializers import CharField, IntegerField, UUIDField
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
@@ -1339,6 +1340,13 @@ class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             queryset = queryset.filter(book__pk=book_id)
         return queryset
 
+class CalendarRenderer(BaseRenderer):
+    media_type = 'text/calendar'
+    format = 'ics'
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        return data
+
 
 MealPlanViewQueryParameters = [
     OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive). If nothing is given its today - 90 days.'), type=str,
@@ -1392,7 +1400,7 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     @extend_schema(parameters=MealPlanViewQueryParameters,
                    responses={(200, 'text/calendar'): OpenApiTypes.STR})
-    @decorators.action(detail=False)
+    @decorators.action(detail=False, renderer_classes=[CalendarRenderer])
     def ical(self, request):
         from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
         to_date = self.request.query_params.get('to_date', timezone.now() + datetime.timedelta(days=360))
