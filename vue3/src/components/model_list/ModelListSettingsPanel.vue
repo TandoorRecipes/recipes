@@ -1,15 +1,20 @@
 <template>
-    <!-- Desktop: right navigation drawer -->
     <v-navigation-drawer
         v-if="!mobile"
         v-model="isOpen"
         location="right"
         :width="320"
-        temporary
+        :permanent="isPinned && isOpen"
+        :temporary="!isPinned"
     >
         <v-toolbar density="compact" flat>
-            <v-toolbar-title class="text-subtitle-1">{{ $t('Settings') }}</v-toolbar-title>
             <v-spacer />
+            <v-btn
+                :icon="isPinned ? 'fa-solid fa-thumbtack' : 'fa-solid fa-thumbtack fa-rotate-90'"
+                variant="plain"
+                size="small"
+                @click="isPinned = !isPinned"
+            />
             <v-btn
                 icon="fa-solid fa-times"
                 variant="plain"
@@ -18,102 +23,58 @@
             />
         </v-toolbar>
 
+        <v-tabs v-model="currentTab" density="compact" grow>
+            <v-tab value="filters">
+                <v-icon start size="small">fa-solid fa-filter</v-icon>
+                {{ $t('Filters') }}
+            </v-tab>
+            <v-tab value="settings">
+                <v-icon start size="small">fa-solid fa-sliders</v-icon>
+                {{ $t('Settings') }}
+            </v-tab>
+        </v-tabs>
+
         <v-divider />
 
-        <div class="text-overline px-4 pt-3">{{ $t('Columns') }}</div>
-
-        <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
-            <v-checkbox
-                :model-value="isColumnVisible(col.key)"
-                @update:model-value="toggleColumn(col.key)"
-                :label="$t(col.title)"
-                hide-details
-                density="compact"
-                class="flex-grow-1"
-            />
-            <v-btn-toggle
-                v-if="col.hasDisplayMode"
-                :model-value="getDisplayMode(col.key)"
-                @update:model-value="(val: any) => setDisplayMode(col.key, val)"
-                mandatory
-                density="compact"
-                class="ms-2"
-            >
-                <v-btn value="icon" size="x-small">
-                    <v-icon size="small">fa-solid fa-icons</v-icon>
-                </v-btn>
-                <v-btn value="text" size="x-small">
-                    <v-icon size="small">fa-solid fa-font</v-icon>
-                </v-btn>
-            </v-btn-toggle>
-        </div>
-
-        <v-divider class="my-2" />
-
-        <div class="text-overline px-4 pt-2">{{ $t('Table') }}</div>
-        <div class="px-4 py-1">
-            <v-switch
-                v-model="showColumnHeaders"
-                :label="$t('ShowColumnHeaders')"
-                color="primary"
-                hide-details
-                density="compact"
-            />
-        </div>
+        <settings-panel-tabs-content
+            v-model:current-tab="currentTab"
+            :toggleable-columns="toggleableColumns"
+            :is-column-visible="isColumnVisible"
+            :toggle-column="toggleColumn"
+            :get-display-mode="getDisplayMode"
+            :set-display-mode="setDisplayMode"
+            v-model:show-column-headers="showColumnHeaders"
+        />
     </v-navigation-drawer>
 
-    <!-- Mobile: bottom sheet -->
     <v-bottom-sheet v-else v-model="isOpen" scrollable>
         <v-card>
-            <v-card-title class="d-flex align-center">
-                <span>{{ $t('Settings') }}</span>
-                <v-spacer />
+            <v-card-title class="d-flex align-center pa-0">
+                <v-tabs v-model="currentTab" density="compact" grow>
+                    <v-tab value="filters">
+                        <v-icon start size="small">fa-solid fa-filter</v-icon>
+                        {{ $t('Filters') }}
+                    </v-tab>
+                    <v-tab value="settings">
+                        <v-icon start size="small">fa-solid fa-sliders</v-icon>
+                        {{ $t('Settings') }}
+                    </v-tab>
+                </v-tabs>
                 <v-btn icon="fa-solid fa-times" variant="plain" size="small" @click="isOpen = false" />
             </v-card-title>
 
             <v-divider />
 
-            <v-card-text style="max-height: 60vh; overflow-y: auto;">
-                <div class="text-overline px-4 pt-3">{{ $t('Columns') }}</div>
-
-                <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
-                    <v-checkbox
-                        :model-value="isColumnVisible(col.key)"
-                        @update:model-value="toggleColumn(col.key)"
-                        :label="$t(col.title)"
-                        hide-details
-                        density="compact"
-                        class="flex-grow-1"
-                    />
-                    <v-btn-toggle
-                        v-if="col.hasDisplayMode"
-                        :model-value="getDisplayMode(col.key)"
-                        @update:model-value="(val: any) => setDisplayMode(col.key, val)"
-                        mandatory
-                        density="compact"
-                        class="ms-2"
-                    >
-                        <v-btn value="icon" size="x-small">
-                            <v-icon size="small">fa-solid fa-icons</v-icon>
-                        </v-btn>
-                        <v-btn value="text" size="x-small">
-                            <v-icon size="small">fa-solid fa-font</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </div>
-
-                <v-divider class="my-2" />
-
-                <div class="text-overline px-4 pt-2">{{ $t('Table') }}</div>
-                <div class="px-4 py-1">
-                    <v-switch
-                        v-model="showColumnHeaders"
-                        :label="$t('ShowColumnHeaders')"
-                        color="primary"
-                        hide-details
-                        density="compact"
-                    />
-                </div>
+            <v-card-text style="max-height: 60vh; overflow-y: auto;" class="pa-0">
+                <settings-panel-tabs-content
+                    v-model:current-tab="currentTab"
+                    :toggleable-columns="toggleableColumns"
+                    :is-column-visible="isColumnVisible"
+                    :toggle-column="toggleColumn"
+                    :get-display-mode="getDisplayMode"
+                    :set-display-mode="setDisplayMode"
+                    v-model:show-column-headers="showColumnHeaders"
+                />
             </v-card-text>
         </v-card>
     </v-bottom-sheet>
@@ -124,9 +85,11 @@ import {computed, PropType} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {Model, ModelTableHeaders} from '@/types/Models'
+import SettingsPanelTabsContent from '@/components/model_list/SettingsPanelTabsContent.vue'
 
 const props = defineProps({
     modelValue: {type: Boolean, required: true},
+    activeTab: {type: String, default: 'settings'},
     model: {type: Object as PropType<Model>, required: true},
     allColumns: {type: Array as PropType<ModelTableHeaders[]>, required: true},
     isColumnVisible: {type: Function as PropType<(key: string) => boolean>, required: true},
@@ -135,20 +98,34 @@ const props = defineProps({
     setDisplayMode: {type: Function as PropType<(key: string, mode: 'icon' | 'text') => void>, required: true},
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:activeTab'])
+
+const currentTab = computed({
+    get: () => props.activeTab,
+    set: (val: string) => emit('update:activeTab', val),
+})
 
 const {mobile} = useDisplay()
 const deviceSettings = useUserPreferenceStore().deviceSettings
 
 const settingsKey = computed(() => props.model.listSettings?.settingsKey ?? '')
 
-// Drawer open/close
+const isPinned = computed({
+    get: () => {
+        if (!settingsKey.value) return false
+        return (deviceSettings as any)[`${settingsKey.value}_panelPinned`] ?? false
+    },
+    set: (val: boolean) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_panelPinned`] = val
+    },
+})
+
 const isOpen = computed({
     get: () => props.modelValue,
     set: (val: boolean) => emit('update:modelValue', val),
 })
 
-// Show column headers setting
 const showColumnHeaders = computed({
     get: () => {
         if (!settingsKey.value) return true
@@ -160,7 +137,6 @@ const showColumnHeaders = computed({
     },
 })
 
-// Columns available for toggling (exclude name and action-menu types)
 const toggleableColumns = computed(() => {
     return props.allColumns.filter(c => c.key !== 'name')
 })

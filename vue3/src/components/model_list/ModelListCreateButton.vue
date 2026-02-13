@@ -6,7 +6,7 @@
         :class="{'float-right': !compact}"
         color="create"
     >
-        <v-icon icon="fa-solid fa-plus" />
+        <i class="fa-solid fa-plus"></i>
         <model-edit-dialog
             :close-after-create="false"
             :model="model"
@@ -18,17 +18,15 @@
 </template>
 
 <script setup lang="ts">
+import {PropType} from 'vue'
 import type {EditorSupportedModels} from '@/types/Models'
 import ModelEditDialog from '@/components/dialogs/ModelEditDialog.vue'
 
-withDefaults(defineProps<{
-    model: EditorSupportedModels
-    disableCreate?: boolean
-    compact?: boolean
-}>(), {
-    disableCreate: false,
-    compact: false,
+defineProps({
+    model: {type: String as PropType<EditorSupportedModels>, required: true},
+    disableCreate: {type: Boolean, default: false},
+    compact: {type: Boolean, default: false},
 })
 
-const emit = defineEmits<{ change: [] }>()
+const emit = defineEmits(['change'])
 </script>

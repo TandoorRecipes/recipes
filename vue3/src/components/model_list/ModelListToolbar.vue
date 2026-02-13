@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex align-center ga-2">
+    <div v-if="!mobile" class="d-flex align-center ga-2">
         <v-btn
             v-if="hasFilters"
             icon
@@ -69,14 +69,95 @@
             <v-icon>fa-solid fa-sliders</v-icon>
         </v-btn>
     </div>
+
+    <div v-else>
+        <v-text-field
+            prepend-inner-icon="$search"
+            :label="$t('Search')"
+            :model-value="query"
+            @update:model-value="emit('update:query', $event)"
+            clearable
+            hide-details
+            density="compact"
+        />
+
+        <div class="model-list-toolbar-carousel-wrapper mt-2">
+        <div class="model-list-toolbar-carousel">
+            <v-btn
+                v-if="hasFilters"
+                variant="text"
+                density="compact"
+                prepend-icon="fa-solid fa-filter"
+                class="text-none flex-shrink-0"
+                @click="emit('open-filters')"
+            >
+                <v-badge
+                    :model-value="activeFilterCount > 0"
+                    :content="activeFilterCount"
+                    color="primary"
+                    inline
+                >
+                    {{ $t('Filters') }}
+                </v-badge>
+            </v-btn>
+
+            <v-btn
+                v-if="hasMultiSelect"
+                variant="text"
+                density="compact"
+                class="text-none flex-shrink-0"
+                :color="selectMode ? 'primary' : undefined"
+                :prepend-icon="selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check'"
+                @click="emit('toggle-select')"
+            >
+                {{ $t('Select') }}
+            </v-btn>
+
+            <v-btn
+                v-if="sortOptions.length > 0"
+                variant="text"
+                density="compact"
+                class="text-none flex-shrink-0"
+                :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
+            >
+                {{ $t('sort_by') }} {{ currentLabel }}
+                <v-menu activator="parent" close-on-content-click>
+                    <v-list density="compact">
+                        <v-list-item
+                            v-for="opt in sortOptions"
+                            :key="opt.key"
+                            :active="currentField === opt.key"
+                            @click="onSortSelect(opt.key)"
+                        >
+                            {{ $t(opt.labelKey) }}
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-btn>
+
+            <v-btn
+                v-if="hasFilters"
+                variant="text"
+                density="compact"
+                prepend-icon="fa-solid fa-sliders"
+                class="text-none flex-shrink-0"
+                @click="emit('open-settings')"
+            >
+                {{ $t('Settings') }}
+            </v-btn>
+        </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import {computed, PropType} from 'vue'
+import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {ModelSortDef} from '@/composables/modellist/types'
 
 const {t} = useI18n()
+const {mobile} = useDisplay()
 
 const props = defineProps({
     query: {type: String, default: ''},
@@ -121,3 +202,34 @@ function onSortSelect(key: string) {
     }
 }
 </script>
+
+<style scoped>
+.model-list-toolbar-carousel-wrapper {
+    position: relative;
+}
+
+.model-list-toolbar-carousel-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    background: linear-gradient(to right, transparent, rgb(var(--v-theme-surface)));
+    pointer-events: none;
+}
+
+.model-list-toolbar-carousel {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 4px;
+    align-items: center;
+    padding-right: 36px;
+}
+
+.model-list-toolbar-carousel::-webkit-scrollbar {
+    display: none;
+}
+</style>
