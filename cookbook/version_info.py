@@ -1,3 +1,3 @@
-TANDOOR_VERSION = "cf0401a119ba4024a53dbdf877e4cdb5522f4f32"
-TANDOOR_REF = "cf0401a119ba4024a53dbdf877e4cdb5522f4f32"
-VERSION_INFO = [{'name': 'Tandoor ', 'version': 'commit cf0401a119ba4024a53dbdf877e4cdb5522f4f32\nAuthor: smilerz \nDate:   Fri Mar 22 15:34:54 2024 -0500\n\n    python client generation\n', 'website': 'https://github.com/smilerz/recipes', 'commit_link': 'https://github.com/smilerz/recipes/commit/cf0401a119ba4024a53dbdf877e4cdb5522f4f32', 'ref': 'cf0401a119ba4024a53dbdf877e4cdb5522f4f32', 'branch': 'working', 'tag': ''}]
+TANDOOR_VERSION = ""
+TANDOOR_REF = ""
+VERSION_INFO = []
