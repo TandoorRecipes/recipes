@@ -8,11 +8,11 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2026-02-11 08:39+0000\n"
+"PO-Revision-Date: 2026-02-10 12:07+0000\n"
 "Last-Translator: Sigurd Fyllingsnes <tilsigurd@gmail.com>\n"
-"Language-Team: Norwegian Bokmål <http://translate.tandoor.dev/projects/"
-"tandoor/recipes-backend/nb_NO/>\n"
-"Language: nb_NO\n"
+"Language-Team: Norwegian Nynorsk <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/nn/>\n"
+"Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,52 +21,46 @@ msgstr ""
 
 #: .\cookbook\forms.py:50
 msgid "Default"
-msgstr "Forvalg"
+msgstr "Standard"
 
 #: .\cookbook\forms.py:77
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
-"For å unngå duplikater, blir oppskrifter med samme navn som eksisterende "
-"ignorert. Merk av denne boksen for å importere alt."
 
 #: .\cookbook\forms.py:108
 msgid "Maximum number of users for this space reached."
-msgstr "Maksimalt antall brukere for dette området er nådd."
+msgstr ""
 
 #: .\cookbook\forms.py:114
 msgid "Email address already taken!"
-msgstr "E‑postadressen er allerede i bruk!"
+msgstr ""
 
 #: .\cookbook\forms.py:121
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
-"En e‑postadresse er ikke påkrevd, men hvis den oppgis, vil invitasjonslenken "
-"bli sendt til brukeren."
 
 #: .\cookbook\forms.py:133
 msgid "Name already taken."
-msgstr "Navnet er allerede i bruk."
+msgstr ""
 
 #: .\cookbook\forms.py:144 .\cookbook\forms.py:158
 msgid "Accept Terms and Privacy"
-msgstr "Godta vilkår og personvern"
+msgstr ""
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
-"For å forhindre spam ble den forespurte e‑posten ikke sendt. Vent noen "
-"minutter og prøv igjen."
 
 #: .\cookbook\helper\permission_helper.py:165
 #: .\cookbook\helper\permission_helper.py:186 .\cookbook\views\views.py:138
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Du er ikke innlogget og kan derfor ikke vise siden!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:173
@@ -79,565 +73,546 @@ msgstr "Du er ikke innlogget og kan derfor ikke vise siden!"
 #: .\cookbook\helper\permission_helper.py:343
 #: .\cookbook\helper\permission_helper.py:359
 msgid "You do not have the required permissions to view this page!"
-msgstr "Du har ikke påkrevd tilgang for å vise denne siden!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:191
 #: .\cookbook\helper\permission_helper.py:214
 #: .\cookbook\helper\permission_helper.py:236
 #: .\cookbook\helper\permission_helper.py:251
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "Du kan ikke samhandle med dette objektet, da det ikke tilhører deg!"
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:420
 msgid "You have reached the maximum number of recipes for your space."
-msgstr "Du har nådd det maksimale antallet oppskrifter for området ditt."
+msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:432
 msgid "You have more users than allowed in your space."
-msgstr "Du har flere brukere enn det som er tillatt i området ditt."
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "reverse rotation"
-msgstr "reversert rotasjon"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "careful rotation"
-msgstr "forsiktig rotasjon"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "knead"
-msgstr "elte"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "thicken"
-msgstr "tykne"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "warm up"
-msgstr "varm opp"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "ferment"
-msgstr "fermentere"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "slow cook"
-msgstr "langtidskoke"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr "eggkoker"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr "vannkoker"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
-msgstr "blande"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "pre-clean"
-msgstr "forhåndsrengjøre"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr "høy temperatur"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr "riskoker"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
-msgstr "karamellisere"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr "skreller"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
-msgstr "skjæremaskin"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr "rivjern"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
-msgstr "spiralisering"
+msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
-msgstr "sous-vide"
+msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr "Du må oppgi en porsjonsstørrelse"
+msgstr ""
 
 #: .\cookbook\helper\template_helper.py:97
 #: .\cookbook\helper\template_helper.py:99
 #: .\cookbook\helper\template_helper.py:101
 msgid "Could not parse template code."
-msgstr "Kunne ikke analysere mal-koden."
+msgstr ""
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr "Favoritt"
+msgstr ""
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr "Jeg har lagd denne"
+msgstr ""
 
 #: .\cookbook\integration\integration.py:238
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
-"Importøren forventet en .zip-fil. Har du valgt riktig type importør for "
-"dataene dine?"
 
 #: .\cookbook\integration\integration.py:241
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
-"Det oppstod en uventet feil under importen. Kontroller at du har lastet opp "
-"en gyldig fil."
 
 #: .\cookbook\integration\integration.py:246
 msgid "The following recipes were ignored because they already existed:"
-msgstr "Følgende oppskrifter ble ignorert fordi de allerede eksisterte:"
+msgstr ""
 
 #: .\cookbook\integration\integration.py:250
 #, python-format
 msgid "Imported %s recipes."
-msgstr "Importerte %s oppskrifter."
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:210
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr "Kalorier"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:211
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr "Karbohydrater"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr "Kolesterol"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
-msgstr "Fett"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr "Fiber"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:215
 msgid "Protein"
-msgstr "Protein"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr "Mettet fett"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr "Natrium"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr "Sukker"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr "Transfett"
+msgstr ""
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr "Umettet fett"
+msgstr ""
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr "Oppskriftskilde:"
+msgstr ""
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
-msgstr "Notater"
+msgstr ""
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr "Næringsinformasjon"
+msgstr ""
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
-msgstr "Kilde"
+msgstr ""
 
 #: .\cookbook\integration\recettetek.py:55
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr "Importert fra"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr "Porsjoner"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr "Ventetid"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr "Forberedelsestid"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:6
 msgid "Cookbook"
-msgstr "Kokebok"
+msgstr ""
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr "Del"
+msgstr ""
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr "Fikser matvarer med "
+msgstr ""
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr "Bygger opp fulltekstsøk‑indeksen for oppskrifter på nytt"
+msgstr ""
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Bare PostgreSQL‑databaser bruker fulltekstsøk; ingen indeks å gjenoppbygge"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr "Gjenoppbygging av oppskriftsindeks fullført."
+msgstr ""
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr "Gjenoppbygging av oppskriftsindeks mislyktes."
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr "Frokost"
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr "Lunsj"
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr "Middag"
+msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:971
 msgid "Other"
-msgstr "Annet"
+msgstr ""
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr "g"
+msgstr ""
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr "Proteiner"
+msgstr ""
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr "kcal"
+msgstr ""
 
 #: .\cookbook\models.py:325
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
-"Maksimalt fil-lager for området i MB. 0 gir ubegrenset lagring, −1 "
-"deaktiverer opplasting av filer."
 
 #: .\cookbook\models.py:513
 msgid "Search"
-msgstr "Søk"
+msgstr ""
 
 #: .\cookbook\models.py:514
 msgid "Meal-Plan"
-msgstr "Måltidsplan"
+msgstr ""
 
 #: .\cookbook\models.py:515
 msgid "Books"
-msgstr "Bøker"
+msgstr ""
 
 #: .\cookbook\models.py:516 .\cookbook\views\views.py:416
 #: .\cookbook\views\views.py:417
 msgid "Shopping"
-msgstr "Handle"
+msgstr ""
 
 #: .\cookbook\models.py:967
 msgid "Nutrition"
-msgstr "Næringsinnhold"
+msgstr ""
 
 #: .\cookbook\models.py:968
 msgid "Allergen"
-msgstr "Allergen"
+msgstr ""
 
 #: .\cookbook\models.py:969
 msgid "Price"
-msgstr "Pris"
+msgstr ""
 
 #: .\cookbook\models.py:970
 msgid "Goal"
-msgstr "Mål"
+msgstr ""
 
 #: .\cookbook\models.py:1467 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr "Enkel"
+msgstr ""
 
 #: .\cookbook\models.py:1468 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr "Frase"
+msgstr ""
 
 #: .\cookbook\models.py:1469 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr "Web"
+msgstr ""
 
 #: .\cookbook\models.py:1470 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr "Rå"
+msgstr ""
 
 #: .\cookbook\models.py:1525
 msgid "Food Alias"
-msgstr "Mat‑alias"
+msgstr ""
 
 #: .\cookbook\models.py:1526
 msgid "Unit Alias"
-msgstr "Enhet-alias"
+msgstr ""
 
 #: .\cookbook\models.py:1527
 msgid "Keyword Alias"
-msgstr "Nøkkelord-alias"
+msgstr ""
 
 #: .\cookbook\models.py:1528
 msgid "Description Replace"
-msgstr "Erstatt beskrivelse"
+msgstr ""
 
 #: .\cookbook\models.py:1529
 msgid "Instruction Replace"
-msgstr "Erstatt instruksjoner"
+msgstr ""
 
 #: .\cookbook\models.py:1530
 msgid "Never Unit"
-msgstr "Aldri enhet"
+msgstr ""
 
 #: .\cookbook\models.py:1531
 msgid "Transpose Words"
-msgstr "Bytt om ord"
+msgstr ""
 
 #: .\cookbook\models.py:1532
 msgid "Food Replace"
-msgstr "Erstatt matvare"
+msgstr ""
 
 #: .\cookbook\models.py:1533
 msgid "Unit Replace"
-msgstr "Erstatt enhet"
+msgstr ""
 
 #: .\cookbook\models.py:1534
 msgid "Name Replace"
-msgstr "Erstatt navn"
+msgstr ""
 
 #: .\cookbook\models.py:1564
 msgid "Recipe"
-msgstr "Oppskrift"
+msgstr ""
 
 #: .\cookbook\models.py:1565
 msgid "Food"
-msgstr "Mat"
+msgstr ""
 
 #: .\cookbook\models.py:1566
 msgid "Keyword"
-msgstr "Nøkkelord"
+msgstr ""
 
 #: .\cookbook\serializer.py:262
 msgid "File uploads are not enabled for this Space."
-msgstr "Filopplasting er ikke aktivert for dette området."
+msgstr ""
 
 #: .\cookbook\serializer.py:273
 msgid "You have reached your file upload limit."
-msgstr "Du har nådd grensen for filopplasting."
+msgstr ""
 
 #: .\cookbook\serializer.py:281
 msgid "The given file type is not allowed."
-msgstr "Filtypen er ikke tillatt."
+msgstr ""
 
 #: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Du har nådd det maksimale antallet områder du kan eie."
+msgstr ""
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr "Navnet på området må være unikt."
+msgstr ""
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
-msgstr "Kan ikke endre tillatelsen for område‑eier."
+msgstr ""
 
 #: .\cookbook\serializer.py:1596
 msgid "Hello"
-msgstr "Hallo"
+msgstr ""
 
 #: .\cookbook\serializer.py:1596
 msgid "You have been invited by "
-msgstr "Du har blitt invitert av "
+msgstr ""
 
 #: .\cookbook\serializer.py:1598
 msgid " to join their Tandoor Recipes space "
-msgstr " til å bli med deres Tandoor oppskrift område "
+msgstr ""
 
 #: .\cookbook\serializer.py:1600
 msgid "Click the following link to activate your account: "
-msgstr "Klikk på følgende lenke for å aktivere kontoen din: "
+msgstr ""
 
 #: .\cookbook\serializer.py:1602
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
-"Hvis lenken ikke fungerer, bruk følgende kode for å bli med i området "
-"manuelt: "
 
 #: .\cookbook\serializer.py:1604
 msgid "The invitation is valid until "
-msgstr "Invitasjonen er gyldig til "
+msgstr ""
 
 #: .\cookbook\serializer.py:1606
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
-"Tandoor Recipes er en åpen kildekode‑oppskriftsbehandler. Sjekk den ut på "
-"GitHub "
 
 #: .\cookbook\serializer.py:1609
 msgid "Tandoor Recipes Invite"
-msgstr "Invitasjon til Tandoor oppskrifter"
+msgstr ""
 
 #: .\cookbook\serializer.py:1813
 msgid "Existing shopping list to update"
-msgstr "Eksisterende handleliste som skal oppdateres"
+msgstr ""
 
 #: .\cookbook\serializer.py:1815
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
-"Liste over ingrediens-ID-er fra oppskriften som skal legges til; hvis ingen "
-"oppgis, legges alle ingredienser til."
 
 #: .\cookbook\serializer.py:1817
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
-"Hvis du angir en list_recipe-ID og porsjoner som 0, vil den handlelisten bli "
-"slettet."
 
 #: .\cookbook\serializer.py:1826
 msgid "Amount of food to add to the shopping list"
-msgstr "Mengde matvare som skal legges til handlelisten"
+msgstr ""
 
 #: .\cookbook\serializer.py:1828
 msgid "ID of unit to use for the shopping list"
-msgstr "ID for enhet som skal brukes for handlelisten"
+msgstr ""
 
 #: .\cookbook\serializer.py:1830
 msgid "When set to true will delete all food from active shopping lists."
-msgstr "Når satt til true vil all mat slettes fra aktive handlelister."
+msgstr ""
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr "404-feil"
+msgstr ""
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr "Finner ikke siden du leter etter."
+msgstr ""
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr "Tilbake til Startsiden"
+msgstr ""
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr "Rapporter en feil"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:10
 msgid "E-mail Addresses"
-msgstr "E-postadresser"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:12
 msgid "The following e-mail addresses are associated with your account:"
-msgstr "Følgende e‑postadresser er knyttet til kontoen din:"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:29
 msgid "Verified"
-msgstr "Verifisert"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:31
 msgid "Unverified"
-msgstr "Ubekreftet"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:33
 msgid "Primary"
-msgstr "Primær"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Make Primary"
-msgstr "Gjør til primæradresse"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:42
 msgid "Re-send Verification"
-msgstr "Send verifisering på nytt"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
 msgid "Remove"
-msgstr "Fjern"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:51
 msgid "Warning:"
-msgstr "Advarsel:"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:51
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
-"Du har for øyeblikket ingen e‑postadresse registrert. Du bør legge til en e‑"
-"postadresse slik at du kan motta varsler, tilbakestille passordet ditt osv."
 
 #: .\cookbook\templates\account\email.html:57
 msgid "Add E-mail Address"
-msgstr "Legg til e-postadresse"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:62
 msgid "Add E-mail"
-msgstr "Legg til e-post"
+msgstr ""
 
 #: .\cookbook\templates\account\email.html:72
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr "Vil du virkelig fjerne den valgte e-postadressen?"
+msgstr ""
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr "Bekreft e-postadresse"
+msgstr ""
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -647,14 +622,10 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
-"Vennligst bekreft at\n"
-"            <a href=\"mailto:%(email)s\">%(email)s</a> er en e‑postadresse "
-"for bruker %(user_display)s\n"
-"            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 msgid "Confirm"
-msgstr "Bekreft"
+msgstr ""
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -663,13 +634,11 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"Denne e-postbekreftelseslenken er utløpt eller ugyldig. Vennligst\n"
-"            <a href=\"%(email_url)s\">be om en ny e-postbekreftelse</a>."
 
 #: .\cookbook\templates\account\login.html:8
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr "Logg inn"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -681,7 +650,7 @@ msgstr "Logg inn"
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr "Logg in"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:41
@@ -689,34 +658,34 @@ msgstr "Logg in"
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:56
 msgid "Sign Up"
-msgstr "Registrer deg"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
-msgstr "Glemt passord?"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr "Reset passordet mitt"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
-msgstr "Sosial innlogging"
+msgstr ""
 
 #: .\cookbook\templates\account\login.html:51
 msgid "You can use any of the following providers to sign in."
-msgstr "Velg en av følgende leverandører for å logge på."
+msgstr ""
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr "Logg ut"
+msgstr ""
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr "Er du sikker på at du vil logge ut?"
+msgstr ""
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:10
@@ -726,42 +695,38 @@ msgstr "Er du sikker på at du vil logge ut?"
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
 msgid "Change Password"
-msgstr "Bytt Passord"
+msgstr ""
 
 #: .\cookbook\templates\account\password_change.html:16
 msgid "Forgot Password?"
-msgstr "Glemt Passord?"
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:18
 msgid "Password Reset"
-msgstr "Nullstill passord"
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
-"Glemt passordet ditt? Skriv inn e-postadressen din nedenfor, så sender vi "
-"deg en e-post som lar deg tilbakestille det."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr "Nullstilling av passord er skrudd av for denne instansen."
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset_done.html:25
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
-"Vi har sendt deg en e-post. Ta kontakt med oss hvis du ikke mottar den i "
-"løpet av noen minutter."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
-msgstr "Ugyldig token"
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -771,110 +736,106 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
-"Lenken for tilbakestilling av passord var ugyldig, muligens fordi den "
-"allerede er brukt.\n"
-"                    Vennligst be om en <a href=\"%(passwd_reset_url)s\">ny "
-"tilbakestilling av passord</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr "bytt passord"
+msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr "Passordet ditt er nå endret."
+msgstr ""
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:10
 #: .\cookbook\templates\account\password_set.html:15
 msgid "Set Password"
-msgstr "Sett passord"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
-msgstr "Registrer"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:11
 msgid "Create an Account"
-msgstr "Opprett en konto"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:41
 msgid "I accept the follwoing"
-msgstr "Jeg godtar følgende"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:44
 #: .\cookbook\templates\socialaccount\signup.html:35
 msgid "Terms and Conditions"
-msgstr "Vilkår og betingelser"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:47
 #: .\cookbook\templates\socialaccount\signup.html:38
 msgid "and"
-msgstr "og"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:51
 #: .\cookbook\templates\socialaccount\signup.html:42
 msgid "Privacy Policy"
-msgstr "Personvernerklæring"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:64
 msgid "Create User"
-msgstr "Opprett bruker"
+msgstr ""
 
 #: .\cookbook\templates\account\signup.html:68
 msgid "Already have an account?"
-msgstr "Har du allerede en konto?"
+msgstr ""
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr "Registrering stengt"
+msgstr ""
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr "Beklager, men registreringen er for øyeblikket stengt."
+msgstr ""
 
 #: .\cookbook\templates\frontend\tandoor.html:15
 msgid "Tandoor Recipe Manager"
-msgstr "Tandoor Oppskrift Administrator"
+msgstr ""
 
 #: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
-msgstr "Søk etter oppskrift..."
+msgstr ""
 
 #: .\cookbook\templates\index.html:43
 msgid "New Recipe"
-msgstr "Ny oppskrift"
+msgstr ""
 
 #: .\cookbook\templates\index.html:46
 msgid "Import Recipe"
-msgstr "Importer oppskrift"
+msgstr ""
 
 #: .\cookbook\templates\index.html:52
 msgid "Advanced Search"
-msgstr "Avansert søk"
+msgstr ""
 
 #: .\cookbook\templates\index.html:56
 msgid "Reset Search"
-msgstr "Nullstill søk"
+msgstr ""
 
 #: .\cookbook\templates\index.html:84
 msgid "Last viewed"
-msgstr "Sist sett"
+msgstr ""
 
 #: .\cookbook\templates\index.html:86
 msgid "Recipes"
-msgstr "Oppskrifter"
+msgstr ""
 
 #: .\cookbook\templates\index.html:93
 msgid "Log in to view recipes"
-msgstr "Logg inn for å se oppskrifter"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr "Markdown-informasjon"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -891,71 +852,54 @@ msgid ""
 "below.\n"
 "    "
 msgstr ""
-"\n"
-"        Markdown er et lettvekts markup språk som benyttes for å formatere "
-"ren tekst.\n"
-"        Denne siden bruker biblioteket <a href=\"https://python-markdown."
-"github.io/\" target=\"_blank\">Python Markdown</a> for\n"
-"        å konvertere teksten din til velformatert HTML. Fullstendig "
-"dokumentasjon for markdown finner du\n"
-"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
-"target=\"_blank\">her</a>.\n"
-"        En ufullstendig, men sannsynligvis tilstrekkelig dokumentasjon "
-"finner du under her.\n"
-"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr "Overskrifter"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr "Formatering"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
 msgstr ""
-"Linjeskift er satt inn ved å sette inn to mellomrom på slutten av en linje"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
-msgstr "eller ved å sette inn en tom linje mellom."
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr "Denne teksten er tykk"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr "Denne teksten er Kursiv"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr "Det er også mulig å sitere avsnitt"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr "Lister"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
-"Lister kan være ordnet eller uordnet. Det er <b>viktig å legge inn en tom "
-"linje før listen!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr "Ordnet liste"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -964,12 +908,12 @@ msgstr "Ordnet liste"
 #: .\cookbook\templates\markdown_info.html:111
 #: .\cookbook\templates\markdown_info.html:112
 msgid "unordered list item"
-msgstr "uordnet listepunkt"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr "Uordnet liste"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -978,28 +922,26 @@ msgstr "Uordnet liste"
 #: .\cookbook\templates\markdown_info.html:117
 #: .\cookbook\templates\markdown_info.html:118
 msgid "ordered list item"
-msgstr "ordnet listepunkt"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr "Bilder og lenker"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
-"Lenker kan formateres med Markdown. Denne applikasjonen lar deg også lime "
-"inn lenker direkte i Markdown-felt uten noen formatering."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
 msgid "This will become an image"
-msgstr "Dette vil bli til et bilde"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:152
 msgid "Tables"
-msgstr "Tabeller"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
@@ -1007,75 +949,70 @@ msgid ""
 "editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
-"Markdown-tabeller er vanskelige å lage for hånd. Det anbefales å bruke en "
-"tabellredigerer som <a href=\"https://www.tablesgenerator.com/markdown_tables"
-"\" rel=\"noreferrer noopener\" target=\"_blank\">denne.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:171
 #: .\cookbook\templates\markdown_info.html:177
 msgid "Table"
-msgstr "Tabell"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:172
 msgid "Header"
-msgstr "Overskrift"
+msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:157
 #: .\cookbook\templates\markdown_info.html:178
 msgid "Cell"
-msgstr "Selle"
+msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr "Ingen tilgang"
+msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr "Du har ingen grupper og kan derfor ikke bruke denne applikasjonen."
+msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 msgid "Please contact your administrator."
-msgstr "Vennligst kontakt administratoren din."
+msgstr ""
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
 msgid "No Permission"
-msgstr "Ingen tilgang"
+msgstr ""
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
 msgstr ""
-"Du har ikke de nødvendige tillatelsene til å vise denne siden eller utføre "
-"denne handlingen."
 
 #: .\cookbook\templates\offline.html:5
 msgid "Offline"
-msgstr "Frakoblet"
+msgstr ""
 
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr "Tilbake"
+msgstr ""
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr "Oppskriftsoversikt"
+msgstr ""
 
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr "API-dokumentasjon"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
 msgid "Search Settings"
-msgstr "Søke Instillinger"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1088,18 +1025,10 @@ msgid ""
 "only available if you are using Postgres for your database.\n"
 "    "
 msgstr ""
-"\n"
-"        Å skape den beste søkeopplevelsen er komplisert og avhenger i stor "
-"grad av dine egne innstillinger.  \n"
-"        Endringer i søkeinnstillingene kan ha stor innvirkning på både "
-"hastigheten og kvaliteten på resultatene.\n"
-"        Søkemetoder, trigrammer og fulltekstsøk-konfigurasjoner er bare "
-"tilgjengelige hvis du bruker Postgres som database.\n"
-"    "
 
 #: .\cookbook\templates\search_info.html:19
 msgid "Search Methods"
-msgstr "Søke Metode"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1115,16 +1044,6 @@ msgid ""
 "html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
 "            "
 msgstr ""
-" \n"
-"            Fulltekst­søk forsøker å normalisere ordene som oppgis for å "
-"matche vanlige varianter. For eksempel: «forked», «forking», «forks» vil "
-"alle normaliseres til «fork».\n"
-"            Det finnes flere metoder, beskrevet nedenfor, som styrer hvordan "
-"søket skal oppføre seg når flere ord søkes etter.\n"
-"            Full tekniske detaljer om hvordan disse fungerer kan ses på <a "
-"href=https://www.postgresql.org/docs/current/textsearch-controls.html"
-"#TEXTSEARCH-PARSING-QUERIES>Postgresql sitt nettsted.\n"
-"            "
 
 #: .\cookbook\templates\search_info.html:29
 msgid ""
@@ -1136,13 +1055,6 @@ msgid ""
 "selected for a full text search.\n"
 "            "
 msgstr ""
-" \n"
-"            Enkle søk ignorerer tegnsetting og vanlige ord som «the», «a» og "
-"«and», og behandler separate ord som nødvendige.\n"
-"            Søk etter «eple or mel» vil returnere alle oppskrifter som "
-"inneholder både «eple» og «mel» et eller annet sted i feltene som er valgt "
-"for fulltekstsøk.\n"
-"            "
 
 #: .\cookbook\templates\search_info.html:34
 msgid ""
@@ -1154,13 +1066,6 @@ msgid ""
 "been selected for a full text search.\n"
 "            "
 msgstr ""
-" \n"
-"            Frasesøk ignorerer tegnsetting, men søker etter alle ordene i "
-"nøyaktig den rekkefølgen de er oppgitt.\n"
-"            Søk etter «epple eller mel» vil bare returnere en oppskrift som "
-"inneholder den eksakte frasen «epple eller mel» i et av feltene som er valgt "
-"for fulltekstsøk.\n"
-"            "
 
 #: .\cookbook\templates\search_info.html:39
 msgid ""
@@ -1180,22 +1085,6 @@ msgid ""
 "recipe that has the word 'butter' in any field included.\n"
 "            "
 msgstr ""
-" \n"
-"            Web‑søk simulerer funksjonalitet som finnes på mange nettsøk‑"
-"tjenester og støtter spesialsyntaks.\n"
-"            Å sette anførselstegn rundt flere ord gjør disse ordene om til "
-"en frase.\n"
-"            'eller' gjenkjennes som et søk etter ordet (eller frasen) rett "
-"før «eller» ELLER ordet (eller frasen) rett etter.\n"
-"            '-' gjenkjennes som et søk etter oppskrifter som ikke inneholder "
-"ordet (eller frasen) som kommer rett etter. \n"
-"            For eksempel vil et søk etter \"apple pie\" or cherry -butter "
-"returnere alle oppskrifter som inneholder frasen \"apple pie\" eller ordet "
-"\"cherry\" \n"
-"            i et hvilket som helst felt som er inkludert i fulltekstsøket, "
-"men utelat alle oppskrifter som har ordet «butter» i et hvilket som helst av "
-"de inkluderte feltene.\n"
-"            "
 
 #: .\cookbook\templates\search_info.html:48
 msgid ""
@@ -1204,10 +1093,6 @@ msgid ""
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
-" \n"
-"            Rå‑søk ligner på Web‑søk, men tar også hensyn til "
-"tegnsettingsoperatorer som |, & og ().\n"
-"            "
 
 #: .\cookbook\templates\search_info.html:59
 msgid ""
@@ -1223,21 +1108,10 @@ msgid ""
 "methods.\n"
 "            "
 msgstr ""
-" \n"
-"            En annen tilnærming til søk som også krever PostgreSQL, er "
-"uklart søk (fuzzy search) eller trigramsamsvar. Et trigram er en gruppe på "
-"tre påfølgende tegn.\n"
-"            Søk etter «apple» vil for eksempel generere trigrammene «app», "
-"«ppl» og «ple», og deretter gi en poengsum basert på hvor godt ordene "
-"samsvarer med de genererte trigrammene.\n"
-"            En fordel med trigramsøk er at et søk etter «sandwich» også vil "
-"finne feilstavede ord som «sandwhich», som ville blitt oversett av andre "
-"metoder.\n"
-"            "
 
 #: .\cookbook\templates\search_info.html:69
 msgid "Search Fields"
-msgstr "Søke Felt"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1276,7 +1150,7 @@ msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
 msgid "Search Index"
-msgstr "Søke Index"
+msgstr ""
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1290,68 +1164,49 @@ msgid ""
 "the management command 'python manage.py rebuildindex'\n"
 "            "
 msgstr ""
-" \n"
-"            Både trigramsøk og fulltekstsøk er avhengige av databaseindekser "
-"for å fungere effektivt.\n"
-"\n"
-"            Du kan gjenoppbygge indeksene for alle felt på admin-siden for "
-"oppskrifter ved å velge alle oppskrifter og kjøre «rebuild index for "
-"selected recipes».             Du kan også gjenoppbygge indekser via "
-"kommandolinjen ved å utføre styringskommandoen «python manage.py "
-"rebuildindex».\n"
-"            "
 
 #: .\cookbook\templates\setup.html:6
 msgid "Cookbook Setup"
-msgstr "Kokeboksoppsett"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
-msgstr "Installering"
+msgstr ""
 
 #: .\cookbook\templates\setup.html:15
 msgid ""
 "To start using this application you must first create a superuser account."
 msgstr ""
-"For å begynne å bruke denne applikasjonen må du først opprette en "
-"superbrukerkonto."
 
 #: .\cookbook\templates\setup.html:20
 msgid "Create Superuser account"
-msgstr "Opprett superbruker-konto"
+msgstr ""
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
 msgid "Social Network Login Failure"
-msgstr "Sosial innlogging Feilet"
+msgstr ""
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
 "An error occurred while attempting to login via your social network account."
 msgstr ""
-"Det oppsto en feil under forsøket på å logge inn med din konto fra sosiale "
-"medier."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
 msgid "Account Connections"
-msgstr "Kontotilkoblinger"
+msgstr ""
 
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
-"Du kan logge inn på kontoen din ved å bruke en av følgende tredjeparts- "
-"kontoer:\n"
-"            kontoer:"
 
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid ""
 "You currently have no social network accounts connected to this account."
 msgstr ""
-"Du har for øyeblikket ingen kontoer fra sosiale medier koblet til denne "
-"kontoen."
 
 #: .\cookbook\templates\socialaccount\connections.html:47
 msgid "Add a 3rd Party Account"
@@ -1360,7 +1215,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
 msgid "Signup"
-msgstr "Logg inn"
+msgstr ""
 
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
@@ -1413,7 +1268,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
 msgid "Sign in using"
-msgstr "Logg inn med"
+msgstr ""
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
@@ -1460,7 +1315,7 @@ msgstr ""
 #: .\cookbook\templates\space_overview.html:91
 #: .\cookbook\templates\space_overview.html:100
 msgid "Create Space"
-msgstr "Opprett område"
+msgstr ""
 
 #: .\cookbook\templates\space_overview.html:94
 msgid "Create your own recipe space."
@@ -1472,7 +1327,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:23
 msgid "System"
-msgstr "System"
+msgstr ""
 
 #: .\cookbook\templates\system.html:24
 msgid ""
@@ -1509,13 +1364,13 @@ msgstr ""
 #: .\cookbook\templates\system.html:96 .\cookbook\templates\system.html:109
 #: .\cookbook\templates\system.html:123 .\cookbook\templates\system.html:134
 msgid "Warning"
-msgstr "Advarsel"
+msgstr ""
 
 #: .\cookbook\templates\system.html:68 .\cookbook\templates\system.html:82
 #: .\cookbook\templates\system.html:96 .\cookbook\templates\system.html:109
 #: .\cookbook\templates\system.html:125 .\cookbook\templates\system.html:134
 msgid "Ok"
-msgstr "OK"
+msgstr ""
 
 #: .\cookbook\templates\system.html:70
 msgid ""
@@ -1552,7 +1407,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:94
 msgid "Debug Mode"
-msgstr "Avlusingsmodus"
+msgstr ""
 
 #: .\cookbook\templates\system.html:98
 msgid ""
@@ -1580,11 +1435,11 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:118
 msgid "Database"
-msgstr "Database"
+msgstr ""
 
 #: .\cookbook\templates\system.html:121
 msgid "Info"
-msgstr "Info"
+msgstr ""
 
 #: .\cookbook\templates\system.html:131 .\cookbook\templates\system.html:148
 msgid "Migrations"
@@ -1616,15 +1471,15 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:271
 msgid "Show"
-msgstr "Vis"
+msgstr ""
 
 #: .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr "Eksporter oppskrifter"
+msgstr ""
 
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr "Eksporter"
+msgstr ""
 
 #: .\cookbook\views\api.py:198 .\cookbook\views\api.py:326
 msgid "Parameter updated_at incorrectly formatted"
@@ -2030,7 +1885,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:397 .\cookbook\views\views.py:398
 msgid "Plan"
-msgstr "Plan"
+msgstr ""
 
 #: .\cookbook\views\views.py:399
 msgid "View your meal Plan"
@@ -2038,676 +1893,4 @@ msgstr ""
 
 #: .\cookbook\views\views.py:418
 msgid "View your shopping lists"
-msgstr "Vis din handleliste"
-
-#~ msgid ""
-#~ "Both fields are optional. If none are given the username will be "
-#~ "displayed instead"
-#~ msgstr ""
-#~ "Begge feltene er valgfrie. Hvis ingen blir oppgitt, vil brukernavnet "
-#~ "vises i stedet"
-
-#~ msgid "Name"
-#~ msgstr "Navn"
-
-#~ msgid "Keywords"
-#~ msgstr "Nøkkelord"
-
-#~ msgid "Preparation time in minutes"
-#~ msgstr "Forberedelsestid i minutter"
-
-#~ msgid "Waiting time (cooking/baking) in minutes"
-#~ msgstr "Ventetid (til matlaging/baking) i minutter"
-
-#~ msgid "Path"
-#~ msgstr "Sti"
-
-#~ msgid "Storage UID"
-#~ msgstr "Lagring UID"
-
-#~ msgid "Add your comment: "
-#~ msgstr "Legg til din kommentar: "
-
-#~ msgid "Leave empty for dropbox and enter app password for nextcloud."
-#~ msgstr ""
-#~ "La det stå tomt for Dropbox og skriv inn app-passordet for Nextcloud."
-
-#~ msgid "Leave empty for nextcloud and enter api token for dropbox."
-#~ msgstr "La det stå tomt for Nextcloud og skriv inn API-tokenet for Dropbox."
-
-#~ msgid ""
-#~ "Leave empty for dropbox and enter only base url for nextcloud (<code>/"
-#~ "remote.php/webdav/</code> is added automatically)"
-#~ msgstr ""
-#~ "La det stå tomt for Dropbox, og skriv bare inn grunn-URLen for Nextcloud "
-#~ "(<code>/remote.php/webdav/</code> blir lagt til automatisk)"
-
-#~ msgid "Search String"
-#~ msgstr "Søkestreng"
-
-#~ msgid "File ID"
-#~ msgstr "Fil-ID"
-
-#, fuzzy
-#~| msgid "Search"
-#~ msgid "Search Method"
-#~ msgstr "Søk"
-
-#, fuzzy
-#~| msgid "Search"
-#~ msgid "Fuzzy Search"
-#~ msgstr "Søk"
-
-#, fuzzy
-#~| msgid "Text"
-#~ msgid "Full Text"
-#~ msgstr "Tekst"
-
-#~ msgid "Delete"
-#~ msgstr "Slett"
-
-#~ msgid "Settings"
-#~ msgstr "Innstillinger"
-
-#, fuzzy
-#~| msgid "Password Reset"
-#~ msgid "Password"
-#~ msgstr "Nullstill passord"
-
-#~ msgid "Foods"
-#~ msgstr "Ny matvare"
-
-#~ msgid "Units"
-#~ msgstr "Enheter"
-
-#~ msgid "Supermarket"
-#~ msgstr "Butikk"
-
-#, fuzzy
-#~| msgid "Supermarket"
-#~ msgid "Supermarket Category"
-#~ msgstr "Butikk"
-
-#, fuzzy
-#~| msgid "Nutrition"
-#~ msgid "Automations"
-#~ msgstr "Næringsinnhold"
-
-#, fuzzy
-#~| msgid "File ID"
-#~ msgid "Files"
-#~ msgstr "Fil-ID"
-
-#~ msgid "Batch Edit"
-#~ msgstr "Oppdatere flere"
-
-#~ msgid "History"
-#~ msgstr "Historikk"
-
-#~ msgid "Ingredient Editor"
-#~ msgstr "Ingrediensredigerer"
-
-#~ msgid "Properties"
-#~ msgstr "Egenskaper"
-
-#~ msgid "Create"
-#~ msgstr "Opprett"
-
-#, fuzzy
-#~| msgid "Settings"
-#~ msgid "Space Settings"
-#~ msgstr "Innstillinger"
-
-#~ msgid "Admin"
-#~ msgstr "Administrasjon"
-
-#~ msgid "Markdown Guide"
-#~ msgstr "Markdown-guide"
-
-#~ msgid "GitHub"
-#~ msgstr "GitHub"
-
-#~ msgid "API Browser"
-#~ msgstr "API-utforsker"
-
-#~ msgid "Batch edit Category"
-#~ msgstr "Oppdater flere kategorier"
-
-#~ msgid "Batch edit Recipes"
-#~ msgstr "Oppdater flere oppskrifter"
-
-#~ msgid "Add the specified keywords to all recipes containing a word"
-#~ msgstr ""
-#~ "Legg til spesifikt nøkkelord til alle oppskrifter som inneholder et ord"
-
-#~ msgid "Sync"
-#~ msgstr "Synkronisering"
-
-#~ msgid "Manage watched Folders"
-#~ msgstr "Behandle overvåkede mapper"
-
-#~ msgid ""
-#~ "On this Page you can manage all storage folder locations that should be "
-#~ "monitored and synced."
-#~ msgstr ""
-#~ "Her kan du behandle alle lagringsmapper og plasseringer for monitorering "
-#~ "og synkronisering."
-
-#~ msgid "The path must be in the following format"
-#~ msgstr "Stien må være i følgende format"
-
-#~ msgid "Save"
-#~ msgstr "Lagre"
-
-#~ msgid "Sync Now!"
-#~ msgstr "Synkroniser nå!"
-
-#, fuzzy
-#~| msgid "Recipes"
-#~ msgid "Show Recipes"
-#~ msgstr "Oppskrifter"
-
-#, fuzzy
-#~| msgid "View Log"
-#~ msgid "Show Log"
-#~ msgstr "Vis logg"
-
-#~ msgid "Importing Recipes"
-#~ msgstr "Importerer oppskrifter"
-
-#~ msgid ""
-#~ "This can take a few minutes, depending on the number of recipes in sync, "
-#~ "please wait."
-#~ msgstr ""
-#~ "Dette kan ta noen minutter, avhenging av antall oppskrifter som skal "
-#~ "synkroniseres. Vennligst vent."
-
-#~ msgid "Recipe Books"
-#~ msgstr "Oppskriftsbøker"
-
-#~ msgid "Import new Recipe"
-#~ msgstr "Importer ny oppskrift"
-
-#~ msgid "Edit Recipe"
-#~ msgstr "Rediger oppskrift"
-
-#, python-format
-#~ msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-#~ msgstr "Er du sikker på at du vil slette %(title)s: <b>%(object)s</b> "
-
-#~ msgid "Protected"
-#~ msgstr "Beskyttet"
-
-#~ msgid "Edit"
-#~ msgstr "Rediger"
-
-#~ msgid "View"
-#~ msgstr "Vis"
-
-#~ msgid "Delete original file"
-#~ msgstr "Slett opprinnelig fil"
-
-#~ msgid "List"
-#~ msgstr "Liste"
-
-#~ msgid "Filter"
-#~ msgstr "Filtrer"
-
-#~ msgid "Import all"
-#~ msgstr "Importer alle"
-
-#~ msgid "New"
-#~ msgstr "Ny"
-
-#~ msgid "previous"
-#~ msgstr "forrige"
-
-#~ msgid "next"
-#~ msgstr "neste"
-
-#~ msgid "View Log"
-#~ msgstr "Vis logg"
-
-#~ msgid "Cook Log"
-#~ msgstr "Tilberedingslogg"
-
-#~ msgid "Import"
-#~ msgstr "Importér"
-
-#~ msgid "Security Warning"
-#~ msgstr "Sikkerhetsadvarsel"
-
-#~ msgid ""
-#~ "\n"
-#~ "        The <b>Password and Token</b> field are stored as <b>plain text</"
-#~ "b> inside the database.\n"
-#~ "        This is necessary because they are needed to make API requests, "
-#~ "but it also increases the risk of\n"
-#~ "        someone stealing it. <br/>\n"
-#~ "        To limit the possible damage tokens or accounts with limited "
-#~ "access can be used.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        <b>Passord og nøkkelfeltene</b> er lagret som <b>ren tekst</b> i "
-#~ "databasen.\n"
-#~ "        Dette er nødvendig for å kunne utføre API-forespørsler, men det "
-#~ "øker samtidig risiko for\n"
-#~ "        uønsket tilgang til dem.<br/>\n"
-#~ "        For å begrense kosekvensene av uønsket tilgang, kan nøkler eller "
-#~ "kontoer med begrenset tilgang benyttes.\n"
-#~ "    "
-
-#~ msgid "You are currently offline!"
-#~ msgstr "Du er ikke tilkoblet!"
-
-#~ msgid "Comments"
-#~ msgstr "Kommentarer"
-
-#~ msgid "by"
-#~ msgstr "av"
-
-#, fuzzy
-#~| msgid "Social Login"
-#~ msgid "Social"
-#~ msgstr "Sosial innlogging"
-
-#, fuzzy
-#~| msgid "Description"
-#~ msgid "Manage Subscription"
-#~ msgstr "Beskrivelse"
-
-#~ msgid "Shopping List"
-#~ msgstr "Handleliste"
-
-#, fuzzy
-#~| msgid "Storage Backends"
-#~ msgid "Connector Config Backend"
-#~ msgstr "Lagringsplasser"
-
-#, fuzzy
-#~| msgid "Supermarket"
-#~ msgid "Supermarkets"
-#~ msgstr "Butikk"
-
-#, fuzzy
-#~| msgid "Shopping List"
-#~ msgid "Shopping Categories"
-#~ msgstr "Handleliste"
-
-#, fuzzy
-#~| msgid "Filter"
-#~ msgid "Custom Filters"
-#~ msgstr "Filtrer"
-
-#~ msgid "Steps"
-#~ msgstr "Trinn"
-
-#~ msgid ""
-#~ "Color of the top navigation bar. Not all colors work with all themes, "
-#~ "just try them out!"
-#~ msgstr ""
-#~ "Farge på toppnavigasjonslinjen. Ikke alle farger fungerer med alle "
-#~ "temaer, så bare prøv dem ut!"
-
-#~ msgid ""
-#~ "Default Unit to be used when inserting a new ingredient into a recipe."
-#~ msgstr "Standard enhet når ny ingrediens legges til en oppskrift."
-
-#~ msgid ""
-#~ "Enables support for fractions in ingredient amounts (e.g. convert "
-#~ "decimals to fractions automatically)"
-#~ msgstr ""
-#~ "Aktiverer støtte for deler av ingrediensmengde (konverterer feks. "
-#~ "desimaler til deler automatisk)"
-
-#~ msgid ""
-#~ "Users with whom newly created meal plan/shopping list entries should be "
-#~ "shared by default."
-#~ msgstr ""
-#~ "Brukere som oppretter nye måltidsplaner/handlelister, deler disse "
-#~ "oppføringene som standard."
-
-#~ msgid "Show recently viewed recipes on search page."
-#~ msgstr "Vis nylig viste oppskrifter på søkesiden."
-
-#~ msgid "Number of decimals to round ingredients."
-#~ msgstr "Antall desimaler ingredienser skal avrundes til."
-
-#~ msgid ""
-#~ "If you want to be able to create and see comments underneath recipes."
-#~ msgstr "Hvis du ønsker å opprette og se kommentarer under oppskrifter."
-
-#~ msgid ""
-#~ "Setting to 0 will disable auto sync. When viewing a shopping list the "
-#~ "list is updated every set seconds to sync changes someone else might have "
-#~ "made. Useful when shopping with multiple people but might use a little "
-#~ "bit of mobile data. If lower than instance limit it is reset when saving."
-#~ msgstr ""
-#~ "0 vil deaktivere automatisk synkronisering. Når en handleliste vises, "
-#~ "oppdateres listen med oppgitt antall sekunders mellomrom for å "
-#~ "synkronisere endringer fra andre brukere. Nyttig dersom flere brukere "
-#~ "handler samtidig. Datatrafikk oppstår når aktiv. Hvis verdien er lavere "
-#~ "enn grensen, tilbakestilles den ved lagring."
-
-#~ msgid "Makes the navbar stick to the top of the page."
-#~ msgstr "Fest navigasjonslinjen til toppen av siden."
-
-#~ msgid "New unit that other gets replaced by."
-#~ msgstr "Ny enhet som erstatter den gamle."
-
-#~ msgid "Old Unit"
-#~ msgstr "Gammel enhet"
-
-#~ msgid "Unit that should be replaced."
-#~ msgstr "Enhet som skal erstattes."
-
-#~ msgid "New food that other gets replaced by."
-#~ msgstr "Ny matvare som erstatter den gamle."
-
-#~ msgid "Old Food"
-#~ msgstr "Gammel matvare"
-
-#~ msgid "Food that should be replaced."
-#~ msgstr "Matvare som bør erstattes."
-
-#~ msgid "You must provide at least a recipe or a title."
-#~ msgstr "Du må oppgi minst en oppskrift eller en tittel."
-
-#~ msgid "You can list default users to share recipes with in the settings."
-#~ msgstr ""
-#~ "Du kan liste opp standardbrukere for å dele oppskrifter innen "
-#~ "innstillingene."
-
-#~ msgid ""
-#~ "You can use markdown to format this field. See the <a href=\"/docs/"
-#~ "markdown/\">docs here</a>"
-#~ msgstr ""
-#~ "Du kan bruke Markdown for å formatere dette feltet. Se <a href=\"/docs/"
-#~ "markdown/\">dokumentasjonen her</a>"
-
-#~ msgid ""
-#~ "A username is not required, if left blank the new user can choose one."
-#~ msgstr ""
-#~ "Et brukernavn er ikke påkrevd. Hvis det blir stående tomt, kan den nye "
-#~ "brukeren velge ett selv."
-
-#~ msgid "The requested site provided malformed data and cannot be read."
-#~ msgstr ""
-#~ "Nettstedet du har forespurt, har levert feilformatert data som ikke kan "
-#~ "leses."
-
-#~ msgid ""
-#~ "The requested site does not provide any recognized data format to import "
-#~ "the recipe from."
-#~ msgstr ""
-#~ "Det forespurte nettstedet gir ingen gjenkjennelig dataformat som kan "
-#~ "importeres oppskriften fra."
-
-#~ msgid "Small"
-#~ msgstr "Liten"
-
-#~ msgid "Large"
-#~ msgstr "Stor"
-
-#~ msgid "Time"
-#~ msgstr "Tid"
-
-#~ msgid "Link"
-#~ msgstr "Lenke"
-
-#~ msgid "Utensils"
-#~ msgstr "Redskaper"
-
-#~ msgid "Storage Data"
-#~ msgstr "Datalagring"
-
-#~ msgid "Configure Sync"
-#~ msgstr "Konfigurer synkronisering"
-
-#~ msgid "Discovered Recipes"
-#~ msgstr "Oppdagede oppskrifter"
-
-#~ msgid "Discovery Log"
-#~ msgstr "Logg Oppdagelser"
-
-#~ msgid "Statistics"
-#~ msgstr "Statistikk"
-
-#~ msgid "Units & Ingredients"
-#~ msgstr "Enheter & Ingredienser"
-
-#~ msgid "Logout"
-#~ msgstr "Logg ut"
-
-#~ msgid "New Book"
-#~ msgstr "Ny bok"
-
-#~ msgid "Toggle Recipes"
-#~ msgstr "Veksle oppskrifter"
-
-#~ msgid "There are no recipes in this book yet."
-#~ msgstr "Det er foreløpig ingen oppskrifter i denne boken."
-
-#~ msgid "Waiting Time"
-#~ msgstr "Ventetid"
-
-#~ msgid "Servings Text"
-#~ msgstr "Porsjon beskrivelse"
-
-#~ msgid "Select Keywords"
-#~ msgstr "Velg nøkkelord"
-
-#~ msgid "Add Keyword"
-#~ msgstr "Legg til nøkkelord"
-
-#~ msgid "Delete Step"
-#~ msgstr "Fjern trinn"
-
-#~ msgid "Step"
-#~ msgstr "Trinn"
-
-#~ msgid "Show as header"
-#~ msgstr "Vis som overskrift"
-
-#~ msgid "Hide as header"
-#~ msgstr "Skjul overskrift"
-
-#~ msgid "Move Up"
-#~ msgstr "Flytt oppover"
-
-#~ msgid "Move Down"
-#~ msgstr "Flytt nedover"
-
-#~ msgid "Step Name"
-#~ msgstr "Trinn navn"
-
-#~ msgid "Step Type"
-#~ msgstr "Trinn type"
-
-#~ msgid "Step time in Minutes"
-#~ msgstr "Trinn tid i minutter"
-
-#~ msgid "Select Unit"
-#~ msgstr "Velg enhet"
-
-#~ msgid "Select"
-#~ msgstr "Velg"
-
-#~ msgid "Select Food"
-#~ msgstr "Velg mat"
-
-#~ msgid "Note"
-#~ msgstr "Notis"
-
-#~ msgid "Delete Ingredient"
-#~ msgstr "Slett ingrediens"
-
-#~ msgid "Make Ingredient"
-#~ msgstr "Opprett ingrediens"
-
-#~ msgid "Disable Amount"
-#~ msgstr "Deaktiver mengde"
-
-#~ msgid "Enable Amount"
-#~ msgstr "Aktiver mengde"
-
-#~ msgid "Copy Template Reference"
-#~ msgstr "Kopier mal-referanse"
-
-#~ msgid "Save & View"
-#~ msgstr "Lagre og vis"
-
-#~ msgid "Add Step"
-#~ msgstr "Legg til trinn"
-
-#~ msgid "Add Nutrition"
-#~ msgstr "Legg til næringsinnhold"
-
-#~ msgid "Remove Nutrition"
-#~ msgstr "Fjern næringsinnhold"
-
-#~ msgid "View Recipe"
-#~ msgstr "Vis oppskrift"
-
-#~ msgid "Delete Recipe"
-#~ msgstr "Slett oppskrift"
-
-#~ msgid "Edit Ingredients"
-#~ msgstr "Rediger ingrediens"
-
-#~ msgid ""
-#~ "\n"
-#~ "        The following form can be used if, accidentally, two (or more) "
-#~ "units or ingredients where created that should be\n"
-#~ "        the same.\n"
-#~ "        It merges two units or ingredients and updates all recipes using "
-#~ "them.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Følgende skjema kan brukes dersom, tilfeldigvis, to eller flere "
-#~ "enheter eller ingredienser er opprettet,\n"
-#~ "        og burde være identiske.\n"
-#~ "        Det slår sammen to enheter eller ingredienser og oppdaterer alle "
-#~ "oppskrifter som inneholder disse.\n"
-#~ "    "
-
-#~ msgid "Are you sure that you want to merge these two units?"
-#~ msgstr "Er du sikker på at du vil slå sammen disse enhetene?"
-
-#~ msgid "Are you sure that you want to merge these two ingredients?"
-#~ msgstr "Er du sikker på at du vil slå sammen disse ingrediensene?"
-
-#~ msgid "Import Recipes"
-#~ msgstr "Importer oppskrifter"
-
-#~ msgid "Log Recipe Cooking"
-#~ msgstr "Loggfør tilberedt oppskrift"
-
-#~ msgid "All fields are optional and can be left empty."
-#~ msgstr "Alle felt er valgfri og kan stå tomme."
-
-#~ msgid "Rating"
-#~ msgstr "Vurdering"
-
-#~ msgid "Close"
-#~ msgstr "Lukk"
-
-#~ msgid "Open Recipe"
-#~ msgstr "Åpne oppskrift"
-
-#~ msgid "Website Import"
-#~ msgstr "Importer fra nettside"
-
-#~ msgid "New Entry"
-#~ msgstr "Ny oppføring"
-
-#~ msgid "Title"
-#~ msgstr "Tittel"
-
-#~ msgid "Note (optional)"
-#~ msgstr "Merknad (valgfritt)"
-
-#~ msgid ""
-#~ "You can use markdown to format this field. See the <a href=\"/docs/"
-#~ "markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">docs here</a>"
-#~ msgstr ""
-#~ "Du kan bruke Markdown for å formatere dette feltet. Se <a href=\"/docs/"
-#~ "markdown/\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentasjonen "
-#~ "her</a>"
-
-#~ msgid "Serving Count"
-#~ msgstr "Antall porsjoner"
-
-#~ msgid "Create only note"
-#~ msgstr "Opprett kun en merknad"
-
-#~ msgid "Shopping list currently empty"
-#~ msgstr "Handlelisten er for øyeblikket tom"
-
-#~ msgid "Number of Days"
-#~ msgstr "Antall dager"
-
-#~ msgid "Weekday offset"
-#~ msgstr "Ukedagsforskyvning"
-
-#~ msgid ""
-#~ "Number of days starting from the first day of the week to offset the "
-#~ "default view."
-#~ msgstr ""
-#~ "Antall dager fra den første dagen i uken for å endre standardvisningen."
-
-#~ msgid "Edit plan types"
-#~ msgstr "Rediger plantyper"
-
-#~ msgid "Week iCal export"
-#~ msgstr "Uke iCal-eksport"
-
-#~ msgid "Created by"
-#~ msgstr "Opprettet av"
-
-#~ msgid "Shared with"
-#~ msgstr "Delt med"
-
-#~ msgid "Add to Shopping"
-#~ msgstr "Legg til i handlelisten"
-
-#~ msgid "New meal type"
-#~ msgstr "Ny måltidstype"
-
-#~ msgid "Meal Plan Help"
-#~ msgstr "Hjelp for måltidsplanen"
-
-#~ msgid "Meal Plan View"
-#~ msgstr "Visning av måltidsplanen"
-
-#~ msgid "Other meals on this day"
-#~ msgstr "Andre måltider denne dagen"
-
-#~ msgid "Account"
-#~ msgstr "Konto"
-
-#~ msgid "Language"
-#~ msgstr "Språk"
-
-#~ msgid "Style"
-#~ msgstr "Stil"
-
-#~ msgid "Entry Mode"
-#~ msgstr "Oppføringsmodus"
-
-#~ msgid "Add Entry"
-#~ msgstr "Legg til oppføring"
-
-#~ msgid "Amount"
-#~ msgstr "Mengde"
-
-#~ msgid "Select Supermarket"
-#~ msgstr "Velg butikk"
-
-#~ msgid "Select User"
-#~ msgstr "Velg bruker"
-
-#~ msgid "Finished"
-#~ msgstr "Fullført"
+msgstr ""

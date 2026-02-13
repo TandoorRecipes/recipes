@@ -44,7 +44,7 @@ const fdcDataTypeSelection = ref(['Foundation','Survey (FNDDS)','SR Legacy'])
 function fdcSearch() {
     let api = new ApiApi()
     loading.value = true
-    api.apiFdcSearchRetrieve({query: query.value, dataType: fdcDataTypeSelection.value.join(',') }).then(r => {
+    api.apiFdcSearchRetrieve({query: query.value, dataType: fdcDataTypeSelection.value }).then(r => {
         fdcQueryResults.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

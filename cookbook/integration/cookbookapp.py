@@ -2,7 +2,7 @@ import re
 from io import BytesIO
 from typing import Any
 
-import requests
+from cookbook.helper.HelperFunctions import safe_request
 import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -123,7 +123,7 @@ class CookBookApp(Integration):
         if 'image' in recipe_json and len(recipe_json['image']) > 0:
             try:
                 url = recipe_json["image"]
-                response = requests.get(url)
+                response = safe_request('GET', url)
                 self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:
                 print(f'Failed to import image for {recipe.name}', str(e))

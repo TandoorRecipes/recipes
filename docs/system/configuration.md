@@ -165,6 +165,16 @@ MEDIA_URL=/media/
 Where mediafiles should be stored on disk. The default location is a
 `mediafiles` subfolder at the root of the application directory.
 
+#### Local Storage Paths
+
+> default `<MEDIA_ROOT>/local_provider` - options: `/path/to/local/recipes,/another/path` (comma separated list)
+
+Allowed paths for the local provider. The local provider will only serve files that are within these paths.
+
+```
+LOCAL_STORAGE_PATHS=/path/to/local/recipes
+```
+
 #### Gunicorn Workers
 
 > default `3` - options `1-X`

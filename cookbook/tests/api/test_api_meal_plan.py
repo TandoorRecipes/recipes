@@ -232,8 +232,12 @@ def test_ical(arg, request, obj_1, obj_3, u1_s1):
 
 def test_ical_event(obj_1, u1_s1):
     r = u1_s1.get(f'{reverse(ICAL_URL)}')
+    assert r.status_code == 200
+    assert r['Content-Type'] == 'text/calendar'
+    assert 'inline' in r['Content-Disposition']
 
     cal = Calendar.from_ical(r.getvalue().decode('UTF-8'))
+
     events = cal.walk('VEVENT')
     assert len(events) == 1
 

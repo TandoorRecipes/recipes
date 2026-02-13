@@ -315,6 +315,7 @@
   "Link": "Link",
   "Load": "Laden",
   "Load_More": "Weitere laden",
+  "LocalStoragePathHelp": "Der lokale Pfad muss innerhalb der in den Servereinstellungen festgelegten LOCAL_STORAGE_PATHS liege.",
   "LogCredits": "Credits Protokollieren",
   "LogCreditsHelp": "Protokolliere die Credit Kosten der AI Anfragen. Ohne diese Protokollierung können Nutzer unbgerenzt viele Anfragen stellen.",
   "Log_Cooking": "Kochen protokollieren",

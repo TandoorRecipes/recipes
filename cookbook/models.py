@@ -110,6 +110,7 @@ class TreeManager(MP_NodeManager):
                 if 'Key (path)' in e.args[0]:
                     self.model.fix_tree(fix_paths=True)
                     return self.model.add_root(**kwargs), True
+                raise e
 
 
 class TreeModel(MP_Node):
