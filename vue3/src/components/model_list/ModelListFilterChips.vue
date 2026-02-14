@@ -9,6 +9,7 @@
             variant="tonal"
             :color="chipColor(filter.def, filter.value)"
             :prepend-icon="filter.def.icon"
+            :style="filter.def.type !== 'tristate' ? 'cursor: default' : undefined"
             @click="toggleFilter(filter.def, filter.value)"
             @click:close="clearFilter(filter.key)"
         >
@@ -26,15 +27,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, shallowReactive, watch} from 'vue'
+import {computed, reactive, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {FilterDef} from '@/composables/modellist/types'
+import type {ModelFilterDef} from '@/composables/modellist/types'
 import {getGenericModelFromString} from '@/types/Models'
 
 const {t} = useI18n()
 
 const props = defineProps<{
-    filterDefs: FilterDef[]
+    filterDefs: ModelFilterDef[]
     getFilter: (key: string) => string | undefined
     setFilter: (key: string, value: string | undefined) => void
     clearFilter: (key: string) => void
@@ -42,12 +43,8 @@ const props = defineProps<{
     activeFilterCount: number
 }>()
 
-const emit = defineEmits<{
-    'open-filters': []
-}>()
-
 const activeFilters = computed(() => {
-    const result: {key: string, def: FilterDef, value: string}[] = []
+    const result: {key: string, def: ModelFilterDef, value: string}[] = []
     for (const def of props.filterDefs) {
         const value = props.getFilter(def.key)
         if (value !== undefined && value !== '') {
@@ -58,15 +55,13 @@ const activeFilters = computed(() => {
 })
 
 /** Cache resolved names for model-select filters: "modelName:id" → display name */
-const nameCache = shallowReactive(new Map<string, string>())
-/** Track in-flight API requests to prevent duplicate fetches */
-const inFlight = new Set<string>()
+const nameCache = reactive(new Map<string, string>())
 
 watch(activeFilters, (filters) => {
     const modelSelectFilters = filters.filter(f => f.def.type === 'model-select' && f.def.modelName)
     for (const f of modelSelectFilters) {
         const cacheKey = `${f.def.modelName}:${f.value}`
-        if (nameCache.has(cacheKey) || inFlight.has(cacheKey)) continue
+        if (nameCache.has(cacheKey)) continue
         const id = Number(f.value)
         if (Number.isNaN(id)) {
             nameCache.set(cacheKey, String(f.value))
@@ -75,19 +70,16 @@ watch(activeFilters, (filters) => {
         nameCache.set(cacheKey, String(f.value))  // placeholder with ID prevents duplicate requests
         const gm = getGenericModelFromString(f.def.modelName!, t)
         if (!gm) continue
-        inFlight.add(cacheKey)
         gm.retrieve(id).then((obj: any) => {
             const label = gm.model.itemLabel ?? 'name'
             nameCache.set(cacheKey, obj[label] ?? String(f.value))
         }).catch(() => {
             nameCache.set(cacheKey, String(f.value))
-        }).finally(() => {
-            inFlight.delete(cacheKey)
         })
     }
 }, {immediate: true})
 
-function chipLabel(def: FilterDef, value: string): string {
+function chipLabel(def: ModelFilterDef, value: string): string {
     if (def.type === 'tristate') {
         return t(def.labelKey)
     }
@@ -95,29 +87,19 @@ function chipLabel(def: FilterDef, value: string): string {
         const name = nameCache.get(`${def.modelName}:${value}`)
         return name ? `${t(def.labelKey)}: ${name}` : t(def.labelKey)
     }
-    if (def.type === 'number') {
-        const suffix = def.suffixKey ? ` ${t(def.suffixKey).toLowerCase()}` : ''
-        return `${t(def.labelKey)}: ${value}${suffix}`
-    }
     return t(def.labelKey)
 }
 
-function chipColor(def: FilterDef, value: string): string {
+function chipColor(def: ModelFilterDef, value: string): string {
     if (def.type === 'tristate') {
         return value === '1' ? 'success' : 'error'
-    }
-    if (def.type === 'number') {
-        return 'warning'
     }
     return 'primary'
 }
 
-function toggleFilter(def: FilterDef, value: string): void {
+function toggleFilter(def: ModelFilterDef, value: string): void {
     if (def.type === 'tristate') {
         props.setFilter(def.key, value === '1' ? '0' : '1')
-    } else {
-        // model-select and number filters open the filter panel
-        emit('open-filters')
     }
 }
 </script>
