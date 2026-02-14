@@ -1,9 +1,13 @@
 <template>
     <v-tabs-window :model-value="currentTab" @update:model-value="emit('update:currentTab', $event)">
         <v-tabs-window-item value="filters">
-            <div class="pa-4 text-body-2 text-medium-emphasis">
-                {{ $t('No filters available yet.') }}
-            </div>
+            <model-filter-panel
+                :grouped-filter-defs="groupedFilterDefs"
+                :get-filter="getFilter"
+                :set-filter="setFilter"
+                :clear-all-filters="clearAllFilters"
+                :active-filter-count="activeFilterCount"
+            />
         </v-tabs-window-item>
 
         <v-tabs-window-item value="settings">
@@ -55,6 +59,8 @@
 <script setup lang="ts">
 import {PropType} from 'vue'
 import type {ModelTableHeaders} from '@/types/Models'
+import type {ModelFilterDef} from '@/composables/modellist/types'
+import ModelFilterPanel from '@/components/model_list/filters/ModelFilterPanel.vue'
 
 defineProps({
     currentTab: {type: String, required: true},
@@ -64,6 +70,11 @@ defineProps({
     toggleColumn: {type: Function as PropType<(key: string) => void>, required: true},
     getDisplayMode: {type: Function as PropType<(key: string) => 'icon' | 'text'>, required: true},
     setDisplayMode: {type: Function as PropType<(key: string, mode: 'icon' | 'text') => void>, required: true},
+    groupedFilterDefs: {type: Object as PropType<Map<string, ModelFilterDef[]>>, default: () => new Map()},
+    getFilter: {type: Function as PropType<(key: string) => string | undefined>, default: () => () => undefined},
+    setFilter: {type: Function as PropType<(key: string, value: string | undefined) => void>, default: () => () => {}},
+    clearAllFilters: {type: Function as PropType<() => void>, default: () => () => {}},
+    activeFilterCount: {type: Number, default: 0},
 })
 
 const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders'])

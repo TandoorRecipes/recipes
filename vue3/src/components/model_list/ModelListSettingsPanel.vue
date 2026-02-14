@@ -44,6 +44,11 @@
             :get-display-mode="getDisplayMode"
             :set-display-mode="setDisplayMode"
             v-model:show-column-headers="showColumnHeaders"
+            :grouped-filter-defs="groupedFilterDefs"
+            :get-filter="getFilter"
+            :set-filter="setFilter"
+            :clear-all-filters="clearAllFilters"
+            :active-filter-count="activeFilterCount"
         />
     </v-navigation-drawer>
 
@@ -74,6 +79,11 @@
                     :get-display-mode="getDisplayMode"
                     :set-display-mode="setDisplayMode"
                     v-model:show-column-headers="showColumnHeaders"
+                    :grouped-filter-defs="groupedFilterDefs"
+                    :get-filter="getFilter"
+                    :set-filter="setFilter"
+                    :clear-all-filters="clearAllFilters"
+                    :active-filter-count="activeFilterCount"
                 />
             </v-card-text>
         </v-card>
@@ -85,6 +95,7 @@ import {computed, PropType} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {Model, ModelTableHeaders} from '@/types/Models'
+import type {ModelFilterDef} from '@/composables/modellist/types'
 import SettingsPanelTabsContent from '@/components/model_list/SettingsPanelTabsContent.vue'
 
 const props = defineProps({
@@ -96,6 +107,11 @@ const props = defineProps({
     toggleColumn: {type: Function as PropType<(key: string) => void>, required: true},
     getDisplayMode: {type: Function as PropType<(key: string) => 'icon' | 'text'>, required: true},
     setDisplayMode: {type: Function as PropType<(key: string, mode: 'icon' | 'text') => void>, required: true},
+    groupedFilterDefs: {type: Object as PropType<Map<string, ModelFilterDef[]>>, default: () => new Map()},
+    getFilter: {type: Function as PropType<(key: string) => string | undefined>, default: () => () => undefined},
+    setFilter: {type: Function as PropType<(key: string, value: string | undefined) => void>, default: () => () => {}},
+    clearAllFilters: {type: Function as PropType<() => void>, default: () => () => {}},
+    activeFilterCount: {type: Number, default: 0},
 })
 
 const emit = defineEmits(['update:modelValue', 'update:activeTab'])

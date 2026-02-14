@@ -50,17 +50,23 @@ export function useModelListFilters(model: ComputedRef<Model | undefined>) {
 
     const activeFilterCount = computed<number>(() => parseFilters().size)
 
-    /** Convert filter values to API-ready types (string → number for tristate and model-select) */
+    /** Convert snake_case to camelCase for OpenAPI client compatibility */
+    function snakeToCamel(s: string): string {
+        return s.replace(/_([a-z])/g, (_, c) => c.toUpperCase())
+    }
+
+    /** Convert filter values to API-ready types and camelCase keys for the OpenAPI client */
     const filterParams = computed<Record<string, string | number>>(() => {
         const map = parseFilters()
         if (map.size === 0) return {}
         const params: Record<string, string | number> = {}
         for (const [key, val] of map) {
             const def = filterDefs.value.find(d => d.key === key)
+            const paramKey = snakeToCamel(key)
             if (def?.type === 'tristate' || def?.type === 'model-select') {
-                params[key] = Number(val)
+                params[paramKey] = Number(val)
             } else {
-                params[key] = val
+                params[paramKey] = val
             }
         }
         return params
