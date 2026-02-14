@@ -7,6 +7,8 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from icalendar import Calendar
+from oauth2_provider.models import AccessToken
+from rest_framework.test import APIClient
 
 from cookbook.models import MealPlan, MealType
 from cookbook.tests.factories import RecipeFactory
@@ -324,6 +326,30 @@ def test_create_date_only_gets_noon_default(u1_s1, recipe_1_s1, meal_type):
     assert local_from.minute == 0
     assert local_to.hour == 12
     assert local_to.minute == 0
+
+
+def test_token_permissions(u1_s1, obj_1):
+    user = auth.get_user(u1_s1)
+
+    # Client with read write scope
+    rw_client = APIClient()
+    rw_token = AccessToken.objects.create(user=user, scope='read write', expires=timezone.now() + timedelta(days=1), token='rw_token')
+    rw_client.credentials(HTTP_AUTHORIZATION=f'Bearer {rw_token.token}')
+
+    # should be able to use normal endpoints
+    assert rw_client.get(reverse(LIST_URL)).status_code == 200
+    # should NOT be able to use ical endpoint (it requires 'mealplan' scope)
+    assert rw_client.get(reverse(ICAL_URL)).status_code == 403
+
+    # Client with mealplan scope
+    mp_client = APIClient()
+    mp_token = AccessToken.objects.create(user=user, scope='mealplan', expires=timezone.now() + timedelta(days=1), token='mp_token')
+    mp_client.credentials(HTTP_AUTHORIZATION=f'Bearer {mp_token.token}')
+
+    # should be able to use ical endpoint
+    assert mp_client.get(reverse(ICAL_URL)).status_code == 200
+    # should NOT be able to use normal endpoints
+    assert mp_client.get(reverse(LIST_URL)).status_code == 403
 
 
 def test_create_date_only_with_meal_type_time(u1_s1, recipe_1_s1, space_1):
