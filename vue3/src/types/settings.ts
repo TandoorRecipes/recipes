@@ -28,6 +28,7 @@ export type DeviceSettings = {
 
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
+    general_showModelListDescription: boolean
 
     // Food list settings
     food_hiddenColumns: string[] | null
