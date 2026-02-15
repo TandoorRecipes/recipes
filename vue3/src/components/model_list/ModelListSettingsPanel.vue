@@ -49,6 +49,9 @@
             :set-filter="setFilter"
             :clear-all-filters="clearAllFilters"
             :active-filter-count="activeFilterCount"
+            :action-defs="actionDefs"
+            :quick-action-keys="quickActionKeys"
+            :set-quick-action-keys="setQuickActionKeys"
         />
     </v-navigation-drawer>
 
@@ -84,6 +87,9 @@
                     :set-filter="setFilter"
                     :clear-all-filters="clearAllFilters"
                     :active-filter-count="activeFilterCount"
+                    :action-defs="actionDefs"
+                    :quick-action-keys="quickActionKeys"
+                    :set-quick-action-keys="setQuickActionKeys"
                 />
             </v-card-text>
         </v-card>
@@ -95,7 +101,7 @@ import {computed, PropType} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {Model, ModelTableHeaders} from '@/types/Models'
-import type {ModelFilterDef} from '@/composables/modellist/types'
+import type {ModelActionDef, ModelFilterDef} from '@/composables/modellist/types'
 import SettingsPanelTabsContent from '@/components/model_list/SettingsPanelTabsContent.vue'
 
 const props = defineProps({
@@ -112,6 +118,7 @@ const props = defineProps({
     setFilter: {type: Function as PropType<(key: string, value: string | undefined) => void>, default: () => () => {}},
     clearAllFilters: {type: Function as PropType<() => void>, default: () => () => {}},
     activeFilterCount: {type: Number, default: 0},
+    actionDefs: {type: Array as PropType<ModelActionDef[]>, default: () => []},
 })
 
 const emit = defineEmits(['update:modelValue', 'update:activeTab'])
@@ -129,11 +136,11 @@ const settingsKey = computed(() => props.model.listSettings?.settingsKey ?? '')
 const isPinned = computed({
     get: () => {
         if (!settingsKey.value) return false
-        return (deviceSettings as any)[`${settingsKey.value}_panelPinned`] ?? false
+        return (deviceSettings as any)[`${settingsKey.value}_settingsPinned`] ?? false
     },
     set: (val: boolean) => {
         if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_panelPinned`] = val
+        ;(deviceSettings as any)[`${settingsKey.value}_settingsPinned`] = val
     },
 })
 
@@ -156,4 +163,19 @@ const showColumnHeaders = computed({
 const toggleableColumns = computed(() => {
     return props.allColumns.filter(c => c.key !== 'name')
 })
+
+const quickActionKeys = computed({
+    get: () => {
+        if (!settingsKey.value) return []
+        return (deviceSettings as any)[`${settingsKey.value}_quickActions`] ?? []
+    },
+    set: (val: string[]) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_quickActions`] = val
+    },
+})
+
+function setQuickActionKeys(val: string[]) {
+    quickActionKeys.value = val
+}
 </script>
