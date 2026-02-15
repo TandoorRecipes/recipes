@@ -76,6 +76,16 @@
                     density="compact"
                 />
             </div>
+            <div class="px-4 py-1" v-if="treeAvailable">
+                <v-switch
+                    :model-value="treeEnabled"
+                    @update:model-value="emit('update:treeEnabled', $event)"
+                    :label="$t('TreeView')"
+                    color="primary"
+                    hide-details
+                    density="compact"
+                />
+            </div>
         </v-tabs-window-item>
     </v-tabs-window>
 </template>
@@ -102,9 +112,11 @@ const props = defineProps({
     actionDefs: {type: Array as PropType<ModelActionDef[]>, default: () => []},
     quickActionKeys: {type: Array as PropType<string[]>, default: () => []},
     setQuickActionKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
+    treeAvailable: {type: Boolean, default: false},
+    treeEnabled: {type: Boolean, default: false},
 })
 
-const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders'])
+const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled'])
 
 const selectedCount = computed(() => props.quickActionKeys.length)
 

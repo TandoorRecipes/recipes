@@ -52,6 +52,8 @@
             :action-defs="actionDefs"
             :quick-action-keys="quickActionKeys"
             :set-quick-action-keys="setQuickActionKeys"
+            :tree-available="treeAvailable"
+            v-model:tree-enabled="treeEnabled"
         />
     </v-navigation-drawer>
 
@@ -90,6 +92,8 @@
                     :action-defs="actionDefs"
                     :quick-action-keys="quickActionKeys"
                     :set-quick-action-keys="setQuickActionKeys"
+                    :tree-available="treeAvailable"
+                    v-model:tree-enabled="treeEnabled"
                 />
             </v-card-text>
         </v-card>
@@ -157,6 +161,21 @@ const showColumnHeaders = computed({
     set: (val: boolean) => {
         if (!settingsKey.value) return
         ;(deviceSettings as any)[`${settingsKey.value}_showColumnHeaders`] = val
+    },
+})
+
+const treeAvailable = computed(() =>
+    !!props.model.isTree && !!props.model.listSettings?.treeEnabled
+)
+
+const treeEnabled = computed({
+    get: () => {
+        if (!settingsKey.value) return false
+        return (deviceSettings as any)[`${settingsKey.value}_treeView`] ?? false
+    },
+    set: (val: boolean) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_treeView`] = val
     },
 })
 

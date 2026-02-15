@@ -1,43 +1,47 @@
-/**
- * Composable for tree view in ModelListPage. Manages expand/collapse state,
- * lazy child loading with pagination, flat-list construction from hierarchical data,
- * and tree-aware cell rendering (indentation, chevrons, load-more sentinels).
- */
-import {computed, h, shallowRef, shallowReactive, watch, type ComputedRef, type Ref, type VNode, type WritableComputedRef} from 'vue'
+import {computed, ref, watch, type ComputedRef} from 'vue'
+import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import {useMessageStore, ErrorMessageType} from '@/stores/MessageStore'
 import type {Model} from '@/types/Models'
-import type {ModelItem} from './types'
 
-/** Page size for child fetches (independent of the table's page size) */
-const CHILD_PAGE_SIZE = 100
+/** Practical ceiling for child fetch — food hierarchies rarely exceed this */
+const MAX_CHILDREN = 500
 
-export {CHILD_PAGE_SIZE}
-
-interface ChildrenCacheEntry {
-    items: ModelItem[]
-    hasMore: boolean
-    page: number
-}
+export {MAX_CHILDREN}
 
 /**
  * Composable managing tree expand/collapse state for ModelListPage.
  *
- * Accepts a `treeEnabled` setting ref and a `fetchChildren` callback
- * to stay decoupled from device settings and GenericModel.
+ * Accepts a `fetchChildren` callback to stay decoupled from GenericModel.
+ * The callback should return the array of child items for a given parent ID.
  */
 export function useModelListTree(
     model: ComputedRef<Model | undefined>,
-    fetchChildren: (parentId: number, page: number) => Promise<{results: ModelItem[], hasMore: boolean}>,
-    treeEnabled: WritableComputedRef<boolean>,
+    fetchChildren: (parentId: number) => Promise<any[]>,
 ) {
+    const deviceSettings = useUserPreferenceStore().deviceSettings
+
+    const settingsKey = computed(() => model.value?.listSettings?.settingsKey ?? '')
+
+    /** User preference toggle — persisted in device settings */
+    const treeEnabled = computed({
+        get: () => {
+            if (!settingsKey.value) return false
+            return (deviceSettings as any)[`${settingsKey.value}_treeView`] ?? false
+        },
+        set: (val: boolean) => {
+            if (!settingsKey.value) return
+            ;(deviceSettings as any)[`${settingsKey.value}_treeView`] = val
+        },
+    })
+
     /** Tree is active when user enabled it AND the model supports it */
     const treeActive = computed(() =>
         treeEnabled.value && !!model.value?.isTree && !!model.value?.listSettings?.treeEnabled
     )
 
-    const expandedIds = shallowRef<Set<number>>(new Set())
-    const loadingIds = shallowRef<Set<number>>(new Set())
-    const childrenCache = shallowReactive(new Map<number, ChildrenCacheEntry>())
+    const expandedIds = ref<Set<number>>(new Set())
+    const loadingIds = ref<Set<number>>(new Set())
+    const childrenCache = new Map<number, any[]>()
 
     /** Optional callback invoked when children are removed from view on collapse */
     let onCollapseCallback: ((removedIds: number[]) => void) | undefined
@@ -48,8 +52,7 @@ export function useModelListTree(
 
     /** Recursively collect all expanded descendant IDs */
     function collectExpandedDescendants(parentId: number): number[] {
-        const cached = childrenCache.get(parentId)
-        const children = cached?.items ?? []
+        const children = childrenCache.get(parentId) ?? []
         const removed: number[] = []
         for (const child of children) {
             removed.push(child.id)
@@ -79,8 +82,8 @@ export function useModelListTree(
             loadingIds.value.add(id)
             loadingIds.value = new Set(loadingIds.value)
             try {
-                const result = await fetchChildren(id, 1)
-                childrenCache.set(id, {items: result.results, hasMore: result.hasMore, page: 1})
+                const children = await fetchChildren(id)
+                childrenCache.set(id, children)
             } catch (e) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, e)
                 return
@@ -94,37 +97,63 @@ export function useModelListTree(
         expandedIds.value = new Set(expandedIds.value)
     }
 
-    async function loadMoreChildren(parentId: number) {
-        const cached = childrenCache.get(parentId)
-        if (!cached || !cached.hasMore) return
-
-        loadingIds.value.add(parentId)
-        loadingIds.value = new Set(loadingIds.value)
-        try {
-            const nextPage = cached.page + 1
-            const result = await fetchChildren(parentId, nextPage)
-            cached.items = [...cached.items, ...result.results]
-            cached.hasMore = result.hasMore
-            cached.page = nextPage
-            // Trigger reactivity via expandedIds reassignment
-            expandedIds.value = new Set(expandedIds.value)
-        } catch (e) {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, e)
-        } finally {
-            loadingIds.value.delete(parentId)
+    async function expandAll(rootItems: any[]) {
+        const expandable = rootItems.filter(item => (item.numchild ?? 0) > 0)
+        // Fetch all uncached children concurrently
+        const uncached = expandable.filter(item => !childrenCache.has(item.id))
+        if (uncached.length > 0) {
+            for (const item of uncached) {
+                loadingIds.value.add(item.id)
+            }
             loadingIds.value = new Set(loadingIds.value)
+            try {
+                const results = await Promise.allSettled(
+                    uncached.map(item => fetchChildren(item.id).then(children => ({id: item.id, children})))
+                )
+                for (const result of results) {
+                    if (result.status === 'fulfilled') {
+                        childrenCache.set(result.value.id, result.value.children)
+                    }
+                }
+            } finally {
+                for (const item of uncached) {
+                    loadingIds.value.delete(item.id)
+                }
+                loadingIds.value = new Set(loadingIds.value)
+            }
+        }
+        // Expand all that have cached children
+        const newExpanded = new Set(expandedIds.value)
+        for (const item of expandable) {
+            if (childrenCache.has(item.id)) {
+                newExpanded.add(item.id)
+            }
+        }
+        expandedIds.value = newExpanded
+    }
+
+    function collapseAll() {
+        const allRemoved: number[] = []
+        for (const id of expandedIds.value) {
+            const children = childrenCache.get(id) ?? []
+            for (const child of children) {
+                allRemoved.push(child.id)
+            }
+        }
+        expandedIds.value = new Set()
+        if (onCollapseCallback && allRemoved.length > 0) {
+            onCollapseCallback(allRemoved)
         }
     }
 
     /**
      * Walks root items and inserts children of expanded nodes inline.
      * Adds `_depth` (0 = root) and `_isLoading` properties to each item.
-     * If an expanded node has more pages, appends a sentinel `_isLoadMore` row.
      */
-    function buildFlatList(rootItems: ModelItem[]): ModelItem[] {
-        const result: ModelItem[] = []
+    function buildFlatList(rootItems: any[]): any[] {
+        const result: any[] = []
 
-        function walk(items: ModelItem[], depth: number) {
+        function walk(items: any[], depth: number) {
             for (const item of items) {
                 result.push({
                     ...item,
@@ -132,18 +161,8 @@ export function useModelListTree(
                     _isLoading: loadingIds.value.has(item.id),
                 })
                 if (expandedIds.value.has(item.id)) {
-                    const cached = childrenCache.get(item.id)
-                    const children = cached?.items ?? []
+                    const children = childrenCache.get(item.id) ?? []
                     walk(children, depth + 1)
-                    if (cached?.hasMore) {
-                        result.push({
-                            _isLoadMore: true,
-                            _parentId: item.id,
-                            _depth: depth + 1,
-                            id: -item.id,
-                            name: '',
-                        })
-                    }
                 }
             }
         }
@@ -152,18 +171,9 @@ export function useModelListTree(
         return result
     }
 
-    /** Update a single item inside the children cache (e.g. after a toggle action) */
-    function updateCachedChild(itemId: number, field: string, value: unknown): boolean {
-        for (const [parentId, entry] of childrenCache) {
-            const idx = entry.items.findIndex(i => i.id === itemId)
-            if (idx >= 0) {
-                entry.items[idx] = {...entry.items[idx], [field]: value} as ModelItem
-                // Trigger reactivity so buildFlatList re-spreads
-                expandedIds.value = new Set(expandedIds.value)
-                return true
-            }
-        }
-        return false
+    /** Returns `{root: 0}` when tree is active so the API returns only roots */
+    function getTreeLoadParams(): Record<string, any> {
+        return treeActive.value ? {root: 0} : {}
     }
 
     function clearTreeState() {
@@ -172,61 +182,9 @@ export function useModelListTree(
         childrenCache.clear()
     }
 
-    /**
-     * Render a tree-aware name cell for the desktop DataTable.
-     * Handles indentation, expand/collapse chevrons, load-more sentinels.
-     * Call site provides the name content VNode and layout context.
-     */
-    function renderTreeCell(item: ModelItem, nameContent: VNode | string, mobile: Ref<boolean>, t: (key: string) => string): VNode {
-        const step = mobile.value ? 20 : 28
-
-        if (item._isLoadMore) {
-            const depth = item._depth ?? 0
-            const isLoading = loadingIds.value.has(item._parentId)
-            return h('div', {class: 'd-flex align-center', style: {paddingLeft: `${depth * step}px`}}, [
-                h('button', {
-                    type: 'button',
-                    class: 'text-primary text-caption font-weight-medium',
-                    style: {cursor: 'pointer', appearance: 'none', border: 'none', background: 'none', padding: '4px 8px'},
-                    disabled: isLoading,
-                    'aria-label': t('Load_More'),
-                    onClick: (e: Event) => { e.stopPropagation(); loadMoreChildren(item._parentId) },
-                }, [
-                    h('i', {class: isLoading ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-ellipsis', style: {fontSize: '12px', marginRight: '6px'}}),
-                    t('Load_More'),
-                ]),
-            ])
-        }
-
-        const depth = item._depth ?? 0
-        const hasChildren = (item.numchild ?? 0) > 0
-        const isExpanded = expandedIds.value.has(item.id)
-        const isLoading = item._isLoading
-
-        const children: VNode[] = []
-
-        if (hasChildren) {
-            if (isLoading) {
-                children.push(h('span', {class: 'tree-expand-btn', style: {width: '28px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', opacity: '0.4'}},
-                    [h('i', {class: 'fa-solid fa-chevron-down', style: {fontSize: '12px'}})]
-                ))
-            } else {
-                children.push(h('button', {
-                    class: ['tree-expand-btn', isExpanded ? 'tree-chevron-expanded' : ''],
-                    style: {cursor: 'pointer', width: '28px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', appearance: 'none', border: 'none', background: 'none', padding: 0},
-                    'aria-expanded': isExpanded,
-                    'aria-label': t('Toggle'),
-                    onClick: (e: Event) => { e.stopPropagation(); toggleExpand(item.id) },
-                    onKeydown: (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleExpand(item.id) } },
-                }, [h('i', {class: 'fa-solid fa-chevron-right', style: {fontSize: '12px'}})]))
-            }
-        } else if (depth > 0) {
-            children.push(h('span', {style: {width: '28px', display: 'inline-block'}}))
-        }
-
-        children.push(nameContent as VNode)
-
-        return h('div', {class: 'd-flex align-center', style: {paddingLeft: `${depth * step}px`}}, children)
+    /** Returns true if any item in the list has children */
+    function hasExpandableItems(items: any[]): boolean {
+        return items.some(item => (item.numchild ?? 0) > 0)
     }
 
     // Clear tree state when tree mode changes
@@ -235,15 +193,17 @@ export function useModelListTree(
     })
 
     return {
+        treeEnabled,
         treeActive,
         expandedIds,
         loadingIds,
         toggleExpand,
-        loadMoreChildren,
+        expandAll,
+        collapseAll,
         buildFlatList,
-        updateCachedChild,
+        getTreeLoadParams,
         clearTreeState,
+        hasExpandableItems,
         setOnCollapse,
-        renderTreeCell,
     }
 }
