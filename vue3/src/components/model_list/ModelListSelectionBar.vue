@@ -16,7 +16,7 @@
                 <v-menu activator="parent" close-on-content-click>
                     <v-list density="compact">
                         <v-list-item @click="emit('select-all')">
-                            {{ $t('All') }}
+                            {{ $t('Select_Page') }}
                         </v-list-item>
                         <v-list-item @click="emit('select-none')">
                             {{ $t('None') }}

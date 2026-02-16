@@ -1,13 +1,14 @@
 <template>
     <div class="d-flex align-center justify-end">
         <template v-for="action in quickActions" :key="action.key">
-            <v-tooltip :text="$t(action.labelKey)" location="top" :open-delay="1200">
+            <v-tooltip :text="$t(action.labelKey)" location="top" :open-delay="400">
                 <template #activator="{ props: tooltipProps }">
                     <v-btn
                         v-bind="tooltipProps"
                         icon
                         variant="plain"
                         size="small"
+                        :aria-label="$t(action.labelKey)"
                         @click.stop="$emit('action', action.key, item)"
                     >
                         <v-icon
@@ -20,9 +21,9 @@
             </v-tooltip>
         </template>
 
-        <v-btn icon="$menu" variant="plain">
+        <v-btn icon="$menu" variant="plain" :aria-label="$t('Actions')">
             <v-icon icon="$menu" />
-            <v-menu activator="parent" close-on-content-click>
+            <v-menu v-model="menuOpen" activator="parent" :close-on-content-click="false">
                 <v-list density="compact">
                     <template v-for="([group, defs], groupIdx) in groupedActionDefs" :key="group">
                         <v-divider v-if="groupIdx > 0" />
@@ -44,7 +45,7 @@
                                 v-else-if="!action.isToggle && isVisible(action)"
                                 :prepend-icon="action.icon"
                                 :class="action.isDanger ? 'text-error' : undefined"
-                                @click="$emit('action', action.key, item)"
+                                @click="menuOpen = false; $emit('action', action.key, item)"
                             >
                                 {{ $t(action.labelKey) }}
                             </v-list-item>
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, ref} from 'vue'
 import type {ModelActionDef} from '@/composables/modellist/types'
 
 const props = defineProps<{
@@ -71,6 +72,8 @@ const props = defineProps<{
 defineEmits<{
     action: [key: string, item: any]
 }>()
+
+const menuOpen = ref(false)
 
 const quickActions = computed(() =>
     (props.quickActionKeys ?? [])

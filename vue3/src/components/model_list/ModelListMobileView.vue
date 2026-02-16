@@ -1,8 +1,12 @@
 <template>
     <div>
-        <v-progress-linear v-if="loading" indeterminate color="primary" />
+        <v-progress-linear v-if="loading && items.length > 0" indeterminate color="primary" />
 
-        <v-list v-if="items.length > 0 || loading" lines="two" density="compact">
+        <template v-if="loading && items.length === 0">
+            <v-skeleton-loader v-for="n in 4" :key="n" type="list-item" />
+        </template>
+
+        <v-list v-if="items.length > 0" lines="two" density="compact">
             <v-list-item
                 v-for="item in items"
                 :key="item.id"
@@ -30,6 +34,8 @@
                                 variant="plain"
                                 size="x-small"
                                 class="tree-chevron-spacer"
+                                :aria-label="$t('Toggle')"
+                                :aria-expanded="expandedIds.has(item.id)"
                                 @click.stop="toggleExpand(item.id)"
                             >
                                 <v-icon

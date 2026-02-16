@@ -97,55 +97,6 @@ export function useModelListTree(
         expandedIds.value = new Set(expandedIds.value)
     }
 
-    async function expandAll(rootItems: any[]) {
-        const expandable = rootItems.filter(item => (item.numchild ?? 0) > 0)
-        // Fetch all uncached children concurrently
-        const uncached = expandable.filter(item => !childrenCache.has(item.id))
-        if (uncached.length > 0) {
-            for (const item of uncached) {
-                loadingIds.value.add(item.id)
-            }
-            loadingIds.value = new Set(loadingIds.value)
-            try {
-                const results = await Promise.allSettled(
-                    uncached.map(item => fetchChildren(item.id).then(children => ({id: item.id, children})))
-                )
-                for (const result of results) {
-                    if (result.status === 'fulfilled') {
-                        childrenCache.set(result.value.id, result.value.children)
-                    }
-                }
-            } finally {
-                for (const item of uncached) {
-                    loadingIds.value.delete(item.id)
-                }
-                loadingIds.value = new Set(loadingIds.value)
-            }
-        }
-        // Expand all that have cached children
-        const newExpanded = new Set(expandedIds.value)
-        for (const item of expandable) {
-            if (childrenCache.has(item.id)) {
-                newExpanded.add(item.id)
-            }
-        }
-        expandedIds.value = newExpanded
-    }
-
-    function collapseAll() {
-        const allRemoved: number[] = []
-        for (const id of expandedIds.value) {
-            const children = childrenCache.get(id) ?? []
-            for (const child of children) {
-                allRemoved.push(child.id)
-            }
-        }
-        expandedIds.value = new Set()
-        if (onCollapseCallback && allRemoved.length > 0) {
-            onCollapseCallback(allRemoved)
-        }
-    }
-
     /**
      * Walks root items and inserts children of expanded nodes inline.
      * Adds `_depth` (0 = root) and `_isLoading` properties to each item.
@@ -182,11 +133,6 @@ export function useModelListTree(
         childrenCache.clear()
     }
 
-    /** Returns true if any item in the list has children */
-    function hasExpandableItems(items: any[]): boolean {
-        return items.some(item => (item.numchild ?? 0) > 0)
-    }
-
     // Clear tree state when tree mode changes
     watch(treeActive, () => {
         clearTreeState()
@@ -198,12 +144,9 @@ export function useModelListTree(
         expandedIds,
         loadingIds,
         toggleExpand,
-        expandAll,
-        collapseAll,
         buildFlatList,
         getTreeLoadParams,
         clearTreeState,
-        hasExpandableItems,
         setOnCollapse,
     }
 }

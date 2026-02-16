@@ -9,7 +9,6 @@
             variant="tonal"
             :color="chipColor(filter.def, filter.value)"
             :prepend-icon="filter.def.icon"
-            :style="filter.def.type !== 'tristate' ? 'cursor: default' : undefined"
             @click="toggleFilter(filter.def, filter.value)"
             @click:close="clearFilter(filter.key)"
         >
@@ -41,6 +40,10 @@ const props = defineProps<{
     clearFilter: (key: string) => void
     clearAllFilters: () => void
     activeFilterCount: number
+}>()
+
+const emit = defineEmits<{
+    'open-filters': []
 }>()
 
 const activeFilters = computed(() => {
@@ -100,6 +103,8 @@ function chipColor(def: ModelFilterDef, value: string): string {
 function toggleFilter(def: ModelFilterDef, value: string): void {
     if (def.type === 'tristate') {
         props.setFilter(def.key, value === '1' ? '0' : '1')
+    } else {
+        emit('open-filters')
     }
 }
 </script>
