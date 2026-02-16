@@ -262,8 +262,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             food_swipeEnabled: true,
             food_swipeLeft: ['edit', 'shopping'],
             food_swipeRight: ['onhand', 'delete'],
-            food_mobileSubtitle: ['supermarketCategory'],
-            food_mobileChips: ['onhand', 'shopping'],
+            food_mobileSubtitle: ['supermarketCategory.name'],
         }
     }
 

@@ -29,7 +29,7 @@
                         <v-list-subheader v-if="group">{{ $t(group) }}</v-list-subheader>
                         <template v-for="action in defs" :key="action.key">
                             <v-list-item
-                                v-if="action.isToggle"
+                                v-if="action.isToggle && isVisible(action)"
                                 @click.stop="$emit('action', action.key, item)"
                             >
                                 <template #prepend>
@@ -41,7 +41,7 @@
                                 {{ $t(action.labelKey) }}
                             </v-list-item>
                             <v-list-item
-                                v-else
+                                v-else-if="!action.isToggle && isVisible(action)"
                                 :prepend-icon="action.icon"
                                 :class="action.isDanger ? 'text-error' : undefined"
                                 @click="$emit('action', action.key, item)"
@@ -75,8 +75,12 @@ defineEmits<{
 const quickActions = computed(() =>
     (props.quickActionKeys ?? [])
         .map(key => props.actionDefs.find(a => a.key === key))
-        .filter((a): a is ModelActionDef => !!a)
+        .filter((a): a is ModelActionDef => !!a && isVisible(a))
 )
+
+function isVisible(action: ModelActionDef): boolean {
+    return !action.visible || action.visible(props.item)
+}
 
 function resolveColor(action: ModelActionDef, item: any): string | undefined {
     if (!action.isToggle) return undefined

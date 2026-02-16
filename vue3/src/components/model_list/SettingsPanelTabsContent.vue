@@ -35,47 +35,50 @@
                 <v-divider class="my-2" />
             </template>
 
-            <div class="text-overline px-4 pt-3">{{ $t('Columns') }}</div>
+            <template v-if="!mobile">
+                <div class="text-overline px-4 pt-3">{{ $t('Columns') }}</div>
 
-            <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
-                <v-checkbox
-                    :model-value="isColumnVisible(col.key)"
-                    @update:model-value="toggleColumn(col.key)"
-                    :label="$t(col.title)"
-                    hide-details
-                    density="compact"
-                    class="flex-grow-1"
-                />
-                <v-btn-toggle
-                    v-if="col.hasDisplayMode"
-                    :model-value="getDisplayMode(col.key)"
-                    @update:model-value="(val: any) => setDisplayMode(col.key, val)"
-                    mandatory
-                    density="compact"
-                    class="ms-2"
-                >
-                    <v-btn value="icon" size="x-small">
-                        <v-icon size="small">fa-solid fa-icons</v-icon>
-                    </v-btn>
-                    <v-btn value="text" size="x-small">
-                        <v-icon size="small">fa-solid fa-font</v-icon>
-                    </v-btn>
-                </v-btn-toggle>
-            </div>
+                <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
+                    <v-checkbox
+                        :model-value="isColumnVisible(col.key)"
+                        @update:model-value="toggleColumn(col.key)"
+                        :label="$t(col.title)"
+                        hide-details
+                        density="compact"
+                        class="flex-grow-1"
+                    />
+                    <v-btn-toggle
+                        v-if="col.hasDisplayMode"
+                        :model-value="getDisplayMode(col.key)"
+                        @update:model-value="(val: any) => setDisplayMode(col.key, val)"
+                        mandatory
+                        density="compact"
+                        class="ms-2"
+                    >
+                        <v-btn value="icon" size="x-small">
+                            <v-icon size="small">fa-solid fa-icons</v-icon>
+                        </v-btn>
+                        <v-btn value="text" size="x-small">
+                            <v-icon size="small">fa-solid fa-font</v-icon>
+                        </v-btn>
+                    </v-btn-toggle>
+                </div>
 
-            <v-divider class="my-2" />
+                <v-divider class="my-2" />
 
-            <div class="text-overline px-4 pt-2">{{ $t('Table') }}</div>
-            <div class="px-4 py-1">
-                <v-switch
-                    :model-value="showColumnHeaders"
-                    @update:model-value="emit('update:showColumnHeaders', $event)"
-                    :label="$t('ShowColumnHeaders')"
-                    color="primary"
-                    hide-details
-                    density="compact"
-                />
-            </div>
+                <div class="text-overline px-4 pt-2">{{ $t('Table') }}</div>
+                <div class="px-4 py-1">
+                    <v-switch
+                        :model-value="showColumnHeaders"
+                        @update:model-value="emit('update:showColumnHeaders', $event)"
+                        :label="$t('ShowColumnHeaders')"
+                        color="primary"
+                        hide-details
+                        density="compact"
+                    />
+                </div>
+            </template>
+
             <div class="px-4 py-1" v-if="treeAvailable">
                 <v-switch
                     :model-value="treeEnabled"
@@ -86,15 +89,38 @@
                     density="compact"
                 />
             </div>
+
+            <template v-if="hasMobileList && mobile">
+                <v-divider class="my-2" />
+
+                <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle') }}</div>
+                <div class="d-flex flex-wrap ga-2 px-4 py-2">
+                    <v-chip
+                        v-for="col in toggleableColumns"
+                        :key="'sub-' + col.key"
+                        :prepend-icon="isMobileSubtitleSelected(col.key) ? 'fa-solid fa-check' : undefined"
+                        :variant="isMobileSubtitleSelected(col.key) ? 'flat' : 'outlined'"
+                        :color="isMobileSubtitleSelected(col.key) ? 'primary' : undefined"
+                        size="small"
+                        label
+                        @click="toggleMobileSubtitle(col.key)"
+                    >
+                        {{ $t(col.title) }}
+                    </v-chip>
+                </div>
+            </template>
         </v-tabs-window-item>
     </v-tabs-window>
 </template>
 
 <script setup lang="ts">
 import {computed, PropType} from 'vue'
+import {useDisplay} from 'vuetify'
 import type {ModelTableHeaders} from '@/types/Models'
 import type {ModelActionDef, ModelFilterDef} from '@/composables/modellist/types'
 import ModelFilterPanel from '@/components/model_list/filters/ModelFilterPanel.vue'
+
+const {mobile} = useDisplay()
 
 const props = defineProps({
     currentTab: {type: String, required: true},
@@ -114,6 +140,9 @@ const props = defineProps({
     setQuickActionKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
     treeAvailable: {type: Boolean, default: false},
     treeEnabled: {type: Boolean, default: false},
+    hasMobileList: {type: Boolean, default: false},
+    mobileSubtitleKeys: {type: Array as PropType<string[]>, default: () => []},
+    setMobileSubtitleKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
 })
 
 const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled'])
@@ -134,4 +163,21 @@ function toggleQuickAction(key: string) {
     }
     props.setQuickActionKeys(keys.filter(k => !!k))
 }
+
+// Mobile settings
+function isMobileSubtitleSelected(key: string) {
+    return props.mobileSubtitleKeys.includes(key)
+}
+
+function toggleMobileSubtitle(key: string) {
+    const keys = [...props.mobileSubtitleKeys]
+    const idx = keys.indexOf(key)
+    if (idx >= 0) {
+        keys.splice(idx, 1)
+    } else {
+        keys.push(key)
+    }
+    props.setMobileSubtitleKeys(keys)
+}
+
 </script>

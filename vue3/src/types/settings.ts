@@ -42,5 +42,4 @@ export type DeviceSettings = {
     food_swipeLeft: string[]
     food_swipeRight: string[]
     food_mobileSubtitle: string[]
-    food_mobileChips: string[]
 }

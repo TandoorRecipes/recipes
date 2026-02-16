@@ -94,6 +94,9 @@
                     :set-quick-action-keys="setQuickActionKeys"
                     :tree-available="treeAvailable"
                     v-model:tree-enabled="treeEnabled"
+                    :has-mobile-list="hasMobileList"
+                    :mobile-subtitle-keys="mobileSubtitleKeys"
+                    :set-mobile-subtitle-keys="setMobileSubtitleKeys"
                 />
             </v-card-text>
         </v-card>
@@ -196,5 +199,22 @@ const quickActionKeys = computed({
 
 function setQuickActionKeys(val: string[]) {
     quickActionKeys.value = val
+}
+
+const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
+
+const mobileSubtitleKeys = computed({
+    get: () => {
+        if (!settingsKey.value) return []
+        return (deviceSettings as any)[`${settingsKey.value}_mobileSubtitle`] ?? []
+    },
+    set: (val: string[]) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_mobileSubtitle`] = val
+    },
+})
+
+function setMobileSubtitleKeys(val: string[]) {
+    mobileSubtitleKeys.value = val
 }
 </script>
