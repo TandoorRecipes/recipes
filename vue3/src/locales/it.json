@@ -882,7 +882,7 @@
     "UpdateFoodLists": "Aggiorna le liste della spesa",
     "UpdateFoodListsHelp": "Aggiorna le liste della spesa predefinite nell'alimento quando modifichi le liste durante la spesa.",
     "Scale": "Bilancia",
-    "ScaleRecipeHelp": "Aumenta o diminuisci tutte le quantità degli ingredienti in modo che venga creato il numero di porzioni indicato quando si prepara la ricetta. ",
+    "ScaleRecipeHelp": "Aumenta o diminuisci le quantità di tutti gli ingredienti in modo da ottenere il numero di porzioni specificato durante la preparazione della ricetta. ",
     "Diameter": "Diametro",
     "Linear": "Lineare",
     "DiameterUnit": "Unità diametro",
@@ -894,5 +894,6 @@
     "ScalingHelp": "Aggiungi un diametro a una ricetta per abilitare la scalabilità in base al diametro, oltre alla scalabilità in base alle porzioni. ",
     "Scaling": "Scalabilità",
     "CalendarIcsHelp": "Utilizza l'URL seguente per sincronizzare il tuo piano alimentare con il tuo calendario. ",
-    "Calendar": "Calendario"
+    "Calendar": "Calendario",
+    "LocalStoragePathHelp": "Il percorso locale deve essere compreso nei LOCAL_STORAGE_PATHS configurati dal server."
 }
