@@ -60,7 +60,16 @@
     </v-navigation-drawer>
 
     <v-bottom-sheet v-else v-model="isOpen" scrollable>
-        <v-card>
+        <v-card :style="sheetDragStyle">
+            <div
+                style="display: flex; justify-content: center; padding: 12px 0 4px; cursor: grab; touch-action: none;"
+                @touchstart.passive="onSheetDragStart"
+                @touchmove="onSheetDragMove"
+                @touchend.passive="onSheetDragEnd"
+            >
+                <div style="width: 40px; height: 4px; border-radius: 2px; background: rgba(var(--v-theme-on-surface), 0.3);" />
+            </div>
+
             <v-card-title class="d-flex align-center pa-0">
                 <v-tabs v-model="currentTab" density="compact" grow>
                     <v-tab value="filters">
@@ -101,14 +110,38 @@
                     :has-mobile-list="hasMobileList"
                     :mobile-subtitle-keys="mobileSubtitleKeys"
                     :set-mobile-subtitle-keys="setMobileSubtitleKeys"
+                    v-model:show-mobile-headers="showMobileHeaders"
+                    :swipe-enabled="swipeEnabled"
+                    :set-swipe-enabled="setSwipeEnabled"
+                    :swipe-left-keys="swipeLeftKeys"
+                    :set-swipe-left-keys="setSwipeLeftKeys"
+                    :swipe-right-keys="swipeRightKeys"
+                    :set-swipe-right-keys="setSwipeRightKeys"
                 />
             </v-card-text>
+
+            <v-divider />
+
+            <v-card-actions>
+                <v-btn
+                    v-show="currentTab === 'filters'"
+                    variant="text"
+                    color="primary"
+                    @click="clearAllFilters"
+                >
+                    {{ $t('Clear_All') }}
+                </v-btn>
+                <v-spacer />
+                <v-btn variant="flat" color="primary" @click="isOpen = false">
+                    {{ $t('Done') }}
+                </v-btn>
+            </v-card-actions>
         </v-card>
     </v-bottom-sheet>
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from 'vue'
+import {computed, ref, PropType} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {Model, ModelTableHeaders} from '@/types/Models'
@@ -220,6 +253,17 @@ const showStats = computed({
 
 const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
 
+const showMobileHeaders = computed({
+    get: () => {
+        if (!settingsKey.value) return false
+        return (deviceSettings as any)[`${settingsKey.value}_showMobileHeaders`] ?? false
+    },
+    set: (val: boolean) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_showMobileHeaders`] = val
+    },
+})
+
 const mobileSubtitleKeys = computed({
     get: () => {
         if (!settingsKey.value) return []
@@ -233,5 +277,83 @@ const mobileSubtitleKeys = computed({
 
 function setMobileSubtitleKeys(val: string[]) {
     mobileSubtitleKeys.value = val
+}
+
+const swipeEnabled = computed({
+    get: () => {
+        if (!settingsKey.value) return false
+        return (deviceSettings as any)[`${settingsKey.value}_swipeEnabled`] ?? false
+    },
+    set: (val: boolean) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_swipeEnabled`] = val
+    },
+})
+
+function setSwipeEnabled(val: boolean) {
+    swipeEnabled.value = val
+}
+
+const swipeLeftKeys = computed({
+    get: () => {
+        if (!settingsKey.value) return []
+        return (deviceSettings as any)[`${settingsKey.value}_swipeLeft`] ?? []
+    },
+    set: (val: string[]) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_swipeLeft`] = val
+    },
+})
+
+function setSwipeLeftKeys(val: string[]) {
+    swipeLeftKeys.value = val
+}
+
+const swipeRightKeys = computed({
+    get: () => {
+        if (!settingsKey.value) return []
+        return (deviceSettings as any)[`${settingsKey.value}_swipeRight`] ?? []
+    },
+    set: (val: string[]) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_swipeRight`] = val
+    },
+})
+
+function setSwipeRightKeys(val: string[]) {
+    swipeRightKeys.value = val
+}
+
+// Bottom sheet drag-to-dismiss
+const dragStartY = ref(0)
+const dragOffset = ref(0)
+const isDragging = ref(false)
+
+const sheetDragStyle = computed(() => {
+    if (dragOffset.value <= 0) return undefined
+    return {
+        transform: `translateY(${dragOffset.value}px)`,
+        transition: isDragging.value ? 'none' : 'transform 0.2s ease',
+    }
+})
+
+function onSheetDragStart(e: TouchEvent) {
+    dragStartY.value = e.touches[0].clientY
+    dragOffset.value = 0
+    isDragging.value = true
+}
+
+function onSheetDragMove(e: TouchEvent) {
+    if (!isDragging.value) return
+    const dy = e.touches[0].clientY - dragStartY.value
+    dragOffset.value = Math.max(0, dy)
+}
+
+function onSheetDragEnd() {
+    if (dragOffset.value > 100) {
+        isOpen.value = false
+    }
+    dragOffset.value = 0
+    isDragging.value = false
 }
 </script>

@@ -1,94 +1,191 @@
 <template>
     <div>
-        <v-progress-linear v-if="loading && items.length > 0" indeterminate color="primary" />
+        <v-progress-linear v-if="loading || childrenLoading" indeterminate color="primary" />
 
-        <template v-if="loading && items.length === 0">
-            <v-skeleton-loader v-for="n in 4" :key="n" type="list-item" />
-        </template>
+        <div v-if="showSwipeHint" class="d-flex align-center px-3 py-1 text-caption text-medium-emphasis">
+            <v-icon icon="fa-solid fa-hand-pointer" size="x-small" class="mr-2" />
+            <span class="flex-grow-1">{{ $t('SwipeHint') }}</span>
+            <v-btn
+                icon="fa-solid fa-xmark"
+                variant="plain"
+                size="x-small"
+                density="compact"
+                @click="dismissSwipeHint"
+            />
+        </div>
 
-        <v-list v-if="items.length > 0" lines="two" density="compact">
+        <v-list v-if="items.length > 0" class="mobile-list" density="compact">
             <v-list-item
-                v-for="item in items"
-                :key="item.id"
+                v-if="showMobileHeaders"
+                class="mobile-list-header"
+                density="compact"
             >
                 <template #prepend>
-                    <div class="d-flex align-center" :style="treeActive ? { paddingLeft: ((item._depth ?? 0) * 20) + 'px' } : undefined">
-                        <v-checkbox-btn
-                            v-if="selectMode"
-                            :model-value="isSelected(item)"
-                            density="compact"
-                            class="mr-1"
-                            @update:model-value="toggleSelection(item)"
-                        />
-                        <template v-if="treeActive">
-                            <v-progress-circular
-                                v-if="item._isLoading"
-                                indeterminate
-                                size="16"
-                                width="2"
-                                class="tree-chevron-spacer"
-                            />
-                            <v-btn
-                                v-else-if="(item.numchild ?? 0) > 0"
-                                icon
-                                variant="plain"
-                                size="x-small"
-                                class="tree-chevron-spacer"
-                                :aria-label="$t('Toggle')"
-                                :aria-expanded="expandedIds.has(item.id)"
-                                @click.stop="toggleExpand(item.id)"
-                            >
-                                <v-icon
-                                    size="small"
-                                    :icon="expandedIds.has(item.id) ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right'"
-                                />
-                            </v-btn>
-                            <span v-else-if="(item._depth ?? 0) > 0" class="tree-chevron-spacer" />
-                        </template>
-                    </div>
-                </template>
-
-                <v-list-item-title>{{ item.name }}</v-list-item-title>
-
-                <v-list-item-subtitle v-if="getSubtitle(item)">
-                    {{ getSubtitle(item) }}
-                </v-list-item-subtitle>
-
-                <template #append>
-                    <ModelListActionMenu
-                        :item="item"
-                        :action-defs="actionDefs"
-                        :grouped-action-defs="groupedActionDefs"
-                        :get-toggle-state="getToggleState"
-                        :quick-action-keys="quickActionKeys"
-                        @action="(key: string, actionItem: any) => $emit('action', key, actionItem)"
+                    <v-checkbox-btn
+                        v-if="selectMode"
+                        :model-value="allSelected"
+                        :indeterminate="someSelected && !allSelected"
+                        density="compact"
+                        class="mr-1"
+                        :aria-label="$t('Select_All')"
+                        @update:model-value="toggleSelectAll"
                     />
                 </template>
+                <v-list-item-title class="text-caption text-medium-emphasis font-weight-medium">
+                    {{ $t('Name') }}
+                </v-list-item-title>
             </v-list-item>
+
+            <div
+                v-for="item in items"
+                :key="item.id"
+                class="mobile-list-item"
+            >
+                <!-- Swipe action buttons (left side = revealed by swiping right) -->
+                <div
+                    v-if="swipeActive && resolvedRightActions.length > 0"
+                    class="swipe-actions swipe-actions-left"
+                >
+                    <button
+                        v-for="(action, idx) in resolvedRightActions"
+                        :key="'sr-' + action.key"
+                        class="swipe-action-btn"
+                        :class="{ 'swipe-action-expand': idx === 0 && swipe.isFullSwipe(item.id) }"
+                        :style="{ backgroundColor: getActionBg(action, item), minWidth: SLOT_WIDTH + 'px' }"
+                        tabindex="-1"
+                        aria-hidden="true"
+                        data-swipe-action
+                        @touchend="onActionClick($event, action.key, item)"
+                        @click.prevent
+                    >
+                        <v-icon :icon="action.icon" size="small" color="white" />
+                    </button>
+                </div>
+
+                <!-- Swipe action buttons (right side = revealed by swiping left) -->
+                <div
+                    v-if="swipeActive && resolvedLeftActions.length > 0"
+                    class="swipe-actions swipe-actions-right"
+                >
+                    <button
+                        v-for="(action, idx) in resolvedLeftActions"
+                        :key="'sl-' + action.key"
+                        class="swipe-action-btn"
+                        :class="{ 'swipe-action-expand': idx === resolvedLeftActions.length - 1 && swipe.isFullSwipe(item.id) }"
+                        :style="{ backgroundColor: getActionBg(action, item), minWidth: SLOT_WIDTH + 'px' }"
+                        tabindex="-1"
+                        aria-hidden="true"
+                        data-swipe-action
+                        @touchend="onActionClick($event, action.key, item)"
+                        @click.prevent
+                    >
+                        <v-icon :icon="action.icon" size="small" color="white" />
+                    </button>
+                </div>
+
+                <!-- Swipeable content layer -->
+                <div
+                    class="mobile-list-content"
+                    :class="{ 'no-transition': swipe.isSwiping(item.id) }"
+                    :style="{ transform: swipeActive ? swipe.getSwipeTransform(item.id) : undefined }"
+                    @touchstart.passive="swipeActive && swipe.onTouchStart($event, item.id)"
+                    @touchmove.passive="swipeActive && swipe.onTouchMove($event, item.id)"
+                    @touchend.passive="swipeActive && swipe.onTouchEnd($event, item.id)"
+                >
+                    <v-list-item density="compact">
+                        <template #prepend>
+                            <div class="d-flex align-center" :style="treeActive ? { paddingLeft: ((item._depth ?? 0) * 20) + 'px' } : undefined">
+                                <v-checkbox-btn
+                                    v-if="selectMode"
+                                    :model-value="isSelected(item)"
+                                    density="compact"
+                                    class="mr-1"
+                                    @update:model-value="toggleSelection(item)"
+                                />
+                                <template v-if="treeActive">
+                                    <v-btn
+                                        v-if="(item.numchild ?? 0) > 0"
+                                        icon
+                                        variant="plain"
+                                        size="x-small"
+                                        class="tree-chevron-spacer"
+                                        :aria-label="$t('Toggle')"
+                                        :aria-expanded="expandedIds.has(item.id)"
+                                        @click.stop="toggleExpand(item.id)"
+                                    >
+                                        <v-icon
+                                            size="small"
+                                            :icon="expandedIds.has(item.id) ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right'"
+                                        />
+                                    </v-btn>
+                                    <span v-else-if="(item._depth ?? 0) > 0" class="tree-chevron-spacer" />
+                                </template>
+                            </div>
+                        </template>
+
+                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+
+                        <v-list-item-subtitle v-if="getSubtitle(item)">
+                            {{ getSubtitle(item) }}
+                        </v-list-item-subtitle>
+
+                        <template #append>
+                            <ModelListActionMenu
+                                :item="item"
+                                :action-defs="actionDefs"
+                                :grouped-action-defs="groupedActionDefs"
+                                :get-toggle-state="getToggleState"
+                                :quick-action-keys="quickActionKeys"
+                                @action="(key: string, actionItem: any) => $emit('action', key, actionItem)"
+                            />
+                        </template>
+                    </v-list-item>
+                </div>
+            </div>
         </v-list>
 
         <v-card v-else-if="!loading" variant="flat" class="text-center pa-8 text-medium-emphasis">
             {{ $t('No_Results') }}
         </v-card>
 
-        <div v-if="totalPages > 1" class="d-flex justify-center mt-2">
-            <v-pagination
-                :model-value="page"
-                :length="totalPages"
-                :total-visible="5"
-                density="comfortable"
-                @update:model-value="onPageChange"
-            />
+        <div v-if="itemsLength > 0" class="v-data-table-footer" style="background: rgb(var(--v-theme-surface));">
+            <div class="v-data-table-footer__items-per-page">
+                <span>{{ $t('Items_per_page') }}</span>
+                <v-select
+                    :model-value="itemsPerPage"
+                    :items="[10, 25, 50]"
+                    density="compact"
+                    variant="outlined"
+                    hide-details
+                    @update:model-value="onPageSizeChange"
+                />
+            </div>
+            <div class="v-data-table-footer__info">
+                {{ rangeText }}
+            </div>
+            <div class="v-data-table-footer__pagination">
+                <v-pagination
+                    :model-value="page"
+                    :length="totalPages"
+                    density="comfortable"
+                    rounded
+                    show-first-last-page
+                    :total-visible="0"
+                    variant="plain"
+                    @update:model-value="onPageChange"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {ModelActionDef} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
 import {getNestedProperty} from '@/utils/utils'
+import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
 import ModelListActionMenu from '@/components/model_list/ModelListActionMenu.vue'
 
 const {t} = useI18n()
@@ -110,6 +207,11 @@ const props = defineProps<{
     expandedIds: Set<number>,
     toggleExpand: (id: number) => void,
     mobileSubtitleKeys: string[],
+    swipeEnabled: boolean,
+    swipeLeftKeys: string[],
+    swipeRightKeys: string[],
+    settingsKey: string,
+    showMobileHeaders: boolean,
 }>()
 
 const emit = defineEmits<{
@@ -118,9 +220,125 @@ const emit = defineEmits<{
     action: [key: string, item: any],
 }>()
 
+/** Resolve action keys to action defs, filtering out missing/invisible */
+const resolvedLeftActions = computed(() =>
+    props.swipeLeftKeys
+        .map(key => props.actionDefs.find(a => a.key === key))
+        .filter((a): a is ModelActionDef => !!a)
+)
+
+const resolvedRightActions = computed(() =>
+    props.swipeRightKeys
+        .map(key => props.actionDefs.find(a => a.key === key))
+        .filter((a): a is ModelActionDef => !!a)
+)
+
+const leftSlotCount = computed(() => resolvedLeftActions.value.length)
+const rightSlotCount = computed(() => resolvedRightActions.value.length)
+
+/** Swipe is active only when enabled, not in select mode, and actions are configured */
+const swipeActive = computed(() =>
+    props.swipeEnabled && !props.selectMode && (leftSlotCount.value > 0 || rightSlotCount.value > 0)
+)
+
+const enabledRef = computed(() => swipeActive.value)
+
+function handleFullSwipe(id: number, direction: 'left' | 'right') {
+    const item = props.items.find(i => i.id === id)
+    if (!item) return
+    // Outermost action: last in the array for swipe-left, first for swipe-right
+    const action = direction === 'left'
+        ? resolvedLeftActions.value[resolvedLeftActions.value.length - 1]
+        : resolvedRightActions.value[0]
+    if (action) emit('action', action.key, item)
+}
+
+const swipe = useSwipeGesture(enabledRef, leftSlotCount, rightSlotCount, handleFullSwipe)
+
+/** Reset swipe state when items change (pagination, filters, etc.) */
+watch(() => props.items, () => swipe.resetAll())
+
+/** Swipe hint banner */
+const hintStorageKey = computed(() => `${props.settingsKey}_swipeHintDismissed`)
+const hintDismissed = ref(false)
+
+onMounted(() => {
+    hintDismissed.value = localStorage.getItem(hintStorageKey.value) === 'true'
+})
+
+const showSwipeHint = computed(() =>
+    swipeActive.value && !hintDismissed.value
+)
+
+function dismissSwipeHint() {
+    hintDismissed.value = true
+    localStorage.setItem(hintStorageKey.value, 'true')
+}
+
+/** Get background color for a swipe action button */
+function getActionBg(action: ModelActionDef, item: any): string {
+    if (action.isDanger) return 'rgb(var(--v-theme-error))'
+    if (action.isToggle) {
+        const active = action.isActive ? action.isActive(item) : props.getToggleState(action, item)
+        if (active) return 'rgb(var(--v-theme-success))'
+    }
+    if (action.colorResolver) {
+        const color = action.colorResolver(item)
+        if (color) return `rgb(var(--v-theme-${color}))`
+    }
+    if (action.routeName) return 'rgb(var(--v-theme-info))'
+    return 'rgb(var(--v-theme-primary))'
+}
+
+const lastActionTime = ref(0)
+function onActionClick(e: Event, key: string, item: any) {
+    e.preventDefault()
+    const now = Date.now()
+    if (now - lastActionTime.value < 400) return
+    lastActionTime.value = now
+    swipe.resetSwipe(item.id)
+    emit('action', key, item)
+}
+
 const totalPages = computed(() =>
     props.itemsPerPage > 0 ? Math.ceil(props.itemsLength / props.itemsPerPage) : 1
 )
+
+const childrenLoading = computed(() => props.items.some((item: any) => item._isLoading))
+
+
+const rangeText = computed(() => {
+    const start = (props.page - 1) * props.itemsPerPage + 1
+    const end = Math.min(props.page * props.itemsPerPage, props.itemsLength)
+    return `${start}-${end} / ${props.itemsLength}`
+})
+
+function onPageSizeChange(size: number) {
+    emit('update:options', {page: 1, itemsPerPage: size})
+}
+
+// Select-all header logic — compare by ID to handle cross-page selections
+const allSelected = computed(() => {
+    if (props.items.length === 0) return false
+    const selectedIds = new Set(props.selectedItems.map((s: any) => s.id))
+    return props.items.every((item: any) => selectedIds.has(item.id))
+})
+const someSelected = computed(() => {
+    const selectedIds = new Set(props.selectedItems.map((s: any) => s.id))
+    return props.items.some((item: any) => selectedIds.has(item.id))
+})
+
+function toggleSelectAll(val: boolean | null) {
+    const pageIds = new Set(props.items.map((i: any) => i.id))
+    if (val) {
+        // Merge current page into existing selections
+        const kept = props.selectedItems.filter((s: any) => !pageIds.has(s.id))
+        emit('update:selectedItems', [...kept, ...props.items])
+    } else {
+        // Remove only current page from selections
+        emit('update:selectedItems', props.selectedItems.filter((s: any) => !pageIds.has(s.id)))
+    }
+}
 
 /** Columns selected for subtitle display */
 const subtitleColumns = computed(() =>
@@ -144,11 +362,8 @@ function toggleSelection(item: any) {
     emit('update:selectedItems', current)
 }
 
-/** Build subtitle from configured columns (cached per render cycle) */
-const subtitleCache = new WeakMap<object, string>()
+/** Build subtitle from configured columns */
 function getSubtitle(item: any): string {
-    const cached = subtitleCache.get(item)
-    if (cached !== undefined) return cached
     const parts: string[] = []
     for (const col of subtitleColumns.value) {
         const field = col.field ?? col.key
@@ -160,9 +375,7 @@ function getSubtitle(item: any): string {
             parts.push(String(val))
         }
     }
-    const result = parts.join(' · ')
-    subtitleCache.set(item, result)
-    return result
+    return parts.join(' · ')
 }
 
 function onPageChange(newPage: number) {
@@ -181,5 +394,61 @@ onMounted(() => {
     display: inline-flex;
     justify-content: center;
     align-items: center;
+}
+
+.mobile-list-item {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.mobile-list-content {
+    position: relative;
+    z-index: 1;
+    background: rgb(var(--v-theme-surface));
+    transition: transform 0.2s ease;
+}
+
+.mobile-list-content.no-transition {
+    transition: none;
+}
+
+.swipe-actions {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: stretch;
+}
+
+.swipe-actions-left {
+    left: 0;
+    right: 0;
+}
+
+.swipe-actions-right {
+    left: 0;
+    right: 0;
+    justify-content: flex-end;
+}
+
+.swipe-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.swipe-action-expand {
+    flex-grow: 1;
+}
+
+.mobile-list-header {
+    background: rgba(var(--v-theme-on-surface), 0.03);
+    border-bottom: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+    min-height: 36px;
 }
 </style>

@@ -1,24 +1,21 @@
 <template>
     <div class="d-flex align-center justify-end">
         <template v-for="action in quickActions" :key="action.key">
-            <v-tooltip :text="$t(action.labelKey)" location="top" :open-delay="400">
-                <template #activator="{ props: tooltipProps }">
-                    <v-btn
-                        v-bind="tooltipProps"
-                        icon
-                        variant="plain"
-                        size="small"
-                        :aria-label="$t(action.labelKey)"
-                        @click.stop="$emit('action', action.key, item)"
-                    >
-                        <v-icon
-                            :icon="action.icon"
-                            size="small"
-                            :color="resolveColor(action, item)"
-                        />
-                    </v-btn>
-                </template>
-            </v-tooltip>
+            <v-btn
+                icon
+                variant="plain"
+                size="small"
+                :aria-label="$t(action.labelKey)"
+                @click.stop="$emit('action', action.key, item)"
+            >
+                <v-icon
+                    :key="action.key + '-' + resolveColor(action, item)"
+                    :icon="action.icon"
+                    size="small"
+                    :color="resolveColor(action, item)"
+                />
+                <v-tooltip v-if="!mobile" activator="parent" :text="$t(action.labelKey)" location="top" :open-delay="400" />
+            </v-btn>
         </template>
 
         <v-btn icon="$menu" variant="plain" :aria-label="$t('Actions')">
@@ -35,6 +32,7 @@
                             >
                                 <template #prepend>
                                     <v-icon
+                                        :key="action.key + '-' + resolveColor(action, item)"
                                         :icon="action.icon"
                                         :color="resolveColor(action, item)"
                                     />
@@ -59,7 +57,10 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue'
+import {useDisplay} from 'vuetify'
 import type {ModelActionDef} from '@/composables/modellist/types'
+
+const {mobile} = useDisplay()
 
 const props = defineProps<{
     item: any,

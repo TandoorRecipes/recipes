@@ -1,6 +1,6 @@
 <template>
-    <v-card v-if="hasData || loading" variant="tonal" density="compact" class="mt-2">
-        <v-card-text class="d-flex flex-wrap align-center ga-2 py-2">
+    <v-card v-if="hasData || loading" variant="tonal" density="compact" class="rounded-t-0">
+        <v-card-text class="d-flex flex-wrap align-center justify-center ga-2 py-2">
             <v-chip size="small" variant="text" :loading="loading">
                 {{ $t('Showing') }} {{ pageCount }} / {{ itemCount }}
             </v-chip>
