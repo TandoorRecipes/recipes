@@ -90,6 +90,17 @@
                 />
             </div>
 
+            <div class="px-4 py-1" v-if="statsAvailable">
+                <v-switch
+                    :model-value="showStats"
+                    @update:model-value="emit('update:showStats', $event)"
+                    :label="$t('ShowStats')"
+                    color="primary"
+                    hide-details
+                    density="compact"
+                />
+            </div>
+
             <template v-if="hasMobileList && mobile">
                 <v-divider class="my-2" />
 
@@ -140,12 +151,14 @@ const props = defineProps({
     setQuickActionKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
     treeAvailable: {type: Boolean, default: false},
     treeEnabled: {type: Boolean, default: false},
+    statsAvailable: {type: Boolean, default: false},
+    showStats: {type: Boolean, default: false},
     hasMobileList: {type: Boolean, default: false},
     mobileSubtitleKeys: {type: Array as PropType<string[]>, default: () => []},
     setMobileSubtitleKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
 })
 
-const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled'])
+const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled', 'update:showStats'])
 
 const selectedCount = computed(() => props.quickActionKeys.length)
 

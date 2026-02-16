@@ -54,6 +54,8 @@
             :set-quick-action-keys="setQuickActionKeys"
             :tree-available="treeAvailable"
             v-model:tree-enabled="treeEnabled"
+            :stats-available="statsAvailable"
+            v-model:show-stats="showStats"
         />
     </v-navigation-drawer>
 
@@ -94,6 +96,8 @@
                     :set-quick-action-keys="setQuickActionKeys"
                     :tree-available="treeAvailable"
                     v-model:tree-enabled="treeEnabled"
+                    :stats-available="statsAvailable"
+                    v-model:show-stats="showStats"
                     :has-mobile-list="hasMobileList"
                     :mobile-subtitle-keys="mobileSubtitleKeys"
                     :set-mobile-subtitle-keys="setMobileSubtitleKeys"
@@ -200,6 +204,19 @@ const quickActionKeys = computed({
 function setQuickActionKeys(val: string[]) {
     quickActionKeys.value = val
 }
+
+const statsAvailable = computed(() => !!props.model.listSettings?.statsFooter)
+
+const showStats = computed({
+    get: () => {
+        if (!settingsKey.value) return false
+        return (deviceSettings as any)[`${settingsKey.value}_showStats`] ?? false
+    },
+    set: (val: boolean) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_showStats`] = val
+    },
+})
 
 const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
 

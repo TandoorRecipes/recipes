@@ -208,6 +208,21 @@ export function getAncestorPath(item: ModelItem): string | null {
 }
 
 /**
+ * Stat definition for a model list stats footer.
+ * Each stat maps to a key in the API response's stats object.
+ */
+export type ModelStatDef = {
+    /** Unique key, matches the API stats response key */
+    key: string,
+    /** Localization key for the display label */
+    labelKey: string,
+    /** Icon to display (FontAwesome class) */
+    icon: string,
+    /** Vuetify color for the chip */
+    color: string,
+}
+
+/**
  * Sort option definition for a model list.
  * Each option maps to a backend `ordering` query parameter value.
  */
