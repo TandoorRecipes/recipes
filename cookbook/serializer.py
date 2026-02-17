@@ -899,15 +899,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
             return False
 
     def create(self, validated_data):
+        space = validated_data.pop('space', self.context['request'].space)
         name = validated_data['name'].strip()
 
         if plural_name := validated_data.pop('plural_name', None):
             plural_name = plural_name.strip()
 
-        if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name)).first():
+        if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name), space=space).first():
             return food
 
-        space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
             sm_category = validated_data['supermarket_category']
@@ -932,7 +932,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
                 validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
 
         if properties_food_unit := validated_data.pop('properties_food_unit', None):
-            properties_food_unit = Unit.objects.filter(name=properties_food_unit['name']).first()
+            properties_food_unit = Unit.objects.filter(name=properties_food_unit['name'], space=space).first()
 
         properties = validated_data.pop('properties', None)
 
@@ -1478,15 +1478,14 @@ class FoodShoppingSerializer(serializers.ModelSerializer):
 
     # TODO duplicate code with FoodSerializer, merge into one or use proper function
     def create(self, validated_data):
+        space = validated_data.pop('space', self.context['request'].space)
         name = validated_data['name'].strip()
 
         if plural_name := validated_data.pop('plural_name', None):
             plural_name = plural_name.strip()
 
-        if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name)).first():
+        if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name), space=space).first():
             return food
-
-        space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
             sm_category = validated_data['supermarket_category']
@@ -1496,7 +1495,7 @@ class FoodShoppingSerializer(serializers.ModelSerializer):
                 space=space, defaults=sm_category)
 
         if properties_food_unit := validated_data.pop('properties_food_unit', None):
-            properties_food_unit = Unit.objects.filter(name=properties_food_unit['name']).first()
+            properties_food_unit = Unit.objects.filter(name=properties_food_unit['name'], space=space).first()
 
         obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space,
                                                   properties_food_unit=properties_food_unit,
