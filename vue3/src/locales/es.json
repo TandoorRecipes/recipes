@@ -851,5 +851,11 @@
     "APIKey": "Clave API",
     "Comment": "Comentario",
     "DefaultShoppingListHelp": "Lista por defecto cuando esta comida es añadida a la lista de la compra.",
-    "Fulltext": "Texto Completo"
+    "Fulltext": "Texto Completo",
+    "LocalStoragePathHelp": "La ruta local debe pertenecer a LOCAL_STORAGE_PATHS configurado en el servidor.",
+    "ScaleRecipeHelp": "Aumentar o disminuir todas las cantidades de ingredientes para obtener el numero de porciones deseadas de la receta. ",
+    "Scaling": "Escalar",
+    "ScalingHelp": "Añade un diámetro a la receta para habilitar el escalado basado en diámetro ademas del escalador basado en porciones. ",
+    "CalendarIcsHelp": "Use la siguiente url para sincronizar su plan de comidas con su calendario. ",
+    "Calendar": "Calendario"
 }
