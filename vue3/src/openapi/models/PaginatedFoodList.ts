@@ -51,11 +51,18 @@ export interface PaginatedFoodList {
      */
     results: Array<Food>;
     /**
-     * 
+     *
      * @type {Date}
      * @memberof PaginatedFoodList
      */
     timestamp?: Date;
+    /**
+     * MANUAL: Space-wide aggregate stats (onhand, shopping, ignored, total).
+     * Not in OpenAPI schema — injected by FoodViewSet.list().
+     * @type {Record<string, number>}
+     * @memberof PaginatedFoodList
+     */
+    stats?: Record<string, number>;
 }
 
 /**
@@ -82,6 +89,7 @@ export function PaginatedFoodListFromJSONTyped(json: any, ignoreDiscriminator: b
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(FoodFromJSON)),
         'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
+        'stats': json['stats'] == null ? undefined : json['stats'], // MANUAL
     };
 }
 
@@ -96,6 +104,7 @@ export function PaginatedFoodListToJSON(value?: PaginatedFoodList | null): any {
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(FoodToJSON)),
         'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'stats': value['stats'], // MANUAL
     };
 }
 

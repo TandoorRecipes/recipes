@@ -2,7 +2,7 @@
     <v-card v-if="hasData || loading" variant="tonal" density="compact" class="rounded-t-0">
         <v-card-text class="d-flex flex-wrap align-center justify-center ga-2 py-2">
             <v-chip size="small" variant="text" :loading="loading">
-                {{ $t('Showing') }} {{ pageCount }} / {{ itemCount }}
+                {{ $t('Showing') }} {{ pageCount }} / {{ totalCount }}
             </v-chip>
 
             <v-chip
@@ -32,6 +32,7 @@ const props = defineProps({
     loading: {type: Boolean, default: false},
 })
 
+const totalCount = computed(() => props.stats.total ?? props.itemCount)
 const hasData = computed(() => props.pageCount > 0)
 
 const statChips = computed(() =>
