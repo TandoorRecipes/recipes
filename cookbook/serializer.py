@@ -2130,7 +2130,7 @@ class ImportOpenDataMetaDataSerializer(serializers.Serializer):
 
 class IngredientParserRequestSerializer(serializers.Serializer):
     ingredient = serializers.CharField(required=False)
-    ingredients = serializers.ListField(child=serializers.CharField(), required=False)
+    ingredients = serializers.ListField(child=serializers.CharField(allow_blank=True), required=False)
 
 
 class IngredientParserResponseSerializer(serializers.Serializer):
