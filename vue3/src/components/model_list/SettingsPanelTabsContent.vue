@@ -15,11 +15,12 @@
                 <button class="text-overline px-4 pt-3 d-block w-100 text-start"
                     style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
                     :aria-expanded="isSectionOpen('quickActions')"
+                    aria-controls="quickActions-section-content"
                     @click="toggleSection('quickActions')">
                     {{ $t('QuickActions') }}
                 </button>
                 <v-expand-transition>
-                    <div v-show="isSectionOpen('quickActions')">
+                    <div v-show="isSectionOpen('quickActions')" id="quickActions-section-content">
                         <div class="text-caption px-4 text-medium-emphasis">{{ t('QuickActionsDescription_N', { n: maxQuickActions }) }}</div>
                         <div class="d-flex flex-wrap ga-2 px-4 py-2">
                             <v-chip
@@ -47,11 +48,12 @@
                 <button class="text-overline px-4 pt-3 d-block w-100 text-start"
                     style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
                     :aria-expanded="isSectionOpen('columns')"
+                    aria-controls="columns-section-content"
                     @click="toggleSection('columns')">
                     {{ $t('Columns') }}
                 </button>
                 <v-expand-transition>
-                    <div v-show="isSectionOpen('columns')">
+                    <div v-show="isSectionOpen('columns')" id="columns-section-content">
                         <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
                             <v-checkbox
                                 :model-value="isColumnVisible(col.key)"
@@ -85,11 +87,12 @@
                 <button class="text-overline px-4 d-block w-100 text-start"
                     style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
                     :aria-expanded="isSectionOpen('subtitle')"
+                    aria-controls="subtitle-section-content"
                     @click="toggleSection('subtitle')">
                     {{ $t('Subtitle') }}
                 </button>
                 <v-expand-transition>
-                    <div v-show="isSectionOpen('subtitle')">
+                    <div v-show="isSectionOpen('subtitle')" id="subtitle-section-content">
                         <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
                         <div class="d-flex flex-wrap ga-2 px-4 py-2">
                             <v-chip
@@ -115,11 +118,12 @@
                 <button class="text-overline px-4 pt-2 d-block w-100 text-start"
                     style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
                     :aria-expanded="isSectionOpen('table')"
+                    aria-controls="table-section-content"
                     @click="toggleSection('table')">
                     {{ $t('Table') }}
                 </button>
                 <v-expand-transition>
-                    <div v-show="isSectionOpen('table')">
+                    <div v-show="isSectionOpen('table')" id="table-section-content">
                         <div class="px-4 py-1">
                             <v-switch
                                 :model-value="showColumnHeaders"
@@ -162,11 +166,12 @@
                 <button class="text-overline px-4 pt-2 d-block w-100 text-start"
                     style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
                     :aria-expanded="isSectionOpen('display')"
+                    aria-controls="display-section-content"
                     @click="toggleSection('display')">
                     {{ $t('Display') }}
                 </button>
                 <v-expand-transition>
-                    <div v-show="isSectionOpen('display')">
+                    <div v-show="isSectionOpen('display')" id="display-section-content">
                         <div class="px-4 py-1">
                             <v-switch
                                 :model-value="showMobileHeaders"
@@ -185,11 +190,12 @@
                 <button class="text-overline px-4 d-block w-100 text-start"
                     style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
                     :aria-expanded="isSectionOpen('mobileSubtitle')"
+                    aria-controls="mobileSubtitle-section-content"
                     @click="toggleSection('mobileSubtitle')">
                     {{ $t('Subtitle') }}
                 </button>
                 <v-expand-transition>
-                    <div v-show="isSectionOpen('mobileSubtitle')">
+                    <div v-show="isSectionOpen('mobileSubtitle')" id="mobileSubtitle-section-content">
                         <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
                         <div class="d-flex flex-wrap ga-2 px-4 py-2">
                             <v-chip

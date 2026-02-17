@@ -16,13 +16,10 @@ import {
     UnitConversion, User, UserFile,
     UserSpace, ViewLog, Household
 } from "@/openapi";
-import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {defineAsyncComponent, shallowRef} from "vue";
 import type {ModelFilterDef, ModelActionDef, ModelListSettings, ModelColumnType, ModelSortDef, ModelStatDef} from "@/composables/modellist/types";
-
-type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
 /**
  * returns a GenericModel instance with the given model type
@@ -1101,17 +1098,6 @@ export class GenericModel {
         this.model = model
         this.api = new ApiApi()
         this.t = t
-    }
-
-    getTableHeaders(): VDataTableProps['headers'][] {
-        let tableHeaders: VDataTableProps['headers'][] = []
-        this.model.tableHeaders.forEach(header => {
-            if (!header.hidden) {
-                header.title = this.t(header.title)
-                tableHeaders.push(header as unknown as VDataTableProps['headers'])
-            }
-        })
-        return tableHeaders
     }
 
     /**

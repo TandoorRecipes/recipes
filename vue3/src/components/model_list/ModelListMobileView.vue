@@ -10,6 +10,7 @@
                 variant="plain"
                 size="x-small"
                 density="compact"
+                :aria-label="$t('Dismiss')"
                 @click="dismissSwipeHint"
             />
         </div>
@@ -123,10 +124,10 @@
                             </div>
                         </template>
 
-                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                        <v-list-item-title>{{ item[props.labelField ?? 'name'] }}</v-list-item-title>
 
-                        <v-list-item-subtitle v-if="getSubtitle(item)">
-                            {{ getSubtitle(item) }}
+                        <v-list-item-subtitle v-if="subtitleMap.has(item.id)">
+                            {{ subtitleMap.get(item.id) }}
                         </v-list-item-subtitle>
 
                         <template #append>
@@ -212,6 +213,7 @@ const props = defineProps<{
     swipeRightKeys: string[],
     settingsKey: string,
     showMobileHeaders: boolean,
+    labelField?: string,
 }>()
 
 const emit = defineEmits<{
@@ -297,6 +299,7 @@ function onActionClick(e: Event, key: string, item: any) {
     const now = Date.now()
     if (now - (lastActionTimes.get(actionItemKey) ?? 0) < 400) return
     lastActionTimes.set(actionItemKey, now)
+    if (lastActionTimes.size > 200) lastActionTimes.clear()
     swipe.resetSwipe(item.id)
     emit('action', key, item)
 }
@@ -364,10 +367,16 @@ function toggleSelection(item: any) {
     emit('update:selectedItems', current)
 }
 
-/** Build subtitle from configured columns */
-function getSubtitle(item: any): string {
-    return buildSubtitleText(item, subtitleColumns.value, t)
-}
+/** Build subtitle map — computed once per render, not twice per item */
+const subtitleMap = computed(() => {
+    const cols = subtitleColumns.value
+    const map = new Map<number, string>()
+    for (const item of props.items) {
+        const text = buildSubtitleText(item, cols, t)
+        if (text) map.set(item.id, text)
+    }
+    return map
+})
 
 function onPageChange(newPage: number) {
     emit('update:options', {page: newPage, itemsPerPage: props.itemsPerPage})

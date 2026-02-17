@@ -64,6 +64,8 @@
     <v-bottom-sheet v-else v-model="isOpen" scrollable>
         <v-card :style="sheetDragStyle">
             <div
+                role="separator"
+                :aria-label="$t('Drag')"
                 style="display: flex; justify-content: center; padding: 12px 0 4px; cursor: grab; touch-action: none;"
                 @touchstart.passive="onSheetDragStart"
                 @touchmove="onSheetDragMove"
@@ -147,9 +149,9 @@
 <script setup lang="ts">
 import {computed, ref, PropType} from 'vue'
 import {useDisplay} from 'vuetify'
-import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {Model, ModelTableHeaders} from '@/types/Models'
 import type {ModelActionDef, ModelFilterDef} from '@/composables/modellist/types'
+import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
 import SettingsPanelTabsContent from '@/components/model_list/SettingsPanelTabsContent.vue'
 
 const props = defineProps({
@@ -177,65 +179,23 @@ const currentTab = computed({
 })
 
 const {mobile} = useDisplay()
-const deviceSettings = useUserPreferenceStore().deviceSettings
 
 const settingsKey = computed(() => props.model.listSettings?.settingsKey ?? '')
-
-const isPinned = computed({
-    get: () => {
-        if (!settingsKey.value) return false
-        return (deviceSettings as any)[`${settingsKey.value}_settingsPinned`] ?? false
-    },
-    set: (val: boolean) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_settingsPinned`] = val
-    },
-})
+const {isPinned, showStats, showColumnHeaders, treeEnabled, quickActionKeys,
+    desktopSubtitleKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys,
+    swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKey)
 
 const isOpen = computed({
     get: () => props.modelValue,
     set: (val: boolean) => emit('update:modelValue', val),
 })
 
-const showColumnHeaders = computed({
-    get: () => {
-        if (!settingsKey.value) return true
-        return (deviceSettings as any)[`${settingsKey.value}_showColumnHeaders`] ?? true
-    },
-    set: (val: boolean) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_showColumnHeaders`] = val
-    },
-})
-
 const treeAvailable = computed(() =>
     !!props.model.isTree && !!props.model.listSettings?.treeEnabled
 )
 
-const treeEnabled = computed({
-    get: () => {
-        if (!settingsKey.value) return false
-        return (deviceSettings as any)[`${settingsKey.value}_treeView`] ?? false
-    },
-    set: (val: boolean) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_treeView`] = val
-    },
-})
-
 const toggleableColumns = computed(() => {
     return props.allColumns.filter(c => c.key !== 'name')
-})
-
-const quickActionKeys = computed({
-    get: () => {
-        if (!settingsKey.value) return []
-        return (deviceSettings as any)[`${settingsKey.value}_quickActions`] ?? []
-    },
-    set: (val: string[]) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_quickActions`] = val
-    },
 })
 
 function setQuickActionKeys(val: string[]) {
@@ -243,101 +203,23 @@ function setQuickActionKeys(val: string[]) {
 }
 
 const statsAvailable = computed(() => !!props.model.listSettings?.statsFooter)
-
-const showStats = computed({
-    get: () => {
-        if (!settingsKey.value) return false
-        return (deviceSettings as any)[`${settingsKey.value}_showStats`] ?? false
-    },
-    set: (val: boolean) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_showStats`] = val
-    },
-})
-
 const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
-
-const showMobileHeaders = computed({
-    get: () => {
-        if (!settingsKey.value) return false
-        return (deviceSettings as any)[`${settingsKey.value}_showMobileHeaders`] ?? false
-    },
-    set: (val: boolean) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_showMobileHeaders`] = val
-    },
-})
-
-const mobileSubtitleKeys = computed({
-    get: () => {
-        if (!settingsKey.value) return []
-        return (deviceSettings as any)[`${settingsKey.value}_mobileSubtitle`] ?? []
-    },
-    set: (val: string[]) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_mobileSubtitle`] = val
-    },
-})
 
 function setMobileSubtitleKeys(val: string[]) {
     mobileSubtitleKeys.value = val
 }
 
-const desktopSubtitleKeys = computed({
-    get: () => {
-        if (!settingsKey.value) return []
-        return (deviceSettings as any)[`${settingsKey.value}_desktopSubtitle`] ?? []
-    },
-    set: (val: string[]) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_desktopSubtitle`] = val
-    },
-})
-
 function setDesktopSubtitleKeys(val: string[]) {
     desktopSubtitleKeys.value = val
 }
-
-const swipeEnabled = computed({
-    get: () => {
-        if (!settingsKey.value) return false
-        return (deviceSettings as any)[`${settingsKey.value}_swipeEnabled`] ?? false
-    },
-    set: (val: boolean) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_swipeEnabled`] = val
-    },
-})
 
 function setSwipeEnabled(val: boolean) {
     swipeEnabled.value = val
 }
 
-const swipeLeftKeys = computed({
-    get: () => {
-        if (!settingsKey.value) return []
-        return (deviceSettings as any)[`${settingsKey.value}_swipeLeft`] ?? []
-    },
-    set: (val: string[]) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_swipeLeft`] = val
-    },
-})
-
 function setSwipeLeftKeys(val: string[]) {
     swipeLeftKeys.value = val
 }
-
-const swipeRightKeys = computed({
-    get: () => {
-        if (!settingsKey.value) return []
-        return (deviceSettings as any)[`${settingsKey.value}_swipeRight`] ?? []
-    },
-    set: (val: string[]) => {
-        if (!settingsKey.value) return
-        ;(deviceSettings as any)[`${settingsKey.value}_swipeRight`] = val
-    },
-})
 
 function setSwipeRightKeys(val: string[]) {
     swipeRightKeys.value = val

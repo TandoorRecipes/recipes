@@ -1,5 +1,4 @@
-import {computed, ref, watch, type ComputedRef} from 'vue'
-import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
+import {computed, ref, watch, type ComputedRef, type WritableComputedRef} from 'vue'
 import {useMessageStore, ErrorMessageType} from '@/stores/MessageStore'
 import type {Model} from '@/types/Models'
 
@@ -11,29 +10,14 @@ export {MAX_CHILDREN}
 /**
  * Composable managing tree expand/collapse state for ModelListPage.
  *
- * Accepts a `fetchChildren` callback to stay decoupled from GenericModel.
- * The callback should return the array of child items for a given parent ID.
+ * Accepts a `treeEnabled` setting ref and a `fetchChildren` callback
+ * to stay decoupled from device settings and GenericModel.
  */
 export function useModelListTree(
     model: ComputedRef<Model | undefined>,
     fetchChildren: (parentId: number) => Promise<any[]>,
+    treeEnabled: WritableComputedRef<boolean>,
 ) {
-    const deviceSettings = useUserPreferenceStore().deviceSettings
-
-    const settingsKey = computed(() => model.value?.listSettings?.settingsKey ?? '')
-
-    /** User preference toggle — persisted in device settings */
-    const treeEnabled = computed({
-        get: () => {
-            if (!settingsKey.value) return false
-            return (deviceSettings as any)[`${settingsKey.value}_treeView`] ?? false
-        },
-        set: (val: boolean) => {
-            if (!settingsKey.value) return
-            ;(deviceSettings as any)[`${settingsKey.value}_treeView`] = val
-        },
-    })
-
     /** Tree is active when user enabled it AND the model supports it */
     const treeActive = computed(() =>
         treeEnabled.value && !!model.value?.isTree && !!model.value?.listSettings?.treeEnabled
@@ -139,7 +123,6 @@ export function useModelListTree(
     })
 
     return {
-        treeEnabled,
         treeActive,
         expandedIds,
         loadingIds,
