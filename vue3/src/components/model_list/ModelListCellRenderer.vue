@@ -7,7 +7,7 @@
         <v-chip v-if="value" label>{{ value }}</v-chip>
     </template>
     <template v-else-if="header.type === 'number'">
-        <span v-if="value != null">
+        <span v-if="value != null" :class="{'text-disabled': value === 0, 'font-weight-medium': value > 0 && header.emphasizeNonZero}">
             <span v-if="!showHeaders" class="text-medium-emphasis">{{ t(header.title) }}: </span>{{ value }}
         </span>
     </template>

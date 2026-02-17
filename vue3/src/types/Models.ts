@@ -105,6 +105,8 @@ export type ModelTableHeaders = {
     defaultDisplayMode?: 'icon' | 'text',
     /** Dot-path to data field if different from key */
     field?: string,
+    /** For number type: apply font-weight-medium when value > 0 */
+    emphasizeNonZero?: boolean,
 }
 
 /**
@@ -254,7 +256,7 @@ export const TFood = {
         {title: 'Name', key: 'name', type: 'text'},
         {title: 'Category', key: 'supermarketCategory.name', type: 'text', hidden: true},
         {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
-        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true, emphasizeNonZero: true},
         {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],

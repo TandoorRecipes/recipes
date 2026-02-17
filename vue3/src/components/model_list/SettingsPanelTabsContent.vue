@@ -380,14 +380,15 @@ function toggleSection(key: string) {
 }
 
 const maxQuickActions = computed(() => mobile.value ? 2 : 4)
-const selectedCount = computed(() => props.quickActionKeys.length)
+const effectiveQuickActionKeys = computed(() => props.quickActionKeys.slice(0, maxQuickActions.value))
+const selectedCount = computed(() => effectiveQuickActionKeys.value.length)
 
 function isSelected(key: string) {
-    return props.quickActionKeys.includes(key)
+    return effectiveQuickActionKeys.value.includes(key)
 }
 
 function toggleQuickAction(key: string) {
-    const keys = [...props.quickActionKeys]
+    const keys = [...effectiveQuickActionKeys.value]
     const idx = keys.indexOf(key)
     if (idx >= 0) {
         keys.splice(idx, 1)
