@@ -9,6 +9,16 @@ class Round(Func):
     template = '%(function)s(%(expressions)s, 0)'
 
 
+_SSRF_SAFE_MANAGER = Manager(
+    Config(
+        default_timeout=(2, 10),
+        never_redirect=False,
+        ip_filter_enable=True,
+        ip_filter_allow_loopback_ips=False,
+    )
+)
+
+
 def str2bool(v):
     if isinstance(v, bool) or v is None:
         return v
@@ -20,16 +30,7 @@ def safe_request(method, url, **kwargs):
     """
     use requests-hardened to make external requests SSRF safe
     """
-    http_manager = Manager(
-        Config(
-            default_timeout=(2, 10),
-            never_redirect=False,
-            # Enable SSRF IP filter
-            ip_filter_enable=True,
-            ip_filter_allow_loopback_ips=False,
-        )
-    )
-    return http_manager.send_request(method, url, **kwargs)
+    return _SSRF_SAFE_MANAGER.send_request(method, url, **kwargs)
 
 
 def match_or_fuzzymatch(check_string: str, key_dict: dict) -> tuple[str, int]:
