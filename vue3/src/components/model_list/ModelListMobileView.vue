@@ -184,7 +184,7 @@ import {computed, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {ModelActionDef} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
-import {getNestedProperty} from '@/utils/utils'
+import {buildSubtitleText} from '@/utils/utils'
 import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
 import ModelListActionMenu from '@/components/model_list/ModelListActionMenu.vue'
 
@@ -364,18 +364,7 @@ function toggleSelection(item: any) {
 
 /** Build subtitle from configured columns */
 function getSubtitle(item: any): string {
-    const parts: string[] = []
-    for (const col of subtitleColumns.value) {
-        const field = col.field ?? col.key
-        const val = getNestedProperty(item, field)
-        if (val == null || val === '' || val === false) continue
-        if (typeof val === 'number' || typeof val === 'boolean') {
-            parts.push(`${t(col.title)}: ${val}`)
-        } else {
-            parts.push(String(val))
-        }
-    }
-    return parts.join(' · ')
+    return buildSubtitleText(item, subtitleColumns.value, t)
 }
 
 function onPageChange(newPage: number) {

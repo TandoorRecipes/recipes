@@ -12,71 +12,126 @@
 
         <v-tabs-window-item value="settings">
             <template v-if="actionDefs.length > 0">
-                <div class="text-overline px-4 pt-3">{{ $t('QuickActions') }}</div>
-                <div class="text-caption px-4 text-medium-emphasis">{{ t('QuickActionsDescription_N', { n: maxQuickActions }) }}</div>
-
-                <div class="d-flex flex-wrap ga-2 px-4 py-2">
-                    <v-chip
-                        v-for="action in actionDefs"
-                        :key="action.key"
-                        :prepend-icon="isSelected(action.key) ? 'fa-solid fa-check' : action.icon"
-                        :variant="isSelected(action.key) ? 'flat' : 'outlined'"
-                        :color="isSelected(action.key) ? 'primary' : undefined"
-                        :disabled="!isSelected(action.key) && selectedCount >= maxQuickActions"
-                        size="small"
-                        label
-                        @click="toggleQuickAction(action.key)"
-                    >
-                        {{ $t(action.labelKey) }}
-                    </v-chip>
-                </div>
-                <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ selectedCount }}/{{ maxQuickActions }} {{ $t('Selected') }}</div>
+                <button class="text-overline px-4 pt-3 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('quickActions')"
+                    @click="toggleSection('quickActions')">
+                    {{ $t('QuickActions') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('quickActions')">
+                        <div class="text-caption px-4 text-medium-emphasis">{{ t('QuickActionsDescription_N', { n: maxQuickActions }) }}</div>
+                        <div class="d-flex flex-wrap ga-2 px-4 py-2">
+                            <v-chip
+                                v-for="action in actionDefs"
+                                :key="action.key"
+                                :prepend-icon="isSelected(action.key) ? 'fa-solid fa-check' : action.icon"
+                                :variant="isSelected(action.key) ? 'flat' : 'outlined'"
+                                :color="isSelected(action.key) ? 'primary' : undefined"
+                                :disabled="!isSelected(action.key) && selectedCount >= maxQuickActions"
+                                size="small"
+                                label
+                                @click="toggleQuickAction(action.key)"
+                            >
+                                {{ $t(action.labelKey) }}
+                            </v-chip>
+                        </div>
+                        <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ selectedCount }}/{{ maxQuickActions }} {{ $t('Selected') }}</div>
+                    </div>
+                </v-expand-transition>
 
                 <v-divider class="my-2" />
             </template>
 
             <template v-if="!mobile">
-                <div class="text-overline px-4 pt-3">{{ $t('Columns') }}</div>
-
-                <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
-                    <v-checkbox
-                        :model-value="isColumnVisible(col.key)"
-                        @update:model-value="toggleColumn(col.key)"
-                        :label="$t(col.title)"
-                        hide-details
-                        density="compact"
-                        class="flex-grow-1"
-                    />
-                    <v-btn-toggle
-                        v-if="col.hasDisplayMode"
-                        :model-value="getDisplayMode(col.key)"
-                        @update:model-value="(val: any) => setDisplayMode(col.key, val)"
-                        mandatory
-                        density="compact"
-                        class="ms-2"
-                    >
-                        <v-btn value="icon" size="x-small">
-                            <v-icon size="small">fa-solid fa-icons</v-icon>
-                        </v-btn>
-                        <v-btn value="text" size="x-small">
-                            <v-icon size="small">fa-solid fa-font</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </div>
+                <button class="text-overline px-4 pt-3 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('columns')"
+                    @click="toggleSection('columns')">
+                    {{ $t('Columns') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('columns')">
+                        <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
+                            <v-checkbox
+                                :model-value="isColumnVisible(col.key)"
+                                @update:model-value="toggleColumn(col.key)"
+                                :label="$t(col.title)"
+                                hide-details
+                                density="compact"
+                                class="flex-grow-1"
+                            />
+                            <v-btn-toggle
+                                v-if="col.hasDisplayMode"
+                                :model-value="getDisplayMode(col.key)"
+                                @update:model-value="(val: any) => setDisplayMode(col.key, val)"
+                                mandatory
+                                density="compact"
+                                class="ms-2"
+                            >
+                                <v-btn value="icon" size="x-small">
+                                    <v-icon size="small">fa-solid fa-icons</v-icon>
+                                </v-btn>
+                                <v-btn value="text" size="x-small">
+                                    <v-icon size="small">fa-solid fa-font</v-icon>
+                                </v-btn>
+                            </v-btn-toggle>
+                        </div>
+                    </div>
+                </v-expand-transition>
 
                 <v-divider class="my-2" />
 
-                <div class="text-overline px-4 pt-2">{{ $t('Table') }}</div>
-                <div class="px-4 py-1">
-                    <v-switch
-                        :model-value="showColumnHeaders"
-                        @update:model-value="emit('update:showColumnHeaders', $event)"
-                        :label="$t('ShowColumnHeaders')"
-                        color="primary"
-                        hide-details
-                        density="compact"
-                    />
-                </div>
+                <button class="text-overline px-4 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('subtitle')"
+                    @click="toggleSection('subtitle')">
+                    {{ $t('Subtitle') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('subtitle')">
+                        <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
+                        <div class="d-flex flex-wrap ga-2 px-4 py-2">
+                            <v-chip
+                                v-for="col in toggleableColumns"
+                                :key="'dsub-' + col.key"
+                                :prepend-icon="isDesktopSubtitleSelected(col.key) ? 'fa-solid fa-check' : undefined"
+                                :variant="isDesktopSubtitleSelected(col.key) ? 'flat' : 'outlined'"
+                                :color="isDesktopSubtitleSelected(col.key) ? 'primary' : undefined"
+                                :disabled="!isDesktopSubtitleSelected(col.key) && desktopSubtitleKeys.length >= 2"
+                                size="small"
+                                label
+                                @click="toggleDesktopSubtitle(col.key)"
+                            >
+                                {{ $t(col.title) }}
+                            </v-chip>
+                        </div>
+                        <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ desktopSubtitleKeys.length }}/2 {{ $t('Selected') }}</div>
+                    </div>
+                </v-expand-transition>
+
+                <v-divider class="my-2" />
+
+                <button class="text-overline px-4 pt-2 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('table')"
+                    @click="toggleSection('table')">
+                    {{ $t('Table') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('table')">
+                        <div class="px-4 py-1">
+                            <v-switch
+                                :model-value="showColumnHeaders"
+                                @update:model-value="emit('update:showColumnHeaders', $event)"
+                                :label="$t('ShowColumnHeaders')"
+                                color="primary"
+                                hide-details
+                                density="compact"
+                            />
+                        </div>
+                    </div>
+                </v-expand-transition>
             </template>
 
             <div class="px-4 py-1" v-if="treeAvailable">
@@ -104,118 +159,147 @@
             <template v-if="hasMobileList && mobile">
                 <v-divider class="my-2" />
 
-                <div class="text-overline px-4 pt-2">{{ $t('Display') }}</div>
-                <div class="px-4 py-1">
-                    <v-switch
-                        :model-value="showMobileHeaders"
-                        @update:model-value="emit('update:showMobileHeaders', $event)"
-                        :label="$t('ShowColumnHeaders')"
-                        color="primary"
-                        hide-details
-                        density="compact"
-                    />
-                </div>
-
-                <v-divider class="my-2" />
-
-                <div class="text-overline px-4">{{ $t('Subtitle') }}</div>
-                <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
-                <div class="d-flex flex-wrap ga-2 px-4 py-2">
-                    <v-chip
-                        v-for="col in toggleableColumns"
-                        :key="'sub-' + col.key"
-                        :prepend-icon="isMobileSubtitleSelected(col.key) ? 'fa-solid fa-check' : undefined"
-                        :variant="isMobileSubtitleSelected(col.key) ? 'flat' : 'outlined'"
-                        :color="isMobileSubtitleSelected(col.key) ? 'primary' : undefined"
-                        :disabled="!isMobileSubtitleSelected(col.key) && mobileSubtitleKeys.length >= 2"
-                        size="small"
-                        label
-                        @click="toggleMobileSubtitle(col.key)"
-                    >
-                        {{ $t(col.title) }}
-                    </v-chip>
-                </div>
-                <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ mobileSubtitleKeys.length }}/2 {{ $t('Selected') }}</div>
-
-                <v-divider class="my-2" />
-
-                <div class="text-overline px-4">{{ $t('SwipeActions') }}</div>
-                <div class="px-4 py-1">
-                    <v-switch
-                        :model-value="swipeEnabled"
-                        @update:model-value="setSwipeEnabled($event)"
-                        :label="$t('EnableSwipe')"
-                        color="primary"
-                        hide-details
-                        density="compact"
-                    />
-                </div>
-
-                <template v-if="swipeEnabled">
-                    <div class="d-flex px-4 py-2 ga-2">
-                        <!-- Swipe right (left-side actions) -->
-                        <div class="flex-grow-1">
-                            <div class="text-caption text-success mb-1">{{ $t('SwipeRight') }} &rarr;</div>
-                            <div
-                                v-for="(key, idx) in swipeRightKeys"
-                                :key="'swr-' + idx"
-                                class="d-flex align-center mb-1"
-                            >
-                                <v-icon :icon="getActionIcon(key)" size="x-small" class="mr-1" />
-                                <span class="text-caption flex-grow-1">{{ getActionLabel(key) }}</span>
-                                <v-btn
-                                    icon="fa-solid fa-xmark"
-                                    variant="plain"
-                                    size="x-small"
-                                    density="compact"
-                                    @click="removeSwipeAction('right', idx)"
-                                />
-                            </div>
-                            <v-btn
-                                v-if="swipeRightKeys.length < 2"
-                                variant="tonal"
-                                size="small"
-                                block
-                                prepend-icon="fa-solid fa-plus"
-                                @click="openSwipePicker('right')"
-                            >
-                                {{ $t('Add') }}
-                            </v-btn>
-                        </div>
-
-                        <v-divider vertical />
-
-                        <!-- Swipe left (right-side actions) -->
-                        <div class="flex-grow-1">
-                            <div class="text-caption text-error mb-1">&larr; {{ $t('SwipeLeft') }}</div>
-                            <div
-                                v-for="(key, idx) in swipeLeftKeys"
-                                :key="'swl-' + idx"
-                                class="d-flex align-center mb-1"
-                            >
-                                <v-icon :icon="getActionIcon(key)" size="x-small" class="mr-1" />
-                                <span class="text-caption flex-grow-1">{{ getActionLabel(key) }}</span>
-                                <v-btn
-                                    icon="fa-solid fa-xmark"
-                                    variant="plain"
-                                    size="x-small"
-                                    density="compact"
-                                    @click="removeSwipeAction('left', idx)"
-                                />
-                            </div>
-                            <v-btn
-                                v-if="swipeLeftKeys.length < 2"
-                                variant="tonal"
-                                size="small"
-                                block
-                                prepend-icon="fa-solid fa-plus"
-                                @click="openSwipePicker('left')"
-                            >
-                                {{ $t('Add') }}
-                            </v-btn>
+                <button class="text-overline px-4 pt-2 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('display')"
+                    @click="toggleSection('display')">
+                    {{ $t('Display') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('display')">
+                        <div class="px-4 py-1">
+                            <v-switch
+                                :model-value="showMobileHeaders"
+                                @update:model-value="emit('update:showMobileHeaders', $event)"
+                                :label="$t('ShowColumnHeaders')"
+                                color="primary"
+                                hide-details
+                                density="compact"
+                            />
                         </div>
                     </div>
-                </template>
+                </v-expand-transition>
+
+                <v-divider class="my-2" />
+
+                <button class="text-overline px-4 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('mobileSubtitle')"
+                    @click="toggleSection('mobileSubtitle')">
+                    {{ $t('Subtitle') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('mobileSubtitle')">
+                        <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
+                        <div class="d-flex flex-wrap ga-2 px-4 py-2">
+                            <v-chip
+                                v-for="col in toggleableColumns"
+                                :key="'sub-' + col.key"
+                                :prepend-icon="isMobileSubtitleSelected(col.key) ? 'fa-solid fa-check' : undefined"
+                                :variant="isMobileSubtitleSelected(col.key) ? 'flat' : 'outlined'"
+                                :color="isMobileSubtitleSelected(col.key) ? 'primary' : undefined"
+                                :disabled="!isMobileSubtitleSelected(col.key) && mobileSubtitleKeys.length >= 2"
+                                size="small"
+                                label
+                                @click="toggleMobileSubtitle(col.key)"
+                            >
+                                {{ $t(col.title) }}
+                            </v-chip>
+                        </div>
+                        <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ mobileSubtitleKeys.length }}/2 {{ $t('Selected') }}</div>
+                    </div>
+                </v-expand-transition>
+
+                <v-divider class="my-2" />
+
+                <button class="text-overline px-4 d-block w-100 text-start"
+                    style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; padding-bottom: 0;"
+                    :aria-expanded="isSectionOpen('swipe')"
+                    aria-controls="swipe-section-content"
+                    @click="toggleSection('swipe')">
+                    {{ $t('SwipeActions') }}
+                </button>
+                <v-expand-transition>
+                    <div v-show="isSectionOpen('swipe')" id="swipe-section-content">
+                        <div class="px-4 py-1">
+                            <v-switch
+                                :model-value="swipeEnabled"
+                                @update:model-value="setSwipeEnabled($event)"
+                                :label="$t('EnableSwipe')"
+                                color="primary"
+                                hide-details
+                                density="compact"
+                            />
+                        </div>
+                        <v-expand-transition>
+                            <div v-show="swipeEnabled">
+                                <div class="d-flex px-4 py-2 ga-2">
+                                    <!-- Swipe right (left-side actions) -->
+                                    <div class="flex-grow-1">
+                                        <div class="text-caption text-success mb-1">{{ $t('SwipeRight') }} &rarr;</div>
+                                        <div
+                                            v-for="(key, idx) in swipeRightKeys"
+                                            :key="'swr-' + idx"
+                                            class="d-flex align-center mb-1"
+                                        >
+                                            <v-icon :icon="getActionIcon(key)" size="x-small" class="mr-1" />
+                                            <span class="text-caption flex-grow-1">{{ getActionLabel(key) }}</span>
+                                            <v-btn
+                                                icon="fa-solid fa-xmark"
+                                                variant="plain"
+                                                size="x-small"
+                                                density="compact"
+                                                @click="removeSwipeAction('right', idx)"
+                                            />
+                                        </div>
+                                        <v-btn
+                                            v-if="swipeRightKeys.length < 2"
+                                            variant="tonal"
+                                            size="small"
+                                            block
+                                            prepend-icon="fa-solid fa-plus"
+                                            @click="openSwipePicker('right')"
+                                        >
+                                            {{ $t('Add') }}
+                                        </v-btn>
+                                    </div>
+
+                                    <v-divider vertical />
+
+                                    <!-- Swipe left (right-side actions) -->
+                                    <div class="flex-grow-1">
+                                        <div class="text-caption text-error mb-1">&larr; {{ $t('SwipeLeft') }}</div>
+                                        <div
+                                            v-for="(key, idx) in swipeLeftKeys"
+                                            :key="'swl-' + idx"
+                                            class="d-flex align-center mb-1"
+                                        >
+                                            <v-icon :icon="getActionIcon(key)" size="x-small" class="mr-1" />
+                                            <span class="text-caption flex-grow-1">{{ getActionLabel(key) }}</span>
+                                            <v-btn
+                                                icon="fa-solid fa-xmark"
+                                                variant="plain"
+                                                size="x-small"
+                                                density="compact"
+                                                @click="removeSwipeAction('left', idx)"
+                                            />
+                                        </div>
+                                        <v-btn
+                                            v-if="swipeLeftKeys.length < 2"
+                                            variant="tonal"
+                                            size="small"
+                                            block
+                                            prepend-icon="fa-solid fa-plus"
+                                            @click="openSwipePicker('left')"
+                                        >
+                                            {{ $t('Add') }}
+                                        </v-btn>
+                                    </div>
+                                </div>
+                            </div>
+                        </v-expand-transition>
+                    </div>
+                </v-expand-transition>
             </template>
 
             <!-- Swipe action picker dialog -->
@@ -268,6 +352,8 @@ const props = defineProps({
     treeEnabled: {type: Boolean, default: false},
     statsAvailable: {type: Boolean, default: false},
     showStats: {type: Boolean, default: false},
+    desktopSubtitleKeys: {type: Array as PropType<string[]>, default: () => []},
+    setDesktopSubtitleKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
     hasMobileList: {type: Boolean, default: false},
     mobileSubtitleKeys: {type: Array as PropType<string[]>, default: () => []},
     setMobileSubtitleKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
@@ -281,6 +367,17 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled', 'update:showStats', 'update:showMobileHeaders'])
+
+// Collapsible section state (all default open)
+const openSections = ref<Record<string, boolean>>({})
+
+function isSectionOpen(key: string): boolean {
+    return openSections.value[key] !== false
+}
+
+function toggleSection(key: string) {
+    openSections.value[key] = !isSectionOpen(key)
+}
 
 const maxQuickActions = computed(() => mobile.value ? 2 : 4)
 const selectedCount = computed(() => props.quickActionKeys.length)
@@ -298,6 +395,22 @@ function toggleQuickAction(key: string) {
         keys.push(key)
     }
     props.setQuickActionKeys(keys.filter(k => !!k))
+}
+
+// Desktop subtitle settings
+function isDesktopSubtitleSelected(key: string) {
+    return props.desktopSubtitleKeys.includes(key)
+}
+
+function toggleDesktopSubtitle(key: string) {
+    const keys = [...props.desktopSubtitleKeys]
+    const idx = keys.indexOf(key)
+    if (idx >= 0) {
+        keys.splice(idx, 1)
+    } else if (keys.length < 2) {
+        keys.push(key)
+    }
+    props.setDesktopSubtitleKeys(keys)
 }
 
 // Mobile settings

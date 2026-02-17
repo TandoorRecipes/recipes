@@ -56,6 +56,8 @@
             v-model:tree-enabled="treeEnabled"
             :stats-available="statsAvailable"
             v-model:show-stats="showStats"
+            :desktop-subtitle-keys="desktopSubtitleKeys"
+            :set-desktop-subtitle-keys="setDesktopSubtitleKeys"
         />
     </v-navigation-drawer>
 
@@ -108,6 +110,8 @@
                     :stats-available="statsAvailable"
                     v-model:show-stats="showStats"
                     :has-mobile-list="hasMobileList"
+                    :desktop-subtitle-keys="desktopSubtitleKeys"
+                    :set-desktop-subtitle-keys="setDesktopSubtitleKeys"
                     :mobile-subtitle-keys="mobileSubtitleKeys"
                     :set-mobile-subtitle-keys="setMobileSubtitleKeys"
                     v-model:show-mobile-headers="showMobileHeaders"
@@ -277,6 +281,21 @@ const mobileSubtitleKeys = computed({
 
 function setMobileSubtitleKeys(val: string[]) {
     mobileSubtitleKeys.value = val
+}
+
+const desktopSubtitleKeys = computed({
+    get: () => {
+        if (!settingsKey.value) return []
+        return (deviceSettings as any)[`${settingsKey.value}_desktopSubtitle`] ?? []
+    },
+    set: (val: string[]) => {
+        if (!settingsKey.value) return
+        ;(deviceSettings as any)[`${settingsKey.value}_desktopSubtitle`] = val
+    },
+})
+
+function setDesktopSubtitleKeys(val: string[]) {
+    desktopSubtitleKeys.value = val
 }
 
 const swipeEnabled = computed({
