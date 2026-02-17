@@ -5,6 +5,7 @@
             icon
             variant="text"
             size="small"
+            :aria-label="$t('Filters')"
             @click="emit('open-filters')"
         >
             <v-badge
@@ -22,6 +23,7 @@
             variant="text"
             size="small"
             :color="selectMode ? 'primary' : undefined"
+            :aria-label="$t('Select')"
             @click="emit('toggle-select')"
         >
             <v-icon>{{ selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check' }}</v-icon>
@@ -31,7 +33,7 @@
             prepend-inner-icon="$search"
             :label="$t('Search')"
             :model-value="query"
-            @update:model-value="emit('update:query', $event)"
+            @update:model-value="onSearchInput"
             clearable
             hide-details
             density="compact"
@@ -64,6 +66,7 @@
             icon
             variant="text"
             size="small"
+            :aria-label="$t('Settings')"
             @click="emit('open-settings')"
         >
             <v-icon>fa-solid fa-sliders</v-icon>
@@ -75,7 +78,7 @@
             prepend-inner-icon="$search"
             :label="$t('Search')"
             :model-value="query"
-            @update:model-value="emit('update:query', $event)"
+            @update:model-value="onSearchInput"
             clearable
             hide-details
             density="compact"
@@ -155,6 +158,7 @@ import {computed, PropType} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {ModelSortDef} from '@/composables/modellist/types'
+import {useDebounceFn} from '@vueuse/core'
 
 const {t} = useI18n()
 const {mobile} = useDisplay()
@@ -177,15 +181,24 @@ const emit = defineEmits([
     'toggle-select',
 ])
 
+const debouncedEmitQuery = useDebounceFn((val: string) => {
+    emit('update:query', val)
+}, 300)
+
+function onSearchInput(val: string | null) {
+    debouncedEmitQuery(val ?? '')
+}
+
+const effectiveOrdering = computed(() =>
+    props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0].key : '')
+)
+
 const currentField = computed(() => {
-    const ord = props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0].key : '')
+    const ord = effectiveOrdering.value
     return ord.startsWith('-') ? ord.slice(1) : ord
 })
 
-const isDescending = computed(() => {
-    const ord = props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0].key : '')
-    return ord.startsWith('-')
-})
+const isDescending = computed(() => effectiveOrdering.value.startsWith('-'))
 
 const currentLabel = computed(() => {
     const opt = props.sortOptions.find(o => o.key === currentField.value)

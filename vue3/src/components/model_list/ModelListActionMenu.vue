@@ -28,7 +28,7 @@
                         <template v-for="action in defs" :key="action.key">
                             <v-list-item
                                 v-if="action.isToggle && isVisible(action)"
-                                @click.stop="$emit('action', action.key, item)"
+                                @click.stop="menuOpen = false; $emit('action', action.key, item)"
                             >
                                 <template #prepend>
                                     <v-icon

@@ -153,7 +153,7 @@
                 <span>{{ $t('Items_per_page') }}</span>
                 <v-select
                     :model-value="itemsPerPage"
-                    :items="[10, 25, 50]"
+                    :items="[10, 25, 50, 100]"
                     density="compact"
                     variant="outlined"
                     hide-details
@@ -290,12 +290,13 @@ function getActionBg(action: ModelActionDef, item: any): string {
     return 'rgb(var(--v-theme-primary))'
 }
 
-const lastActionTime = ref(0)
+const lastActionTimes = new Map<string, number>()
 function onActionClick(e: Event, key: string, item: any) {
     e.preventDefault()
+    const actionItemKey = `${key}-${item.id}`
     const now = Date.now()
-    if (now - lastActionTime.value < 400) return
-    lastActionTime.value = now
+    if (now - (lastActionTimes.get(actionItemKey) ?? 0) < 400) return
+    lastActionTimes.set(actionItemKey, now)
     swipe.resetSwipe(item.id)
     emit('action', key, item)
 }
@@ -308,6 +309,7 @@ const childrenLoading = computed(() => props.items.some((item: any) => item._isL
 
 
 const rangeText = computed(() => {
+    if (props.itemsLength === 0) return `0 / 0`
     const start = (props.page - 1) * props.itemsPerPage + 1
     const end = Math.min(props.page * props.itemsPerPage, props.itemsLength)
     return `${start}-${end} / ${props.itemsLength}`
