@@ -1201,6 +1201,15 @@ class RecipeImport(models.Model, PermissionModelMixin):
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
+    
+    cover = models.ForeignKey(
+        "UserFile",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="recipe_book_covers"
+    )
+    
     shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)

@@ -9,12 +9,13 @@ services:
 
   web_recipes:
     restart: always
-    image: vabene1111/recipes
+    build: .
     env_file:
       - ./.env
     ports:
       - 80:80
     volumes:
+      - ./recipes:/opt/recipes  # <-- mount your local code
       - staticfiles:/opt/recipes/staticfiles
       - ./mediafiles:/opt/recipes/mediafiles
     depends_on:

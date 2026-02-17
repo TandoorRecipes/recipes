@@ -1329,6 +1329,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
     created_by = UserSerializer(read_only=True)
     shared = UserSerializer(many=True)
     filter = CustomFilterSerializer(allow_null=True, required=False)
+    cover = serializers.ImageField(required=False)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1336,7 +1337,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
 
     class Meta:
         model = RecipeBook
-        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter', 'order')
+        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter', 'order', 'cover')
         read_only_fields = ('created_by',)
 
 

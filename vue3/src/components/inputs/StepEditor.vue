@@ -96,13 +96,14 @@
                                             <v-btn variant="plain" class="" density="compact" tabindex="-1" icon>
                                                 <v-icon icon="$menu"></v-icon>
                                                 <v-menu activator="parent">
-                                                    <v-list>
+                                                    <v-list>                                                     
                                                         <v-list-item link>
                                                             <v-switch v-model="step.ingredients[index].isHeader" :label="$t('Headline')" hide-details></v-switch>
                                                         </v-list-item>
                                                         <v-list-item link>
                                                             <v-switch v-model="step.ingredients[index].noAmount" :label="$t('Disable_Amount')" hide-details></v-switch>
                                                         </v-list-item>
+
                                                         <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">
                                                             {{ $t('Move') }}
                                                         </v-list-item>
