@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2026-02-09 00:29+0000\n"
+"PO-Revision-Date: 2026-02-17 00:44+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -1039,7 +1039,7 @@ msgstr "Налаштування простору"
 
 #: .\cookbook\templates\base.html:340
 msgid "External Connectors"
-msgstr "Зовнішні підключення"
+msgstr "Зовнішні Конектори"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -2575,7 +2575,7 @@ msgstr ""
 
 #: .\cookbook\views\delete.py:135
 msgid "Connectors Config Backend"
-msgstr "Конфігурація коннекторів для бекенду"
+msgstr "Конфігурація конекторів для бекенду"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
