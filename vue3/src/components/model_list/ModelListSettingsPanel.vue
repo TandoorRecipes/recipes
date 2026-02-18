@@ -149,28 +149,36 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, PropType} from 'vue'
+import {computed, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import type {Model, ModelTableHeaders} from '@/types/Models'
 import type {ModelActionDef, ModelFilterDef} from '@/composables/modellist/types'
 import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
 import SettingsPanelTabsContent from '@/components/model_list/SettingsPanelTabsContent.vue'
 
-const props = defineProps({
-    modelValue: {type: Boolean, required: true},
-    activeTab: {type: String, default: 'settings'},
-    model: {type: Object as PropType<Model>, required: true},
-    allColumns: {type: Array as PropType<ModelTableHeaders[]>, required: true},
-    isColumnVisible: {type: Function as PropType<(key: string) => boolean>, required: true},
-    toggleColumn: {type: Function as PropType<(key: string) => void>, required: true},
-    getDisplayMode: {type: Function as PropType<(key: string) => 'icon' | 'text'>, required: true},
-    setDisplayMode: {type: Function as PropType<(key: string, mode: 'icon' | 'text') => void>, required: true},
-    groupedFilterDefs: {type: Object as PropType<Map<string, ModelFilterDef[]>>, default: () => new Map()},
-    getFilter: {type: Function as PropType<(key: string) => string | undefined>, default: () => () => undefined},
-    setFilter: {type: Function as PropType<(key: string, value: string | undefined) => void>, default: () => () => {}},
-    clearAllFilters: {type: Function as PropType<() => void>, default: () => () => {}},
-    activeFilterCount: {type: Number, default: 0},
-    actionDefs: {type: Array as PropType<ModelActionDef[]>, default: () => []},
+const props = withDefaults(defineProps<{
+    modelValue: boolean
+    activeTab?: string
+    model: Model
+    allColumns: ModelTableHeaders[]
+    isColumnVisible: (key: string) => boolean
+    toggleColumn: (key: string) => void
+    getDisplayMode: (key: string) => 'icon' | 'text'
+    setDisplayMode: (key: string, mode: 'icon' | 'text') => void
+    groupedFilterDefs?: Map<string, ModelFilterDef[]>
+    getFilter?: (key: string) => string | undefined
+    setFilter?: (key: string, value: string | undefined) => void
+    clearAllFilters?: () => void
+    activeFilterCount?: number
+    actionDefs?: ModelActionDef[]
+}>(), {
+    activeTab: 'settings',
+    groupedFilterDefs: () => new Map(),
+    getFilter: () => () => undefined,
+    setFilter: () => () => {},
+    clearAllFilters: () => () => {},
+    activeFilterCount: 0,
+    actionDefs: () => [],
 })
 
 const emit = defineEmits(['update:modelValue', 'update:activeTab'])

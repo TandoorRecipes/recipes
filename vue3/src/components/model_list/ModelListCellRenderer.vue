@@ -17,18 +17,20 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from 'vue'
+import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {ModelTableHeaders} from '@/types/Models'
 import {getNestedProperty} from '@/utils/utils'
 
 const {t} = useI18n()
 
-const props = defineProps({
-    item: {type: Object, required: true},
-    header: {type: Object as PropType<ModelTableHeaders>, required: true},
-    displayMode: {type: String as PropType<'icon' | 'text'>, required: true},
-    showHeaders: {type: Boolean, default: true},
+const props = withDefaults(defineProps<{
+    item: Record<string, any>
+    header: ModelTableHeaders
+    displayMode: 'icon' | 'text'
+    showHeaders?: boolean
+}>(), {
+    showHeaders: true,
 })
 
 const value = computed(() => {

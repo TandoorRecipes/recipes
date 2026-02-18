@@ -1,4 +1,4 @@
-import {computed, ref, watch, type ComputedRef, type WritableComputedRef} from 'vue'
+import {computed, ref, shallowReactive, watch, type ComputedRef, type WritableComputedRef} from 'vue'
 import {useMessageStore, ErrorMessageType} from '@/stores/MessageStore'
 import type {Model} from '@/types/Models'
 
@@ -31,7 +31,7 @@ export function useModelListTree(
 
     const expandedIds = ref<Set<number>>(new Set())
     const loadingIds = ref<Set<number>>(new Set())
-    const childrenCache = new Map<number, ChildrenCacheEntry>()
+    const childrenCache = shallowReactive(new Map<number, ChildrenCacheEntry>())
 
     /** Optional callback invoked when children are removed from view on collapse */
     let onCollapseCallback: ((removedIds: number[]) => void) | undefined

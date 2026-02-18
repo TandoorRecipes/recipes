@@ -331,7 +331,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, PropType} from 'vue'
+import {computed, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {ModelTableHeaders} from '@/types/Models'
@@ -343,38 +343,63 @@ const {mobile} = useDisplay()
 /** Detect touch-primary input device via CSS media query (W3C standard) */
 const hasTouchInput = window.matchMedia('(pointer: coarse)').matches
 
-const props = defineProps({
-    currentTab: {type: String, required: true},
-    showColumnHeaders: {type: Boolean, required: true},
-    toggleableColumns: {type: Array as PropType<ModelTableHeaders[]>, required: true},
-    isColumnVisible: {type: Function as PropType<(key: string) => boolean>, required: true},
-    toggleColumn: {type: Function as PropType<(key: string) => void>, required: true},
-    getDisplayMode: {type: Function as PropType<(key: string) => 'icon' | 'text'>, required: true},
-    setDisplayMode: {type: Function as PropType<(key: string, mode: 'icon' | 'text') => void>, required: true},
-    groupedFilterDefs: {type: Object as PropType<Map<string, ModelFilterDef[]>>, default: () => new Map()},
-    getFilter: {type: Function as PropType<(key: string) => string | undefined>, default: () => () => undefined},
-    setFilter: {type: Function as PropType<(key: string, value: string | undefined) => void>, default: () => () => {}},
-    clearAllFilters: {type: Function as PropType<() => void>, default: () => () => {}},
-    activeFilterCount: {type: Number, default: 0},
-    actionDefs: {type: Array as PropType<ModelActionDef[]>, default: () => []},
-    quickActionKeys: {type: Array as PropType<string[]>, default: () => []},
-    setQuickActionKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
-    treeAvailable: {type: Boolean, default: false},
-    treeEnabled: {type: Boolean, default: false},
-    statsAvailable: {type: Boolean, default: false},
-    showStats: {type: Boolean, default: false},
-    desktopSubtitleKeys: {type: Array as PropType<string[]>, default: () => []},
-    setDesktopSubtitleKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
-    hasMobileList: {type: Boolean, default: false},
-    mobileSubtitleKeys: {type: Array as PropType<string[]>, default: () => []},
-    setMobileSubtitleKeys: {type: Function as PropType<(keys: string[]) => void>, default: () => () => {}},
-    swipeEnabled: {type: Boolean, default: false},
-    setSwipeEnabled: {type: Function as PropType<(val: boolean) => void>, default: () => () => {}},
-    swipeLeftKeys: {type: Array as PropType<string[]>, default: () => []},
-    setSwipeLeftKeys: {type: Function as PropType<(val: string[]) => void>, default: () => () => {}},
-    swipeRightKeys: {type: Array as PropType<string[]>, default: () => []},
-    setSwipeRightKeys: {type: Function as PropType<(val: string[]) => void>, default: () => () => {}},
-    showMobileHeaders: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+    currentTab: string
+    showColumnHeaders: boolean
+    toggleableColumns: ModelTableHeaders[]
+    isColumnVisible: (key: string) => boolean
+    toggleColumn: (key: string) => void
+    getDisplayMode: (key: string) => 'icon' | 'text'
+    setDisplayMode: (key: string, mode: 'icon' | 'text') => void
+    groupedFilterDefs?: Map<string, ModelFilterDef[]>
+    getFilter?: (key: string) => string | undefined
+    setFilter?: (key: string, value: string | undefined) => void
+    clearAllFilters?: () => void
+    activeFilterCount?: number
+    actionDefs?: ModelActionDef[]
+    quickActionKeys?: string[]
+    setQuickActionKeys?: (keys: string[]) => void
+    treeAvailable?: boolean
+    treeEnabled?: boolean
+    statsAvailable?: boolean
+    showStats?: boolean
+    desktopSubtitleKeys?: string[]
+    setDesktopSubtitleKeys?: (keys: string[]) => void
+    hasMobileList?: boolean
+    mobileSubtitleKeys?: string[]
+    setMobileSubtitleKeys?: (keys: string[]) => void
+    swipeEnabled?: boolean
+    setSwipeEnabled?: (val: boolean) => void
+    swipeLeftKeys?: string[]
+    setSwipeLeftKeys?: (val: string[]) => void
+    swipeRightKeys?: string[]
+    setSwipeRightKeys?: (val: string[]) => void
+    showMobileHeaders?: boolean
+}>(), {
+    groupedFilterDefs: () => new Map(),
+    getFilter: () => () => undefined,
+    setFilter: () => () => {},
+    clearAllFilters: () => () => {},
+    activeFilterCount: 0,
+    actionDefs: () => [],
+    quickActionKeys: () => [],
+    setQuickActionKeys: () => () => {},
+    treeAvailable: false,
+    treeEnabled: false,
+    statsAvailable: false,
+    showStats: false,
+    desktopSubtitleKeys: () => [],
+    setDesktopSubtitleKeys: () => () => {},
+    hasMobileList: false,
+    mobileSubtitleKeys: () => [],
+    setMobileSubtitleKeys: () => () => {},
+    swipeEnabled: false,
+    setSwipeEnabled: () => () => {},
+    swipeLeftKeys: () => [],
+    setSwipeLeftKeys: () => () => {},
+    swipeRightKeys: () => [],
+    setSwipeRightKeys: () => () => {},
+    showMobileHeaders: false,
 })
 
 const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled', 'update:showStats', 'update:showMobileHeaders'])

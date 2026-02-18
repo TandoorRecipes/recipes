@@ -53,9 +53,9 @@ import {useDisplay} from 'vuetify'
 
 const {mobile} = useDisplay()
 
-defineProps({
-    selectedCount: { type: Number, required: true },
-})
+defineProps<{
+    selectedCount: number
+}>()
 
 const emit = defineEmits<{
     close: []

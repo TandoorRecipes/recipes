@@ -21,15 +21,17 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from 'vue'
+import {computed} from 'vue'
 import type {ModelStatDef} from '@/composables/modellist/types'
 
-const props = defineProps({
-    pageCount: {type: Number, required: true},
-    itemCount: {type: Number, required: true},
-    stats: {type: Object as PropType<Record<string, number>>, required: true},
-    statDefs: {type: Array as PropType<ModelStatDef[]>, required: true},
-    loading: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+    pageCount: number
+    itemCount: number
+    stats: Record<string, number>
+    statDefs: ModelStatDef[]
+    loading?: boolean
+}>(), {
+    loading: false,
 })
 
 const totalCount = computed(() => props.stats.total ?? props.itemCount)

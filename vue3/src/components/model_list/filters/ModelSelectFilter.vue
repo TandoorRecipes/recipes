@@ -19,13 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import {type PropType} from 'vue'
 import type {ModelFilterDef} from '@/composables/modellist/types'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 
-defineProps({
-    filterDef: {type: Object as PropType<ModelFilterDef>, required: true},
-    modelValue: {type: String as PropType<string | undefined>, default: undefined},
+withDefaults(defineProps<{
+    filterDef: ModelFilterDef
+    modelValue?: string
+}>(), {
+    modelValue: undefined,
 })
 
 const emit = defineEmits(['update:modelValue'])

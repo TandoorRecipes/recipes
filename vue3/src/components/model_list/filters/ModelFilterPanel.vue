@@ -56,18 +56,18 @@
 </template>
 
 <script setup lang="ts">
-import {type PropType, ref} from 'vue'
+import {ref} from 'vue'
 import type {ModelFilterDef} from '@/composables/modellist/types'
 import TriStateFilter from './TriStateFilter.vue'
 import ModelSelectFilter from './ModelSelectFilter.vue'
 
-defineProps({
-    groupedFilterDefs: {type: Object as PropType<Map<string, ModelFilterDef[]>>, required: true},
-    getFilter: {type: Function as PropType<(key: string) => string | undefined>, required: true},
-    setFilter: {type: Function as PropType<(key: string, value: string | undefined) => void>, required: true},
-    clearAllFilters: {type: Function as PropType<() => void>, required: true},
-    activeFilterCount: {type: Number, required: true},
-})
+defineProps<{
+    groupedFilterDefs: Map<string, ModelFilterDef[]>
+    getFilter: (key: string) => string | undefined
+    setFilter: (key: string, value: string | undefined) => void
+    clearAllFilters: () => void
+    activeFilterCount: number
+}>()
 
 const openGroups = ref<Record<string, boolean>>({})
 

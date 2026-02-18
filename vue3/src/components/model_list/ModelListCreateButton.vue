@@ -18,14 +18,16 @@
 </template>
 
 <script setup lang="ts">
-import {PropType} from 'vue'
 import type {EditorSupportedModels} from '@/types/Models'
 import ModelEditDialog from '@/components/dialogs/ModelEditDialog.vue'
 
-defineProps({
-    model: {type: String as PropType<EditorSupportedModels>, required: true},
-    disableCreate: {type: Boolean, default: false},
-    compact: {type: Boolean, default: false},
+withDefaults(defineProps<{
+    model: EditorSupportedModels
+    disableCreate?: boolean
+    compact?: boolean
+}>(), {
+    disableCreate: false,
+    compact: false,
 })
 
 const emit = defineEmits(['change'])

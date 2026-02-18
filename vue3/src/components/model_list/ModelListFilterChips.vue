@@ -59,12 +59,14 @@ const activeFilters = computed(() => {
 
 /** Cache resolved names for model-select filters: "modelName:id" → display name */
 const nameCache = reactive(new Map<string, string>())
+/** Track in-flight API requests to prevent duplicate fetches */
+const inFlight = new Set<string>()
 
 watch(activeFilters, (filters) => {
     const modelSelectFilters = filters.filter(f => f.def.type === 'model-select' && f.def.modelName)
     for (const f of modelSelectFilters) {
         const cacheKey = `${f.def.modelName}:${f.value}`
-        if (nameCache.has(cacheKey)) continue
+        if (nameCache.has(cacheKey) || inFlight.has(cacheKey)) continue
         const id = Number(f.value)
         if (Number.isNaN(id)) {
             nameCache.set(cacheKey, String(f.value))
@@ -73,11 +75,14 @@ watch(activeFilters, (filters) => {
         nameCache.set(cacheKey, String(f.value))  // placeholder with ID prevents duplicate requests
         const gm = getGenericModelFromString(f.def.modelName!, t)
         if (!gm) continue
+        inFlight.add(cacheKey)
         gm.retrieve(id).then((obj: any) => {
             const label = gm.model.itemLabel ?? 'name'
             nameCache.set(cacheKey, obj[label] ?? String(f.value))
         }).catch(() => {
             nameCache.set(cacheKey, String(f.value))
+        }).finally(() => {
+            inFlight.delete(cacheKey)
         })
     }
 }, {immediate: true})

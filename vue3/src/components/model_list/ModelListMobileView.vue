@@ -332,7 +332,11 @@ function onActionClick(e: Event, key: string, item: ModelItem) {
     const now = Date.now()
     if (now - (lastActionTimes.get(actionItemKey) ?? 0) < 400) return
     lastActionTimes.set(actionItemKey, now)
-    if (lastActionTimes.size > 200) lastActionTimes.clear()
+    if (lastActionTimes.size > 50) {
+        for (const [k, t] of lastActionTimes) {
+            if (now - t > 10_000) lastActionTimes.delete(k)
+        }
+    }
     swipe.resetSwipe(item.id)
     emit('action', key, item)
 }

@@ -154,7 +154,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from 'vue'
+import {computed} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {ModelSortDef} from '@/composables/modellist/types'
@@ -163,14 +163,22 @@ import {useDebounceFn} from '@vueuse/core'
 const {t} = useI18n()
 const {mobile} = useDisplay()
 
-const props = defineProps({
-    query: {type: String, default: ''},
-    ordering: {type: String, default: ''},
-    sortOptions: {type: Array as PropType<ModelSortDef[]>, default: () => []},
-    hasFilters: {type: Boolean, default: false},
-    activeFilterCount: {type: Number, default: 0},
-    hasMultiSelect: {type: Boolean, default: false},
-    selectMode: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+    query?: string
+    ordering?: string
+    sortOptions?: ModelSortDef[]
+    hasFilters?: boolean
+    activeFilterCount?: number
+    hasMultiSelect?: boolean
+    selectMode?: boolean
+}>(), {
+    query: '',
+    ordering: '',
+    sortOptions: () => [],
+    hasFilters: false,
+    activeFilterCount: 0,
+    hasMultiSelect: false,
+    selectMode: false,
 })
 
 const emit = defineEmits([

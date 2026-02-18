@@ -17,12 +17,14 @@
 </template>
 
 <script setup lang="ts">
-import {computed, type PropType} from 'vue'
+import {computed} from 'vue'
 import type {ModelFilterDef} from '@/composables/modellist/types'
 
-const props = defineProps({
-    filterDef: {type: Object as PropType<ModelFilterDef>, required: true},
-    modelValue: {type: String as PropType<string | undefined>, default: undefined},
+const props = withDefaults(defineProps<{
+    filterDef: ModelFilterDef
+    modelValue?: string
+}>(), {
+    modelValue: undefined,
 })
 
 const emit = defineEmits(['update:modelValue'])
