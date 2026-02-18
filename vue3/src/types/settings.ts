@@ -43,4 +43,5 @@ export type DeviceSettings = {
     food_swipeRight: string[]
     food_mobileSubtitle: string[]
     food_desktopSubtitle: string[]
+    food_showMobileHeaders: boolean
 }

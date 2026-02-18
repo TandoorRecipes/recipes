@@ -37,9 +37,32 @@
                 </v-list-item-title>
             </v-list-item>
 
-            <div
+            <template
                 v-for="item in items"
                 :key="item.id"
+            >
+            <!-- Load More sentinel row -->
+            <v-list-item
+                v-if="item._isLoadMore"
+                density="compact"
+                class="d-flex justify-center"
+                :style="{ paddingLeft: ((item._depth ?? 0) * 20 + 16) + 'px' }"
+            >
+                <v-btn
+                    variant="text"
+                    size="small"
+                    color="primary"
+                    class="text-none text-caption"
+                    :loading="loadingIds?.has(item._parentId)"
+                    @click="$emit('load-more', item._parentId)"
+                >
+                    <v-icon icon="fa-solid fa-ellipsis" size="x-small" class="mr-1" />
+                    {{ $t('Load_More') }}
+                </v-btn>
+            </v-list-item>
+
+            <div
+                v-else
                 class="mobile-list-item"
             >
                 <!-- Swipe action buttons (left side = revealed by swiping right) -->
@@ -143,6 +166,7 @@
                     </v-list-item>
                 </div>
             </div>
+            </template>
         </v-list>
 
         <v-card v-else-if="!loading" variant="flat" class="text-center pa-8 text-medium-emphasis">
@@ -206,6 +230,7 @@ const props = defineProps<{
     quickActionKeys: string[],
     treeActive: boolean,
     expandedIds: Set<number>,
+    loadingIds: Set<number>,
     toggleExpand: (id: number) => void,
     mobileSubtitleKeys: string[],
     swipeEnabled: boolean,
@@ -220,6 +245,7 @@ const emit = defineEmits<{
     'update:selectedItems': [items: any[]],
     'update:options': [options: { page: number, itemsPerPage: number }],
     action: [key: string, item: any],
+    'load-more': [parentId: number],
 }>()
 
 /** Resolve action keys to action defs, filtering out missing/invisible */
@@ -323,22 +349,25 @@ function onPageSizeChange(size: number) {
 }
 
 // Select-all header logic — compare by ID to handle cross-page selections
+// Filter out sentinel rows (Load More) which have string IDs and no real data
+const realItems = computed(() => props.items.filter((i: any) => !i._isLoadMore))
+
 const allSelected = computed(() => {
-    if (props.items.length === 0) return false
+    if (realItems.value.length === 0) return false
     const selectedIds = new Set(props.selectedItems.map((s: any) => s.id))
-    return props.items.every((item: any) => selectedIds.has(item.id))
+    return realItems.value.every((item: any) => selectedIds.has(item.id))
 })
 const someSelected = computed(() => {
     const selectedIds = new Set(props.selectedItems.map((s: any) => s.id))
-    return props.items.some((item: any) => selectedIds.has(item.id))
+    return realItems.value.some((item: any) => selectedIds.has(item.id))
 })
 
 function toggleSelectAll(val: boolean | null) {
-    const pageIds = new Set(props.items.map((i: any) => i.id))
+    const pageIds = new Set(realItems.value.map((i: any) => i.id))
     if (val) {
         // Merge current page into existing selections
         const kept = props.selectedItems.filter((s: any) => !pageIds.has(s.id))
-        emit('update:selectedItems', [...kept, ...props.items])
+        emit('update:selectedItems', [...kept, ...realItems.value])
     } else {
         // Remove only current page from selections
         emit('update:selectedItems', props.selectedItems.filter((s: any) => !pageIds.has(s.id)))
@@ -372,6 +401,7 @@ const subtitleMap = computed(() => {
     const cols = subtitleColumns.value
     const map = new Map<number, string>()
     for (const item of props.items) {
+        if (item._isLoadMore) continue
         const text = buildSubtitleText(item, cols, t)
         if (text) map.set(item.id, text)
     }

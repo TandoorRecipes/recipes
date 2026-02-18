@@ -264,6 +264,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             food_swipeRight: ['onhand', 'delete'],
             food_mobileSubtitle: ['supermarketCategory.name'],
             food_desktopSubtitle: [],
+            food_showMobileHeaders: false,
         }
     }
 
