@@ -30,18 +30,8 @@ export type DeviceSettings = {
     general_closedHelpAlerts: String[]
     general_showModelListDescription: boolean
 
-    // Food list settings
-    food_hiddenColumns: string[] | null
-    food_columnDisplayModes: Record<string, 'icon' | 'text'>
-    food_quickActions: string[]
-    food_treeView: boolean
-    food_showStats: boolean
-    food_showColumnHeaders: boolean
-    food_settingsPinned: boolean
-    food_swipeEnabled: boolean
-    food_swipeLeft: string[]
-    food_swipeRight: string[]
-    food_mobileSubtitle: string[]
-    food_desktopSubtitle: string[]
-    food_showMobileHeaders: boolean
+    // Model list settings are stored with dynamic keys: `${settingsKey}_${suffix}`
+    // e.g. food_hiddenColumns, keyword_treeView, unit_quickActions
+    // Index signature allows new models without adding explicit properties
+    [key: string]: any
 }

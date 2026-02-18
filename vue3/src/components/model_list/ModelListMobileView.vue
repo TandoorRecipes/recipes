@@ -207,7 +207,7 @@
 <script setup lang="ts">
 import {computed, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {ModelActionDef} from '@/composables/modellist/types'
+import type {ModelActionDef, ModelItem} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
 import {buildSubtitleText} from '@/utils/utils'
 import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
@@ -216,17 +216,17 @@ import ModelListActionMenu from '@/components/model_list/ModelListActionMenu.vue
 const {t} = useI18n()
 
 const props = defineProps<{
-    items: any[],
+    items: ModelItem[],
     itemsLength: number,
     loading: boolean,
     page: number,
     itemsPerPage: number,
     selectMode: boolean,
-    selectedItems: any[],
+    selectedItems: ModelItem[],
     enhancedColumns: ModelTableHeaders[],
     actionDefs: ModelActionDef[],
     groupedActionDefs: Map<string, ModelActionDef[]>,
-    getToggleState: (action: ModelActionDef, item: any) => boolean,
+    getToggleState: (action: ModelActionDef, item: ModelItem) => boolean,
     quickActionKeys: string[],
     treeActive: boolean,
     expandedIds: Set<number>,
@@ -242,9 +242,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-    'update:selectedItems': [items: any[]],
+    'update:selectedItems': [items: ModelItem[]],
     'update:options': [options: { page: number, itemsPerPage: number }],
-    action: [key: string, item: any],
+    action: [key: string, item: ModelItem],
     'load-more': [parentId: number],
 }>()
 
@@ -304,7 +304,7 @@ function dismissSwipeHint() {
 }
 
 /** Get background color for a swipe action button */
-function getActionBg(action: ModelActionDef, item: any): string {
+function getActionBg(action: ModelActionDef, item: ModelItem): string {
     if (action.isDanger) return 'rgb(var(--v-theme-error))'
     if (action.isToggle) {
         const active = action.isActive ? action.isActive(item) : props.getToggleState(action, item)
@@ -319,7 +319,7 @@ function getActionBg(action: ModelActionDef, item: any): string {
 }
 
 const lastActionTimes = new Map<string, number>()
-function onActionClick(e: Event, key: string, item: any) {
+function onActionClick(e: Event, key: string, item: ModelItem) {
     e.preventDefault()
     const actionItemKey = `${key}-${item.id}`
     const now = Date.now()
@@ -334,7 +334,7 @@ const totalPages = computed(() =>
     props.itemsPerPage > 0 ? Math.ceil(props.itemsLength / props.itemsPerPage) : 1
 )
 
-const childrenLoading = computed(() => props.items.some((item: any) => item._isLoading))
+const childrenLoading = computed(() => props.items.some(item => item._isLoading))
 
 
 const rangeText = computed(() => {
@@ -350,27 +350,27 @@ function onPageSizeChange(size: number) {
 
 // Select-all header logic — compare by ID to handle cross-page selections
 // Filter out sentinel rows (Load More) which have string IDs and no real data
-const realItems = computed(() => props.items.filter((i: any) => !i._isLoadMore))
+const realItems = computed(() => props.items.filter(i => !i._isLoadMore))
 
 const allSelected = computed(() => {
     if (realItems.value.length === 0) return false
-    const selectedIds = new Set(props.selectedItems.map((s: any) => s.id))
-    return realItems.value.every((item: any) => selectedIds.has(item.id))
+    const selectedIds = new Set(props.selectedItems.map(s => s.id))
+    return realItems.value.every(item => selectedIds.has(item.id))
 })
 const someSelected = computed(() => {
-    const selectedIds = new Set(props.selectedItems.map((s: any) => s.id))
-    return realItems.value.some((item: any) => selectedIds.has(item.id))
+    const selectedIds = new Set(props.selectedItems.map(s => s.id))
+    return realItems.value.some(item => selectedIds.has(item.id))
 })
 
 function toggleSelectAll(val: boolean | null) {
-    const pageIds = new Set(realItems.value.map((i: any) => i.id))
+    const pageIds = new Set(realItems.value.map(i => i.id))
     if (val) {
         // Merge current page into existing selections
-        const kept = props.selectedItems.filter((s: any) => !pageIds.has(s.id))
+        const kept = props.selectedItems.filter(s => !pageIds.has(s.id))
         emit('update:selectedItems', [...kept, ...realItems.value])
     } else {
         // Remove only current page from selections
-        emit('update:selectedItems', props.selectedItems.filter((s: any) => !pageIds.has(s.id)))
+        emit('update:selectedItems', props.selectedItems.filter(s => !pageIds.has(s.id)))
     }
 }
 
@@ -381,13 +381,13 @@ const subtitleColumns = computed(() =>
         .filter((c): c is ModelTableHeaders => !!c)
 )
 
-function isSelected(item: any): boolean {
-    return props.selectedItems.some((s: any) => s.id === item.id)
+function isSelected(item: ModelItem): boolean {
+    return props.selectedItems.some(s => s.id === item.id)
 }
 
-function toggleSelection(item: any) {
+function toggleSelection(item: ModelItem) {
     const current = [...props.selectedItems]
-    const idx = current.findIndex((s: any) => s.id === item.id)
+    const idx = current.findIndex(s => s.id === item.id)
     if (idx >= 0) {
         current.splice(idx, 1)
     } else {

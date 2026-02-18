@@ -58,20 +58,20 @@
 <script setup lang="ts">
 import {computed, ref} from 'vue'
 import {useDisplay} from 'vuetify'
-import type {ModelActionDef} from '@/composables/modellist/types'
+import type {ModelActionDef, ModelItem} from '@/composables/modellist/types'
 
 const {mobile} = useDisplay()
 
 const props = defineProps<{
-    item: any,
+    item: ModelItem,
     actionDefs: ModelActionDef[],
     groupedActionDefs: Map<string, ModelActionDef[]>,
-    getToggleState: (action: ModelActionDef, item: any) => boolean,
+    getToggleState: (action: ModelActionDef, item: ModelItem) => boolean,
     quickActionKeys?: string[],
 }>()
 
 defineEmits<{
-    action: [key: string, item: any]
+    action: [key: string, item: ModelItem]
 }>()
 
 const menuOpen = ref(false)
@@ -86,7 +86,7 @@ function isVisible(action: ModelActionDef): boolean {
     return !action.visible || action.visible(props.item)
 }
 
-function resolveColor(action: ModelActionDef, item: any): string | undefined {
+function resolveColor(action: ModelActionDef, item: ModelItem): string | undefined {
     if (!action.isToggle) return undefined
     if (action.colorResolver) return action.colorResolver(item)
     return props.getToggleState(action, item) ? action.activeColor : action.inactiveColor
