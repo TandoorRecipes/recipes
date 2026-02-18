@@ -1146,19 +1146,14 @@ export interface ApiFoodListRequest {
     hasSubstitute?: boolean;
     ignoreShopping?: boolean;
     inShoppingList?: boolean;
-    limit?: string;
     onhand?: boolean;
     ordering?: string;
     page?: number;
     pageSize?: number;
-    query?: string;
-    random?: string;
     root?: number;
     rootTree?: number;
-    stats?: boolean;
     supermarketCategory?: number;
     tree?: number;
-    updatedAt?: string;
 }
 
 export interface ApiFoodMergeUpdateRequest {
@@ -1196,9 +1191,13 @@ export interface ApiFoodRetrieveRequest {
     id: number;
 }
 
+export interface ApiFoodShoppingDestroyRequest {
+    id: number;
+}
+
 export interface ApiFoodShoppingUpdateRequest {
     id: number;
-    foodShoppingUpdate: FoodShoppingUpdate;
+    foodShoppingUpdate?: FoodShoppingUpdate;
 }
 
 export interface ApiFoodUpdateRequest {
@@ -7617,10 +7616,6 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['in_shopping_list'] = requestParameters['inShoppingList'];
         }
 
-        if (requestParameters['limit'] != null) {
-            queryParameters['limit'] = requestParameters['limit'];
-        }
-
         if (requestParameters['onhand'] != null) {
             queryParameters['onhand'] = requestParameters['onhand'];
         }
@@ -7637,14 +7632,6 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
-        if (requestParameters['query'] != null) {
-            queryParameters['query'] = requestParameters['query'];
-        }
-
-        if (requestParameters['random'] != null) {
-            queryParameters['random'] = requestParameters['random'];
-        }
-
         if (requestParameters['root'] != null) {
             queryParameters['root'] = requestParameters['root'];
         }
@@ -7653,20 +7640,12 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['root_tree'] = requestParameters['rootTree'];
         }
 
-        if (requestParameters['stats'] != null) {
-            queryParameters['stats'] = requestParameters['stats'];
-        }
-
         if (requestParameters['supermarketCategory'] != null) {
             queryParameters['supermarket_category'] = requestParameters['supermarketCategory'];
         }
 
         if (requestParameters['tree'] != null) {
             queryParameters['tree'] = requestParameters['tree'];
-        }
-
-        if (requestParameters['updatedAt'] != null) {
-            queryParameters['updated_at'] = requestParameters['updatedAt'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -7979,18 +7958,47 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * logs request counts to redis cache total/per user/
      */
+    async apiFoodShoppingDestroyRaw(requestParameters: ApiFoodShoppingDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFoodShoppingDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/{id}/shopping/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodShoppingDestroy(requestParameters: ApiFoodShoppingDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiFoodShoppingDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
     async apiFoodShoppingUpdateRaw(requestParameters: ApiFoodShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FoodShoppingUpdate>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
                 'Required parameter "id" was null or undefined when calling apiFoodShoppingUpdate().'
-            );
-        }
-
-        if (requestParameters['foodShoppingUpdate'] == null) {
-            throw new runtime.RequiredError(
-                'foodShoppingUpdate',
-                'Required parameter "foodShoppingUpdate" was null or undefined when calling apiFoodShoppingUpdate().'
             );
         }
 

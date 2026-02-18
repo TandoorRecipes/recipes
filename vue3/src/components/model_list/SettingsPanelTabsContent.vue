@@ -216,6 +216,7 @@
                     </div>
                 </v-expand-transition>
 
+                <template v-if="hasTouchInput">
                 <v-divider class="my-2" />
 
                 <button class="text-overline px-4 d-block w-100 text-start"
@@ -306,6 +307,7 @@
                         </v-expand-transition>
                     </div>
                 </v-expand-transition>
+                </template>
             </template>
 
             <!-- Swipe action picker dialog -->
@@ -337,6 +339,9 @@ import type {ModelActionDef, ModelFilterDef} from '@/composables/modellist/types
 import ModelFilterPanel from '@/components/model_list/filters/ModelFilterPanel.vue'
 
 const {mobile} = useDisplay()
+
+/** Detect touch-primary input device via CSS media query (W3C standard) */
+const hasTouchInput = window.matchMedia('(pointer: coarse)').matches
 
 const props = defineProps({
     currentTab: {type: String, required: true},

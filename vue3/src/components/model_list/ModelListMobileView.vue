@@ -264,9 +264,16 @@ const resolvedRightActions = computed(() =>
 const leftSlotCount = computed(() => resolvedLeftActions.value.length)
 const rightSlotCount = computed(() => resolvedRightActions.value.length)
 
-/** Swipe is active only when enabled, not in select mode, and actions are configured */
+/** Detect touch-primary input device via CSS media query (W3C standard) */
+const hasTouchInput = ref(window.matchMedia('(pointer: coarse)').matches)
+onMounted(() => {
+    const mql = window.matchMedia('(pointer: coarse)')
+    mql.addEventListener('change', (e) => { hasTouchInput.value = e.matches })
+})
+
+/** Swipe is active only on touch devices, when enabled, not in select mode, and actions are configured */
 const swipeActive = computed(() =>
-    props.swipeEnabled && !props.selectMode && (leftSlotCount.value > 0 || rightSlotCount.value > 0)
+    hasTouchInput.value && props.swipeEnabled && !props.selectMode && (leftSlotCount.value > 0 || rightSlotCount.value > 0)
 )
 
 const enabledRef = computed(() => swipeActive.value)

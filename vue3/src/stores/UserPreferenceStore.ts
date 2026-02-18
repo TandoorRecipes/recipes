@@ -259,7 +259,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             food_showStats: false,
             food_showColumnHeaders: true,
             food_settingsPinned: false,
-            food_swipeEnabled: true,
+            food_swipeEnabled: false,
             food_swipeLeft: ['edit', 'shopping'],
             food_swipeRight: ['onhand', 'delete'],
             food_mobileSubtitle: ['supermarketCategory.name'],

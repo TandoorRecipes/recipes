@@ -51,7 +51,7 @@ export interface PaginatedFoodList {
      */
     results: Array<Food>;
     /**
-     *
+     * 
      * @type {Date}
      * @memberof PaginatedFoodList
      */
