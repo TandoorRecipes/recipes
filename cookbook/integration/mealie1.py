@@ -145,7 +145,7 @@ class Mealie1(Integration):
             if s['recipe_id'] in recipes_dict:
                 step = Step.objects.create(instruction=(s['text'] if s['text'] else "") + (f" \n {s['summary']}" if 'summary' in s and s['summary'] else ""),
                                            order=s['position'],
-                                           name=s['title'],
+                                           name=(s['title'] or '')[:128],
                                            space=self.request.space)
                 steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[s['recipe_id']], step_id=step.pk))
                 step_id_dict[s["id"]] = step.pk
@@ -182,13 +182,16 @@ class Mealie1(Integration):
         for ref in mealie_database['recipe_ingredient_ref_link']:
             recipe_ingredient_ref_link_dict[ref["reference_id"]] = ref["instruction_id"]
 
+        # Process ingredients in (recipe_id, position) order so section headers and ingredients keep correct order
+        ingredients_sorted = sorted(mealie_database['recipes_ingredients'], key=lambda x: (x['recipe_id'], x['position']))
         ingredients_relation = []
-        for i in mealie_database['recipes_ingredients']:
+        for i in ingredients_sorted:
             if i['recipe_id'] in recipes_dict:
                 if i['title']:
                     title_ingredient = Ingredient.objects.create(
                         note=i['title'],
                         is_header=True,
+                        order=i['position'],
                         space=self.request.space,
                     )
                     ingredients_relation.append(Step.ingredients.through(step_id=get_step_id(i, first_step_of_recipe_dict, step_id_dict,recipe_ingredient_ref_link_dict), ingredient_id=title_ingredient.pk))
@@ -361,7 +364,7 @@ class Mealie1(Integration):
         for r in mealie_database['recipes']:
             try:
                 if recipe := Recipe.objects.filter(pk=recipes_dict[r['id']]).first():
-                    self.import_recipe_image(recipe, BytesIO(file.read(f'data/recipes/{str(uuid.UUID(str(r['id'])))}/images/original.webp')), filetype='.webp')
+                    self.import_recipe_image(recipe, BytesIO(file.read(f'data/recipes/{str(uuid.UUID(str(r["id"])))}/images/original.webp')), filetype='.webp')
             except Exception:
                 pass
 
