@@ -16,7 +16,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * This is the single owner of header computation for ALL models —
  * replaces GenericModel.getTableHeaders() entirely.
  */
-export function useModelListColumns(model: ComputedRef<Model | undefined>, t: Function) {
+export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (key: string) => string) {
     const deviceSettings = useUserPreferenceStore().deviceSettings
 
     const listSettings = computed(() => model.value?.listSettings)

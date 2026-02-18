@@ -85,7 +85,7 @@
         />
 
         <div class="model-list-toolbar-carousel-wrapper mt-2">
-        <div class="model-list-toolbar-carousel">
+        <div class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')">
             <v-btn
                 v-if="hasFilters"
                 variant="text"

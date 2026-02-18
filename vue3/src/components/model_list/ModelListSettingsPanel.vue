@@ -13,12 +13,14 @@
                 :icon="isPinned ? 'fa-solid fa-thumbtack' : 'fa-solid fa-thumbtack fa-rotate-90'"
                 variant="plain"
                 size="small"
+                :aria-label="isPinned ? $t('Unpin') : $t('Pin')"
                 @click="isPinned = !isPinned"
             />
             <v-btn
                 icon="fa-solid fa-times"
                 variant="plain"
                 size="small"
+                :aria-label="$t('Close')"
                 @click="isOpen = false"
             />
         </v-toolbar>
@@ -64,8 +66,7 @@
     <v-bottom-sheet v-else v-model="isOpen" scrollable>
         <v-card :style="sheetDragStyle">
             <div
-                role="separator"
-                :aria-label="$t('Drag')"
+                role="presentation"
                 style="display: flex; justify-content: center; padding: 12px 0 4px; cursor: grab; touch-action: none;"
                 @touchstart.passive="onSheetDragStart"
                 @touchmove="onSheetDragMove"
@@ -85,7 +86,7 @@
                         {{ $t('Settings') }}
                     </v-tab>
                 </v-tabs>
-                <v-btn icon="fa-solid fa-times" variant="plain" size="small" @click="isOpen = false" />
+                <v-btn icon="fa-solid fa-times" variant="plain" size="small" :aria-label="$t('Close')" @click="isOpen = false" />
             </v-card-title>
 
             <v-divider />
