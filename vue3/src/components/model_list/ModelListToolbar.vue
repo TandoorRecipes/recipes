@@ -181,13 +181,13 @@ const props = withDefaults(defineProps<{
     selectMode: false,
 })
 
-const emit = defineEmits([
-    'update:query',
-    'update:ordering',
-    'open-filters',
-    'open-settings',
-    'toggle-select',
-])
+const emit = defineEmits<{
+    'update:query': [val: string]
+    'update:ordering': [val: string]
+    'open-filters': []
+    'open-settings': []
+    'toggle-select': []
+}>()
 
 const debouncedEmitQuery = useDebounceFn((val: string) => {
     emit('update:query', val)

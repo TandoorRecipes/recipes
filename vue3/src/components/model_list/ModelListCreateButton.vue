@@ -30,5 +30,5 @@ withDefaults(defineProps<{
     compact: false,
 })
 
-const emit = defineEmits(['change'])
+const emit = defineEmits<{ change: [] }>()
 </script>

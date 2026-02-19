@@ -181,7 +181,10 @@ const props = withDefaults(defineProps<{
     actionDefs: () => [],
 })
 
-const emit = defineEmits(['update:modelValue', 'update:activeTab'])
+const emit = defineEmits<{
+    'update:modelValue': [val: boolean]
+    'update:activeTab': [val: string]
+}>()
 
 const currentTab = computed({
     get: () => props.activeTab,

@@ -265,9 +265,10 @@ const leftSlotCount = computed(() => resolvedLeftActions.value.length)
 const rightSlotCount = computed(() => resolvedRightActions.value.length)
 
 /** Detect touch-primary input device via CSS media query (W3C standard) */
-const hasTouchInput = ref(window.matchMedia('(pointer: coarse)').matches)
+const hasTouchInput = ref(false)
 onMounted(() => {
     const mql = window.matchMedia('(pointer: coarse)')
+    hasTouchInput.value = mql.matches
     mql.addEventListener('change', (e) => { hasTouchInput.value = e.matches })
 })
 

@@ -341,7 +341,7 @@ import ModelFilterPanel from '@/components/model_list/filters/ModelFilterPanel.v
 const {mobile} = useDisplay()
 
 /** Detect touch-primary input device via CSS media query (W3C standard) */
-const hasTouchInput = window.matchMedia('(pointer: coarse)').matches
+const hasTouchInput = typeof window !== 'undefined' ? window.matchMedia('(pointer: coarse)').matches : false
 
 const props = withDefaults(defineProps<{
     currentTab: string
@@ -402,7 +402,13 @@ const props = withDefaults(defineProps<{
     showMobileHeaders: false,
 })
 
-const emit = defineEmits(['update:currentTab', 'update:showColumnHeaders', 'update:treeEnabled', 'update:showStats', 'update:showMobileHeaders'])
+const emit = defineEmits<{
+    'update:currentTab': [val: string]
+    'update:showColumnHeaders': [val: boolean]
+    'update:treeEnabled': [val: boolean]
+    'update:showStats': [val: boolean]
+    'update:showMobileHeaders': [val: boolean]
+}>()
 
 // Collapsible section state (all default open)
 const openSections = ref<Record<string, boolean>>({})
