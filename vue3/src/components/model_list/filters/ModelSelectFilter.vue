@@ -29,7 +29,7 @@ withDefaults(defineProps<{
     modelValue: undefined,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{ 'update:modelValue': [val: string | undefined] }>()
 
 function onUpdate(val: number | null) {
     emit('update:modelValue', val != null ? String(val) : undefined)

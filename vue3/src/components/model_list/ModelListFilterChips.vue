@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, reactive, watch} from 'vue'
+import {computed, shallowReactive, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {ModelFilterDef} from '@/composables/modellist/types'
 import {getGenericModelFromString} from '@/types/Models'
@@ -58,7 +58,7 @@ const activeFilters = computed(() => {
 })
 
 /** Cache resolved names for model-select filters: "modelName:id" → display name */
-const nameCache = reactive(new Map<string, string>())
+const nameCache = shallowReactive(new Map<string, string>())
 /** Track in-flight API requests to prevent duplicate fetches */
 const inFlight = new Set<string>()
 

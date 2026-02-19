@@ -205,7 +205,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref, watch} from 'vue'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {ModelActionDef, ModelItem} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
@@ -266,11 +266,14 @@ const rightSlotCount = computed(() => resolvedRightActions.value.length)
 
 /** Detect touch-primary input device via CSS media query (W3C standard) */
 const hasTouchInput = ref(false)
+let touchMql: MediaQueryList | undefined
+function onTouchChange(e: MediaQueryListEvent) { hasTouchInput.value = e.matches }
 onMounted(() => {
-    const mql = window.matchMedia('(pointer: coarse)')
-    hasTouchInput.value = mql.matches
-    mql.addEventListener('change', (e) => { hasTouchInput.value = e.matches })
+    touchMql = window.matchMedia('(pointer: coarse)')
+    hasTouchInput.value = touchMql.matches
+    touchMql.addEventListener('change', onTouchChange)
 })
+onUnmounted(() => { touchMql?.removeEventListener('change', onTouchChange) })
 
 /** Swipe is active only on touch devices, when enabled, not in select mode, and actions are configured */
 const swipeActive = computed(() =>
@@ -364,15 +367,12 @@ function onPageSizeChange(size: number) {
 // Filter out sentinel rows (Load More) which have string IDs and no real data
 const realItems = computed(() => props.items.filter(i => !i._isLoadMore))
 
+const selectedIdSet = computed(() => new Set(props.selectedItems.map(s => s.id)))
 const allSelected = computed(() => {
     if (realItems.value.length === 0) return false
-    const selectedIds = new Set(props.selectedItems.map(s => s.id))
-    return realItems.value.every(item => selectedIds.has(item.id))
+    return realItems.value.every(item => selectedIdSet.value.has(item.id))
 })
-const someSelected = computed(() => {
-    const selectedIds = new Set(props.selectedItems.map(s => s.id))
-    return realItems.value.some(item => selectedIds.has(item.id))
-})
+const someSelected = computed(() => realItems.value.some(item => selectedIdSet.value.has(item.id)))
 
 function toggleSelectAll(val: boolean | null) {
     const pageIds = new Set(realItems.value.map(i => i.id))

@@ -331,7 +331,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {ModelTableHeaders} from '@/types/Models'
@@ -341,7 +341,15 @@ import ModelFilterPanel from '@/components/model_list/filters/ModelFilterPanel.v
 const {mobile} = useDisplay()
 
 /** Detect touch-primary input device via CSS media query (W3C standard) */
-const hasTouchInput = typeof window !== 'undefined' ? window.matchMedia('(pointer: coarse)').matches : false
+const hasTouchInput = ref(false)
+let touchMql: MediaQueryList | undefined
+function onTouchChange(e: MediaQueryListEvent) { hasTouchInput.value = e.matches }
+onMounted(() => {
+    touchMql = window.matchMedia('(pointer: coarse)')
+    hasTouchInput.value = touchMql.matches
+    touchMql.addEventListener('change', onTouchChange)
+})
+onUnmounted(() => { touchMql?.removeEventListener('change', onTouchChange) })
 
 const props = withDefaults(defineProps<{
     currentTab: string

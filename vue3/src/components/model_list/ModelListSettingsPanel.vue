@@ -67,7 +67,6 @@
         <v-card :style="sheetDragStyle">
             <div
                 role="presentation"
-                :aria-label="$t('Drag')"
                 style="display: flex; justify-content: center; padding: 12px 0 4px; cursor: grab; touch-action: none;"
                 @touchstart.passive="onSheetDragStart"
                 @touchmove="onSheetDragMove"

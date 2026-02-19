@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<{
     modelValue: undefined,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{ 'update:modelValue': [val: string | undefined] }>()
 
 const toggleValue = computed(() => props.modelValue ?? 'any')
 

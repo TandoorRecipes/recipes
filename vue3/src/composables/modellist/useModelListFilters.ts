@@ -80,7 +80,7 @@ export function useModelListFilters(model: ComputedRef<Model | undefined>) {
     }
 
     function setFilter(key: string, value: string | undefined): void {
-        const map = parseFilters(rawFilters.value)
+        const map = new Map(parsedFilters.value)
         if (value === undefined || value === '') {
             map.delete(key)
         } else {

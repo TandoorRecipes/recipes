@@ -1,6 +1,7 @@
-import {computed, ref, shallowReactive, watch, type ComputedRef, type WritableComputedRef} from 'vue'
+import {computed, shallowRef, shallowReactive, watch, type ComputedRef, type WritableComputedRef} from 'vue'
 import {useMessageStore, ErrorMessageType} from '@/stores/MessageStore'
 import type {Model} from '@/types/Models'
+import type {ModelItem} from './types'
 
 /** Page size for child fetches (independent of the table's page size) */
 const CHILD_PAGE_SIZE = 100
@@ -8,7 +9,7 @@ const CHILD_PAGE_SIZE = 100
 export {CHILD_PAGE_SIZE}
 
 interface ChildrenCacheEntry {
-    items: any[]
+    items: ModelItem[]
     hasMore: boolean
     page: number
 }
@@ -21,7 +22,7 @@ interface ChildrenCacheEntry {
  */
 export function useModelListTree(
     model: ComputedRef<Model | undefined>,
-    fetchChildren: (parentId: number, page: number) => Promise<{results: any[], hasMore: boolean}>,
+    fetchChildren: (parentId: number, page: number) => Promise<{results: ModelItem[], hasMore: boolean}>,
     treeEnabled: WritableComputedRef<boolean>,
 ) {
     /** Tree is active when user enabled it AND the model supports it */
@@ -29,8 +30,8 @@ export function useModelListTree(
         treeEnabled.value && !!model.value?.isTree && !!model.value?.listSettings?.treeEnabled
     )
 
-    const expandedIds = ref<Set<number>>(new Set())
-    const loadingIds = ref<Set<number>>(new Set())
+    const expandedIds = shallowRef<Set<number>>(new Set())
+    const loadingIds = shallowRef<Set<number>>(new Set())
     const childrenCache = shallowReactive(new Map<number, ChildrenCacheEntry>())
 
     /** Optional callback invoked when children are removed from view on collapse */
@@ -115,10 +116,10 @@ export function useModelListTree(
      * Adds `_depth` (0 = root) and `_isLoading` properties to each item.
      * If an expanded node has more pages, appends a sentinel `_isLoadMore` row.
      */
-    function buildFlatList(rootItems: any[]): any[] {
-        const result: any[] = []
+    function buildFlatList(rootItems: ModelItem[]): ModelItem[] {
+        const result: ModelItem[] = []
 
-        function walk(items: any[], depth: number) {
+        function walk(items: ModelItem[], depth: number) {
             for (const item of items) {
                 result.push({
                     ...item,
@@ -134,7 +135,8 @@ export function useModelListTree(
                             _isLoadMore: true,
                             _parentId: item.id,
                             _depth: depth + 1,
-                            id: `load-more-${item.id}`,
+                            id: -item.id,
+                            name: '',
                         })
                     }
                 }
