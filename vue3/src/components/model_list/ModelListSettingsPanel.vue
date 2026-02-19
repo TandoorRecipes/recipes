@@ -66,8 +66,7 @@
     <v-bottom-sheet v-else v-model="isOpen" scrollable>
         <v-card :style="sheetDragStyle">
             <div
-                role="separator"
-                :aria-label="$t('Drag')"
+                role="presentation"
                 style="display: flex; justify-content: center; padding: 12px 0 4px; cursor: grab; touch-action: none;"
                 @touchstart.passive="onSheetDragStart"
                 @touchmove="onSheetDragMove"
