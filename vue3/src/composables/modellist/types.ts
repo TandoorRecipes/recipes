@@ -233,4 +233,14 @@ export type ModelSortDef = {
     labelKey: string,
     /** Icon (FontAwesome class), optional */
     icon?: string,
+    /** When true, selecting this sort starts descending (e.g. highest count first) */
+    defaultDescending?: boolean,
+}
+
+/** Extract the ancestor path from an item's fullName (everything before the last " > "). */
+export function getAncestorPath(item: ModelItem): string | null {
+    const fn = item.fullName
+    if (!fn) return null
+    const lastSep = fn.lastIndexOf(' > ')
+    return lastSep > 0 ? fn.substring(0, lastSep) : null
 }

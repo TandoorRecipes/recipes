@@ -15,7 +15,7 @@
             />
         </div>
 
-        <v-list v-if="items.length > 0" class="mobile-list" density="compact">
+        <v-list v-if="items.length > 0" class="mobile-list bg-transparent" density="compact">
             <v-list-item
                 v-if="showMobileHeaders"
                 class="mobile-list-header"
@@ -149,6 +149,9 @@
 
                         <v-list-item-title>{{ item[props.labelField ?? 'name'] }}</v-list-item-title>
 
+                        <v-list-item-subtitle v-if="treeSuspended && getAncestorPath(item)" class="text-disabled">
+                            {{ getAncestorPath(item) }}
+                        </v-list-item-subtitle>
                         <v-list-item-subtitle v-if="subtitleMap.has(item.id)">
                             {{ subtitleMap.get(item.id) }}
                         </v-list-item-subtitle>
@@ -173,7 +176,7 @@
             {{ $t('No_Results') }}
         </v-card>
 
-        <div v-if="itemsLength > 0" class="v-data-table-footer" style="background: rgb(var(--v-theme-surface));">
+        <div v-if="itemsLength > 0" class="v-data-table-footer" style="background: transparent;">
             <div class="v-data-table-footer__items-per-page">
                 <span>{{ $t('Items_per_page') }}</span>
                 <v-select
@@ -208,6 +211,7 @@
 import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {ModelActionDef, ModelItem} from '@/composables/modellist/types'
+import {getAncestorPath} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
 import {buildSubtitleText} from '@/utils/utils'
 import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
@@ -229,6 +233,7 @@ const props = defineProps<{
     getToggleState: (action: ModelActionDef, item: ModelItem) => boolean,
     quickActionKeys: string[],
     treeActive: boolean,
+    treeSuspended: boolean,
     expandedIds: Set<number>,
     loadingIds: Set<number>,
     toggleExpand: (id: number) => void,
@@ -408,6 +413,7 @@ function toggleSelection(item: ModelItem) {
     emit('update:selectedItems', current)
 }
 
+
 /** Build subtitle map — computed once per render, not twice per item */
 const subtitleMap = computed(() => {
     const cols = subtitleColumns.value
@@ -442,12 +448,16 @@ onMounted(() => {
     position: relative;
     overflow: hidden;
     touch-action: pan-y;
+    background-image: linear-gradient(rgba(var(--v-theme-on-surface), 0.12), rgba(var(--v-theme-on-surface), 0.12));
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
 }
 
 .mobile-list-content {
     position: relative;
     z-index: 1;
-    background: rgb(var(--v-theme-surface));
+    background: rgb(var(--v-theme-background));
     transition: transform 0.2s ease;
 }
 

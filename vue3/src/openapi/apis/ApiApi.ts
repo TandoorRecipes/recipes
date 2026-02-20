@@ -1150,8 +1150,10 @@ export interface ApiFoodListRequest {
     ordering?: string;
     page?: number;
     pageSize?: number;
+    query?: string;
     root?: number;
     rootTree?: number;
+    stats?: boolean;
     supermarketCategory?: number;
     tree?: number;
     usedInRecipes?: boolean;
@@ -7633,12 +7635,20 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
+        }
+
         if (requestParameters['root'] != null) {
             queryParameters['root'] = requestParameters['root'];
         }
 
         if (requestParameters['rootTree'] != null) {
             queryParameters['root_tree'] = requestParameters['rootTree'];
+        }
+
+        if (requestParameters['stats'] != null) {
+            queryParameters['stats'] = requestParameters['stats'];
         }
 
         if (requestParameters['supermarketCategory'] != null) {

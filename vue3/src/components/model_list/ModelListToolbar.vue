@@ -41,6 +41,18 @@
         />
 
         <v-btn
+            v-if="showReset"
+            icon
+            variant="text"
+            size="small"
+            :aria-label="$t('Reset')"
+            @click="emit('reset')"
+        >
+            <v-icon>fa-solid fa-arrow-rotate-left</v-icon>
+            <v-tooltip activator="parent" :text="$t('Reset')" location="top" :open-delay="400" />
+        </v-btn>
+
+        <v-btn
             v-if="sortOptions.length > 0"
             variant="text"
             class="text-none flex-shrink-0"
@@ -86,6 +98,17 @@
 
         <div class="model-list-toolbar-carousel-wrapper mt-2">
         <div class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')">
+            <v-btn
+                v-if="showReset"
+                variant="text"
+                density="compact"
+                prepend-icon="fa-solid fa-arrow-rotate-left"
+                class="text-none flex-shrink-0"
+                @click="emit('reset')"
+            >
+                {{ $t('Reset') }}
+            </v-btn>
+
             <v-btn
                 v-if="hasFilters"
                 variant="text"
@@ -171,6 +194,7 @@ const props = withDefaults(defineProps<{
     activeFilterCount?: number
     hasMultiSelect?: boolean
     selectMode?: boolean
+    showReset?: boolean
 }>(), {
     query: '',
     ordering: '',
@@ -179,6 +203,7 @@ const props = withDefaults(defineProps<{
     activeFilterCount: 0,
     hasMultiSelect: false,
     selectMode: false,
+    showReset: false,
 })
 
 const emit = defineEmits<{
@@ -187,6 +212,7 @@ const emit = defineEmits<{
     'open-filters': []
     'open-settings': []
     'toggle-select': []
+    'reset': []
 }>()
 
 const debouncedEmitQuery = useDebounceFn((val: string) => {
@@ -218,8 +244,9 @@ function onSortSelect(key: string) {
         // Same field: toggle direction
         emit('update:ordering', isDescending.value ? key : `-${key}`)
     } else {
-        // New field: ascending
-        emit('update:ordering', key)
+        // New field: use defaultDescending if set, otherwise ascending
+        const opt = props.sortOptions.find(o => o.key === key)
+        emit('update:ordering', opt?.defaultDescending ? `-${key}` : key)
     }
 }
 </script>
