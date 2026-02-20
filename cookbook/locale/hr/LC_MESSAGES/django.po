@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-02-03 16:58+0000\n"
-"Last-Translator: Domagoj Levanić <levanicdomagoj@gmail.com>\n"
+"PO-Revision-Date: 2026-02-20 22:13+0000\n"
+"Last-Translator: Bruno <bbadanjak2@gmail.com>\n"
 "Language-Team: Croatian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.8.4\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -123,51 +123,51 @@ msgstr "kvasac"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "slow cook"
-msgstr ""
+msgstr "sporo kuhanje"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr ""
+msgstr "kuhalo za jaja"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "kuhalo za vodu"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
-msgstr ""
+msgstr "smjesa"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "pre-clean"
-msgstr ""
+msgstr "prethodno čišćenje"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr ""
+msgstr "visoka temperatura"
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr ""
+msgstr "kuhalo za rižu"
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
-msgstr ""
+msgstr "karamelizirati"
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr ""
+msgstr "guljač"
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
-msgstr ""
+msgstr "rezač"
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "ribež"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
-msgstr ""
+msgstr "spiralizator"
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
@@ -229,7 +229,7 @@ msgstr "Ugljikohidrati"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "Kolesterol"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -238,7 +238,7 @@ msgstr "Masnoća"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Vlakna"
 
 #: .\cookbook\integration\mealie1.py:215
 #, fuzzy
@@ -248,23 +248,23 @@ msgstr "Proteini"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Zasićene masti"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Natrij"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Šećer"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr ""
+msgstr "Trans masti"
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Nezasićene masti"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
