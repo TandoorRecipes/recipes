@@ -30,7 +30,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * @param t translation function from calling context
  * @return instance of GenericModel
  */
-export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false|GenericModel {
+export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false | GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
         return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
@@ -810,7 +810,8 @@ export const TInventoryEntry = {
     disableCreate: true,
     disableDelete: true,
     disableUpdate: true,
-    toStringKeys: ['food.name'],
+    toStringKeys: ['label'],
+    itemLabel: 'label',
 
     tableHeaders: [
         {title: 'Food', key: 'food'},

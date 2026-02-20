@@ -1,104 +1,104 @@
 <template>
-    <v-dialog max-width="900px" v-model="dialog">
-        <v-card :loading="loading">
-            <v-closable-card-title v-model="dialog" :title="$t('Inventory Log History')" icon="fa-solid fa-clipboard-list"></v-closable-card-title>
+    <v-dialog max-width="900" v-model="dialog" activator="model">
+        <v-card>
 
+            <v-closable-card-title :v-model="dialog" :title="$t('History')"></v-closable-card-title>
             <v-card-text>
-                <v-table>
-                    <thead>
-                    <tr>
-                        <th>{{ $t('Date') }}</th>
-                        <th>{{ $t('Type') }}</th>
-                        <th>{{ $t('Change') }}</th>
-                        <th>{{ $t('Location') }}</th>
-                        <th>{{ $t('Note') }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="log in logs" :key="log.id">
-                        <td>{{ new Date(log.createdAt).toLocaleString() }}</td>
-                        <td>{{ $t(log.bookingType || 'add') }}</td>
-                        <td>
-                            <div class="d-flex align-center">
-                                <span class="text-error">{{ log.oldAmount }}</span>
-                                <v-icon icon="fa-solid fa-arrow-right" size="x-small" class="mx-2"></v-icon>
-                                <span class="text-success">{{ log.newAmount }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div v-if="log.oldInventoryLocation !== log.newInventoryLocation">
-                                {{ locationMap.get(log.oldInventoryLocation) }}
-                                <v-icon icon="fa-solid fa-arrow-right" size="x-small" class="mx-1"></v-icon>
-                                {{ locationMap.get(log.newInventoryLocation) }}
-                            </div>
-                            <div v-else>
-                                {{ locationMap.get(log.newInventoryLocation) }}
-                            </div>
-                        </td>
-                        <td>{{ log.note }}</td>
-                    </tr>
-                    <tr v-if="logs.length === 0 && !loading">
-                        <td colspan="5" class="text-center text-disabled">{{ $t('No log entries found') }}</td>
-                    </tr>
-                    </tbody>
-                </v-table>
+                <v-data-table-server
+                    return-object
+                    @update:options="loadItems"
+                    :items="items"
+                    :items-length="itemCount"
+                    :loading="tableLoading"
+                    :headers="tableHeaders"
+                    :page="page"
+                    :items-per-page="pageSize"
+                    disable-sort
+                >
+
+                    <template #item.createdAt="{item}"></template>
+                    <template #item.amount="{item}">
+                        <template v-if="item.oldAmount != item.newAmount">
+                            {{ item.oldAmount }} -> {{ item.newAmount }}
+                        </template>
+                        <template v-else>
+                            {{ item.newAmount }}
+                        </template>
+                    </template>
+
+                    <template #item.location="{item}">
+                        <template v-if="item.oldInventoryLocation != item.newInventoryLocation">
+                            {{ item.oldInventoryLocation }} -> {{ item.newInventoryLocation }}
+                        </template>
+                        <template v-else>
+                            {{ item.newInventoryLocation }}
+                        </template>
+                    </template>
+
+                </v-data-table-server>
+
             </v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
-            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import { ApiApi, InventoryEntry, InventoryLog } from "@/openapi";
+import {PropType, ref} from "vue";
+import {ApiApi, Ingredient, InventoryEntry, InventoryLog} from "@/openapi";
+import {DateTime} from "luxon";
+import {ingredientToString} from "@/utils/model_utils.ts";
+import {VDataTableUpdateOptions} from "@/vuetify.ts";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {useI18n} from "vue-i18n";
 
-const props = defineProps<{
-    modelValue: boolean;
-    entry: InventoryEntry | null;
-}>();
+const {t} = useI18n()
 
-const emit = defineEmits(['update:modelValue']);
+const props = defineProps({
+    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: true}
+})
 
-const api = new ApiApi();
+const dialog = defineModel<boolean>({})
 
-const dialog = ref(props.modelValue);
-const loading = ref(false);
-const logs = ref<InventoryLog[]>([]);
-const locationMap = ref(new Map<number, string>());
+const tableLoading = ref(false)
 
-const fetchLogs = () => {
-    if (!props.entry?.id) return;
-    loading.value = true;
+const items = ref([] as InventoryLog[])
+const itemCount = ref(0)
+const page = ref(1)
+const pageSize = ref(10)
 
-    api.apiInventoryLogList({ entryId: props.entry.id } as any).then(r => {
-        logs.value = r.results || [];
+const tableHeaders = ref([
+    {title: t('BookingType'), key: 'bookingType'},
+    {title: t('Date'), key: 'createdAt'},
+    {title: t('Amount'), key: 'amount'},
+    {title: t('InventoryLocation'), key: 'location'},
+])
 
-        // Fetch locations to show names
-        api.apiInventoryLocationList({ limit: 1000 }).then(locationsResponse => {
-            const locations = locationsResponse.results || [];
-            locationMap.value = new Map(locations.map(l => [l.id!, l.name]));
-        });
-    }).catch(e => {
-        console.error(e);
+
+/**
+ * load logs for selected inventory entry
+ */
+function loadItems(options: VDataTableUpdateOptions) {
+    let api = new ApiApi()
+
+    tableLoading.value = true
+
+    page.value = options.page
+    pageSize.value = options.itemsPerPage
+
+    api.apiInventoryLogList({entryId: props.inventoryEntry.id!}).then((r: any) => {
+        items.value = r.results
+        itemCount.value = r.count
+    }).catch((err: any) => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
-        loading.value = false;
-    });
-};
+        tableLoading.value = false
+    })
 
-watch(() => props.modelValue, (val) => {
-    dialog.value = val;
-    if (val && props.entry) {
-        fetchLogs();
-    }
-});
-
-watch(dialog, (val) => {
-    emit('update:modelValue', val);
-});
+}
 
 </script>
+
+<style scoped>
+
+</style>

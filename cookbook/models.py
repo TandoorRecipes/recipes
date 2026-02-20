@@ -1384,7 +1384,6 @@ class InventoryEntry(models.Model, PermissionModelMixin):
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
 
     expires = models.DateField(null=True, blank=True)
-    expires_frozen = models.DateField(null=True, blank=True)
 
     note = models.CharField(max_length=256, null=True, blank=True)
 
@@ -1425,6 +1424,10 @@ class InventoryLog(models.Model, PermissionModelMixin):
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    class Meta:
+        ordering = ('created_at',)
+
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)

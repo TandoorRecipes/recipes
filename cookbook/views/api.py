@@ -876,7 +876,7 @@ class InventoryLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        queryset = self.queryset.filter(space=self.request.space).order_by('-created_at')
+        queryset = self.queryset.filter(space=self.request.space)
 
         if entry_id := self.request.query_params.get('entry_id'):
             queryset = queryset.filter(entry__id=entry_id)

@@ -1279,7 +1279,7 @@ export interface ApiInventoryEntryCascadingListRequest {
 }
 
 export interface ApiInventoryEntryCreateRequest {
-    inventoryEntry: InventoryEntry;
+    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
 }
 
 export interface ApiInventoryEntryDestroyRequest {
@@ -1304,7 +1304,7 @@ export interface ApiInventoryEntryNullingListRequest {
 
 export interface ApiInventoryEntryPartialUpdateRequest {
     id: number;
-    patchedInventoryEntry?: PatchedInventoryEntry;
+    patchedInventoryEntry?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'>;
 }
 
 export interface ApiInventoryEntryProtectingListRequest {
@@ -1320,7 +1320,7 @@ export interface ApiInventoryEntryRetrieveRequest {
 
 export interface ApiInventoryEntryUpdateRequest {
     id: number;
-    inventoryEntry: InventoryEntry;
+    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
 }
 
 export interface ApiInventoryLocationCascadingListRequest {

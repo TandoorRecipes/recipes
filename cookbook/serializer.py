@@ -1704,6 +1704,14 @@ class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSeriali
     inventory_location = InventoryLocationSerializer()
     food = FoodSerializer()
     unit = UnitSerializer()
+    label = serializers.SerializerMethodField('get_label')
+
+    def get_label(self, obj):
+        text = f'#{obj.code} - {round(obj.amount, 2)}'
+        if obj.unit:
+            text += f' ({obj.unit})'
+        text += f' {obj.food.name}'
+        return text
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1751,8 +1759,9 @@ class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSeriali
         model = InventoryEntry
         fields = (
             'id', 'inventory_location', 'sub_location', 'code',
-            'food', 'unit', 'amount', 'expires', 'expires_frozen', 'note'
+            'food', 'unit', 'amount', 'expires', 'note', 'label', 'created_at', 'created_by'
         )
+        read_only_fields = ('id', 'created_at', 'created_by')
 
 
 class InventoryLogSerializer(SpacedModelSerializer):

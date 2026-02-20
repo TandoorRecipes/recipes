@@ -88,16 +88,28 @@ export interface InventoryEntry {
     expires?: Date;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof InventoryEntry
      */
-    expiresFrozen?: Date;
+    note?: string;
     /**
      * 
      * @type {string}
      * @memberof InventoryEntry
      */
-    note?: string;
+    readonly label: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof InventoryEntry
+     */
+    readonly createdAt: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof InventoryEntry
+     */
+    readonly createdBy: number;
 }
 
 /**
@@ -107,6 +119,9 @@ export function instanceOfInventoryEntry(value: object): value is InventoryEntry
     if (!('inventoryLocation' in value) || value['inventoryLocation'] === undefined) return false;
     if (!('food' in value) || value['food'] === undefined) return false;
     if (!('unit' in value) || value['unit'] === undefined) return false;
+    if (!('label' in value) || value['label'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -128,12 +143,14 @@ export function InventoryEntryFromJSONTyped(json: any, ignoreDiscriminator: bool
         'unit': UnitFromJSON(json['unit']),
         'amount': json['amount'] == null ? undefined : json['amount'],
         'expires': json['expires'] == null ? undefined : (new Date(json['expires'])),
-        'expiresFrozen': json['expires_frozen'] == null ? undefined : (new Date(json['expires_frozen'])),
         'note': json['note'] == null ? undefined : json['note'],
+        'label': json['label'],
+        'createdAt': (new Date(json['created_at'])),
+        'createdBy': json['created_by'],
     };
 }
 
-export function InventoryEntryToJSON(value?: InventoryEntry | null): any {
+export function InventoryEntryToJSON(value?: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
@@ -147,7 +164,6 @@ export function InventoryEntryToJSON(value?: InventoryEntry | null): any {
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
         'expires': value['expires'] == null ? undefined : ((value['expires'] as any).toISOString().substring(0,10)),
-        'expires_frozen': value['expiresFrozen'] == null ? undefined : ((value['expiresFrozen'] as any).toISOString().substring(0,10)),
         'note': value['note'],
     };
 }

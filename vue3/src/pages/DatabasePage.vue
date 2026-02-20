@@ -44,7 +44,7 @@
         <v-row dense>
             <database-link-col :to="{name: 'InventoryBookingPage'}"
                                prepend-icon="fa-solid fa-boxes-stacked"
-                               :title="$t('Inventory Booking')"
+                               :title="$t('InventoryBooking')"
                                :subtitle="$t('InventoryBookingHelp')">
             </database-link-col>
             <database-model-col model="InventoryLocation"></database-model-col>

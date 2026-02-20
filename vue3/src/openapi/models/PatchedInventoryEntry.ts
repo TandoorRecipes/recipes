@@ -88,16 +88,28 @@ export interface PatchedInventoryEntry {
     expires?: Date;
     /**
      * 
-     * @type {Date}
+     * @type {string}
      * @memberof PatchedInventoryEntry
      */
-    expiresFrozen?: Date;
+    note?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedInventoryEntry
      */
-    note?: string;
+    readonly label?: string;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PatchedInventoryEntry
+     */
+    readonly createdAt?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedInventoryEntry
+     */
+    readonly createdBy?: number;
 }
 
 /**
@@ -125,12 +137,14 @@ export function PatchedInventoryEntryFromJSONTyped(json: any, ignoreDiscriminato
         'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'] == null ? undefined : json['amount'],
         'expires': json['expires'] == null ? undefined : (new Date(json['expires'])),
-        'expiresFrozen': json['expires_frozen'] == null ? undefined : (new Date(json['expires_frozen'])),
         'note': json['note'] == null ? undefined : json['note'],
+        'label': json['label'] == null ? undefined : json['label'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
-export function PatchedInventoryEntryToJSON(value?: PatchedInventoryEntry | null): any {
+export function PatchedInventoryEntryToJSON(value?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
@@ -144,7 +158,6 @@ export function PatchedInventoryEntryToJSON(value?: PatchedInventoryEntry | null
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
         'expires': value['expires'] == null ? undefined : ((value['expires'] as any).toISOString().substring(0,10)),
-        'expires_frozen': value['expiresFrozen'] == null ? undefined : ((value['expiresFrozen'] as any).toISOString().substring(0,10)),
         'note': value['note'],
     };
 }

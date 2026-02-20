@@ -1,413 +1,297 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col cols="12">
+        <v-row dense>
+            <v-col>
                 <v-card prepend-icon="fa-solid fa-boxes-stacked" :title="$t('InventoryBooking')">
-                    <v-card-text>
-                        <v-row>
-                            <v-col cols="12" sm="6">
-                                <model-select model="Food" v-model="selectedFood" append-to-body can-clear></model-select>
-                            </v-col>
-                            <v-col cols="12" sm="6">
-                                <v-text-field
-                                    v-model="searchCode"
-                                    :label="$t('InventoryCode')"
-                                    append-inner-icon="$search"
-                                    @click:append-inner="lookupCode"
-                                    @keyup.enter="lookupCode"
-                                    persistent-hint
-                                ></v-text-field>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
+                    <template #subtitle>
+                        <div class="text-wrap">
+                            {{ $t('InventoryBookingHelp') }}
+                        </div>
+                    </template>
                 </v-card>
             </v-col>
         </v-row>
-
-        <v-row v-if="selectedFood || loading">
+        <v-row>
             <v-col cols="12" md="6">
-                <v-card :loading="loading">
-                    <v-tabs v-model="activeTab" :disabled="loading" grow>
-                        <v-tab value="add">{{ $t('Add') }}</v-tab>
-                        <v-tab value="remove">{{ $t('Remove') }}</v-tab>
-                        <v-tab value="move">{{ $t('Move') }}</v-tab>
-                    </v-tabs>
-
+                <v-card :loading="formLoading">
+                    <v-card-title>
+                        {{ $t('InventoryBooking') }}
+                    </v-card-title>
                     <v-card-text>
-                        <v-window v-model="activeTab">
-                            <v-window-item value="add">
-                                <v-form @submit.prevent="addStock" :disabled="loading">
-                                    <v-row>
-                                        <v-col cols="6">
-                                            <v-text-field v-model.number="booking.amount" :label="$t('Amount')" type="number"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="6">
-                                            <model-select model="Unit" v-model="booking.unit"></model-select>
-                                        </v-col>
-                                    </v-row>
-                                    <model-select model="InventoryLocation" v-model="booking.inventoryLocation"></model-select>
-                                    <v-text-field v-model="booking.subLocation" :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" persistent-hint clearable></v-text-field>
+                        <v-form>
+                            <v-btn-toggle v-model="bookingMode" class="mb-5" border divided>
+                                <v-btn value="add" prepend-icon="$create">{{ $t('Add') }}</v-btn>
+                                <v-btn value="remove" prepend-icon="fa-solid fa-minus">{{ $t('Remove') }}</v-btn>
+                                <v-btn value="move" prepend-icon="fa-solid fa-arrow-right">{{ $t('Move') }}</v-btn>
+                            </v-btn-toggle>
 
-                                    <v-text-field v-model="booking.expiresFrozen" :label="$t('Expires_Frozen')" type="date" v-if="booking.inventoryLocation && booking.inventoryLocation.isFreezer">
-                                        <template #append-inner>
-                                            <v-btn icon="fa-solid fa-snowflake" size="small" variant="text" @click="openFreezerDialog"></v-btn>
-                                        </template>
-                                    </v-text-field>
-                                    <v-text-field v-model="booking.expires" :label="$t('Expires')" type="date" v-else></v-text-field>
+                            <model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)" @update:modelValue="inventoryEntrySelected()">
+                                <template #append>
+                                    <v-btn icon="fa-solid fa-barcode"></v-btn>
+                                </template>
+                            </model-select>
 
-                                    <v-btn color="success" block type="submit" :loading="loading">{{ $t('Add Stock') }}</v-btn>
-                                </v-form>
-                            </v-window-item>
+                            <model-select model="Food" v-model="food"></model-select>
 
-                            <v-window-item value="remove">
-                                <v-form @submit.prevent="removeStock" :disabled="loading">
-                                    <v-select
-                                        v-model="selectedStockEntry"
-                                        :items="currentStock"
-                                        item-title="displayName"
-                                        item-value="id"
-                                        :label="$t('Select Stock Entry')"
-                                        required
-                                        return-object
-                                    ></v-select>
-                                    <v-text-field v-model.number="booking.amount" :label="$t('Amount to Remove')" type="number" step="any" required></v-text-field>
-                                    <v-btn color="error" block type="submit" :loading="loading">{{ $t('Remove Stock') }}</v-btn>
-                                </v-form>
-                            </v-window-item>
+                            <model-select model="InventoryLocation" allow-create v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)"></model-select>
+                            <v-text-field :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" v-model="subLocation" v-if="['add','move'].includes(bookingMode)"></v-text-field>
 
-                            <v-window-item value="move">
-                                <v-form @submit.prevent="moveStock" :disabled="loading">
-                                    <v-select
-                                        v-model="selectedStockEntry"
-                                        :items="currentStock"
-                                        item-title="displayName"
-                                        item-value="id"
-                                        :label="$t('Source Stock Entry')"
-                                        required
-                                        return-object
-                                    ></v-select>
-                                    <v-text-field v-model.number="booking.amount" :label="$t('Amount to Move')" type="number" step="any" required></v-text-field>
-                                    <model-select model="InventoryLocation" v-model="booking.targetLocation" :label="$t('Target Location')" required></model-select>
-                                    <v-text-field v-model="booking.targetSubLocation" :label="$t('Target Sub Location')"></v-text-field>
-                                    <v-btn color="primary" block type="submit" :loading="loading">{{ $t('Move Stock') }}</v-btn>
-                                </v-form>
-                            </v-window-item>
-                        </v-window>
+                            <v-number-input :label="$t('Amount')" v-model="amount"></v-number-input>
+                            <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)"></model-select>
+
+                            <v-date-input :label="$t('Expires')" v-model="expires" v-if="['add'].includes(bookingMode)">
+                                <template #append-inner>
+                                    <v-btn variant="text" @click.stop="freezerExpiryDialog = true">
+                                        <v-icon icon="fa-solid fa-snowflake"></v-icon>
+                                        <freezer-expiry-dialog v-model:date="expires" v-model="freezerExpiryDialog"></freezer-expiry-dialog>
+                                    </v-btn>
+                                </template>
+                            </v-date-input>
+                        </v-form>
                     </v-card-text>
+                    <v-card-actions>
+                        <v-btn color="warning" prepend-icon="$reset" @click="resetForm()">{{ $t('Reset') }}</v-btn>
+                        <v-btn color="create" prepend-icon="$save" @click="save()">{{ $t('Save') }}</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
 
             <v-col cols="12" md="6">
-                <v-card :title="$t('Current Stock')" :loading="loading">
-                    <v-table>
-                        <thead>
-                        <tr>
-                            <th>{{ $t('Location') }}</th>
-                            <th>{{ $t('Amount') }}</th>
-                            <th>{{ $t('Expires') }}</th>
-                            <th>{{ $t('Expires_Frozen') }}</th>
-                            <th class="text-end">{{ $t('Actions') }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="entry in currentStock" :key="entry.id">
-                            <td>
-                                {{ entry.inventoryLocationName }}
-                                <div v-if="entry.subLocation" class="text-caption">{{ entry.subLocation }}</div>
-                            </td>
-                            <td>{{ entry.amount }} {{ entry.unitName }}</td>
-                            <td>{{ entry.expires ? new Date(entry.expires).toLocaleDateString() : '-' }}</td>
-                            <td>{{ entry.expiresFrozen ? new Date(entry.expiresFrozen).toLocaleDateString() : '-' }}</td>
-                            <td class="text-end text-no-wrap">
-                                <v-btn icon="fa-solid fa-clock-rotate-left" size="x-small" variant="text" color="info" @click="openLogDialog(entry)" :title="$t('History')"></v-btn>
-                                <v-btn icon="fa-solid fa-minus" size="x-small" variant="text" color="error" @click="preSelectEntry(entry, mode='remove')"
-                                       :title="$t('Remove')"></v-btn>
-                                <v-btn icon="fa-solid fa-arrows-rotate" size="x-small" variant="text" color="primary" @click="preSelectEntry(entry, mode='move')"
-                                       :title="$t('Move')"></v-btn>
-                            </td>
-                        </tr>
-                        <tr v-if="currentStock.length === 0">
-                            <td colspan="5" class="text-center text-disabled">{{ $t('No stock available') }}</td>
-                        </tr>
-                        </tbody>
-                    </v-table>
+                <v-card :loading="tableLoading">
+                    <v-card-title>
+                        {{ $t('Stock') }}
+                    </v-card-title>
+                    <v-card-text>
+                        <v-data-table-server
+                            return-object
+                            @update:options="loadItems"
+                            :items="items"
+                            :items-length="itemCount"
+                            :loading="tableLoading"
+                            :headers="tableHeaders"
+                            :page="page"
+                            :items-per-page="pageSize"
+                            disable-sort
+                        >
+                            <template #item.code="{item}">
+                                #{{ item.code }}
+                            </template>
+                            <template #item.food="{item}">
+                                {{ ingredientToString({food: item.food, unit: item.unit, amount: item.amount} as Ingredient) }}
+                            </template>
+                            <template #item.expires="{item}">
+                                <template v-if="item.expires ">
+                                    <v-chip size="small" label :color="(item.expires < DateTime.now() ? 'error' : 'success')">
+                                        {{ DateTime.fromJSDate(item.expires).toLocaleString(DateTime.DATE_MED) }}
+                                    </v-chip>
+                                </template>
+                            </template>
+                            <template #item.action="{item}">
+                                <v-btn density="compact" icon="fa-solid fa-clock-rotate-left" variant="plain" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
+                                <v-btn density="compact" icon="fa-solid fa-minus" variant="plain" @click="bookingMode='remove'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
+                                <v-btn density="compact" icon="fa-solid fa-arrow-right" variant="plain" @click="bookingMode='move'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
+                            </template>
+                        </v-data-table-server>
+                    </v-card-text>
                 </v-card>
             </v-col>
-        </v-row>
 
-        <freezer-expiry-dialog v-model="freezerDialog" @select="applyFreezerExpiry"></freezer-expiry-dialog>
-        <inventory-entry-log-dialog v-model="logDialog" :entry="selectedEntry"></inventory-entry-log-dialog>
+        </v-row>
     </v-container>
+
+    <inventory-entry-log-dialog v-model="entryLogDialog" :inventory-entry="entryLogEntry"></inventory-entry-log-dialog>
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {useRoute} from 'vue-router';
 
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import {computed, ref, watch} from "vue";
+import {ApiApi, ApiInventoryEntryListRequest, Food, Ingredient, InventoryEntry, InventoryLocation, Unit} from "@/openapi";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {VDateInput} from "vuetify/labs/VDateInput";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
+import {useI18n} from "vue-i18n";
+import {VDataTableUpdateOptions} from "@/vuetify.ts";
+import {DateTime} from "luxon";
+import {ingredientToString} from "@/utils/model_utils.ts";
 import FreezerExpiryDialog from "@/components/dialogs/FreezerExpiryDialog.vue";
 import InventoryEntryLogDialog from "@/components/dialogs/InventoryEntryLogDialog.vue";
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {ApiApi, Food, InventoryEntry, InventoryLocation, InventoryLog} from "@/openapi";
-import {MessageType, useMessageStore} from "@/stores/MessageStore";
-import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
-const {t} = useI18n();
-const route = useRoute();
-const messageStore = useMessageStore();
+const {t} = useI18n()
 
-const api = new ApiApi();
+// form
+const formLoading = ref(false)
+const freezerExpiryDialog = ref(false)
 
-const selectedFood = ref<Food | null>(null);
-const searchCode = ref('');
-const currentStock = ref<any[]>([]);
-const foodLogs = ref<InventoryLog[]>([]);
-const locationMap = ref(new Map<number, string>());
-const loading = ref(false);
-const activeTab = ref('add');
-const freezerDialog = ref(false);
-const logDialog = ref(false);
-const selectedEntry = ref<InventoryEntry | null>(null);
-const selectedStockEntry = ref<any | null>(null);
+const bookingMode = ref('add')
+const food = ref<Food | null>(null)
+const inventoryEntry = ref<InventoryEntry | null>(null)
+const inventoryLocation = ref<InventoryLocation | null>(null)
+const subLocation = ref<string | undefined>('')
+const amount = ref<number | undefined>(1)
+const unit = ref<Unit | undefined | null>(useUserPreferenceStore().defaultUnitObj)
+const expires = ref<Date | undefined>(undefined)
 
-const booking = ref<any>({
-    amount: 1,
-    unit: useUserPreferenceStore().defaultUnitObj,
-    inventoryLocation: {} as InventoryLocation,
-    targetLocation: {} as InventoryLocation,
-    targetSubLocation: '',
-});
+// table
+const tableLoading = ref(false)
 
-const fetchFoodLogs = () => {
-    if (!selectedFood.value?.id) return;
+const items = ref([] as InventoryEntry[])
+const itemCount = ref(0)
+const page = ref(1)
+const pageSize = ref(10)
 
-    api.apiInventoryLogList({foodId: selectedFood.value.id}).then(r => {
-        foodLogs.value = r.results || [];
-    }).catch(e => {
-        console.error(e);
-    });
-};
+// general
+const entryLogDialog = ref(false)
+const entryLogEntry = ref<InventoryEntry | null>(null)
 
-const fetchStock = () => {
-    if (!selectedFood.value?.id) {
-        currentStock.value = [];
-        foodLogs.value = [];
-        return;
+const tableHeaders = computed(() => {
+    let headers = [
+        {title: t('Code'), key: 'code'},
+        {title: t('Food'), key: 'food'},
+        {title: t('Expires'), key: 'expires',},
+    ]
+
+    if (inventoryLocation.value == null) {
+        headers.push({title: t('InventoryLocation'), key: 'inventoryLocation.name',},)
     }
 
-    loading.value = true;
-    api.apiInventoryEntryList({foodId: selectedFood.value.id, empty: false}).then(async r => {
-        const entries = r.results || [];
+    headers.push({title: 'Actions', key: 'action', align: 'end'},)
 
-        // Fetch units to show names (locations are already in locationMap)
-        const unitsResponse = await api.apiUnitList({limit: 1000});
-        const units = unitsResponse.results || [];
-        const unitMap = new Map(units.map(u => [u.id, u.name]));
+    return headers
+})
 
-        currentStock.value = entries.map(e => ({
-            ...e,
-            inventoryLocationName: locationMap.value.get(e.inventoryLocation) || e.inventoryLocation,
-            unitName: unitMap.get(e.unit) || '',
-            displayName: `${locationMap.value.get(e.inventoryLocation)} ${e.subLocation ? '(' + e.subLocation + ')' : ''} - ${e.amount} ${unitMap.get(e.unit) || ''}`
-        }));
+watch([() => food.value, () => inventoryLocation.value], () => {
+    loadItems({page: 1, itemsPerPage: 10})
+})
 
-        fetchFoodLogs();
-    }).catch(e => {
-        console.error(e);
-        messageStore.addMessage(MessageType.ERROR, t('Error fetching stock'));
-    }).finally(() => {
-        loading.value = false;
-    });
-};
 
-const lookupCode = () => {
-    if (!searchCode.value) return;
-
-    loading.value = true;
-    api.apiInventoryEntryList({code: searchCode.value, empty: true}).then(r => {
-        if (r.results && r.results.length > 0) {
-            const entry = r.results[0];
-            if (entry.food) {
-                // Fetch food details to set selectedFood
-                api.apiFoodRetrieve({id: entry.food}).then(food => {
-                    selectedFood.value = food;
-                });
-            }
-        } else {
-            messageStore.addMessage(MessageType.INFO, t('No entries found for this code'));
-        }
-    }).catch(e => {
-        console.error(e);
-        messageStore.addMessage(MessageType.ERROR, t('Error looking up code'));
-    }).finally(() => {
-        loading.value = false;
-    });
-};
-
-const addStock = () => {
-    if (!selectedFood.value?.id || !booking.value.inventoryLocation) return;
-    loading.value = true;
-    api.apiInventoryEntryCreate({
-        inventoryEntry: {
-            food: (selectedFood.value as any)?.id || selectedFood.value,
-            amount: booking.value.amount,
-            unit: (booking.value.unit as any)?.id || booking.value.unit,
-            inventoryLocation: (booking.value.inventoryLocation as any)?.id || booking.value.inventoryLocation,
-            subLocation: booking.value.subLocation,
-            expires: booking.value.expires ? new Date(booking.value.expires) : undefined,
-            expiresFrozen: booking.value.expiresFrozen ? new Date(booking.value.expiresFrozen) : undefined,
-        }
-    }).then(() => {
-        messageStore.addMessage(MessageType.SUCCESS, t('Stock added successfully'));
-        fetchStock();
-        // Reset some booking fields
-        booking.value.amount = 1;
-        fetchFoodLogs();
-    }).catch(() => {
-        messageStore.addMessage(MessageType.ERROR, t('Error adding stock'));
-    }).finally(() => {
-        loading.value = false;
-    });
-};
-
-const removeStock = () => {
-    if (!selectedStockEntry.value) return;
-    loading.value = true;
-
-    const entry = selectedStockEntry.value;
-    const newAmount = entry.amount - booking.value.amount;
-
-    if (newAmount < 0) {
-        messageStore.addMessage(MessageType.ERROR, t('Cannot remove more than available'));
-        loading.value = false;
-        return;
+/**
+ * save form depending on selected booking mode
+ */
+function save() {
+    if (bookingMode.value == 'add') {
+        addInventory()
+    } else if (bookingMode.value == 'remove') {
+        removeInventory()
     }
+}
 
-    api.apiInventoryEntryPartialUpdate({
-        id: entry.id,
-        patchedInventoryEntry: {
-            amount: newAmount
-        }
-    }).then(() => {
-        messageStore.addMessage(MessageType.SUCCESS, t('Stock removed successfully'));
-        fetchStock();
-        fetchFoodLogs();
-    }).catch(() => {
-        messageStore.addMessage(MessageType.ERROR, t('Error removing stock'));
+/**
+ * add new inventory entry
+ */
+function addInventory() {
+    let api = new ApiApi()
+    formLoading.value = true
+
+    let inventoryEntry = {
+        food: food.value,
+        inventoryLocation: inventoryLocation.value,
+        subLocation: subLocation.value,
+        amount: amount.value,
+        unit: unit.value,
+        expires: expires.value
+    } as InventoryEntry
+
+    api.apiInventoryEntryCreate({inventoryEntry: inventoryEntry}).then(r => {
+        useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+        resetForm(false)
+        loadItems({page: 1, itemsPerPage: 10})
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     }).finally(() => {
-        loading.value = false;
-    });
-};
+        formLoading.value = false
+    })
+}
 
-const moveStock = () => {
-    if (!selectedStockEntry.value || !booking.value.targetLocation) return;
-    loading.value = true;
+function removeInventory() {
+    let api = new ApiApi()
 
-    const entry = selectedStockEntry.value;
-    const moveAmount = booking.value.amount;
+    if (inventoryEntry.value != null) {
+        formLoading.value = true
 
-    if (moveAmount > entry.amount) {
-        messageStore.addMessage(MessageType.ERROR, t('Cannot move more than available'));
-        loading.value = false;
-        return;
-    }
-
-    // 1. Decrease source
-    api.apiInventoryEntryPartialUpdate({
-        id: entry.id,
-        patchedInventoryEntry: {
-            amount: entry.amount - moveAmount
+        if (inventoryEntry.value.amount != undefined && amount.value != undefined) {
+            inventoryEntry.value.amount = Math.max(inventoryEntry.value.amount - amount.value, 0)
         }
-    }).then(() => {
-        // 2. Add to target (or create new)
-        api.apiInventoryEntryCreate({
-            inventoryEntry: {
-                food: (selectedFood.value as any)?.id || selectedFood.value,
-                amount: moveAmount,
-                unit: (entry.unit as any)?.id || entry.unit,
-                inventoryLocation: (booking.value.targetLocation as any)?.id || booking.value.targetLocation,
-                subLocation: booking.value.targetSubLocation,
-                expires: entry.expires ? new Date(entry.expires) : undefined,
-                expiresFrozen: entry.expiresFrozen ? new Date(entry.expiresFrozen) : undefined,
-            }
-        }).then(() => {
-            messageStore.addMessage(MessageType.SUCCESS, t('Stock moved successfully'));
-            fetchStock();
-            fetchFoodLogs();
-        }).catch(() => {
-            messageStore.addMessage(MessageType.ERROR, t('Error moving stock'));
+
+        api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
+            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+            resetForm()
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
-            loading.value = false;
-        });
-    }).catch(() => {
-        messageStore.addMessage(MessageType.ERROR, t('Error moving stock'));
-        loading.value = false;
-    });
-};
+            formLoading.value = false
+        })
+    }
 
-const openLogDialog = (entry: any) => {
-    selectedEntry.value = entry;
-    logDialog.value = true;
-};
+}
 
-const openLogDialogFromId = (entryId: number) => {
-    api.apiInventoryEntryRetrieve({id: entryId}).then(entry => {
-        openLogDialog(entry);
-    }).catch(() => {
-        messageStore.addMessage(MessageType.ERROR, t('Error fetching entry details'));
-    });
-};
 
-const openFreezerDialog = () => {
-    freezerDialog.value = true;
-};
+/**
+ * reset form to default values
+ */
+function resetForm(resetFood: boolean = true) {
+    if (resetFood) {
+        food.value = null
+    }
+    inventoryEntry.value = null
+    inventoryLocation.value = null
+    subLocation.value = ''
+    amount.value = 1
+    unit.value = useUserPreferenceStore().defaultUnitObj
+    expires.value = undefined
+}
 
-const applyFreezerExpiry = (days: number) => {
-    const date = new Date();
-    date.setDate(date.getDate() + days);
-    booking.value.expiresFrozen = date.toISOString().split('T')[0];
-};
+/**
+ * when an inventory entry is selected, fill form with values from inventory entry
+ */
+function inventoryEntrySelected() {
+    if (inventoryEntry.value) {
+        food.value = inventoryEntry.value.food
+        unit.value = inventoryEntry.value.unit
+        //inventoryLocation.value = inventoryEntry.value.inventoryLocation
+        //subLocation.value = inventoryEntry.value.subLocation
+        amount.value = inventoryEntry.value.amount
+        //expires.value = inventoryEntry.value.expires
+    }
+}
 
-const preSelectEntry = (entry: any, mode: 'remove' | 'move') => {
-    activeTab.value = mode;
-    selectedStockEntry.value = entry;
-    booking.value.amount = entry.amount;
-};
+/**
+ * load inventory data based on current props
+ */
+function loadItems(options: VDataTableUpdateOptions) {
+    let api = new ApiApi()
 
-onMounted(() => {
-    // Pre-fetch locations
-    api.apiInventoryLocationList({limit: 1000}).then(r => {
-        const locations = r.results || [];
-        locationMap.value = new Map(locations.map(l => [l.id!, l.name]));
-    }).catch(e => {
-        console.error(e);
-    });
+    let parameters = {} as ApiInventoryEntryListRequest
 
-    // Handle query params
-    if (route.query.code) {
-        searchCode.value = route.query.code as string;
-        lookupCode();
-    } else if (route.query.food) {
-        const foodId = parseInt(route.query.food as string);
-        if (!isNaN(foodId)) {
-            loading.value = true;
-            api.apiFoodRetrieve({id: foodId}).then(food => {
-                selectedFood.value = food;
-            }).catch(e => {
-                console.error(e);
-            }).finally(() => {
-                loading.value = false;
-            });
+    if (food.value == null && inventoryLocation.value == null) {
+        items.value = []
+        itemCount.value = 0
+    } else {
+        if (food.value) {
+            parameters.foodId = food.value.id!
         }
-    }
-});
+        if (inventoryLocation.value) {
+            parameters.inventoryLocationId = inventoryLocation.value.id!
+        }
 
-watch(selectedFood, () => {
-    fetchStock();
-    selectedStockEntry.value = null;
-    if (!selectedFood.value) {
-        searchCode.value = '';
+        tableLoading.value = true
+
+        page.value = options.page
+        pageSize.value = options.itemsPerPage
+
+        api.apiInventoryEntryList(parameters).then((r: any) => {
+            items.value = r.results
+            itemCount.value = r.count
+        }).catch((err: any) => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }).finally(() => {
+            tableLoading.value = false
+        })
     }
-});
+}
 
 </script>
+
+<style scoped>
+
+</style>
