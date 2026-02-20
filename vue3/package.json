@@ -33,7 +33,7 @@
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.8.1",
     "esbuild-register": "^3.6.0",
-    "jsdom": "^26.1.0",
+    "jsdom": "^28.1.0",
     "typescript": "^5.8.3",
     "vite": "7.2.4",
     "vite-plugin-pwa": "^1.0.3",
