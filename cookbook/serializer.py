@@ -701,7 +701,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
 class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     label = serializers.SerializerMethodField('get_label', allow_null=False)
-    parent = IntegerField(read_only=True)
+    parent = IntegerField(read_only=True, allow_null=True)
 
     recipe_filter = 'keywords'
 
@@ -878,7 +878,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     food_onhand = CustomOnHandField(required=False, allow_null=True)
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
-    parent = IntegerField(read_only=True)
+    parent = IntegerField(read_only=True, allow_null=True)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
