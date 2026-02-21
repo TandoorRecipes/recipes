@@ -41,15 +41,8 @@
                             <model-select model="InventoryLocation" allow-create v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)"></model-select>
                             <v-text-field :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" v-model="subLocation" v-if="['add','move'].includes(bookingMode)"></v-text-field>
 
-                            <v-text-field :label="$t('Code')" v-model="code" v-if="['add'].includes(bookingMode)">
-                                <template #append-inner>
-                                    <v-tooltip location="top" :text="$t('CodeHelp')">
-                                        <template v-slot:activator="{ props }">
-                                            <v-icon v-bind="props" icon="$help"></v-icon>
-                                        </template>
-                                    </v-tooltip>
-                                </template>
-                            </v-text-field>
+                            <closable-help-alert :text="$t('CodeHelp')" class="mb-2"></closable-help-alert>
+                            <v-text-field :label="$t('Code')" v-model="code" v-if="['add'].includes(bookingMode)"></v-text-field>
 
                             <v-number-input :label="$t('Amount')" :precision="2" v-model="amount"></v-number-input>
                             <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)"></model-select>
@@ -135,7 +128,7 @@
 
                 <p class="text-disabled mt-4">{{ $t('Code') }}</p>
                 <p class="text-h3 text-pre">
-                    {{ bookingConfirmEntry.code }}
+                    #{{ bookingConfirmEntry.code }}
                 </p>
 
                 <template v-if="bookingConfirmEntry.expires">
@@ -179,6 +172,7 @@ import {ingredientToString} from "@/utils/model_utils.ts";
 import FreezerExpiryDialog from "@/components/dialogs/FreezerExpiryDialog.vue";
 import InventoryEntryLogDialog from "@/components/dialogs/InventoryEntryLogDialog.vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 
 const {t} = useI18n()
 
@@ -255,7 +249,8 @@ function addInventory() {
         subLocation: subLocation.value,
         amount: amount.value,
         unit: unit.value,
-        expires: expires.value
+        expires: expires.value,
+        code: code.value,
     } as InventoryEntry
 
     api.apiInventoryEntryCreate({inventoryEntry: inventoryEntry}).then(r => {
