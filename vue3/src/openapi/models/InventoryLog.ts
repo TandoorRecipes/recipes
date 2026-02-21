@@ -19,6 +19,12 @@ import {
     BookingTypeEnumFromJSONTyped,
     BookingTypeEnumToJSON,
 } from './BookingTypeEnum';
+import type { InventoryEntry } from './InventoryEntry';
+import {
+    InventoryEntryFromJSON,
+    InventoryEntryFromJSONTyped,
+    InventoryEntryToJSON,
+} from './InventoryEntry';
 import type { InventoryLocation } from './InventoryLocation';
 import {
     InventoryLocationFromJSON,
@@ -40,10 +46,10 @@ export interface InventoryLog {
     id?: number;
     /**
      * 
-     * @type {number}
+     * @type {InventoryEntry}
      * @memberof InventoryLog
      */
-    entry: number;
+    entry: InventoryEntry;
     /**
      * 
      * @type {BookingTypeEnum}
@@ -110,7 +116,7 @@ export function InventoryLogFromJSONTyped(json: any, ignoreDiscriminator: boolea
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
-        'entry': json['entry'],
+        'entry': InventoryEntryFromJSON(json['entry']),
         'bookingType': json['booking_type'] == null ? undefined : BookingTypeEnumFromJSON(json['booking_type']),
         'oldAmount': json['old_amount'] == null ? undefined : json['old_amount'],
         'newAmount': json['new_amount'] == null ? undefined : json['new_amount'],
@@ -128,7 +134,7 @@ export function InventoryLogToJSON(value?: Omit<InventoryLog, 'createdAt'> | nul
     return {
         
         'id': value['id'],
-        'entry': value['entry'],
+        'entry': InventoryEntryToJSON(value['entry']),
         'booking_type': BookingTypeEnumToJSON(value['bookingType']),
         'old_amount': value['oldAmount'],
         'new_amount': value['newAmount'],

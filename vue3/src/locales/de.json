@@ -308,6 +308,8 @@
   "InventoryEntryHelp": "Einzelne Gebinde (Dosen, Gläser, Packungen, ...) im Lager.",
   "InventoryLocation": "Lagerort",
   "InventoryLocationHelp": "Verschiedene Lagerorte, z.B. Kühlschrank, Eisfach oder Vorratskammer.",
+  "InventoryLog": "Lagerprotokoll",
+  "InventoryLogHelp": "Sehe alle Änderungen deiner Vorräte.",
   "InviteLinkHelp": "Links zum Einladen neuer Nutzer in einen Space. ",
   "Invite_Link": "Einladungs Link",
   "Invites": "Einladungen",

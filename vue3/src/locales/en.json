@@ -308,6 +308,8 @@
   "InventoryEntryHelp": "Individual packages inside the Inventory.",
   "InventoryLocation": "Inventory Location",
   "InventoryLocationHelp": "Different inventory locations like a freezer, fridge or shelf.",
+  "InventoryLog": "Inventory Log",
+  "InventoryLogHelp": "See all changes to your inventory.",
   "InviteLinkCreatedEmailFailed": "Invite link created, but email failed. Details logged — contact your admin if this persists.",
   "InviteLinkHelp": "Links to invite new people to your space. ",
   "Invite_Link": "Invite Link",

@@ -223,6 +223,7 @@ function removeInventory() {
         api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
             resetForm(false)
+            loadItems({page: 1, itemsPerPage: 10})
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
@@ -251,6 +252,7 @@ function moveInventory() {
             api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
                 useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
                 resetForm(false)
+                loadItems({page: 1, itemsPerPage: 10})
             }).catch(err => {
                 useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
             }).finally(() => {
