@@ -95,9 +95,13 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         instructions = env.from_string(instructions).render(ingredients=ingredients, scale=scale)
     except TemplateSyntaxError:
         return _('Could not parse template code.') + ' Error: Template Syntax broken'
+    except TypeError:
+        return _('Could not parse template code.') + ' Error: Unsupported types'
     except UndefinedError:
         return _('Could not parse template code.') + ' Error: Undefined Error'
     except SecurityError:
         return _('Could not parse template code.') + ' Error: Security Error'
+    except Exception as e:
+        return _('Could not parse template code.') + f' Error generating template.'
 
     return instructions

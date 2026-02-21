@@ -1486,6 +1486,34 @@ class FoodShoppingSerializer(serializers.ModelSerializer):
     supermarket_category = SupermarketCategorySerializer(read_only=True)
     shopping_lists = ShoppingListSerializer(read_only=True, many=True)
 
+    #TODO duplicate code with FoodSerializer, merge into one or use proper function
+    def create(self, validated_data):
+        name = validated_data['name'].strip()
+
+        if plural_name := validated_data.pop('plural_name', None):
+            plural_name = plural_name.strip()
+
+        if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name)).first():
+            return food
+
+        space = validated_data.pop('space', self.context['request'].space)
+        # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
+        if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
+            sm_category = validated_data['supermarket_category']
+            sc_name = sm_category.pop('name', None)
+            validated_data['supermarket_category'], sc_created = SupermarketCategory.objects.get_or_create(
+                name=sc_name,
+                space=space, defaults=sm_category)
+
+        if properties_food_unit := validated_data.pop('properties_food_unit', None):
+            properties_food_unit = Unit.objects.filter(name=properties_food_unit['name']).first()
+
+        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space,
+                                                  properties_food_unit=properties_food_unit,
+                                                  defaults=validated_data)
+
+        return obj
+
     class Meta:
         model = Food
         fields = ('id', 'name', 'plural_name', 'supermarket_category', 'shopping_lists')
@@ -2191,7 +2219,7 @@ class ImportOpenDataMetaDataSerializer(serializers.Serializer):
 
 class IngredientParserRequestSerializer(serializers.Serializer):
     ingredient = serializers.CharField(required=False)
-    ingredients = serializers.ListField(child=serializers.CharField(), required=False)
+    ingredients = serializers.ListField(child=serializers.CharField(allow_blank=True), required=False)
 
 
 class IngredientParserResponseSerializer(serializers.Serializer):

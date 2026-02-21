@@ -2,10 +2,9 @@
     <template v-if="loading || recipes.length > 0">
         <v-row justify="space-between">
             <v-col>
-
-                    <h4 @click="openSearch()" class="cursor-pointer"><i :class="icon + ' fa-fw'"></i> {{ title }} <i class="ms-2 fa-solid fa-up-right-from-square"></i></h4>
-
-
+                <h4 @click="openSearch()" class="cursor-pointer">
+                    <i :class="icon + ' fa-fw'"></i> {{ title }}
+                    <span class="ms-2 text-body-2">{{ $t('More') }} <i class="fa-solid fa-chevron-right"></i></span></h4>
             </v-col>
         </v-row>
 

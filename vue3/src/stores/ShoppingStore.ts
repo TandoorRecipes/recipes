@@ -52,7 +52,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     let entriesByGroup = shallowRef([] as IShoppingListCategory[])
     let entriesByGroupMealPlan = shallowRef([] as IShoppingListCategory[])
-    let selectedMealPlan = ref<number|undefined>(undefined)
+    let selectedMealPlan = ref<number | undefined>(undefined)
 
     /**
      * update the variable that displays the shopping list
@@ -61,7 +61,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function updateEntriesStructure() {
         entriesByGroup.value = getEntriesStructure()
 
-        if(selectedMealPlan.value != undefined) {
+        if (selectedMealPlan.value != undefined) {
             console.log("updateEntriesStructure for meal plan " + selectedMealPlan.value)
             entriesByGroupMealPlan.value = getEntriesStructure(selectedMealPlan.value)
         }
@@ -101,11 +101,25 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             structure.categories.delete(UNDEFINED_CATEGORY)
         }
 
-        structure.categories.forEach(category => {
-            if (category.foods.size > 0) {
-                orderedStructure.push(category)
-            }
-        })
+        if (deviceSettings.shopping_selected_grouping === ShoppingGroupingOptions.CATEGORY && deviceSettings.shopping_selected_supermarket != null) {
+            deviceSettings.shopping_selected_supermarket.categoryToSupermarket.forEach(cTS => {
+                if (structure.categories.has(cTS.category.name)) {
+                    let category = structure.categories.get(cTS.category.name)
+                    if (category && category.foods.size > 0) {
+                        orderedStructure.push(category)
+                    }
+                    structure.categories.delete(cTS.category.name)
+                }
+            })
+        }
+
+        if(!(useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY && useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only)){
+            structure.categories.forEach(category => {
+                if (category.foods.size > 0) {
+                    orderedStructure.push(category)
+                }
+            })
+        }
 
         return orderedStructure
     }
@@ -407,10 +421,9 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      * @param entry
      */
     function updateEntryInStructure(structure: IShoppingList, entry: ShoppingListEntry) {
-        let group = useUserPreferenceStore().deviceSettings.shopping_selected_grouping
         let groupingKey = getEntryCategoryKey(entry)
 
-        if (!structure.categories.has(groupingKey) && !(group == ShoppingGroupingOptions.CATEGORY && useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only)) {
+        if (!structure.categories.has(groupingKey)) {
             structure.categories.set(groupingKey, {'name': groupingKey, 'foods': new Map<number, IShoppingListFood>} as IShoppingListCategory)
         }
         if (structure.categories.has(groupingKey)) {

@@ -172,6 +172,7 @@ watch(() => editingObj.value.mealType, (newType, oldType) => {
 
 function applyTimeToEditingDates() {
     if (!mealPlanTime.value) return
+    let changed = editingObjChanged.value
     const [hours, minutes] = mealPlanTime.value.split(':').map(Number)
     if (editingObj.value.fromDate) {
         editingObj.value.fromDate = DateTime.fromJSDate(editingObj.value.fromDate)
@@ -181,6 +182,9 @@ function applyTimeToEditingDates() {
         editingObj.value.toDate = DateTime.fromJSDate(editingObj.value.toDate)
             .set({hour: hours, minute: minutes, second: 0, millisecond: 0}).toJSDate()
     }
+    nextTick(() => {
+        editingObjChanged.value = changed
+    })
 }
 
 /**
