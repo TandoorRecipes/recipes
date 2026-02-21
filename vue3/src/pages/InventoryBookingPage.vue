@@ -8,6 +8,10 @@
                             {{ $t('InventoryBookingHelp') }}
                         </div>
                     </template>
+                    <template #append>
+                        <v-btn class="float-right" icon="$pantry" color="create" :to="{name: 'PantryPage'}">
+                        </v-btn>
+                    </template>
                 </v-card>
             </v-col>
         </v-row>
@@ -61,6 +65,7 @@
                 <v-card :loading="tableLoading">
                     <v-card-title>
                         {{ $t('Stock') }}
+                        <v-btn class="float-right" prepend-icon="$pantry" variant="text" :to="{name: 'PantryPage'}">{{$t('Pantry')}}</v-btn>
                     </v-card-title>
                     <v-card-text>
                         <v-data-table-server

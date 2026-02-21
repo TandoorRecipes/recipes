@@ -13,7 +13,7 @@
         <v-card-text>
             <v-form :disabled="loading">
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                <v-checkbox :label="$t('Is_Freezer')" v-model="editingObj.isFreezer"></v-checkbox>
+                <v-checkbox :label="$t('Freezer')" v-model="editingObj.isFreezer"></v-checkbox>
             </v-form>
         </v-card-text>
     </model-editor-base>

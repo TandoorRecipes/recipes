@@ -42,14 +42,20 @@
             </v-col>
         </v-row>
         <v-row dense>
+            <database-link-col :to="{name: 'PantryPage'}"
+                               prepend-icon="$pantry"
+                               :title="$t('Pantry')"
+                               :subtitle="$t('PantryHelp')">
+            </database-link-col>
             <database-link-col :to="{name: 'InventoryBookingPage'}"
                                prepend-icon="fa-solid fa-boxes-stacked"
                                :title="$t('InventoryBooking')"
                                :subtitle="$t('InventoryBookingHelp')">
             </database-link-col>
             <database-model-col model="InventoryLocation"></database-model-col>
-            <database-model-col model="InventoryEntry"></database-model-col>
-            <database-model-col model="InventoryLog"></database-model-col>
+
+            <!--            <database-model-col model="InventoryEntry"></database-model-col>-->
+            <!--            <database-model-col model="InventoryLog"></database-model-col>-->
         </v-row>
 
         <v-row>
