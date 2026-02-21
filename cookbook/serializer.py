@@ -1164,7 +1164,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True, read_only=True)
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
-    recent = serializers.CharField(read_only=True)
+    recent = serializers.CharField(read_only=True, allow_null=True)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
