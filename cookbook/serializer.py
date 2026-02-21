@@ -1793,6 +1793,8 @@ class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSeriali
 
 
 class InventoryLogSerializer(SpacedModelSerializer):
+    old_inventory_location = InventoryLocationSerializer()
+    new_inventory_location = InventoryLocationSerializer()
 
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')

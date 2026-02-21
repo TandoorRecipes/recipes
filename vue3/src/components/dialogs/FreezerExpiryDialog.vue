@@ -2,7 +2,7 @@
     <v-dialog max-width="600" v-model="dialog" activator="model">
         <v-card>
 
-            <v-closable-card-title :v-model="dialog" :title="$t('Freezer')" :sub-title="$t('FreezerExpiryHelp')"></v-closable-card-title>
+            <v-closable-card-title v-model="dialog" :title="$t('Freezer')" :sub-title="$t('FreezerExpiryHelp')"></v-closable-card-title>
             <v-card-text>
 
                 <v-list>

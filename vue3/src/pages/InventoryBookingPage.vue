@@ -25,18 +25,19 @@
                                 <v-btn value="move" prepend-icon="fa-solid fa-arrow-right">{{ $t('Move') }}</v-btn>
                             </v-btn-toggle>
 
-                            <model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)" @update:modelValue="inventoryEntrySelected()">
+                            <model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)"
+                                          @update:modelValue="inventoryEntrySelected()">
                                 <template #append>
                                     <v-btn icon="fa-solid fa-barcode"></v-btn>
                                 </template>
                             </model-select>
 
-                            <model-select model="Food" v-model="food"></model-select>
+                            <model-select model="Food" allow-create v-model="food"></model-select>
 
                             <model-select model="InventoryLocation" allow-create v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)"></model-select>
                             <v-text-field :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" v-model="subLocation" v-if="['add','move'].includes(bookingMode)"></v-text-field>
 
-                            <v-number-input :label="$t('Amount')" v-model="amount"></v-number-input>
+                            <v-number-input :label="$t('Amount')" :precision="2" v-model="amount"></v-number-input>
                             <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)"></model-select>
 
                             <v-date-input :label="$t('Expires')" v-model="expires" v-if="['add'].includes(bookingMode)">
@@ -86,10 +87,19 @@
                                     </v-chip>
                                 </template>
                             </template>
+                            <template #item.inventoryLocation="{ item }">
+                                {{ item.inventoryLocation.name }}
+                                <span class="text-body-2 text-disabled">
+                                    <br/>
+                                {{ item.subLocation }}
+                                </span>
+                            </template>
                             <template #item.action="{item}">
                                 <v-btn density="compact" icon="fa-solid fa-clock-rotate-left" variant="plain" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
-                                <v-btn density="compact" icon="fa-solid fa-minus" variant="plain" @click="bookingMode='remove'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
-                                <v-btn density="compact" icon="fa-solid fa-arrow-right" variant="plain" @click="bookingMode='move'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
+                                <v-btn density="compact" icon="fa-solid fa-minus" variant="plain"
+                                       @click="bookingMode='remove'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
+                                <v-btn density="compact" icon="fa-solid fa-arrow-right" variant="plain"
+                                       @click="bookingMode='move'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
                             </template>
                         </v-data-table-server>
                     </v-card-text>
@@ -144,21 +154,13 @@ const pageSize = ref(10)
 const entryLogDialog = ref(false)
 const entryLogEntry = ref<InventoryEntry | null>(null)
 
-const tableHeaders = computed(() => {
-    let headers = [
-        {title: t('Code'), key: 'code'},
-        {title: t('Food'), key: 'food'},
-        {title: t('Expires'), key: 'expires',},
-    ]
-
-    if (inventoryLocation.value == null) {
-        headers.push({title: t('InventoryLocation'), key: 'inventoryLocation.name',},)
-    }
-
-    headers.push({title: 'Actions', key: 'action', align: 'end'},)
-
-    return headers
-})
+const tableHeaders = ref([
+    {title: t('Code'), key: 'code'},
+    {title: t('Food'), key: 'food'},
+    {title: t('Expires'), key: 'expires',},
+    {title: t('InventoryLocation'), key: 'inventoryLocation',},
+    {title: 'Actions', key: 'action', align: 'end'},
+])
 
 watch([() => food.value, () => inventoryLocation.value], () => {
     loadItems({page: 1, itemsPerPage: 10})
@@ -173,6 +175,8 @@ function save() {
         addInventory()
     } else if (bookingMode.value == 'remove') {
         removeInventory()
+    } else if (bookingMode.value == 'move') {
+        moveInventory()
     }
 }
 
@@ -203,6 +207,9 @@ function addInventory() {
     })
 }
 
+/**
+ * subtract amount from inventory entry and save to DB
+ */
 function removeInventory() {
     let api = new ApiApi()
 
@@ -215,14 +222,43 @@ function removeInventory() {
 
         api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-            resetForm()
+            resetForm(false)
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
             formLoading.value = false
         })
     }
+}
 
+function moveInventory() {
+    let api = new ApiApi()
+
+    if (inventoryEntry.value != null) {
+        formLoading.value = true
+        let changed = false
+
+        if (inventoryLocation.value != null && inventoryEntry.value.inventoryLocation != inventoryLocation.value) {
+            inventoryEntry.value.inventoryLocation = inventoryLocation.value
+            changed = true
+        }
+        if (subLocation.value != null && inventoryEntry.value.subLocation != subLocation.value) {
+            inventoryEntry.value.subLocation = subLocation.value
+            changed = true
+        }
+
+        if (changed) {
+            api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
+                useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+                resetForm(false)
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+            }).finally(() => {
+                formLoading.value = false
+            })
+        }
+
+    }
 }
 
 

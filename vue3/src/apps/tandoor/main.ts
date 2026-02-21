@@ -49,7 +49,7 @@ let routes = [
     {path: '/edit/:model/:id?', component: () => import("@/pages/ModelEditPage.vue"), props: true, name: 'ModelEditPage', meta: {title: 'Edit'}},
     {path: '/delete/:model/:id?', component: () => import("@/pages/ModelDeletePage.vue"), props: true, name: 'ModelDeletePage', meta: {title: 'Delete'}},
     {path: '/database', component: () => import("@/pages/DatabasePage.vue"), props: true, name: 'DatabasePage', meta: {title: 'Database'}},
-    {path: '/inventory/booking', component: () => import("@/pages/InventoryBookingPage.vue"), name: 'InventoryBookingPage', meta: {title: 'Inventory Booking'}},
+    {path: '/inventory/booking', component: () => import("@/pages/InventoryBookingPage.vue"), name: 'InventoryBookingPage', meta: {title: 'InventoryBooking'}},
 
     {path: '/ingredient-editor', component: () => import("@/pages/IngredientEditorPage.vue"), name: 'IngredientEditorPage', meta: {title: 'Ingredient Editor'}},
     {path: '/property-editor', component: () => import("@/pages/PropertyEditorPage.vue"), name: 'PropertyEditorPage', meta: {title: 'Property_Editor'}},

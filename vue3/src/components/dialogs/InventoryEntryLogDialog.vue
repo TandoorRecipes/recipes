@@ -2,7 +2,8 @@
     <v-dialog max-width="900" v-model="dialog" activator="model">
         <v-card>
 
-            <v-closable-card-title :v-model="dialog" :title="$t('History')"></v-closable-card-title>
+            <v-closable-card-title v-model="dialog" icon="fa-solid fa-clock-rotate-left" :title="$t('History')"></v-closable-card-title>
+
             <v-card-text>
                 <v-data-table-server
                     return-object
@@ -16,10 +17,19 @@
                     disable-sort
                 >
 
-                    <template #item.createdAt="{item}"></template>
+                    <template #item.bookingType="{item}">
+                        <v-chip label color="success" v-if="item.bookingType == 'add'">{{ $t('Added') }}</v-chip>
+                        <v-chip label color="error" v-else-if="item.bookingType == 'remove'">{{ $t('Removed') }}</v-chip>
+                        <v-chip label color="info" v-else>{{ $t('Moved') }}</v-chip>
+                    </template>
+
+                    <template #item.createdAt="{item}">
+                        {{ DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATETIME_MED) }}
+                    </template>
+
                     <template #item.amount="{item}">
                         <template v-if="item.oldAmount != item.newAmount">
-                            {{ item.oldAmount }} -> {{ item.newAmount }}
+                            {{ item.oldAmount }} <i class="fa-solid fa-arrow-right"></i> {{ item.newAmount }}
                         </template>
                         <template v-else>
                             {{ item.newAmount }}
@@ -27,11 +37,11 @@
                     </template>
 
                     <template #item.location="{item}">
-                        <template v-if="item.oldInventoryLocation != item.newInventoryLocation">
-                            {{ item.oldInventoryLocation }} -> {{ item.newInventoryLocation }}
+                        <template v-if="item.oldInventoryLocation.id != item.newInventoryLocation.id">
+                            {{ item.oldInventoryLocation.name }} <i class="fa-solid fa-arrow-right"></i> {{ item.newInventoryLocation.name }}
                         </template>
                         <template v-else>
-                            {{ item.newInventoryLocation }}
+                            {{ item.newInventoryLocation.name }}
                         </template>
                     </template>
 
@@ -55,10 +65,10 @@ import {useI18n} from "vue-i18n";
 const {t} = useI18n()
 
 const props = defineProps({
-    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: true}
+    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: false}
 })
 
-const dialog = defineModel<boolean>({})
+const dialog = defineModel<boolean>()
 
 const tableLoading = ref(false)
 

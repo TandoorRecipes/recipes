@@ -19,6 +19,12 @@ import {
     BookingTypeEnumFromJSONTyped,
     BookingTypeEnumToJSON,
 } from './BookingTypeEnum';
+import type { InventoryLocation } from './InventoryLocation';
+import {
+    InventoryLocationFromJSON,
+    InventoryLocationFromJSONTyped,
+    InventoryLocationToJSON,
+} from './InventoryLocation';
 
 /**
  * 
@@ -58,16 +64,16 @@ export interface InventoryLog {
     newAmount?: number;
     /**
      * 
-     * @type {number}
+     * @type {InventoryLocation}
      * @memberof InventoryLog
      */
-    oldInventoryLocation: number;
+    oldInventoryLocation: InventoryLocation;
     /**
      * 
-     * @type {number}
+     * @type {InventoryLocation}
      * @memberof InventoryLog
      */
-    newInventoryLocation: number;
+    newInventoryLocation: InventoryLocation;
     /**
      * 
      * @type {string}
@@ -108,8 +114,8 @@ export function InventoryLogFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'bookingType': json['booking_type'] == null ? undefined : BookingTypeEnumFromJSON(json['booking_type']),
         'oldAmount': json['old_amount'] == null ? undefined : json['old_amount'],
         'newAmount': json['new_amount'] == null ? undefined : json['new_amount'],
-        'oldInventoryLocation': json['old_inventory_location'],
-        'newInventoryLocation': json['new_inventory_location'],
+        'oldInventoryLocation': InventoryLocationFromJSON(json['old_inventory_location']),
+        'newInventoryLocation': InventoryLocationFromJSON(json['new_inventory_location']),
         'note': json['note'] == null ? undefined : json['note'],
         'createdAt': (new Date(json['created_at'])),
     };
@@ -126,8 +132,8 @@ export function InventoryLogToJSON(value?: Omit<InventoryLog, 'createdAt'> | nul
         'booking_type': BookingTypeEnumToJSON(value['bookingType']),
         'old_amount': value['oldAmount'],
         'new_amount': value['newAmount'],
-        'old_inventory_location': value['oldInventoryLocation'],
-        'new_inventory_location': value['newInventoryLocation'],
+        'old_inventory_location': InventoryLocationToJSON(value['oldInventoryLocation']),
+        'new_inventory_location': InventoryLocationToJSON(value['newInventoryLocation']),
         'note': value['note'],
     };
 }
