@@ -80,7 +80,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     images = None
 
     image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.IntegerField(source='recipe_count', read_only=True)
+    numrecipe = serializers.IntegerField(source='recipe_count', read_only=True, required=False)
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -702,7 +702,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
 class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     label = serializers.SerializerMethodField('get_label', allow_null=False)
-    parent = IntegerField(read_only=True)
+    parent = IntegerField(read_only=True, allow_null=True)
 
     recipe_filter = 'keywords'
 
@@ -873,13 +873,13 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
-    shopping = serializers.CharField(source='shopping_status', read_only=True)
+    shopping = serializers.CharField(source='shopping_status', read_only=True, required=False)
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     child_inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     food_onhand = CustomOnHandField(required=False, allow_null=True)
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
-    parent = IntegerField(read_only=True)
+    parent = IntegerField(read_only=True, allow_null=True)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
@@ -1165,7 +1165,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True, read_only=True)
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
-    recent = serializers.CharField(read_only=True)
+    recent = serializers.CharField(read_only=True, allow_null=True, required=False)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
