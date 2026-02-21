@@ -79,7 +79,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     images = None
 
     image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.IntegerField(source='recipe_count', read_only=True)
+    numrecipe = serializers.IntegerField(source='recipe_count', read_only=True, required=False)
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
