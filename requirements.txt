@@ -1,6 +1,6 @@
 aiohttp==3.13.3
 beautifulsoup4==4.14.3
-boto3==1.42.50
+boto3==1.42.53
 bleach==6.3.0
 cryptography===46.0.5
 crispy-bootstrap4==2025.6
@@ -39,7 +39,7 @@ python-dotenv==1.2.1
 python-ldap==3.4.5
 python3-openid==3.2.0
 python3-saml==1.16.0
-pytubefix==10.3.6
+pytubefix==10.3.8
 pyyaml==6.0.3
 recipe-scrapers==15.11.0
 redis==7.1.1
