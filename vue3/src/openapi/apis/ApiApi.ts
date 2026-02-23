@@ -33,6 +33,7 @@ import type {
   FoodBatchUpdate,
   FoodInheritField,
   FoodShoppingUpdate,
+  FoodStats,
   Group,
   Household,
   ImportLog,
@@ -234,6 +235,8 @@ import {
     FoodInheritFieldToJSON,
     FoodShoppingUpdateFromJSON,
     FoodShoppingUpdateToJSON,
+    FoodStatsFromJSON,
+    FoodStatsToJSON,
     GroupFromJSON,
     GroupToJSON,
     HouseholdFromJSON,
@@ -1146,16 +1149,18 @@ export interface ApiFoodListRequest {
     hasSubstitute?: boolean;
     ignoreShopping?: boolean;
     inShoppingList?: boolean;
+    limit?: string;
     onhand?: boolean;
     ordering?: string;
     page?: number;
     pageSize?: number;
     query?: string;
+    random?: string;
     root?: number;
     rootTree?: number;
-    stats?: boolean;
     supermarketCategory?: number;
     tree?: number;
+    updatedAt?: string;
     usedInRecipes?: boolean;
 }
 
@@ -7619,6 +7624,10 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['in_shopping_list'] = requestParameters['inShoppingList'];
         }
 
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
         if (requestParameters['onhand'] != null) {
             queryParameters['onhand'] = requestParameters['onhand'];
         }
@@ -7639,6 +7648,10 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['query'] = requestParameters['query'];
         }
 
+        if (requestParameters['random'] != null) {
+            queryParameters['random'] = requestParameters['random'];
+        }
+
         if (requestParameters['root'] != null) {
             queryParameters['root'] = requestParameters['root'];
         }
@@ -7647,16 +7660,16 @@ export class ApiApi extends runtime.BaseAPI {
             queryParameters['root_tree'] = requestParameters['rootTree'];
         }
 
-        if (requestParameters['stats'] != null) {
-            queryParameters['stats'] = requestParameters['stats'];
-        }
-
         if (requestParameters['supermarketCategory'] != null) {
             queryParameters['supermarket_category'] = requestParameters['supermarketCategory'];
         }
 
         if (requestParameters['tree'] != null) {
             queryParameters['tree'] = requestParameters['tree'];
+        }
+
+        if (requestParameters['updatedAt'] != null) {
+            queryParameters['updated_at'] = requestParameters['updatedAt'];
         }
 
         if (requestParameters['usedInRecipes'] != null) {
@@ -8043,6 +8056,36 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiFoodShoppingUpdate(requestParameters: ApiFoodShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodShoppingUpdate> {
         const response = await this.apiFoodShoppingUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodStatsRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FoodStats>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/stats/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FoodStatsFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodStatsRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodStats> {
+        const response = await this.apiFoodStatsRetrieveRaw(initOverrides);
         return await response.value();
     }
 

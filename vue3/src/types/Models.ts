@@ -1254,4 +1254,14 @@ export class GenericModel {
         return name
     }
 
+    /**
+     * fetch aggregate stats from the dedicated stats endpoint
+     * @return promise resolving to stats object, or empty object if not supported
+     */
+    stats(): Promise<Record<string, number>> {
+        const method = `api${this.model.name}StatsRetrieve`
+        if (typeof this.api[method] !== 'function') return Promise.resolve({})
+        return this.api[method]()
+    }
+
 }

@@ -42,18 +42,6 @@ export interface FoodStats {
      * @type {number}
      * @memberof FoodStats
      */
-    inventory: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FoodStats
-     */
-    expired: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof FoodStats
-     */
     total: number;
 }
 
@@ -64,8 +52,6 @@ export function instanceOfFoodStats(value: object): value is FoodStats {
     if (!('onhand' in value) || value['onhand'] === undefined) return false;
     if (!('shopping' in value) || value['shopping'] === undefined) return false;
     if (!('ignored' in value) || value['ignored'] === undefined) return false;
-    if (!('inventory' in value) || value['inventory'] === undefined) return false;
-    if (!('expired' in value) || value['expired'] === undefined) return false;
     if (!('total' in value) || value['total'] === undefined) return false;
     return true;
 }
@@ -83,8 +69,6 @@ export function FoodStatsFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'onhand': json['onhand'],
         'shopping': json['shopping'],
         'ignored': json['ignored'],
-        'inventory': json['inventory'],
-        'expired': json['expired'],
         'total': json['total'],
     };
 }
@@ -98,8 +82,6 @@ export function FoodStatsToJSON(value?: FoodStats | null): any {
         'onhand': value['onhand'],
         'shopping': value['shopping'],
         'ignored': value['ignored'],
-        'inventory': value['inventory'],
-        'expired': value['expired'],
         'total': value['total'],
     };
 }
