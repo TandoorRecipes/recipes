@@ -18,7 +18,7 @@
             </v-btn>
         </template>
 
-        <v-btn icon="$menu" variant="plain" :aria-label="$t('Actions')" aria-haspopup="true">
+        <v-btn icon="$menu" variant="plain" :aria-label="$t('Actions')">
             <v-icon icon="$menu" />
             <v-menu v-model="menuOpen" activator="parent" :close-on-content-click="false">
                 <v-list density="compact">
@@ -41,15 +41,10 @@
                             </v-list-item>
                             <v-list-item
                                 v-else-if="!action.isToggle && isVisible(action)"
+                                :prepend-icon="action.icon"
                                 :class="action.isDanger ? 'text-error' : undefined"
                                 @click="menuOpen = false; $emit('action', action.key, item)"
                             >
-                                <template #prepend>
-                                    <v-icon
-                                        :icon="action.icon"
-                                        :color="resolveColor(action, item)"
-                                    />
-                                </template>
                                 {{ $t(action.labelKey) }}
                             </v-list-item>
                         </template>
@@ -67,15 +62,13 @@ import type {ActionDef, ModelItem} from '@/composables/modellist/types'
 
 const {mobile} = useDisplay()
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
     item: ModelItem,
     actionDefs: ActionDef[],
     groupedActionDefs: Map<string, ActionDef[]>,
     getToggleState: (action: ActionDef, item: ModelItem) => boolean,
     quickActionKeys?: string[],
-}>(), {
-    quickActionKeys: () => [],
-})
+}>()
 
 defineEmits<{
     action: [key: string, item: ModelItem]
@@ -94,8 +87,8 @@ function isVisible(action: ActionDef): boolean {
 }
 
 function resolveColor(action: ActionDef, item: ModelItem): string | undefined {
-    if (action.colorResolver) return action.colorResolver(item)
     if (!action.isToggle) return undefined
+    if (action.colorResolver) return action.colorResolver(item)
     return props.getToggleState(action, item) ? action.activeColor : action.inactiveColor
 }
 </script>

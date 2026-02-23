@@ -22,13 +22,13 @@
 
 <script setup lang="ts">
 import {computed} from 'vue'
-import type {ModelStatDef} from '@/composables/modellist/types'
+import type {StatDef} from '@/composables/modellist/types'
 
 const props = withDefaults(defineProps<{
     pageCount: number
     itemCount: number
     stats: Record<string, number>
-    statDefs: ModelStatDef[]
+    statDefs: StatDef[]
     loading?: boolean
 }>(), {
     loading: false,

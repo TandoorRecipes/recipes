@@ -28,13 +28,13 @@
 <script setup lang="ts">
 import {computed, shallowReactive, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {ModelFilterDef} from '@/composables/modellist/types'
+import type {FilterDef} from '@/composables/modellist/types'
 import {getGenericModelFromString} from '@/types/Models'
 
 const {t} = useI18n()
 
 const props = defineProps<{
-    filterDefs: ModelFilterDef[]
+    filterDefs: FilterDef[]
     getFilter: (key: string) => string | undefined
     setFilter: (key: string, value: string | undefined) => void
     clearFilter: (key: string) => void
@@ -47,7 +47,7 @@ const emit = defineEmits<{
 }>()
 
 const activeFilters = computed(() => {
-    const result: {key: string, def: ModelFilterDef, value: string}[] = []
+    const result: {key: string, def: FilterDef, value: string}[] = []
     for (const def of props.filterDefs) {
         const value = props.getFilter(def.key)
         if (value !== undefined && value !== '') {
@@ -87,7 +87,7 @@ watch(activeFilters, (filters) => {
     }
 }, {immediate: true})
 
-function chipLabel(def: ModelFilterDef, value: string): string {
+function chipLabel(def: FilterDef, value: string): string {
     if (def.type === 'tristate') {
         return t(def.labelKey)
     }
@@ -98,14 +98,14 @@ function chipLabel(def: ModelFilterDef, value: string): string {
     return t(def.labelKey)
 }
 
-function chipColor(def: ModelFilterDef, value: string): string {
+function chipColor(def: FilterDef, value: string): string {
     if (def.type === 'tristate') {
         return value === '1' ? 'success' : 'error'
     }
     return 'primary'
 }
 
-function toggleFilter(def: ModelFilterDef, value: string): void {
+function toggleFilter(def: FilterDef, value: string): void {
     if (def.type === 'tristate') {
         props.setFilter(def.key, value === '1' ? '0' : '1')
     } else {

@@ -12,7 +12,7 @@ export function useUrlFilters(
     filterDefs: ComputedRef<FilterDef[]>,
     paramName: string = 'filters'
 ) {
-    const rawFilters = useRouteQuery<string>(paramName, '')
+    const rawFilters = useRouteQuery(paramName, '')
 
     const groupedFilterDefs = computed<Map<string, FilterDef[]>>(() => {
         const map = new Map<string, FilterDef[]>()
@@ -65,7 +65,7 @@ export function useUrlFilters(
         for (const [key, val] of map) {
             const def = filterDefs.value.find(d => d.key === key)
             const paramKey = snakeToCamel(key)
-            if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
+            if (def?.type === 'tristate' || def?.type === 'model-select') {
                 const num = Number(val)
                 if (!isNaN(num)) params[paramKey] = num
             } else {

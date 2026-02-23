@@ -19,11 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import type {ModelFilterDef} from '@/composables/modellist/types'
+import type {FilterDef} from '@/composables/modellist/types'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 
 withDefaults(defineProps<{
-    filterDef: ModelFilterDef
+    filterDef: FilterDef
     modelValue?: string
 }>(), {
     modelValue: undefined,

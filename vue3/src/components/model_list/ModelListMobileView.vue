@@ -83,6 +83,7 @@
                         @click.prevent
                     >
                         <v-icon :icon="action.icon" size="small" color="white" />
+                        <span class="swipe-action-label">{{ $t(action.labelKey) }}</span>
                     </button>
                 </div>
 
@@ -104,6 +105,7 @@
                         @click.prevent
                     >
                         <v-icon :icon="action.icon" size="small" color="white" />
+                        <span class="swipe-action-label">{{ $t(action.labelKey) }}</span>
                     </button>
                 </div>
 
@@ -157,7 +159,7 @@
                         </v-list-item-subtitle>
 
                         <template #append>
-                            <ModelListActionMenu
+                            <ActionMenu
                                 :item="item"
                                 :action-defs="actionDefs"
                                 :grouped-action-defs="groupedActionDefs"
@@ -208,14 +210,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {ModelActionDef, ModelItem} from '@/composables/modellist/types'
+import type {ActionDef, ModelItem} from '@/composables/modellist/types'
 import {getAncestorPath} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
 import {buildSubtitleText} from '@/utils/utils'
 import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
-import ModelListActionMenu from '@/components/model_list/ModelListActionMenu.vue'
+import {useTouchDetect} from '@/composables/useTouchDetect'
+import ActionMenu from "@/components/common/ActionMenu.vue"
 
 const {t} = useI18n()
 
@@ -228,9 +231,10 @@ const props = defineProps<{
     selectMode: boolean,
     selectedItems: ModelItem[],
     enhancedColumns: ModelTableHeaders[],
-    actionDefs: ModelActionDef[],
-    groupedActionDefs: Map<string, ModelActionDef[]>,
-    getToggleState: (action: ModelActionDef, item: ModelItem) => boolean,
+    allColumns: ModelTableHeaders[],
+    actionDefs: ActionDef[],
+    groupedActionDefs: Map<string, ActionDef[]>,
+    getToggleState: (action: ActionDef, item: ModelItem) => boolean,
     quickActionKeys: string[],
     treeActive: boolean,
     treeSuspended: boolean,
@@ -257,28 +261,19 @@ const emit = defineEmits<{
 const resolvedLeftActions = computed(() =>
     props.swipeLeftKeys
         .map(key => props.actionDefs.find(a => a.key === key))
-        .filter((a): a is ModelActionDef => !!a)
+        .filter((a): a is ActionDef => !!a)
 )
 
 const resolvedRightActions = computed(() =>
     props.swipeRightKeys
         .map(key => props.actionDefs.find(a => a.key === key))
-        .filter((a): a is ModelActionDef => !!a)
+        .filter((a): a is ActionDef => !!a)
 )
 
 const leftSlotCount = computed(() => resolvedLeftActions.value.length)
 const rightSlotCount = computed(() => resolvedRightActions.value.length)
 
-/** Detect touch-primary input device via CSS media query (W3C standard) */
-const hasTouchInput = ref(false)
-let touchMql: MediaQueryList | undefined
-function onTouchChange(e: MediaQueryListEvent) { hasTouchInput.value = e.matches }
-onMounted(() => {
-    touchMql = window.matchMedia('(pointer: coarse)')
-    hasTouchInput.value = touchMql.matches
-    touchMql.addEventListener('change', onTouchChange)
-})
-onUnmounted(() => { touchMql?.removeEventListener('change', onTouchChange) })
+const {hasTouchInput} = useTouchDetect()
 
 /** Swipe is active only on touch devices, when enabled, not in select mode, and actions are configured */
 const swipeActive = computed(() =>
@@ -320,7 +315,7 @@ function dismissSwipeHint() {
 }
 
 /** Get background color for a swipe action button */
-function getActionBg(action: ModelActionDef, item: ModelItem): string {
+function getActionBg(action: ActionDef, item: ModelItem): string {
     if (action.isDanger) return 'rgb(var(--v-theme-error))'
     if (action.isToggle) {
         const active = action.isActive ? action.isActive(item) : props.getToggleState(action, item)
@@ -391,10 +386,10 @@ function toggleSelectAll(val: boolean | null) {
     }
 }
 
-/** Columns selected for subtitle display */
+/** Columns selected for subtitle display (use allColumns so hidden columns still work as subtitles) */
 const subtitleColumns = computed(() =>
     props.mobileSubtitleKeys
-        .map(key => props.enhancedColumns.find(c => c.key === key))
+        .map(key => props.allColumns.find(c => c.key === key))
         .filter((c): c is ModelTableHeaders => !!c)
 )
 
@@ -486,12 +481,24 @@ onMounted(() => {
 
 .swipe-action-btn {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 2px;
     border: none;
     cursor: pointer;
-    padding: 0;
+    padding: 0 4px;
     flex-shrink: 0;
+}
+
+.swipe-action-label {
+    font-size: 10px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1;
 }
 
 .swipe-action-expand {

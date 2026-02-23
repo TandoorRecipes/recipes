@@ -180,7 +180,7 @@
 import {computed} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
-import type {ModelSortDef} from '@/composables/modellist/types'
+import type {SortDef} from '@/composables/modellist/types'
 import {useDebounceFn} from '@vueuse/core'
 
 const {t} = useI18n()
@@ -189,7 +189,7 @@ const {mobile} = useDisplay()
 const props = withDefaults(defineProps<{
     query?: string
     ordering?: string
-    sortOptions?: ModelSortDef[]
+    sortOptions?: SortDef[]
     hasFilters?: boolean
     activeFilterCount?: number
     hasMultiSelect?: boolean

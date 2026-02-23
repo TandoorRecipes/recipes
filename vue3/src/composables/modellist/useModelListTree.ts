@@ -152,6 +152,20 @@ export function useModelListTree(
         return treeActive.value ? {root: 0} : {}
     }
 
+    /** Update a single item inside the children cache (e.g. after a toggle action) */
+    function updateCachedChild(itemId: number, field: string, value: unknown): boolean {
+        for (const [parentId, entry] of childrenCache) {
+            const idx = entry.items.findIndex(i => i.id === itemId)
+            if (idx >= 0) {
+                entry.items[idx] = {...entry.items[idx], [field]: value}
+                // Trigger reactivity so buildFlatList re-spreads
+                expandedIds.value = new Set(expandedIds.value)
+                return true
+            }
+        }
+        return false
+    }
+
     function clearTreeState() {
         expandedIds.value = new Set()
         loadingIds.value = new Set()
@@ -170,6 +184,7 @@ export function useModelListTree(
         toggleExpand,
         loadMoreChildren,
         buildFlatList,
+        updateCachedChild,
         getTreeLoadParams,
         clearTreeState,
         setOnCollapse,

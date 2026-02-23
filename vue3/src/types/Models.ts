@@ -19,7 +19,7 @@ import {
 import {getNestedProperty} from "@/utils/utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {defineAsyncComponent, shallowRef} from "vue";
-import type {ModelFilterDef, ModelActionDef, ModelListSettings, ModelColumnType, ModelSortDef, ModelStatDef} from "@/composables/modellist/types";
+import type {FilterDef, ActionDef, BatchAction, HeaderAction, ListSettings, ColumnType, SortDef, StatDef} from "@/composables/modellist/types";
 
 /**
  * returns a GenericModel instance with the given model type
@@ -91,7 +91,7 @@ export type ModelTableHeaders = {
     align?: 'end' | 'start',
     hidden?: boolean,
     /** Enhanced column config: cell renderer type */
-    type?: ModelColumnType,
+    type?: ColumnType,
     /** For boolean-indicator type: icon when true */
     trueIcon?: string,
     /** For boolean-indicator type: icon when false */
@@ -104,6 +104,14 @@ export type ModelTableHeaders = {
     field?: string,
     /** For number type: apply font-weight-medium when value > 0 */
     emphasizeNonZero?: boolean,
+    /** For label-chip type: maps stringified values to chip display. Special key '_default' for catch-all. */
+    chipMap?: Record<string, {label: string, color: string}>,
+    /** For label-chip type: resolves the chip map key from the full item (when logic needs more than the cell value) */
+    chipValueResolver?: (item: Record<string, any>) => string,
+    /** For text type with array values: joins array items by this sub-field (e.g., 'name' → item[key].map(x => x.name).join(', ')) */
+    joinField?: string,
+    /** For label-chip type: optional click handler on the chip */
+    chipClickHandler?: (item: Record<string, any>) => void,
 }
 
 /**
@@ -138,11 +146,13 @@ export type Model = {
     tableHeaders: ModelTableHeaders[],
 
     /** Enhanced list capabilities (optional — when absent, ModelListPage uses current behavior) */
-    filterDefs?: ModelFilterDef[],
-    actionDefs?: ModelActionDef[],
-    statDefs?: ModelStatDef[],
-    listSettings?: ModelListSettings,
-    sortDefs?: ModelSortDef[],
+    filterDefs?: FilterDef[],
+    actionDefs?: ActionDef[],
+    batchActions?: BatchAction[],
+    headerActions?: HeaderAction[],
+    statDefs?: StatDef[],
+    listSettings?: ListSettings,
+    sortDefs?: SortDef[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
@@ -232,7 +242,12 @@ export type EditorSupportedTypes =
     | InventoryLog
     | Household
 
-import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_STAT_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
+import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_BATCH_ACTIONS, FOOD_STAT_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
+import {UNIT_ACTION_DEFS, UNIT_LIST_SETTINGS} from "@/composables/modellist/UnitList";
+import {KEYWORD_ACTION_DEFS, KEYWORD_LIST_SETTINGS} from "@/composables/modellist/KeywordList";
+import {RECIPE_IMPORT_ACTION_DEFS, RECIPE_IMPORT_HEADER_ACTIONS} from "@/composables/modellist/RecipeImportList";
+import {SPACE_ACTION_DEFS} from "@/composables/modellist/SpaceList";
+import {SYNC_ACTION_DEFS} from "@/composables/modellist/SyncList";
 
 export const TFood = {
     name: 'Food',
@@ -259,6 +274,7 @@ export const TFood = {
     ],
     filterDefs: FOOD_FILTER_DEFS,
     actionDefs: FOOD_ACTION_DEFS,
+    batchActions: FOOD_BATCH_ACTIONS,
     statDefs: FOOD_STAT_DEFS,
     listSettings: FOOD_LIST_SETTINGS,
     sortDefs: FOOD_SORT_OPTIONS,
@@ -280,10 +296,13 @@ export const TUnit = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Plural', key: 'plural', hidden: true},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: UNIT_ACTION_DEFS,
+    listSettings: UNIT_LIST_SETTINGS,
 } as Model
 registerModel(TUnit)
 
@@ -303,9 +322,14 @@ export const TKeyword = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Full Name', key: 'fullName', type: 'text', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: KEYWORD_ACTION_DEFS,
+    listSettings: KEYWORD_LIST_SETTINGS,
 } as Model
 registerModel(TKeyword)
 
@@ -540,7 +564,7 @@ export const TShoppingList = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Color', key: 'color'},
+        {title: 'Color', key: 'color', type: 'color-chip'},
         {title: 'Description', key: 'description'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
@@ -763,10 +787,14 @@ export const TUserSpace = {
 
     tableHeaders: [
         {title: 'User', key: 'user.displayName'},
-        {title: 'Group', key: 'groups'},
+        {title: 'Group', key: 'groups', type: 'text', joinField: 'name'},
         {title: 'Household', key: 'household.name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    headerActions: [
+        {type: 'button', key: 'invites', labelKey: 'Invites', icon: 'fa-solid fa-link',
+            routeName: 'ModelListPage', routeParams: {model: 'InviteLink'}},
+    ],
 } as Model
 registerModel(TUserSpace)
 
@@ -806,9 +834,13 @@ export const TSpace = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Owner', key: 'createdBy.displayName'},
-        {title: 'Active', key: 'active'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Active', key: 'active', type: 'label-chip',
+            chipValueResolver: (item) => item.id === useUserPreferenceStore().activeSpace.id ? 'active' : 'select',
+            chipMap: {active: {label: 'Active', color: 'success'}, select: {label: 'Select', color: 'info'}},
+            chipClickHandler: (item) => useUserPreferenceStore().switchSpace(item)},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: SPACE_ACTION_DEFS,
 } as Model
 registerModel(TSpace)
 
@@ -916,8 +948,9 @@ export const TSync = {
         {title: 'SyncedPath', key: 'path'},
         {title: 'ExternalStorage', key: 'storage.name'},
         {title: 'Updated', key: 'lastChecked'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: SYNC_ACTION_DEFS,
 } as Model
 registerModel(TSync)
 
@@ -962,8 +995,10 @@ export const TRecipeImport = {
         {title: 'Name', key: 'name'},
         {title: 'Storage', key: 'storage.name'},
         {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: RECIPE_IMPORT_ACTION_DEFS,
+    headerActions: RECIPE_IMPORT_HEADER_ACTIONS,
 } as Model
 registerModel(TRecipeImport)
 
@@ -1011,8 +1046,10 @@ export const TAiProvider = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Global', key: 'space'},
-        {title: 'Actions', key: 'action', align: 'end'},
+        {title: 'Global', key: 'space', type: 'label-chip',
+            chipValueResolver: (item) => item.space == null ? 'global' : 'space',
+            chipMap: {global: {label: 'Global', color: 'success'}, space: {label: 'Space', color: 'info'}}},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ]
 } as Model
 registerModel(TAiProvider)
@@ -1038,7 +1075,10 @@ export const TAiLog = {
         {title: 'FromBalance', key: 'creditsFromBalance',},
         {title: 'CreatedAt', key: 'createdAt'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    headerActions: [
+        {type: 'widget', component: defineAsyncComponent(() => import('@/components/display/AiCreditsBar.vue'))},
+    ],
 } as Model
 registerModel(TAiLog)
 
