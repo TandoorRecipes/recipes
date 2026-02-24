@@ -16,7 +16,7 @@ jobs:
       pull-requests: read
     outputs:
       pr_merged: ${{ steps.detect_pr.outputs.result }}
-    steps:
+    steps:      
       - name: Check if commit is part of a PR
         id: detect_pr
         uses: actions/github-script@v7
@@ -30,7 +30,7 @@ jobs:
 
             const pr = prs.data.find(pr => pr.merged_at);
             const merged = pr ? 'true' : 'false';
-
+            
             // Set the output explicitly
             core.setOutput('pr_merged', merged);
             return merged;
