@@ -42,7 +42,7 @@ python3-saml==1.16.0
 pytubefix==10.3.8
 pyyaml==6.0.3
 recipe-scrapers==15.11.0
-redis==7.1.1
+redis==7.2.0
 requests==2.32.5
 requests-oauthlib==2.0.0
 six==1.17.0
