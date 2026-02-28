@@ -69,12 +69,18 @@
                 <div
                     v-if="swipeActive && resolvedRightActions.length > 0"
                     class="swipe-actions swipe-actions-left"
+                    :style="swipe.getSwipeDirection(item.id) === 'right'
+                        ? { backgroundColor: getActionBg(resolvedRightActions[0], item) }
+                        : undefined"
                 >
                     <button
                         v-for="(action, idx) in resolvedRightActions"
+                        v-show="idx === 0 || !swipe.isExpanded(item.id)"
                         :key="'sr-' + action.key"
                         class="swipe-action-btn"
-                        :class="{ 'swipe-action-expand': idx === 0 && swipe.isFullSwipe(item.id) }"
+                        :class="{
+                            'swipe-action-armed': idx === 0 && swipe.isArmed(item.id),
+                        }"
                         :style="{ backgroundColor: getActionBg(action, item), minWidth: SLOT_WIDTH + 'px' }"
                         tabindex="-1"
                         aria-hidden="true"
@@ -91,12 +97,18 @@
                 <div
                     v-if="swipeActive && resolvedLeftActions.length > 0"
                     class="swipe-actions swipe-actions-right"
+                    :style="swipe.getSwipeDirection(item.id) === 'left'
+                        ? { backgroundColor: getActionBg(resolvedLeftActions[resolvedLeftActions.length - 1], item) }
+                        : undefined"
                 >
                     <button
                         v-for="(action, idx) in resolvedLeftActions"
+                        v-show="idx === resolvedLeftActions.length - 1 || !swipe.isExpanded(item.id)"
                         :key="'sl-' + action.key"
                         class="swipe-action-btn"
-                        :class="{ 'swipe-action-expand': idx === resolvedLeftActions.length - 1 && swipe.isFullSwipe(item.id) }"
+                        :class="{
+                            'swipe-action-armed': idx === resolvedLeftActions.length - 1 && swipe.isArmed(item.id),
+                        }"
                         :style="{ backgroundColor: getActionBg(action, item), minWidth: SLOT_WIDTH + 'px' }"
                         tabindex="-1"
                         aria-hidden="true"
@@ -502,8 +514,13 @@ onMounted(() => {
     line-height: 1;
 }
 
-.swipe-action-expand {
-    flex-grow: 1;
+.swipe-action-armed .v-icon {
+    transition: transform 0.15s ease;
+    transform: scale(1.4);
+}
+
+.swipe-action-armed {
+    filter: brightness(1.2);
 }
 
 .mobile-list-header {
