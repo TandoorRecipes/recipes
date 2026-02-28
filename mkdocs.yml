@@ -50,6 +50,7 @@ nav:
       - Storages and Sync: features/external_recipes.md
       - Import/Export: features/import_export.md
       - Telegram bot: features/telegram_bot.md
+      - AI: features/ai.md
   - System:
       - Configuration: system/configuration.md
       - Updating: system/updating.md
