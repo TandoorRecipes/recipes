@@ -1,4 +1,9 @@
-import {computed, shallowRef, shallowReactive, watch, type ComputedRef, type WritableComputedRef} from 'vue'
+/**
+ * Composable for tree view in ModelListPage. Manages expand/collapse state,
+ * lazy child loading with pagination, flat-list construction from hierarchical data,
+ * and tree-aware cell rendering (indentation, chevrons, load-more sentinels).
+ */
+import {computed, h, shallowRef, shallowReactive, watch, type ComputedRef, type Ref, type VNode, type WritableComputedRef} from 'vue'
 import {useMessageStore, ErrorMessageType} from '@/stores/MessageStore'
 import type {Model} from '@/types/Models'
 import type {ModelItem} from './types'
@@ -157,7 +162,7 @@ export function useModelListTree(
         for (const [parentId, entry] of childrenCache) {
             const idx = entry.items.findIndex(i => i.id === itemId)
             if (idx >= 0) {
-                entry.items[idx] = {...entry.items[idx], [field]: value}
+                entry.items[idx] = {...entry.items[idx], [field]: value} as ModelItem
                 // Trigger reactivity so buildFlatList re-spreads
                 expandedIds.value = new Set(expandedIds.value)
                 return true
@@ -170,6 +175,63 @@ export function useModelListTree(
         expandedIds.value = new Set()
         loadingIds.value = new Set()
         childrenCache.clear()
+    }
+
+    /**
+     * Render a tree-aware name cell for the desktop DataTable.
+     * Handles indentation, expand/collapse chevrons, load-more sentinels.
+     * Call site provides the name content VNode and layout context.
+     */
+    function renderTreeCell(item: ModelItem, nameContent: VNode | string, mobile: Ref<boolean>, t: (key: string) => string): VNode {
+        const step = mobile.value ? 20 : 28
+
+        if (item._isLoadMore) {
+            const depth = item._depth ?? 0
+            const isLoading = loadingIds.value.has(item._parentId)
+            return h('div', {class: 'd-flex align-center', style: {paddingLeft: `${depth * step}px`}}, [
+                h('button', {
+                    type: 'button',
+                    class: 'text-primary text-caption font-weight-medium',
+                    style: {cursor: 'pointer', appearance: 'none', border: 'none', background: 'none', padding: '4px 8px'},
+                    disabled: isLoading,
+                    'aria-label': t('Load_More'),
+                    onClick: (e: Event) => { e.stopPropagation(); loadMoreChildren(item._parentId) },
+                }, [
+                    h('i', {class: isLoading ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-ellipsis', style: {fontSize: '12px', marginRight: '6px'}}),
+                    t('Load_More'),
+                ]),
+            ])
+        }
+
+        const depth = item._depth ?? 0
+        const hasChildren = (item.numchild ?? 0) > 0
+        const isExpanded = expandedIds.value.has(item.id)
+        const isLoading = item._isLoading
+
+        const children: VNode[] = []
+
+        if (hasChildren) {
+            if (isLoading) {
+                children.push(h('span', {class: 'tree-expand-btn', style: {width: '28px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', opacity: '0.4'}},
+                    [h('i', {class: 'fa-solid fa-chevron-down', style: {fontSize: '12px'}})]
+                ))
+            } else {
+                children.push(h('button', {
+                    class: ['tree-expand-btn', isExpanded ? 'tree-chevron-expanded' : ''],
+                    style: {cursor: 'pointer', width: '28px', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', appearance: 'none', border: 'none', background: 'none', padding: 0},
+                    'aria-expanded': isExpanded,
+                    'aria-label': t('Toggle'),
+                    onClick: (e: Event) => { e.stopPropagation(); toggleExpand(item.id) },
+                    onKeydown: (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleExpand(item.id) } },
+                }, [h('i', {class: 'fa-solid fa-chevron-right', style: {fontSize: '12px'}})]))
+            }
+        } else if (depth > 0) {
+            children.push(h('span', {style: {width: '28px', display: 'inline-block'}}))
+        }
+
+        children.push(nameContent as VNode)
+
+        return h('div', {class: 'd-flex align-center', style: {paddingLeft: `${depth * step}px`}}, children)
     }
 
     // Clear tree state when tree mode changes
@@ -188,5 +250,6 @@ export function useModelListTree(
         getTreeLoadParams,
         clearTreeState,
         setOnCollapse,
+        renderTreeCell,
     }
 }

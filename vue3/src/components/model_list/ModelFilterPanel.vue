@@ -33,21 +33,6 @@
                             />
                         </div>
                     </div>
-                    <div v-else-if="def.type === 'number'" class="d-flex align-center px-4 py-1">
-                        <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
-                        <v-text-field
-                            type="number"
-                            :label="$t(def.labelKey)"
-                            :model-value="getFilter(def.key) ?? ''"
-                            @update:model-value="setFilter(def.key, $event != null && $event !== '' ? String($event) : undefined)"
-                            :placeholder="def.defaultValue"
-                            :suffix="def.suffixKey ? $t(def.suffixKey) : undefined"
-                            density="compact"
-                            hide-details
-                            clearable
-                            class="flex-grow-1"
-                        />
-                    </div>
                 </template>
             </component>
         </template>

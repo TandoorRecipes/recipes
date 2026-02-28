@@ -224,7 +224,7 @@ function onSearchInput(val: string | null) {
 }
 
 const effectiveOrdering = computed(() =>
-    props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0].key : '')
+    props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0]!.key : '')
 )
 
 const currentField = computed(() => {

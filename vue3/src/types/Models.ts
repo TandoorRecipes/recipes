@@ -243,11 +243,6 @@ export type EditorSupportedTypes =
     | Household
 
 import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_BATCH_ACTIONS, FOOD_STAT_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
-import {UNIT_ACTION_DEFS, UNIT_LIST_SETTINGS} from "@/composables/modellist/UnitList";
-import {KEYWORD_ACTION_DEFS, KEYWORD_LIST_SETTINGS} from "@/composables/modellist/KeywordList";
-import {RECIPE_IMPORT_ACTION_DEFS, RECIPE_IMPORT_HEADER_ACTIONS} from "@/composables/modellist/RecipeImportList";
-import {SPACE_ACTION_DEFS} from "@/composables/modellist/SpaceList";
-import {SYNC_ACTION_DEFS} from "@/composables/modellist/SyncList";
 
 export const TFood = {
     name: 'Food',
@@ -301,8 +296,13 @@ export const TUnit = {
         {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: UNIT_ACTION_DEFS,
-    listSettings: UNIT_LIST_SETTINGS,
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'ingredient-editor', labelKey: 'Ingredient Editor', icon: 'fa-solid fa-table-list', group: 'Actions', routeName: 'IngredientEditorPage', routeQuery: (item) => ({unit_id: item.id})},
+        {key: 'merge', labelKey: 'Merge', icon: 'fa-solid fa-arrows-to-dot', group: 'Actions'},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
+    listSettings: {settingsKey: 'unit', settingsPanel: true, mobileList: true},
 } as Model
 registerModel(TUnit)
 
@@ -328,8 +328,16 @@ export const TKeyword = {
         {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: KEYWORD_ACTION_DEFS,
-    listSettings: KEYWORD_LIST_SETTINGS,
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'merge', labelKey: 'Merge', icon: 'fa-solid fa-arrows-to-dot', group: 'Actions'},
+        {key: 'move', labelKey: 'Move', icon: 'fa-solid fa-arrow-right', group: 'Actions',
+            routeName: 'ModelEditPage',
+            routeParams: (item, modelName) => ({model: modelName, id: item.id}),
+            routeQuery: () => ({tab: 'hierarchy'})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
+    listSettings: {settingsKey: 'keyword', settingsPanel: true, mobileList: true, treeEnabled: true},
 } as Model
 registerModel(TKeyword)
 
@@ -835,13 +843,26 @@ export const TSpace = {
         {title: 'Name', key: 'name'},
         {title: 'Owner', key: 'createdBy.displayName'},
         {title: 'Active', key: 'active', type: 'label-chip',
-            chipValueResolver: (item) => item.id === useUserPreferenceStore().activeSpace.id ? 'active' : 'select',
+            chipValueResolver: (item: any) => item.id === useUserPreferenceStore().activeSpace.id ? 'active' : 'select',
             chipMap: {active: {label: 'Active', color: 'success'}, select: {label: 'Select', color: 'info'}},
-            chipClickHandler: (item) => useUserPreferenceStore().switchSpace(item)},
+            chipClickHandler: (item: any) => useUserPreferenceStore().switchSpace(item)},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: SPACE_ACTION_DEFS,
-} as Model
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'leave', labelKey: 'LeaveSpace', icon: 'fa-solid fa-arrow-right-from-bracket', group: 'Actions', isDanger: true, reloadAfterAction: true,
+            visible: (item: any) => item.createdBy?.id !== useUserPreferenceStore().userSettings.user?.id,
+            handler: async (item: any) => {
+                const api = new ApiApi()
+                const store = useUserPreferenceStore()
+                const userSpace = store.userSpaces.find((us: UserSpace) => us.space === item.id)
+                if (userSpace) {
+                    await api.apiUserSpaceDestroy({id: userSpace.id!})
+                }
+            },
+        },
+    ],
+} as unknown as Model
 registerModel(TSpace)
 
 export const TStorage = {
@@ -950,7 +971,11 @@ export const TSync = {
         {title: 'Updated', key: 'lastChecked'},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: SYNC_ACTION_DEFS,
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'sync-import', labelKey: 'Import', icon: 'fa-solid fa-rotate', group: 'Actions'},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSync)
 
@@ -997,9 +1022,25 @@ export const TRecipeImport = {
         {title: 'Created', key: 'createdAt'},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: RECIPE_IMPORT_ACTION_DEFS,
-    headerActions: RECIPE_IMPORT_HEADER_ACTIONS,
-} as Model
+    actionDefs: [
+        {key: 'import', labelKey: 'Import', icon: 'fa-solid fa-rotate', group: 'Actions',
+            reloadAfterAction: true,
+            handler: async (item: any) => {
+                const api = new ApiApi()
+                await api.apiRecipeImportImportRecipeCreate({id: item.id, recipeImport: item as RecipeImport})
+            },
+        },
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
+    headerActions: [
+        {type: 'button', key: 'importAll', labelKey: 'ImportAll', icon: 'fa-solid fa-rotate', color: 'success',
+            handler: async () => {
+                const api = new ApiApi()
+                await api.apiRecipeImportImportAllCreate({recipeImport: {} as RecipeImport})
+            },
+        },
+    ],
+} as unknown as Model
 registerModel(TRecipeImport)
 
 export const TConnectorConfig = {

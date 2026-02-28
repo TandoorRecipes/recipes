@@ -62,13 +62,15 @@ import type {ActionDef, ModelItem} from '@/composables/modellist/types'
 
 const {mobile} = useDisplay()
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     item: ModelItem,
     actionDefs: ActionDef[],
     groupedActionDefs: Map<string, ActionDef[]>,
     getToggleState: (action: ActionDef, item: ModelItem) => boolean,
     quickActionKeys?: string[],
-}>()
+}>(), {
+    quickActionKeys: () => [],
+})
 
 defineEmits<{
     action: [key: string, item: ModelItem]

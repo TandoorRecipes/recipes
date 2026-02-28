@@ -12,7 +12,7 @@ export function useUrlFilters(
     filterDefs: ComputedRef<FilterDef[]>,
     paramName: string = 'filters'
 ) {
-    const rawFilters = useRouteQuery(paramName, '')
+    const rawFilters = useRouteQuery<string>(paramName, '')
 
     const groupedFilterDefs = computed<Map<string, FilterDef[]>>(() => {
         const map = new Map<string, FilterDef[]>()

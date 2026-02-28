@@ -299,7 +299,7 @@ import {useModelListSettings} from '@/composables/modellist/useModelListSettings
 import {useTouchDetect} from '@/composables/useTouchDetect'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
-import ModelFilterPanel from '@/components/model_list/filters/ModelFilterPanel.vue'
+import ModelFilterPanel from '@/components/model_list/ModelFilterPanel.vue'
 
 const {t} = useI18n()
 const {mobile} = useDisplay()

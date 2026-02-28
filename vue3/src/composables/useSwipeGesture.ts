@@ -73,7 +73,7 @@ export function useSwipeGesture(
     function onTouchStart(e: TouchEvent, id: number) {
         if (!enabled.value) return
 
-        const touch = e.touches[0]
+        const touch = e.touches[0]!
         activeStates.set(id, {
             startX: touch.clientX,
             startY: touch.clientY,
@@ -86,7 +86,7 @@ export function useSwipeGesture(
         const state = activeStates.get(id)
         if (!state) return
 
-        const touch = e.touches[0]
+        const touch = e.touches[0]!
         const dx = touch.clientX - state.startX
         const dy = touch.clientY - state.startY
 

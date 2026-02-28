@@ -6,7 +6,7 @@
         :class="{'float-right': !compact}"
         color="create"
     >
-        <i class="fa-solid fa-plus"></i>
+        <v-icon icon="fa-solid fa-plus" />
         <model-edit-dialog
             :close-after-create="false"
             :model="model"

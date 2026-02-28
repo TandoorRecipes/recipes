@@ -135,14 +135,14 @@ const sheetDragStyle = computed(() => {
 })
 
 function onSheetDragStart(e: TouchEvent) {
-    dragStartY.value = e.touches[0].clientY
+    dragStartY.value = e.touches[0]!.clientY
     dragOffset.value = 0
     isDragging.value = true
 }
 
 function onSheetDragMove(e: TouchEvent) {
     if (!isDragging.value) return
-    const dy = e.touches[0].clientY - dragStartY.value
+    const dy = e.touches[0]!.clientY - dragStartY.value
     dragOffset.value = Math.max(0, dy)
 }
 

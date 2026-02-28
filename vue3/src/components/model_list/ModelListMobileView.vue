@@ -164,7 +164,7 @@
                                 :action-defs="actionDefs"
                                 :grouped-action-defs="groupedActionDefs"
                                 :get-toggle-state="getToggleState"
-                                :quick-action-keys="quickActionKeys"
+                                :quick-action-keys="quickActionKeys.slice(0, 3)"
                                 @action="(key: string, actionItem: any) => $emit('action', key, actionItem)"
                             />
                         </template>
@@ -218,11 +218,12 @@ import type {ModelTableHeaders} from '@/types/Models'
 import {buildSubtitleText} from '@/utils/utils'
 import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
 import {useTouchDetect} from '@/composables/useTouchDetect'
+import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
 import ActionMenu from "@/components/common/ActionMenu.vue"
 
 const {t} = useI18n()
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     items: ModelItem[],
     itemsLength: number,
     loading: boolean,
@@ -230,25 +231,23 @@ const props = defineProps<{
     itemsPerPage: number,
     selectMode: boolean,
     selectedItems: ModelItem[],
-    enhancedColumns: ModelTableHeaders[],
     allColumns: ModelTableHeaders[],
     actionDefs: ActionDef[],
     groupedActionDefs: Map<string, ActionDef[]>,
     getToggleState: (action: ActionDef, item: ModelItem) => boolean,
-    quickActionKeys: string[],
     treeActive: boolean,
     treeSuspended: boolean,
     expandedIds: Set<number>,
     loadingIds: Set<number>,
     toggleExpand: (id: number) => void,
-    mobileSubtitleKeys: string[],
-    swipeEnabled: boolean,
-    swipeLeftKeys: string[],
-    swipeRightKeys: string[],
     settingsKey: string,
-    showMobileHeaders: boolean,
     labelField?: string,
-}>()
+}>(), {
+    labelField: 'name',
+})
+
+const settingsKeyRef = computed(() => props.settingsKey)
+const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKeyRef)
 
 const emit = defineEmits<{
     'update:selectedItems': [items: ModelItem[]],
@@ -259,13 +258,13 @@ const emit = defineEmits<{
 
 /** Resolve action keys to action defs, filtering out missing/invisible */
 const resolvedLeftActions = computed(() =>
-    props.swipeLeftKeys
+    swipeLeftKeys.value
         .map(key => props.actionDefs.find(a => a.key === key))
         .filter((a): a is ActionDef => !!a)
 )
 
 const resolvedRightActions = computed(() =>
-    props.swipeRightKeys
+    swipeRightKeys.value
         .map(key => props.actionDefs.find(a => a.key === key))
         .filter((a): a is ActionDef => !!a)
 )
@@ -277,7 +276,7 @@ const {hasTouchInput} = useTouchDetect()
 
 /** Swipe is active only on touch devices, when enabled, not in select mode, and actions are configured */
 const swipeActive = computed(() =>
-    hasTouchInput.value && props.swipeEnabled && !props.selectMode && (leftSlotCount.value > 0 || rightSlotCount.value > 0)
+    hasTouchInput.value && swipeEnabled.value && !props.selectMode && (leftSlotCount.value > 0 || rightSlotCount.value > 0)
 )
 
 const enabledRef = computed(() => swipeActive.value)
@@ -337,8 +336,8 @@ function onActionClick(e: Event, key: string, item: ModelItem) {
     if (now - (lastActionTimes.get(actionItemKey) ?? 0) < 400) return
     lastActionTimes.set(actionItemKey, now)
     if (lastActionTimes.size > 50) {
-        for (const [k, t] of lastActionTimes) {
-            if (now - t > 10_000) lastActionTimes.delete(k)
+        for (const [k, ts] of lastActionTimes) {
+            if (now - ts > 10_000) lastActionTimes.delete(k)
         }
     }
     swipe.resetSwipe(item.id)
@@ -388,7 +387,7 @@ function toggleSelectAll(val: boolean | null) {
 
 /** Columns selected for subtitle display (use allColumns so hidden columns still work as subtitles) */
 const subtitleColumns = computed(() =>
-    props.mobileSubtitleKeys
+    mobileSubtitleKeys.value
         .map(key => props.allColumns.find(c => c.key === key))
         .filter((c): c is ModelTableHeaders => !!c)
 )
