@@ -40,7 +40,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
-                             InventoryLocation, InventoryEntry, InventoryLog)
+                             InventoryLocation, InventoryEntry, InventoryLog, Household)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
@@ -162,7 +162,7 @@ class CustomOnHandField(serializers.Field):
                 shared_users = c
             else:
                 try:
-                    shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+                    shared_users = self.context["request"].user_space.household.values_list('user_id', flat=True)
                     caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5 * 60)
                     # TODO ugly hack that improves API performance significantly, should be done properly
                 except AttributeError:  # Anonymous users (using share links) don't have shared users
@@ -489,21 +489,29 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'demo', 'ai_monthly_credits_used')
 
 
+class HouseholdSerializer(WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = Household
+        fields = ('id', 'name', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'created_at', 'updated_at',)
+
+
 class UserSpaceSerializer(WritableNestedModelSerializer):
     user = UserSerializer(read_only=True)
     groups = GroupSerializer(many=True)
-
-    def validate(self, data):
-        if self.instance.user == self.context['request'].space.created_by:  # can't change space owner permission
-            raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
-        return super().validate(data)
+    household = HouseholdSerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'household','active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -539,7 +547,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'time', 'color', 'default', 'created_by')
+        fields = ('id', 'name', 'order', 'time', 'color', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -548,6 +556,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
     plan_share = UserSerializer(many=True, allow_null=True, required=False)
     shopping_share = UserSerializer(many=True, allow_null=True, required=False)
+    default_meal_type = MealTypeSerializer(required=False, allow_null=True)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
     image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
@@ -576,7 +585,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -899,8 +908,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
                 shared_users = c
             else:
                 try:
-                    shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
-                        self.context['request'].user.id]
+                    shared_users = self.context["request"].user_space.household.values_list('user_id', flat=True)
                     caches['default'].set(
                         f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
                         shared_users, timeout=5 * 60)
@@ -1486,7 +1494,7 @@ class FoodShoppingSerializer(serializers.ModelSerializer):
     supermarket_category = SupermarketCategorySerializer(read_only=True)
     shopping_lists = ShoppingListSerializer(read_only=True, many=True)
 
-    #TODO duplicate code with FoodSerializer, merge into one or use proper function
+    # TODO duplicate code with FoodSerializer, merge into one or use proper function
     def create(self, validated_data):
         name = validated_data['name'].strip()
 
@@ -1717,6 +1725,7 @@ class AutomationSerializer(serializers.ModelSerializer):
 
 
 class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, WritableNestedModelSerializer):
+    household = HouseholdSerializer()
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1725,7 +1734,7 @@ class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, Writ
 
     class Meta:
         model = InventoryLocation
-        fields = ('id', 'name', 'is_freezer')
+        fields = ('id', 'name', 'is_freezer', 'household')
 
 
 class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSerializer):

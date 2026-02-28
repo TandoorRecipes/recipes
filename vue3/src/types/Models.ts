@@ -14,7 +14,7 @@ import {
     SupermarketCategory, Sync, SyncLog,
     Unit,
     UnitConversion, User, UserFile,
-    UserSpace, ViewLog
+    UserSpace, ViewLog, Household
 } from "@/openapi";
 import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
@@ -166,6 +166,7 @@ export type EditorSupportedModels =
     | 'InventoryLocation'
     | 'InventoryEntry'
     | 'InventoryLog'
+    | 'Household'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -208,6 +209,7 @@ export type EditorSupportedTypes =
     | InventoryLocation
     | InventoryEntry
     | InventoryLog
+    | Household
 
 export const TFood = {
     name: 'Food',
@@ -696,6 +698,25 @@ export const TAccessToken = {
 } as Model
 registerModel(TAccessToken)
 
+
+export const THousehold = {
+    name: 'Household',
+    localizationKey: 'Household',
+    localizationKeyDescription: 'HouseholdHelp',
+    icon: 'fa-solid fa-house-chimney-user',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/HouseholdEditor.vue`)),
+
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(THousehold)
+
 export const TUserSpace = {
     name: 'UserSpace',
     localizationKey: 'SpaceMembers',
@@ -713,6 +734,7 @@ export const TUserSpace = {
     tableHeaders: [
         {title: 'User', key: 'user.displayName'},
         {title: 'Group', key: 'groups'},
+        {title: 'Household', key: 'household.name'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
@@ -794,6 +816,7 @@ export const TInventoryLocation = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
+        {title: 'Household', key: 'household.name'},
         {title: 'Freezer', key: 'isFreezer'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]

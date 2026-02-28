@@ -11,36 +11,44 @@
         :object-name="editingObjName()"
         :editing-object="editingObj">
         <v-card-text>
-            <v-form>
-                <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object multiple v-model="editingObj.groups"></v-select>
-                <model-select model="Household" v-model="editingObj.household" allow-create></model-select>
+            <v-form :disabled="loading">
+
+                <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
+
+                <database-model-col model="UserSpace"></database-model-col>
             </v-form>
         </v-card-text>
     </model-editor-base>
-
 
 </template>
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref, watch} from "vue";
-import {ApiApi, Group, UserSpace} from "@/openapi";
-
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-
+import {onMounted, PropType, watch} from "vue";
+import {ConnectorConfig, Household} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import DatabaseModelCol from "@/components/display/DatabaseModelCol.vue";
 
 const props = defineProps({
-    item: {type: {} as PropType<UserSpace>, required: false, default: null},
+    item: {type: {} as PropType<Household>, required: false, default: null},
     itemId: {type: [Number, String], required: false, default: undefined},
-    itemDefaults: {type: {} as PropType<UserSpace>, required: false, default: {} as UserSpace},
+    itemDefaults: {type: {} as PropType<Household>, required: false, default: {} as Household},
     dialog: {type: Boolean, default: false}
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<UserSpace>('UserSpace', emit)
+const {
+    setupState,
+    deleteObject,
+    saveObject,
+    isUpdate,
+    editingObjName,
+    loading,
+    editingObj,
+    editingObjChanged,
+    modelClass
+} = useModelEditorFunctions<Household>('Household', emit)
 
 /**
  * watch prop changes and re-initialize editor
@@ -51,7 +59,6 @@ watch([() => props.item, () => props.itemId], () => {
 })
 
 // object specific data (for selects/display)
-const groups = ref([] as Group[])
 
 onMounted(() => {
     initializeEditor()
@@ -60,14 +67,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor() {
-    const api = new ApiApi()
-    api.apiGroupList().then(r => {
-        groups.value = r
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-    })
-
+function initializeEditor(){
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 }
 

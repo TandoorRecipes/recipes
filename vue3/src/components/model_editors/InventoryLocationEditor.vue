@@ -13,6 +13,7 @@
         <v-card-text>
             <v-form :disabled="loading">
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
+                <model-select model="Household" v-model="editingObj.household" allow-create></model-select>
                 <v-checkbox :label="$t('Freezer')" v-model="editingObj.isFreezer"></v-checkbox>
             </v-form>
         </v-card-text>
@@ -26,6 +27,7 @@ import {onMounted, PropType, watch} from "vue";
 import {InventoryLocation} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<InventoryLocation>, required: false, default: null},

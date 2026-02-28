@@ -75,6 +75,7 @@ class ScopeMiddleware:
                 return views.no_groups(request)
 
             request.space = user_space.space
+            request.user_space = user_space
             with scope(space=request.space):
                 return self.get_response(request)
         else:

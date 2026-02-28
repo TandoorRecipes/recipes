@@ -113,6 +113,20 @@ def is_object_shared(user, obj):
     return user in obj.get_shared()
 
 
+def is_object_household(user, obj):
+    """
+    Tests if a given user is in the same household as the owener of the given object
+    :param user django auth user object
+    :param obj any object that should be tested
+    :return: true if user is in the same household for object, false otherwise
+    """
+    # TODO this could be improved/cleaned up by adding
+    #      share checks for relevant objects
+    if not user.is_authenticated:
+        return False
+    return UserSpace.objects.filter(user=user, space=obj.space, household__in=obj.get_owner().userspace_set.values_list('household_id', flat=True)).exists()
+
+
 def share_link_valid(recipe, share):
     """
     Verifies the validity of a share uuid
@@ -257,13 +271,27 @@ class CustomIsShared(permissions.BasePermission):
     Custom permission class for django rest framework views
     verifies user is shared for the object he is trying to access
     """
-    message = _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
+    message = _('You cannot interact with this object as it is not owned by you!')
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         return is_object_shared(request.user, obj)
+
+
+class CustomIsHousehold(permissions.BasePermission):
+    """
+    Custom permission class for django rest framework views
+    verifies user is in the same household as the object he is trying to access
+    """
+    message = _('You cannot interact with this object because you are not in the same household as the user who created it!')
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return is_object_household(request.user, obj)
 
 
 class CustomIsGuest(permissions.BasePermission):

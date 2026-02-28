@@ -526,7 +526,7 @@ class RecipeSearch():
     def _makenow_filter(self, missing=None):
         if missing is None or (isinstance(missing, bool) and missing == False):
             return
-        shopping_users = [*self._request.user.get_shopping_share(), self._request.user]
+        shopping_users = self._request.user_space.household.values_list('user_id', flat=True)
 
         onhand_filter = (
             Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand

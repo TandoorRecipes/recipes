@@ -37,6 +37,7 @@ models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
 models/GenericModelReference.ts
 models/Group.ts
+models/Household.ts
 models/ImportLog.ts
 models/ImportOpenData.ts
 models/ImportOpenDataMetaData.ts
@@ -81,6 +82,7 @@ models/PaginatedEnterpriseSpaceList.ts
 models/PaginatedExportLogList.ts
 models/PaginatedFoodList.ts
 models/PaginatedGenericModelReferenceList.ts
+models/PaginatedHouseholdList.ts
 models/PaginatedImportLogList.ts
 models/PaginatedIngredientList.ts
 models/PaginatedInventoryEntryList.ts
@@ -130,6 +132,7 @@ models/PatchedEnterpriseSocialEmbed.ts
 models/PatchedEnterpriseSpace.ts
 models/PatchedExportLog.ts
 models/PatchedFood.ts
+models/PatchedHousehold.ts
 models/PatchedImportLog.ts
 models/PatchedIngredient.ts
 models/PatchedInventoryEntry.ts

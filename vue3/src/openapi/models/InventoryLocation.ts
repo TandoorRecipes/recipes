@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Household } from './Household';
+import {
+    HouseholdFromJSON,
+    HouseholdFromJSONTyped,
+    HouseholdToJSON,
+} from './Household';
+
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
  * It solves the problem with nested validation for unique fields on update.
@@ -71,6 +78,12 @@ export interface InventoryLocation {
      * @memberof InventoryLocation
      */
     isFreezer?: boolean;
+    /**
+     * 
+     * @type {Household}
+     * @memberof InventoryLocation
+     */
+    household: Household;
 }
 
 /**
@@ -78,6 +91,7 @@ export interface InventoryLocation {
  */
 export function instanceOfInventoryLocation(value: object): value is InventoryLocation {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('household' in value) || value['household'] === undefined) return false;
     return true;
 }
 
@@ -94,6 +108,7 @@ export function InventoryLocationFromJSONTyped(json: any, ignoreDiscriminator: b
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'isFreezer': json['is_freezer'] == null ? undefined : json['is_freezer'],
+        'household': HouseholdFromJSON(json['household']),
     };
 }
 
@@ -106,6 +121,7 @@ export function InventoryLocationToJSON(value?: InventoryLocation | null): any {
         'id': value['id'],
         'name': value['name'],
         'is_freezer': value['isFreezer'],
+        'household': HouseholdToJSON(value['household']),
     };
 }
 
