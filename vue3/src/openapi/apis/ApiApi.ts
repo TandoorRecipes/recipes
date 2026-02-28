@@ -34,6 +34,7 @@ import type {
   FoodInheritField,
   FoodShoppingUpdate,
   Group,
+  Household,
   ImportLog,
   ImportOpenData,
   ImportOpenDataMetaData,
@@ -69,6 +70,7 @@ import type {
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedGenericModelReferenceList,
+  PaginatedHouseholdList,
   PaginatedImportLogList,
   PaginatedIngredientList,
   PaginatedInventoryEntryList,
@@ -118,6 +120,7 @@ import type {
   PatchedEnterpriseSpace,
   PatchedExportLog,
   PatchedFood,
+  PatchedHousehold,
   PatchedImportLog,
   PatchedIngredient,
   PatchedInventoryEntry,
@@ -233,6 +236,8 @@ import {
     FoodShoppingUpdateToJSON,
     GroupFromJSON,
     GroupToJSON,
+    HouseholdFromJSON,
+    HouseholdToJSON,
     ImportLogFromJSON,
     ImportLogToJSON,
     ImportOpenDataFromJSON,
@@ -303,6 +308,8 @@ import {
     PaginatedFoodListToJSON,
     PaginatedGenericModelReferenceListFromJSON,
     PaginatedGenericModelReferenceListToJSON,
+    PaginatedHouseholdListFromJSON,
+    PaginatedHouseholdListToJSON,
     PaginatedImportLogListFromJSON,
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
@@ -401,6 +408,8 @@ import {
     PatchedExportLogToJSON,
     PatchedFoodFromJSON,
     PatchedFoodToJSON,
+    PatchedHouseholdFromJSON,
+    PatchedHouseholdToJSON,
     PatchedImportLogFromJSON,
     PatchedImportLogToJSON,
     PatchedIngredientFromJSON,
@@ -1198,6 +1207,33 @@ export interface ApiGetRecipeFileRetrieveRequest {
 
 export interface ApiGroupRetrieveRequest {
     id: number;
+}
+
+export interface ApiHouseholdCreateRequest {
+    household: Omit<Household, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiHouseholdDestroyRequest {
+    id: number;
+}
+
+export interface ApiHouseholdListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiHouseholdPartialUpdateRequest {
+    id: number;
+    patchedHousehold?: Omit<PatchedHousehold, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiHouseholdRetrieveRequest {
+    id: number;
+}
+
+export interface ApiHouseholdUpdateRequest {
+    id: number;
+    household: Omit<Household, 'createdAt'|'updatedAt'>;
 }
 
 export interface ApiImportCreateRequest {
@@ -8120,6 +8156,244 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiGroupRetrieve(requestParameters: ApiGroupRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Group> {
         const response = await this.apiGroupRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdCreateRaw(requestParameters: ApiHouseholdCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['household'] == null) {
+            throw new runtime.RequiredError(
+                'household',
+                'Required parameter "household" was null or undefined when calling apiHouseholdCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HouseholdToJSON(requestParameters['household']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdCreate(requestParameters: ApiHouseholdCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdDestroyRaw(requestParameters: ApiHouseholdDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdDestroy(requestParameters: ApiHouseholdDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiHouseholdDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdListRaw(requestParameters: ApiHouseholdListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedHouseholdList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedHouseholdListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdList(requestParameters: ApiHouseholdListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedHouseholdList> {
+        const response = await this.apiHouseholdListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdPartialUpdateRaw(requestParameters: ApiHouseholdPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedHouseholdToJSON(requestParameters['patchedHousehold']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdPartialUpdate(requestParameters: ApiHouseholdPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdRetrieveRaw(requestParameters: ApiHouseholdRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdRetrieve(requestParameters: ApiHouseholdRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdUpdateRaw(requestParameters: ApiHouseholdUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdUpdate().'
+            );
+        }
+
+        if (requestParameters['household'] == null) {
+            throw new runtime.RequiredError(
+                'household',
+                'Required parameter "household" was null or undefined when calling apiHouseholdUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HouseholdToJSON(requestParameters['household']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdUpdate(requestParameters: ApiHouseholdUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -263,6 +263,8 @@
   "HostedFreeVersion": "You are using the free version of Tandoor",
   "Hour": "Hour",
   "Hours": "Hours",
+  "Household": "Household",
+  "HouseholdHelp": "Users of one household automatically share meal plans, shopping lists and the pantry.",
   "Icon": "Icon",
   "IgnoreAccents": "Ignore Accents",
   "IgnoreAccentsHelp": "Ignore accents when searching on the given fields. ",

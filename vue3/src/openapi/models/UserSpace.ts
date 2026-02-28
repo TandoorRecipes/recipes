@@ -25,6 +25,12 @@ import {
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { Household } from './Household';
+import {
+    HouseholdFromJSON,
+    HouseholdFromJSONTyped,
+    HouseholdToJSON,
+} from './Household';
 
 /**
  * Adds nested create feature
@@ -56,6 +62,12 @@ export interface UserSpace {
      * @memberof UserSpace
      */
     groups: Array<Group>;
+    /**
+     * 
+     * @type {Household}
+     * @memberof UserSpace
+     */
+    household?: Household;
     /**
      * 
      * @type {boolean}
@@ -115,6 +127,7 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'user': UserFromJSON(json['user']),
         'space': json['space'],
         'groups': ((json['groups'] as Array<any>).map(GroupFromJSON)),
+        'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
         'active': json['active'] == null ? undefined : json['active'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'inviteLink': json['invite_link'],
@@ -131,6 +144,7 @@ export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'inviteLi
         
         'id': value['id'],
         'groups': ((value['groups'] as Array<any>).map(GroupToJSON)),
+        'household': HouseholdToJSON(value['household']),
         'active': value['active'],
         'internal_note': value['internalNote'],
     };

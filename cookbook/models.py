@@ -576,9 +576,19 @@ class UserPreference(models.Model, PermissionModelMixin):
         return str(self.user)
 
 
+class Household(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=128)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class UserSpace(models.Model, PermissionModelMixin):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    household = models.ForeignKey(Household, on_delete=models.PROTECT, null=True, blank=True)
     groups = models.ManyToManyField(Group)
 
     # there should always only be one active space although permission methods are written in such a way
@@ -1350,9 +1360,6 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     def __str__(self):
         return f'Shopping list entry {self.id}'
 
-    def get_shared(self):
-        return self.created_by.userpreference.shopping_share.all()
-
     def get_owner(self):
         try:
             return self.created_by
@@ -1366,6 +1373,7 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
 class InventoryLocation(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=64)
     is_freezer = models.BooleanField(default=False)
+    household = models.ForeignKey(Household, on_delete=models.PROTECT)
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -66,6 +66,7 @@
         <v-row dense>
             <database-model-col model="Space"></database-model-col>
             <database-model-col model="UserSpace"></database-model-col>
+            <database-model-col model="Household"></database-model-col>
             <database-model-col model="InviteLink"></database-model-col>
         </v-row>
 

@@ -79,7 +79,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly
+                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly, CustomIsHousehold
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -91,7 +91,7 @@ from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, Coo
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
-                             InventoryLocation, InventoryEntry, InventoryLog
+                             InventoryLocation, InventoryEntry, InventoryLog, Household
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -119,7 +119,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
                                  AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer,
-                                 IngredientParserRequestSerializer, IngredientParserResponseSerializer
+                                 IngredientParserRequestSerializer, IngredientParserResponseSerializer, HouseholdSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -711,6 +711,16 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         return Response(self.serializer_class(self.request.space, many=False, context={'request': self.request}).data)
 
 
+class HouseholdViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = Household.objects
+    serializer_class = HouseholdSerializer
+    permission_classes = [CustomIsSpaceOwner & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='internal_note', description='text field to store information about the invite link', type=str),
 ]))
@@ -863,7 +873,6 @@ class InventoryEntryViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationM
                 queryset = queryset.filter(inventory_location_id=inventory_location_id)
 
         return queryset
-
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -1035,7 +1044,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             shared_users = c
         else:
             try:
-                shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [self.request.user.id]
+                shared_users = UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True)
                 caches['default'].set(f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}',
                                       shared_users, timeout=5 * 60)
                 # TODO ugly hack that improves API performance significantly, should be done properly
@@ -1064,7 +1073,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
-        shared_users = list(self.request.user.get_shopping_share())
+        shared_users = UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True)
         shared_users.append(request.user)
         if request.data.get('_delete', False) == 'true':
             ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space,
@@ -1410,6 +1419,7 @@ class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             queryset = queryset.filter(book__pk=book_id)
         return queryset
 
+
 class CalendarRenderer(BaseRenderer):
     media_type = 'text/calendar'
     format = 'ics'
@@ -1427,16 +1437,19 @@ MealPlanViewQueryParameters = [
                      description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str,
                      many=True),
 ]
+
+
 @extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters))
 class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | CustomIsHousehold) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     required_scopes = ['mealplan']
 
     def get_queryset(self):
-        queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
+        queryset = self.queryset.filter(Q(created_by=self.request.user) |
+                                        Q(created_by_id__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))).filter(
             space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
@@ -2116,7 +2129,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return self.queryset.filter(Q(entries__isnull=True)
                                     | Q(entries__created_by=self.request.user)
-                                    | Q(entries__created_by__in=list(self.request.user.get_shopping_share()))).distinct().all()
+                                    | Q(entries__created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))).distinct().all()
 
     @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
     def bulk_create_entries(self, request, pk):
@@ -2183,7 +2196,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     """
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | CustomIsHousehold) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -2192,7 +2205,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         # select_related("list_recipe")
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
-            | Q(created_by__in=list(self.request.user.get_shopping_share()))).prefetch_related('created_by',
+            | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))).prefetch_related('created_by',
                                                                                                'food',
                                                                                                'food__shopping_lists',
                                                                                                'shopping_lists',
@@ -2239,13 +2252,13 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         if serializer.is_valid():
             bulk_entries = ShoppingListEntry.objects.filter(
-                Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
+                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))
             ).filter(
                 space=request.space, id__in=serializer.validated_data['ids']
             )
 
             safe_entry_ids = ShoppingListEntry.objects.filter(
-                Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
+                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))
             ).filter(
                 space=request.space, id__in=serializer.validated_data['ids']
             ).values_list('id', flat=True)
@@ -2272,7 +2285,8 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
             # ---------- shopping lists -------------
             if 'shopping_lists_add' in serializer.validated_data:
-                add_to_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_add'])
+                add_to_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
+                                serializer.validated_data['shopping_lists_add'])
 
             if 'shopping_lists_remove' in serializer.validated_data:
                 remove_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
@@ -3052,7 +3066,7 @@ class ImportOpenData(APIView):
     @decorators.action(detail=True, pagination_class=None, methods=['GET'])
     def get(self, request, format=None):
         response = safe_request('GET',
-            'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/meta.json')
+                                'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/meta.json')
         metadata = json.loads(response.content)
         return Response(metadata)
 
@@ -3062,7 +3076,7 @@ class ImportOpenData(APIView):
         serializer = ImportOpenDataSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             response = safe_request('GET',
-                f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{serializer.validated_data["selected_version"]}.json')  # TODO catch 404, timeout, ...
+                                    f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{serializer.validated_data["selected_version"]}.json')  # TODO catch 404, timeout, ...
             data = json.loads(response.content)
 
             response_obj = {}
@@ -3186,7 +3200,7 @@ def ingredient_from_string(request):
     text = request.data['text']
 
     ingredient_parser = IngredientParser(request, False)
-    ingredient =  ingredient_parser.parse_as_ingredient(text)
+    ingredient = ingredient_parser.parse_as_ingredient(text)
 
     return JsonResponse(ingredient, status=200)
 
@@ -3311,5 +3325,3 @@ def meal_plans_to_ical(queryset, filename):
     response["Content-Disposition"] = f'inline; filename={filename}'
 
     return response
-
-
