@@ -43,28 +43,30 @@ class RecipeSage(Integration):
         ingredients_added = False
         for s in file['recipeInstructions']:
             txt=html.unescape(s['text'].strip())
-            if txt[0]=='[' and txt[-1]==']':
-                step = Step.objects.create(
-                        instruction=txt[1:-1], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
-                )
-            elif txt!="":
-                step = Step.objects.create(
-                        instruction=txt, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
-                )
+            if txt != "":
+                if txt[0]=='[' and txt[-1]==']':
+                    step = Step.objects.create(
+                            instruction=txt[1:-1], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                    )
+                else:
+                    step = Step.objects.create(
+                            instruction=txt, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                    )
             if not ingredients_added:
                 ingredients_added = True
 
                 for ingredient in file['recipeIngredient']:
                     ingredient=html.unescape(ingredient.strip())
-                    if ingredient[0]=='[' and ingredient[-1]==']':
-                        step.ingredients.add(Ingredient.objects.create(is_header=True, original_text=ingredient[1:-1],space=self.request.space,note=ingredient[1:-1],))
-                    elif ingredient.strip() !="":
-                        amount, unit, food, note = ingredient_parser.parse(ingredient.strip())
-                        f = ingredient_parser.get_food(food)
-                        u = ingredient_parser.get_unit(unit)
-                        step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
-                        ))
+                    if ingredient!="":
+                        if ingredient[0]=='[' and ingredient[-1]==']':
+                            step.ingredients.add(Ingredient.objects.create(is_header=True, original_text=ingredient[1:-1],space=self.request.space,note=ingredient[1:-1],))
+                        else:
+                            amount, unit, food, note = ingredient_parser.parse(ingredient.strip())
+                            f = ingredient_parser.get_food(food)
+                            u = ingredient_parser.get_unit(unit)
+                            step.ingredients.add(Ingredient.objects.create(
+                                food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
+                            ))
             recipe.steps.add(step)
 
                 
