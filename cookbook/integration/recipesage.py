@@ -1,9 +1,10 @@
 import json
+import html
 from io import BytesIO
 
 from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time, listify_keywords, parse_keywords
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step, Keyword
 
@@ -48,7 +49,10 @@ class RecipeSage(Integration):
                 ingredients_added = True
 
                 for ingredient in file['recipeIngredient']:
-                    if ingredient.strip() !="":
+                    ingredient=html.unescape(ingredient.strip())
+                    if ingredient[0]=='[' and ingredient[-1]==']':
+                        step.ingredients.add(Ingredient.objects.create(is_header=True, original_text=ingredient[1:-1],space=self.request.space,note=ingredient[1:-1],))
+                    elif ingredient.strip() !="":
                         amount, unit, food, note = ingredient_parser.parse(ingredient.strip())
                         f = ingredient_parser.get_food(food)
                         u = ingredient_parser.get_unit(unit)
