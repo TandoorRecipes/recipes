@@ -33,6 +33,7 @@ export * from './FoodInheritField';
 export * from './FoodShopping';
 export * from './FoodShoppingUpdate';
 export * from './FoodSimple';
+export * from './FoodStats';
 export * from './GenericModelReference';
 export * from './Group';
 export * from './Household';

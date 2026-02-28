@@ -1805,10 +1805,68 @@ paths:
       description: logs request counts to redis cache total/per user/
       parameters:
       - in: query
+        name: expired
+        schema:
+          type: boolean
+        description: Filter by whether food has expired inventory entries
+      - in: query
+        name: expiring_soon
+        schema:
+          type: integer
+        description: Filter by foods with inventory expiring within N days
+      - in: query
+        name: has_children
+        schema:
+          type: boolean
+        description: Filter by whether food has child foods
+      - in: query
+        name: has_inventory
+        schema:
+          type: boolean
+        description: Filter by whether food has inventory entries with amount > 0
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether food has a linked recipe
+      - in: query
+        name: has_substitute
+        schema:
+          type: boolean
+        description: Filter by whether food has substitutes configured
+      - in: query
+        name: ignore_shopping
+        schema:
+          type: boolean
+        description: Filter by ignore_shopping flag
+      - in: query
+        name: in_shopping_list
+        schema:
+          type: boolean
+        description: Filter by whether food is currently in an unchecked shopping
+          list entry
+      - in: query
+        name: inventory_location
+        schema:
+          type: integer
+        description: Filter by inventory location ID (only entries with amount > 0)
+      - in: query
         name: limit
         schema:
           type: string
         description: limit number of entries to return
+      - in: query
+        name: onhand
+        schema:
+          type: boolean
+        description: Filter by on-hand status for current user and shared users
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        description: 'Order results by field. Allowed: name, -name, numrecipe, -numrecipe,
+          numchild, -numchild,supermarket_category__name, -supermarket_category__name.
+          Ignored when query is active.'
       - name: page
         required: false
         in: query
@@ -1825,7 +1883,8 @@ paths:
         name: query
         schema:
           type: string
-        description: lookup if query string is contained within the name, case insensitive
+        description: Search foods by name (fuzzy or contains depending on user search
+          preferences)
       - in: query
         name: random
         schema:
@@ -1835,24 +1894,34 @@ paths:
         name: root
         schema:
           type: integer
-        description: Return first level children of {obj} with ID [int].  Integer
-          0 will return root {obj}s.
+        description: Return first level children of food with ID [int]. Integer 0
+          will return root foods.
       - in: query
         name: root_tree
         schema:
           type: integer
-        description: Return all items belonging to the tree of the given {obj} id
+        description: Return all items belonging to the tree of the given food id
+      - in: query
+        name: supermarket_category
+        schema:
+          type: integer
+        description: Filter by supermarket category ID
       - in: query
         name: tree
         schema:
           type: integer
-        description: Return all self and children of {obj} with ID [int].
+        description: Return all self and children of food with ID [int].
       - in: query
         name: updated_at
         schema:
           type: string
         description: if model has an updated_at timestamp, filter only models updated
           at or after datetime
+      - in: query
+        name: used_in_recipes
+        schema:
+          type: boolean
+        description: Filter by whether food is used as an ingredient in any recipe
       tags:
       - api
       security:
@@ -2335,7 +2404,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/FoodShoppingUpdate'
-        required: true
       security:
       - ApiKeyAuth: []
       responses:
@@ -2345,6 +2413,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/FoodShoppingUpdate'
           description: ''
+    delete:
+      operationId: apiFoodShoppingDestroy
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this food.
+        required: true
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/food/batch_update/:
     put:
       operationId: apiFoodBatchUpdateUpdate
@@ -2371,6 +2456,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FoodBatchUpdate'
+          description: ''
+  /api/food/stats/:
+    get:
+      operationId: apiFoodStatsRetrieve
+      description: logs request counts to redis cache total/per user/
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodStats'
           description: ''
   /api/get_external_file_link/{id}/:
     get:
@@ -5468,7 +5568,9 @@ paths:
         name: sort_order
         schema:
           type: string
-        description: 'Determines the order of the results. Options are: score,-score,name,-name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,lastviewed,-lastviewed'
+        description: 'Determines the order of the results. Options are: score, -score,
+          name, -name, lastcooked, -lastcooked, rating, -rating, times_cooked, -times_cooked,
+          created_at, -created_at, lastviewed, -lastviewed'
       - in: query
         name: timescooked
         schema:
@@ -6945,6 +7047,11 @@ paths:
         individual entries of a shopping list
         automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
       parameters:
+      - in: query
+        name: food
+        schema:
+          type: integer
+        description: Returns only entries for the given food id
       - in: query
         name: mealplan
         schema:
@@ -11087,11 +11194,6 @@ components:
         * `PLAN` - Meal-Plan
         * `BOOKS` - Books
         * `SHOPPING` - Shopping
-    DeleteEnum:
-      enum:
-      - 'true'
-      type: string
-      description: '* `true` - true'
     ExportLog:
       type: object
       properties:
@@ -11273,6 +11375,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         inherit_fields:
           type: array
           items:
@@ -11311,12 +11416,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ShoppingList'
+        in_inventory:
+          type: string
+          readOnly: true
+        substitute_inventory:
+          type: boolean
+          readOnly: true
       required:
       - full_name
+      - in_inventory
       - name
       - numchild
+      - numrecipe
       - parent
       - shopping
+      - substitute_inventory
       - substitute_onhand
     FoodBatchUpdate:
       type: object
@@ -11509,17 +11623,7 @@ components:
           writeOnly: true
           nullable: true
           description: ID of unit to use for the shopping list
-        delete:
-          allOf:
-          - $ref: '#/components/schemas/DeleteEnum'
-          writeOnly: true
-          nullable: true
-          description: |-
-            When set to true will delete all food from active shopping lists.
-
-            * `true` - true
-      required:
-      - delete
+      required: []
     FoodSimple:
       type: object
       properties:
@@ -11536,6 +11640,28 @@ components:
           maxLength: 128
       required:
       - name
+    FoodStats:
+      type: object
+      properties:
+        onhand:
+          type: integer
+        shopping:
+          type: integer
+        ignored:
+          type: integer
+        inventory:
+          type: integer
+        expired:
+          type: integer
+        total:
+          type: integer
+      required:
+      - expired
+      - ignored
+      - inventory
+      - onhand
+      - shopping
+      - total
     GenericModelReference:
       type: object
       properties:
@@ -12163,6 +12289,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -12183,6 +12312,7 @@ components:
       - label
       - name
       - numchild
+      - numrecipe
       - parent
       - updated_at
     KeywordLabel:
@@ -13759,6 +13889,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         inherit_fields:
           type: array
           items:
@@ -13797,6 +13930,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ShoppingList'
+        in_inventory:
+          type: string
+          readOnly: true
+        substitute_inventory:
+          type: boolean
+          readOnly: true
     PatchedHousehold:
       type: object
       description: Adds nested create feature
@@ -14083,6 +14222,9 @@ components:
           type: integer
           readOnly: true
         numchild:
+          type: integer
+          readOnly: true
+        numrecipe:
           type: integer
           readOnly: true
         created_at:
@@ -14985,6 +15127,9 @@ components:
           type: string
           nullable: true
           maxLength: 256
+        numrecipe:
+          type: integer
+          readOnly: true
         open_data_slug:
           type: string
           nullable: true
@@ -16786,12 +16931,16 @@ components:
           type: string
           nullable: true
           maxLength: 256
+        numrecipe:
+          type: integer
+          readOnly: true
         open_data_slug:
           type: string
           nullable: true
           maxLength: 128
       required:
       - name
+      - numrecipe
     UnitConversion:
       type: object
       description: Adds nested create feature

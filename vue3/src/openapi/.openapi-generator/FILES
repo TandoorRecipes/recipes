@@ -35,6 +35,7 @@ models/FoodInheritField.ts
 models/FoodShopping.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
+models/FoodStats.ts
 models/GenericModelReference.ts
 models/Group.ts
 models/Household.ts

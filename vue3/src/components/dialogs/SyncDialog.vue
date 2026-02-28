@@ -1,8 +1,8 @@
 <template>
 
-    <v-dialog max-width="600px" activator="parent" v-model="dialog">
+    <v-dialog max-width="600px" :activator="activator === 'model' ? undefined : 'parent'" v-model="dialogOpen">
         <v-card>
-            <v-closable-card-title v-model="dialog" :title="$t('Import')"></v-closable-card-title>
+            <v-closable-card-title v-model="dialogOpen" :title="$t('Import')"></v-closable-card-title>
             <v-card-text>
                 <div v-if="loading" class="text-center">
                     <v-progress-circular :indeterminate="true" color="success" size="x-large"></v-progress-circular>
@@ -27,17 +27,31 @@
 
 <script setup lang="ts">
 
-import {PropType, ref} from "vue";
+import {type PropType, ref, computed, watch} from "vue";
 import {ApiApi, Sync, SyncLog} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {DateTime} from "luxon";
 
 const props = defineProps({
-    sync: {type: {} as PropType<Sync>, required: true}
+    sync: {type: {} as PropType<Sync>, required: true},
+    modelValue: {type: Boolean, default: undefined},
+    activator: {type: String as PropType<'parent' | 'model'>, default: 'parent'},
+})
+const emit = defineEmits(['update:modelValue'])
+
+const internalDialog = ref(false)
+const dialogOpen = computed({
+    get: () => props.modelValue !== undefined ? props.modelValue : internalDialog.value,
+    set: (val: boolean) => {
+        if (props.modelValue !== undefined) emit('update:modelValue', val)
+        else internalDialog.value = val
+    },
 })
 
-const dialog = ref(false)
+watch(dialogOpen, (val) => {
+    if (val) { syncLog.value = undefined }
+})
 const loading = ref(false)
 const syncLog = ref<undefined | SyncLog>(undefined)
 

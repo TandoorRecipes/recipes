@@ -16,7 +16,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
 
     <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
 
@@ -30,8 +29,6 @@
     <meta name="msapplication-TileImage" content="{{ theme_values.logo_color_144 }}">
 
     <meta name="theme-color" content="{{ theme_values.nav_bg_color }}">
-
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
 
     {% if theme_values.custom_theme %}
         <link id="id_custom_space_css" href="{{ theme_values.custom_theme }}" rel="stylesheet">
