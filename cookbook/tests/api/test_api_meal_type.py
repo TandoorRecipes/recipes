@@ -40,15 +40,15 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     obj_1.save()
 
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
-    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
 
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 404],
+    ['g1_s1', 403],
     ['u1_s1', 200],
-    ['a1_s1', 404],
-    ['g1_s2', 404],
+    ['a1_s1', 200],
+    ['g1_s2', 403],
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])

@@ -1567,7 +1567,7 @@ class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing)
     """
     queryset = MealType.objects
     serializer_class = MealTypeSerializer
-    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
