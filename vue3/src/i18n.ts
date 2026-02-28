@@ -29,6 +29,7 @@ export function setupI18n() {
 
     // load i18n as with locale en by default
     const i18n = createI18n({
+        legacy: false,
         locale: 'en',
         fallbackLocale: 'en',
         messages: {
@@ -115,5 +116,5 @@ function getSupportedLocales(localeFiles = import.meta.glob('@/locales/*.json'))
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
 export function setLocale(i18n: I18n, locale: Locale): void {
-    i18n.global.locale = locale
+    i18n.global.locale.value = locale
 }

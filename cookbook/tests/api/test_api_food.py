@@ -1,4 +1,6 @@
 import json
+from datetime import date
+from unittest.mock import PropertyMock, patch
 
 import pytest
 from django.contrib import auth
@@ -8,7 +10,9 @@ from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import Food, Ingredient, ShoppingListEntry
-from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
+from cookbook.tests.factories import (FoodFactory, IngredientFactory, InventoryEntryFactory,
+                                      InventoryLocationFactory, RecipeFactory,
+                                      ShoppingListEntryFactory, StepFactory,
                                       SupermarketCategoryFactory)
 
 #    ------------------ IMPORTANT -------------------
@@ -24,6 +28,7 @@ LIST_URL = 'api:food-list'
 DETAIL_URL = 'api:food-detail'
 MOVE_URL = 'api:food-move'
 MERGE_URL = 'api:food-merge'
+STATS_URL = 'api:food-stats'
 if (Food.node_order_by):
     node_location = 'sorted-child'
 else:
@@ -33,6 +38,7 @@ register(FoodFactory, 'obj_1', space=LazyFixture('space_1'))
 register(FoodFactory, 'obj_2', space=LazyFixture('space_1'))
 register(FoodFactory, 'obj_3', space=LazyFixture('space_2'))
 register(SupermarketCategoryFactory, 'cat_1', space=LazyFixture('space_1'))
+register(SupermarketCategoryFactory, 'cat_2', space=LazyFixture('space_1'))
 
 
 @pytest.fixture
@@ -600,3 +606,824 @@ def test_onhand(obj_1, u1_s1, u2_s1, space_1):
     caches['default'].set(f'shopping_shared_users_{space_1.id}_{user2.id}', None)
 
     assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is True
+
+
+# ==================== list filter helpers ====================
+
+def get_filter_results(client, params=''):
+    """Helper to GET the food list and return parsed results."""
+    r = client.get(f'{reverse(LIST_URL)}{params}')
+    assert r.status_code == 200
+    return json.loads(r.content)
+
+
+def get_stats(client):
+    """Helper to GET the dedicated food stats endpoint and return parsed results."""
+    r = client.get(reverse(STATS_URL))
+    assert r.status_code == 200
+    return json.loads(r.content)
+
+
+# ==================== onhand filter ====================
+
+@pytest.mark.parametrize("filter_value,expected_count", [
+    ('true', 1),
+    ('false', 1),
+])
+def test_filter_onhand(filter_value, expected_count, u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_onhand = FoodFactory(space=space_1, users_onhand=[user])
+        food_not_onhand = FoodFactory(space=space_1)
+
+    response = get_filter_results(u1_s1, f'?onhand={filter_value}')
+    assert response['count'] == expected_count
+
+    if filter_value == 'true':
+        assert food_onhand.id in [x['id'] for x in response['results']]
+    else:
+        assert food_not_onhand.id in [x['id'] for x in response['results']]
+
+
+def test_filter_onhand_shared_user(u1_s1, u2_s1, space_1):
+    """Onhand filter should respect shopping sharing — shared user's onhand foods should be visible."""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+    # user2 shares shopping with user1, so user1 can see user2's onhand foods
+    user2.userpreference.shopping_share.add(user1)
+    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+
+    with scopes_disabled():
+        food_onhand_user2 = FoodFactory(space=space_1, users_onhand=[user2])
+        FoodFactory(space=space_1)
+
+    response = get_filter_results(u1_s1, '?onhand=true')
+    assert food_onhand_user2.id in [x['id'] for x in response['results']]
+
+
+def test_filter_onhand_no_duplicates(u1_s1, u2_s1, space_1):
+    """Onhand filter should not return duplicate rows when food is onhand for multiple shared users."""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+    user2.userpreference.shopping_share.add(user1)
+    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+
+    with scopes_disabled():
+        # food is onhand for both user1 AND user2 (both in shared_users)
+        food = FoodFactory(space=space_1, users_onhand=[user1, user2])
+
+    response = get_filter_results(u1_s1, '?onhand=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert result_ids.count(food.id) == 1, f"Food {food.id} appears {result_ids.count(food.id)} times, expected 1"
+
+
+# ==================== has_substitute filter ====================
+
+def test_filter_has_substitute_true(u1_s1, space_1):
+    with scopes_disabled():
+        food_with_sub = FoodFactory(space=space_1)
+        food_substitute = FoodFactory(space=space_1)
+        food_without_sub = FoodFactory(space=space_1)
+        food_with_sub.substitute.add(food_substitute)
+
+    response = get_filter_results(u1_s1, '?has_substitute=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_with_sub.id in result_ids
+    assert food_substitute.id in result_ids  # symmetrical M2M: food_substitute also has a substitute
+    assert food_without_sub.id not in result_ids
+
+
+def test_filter_has_substitute_false(u1_s1, space_1):
+    with scopes_disabled():
+        food_with_sub = FoodFactory(space=space_1)
+        food_substitute = FoodFactory(space=space_1)
+        food_without_sub = FoodFactory(space=space_1)
+        food_with_sub.substitute.add(food_substitute)
+
+    response = get_filter_results(u1_s1, '?has_substitute=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_with_sub.id not in result_ids
+    # Only food_without_sub should be in results; food_substitute is excluded because
+    # symmetrical M2M means it also has food_with_sub as a substitute
+    assert food_substitute.id not in result_ids
+    assert food_without_sub.id in result_ids
+
+
+# ==================== in_shopping_list filter ====================
+
+def test_filter_in_shopping_list_true(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_in_list = FoodFactory(space=space_1)
+        food_not_in_list = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food_in_list, space=space_1, created_by=user, checked=False)
+
+    response = get_filter_results(u1_s1, '?in_shopping_list=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_in_list.id in result_ids
+    assert food_not_in_list.id not in result_ids
+
+
+def test_filter_in_shopping_list_false(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_in_list = FoodFactory(space=space_1)
+        food_not_in_list = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food_in_list, space=space_1, created_by=user, checked=False)
+
+    response = get_filter_results(u1_s1, '?in_shopping_list=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_in_list.id not in result_ids
+    assert food_not_in_list.id in result_ids
+
+
+def test_filter_in_shopping_list_checked_excluded(u1_s1, space_1):
+    """Checked-off shopping list entries should NOT count as 'in shopping list'."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user, checked=True)
+
+    response = get_filter_results(u1_s1, '?in_shopping_list=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food.id not in result_ids
+
+
+# ==================== ignore_shopping filter ====================
+
+def test_filter_ignore_shopping(u1_s1, space_1):
+    with scopes_disabled():
+        food_ignored = FoodFactory(space=space_1)
+        food_not_ignored = FoodFactory(space=space_1)
+        food_ignored.ignore_shopping = True
+        food_ignored.save()
+
+    response = get_filter_results(u1_s1, '?ignore_shopping=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_ignored.id in result_ids
+    assert food_not_ignored.id not in result_ids
+
+    response = get_filter_results(u1_s1, '?ignore_shopping=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_ignored.id not in result_ids
+    assert food_not_ignored.id in result_ids
+
+
+# ==================== has_children filter ====================
+
+def test_filter_has_children(u1_s1, space_1):
+    with scopes_disabled():
+        parent = FoodFactory(space=space_1)
+        child = FoodFactory(space=space_1)
+        leaf = FoodFactory(space=space_1)
+        child.move(parent, node_location)
+        # Re-fetch to get updated numchild
+        parent = Food.objects.get(id=parent.id)
+        child = Food.objects.get(id=child.id)
+
+    response = get_filter_results(u1_s1, '?has_children=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert parent.id in result_ids
+    assert child.id not in result_ids
+    assert leaf.id not in result_ids
+
+    response = get_filter_results(u1_s1, '?has_children=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert parent.id not in result_ids
+    assert child.id in result_ids
+    assert leaf.id in result_ids
+
+
+# ==================== has_recipe filter ====================
+
+def test_filter_has_recipe(u1_s1, space_1):
+    with scopes_disabled():
+        recipe = RecipeFactory(space=space_1)
+        food_with_recipe = FoodFactory(space=space_1)
+        food_without_recipe = FoodFactory(space=space_1)
+        food_with_recipe.recipe = recipe
+        food_with_recipe.save()
+
+    response = get_filter_results(u1_s1, '?has_recipe=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_with_recipe.id in result_ids
+    assert food_without_recipe.id not in result_ids
+
+    response = get_filter_results(u1_s1, '?has_recipe=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_with_recipe.id not in result_ids
+    assert food_without_recipe.id in result_ids
+
+
+# ==================== used_in_recipes filter ====================
+
+def test_filter_used_in_recipes(u1_s1, space_1):
+    with scopes_disabled():
+        food_used = FoodFactory(name='UsedFood', space=space_1)
+        food_unused = FoodFactory(name='UnusedFood', space=space_1)
+        # Wire up: Ingredient(food) → Step → Recipe
+        ingredient = IngredientFactory(food=food_used, space=space_1)
+        step = StepFactory(ingredients__count=0, space=space_1)
+        step.ingredients.add(ingredient)
+        recipe = RecipeFactory(steps__count=0, space=space_1)
+        recipe.steps.add(step)
+
+    response = get_filter_results(u1_s1, '?used_in_recipes=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_used.id in result_ids
+    assert food_unused.id not in result_ids
+
+    response = get_filter_results(u1_s1, '?used_in_recipes=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_used.id not in result_ids
+    assert food_unused.id in result_ids
+
+
+# ==================== supermarket_category filter ====================
+
+def test_filter_supermarket_category(u1_s1, space_1, cat_1, cat_2):
+    with scopes_disabled():
+        food_cat1 = FoodFactory(space=space_1)
+        food_cat2 = FoodFactory(space=space_1)
+        food_no_cat = FoodFactory(space=space_1)
+        food_cat1.supermarket_category = cat_1
+        food_cat1.save()
+        food_cat2.supermarket_category = cat_2
+        food_cat2.save()
+
+    response = get_filter_results(u1_s1, f'?supermarket_category={cat_1.id}')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_cat1.id in result_ids
+    assert food_cat2.id not in result_ids
+    assert food_no_cat.id not in result_ids
+
+
+def test_filter_supermarket_category_invalid(u1_s1, space_1):
+    """Non-integer supermarket_category should not cause a 500 error."""
+    r = u1_s1.get(f'{reverse(LIST_URL)}?supermarket_category=abc')
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    assert response['count'] == 0
+
+
+# ==================== combined filters ====================
+
+def test_filter_combined(u1_s1, space_1, cat_1):
+    """Multiple filters should be AND-combined."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_both = FoodFactory(space=space_1, users_onhand=[user])
+        food_onhand_only = FoodFactory(space=space_1, users_onhand=[user])
+        food_cat_only = FoodFactory(space=space_1)
+        food_both.supermarket_category = cat_1
+        food_both.save()
+        food_cat_only.supermarket_category = cat_1
+        food_cat_only.save()
+
+    response = get_filter_results(u1_s1, f'?onhand=true&supermarket_category={cat_1.id}')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_both.id in result_ids
+    assert food_onhand_only.id not in result_ids
+    assert food_cat_only.id not in result_ids
+
+
+# ==================== filter with no match ====================
+
+def test_filter_no_results(u1_s1, space_1):
+    with scopes_disabled():
+        FoodFactory(space=space_1)
+
+    response = get_filter_results(u1_s1, '?onhand=true')
+    assert response['count'] == 0
+
+
+# ==================== filter values are case-insensitive ====================
+
+def test_filter_case_insensitive(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        FoodFactory(space=space_1, users_onhand=[user])
+        FoodFactory(space=space_1)
+
+    for val in ['True', 'TRUE', 'true', '1']:
+        response = get_filter_results(u1_s1, f'?onhand={val}')
+        assert response['count'] == 1, f"onhand={val} should return 1 result"
+
+
+# ==================== ordering ====================
+
+def test_ordering_name_asc(u1_s1, space_1):
+    with scopes_disabled():
+        FoodFactory(name='Banana', space=space_1)
+        FoodFactory(name='Apple', space=space_1)
+        FoodFactory(name='Cherry', space=space_1)
+
+    response = get_filter_results(u1_s1, '?ordering=name')
+    names = [x['name'] for x in response['results']]
+    assert names == sorted(names, key=str.lower)
+
+
+def test_ordering_name_desc(u1_s1, space_1):
+    with scopes_disabled():
+        FoodFactory(name='Banana', space=space_1)
+        FoodFactory(name='Apple', space=space_1)
+        FoodFactory(name='Cherry', space=space_1)
+
+    response = get_filter_results(u1_s1, '?ordering=-name')
+    names = [x['name'] for x in response['results']]
+    assert names == sorted(names, key=str.lower, reverse=True)
+
+
+def test_ordering_numrecipe(u1_s1, space_1):
+    """Ordering by numrecipe should sort by recipe_count annotation."""
+    with scopes_disabled():
+        FoodFactory(name='NoRecipes', space=space_1)
+        food_with_recipes = FoodFactory(name='WithRecipes', space=space_1)
+        # Wire up: Ingredient(food) → Step → Recipe
+        ingredient = IngredientFactory(food=food_with_recipes, space=space_1)
+        step = StepFactory(ingredients__count=0, space=space_1)
+        step.ingredients.add(ingredient)
+        recipe = RecipeFactory(steps__count=0, space=space_1)
+        recipe.steps.add(step)
+
+    response = get_filter_results(u1_s1, '?ordering=numrecipe')
+    names = [x['name'] for x in response['results']]
+    assert names.index('NoRecipes') < names.index('WithRecipes')
+
+    response = get_filter_results(u1_s1, '?ordering=-numrecipe')
+    names = [x['name'] for x in response['results']]
+    assert names.index('WithRecipes') < names.index('NoRecipes')
+
+
+def test_ordering_invalid_field_ignored(u1_s1, space_1):
+    """Invalid ordering field should be silently ignored (default ordering applies)."""
+    with scopes_disabled():
+        FoodFactory(name='Banana', space=space_1)
+        FoodFactory(name='Apple', space=space_1)
+
+    response = get_filter_results(u1_s1, '?ordering=invalid_field')
+    assert response['count'] == 2
+    # Default ordering (name asc) should apply
+    names = [x['name'] for x in response['results']]
+    assert names == sorted(names, key=str.lower)
+
+
+def test_ordering_with_query_active(u1_s1, space_1):
+    """Ordering param is accepted alongside a search query (frontend controls suppression)."""
+    with scopes_disabled():
+        FoodFactory(name='Apple Pie', space=space_1)
+        FoodFactory(name='Banana', space=space_1)
+
+    # Backend applies both query filter and ordering — frontend is responsible
+    # for not sending ordering when relevance-based results are desired
+    response = get_filter_results(u1_s1, '?ordering=-name&query=Apple')
+    assert response['count'] == 1
+    assert response['results'][0]['name'] == 'Apple Pie'
+
+
+def test_ordering_supermarket_category_name(u1_s1, space_1, cat_1, cat_2):
+    """Ordering by supermarket_category__name should sort using case-insensitive comparison."""
+    with scopes_disabled():
+        cat_1.name = 'Bakery'
+        cat_1.save()
+        cat_2.name = 'Produce'
+        cat_2.save()
+        FoodFactory(name='Bread', space=space_1, supermarket_category=cat_1)
+        FoodFactory(name='Apple', space=space_1, supermarket_category=cat_2)
+        FoodFactory(name='NoCat', space=space_1)  # NULL category
+
+    response = get_filter_results(u1_s1, '?ordering=supermarket_category__name')
+    names = [x['name'] for x in response['results']]
+    # Bakery < Produce; NULLs always sort last regardless of direction
+    assert names.index('Bread') < names.index('Apple')
+    assert names.index('NoCat') > names.index('Apple')
+
+    response = get_filter_results(u1_s1, '?ordering=-supermarket_category__name')
+    names = [x['name'] for x in response['results']]
+    # Produce > Bakery; NULLs still last in descending
+    assert names.index('Apple') < names.index('Bread')
+    assert names.index('NoCat') > names.index('Bread')
+
+
+def test_ordering_applied_when_tree_active(u1_s1, space_1):
+    """Backend applies ordering even with tree param (frontend controls suppression)."""
+    with scopes_disabled():
+        parent = FoodFactory(name='Apple', space=space_1)
+        child = FoodFactory(name='Zebra', space=space_1)
+        child.move(parent, node_location)
+
+    # Backend honours ordering — Zebra before Apple with -name
+    response = get_filter_results(u1_s1, f'?tree={parent.id}&ordering=-name')
+    names = [x['name'] for x in response['results']]
+    assert names.index('Zebra') < names.index('Apple')
+
+
+def test_filter_onhand_false_shared_user(u1_s1, u2_s1, space_1):
+    """Onhand=false should exclude shared user's onhand foods."""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+    user2.userpreference.shopping_share.add(user1)
+    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+
+    with scopes_disabled():
+        food_onhand_user2 = FoodFactory(space=space_1, users_onhand=[user2])
+        food_not_onhand = FoodFactory(space=space_1)
+
+    response = get_filter_results(u1_s1, '?onhand=false')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_not_onhand.id in result_ids
+    assert food_onhand_user2.id not in result_ids
+
+
+# ==================== stats ====================
+
+def test_stats_endpoint_returns_counts(u1_s1, space_1):
+    """Dedicated stats endpoint should return onhand, shopping, ignored, total as integers.
+    List endpoint should NOT include a 'stats' key."""
+    with scopes_disabled():
+        FoodFactory(space=space_1)
+
+    # List endpoint must never return stats
+    response_list = get_filter_results(u1_s1)
+    assert 'stats' not in response_list
+
+    stats = get_stats(u1_s1)
+    assert isinstance(stats['onhand'], int)
+    assert isinstance(stats['shopping'], int)
+    assert isinstance(stats['ignored'], int)
+    assert isinstance(stats['total'], int)
+
+
+def test_stats_counts_are_space_wide(u1_s1, space_1):
+    """Stats should reflect totals for the entire space."""
+    user = auth.get_user(u1_s1)
+
+    # capture baseline before creating test data (parallel tests may add foods)
+    baseline = get_stats(u1_s1)
+
+    with scopes_disabled():
+        FoodFactory(space=space_1, users_onhand=[user])
+        _food_shopping = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=_food_shopping, space=space_1, created_by=user, checked=False)
+        food_ignored = FoodFactory(space=space_1)
+        food_ignored.ignore_shopping = True
+        food_ignored.save()
+        FoodFactory(space=space_1)  # plain food
+
+    stats = get_stats(u1_s1)
+    assert stats['onhand'] == baseline['onhand'] + 1
+    assert stats['shopping'] == baseline['shopping'] + 1
+    assert stats['ignored'] == baseline['ignored'] + 1
+    assert stats['total'] == baseline['total'] + 4
+
+
+def test_stats_shopping_is_user_scoped(u1_s1, u2_s1, space_1):
+    """Shopping stats should only count entries created by the user or their shared users."""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+
+    # clear stale shared-user cache from parallel tests
+    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+    # ensure user2 does NOT share with user1 at the start
+    user2.userpreference.shopping_share.remove(user1)
+
+    # capture baseline before creating test data (parallel tests may add foods)
+    baseline = get_stats(u1_s1)['shopping']
+
+    with scopes_disabled():
+        food_u1 = FoodFactory(space=space_1)
+        food_u2 = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food_u1, space=space_1, created_by=user1, checked=False)
+        ShoppingListEntryFactory(food=food_u2, space=space_1, created_by=user2, checked=False)
+
+    # user1 should only see their own new shopping entry
+    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+    stats = get_stats(u1_s1)
+    assert stats['shopping'] == baseline + 1
+
+    # After sharing, user1 should see both new entries
+    user2.userpreference.shopping_share.add(user1)
+    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+
+    stats = get_stats(u1_s1)
+    assert stats['shopping'] == baseline + 2
+
+
+def test_stats_exclude_other_spaces(u1_s1, space_1, space_2):
+    """Stats should only count foods in the requesting user's space."""
+    user = auth.get_user(u1_s1)
+
+    # capture baseline before creating test data (parallel tests may add foods)
+    baseline = get_stats(u1_s1)
+
+    with scopes_disabled():
+        FoodFactory(space=space_1, users_onhand=[user])
+        # Food in another space — should not appear in stats
+        other_food = FoodFactory(space=space_2)
+        other_food.ignore_shopping = True
+        other_food.save()
+
+    stats = get_stats(u1_s1)
+    assert stats['onhand'] == baseline['onhand'] + 1
+    assert stats['ignored'] == baseline['ignored']
+
+
+def test_stats_anonymous_shared_users(u1_s1, space_1):
+    """When _shared_users returns empty (anonymous), onhand and shopping should be 0."""
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        food.ignore_shopping = True
+        food.save()
+        FoodFactory(space=space_1)
+
+    # Simulate anonymous user path (_shared_users returns [])
+    from cookbook.views.api import FoodViewSet
+    with patch.object(FoodViewSet, '_shared_users', new_callable=PropertyMock, return_value=[]):
+        stats = get_stats(u1_s1)
+
+    assert stats['onhand'] == 0
+    assert stats['shopping'] == 0
+    assert stats['ignored'] >= 1
+    assert stats['total'] >= 2
+
+
+# ==================== empty shared_users (anonymous/share-link) ====================
+
+def test_shopping_status_false_when_shared_users_empty(u1_s1, space_1):
+    """When shared_users is empty (anonymous user), shopping field should always be False."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user, checked=False)
+
+    with patch('cookbook.views.api.FoodViewSet._shared_users', new_callable=PropertyMock, return_value=[]):
+        response = get_filter_results(u1_s1, '')
+        result = next(x for x in response['results'] if x['id'] == food.id)
+        assert result['shopping'] == 'False'
+
+
+def test_in_shopping_list_true_empty_when_shared_users_empty(u1_s1, space_1):
+    """in_shopping_list=true should return no results when shared_users is empty."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        FoodFactory(space=space_1)
+        food_in_list = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food_in_list, space=space_1, created_by=user, checked=False)
+
+    with patch('cookbook.views.api.FoodViewSet._shared_users', new_callable=PropertyMock, return_value=[]):
+        response = get_filter_results(u1_s1, '?in_shopping_list=true')
+        assert response['count'] == 0
+
+
+def test_in_shopping_list_false_returns_all_when_shared_users_empty(u1_s1, space_1):
+    """in_shopping_list=false should return all foods when shared_users is empty."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_plain = FoodFactory(space=space_1)
+        food_in_list = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food_in_list, space=space_1, created_by=user, checked=False)
+
+    with patch('cookbook.views.api.FoodViewSet._shared_users', new_callable=PropertyMock, return_value=[]):
+        response = get_filter_results(u1_s1, '?in_shopping_list=false')
+        result_ids = [x['id'] for x in response['results']]
+        assert food_plain.id in result_ids
+        assert food_in_list.id in result_ids
+
+
+# ==================== has_inventory filter ====================
+
+@pytest.mark.parametrize("filter_value,expected_match", [
+    ('true', 'with'),
+    ('false', 'without'),
+])
+def test_filter_has_inventory(filter_value, expected_match, u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_with = FoodFactory(space=space_1)
+        food_without = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food_with, space=space_1, created_by=user, amount=5)
+
+    response = get_filter_results(u1_s1, f'?has_inventory={filter_value}')
+    result_ids = [x['id'] for x in response['results']]
+    if expected_match == 'with':
+        assert food_with.id in result_ids
+        assert food_without.id not in result_ids
+    else:
+        assert food_without.id in result_ids
+        assert food_with.id not in result_ids
+
+
+def test_filter_has_inventory_zero_amount_excluded(u1_s1, space_1):
+    """Inventory entries with amount=0 should not count as 'in inventory'."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food, space=space_1, created_by=user, amount=0)
+
+    response = get_filter_results(u1_s1, '?has_inventory=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food.id not in result_ids
+
+
+def test_filter_has_inventory_no_duplicates(u1_s1, space_1):
+    """Multiple inventory entries for the same food should not cause duplicates."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food, space=space_1, created_by=user, amount=3)
+        InventoryEntryFactory(food=food, space=space_1, created_by=user, amount=2)
+
+    response = get_filter_results(u1_s1, '?has_inventory=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert result_ids.count(food.id) == 1
+
+
+# ==================== inventory_location filter ====================
+
+def test_filter_inventory_location(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        loc_a = InventoryLocationFactory(space=space_1, created_by=user)
+        loc_b = InventoryLocationFactory(space=space_1, created_by=user)
+        food_a = FoodFactory(space=space_1)
+        food_b = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food_a, inventory_location=loc_a, space=space_1, created_by=user, amount=1)
+        InventoryEntryFactory(food=food_b, inventory_location=loc_b, space=space_1, created_by=user, amount=1)
+
+    response = get_filter_results(u1_s1, f'?inventory_location={loc_a.id}')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_a.id in result_ids
+    assert food_b.id not in result_ids
+
+
+def test_filter_inventory_location_zero_amount_excluded(u1_s1, space_1):
+    """Entries with amount=0 at a location should be excluded."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        loc = InventoryLocationFactory(space=space_1, created_by=user)
+        food = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food, inventory_location=loc, space=space_1, created_by=user, amount=0)
+
+    response = get_filter_results(u1_s1, f'?inventory_location={loc.id}')
+    assert response['count'] == 0
+
+
+def test_filter_inventory_location_no_duplicates(u1_s1, space_1):
+    """Multiple entries at the same location should not cause duplicates."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        loc = InventoryLocationFactory(space=space_1, created_by=user)
+        food = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food, inventory_location=loc, space=space_1, created_by=user, amount=1)
+        InventoryEntryFactory(food=food, inventory_location=loc, space=space_1, created_by=user, amount=2)
+
+    response = get_filter_results(u1_s1, f'?inventory_location={loc.id}')
+    result_ids = [x['id'] for x in response['results']]
+    assert result_ids.count(food.id) == 1
+
+
+def test_filter_inventory_location_invalid_value(u1_s1, space_1):
+    """Invalid inventory_location value should return empty result, not 500."""
+    response = get_filter_results(u1_s1, '?inventory_location=abc')
+    assert response['count'] == 0
+
+
+# ==================== expired filter ====================
+
+@pytest.mark.parametrize("filter_value,expected_match", [
+    ('true', 'expired'),
+    ('false', 'not_expired'),
+])
+def test_filter_expired(filter_value, expected_match, u1_s1, space_1):
+    from datetime import timedelta
+    user = auth.get_user(u1_s1)
+    today = date.today()
+    with scopes_disabled():
+        food_expired = FoodFactory(space=space_1)
+        food_not_expired = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food_expired, space=space_1, created_by=user,
+                              amount=1, expires=today - timedelta(days=1))
+        InventoryEntryFactory(food=food_not_expired, space=space_1, created_by=user,
+                              amount=1, expires=today + timedelta(days=10))
+
+    response = get_filter_results(u1_s1, f'?expired={filter_value}')
+    result_ids = [x['id'] for x in response['results']]
+    if expected_match == 'expired':
+        assert food_expired.id in result_ids
+        assert food_not_expired.id not in result_ids
+    else:
+        assert food_not_expired.id in result_ids
+        assert food_expired.id not in result_ids
+
+
+def test_filter_expired_ignores_no_expiration(u1_s1, space_1):
+    """Entries without an expiration date should never be considered expired."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food, space=space_1, created_by=user, amount=1, expires=None)
+
+    response = get_filter_results(u1_s1, '?expired=true')
+    result_ids = [x['id'] for x in response['results']]
+    assert food.id not in result_ids
+
+
+# ==================== expiring_soon filter ====================
+
+def test_filter_expiring_soon(u1_s1, space_1):
+    from datetime import timedelta
+    user = auth.get_user(u1_s1)
+    today = date.today()
+    with scopes_disabled():
+        food_soon = FoodFactory(space=space_1)
+        food_later = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food_soon, space=space_1, created_by=user,
+                              amount=1, expires=today + timedelta(days=2))
+        InventoryEntryFactory(food=food_later, space=space_1, created_by=user,
+                              amount=1, expires=today + timedelta(days=10))
+
+    response = get_filter_results(u1_s1, '?expiring_soon=3')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_soon.id in result_ids
+    assert food_later.id not in result_ids
+
+
+def test_filter_expiring_soon_excludes_already_expired(u1_s1, space_1):
+    """Already expired entries should not appear in expiring_soon results."""
+    from datetime import timedelta
+    user = auth.get_user(u1_s1)
+    today = date.today()
+    with scopes_disabled():
+        food_expired = FoodFactory(space=space_1)
+        InventoryEntryFactory(food=food_expired, space=space_1, created_by=user,
+                              amount=1, expires=today - timedelta(days=1))
+
+    response = get_filter_results(u1_s1, '?expiring_soon=3')
+    result_ids = [x['id'] for x in response['results']]
+    assert food_expired.id not in result_ids
+
+
+def test_filter_expiring_soon_invalid_value(u1_s1, space_1):
+    """Invalid expiring_soon value should be ignored (no filter applied)."""
+    with scopes_disabled():
+        FoodFactory(space=space_1)
+
+    response = get_filter_results(u1_s1, '?expiring_soon=abc')
+    # Should not crash and should return results (no filter applied)
+    assert response['count'] >= 1
+
+
+# ==================== inventory stats ====================
+
+def test_stats_inventory_and_expired(u1_s1, space_1):
+    """Stats endpoint should return inventory and expired counts."""
+    from datetime import timedelta
+    user = auth.get_user(u1_s1)
+    today = date.today()
+
+    baseline = get_stats(u1_s1)
+
+    with scopes_disabled():
+        food_inv = FoodFactory(space=space_1)
+        food_expired = FoodFactory(space=space_1)
+        food_both = FoodFactory(space=space_1)
+        FoodFactory(space=space_1)  # plain food
+
+        InventoryEntryFactory(food=food_inv, space=space_1, created_by=user, amount=1)
+        InventoryEntryFactory(food=food_expired, space=space_1, created_by=user,
+                              amount=1, expires=today - timedelta(days=1))
+        # food_both has inventory AND is expired
+        InventoryEntryFactory(food=food_both, space=space_1, created_by=user,
+                              amount=1, expires=today - timedelta(days=5))
+
+    stats = get_stats(u1_s1)
+    assert stats['inventory'] == baseline.get('inventory', 0) + 3  # all 3 foods have inventory
+    assert stats['expired'] == baseline.get('expired', 0) + 2  # food_expired + food_both
+
+
+# ==================== cross-space isolation ====================
+
+def test_substitute_inventory_shows_true_when_substitute_has_inventory(u1_s1, space_1):
+    """substitute_inventory is True when a substitute food has inventory entries."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food_a = FoodFactory(space=space_1)
+        food_b = FoodFactory(space=space_1)
+        food_a.substitute.add(food_b)
+        InventoryEntryFactory(food=food_b, space=space_1, created_by=user, amount=3)
+
+    response = json.loads(u1_s1.get(reverse(DETAIL_URL, args=[food_a.id])).content)
+    assert response['substitute_inventory'] is True
+
+
+def test_substitute_inventory_shows_false_when_substitute_has_no_inventory(u1_s1, space_1):
+    """substitute_inventory is False when no substitute foods have inventory."""
+    with scopes_disabled():
+        food_a = FoodFactory(space=space_1)
+        food_b = FoodFactory(space=space_1)
+        food_a.substitute.add(food_b)
+        # food_b has no inventory entries
+
+    response = json.loads(u1_s1.get(reverse(DETAIL_URL, args=[food_a.id])).content)
+    assert response['substitute_inventory'] is False
+

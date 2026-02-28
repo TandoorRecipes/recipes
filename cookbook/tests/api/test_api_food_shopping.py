@@ -21,10 +21,6 @@ def test_shopping_forbidden_methods(food, u1_s1):
         reverse(SHOPPING_FOOD_URL, args={food.id}))
     assert r.status_code == 405
 
-    r = u1_s1.delete(
-        reverse(SHOPPING_FOOD_URL, args={food.id}))
-    assert r.status_code == 405
-
     r = u1_s1.get(
         reverse(SHOPPING_FOOD_URL, args={food.id}))
     assert r.status_code == 405
@@ -33,34 +29,32 @@ def test_shopping_forbidden_methods(food, u1_s1):
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
-    ['u1_s1', 204],
+    ['u1_s1', 200],
     ['u1_s2', 404],
-    ['a1_s1', 204],
+    ['a1_s1', 200],
 ])
 def test_shopping_food_create(request, arg, food, ids=lambda arg: arg[0]):
     c = request.getfixturevalue(arg[0])
     r = c.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
     assert r.status_code == arg[1]
-    if r.status_code == 204:
+    if r.status_code == 200:
         assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 1
 
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
-    ['u1_s1', 204],
+    ['u1_s1', 200],
     ['u1_s2', 404],
-    ['a1_s1', 204],
+    ['a1_s1', 200],
 ])
 def test_shopping_food_delete(request, arg, food, ids=lambda arg: arg[0]):
     c = request.getfixturevalue(arg[0])
-    r = c.put(
+    r = c.delete(
         reverse(SHOPPING_FOOD_URL, args={food.id}),
-        {'_delete': "true"},
-        content_type='application/json'
     )
     assert r.status_code == arg[1]
-    if r.status_code == 204:
+    if r.status_code == 200:
         assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 0
 
 

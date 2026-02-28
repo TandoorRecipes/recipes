@@ -45,12 +45,25 @@
 
 import InventoryEntryTable from "@/components/display/InventoryEntryTable.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {ref} from "vue";
-import {Food, InventoryLocation} from "@/openapi";
-import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {onMounted, ref} from "vue";
+import {ApiApi, Food, InventoryLocation} from "@/openapi";
+import {useRoute} from "vue-router";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
+const route = useRoute()
 const food = ref<Food | undefined>(undefined)
 const inventoryLocation = ref<InventoryLocation | undefined>(undefined)
+
+onMounted(() => {
+    const foodId = Number(route.query.food_id)
+    if (foodId && !Number.isNaN(foodId)) {
+        new ApiApi().apiFoodRetrieve({id: foodId}).then(r => {
+            food.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
+    }
+})
 
 </script>
 

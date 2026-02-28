@@ -53,7 +53,7 @@
                         <v-col cols="12" md="6">
                             <v-card :title="$t('Hierarchy')" prepend-icon="fa-solid fa-folder-tree" variant="flat">
                                 <v-card-text>
-                                    <model-select model="Food" :label="$t('Parent')" :object="false" allow-create clearable v-model="batchUpdateRequest.foodBatchUpdate.parentSet">
+                                    <model-select model="Food" :label="$t('Parent')" :object="false" allow-create can-clear v-model="batchUpdateRequest.foodBatchUpdate.parentSet">
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>

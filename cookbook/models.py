@@ -13,7 +13,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Avg, Index, Max, ProtectedError, Q
+from django.db.models import Avg, Index, Max, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
@@ -110,7 +110,7 @@ class TreeManager(MP_NodeManager):
                 if 'Key (path)' in e.args[0]:
                     self.model.fix_tree(fix_paths=True)
                     return self.model.add_root(**kwargs), True
-                raise e
+                raise
 
 
 class TreeModel(MP_Node):

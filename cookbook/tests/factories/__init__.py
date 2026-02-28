@@ -499,3 +499,34 @@ class ViewLogFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.ViewLog'
+
+
+@register
+class InventoryLocationFactory(factory.django.DjangoModelFactory):
+    """InventoryLocation factory."""
+    name = factory.LazyAttribute(lambda x: faker.word())
+    is_freezer = False
+    created_by = factory.SubFactory(
+        UserFactory, space=factory.SelfAttribute('..space'))
+    space = factory.SubFactory(SpaceFactory)
+
+    class Meta:
+        model = 'cookbook.InventoryLocation'
+
+
+@register
+class InventoryEntryFactory(factory.django.DjangoModelFactory):
+    """InventoryEntry factory."""
+    inventory_location = factory.SubFactory(
+        InventoryLocationFactory, space=factory.SelfAttribute('..space'),
+        created_by=factory.SelfAttribute('..created_by'))
+    amount = 1
+    food = factory.SubFactory(
+        FoodFactory, space=factory.SelfAttribute('..space'))
+    expires = None
+    created_by = factory.SubFactory(
+        UserFactory, space=factory.SelfAttribute('..space'))
+    space = factory.SubFactory(SpaceFactory)
+
+    class Meta:
+        model = 'cookbook.InventoryEntry'

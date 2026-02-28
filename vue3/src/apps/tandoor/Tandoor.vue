@@ -69,7 +69,7 @@
         </v-main>
 
         <!-- completely hide in print mode because setting d-print-node keeps layout -->
-        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
+        <v-navigation-drawer v-if="!mobile && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
             <v-list nav>
                 <v-list-item :to="{ name: 'SettingsPage', params: {} }">
                     <template #prepend>
@@ -96,7 +96,7 @@
 
         </v-navigation-drawer>
 
-        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp && !useUserPreferenceStore().isPrintMode">
+        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && mobile && !useUserPreferenceStore().isPrintMode">
             <v-btn value="recent" :to="{ name: 'StartPage', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
@@ -143,7 +143,7 @@ import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
 
-const {lgAndUp} = useDisplay()
+const {mobile} = useDisplay()
 const {t} = useI18n()
 
 const title = useTitle()

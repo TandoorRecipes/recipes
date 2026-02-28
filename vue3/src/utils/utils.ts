@@ -4,12 +4,28 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import {DateTime} from "luxon";
 
 /**
- * Gets a nested property of an object given a dot-notation path.
- *
- * @param object The object to access the property from.
- * @param path The dot-notation path to the property.
- * @returns The value of the nested property, or `undefined` if not found.
+ * Builds a dot-separated subtitle string from an item's column values.
+ * Used by both mobile and desktop subtitle displays.
  */
+export function buildSubtitleText(
+    item: any,
+    columns: { key: string; field?: string; title: string }[],
+    t: (key: string) => string,
+): string {
+    const parts: string[] = []
+    for (const col of columns) {
+        const field = col.field ?? col.key
+        const val = getNestedProperty(item, field)
+        if (val == null || val === '' || val === false) continue
+        if (typeof val === 'number' || typeof val === 'boolean') {
+            parts.push(`${t(col.title)}: ${val}`)
+        } else {
+            parts.push(String(val))
+        }
+    }
+    return parts.join(' \u00b7 ')
+}
+
 export function getNestedProperty(object: any, path: string): any {
     const pathParts = path.split('.');
 
