@@ -464,6 +464,12 @@ async function handleActionWithConfirmation(key: string, item: ModelItem) {
                 const confirmed = await action.activationConfirmationHandler(item, confirmDialogRef.value, t)
                 if (!confirmed) return
             }
+        } else if (action.isToggle && !getToggleState(action, item)) {
+            // Toggle is inactive → user wants to activate → activation confirm
+            if (action.activationConfirmationHandler && confirmDialogRef.value) {
+                const confirmed = await action.activationConfirmationHandler(item, confirmDialogRef.value, t)
+                if (!confirmed) return
+            }
         } else if (!action.isToggle) {
             // Non-toggle destructive action — custom handler or generic confirm
             if (action.confirmationHandler && confirmDialogRef.value) {

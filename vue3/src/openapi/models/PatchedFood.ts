@@ -253,6 +253,18 @@ export interface PatchedFood {
      * @memberof PatchedFood
      */
     shoppingLists?: Array<ShoppingList>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedFood
+     */
+    readonly inInventory?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedFood
+     */
+    readonly substituteInventory?: boolean;
 }
 
 /**
@@ -298,10 +310,12 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
+        'inInventory': json['in_inventory'] == null ? undefined : json['in_inventory'],
+        'substituteInventory': json['substitute_inventory'] == null ? undefined : json['substitute_inventory'],
     };
 }
 
-export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'> | null): any {
+export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'> | null): any {
     if (value == null) {
         return value;
     }

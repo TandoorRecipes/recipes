@@ -164,7 +164,7 @@
                                 :action-defs="actionDefs"
                                 :grouped-action-defs="groupedActionDefs"
                                 :get-toggle-state="getToggleState"
-                                :quick-action-keys="quickActionKeys.slice(0, 2)"
+                                :quick-action-keys="quickActionKeys.slice(0, 3)"
                                 @action="(key: string, actionItem: any) => $emit('action', key, actionItem)"
                             />
                         </template>

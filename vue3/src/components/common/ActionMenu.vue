@@ -41,10 +41,15 @@
                             </v-list-item>
                             <v-list-item
                                 v-else-if="!action.isToggle && isVisible(action)"
-                                :prepend-icon="action.icon"
                                 :class="action.isDanger ? 'text-error' : undefined"
                                 @click="menuOpen = false; $emit('action', action.key, item)"
                             >
+                                <template #prepend>
+                                    <v-icon
+                                        :icon="action.icon"
+                                        :color="resolveColor(action, item)"
+                                    />
+                                </template>
                                 {{ $t(action.labelKey) }}
                             </v-list-item>
                         </template>
@@ -89,8 +94,8 @@ function isVisible(action: ActionDef): boolean {
 }
 
 function resolveColor(action: ActionDef, item: ModelItem): string | undefined {
-    if (!action.isToggle) return undefined
     if (action.colorResolver) return action.colorResolver(item)
+    if (!action.isToggle) return undefined
     return props.getToggleState(action, item) ? action.activeColor : action.inactiveColor
 }
 </script>

@@ -365,7 +365,7 @@ const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
 const toggleableColumns = computed(() => props.allColumns.filter(c => c.key !== 'name'))
 
 // Quick action management
-const maxQuickActions = computed(() => mobile.value ? 2 : 4)
+const maxQuickActions = computed(() => mobile.value ? 3 : 4)
 const effectiveQuickActionKeys = computed(() => quickActionKeys.value.slice(0, maxQuickActions.value))
 const quickActionSelectedCount = computed(() => effectiveQuickActionKeys.value.length)
 

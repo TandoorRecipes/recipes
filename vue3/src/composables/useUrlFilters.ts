@@ -65,7 +65,7 @@ export function useUrlFilters(
         for (const [key, val] of map) {
             const def = filterDefs.value.find(d => d.key === key)
             const paramKey = snakeToCamel(key)
-            if (def?.type === 'tristate' || def?.type === 'model-select') {
+            if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
                 const num = Number(val)
                 if (!isNaN(num)) params[paramKey] = num
             } else {

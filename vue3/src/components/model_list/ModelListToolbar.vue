@@ -97,7 +97,7 @@
         />
 
         <div class="model-list-toolbar-carousel-wrapper mt-2">
-        <div class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')">
+        <div ref="carouselRef" class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')" @scroll.passive="onCarouselScroll">
             <v-btn
                 v-if="showReset"
                 variant="text"
@@ -172,19 +172,39 @@
                 {{ $t('Settings') }}
             </v-btn>
         </div>
+        <v-icon
+            v-if="canScrollRight"
+            icon="fa-solid fa-chevron-right"
+            size="x-small"
+            class="carousel-scroll-hint"
+        />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {SortDef} from '@/composables/modellist/types'
-import {useDebounceFn} from '@vueuse/core'
+import {useDebounceFn, useResizeObserver} from '@vueuse/core'
 
 const {t} = useI18n()
 const {mobile} = useDisplay()
+
+const carouselRef = ref<HTMLElement | null>(null)
+const canScrollRight = ref(false)
+
+function checkCarouselOverflow() {
+    const el = carouselRef.value
+    if (!el) { canScrollRight.value = false; return }
+    canScrollRight.value = el.scrollWidth > el.clientWidth + el.scrollLeft + 4
+}
+
+function onCarouselScroll() { checkCarouselOverflow() }
+
+onMounted(() => checkCarouselOverflow())
+useResizeObserver(carouselRef, () => checkCarouselOverflow())
 
 const props = withDefaults(defineProps<{
     query?: string
@@ -254,17 +274,8 @@ function onSortSelect(key: string) {
 <style scoped>
 .model-list-toolbar-carousel-wrapper {
     position: relative;
-}
-
-.model-list-toolbar-carousel-wrapper::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 36px;
-    background: linear-gradient(to right, transparent, rgb(var(--v-theme-surface)));
-    pointer-events: none;
+    display: flex;
+    align-items: center;
 }
 
 .model-list-toolbar-carousel {
@@ -274,10 +285,17 @@ function onSortSelect(key: string) {
     scrollbar-width: none;
     gap: 4px;
     align-items: center;
-    padding-right: 36px;
+    flex: 1;
+    min-width: 0;
 }
 
 .model-list-toolbar-carousel::-webkit-scrollbar {
     display: none;
+}
+
+.carousel-scroll-hint {
+    flex-shrink: 0;
+    opacity: 0.4;
+    margin-left: 2px;
 }
 </style>

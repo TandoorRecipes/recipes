@@ -95,12 +95,19 @@ function chipLabel(def: FilterDef, value: string): string {
         const name = nameCache.get(`${def.modelName}:${value}`)
         return name ? `${t(def.labelKey)}: ${name}` : t(def.labelKey)
     }
+    if (def.type === 'number') {
+        const suffix = def.suffixKey ? ` ${t(def.suffixKey).toLowerCase()}` : ''
+        return `${t(def.labelKey)}: ${value}${suffix}`
+    }
     return t(def.labelKey)
 }
 
 function chipColor(def: FilterDef, value: string): string {
     if (def.type === 'tristate') {
         return value === '1' ? 'success' : 'error'
+    }
+    if (def.type === 'number') {
+        return 'warning'
     }
     return 'primary'
 }
@@ -109,6 +116,7 @@ function toggleFilter(def: FilterDef, value: string): void {
     if (def.type === 'tristate') {
         props.setFilter(def.key, value === '1' ? '0' : '1')
     } else {
+        // model-select and number filters open the filter panel
         emit('open-filters')
     }
 }
