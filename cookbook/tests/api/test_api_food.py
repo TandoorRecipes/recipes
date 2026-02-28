@@ -7,7 +7,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry
+from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
                                       SupermarketCategoryFactory)
 
@@ -596,7 +596,12 @@ def test_onhand(obj_1, u1_s1, u2_s1, space_1):
 
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    user1.userpreference.shopping_share.add(user2)
+
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user=user1).update(household=household)
+        UserSpace.objects.filter(user=user2).update(household=household)
+
     caches['default'].set(f'shopping_shared_users_{space_1.id}_{user2.id}', None)
 
     assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is True
