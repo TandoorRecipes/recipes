@@ -273,9 +273,9 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     function updateTheme() {
         if (userSettings.value.theme == 'TANDOOR_DARK' && !isPrintMode.value) {
-            vuetify.theme.global.name.value = 'dark'
+            vuetify.theme.change('dark')
         } else {
-            vuetify.theme.global.name.value = 'light'
+            vuetify.theme.change('light')
         }
     }
 
