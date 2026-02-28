@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
-from cookbook.models import ShoppingListEntry
+from cookbook.models import ShoppingListEntry, Household, UserSpace
 from cookbook.tests.factories import ShoppingListEntryFactory
 
 LIST_URL = 'api:shoppinglistentry-list'
@@ -139,7 +139,7 @@ def test_delete(u1_s1, u1_s2, sle):
     }),
 ],
                          indirect=['sle_2'])
-def test_sharing(request, shared, count, sle_2, sle, u1_s1):
+def test_sharing(request, shared, count, sle_2, sle, u1_s1, space_1):
     user = auth.get_user(u1_s1)
     shared_client = request.getfixturevalue(shared)
     shared_user = auth.get_user(shared_client)
@@ -149,9 +149,13 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1):
     assert json.loads(shared_client.get(
         reverse(LIST_URL)).content)['count'] == 10
 
-    user.userpreference.shopping_share.add(shared_user)
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user=user).update(household=household)
+        UserSpace.objects.filter(user=shared_user).update(household=household)
+
     # confirm sharing user only sees their shopping list
-    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 10
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == count
     r = shared_client.get(reverse(LIST_URL))
     # confirm shared user sees their list and the list that's shared with them
     assert json.loads(r.content)['count'] == count
@@ -211,6 +215,5 @@ def test_recent(sle, u1_s1):
     r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?recent=1').content)
     assert r['count'] == 10
     assert [x['checked'] for x in r['results']].count(False) == 9
-
 
 # TODO test auto onhand

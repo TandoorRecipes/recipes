@@ -1211,7 +1211,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                     "content": [
                         {
                             "type": "text",
-                            "text": "Given the following food and the following different types of properties please update the food so that the properties attribute contains a list with all property types in the following format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]."
+                            "text": "Given the following food and the following different types of properties please update the food so that the properties attribute contains a list with all property types in the following JSON format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]. Return only valid JSON."
                                     "The property values should be in the unit given in the property type and for the amount specified in the properties_food_amount attribute of the food, which is given in the properties_food_unit."
                                     "property_amount is a decimal number. Please try to keep a precision of two decimal places if given in your source data."
                                     "Do not make up any data. If there is no data available for the given property type that is ok, just return null as a property_amount for that property type. Do not change anything else!"
@@ -1256,6 +1256,13 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as err:
+                traceback.print_exc()
+                response = {
+                    'error': True,
+                    'msg': 'An unexpected error occurred while processing your AI request. \n\n' + str(err),
+                }
+                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, *args, **kwargs):
@@ -1989,7 +1996,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                     "content": [
                         {
                             "type": "text",
-                            "text": "Given the following recipe and the following different types of properties please update the recipe so that the properties attribute contains a list with all property types in the following format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]."
+                            "text": "Given the following recipe and the following different types of properties please update the recipe so that the properties attribute contains a list with all property types in the following JSON format [{property_amount: <the property value>, property_type: {id: <the ID of the property type>, name: <the name of the property type>}}]. Return only valid JSON."
                                     "The property values should be in the unit given in the property type and calculated based on the total quantity of the foods used for the recipe."
                                     "property_amount is a decimal number. Please try to keep a precision of two decimal places if given in your source data."
                                     "Do not make up any data. If there is no data available for the given property type that is ok, just return null as a property_amount for that property type. Do not change anything else!"
@@ -2034,6 +2041,13 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as err:
+                traceback.print_exc()
+                response = {
+                    'error': True,
+                    'msg': 'An unexpected error occurred while processing your AI request. \n\n' + str(err),
+                }
+                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(responses=RecipeSerializer(many=False))
@@ -2854,6 +2868,13 @@ class AiStepSortView(APIView):
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as err:
+                traceback.print_exc()
+                response = {
+                    'error': True,
+                    'msg': 'An unexpected error occurred while processing your AI request. \n\n' + str(err),
+                }
+                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
