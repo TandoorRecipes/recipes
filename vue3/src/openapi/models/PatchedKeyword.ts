@@ -91,6 +91,12 @@ export interface PatchedKeyword {
     readonly numchild?: number;
     /**
      * 
+     * @type {number}
+     * @memberof PatchedKeyword
+     */
+    readonly numrecipe?: number;
+    /**
+     * 
      * @type {Date}
      * @memberof PatchedKeyword
      */
@@ -133,13 +139,14 @@ export function PatchedKeywordFromJSONTyped(json: any, ignoreDiscriminator: bool
         'description': json['description'] == null ? undefined : json['description'],
         'parent': json['parent'] == null ? undefined : json['parent'],
         'numchild': json['numchild'] == null ? undefined : json['numchild'],
+        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
         'fullName': json['full_name'] == null ? undefined : json['full_name'],
     };
 }
 
-export function PatchedKeywordToJSON(value?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'> | null): any {
+export function PatchedKeywordToJSON(value?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'> | null): any {
     if (value == null) {
         return value;
     }

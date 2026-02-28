@@ -16,12 +16,10 @@ import {
     UnitConversion, User, UserFile,
     UserSpace, ViewLog, Household
 } from "@/openapi";
-import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {defineAsyncComponent, shallowRef} from "vue";
-
-type VDataTableProps = InstanceType<typeof VDataTable>['$props']
+import type {FilterDef, ActionDef, BatchAction, HeaderAction, ListSettings, ColumnType, SortDef, StatDef} from "@/composables/modellist/types";
 
 /**
  * returns a GenericModel instance with the given model type
@@ -32,7 +30,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  */
 export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false | GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
-        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
+        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase())!, t)
     } else {
         return false
     }
@@ -61,11 +59,13 @@ export function getListModels() {
 
 /**
  * common list parameters shared by all generic models
+ * index signature allows filter params to pass through to API
  */
 type GenericListRequestParameter = {
     page: number,
     pageSize: number,
     query: string,
+    [key: string]: any,
 }
 
 /**
@@ -85,11 +85,33 @@ type DeleteRelationRequestParameter = {
  *
  * converted to VDataTableHeaders by the GenericModel instance
  */
-type ModelTableHeaders = {
+export type ModelTableHeaders = {
     title: string,
     key: string,
-    align: 'end' | 'start',
+    align?: 'end' | 'start',
     hidden?: boolean,
+    /** Enhanced column config: cell renderer type */
+    type?: ColumnType,
+    /** For boolean-indicator type: icon when true */
+    trueIcon?: string,
+    /** For boolean-indicator type: icon when false */
+    falseIcon?: string,
+    /** Whether this column supports display mode switching (icon vs text) */
+    hasDisplayMode?: boolean,
+    /** Default display mode if hasDisplayMode is true */
+    defaultDisplayMode?: 'icon' | 'text',
+    /** Dot-path to data field if different from key */
+    field?: string,
+    /** For number type: apply font-weight-medium when value > 0 */
+    emphasizeNonZero?: boolean,
+    /** For label-chip type: maps stringified values to chip display. Special key '_default' for catch-all. */
+    chipMap?: Record<string, {label: string, color: string}>,
+    /** For label-chip type: resolves the chip map key from the full item (when logic needs more than the cell value) */
+    chipValueResolver?: (item: Record<string, any>) => string,
+    /** For text type with array values: joins array items by this sub-field (e.g., 'name' → item[key].map(x => x.name).join(', ')) */
+    joinField?: string,
+    /** For label-chip type: optional click handler on the chip */
+    chipClickHandler?: (item: Record<string, any>) => void,
 }
 
 /**
@@ -122,6 +144,15 @@ export type Model = {
     isTree?: boolean | undefined,
 
     tableHeaders: ModelTableHeaders[],
+
+    /** Enhanced list capabilities (optional — when absent, ModelListPage uses current behavior) */
+    filterDefs?: FilterDef[],
+    actionDefs?: ActionDef[],
+    batchActions?: BatchAction[],
+    headerActions?: HeaderAction[],
+    statDefs?: StatDef[],
+    listSettings?: ListSettings,
+    sortDefs?: SortDef[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
@@ -211,6 +242,8 @@ export type EditorSupportedTypes =
     | InventoryLog
     | Household
 
+import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_BATCH_ACTIONS, FOOD_STAT_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
+
 export const TFood = {
     name: 'Food',
     localizationKey: 'Food',
@@ -227,11 +260,19 @@ export const TFood = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Category', key: 'supermarketCategory.name'},
-        {title: 'Plural', key: 'plural', hidden: true},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Category', key: 'supermarketCategory.name', type: 'text'},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end'},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true, emphasizeNonZero: true},
+        {title: 'Plural', key: 'pluralName', type: 'text'},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: FOOD_FILTER_DEFS,
+    actionDefs: FOOD_ACTION_DEFS,
+    batchActions: FOOD_BATCH_ACTIONS,
+    statDefs: FOOD_STAT_DEFS,
+    listSettings: FOOD_LIST_SETTINGS,
+    sortDefs: FOOD_SORT_OPTIONS,
 } as Model
 registerModel(TFood)
 
@@ -250,10 +291,18 @@ export const TUnit = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Plural', key: 'plural', hidden: true},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'ingredient-editor', labelKey: 'Ingredient Editor', icon: 'fa-solid fa-table-list', group: 'Actions', routeName: 'IngredientEditorPage', routeQuery: (item) => ({unit_id: item.id})},
+        {key: 'merge', labelKey: 'Merge', icon: 'fa-solid fa-arrows-to-dot', group: 'Actions'},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
+    listSettings: {settingsKey: 'unit', settingsPanel: true, mobileList: true},
 } as Model
 registerModel(TUnit)
 
@@ -273,9 +322,22 @@ export const TKeyword = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Full Name', key: 'fullName', type: 'text', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'merge', labelKey: 'Merge', icon: 'fa-solid fa-arrows-to-dot', group: 'Actions'},
+        {key: 'move', labelKey: 'Move', icon: 'fa-solid fa-arrow-right', group: 'Actions',
+            routeName: 'ModelEditPage',
+            routeParams: (item, modelName) => ({model: modelName, id: item.id}),
+            routeQuery: () => ({tab: 'hierarchy'})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
+    listSettings: {settingsKey: 'keyword', settingsPanel: true, mobileList: true, treeEnabled: true},
 } as Model
 registerModel(TKeyword)
 
@@ -510,7 +572,7 @@ export const TShoppingList = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Color', key: 'color'},
+        {title: 'Color', key: 'color', type: 'color-chip'},
         {title: 'Description', key: 'description'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
@@ -733,10 +795,14 @@ export const TUserSpace = {
 
     tableHeaders: [
         {title: 'User', key: 'user.displayName'},
-        {title: 'Group', key: 'groups'},
+        {title: 'Group', key: 'groups', type: 'text', joinField: 'name'},
         {title: 'Household', key: 'household.name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    headerActions: [
+        {type: 'button', key: 'invites', labelKey: 'Invites', icon: 'fa-solid fa-link',
+            routeName: 'ModelListPage', routeParams: {model: 'InviteLink'}},
+    ],
 } as Model
 registerModel(TUserSpace)
 
@@ -776,10 +842,27 @@ export const TSpace = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Owner', key: 'createdBy.displayName'},
-        {title: 'Active', key: 'active'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
-} as Model
+        {title: 'Active', key: 'active', type: 'label-chip',
+            chipValueResolver: (item: any) => item.id === useUserPreferenceStore().activeSpace.id ? 'active' : 'select',
+            chipMap: {active: {label: 'Active', color: 'success'}, select: {label: 'Select', color: 'info'}},
+            chipClickHandler: (item: any) => useUserPreferenceStore().switchSpace(item)},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'leave', labelKey: 'LeaveSpace', icon: 'fa-solid fa-arrow-right-from-bracket', group: 'Actions', isDanger: true, reloadAfterAction: true,
+            visible: (item: any) => item.createdBy?.id !== useUserPreferenceStore().userSettings.user?.id,
+            handler: async (item: any) => {
+                const api = new ApiApi()
+                const store = useUserPreferenceStore()
+                const userSpace = store.userSpaces.find((us: UserSpace) => us.space === item.id)
+                if (userSpace) {
+                    await api.apiUserSpaceDestroy({id: userSpace.id!})
+                }
+            },
+        },
+    ],
+} as unknown as Model
 registerModel(TSpace)
 
 export const TStorage = {
@@ -886,8 +969,13 @@ export const TSync = {
         {title: 'SyncedPath', key: 'path'},
         {title: 'ExternalStorage', key: 'storage.name'},
         {title: 'Updated', key: 'lastChecked'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'sync-import', labelKey: 'Import', icon: 'fa-solid fa-rotate', group: 'Actions'},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSync)
 
@@ -932,9 +1020,27 @@ export const TRecipeImport = {
         {title: 'Name', key: 'name'},
         {title: 'Storage', key: 'storage.name'},
         {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
-} as Model
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'import', labelKey: 'Import', icon: 'fa-solid fa-rotate', group: 'Actions',
+            reloadAfterAction: true,
+            handler: async (item: any) => {
+                const api = new ApiApi()
+                await api.apiRecipeImportImportRecipeCreate({id: item.id, recipeImport: item as RecipeImport})
+            },
+        },
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
+    headerActions: [
+        {type: 'button', key: 'importAll', labelKey: 'ImportAll', icon: 'fa-solid fa-rotate', color: 'success',
+            handler: async () => {
+                const api = new ApiApi()
+                await api.apiRecipeImportImportAllCreate({recipeImport: {} as RecipeImport})
+            },
+        },
+    ],
+} as unknown as Model
 registerModel(TRecipeImport)
 
 export const TConnectorConfig = {
@@ -981,8 +1087,10 @@ export const TAiProvider = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Global', key: 'space'},
-        {title: 'Actions', key: 'action', align: 'end'},
+        {title: 'Global', key: 'space', type: 'label-chip',
+            chipValueResolver: (item) => item.space == null ? 'global' : 'space',
+            chipMap: {global: {label: 'Global', color: 'success'}, space: {label: 'Space', color: 'info'}}},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ]
 } as Model
 registerModel(TAiProvider)
@@ -1008,7 +1116,10 @@ export const TAiLog = {
         {title: 'FromBalance', key: 'creditsFromBalance',},
         {title: 'CreatedAt', key: 'createdAt'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    headerActions: [
+        {type: 'widget', component: defineAsyncComponent(() => import('@/components/display/AiCreditsBar.vue'))},
+    ],
 } as Model
 registerModel(TAiLog)
 
@@ -1053,7 +1164,7 @@ registerModel(TSearchFields)
  */
 export class GenericModel {
 
-    api: Object
+    api: ApiApi & Record<string, (...args: any[]) => any>
     model: Model
     // TODO find out the type of the t useI18n object and use it here
     // TODO decouple context from Generic model so t does not need to be passed
@@ -1068,17 +1179,6 @@ export class GenericModel {
         this.model = model
         this.api = new ApiApi()
         this.t = t
-    }
-
-    getTableHeaders(): VDataTableProps['headers'][] {
-        let tableHeaders: VDataTableProps['headers'][] = []
-        this.model.tableHeaders.forEach(header => {
-            if (!header.hidden) {
-                header.title = this.t(header.title)
-                tableHeaders.push(header as unknown as VDataTableProps['headers'])
-            }
-        })
-        return tableHeaders
     }
 
     /**
@@ -1233,6 +1333,16 @@ export class GenericModel {
             })
         }
         return name
+    }
+
+    /**
+     * fetch aggregate stats from the dedicated stats endpoint
+     * @return promise resolving to stats object, or empty object if not supported
+     */
+    stats(): Promise<Record<string, number>> {
+        const method = `api${this.model.name}StatsRetrieve`
+        if (typeof this.api[method] !== 'function') return Promise.resolve({})
+        return this.api[method]()
     }
 
 }

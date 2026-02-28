@@ -166,6 +166,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {VDateInput} from "vuetify/labs/VDateInput";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
+import {useRoute} from "vue-router";
 import {VDataTableUpdateOptions} from "@/vuetify.ts";
 import {DateTime} from "luxon";
 import {ingredientToString} from "@/utils/model_utils.ts";
@@ -175,6 +176,18 @@ import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 
 const {t} = useI18n()
+const route = useRoute()
+
+onMounted(() => {
+    const foodId = Number(route.query.food_id)
+    if (foodId && !Number.isNaN(foodId)) {
+        new ApiApi().apiFoodRetrieve({id: foodId}).then(r => {
+            food.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
+    }
+})
 
 // form
 const formLoading = ref(false)

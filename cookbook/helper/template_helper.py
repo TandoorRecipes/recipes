@@ -2,7 +2,7 @@ from gettext import gettext as _
 
 import bleach
 import markdown as md
-from jinja2 import Template, TemplateSyntaxError, UndefinedError
+from jinja2 import TemplateSyntaxError, UndefinedError
 from jinja2.exceptions import SecurityError
 from jinja2.sandbox import SandboxedEnvironment
 from markdown.extensions.tables import TableExtension
@@ -101,7 +101,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         return _('Could not parse template code.') + ' Error: Undefined Error'
     except SecurityError:
         return _('Could not parse template code.') + ' Error: Security Error'
-    except Exception as e:
-        return _('Could not parse template code.') + f' Error generating template.'
+    except Exception:
+        return _('Could not parse template code.') + ' Error generating template.'
 
     return instructions
