@@ -909,7 +909,7 @@ class SyncViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     @extend_schema(responses=SyncLogSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['POST'], )
     def query_synced_folder(self, request, pk):
-        sync = get_object_or_404(Sync, pk=pk)
+        sync = get_object_or_404(Sync, pk=pk, space=request.space)
 
         sync_log = None
         if sync.storage.method == Storage.DROPBOX:
