@@ -82,7 +82,7 @@
 
                                 <ModelSelect model="MealType" :allow-create="true" v-model="editingObj.mealType"></ModelSelect>
                                 <v-number-input control-variant="split" :min="0" v-model="editingObj.servings" :label="$t('Servings')" :precision="2"></v-number-input>
-                                <ModelSelect model="User" :allow-create="false" v-model="editingObj.shared" item-label="displayName" mode="tags"></ModelSelect>
+<!--                                <ModelSelect model="User" :allow-create="false" v-model="editingObj.shared" item-label="displayName" mode="tags"></ModelSelect>-->
                             </v-col>
 
                         </v-row>
@@ -216,55 +216,48 @@ function initializeEditor() {
     // load meal types and create new object based on default type when initially loading
     // TODO remove this once moved to user preference from MealType property
     loading.value = true
-    api.apiMealTypeList().then(r => {
 
-        let defaultMealType = {} as MealType
-        r.results.forEach(r => {
-            if (r._default) {
-                defaultMealType = r
+    setupState(props.item, props.itemId, {
+        newItemFunction: () => {
+            const noonToday = DateTime.now().set({hour: 12, minute: 0, second: 0, millisecond: 0})
+            editingObj.value.fromDate = noonToday.toJSDate()
+            editingObj.value.toDate = noonToday.toJSDate()
+            mealPlanTime.value = '12:00'
+
+            editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
+            editingObj.value.servings = 1
+
+            if (useUserPreferenceStore().userSettings.defaultMealType){
+                editingObj.value.mealType = useUserPreferenceStore().userSettings.defaultMealType
             }
-        })
-        if (Object.keys(defaultMealType).length == 0 && r.results.length > 0) {
-            defaultMealType = r.results[0]
+
+            editingObj.value.addshopping = useUserPreferenceStore().userSettings.mealplanAutoaddShopping
+
+            applyItemDefaults(props.itemDefaults)
+
+            if (editingObj.value.mealType?.time) {
+                mealPlanTime.value = editingObj.value.mealType.time.substring(0, 5)
+            }
+            applyTimeToEditingDates()
+
+            if (editingObj.value.toDate < editingObj.value.fromDate) {
+                editingObj.value.toDate = editingObj.value.fromDate
+            }
+
+            initializeDateRange()
+
+            nextTick(() => {
+                editingObjChanged.value = false
+            })
+        }, existingItemFunction: () => {
+            editingObj.value = structuredClone(toRaw(editingObj.value))
+            if (editingObj.value.fromDate) {
+                mealPlanTime.value = DateTime.fromJSDate(editingObj.value.fromDate).toFormat('HH:mm')
+            }
+            initializeDateRange()
         }
+    },)
 
-        setupState(props.item, props.itemId, {
-            newItemFunction: () => {
-                const noonToday = DateTime.now().set({hour: 12, minute: 0, second: 0, millisecond: 0})
-                editingObj.value.fromDate = noonToday.toJSDate()
-                editingObj.value.toDate = noonToday.toJSDate()
-                mealPlanTime.value = '12:00'
-
-                editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
-                editingObj.value.servings = 1
-                editingObj.value.mealType = defaultMealType
-                editingObj.value.addshopping = useUserPreferenceStore().userSettings.mealplanAutoaddShopping
-
-                applyItemDefaults(props.itemDefaults)
-
-                if (defaultMealType?.time) {
-                    mealPlanTime.value = defaultMealType.time.substring(0, 5)
-                }
-                applyTimeToEditingDates()
-
-                if (editingObj.value.toDate < editingObj.value.fromDate) {
-                    editingObj.value.toDate = editingObj.value.fromDate
-                }
-
-                initializeDateRange()
-
-                nextTick(() => {
-                    editingObjChanged.value = false
-                })
-            }, existingItemFunction: () => {
-                editingObj.value = structuredClone(toRaw(editingObj.value))
-                if (editingObj.value.fromDate) {
-                    mealPlanTime.value = DateTime.fromJSDate(editingObj.value.fromDate).toFormat('HH:mm')
-                }
-                initializeDateRange()
-            }
-        },)
-    })
 }
 
 /**

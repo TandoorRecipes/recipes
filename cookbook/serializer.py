@@ -162,7 +162,7 @@ class CustomOnHandField(serializers.Field):
                 shared_users = c
             else:
                 try:
-                    shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+                    shared_users = self.context["request"].user_space.household.values_list('user_id', flat=True)
                     caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5 * 60)
                     # TODO ugly hack that improves API performance significantly, should be done properly
                 except AttributeError:  # Anonymous users (using share links) don't have shared users
@@ -547,7 +547,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'time', 'color', 'default', 'created_by')
+        fields = ('id', 'name', 'order', 'time', 'color', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -556,6 +556,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
     plan_share = UserSerializer(many=True, allow_null=True, required=False)
     shopping_share = UserSerializer(many=True, allow_null=True, required=False)
+    default_meal_type = MealTypeSerializer(required=False, allow_null=True)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
     image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
@@ -584,7 +585,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -907,8 +908,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
                 shared_users = c
             else:
                 try:
-                    shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
-                        self.context['request'].user.id]
+                    shared_users = self.context["request"].user_space.household.values_list('user_id', flat=True)
                     caches['default'].set(
                         f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
                         shared_users, timeout=5 * 60)

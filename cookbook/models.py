@@ -47,20 +47,7 @@ def get_active_space(self):
         return None
 
 
-def get_shopping_share(self):
-    # get list of users that shared shopping list with user. Django ORM forbids this type of query, so raw is required
-    return User.objects.raw(' '.join([
-        'SELECT auth_user.id FROM auth_user',
-        'INNER JOIN cookbook_userpreference',
-        'ON (auth_user.id = cookbook_userpreference.user_id)',
-        'INNER JOIN cookbook_userpreference_shopping_share',
-        'ON (cookbook_userpreference.user_id = cookbook_userpreference_shopping_share.userpreference_id)',
-        'WHERE cookbook_userpreference_shopping_share.user_id ={}'.format(self.id)
-    ]))
-
-
 auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
-auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
 auth.models.User.add_to_class('get_active_space', get_active_space)
 
 
@@ -558,6 +545,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_update_food_lists = models.BooleanField(default=True)
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
+    default_meal_type = models.ForeignKey("MealType", on_delete=models.SET_NULL, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
@@ -1271,7 +1259,7 @@ class MealType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name', 'created_by'], name='mt_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'name'], name='mt_unique_name_per_space'),
         ]
         ordering = ('name',)
 

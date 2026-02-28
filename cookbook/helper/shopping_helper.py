@@ -6,7 +6,7 @@ from django.db.models.functions import Coalesce
 from django.utils.translation import gettext as _
 
 from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
-                             SupermarketCategoryRelation)
+                             SupermarketCategoryRelation, UserSpace)
 
 
 def shopping_helper(qs, request):
@@ -69,22 +69,28 @@ class RecipeShoppingEditor():
     def _servings_factor(self):
         return Decimal(self.servings) / Decimal(self._recipe_servings)
 
-    @property
-    def _shared_users(self):
-        return [*list(self.created_by.get_shopping_share()), self.created_by]
 
     @staticmethod
     def get_shopping_list_recipe(id, user, space):
         # TODO this sucks since it wont find SLR's that no longer have any entries
+        owner_user_space = user.userspace_set.filter(space=space).first()
+        user_ids = []
+        if owner_user_space and owner_user_space.household:
+            user_ids = UserSpace.objects.filter(space=space, household=owner_user_space.household).values_list('user_id', flat=True)
+
         return ShoppingListRecipe.objects.filter(id=id, space=space).filter(
             Q(entries__created_by=user)
-            | Q(entries__created_by__in=list(user.get_shopping_share()))
+            | Q(entries__created_by__in=user_ids)
         ).prefetch_related('entries').first()
 
     def get_recipe_ingredients(self, id, exclude_onhand=False):
         if exclude_onhand:
-            return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space).exclude(
-                food__onhand_users__id__in=[x.id for x in self._shared_users])
+            queryset = Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
+            owner_user_space = self.created_by.userspace_set.filter(space=self.space).first()
+            if owner_user_space and owner_user_space.household:
+                queryset = queryset.exclude(
+                    food__onhand_users__id__in=UserSpace.objects.filter(space=self.space, household=owner_user_space.household))
+            return queryset
         else:
             return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
 
