@@ -1044,7 +1044,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             shared_users = c
         else:
             try:
-                shared_users = UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True)
+                shared_users = UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True)
                 caches['default'].set(f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}',
                                       shared_users, timeout=5 * 60)
                 # TODO ugly hack that improves API performance significantly, should be done properly
@@ -1073,8 +1073,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
-        shared_users = UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True)
-        shared_users.append(request.user)
+        shared_users = UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True)
         if request.data.get('_delete', False) == 'true':
             ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space,
                                              created_by__in=shared_users).delete()
@@ -1449,7 +1448,7 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(created_by=self.request.user) |
-                                        Q(created_by_id__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))).filter(
+                                        Q(created_by_id__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).filter(
             space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
@@ -2129,7 +2128,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return self.queryset.filter(Q(entries__isnull=True)
                                     | Q(entries__created_by=self.request.user)
-                                    | Q(entries__created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))).distinct().all()
+                                    | Q(entries__created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).distinct().all()
 
     @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
     def bulk_create_entries(self, request, pk):
@@ -2205,7 +2204,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         # select_related("list_recipe")
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
-            | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))).prefetch_related('created_by',
+            | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).prefetch_related('created_by',
                                                                                                'food',
                                                                                                'food__shopping_lists',
                                                                                                'shopping_lists',
@@ -2252,13 +2251,13 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         if serializer.is_valid():
             bulk_entries = ShoppingListEntry.objects.filter(
-                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))
+                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))
             ).filter(
                 space=request.space, id__in=serializer.validated_data['ids']
             )
 
             safe_entry_ids = ShoppingListEntry.objects.filter(
-                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household).values_list('user_id', flat=True))
+                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))
             ).filter(
                 space=request.space, id__in=serializer.validated_data['ids']
             ).values_list('id', flat=True)
