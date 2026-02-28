@@ -30,7 +30,10 @@
 
                         <v-textarea v-model="editingObj.message" :label="$t('Message')" clearable></v-textarea>
 
-                        <space-limits-info :space="editingObj" :show-thank-you="false" v-if="isUpdate()"></space-limits-info>
+                        <model-select model="Unit" :label="$t('DefaultUnit')" v-model="editingObj.defaultUnit" clearable
+                                      :hint="$t('DefaultUnitHelp')" persistent-hint class="mb-6"></model-select>
+
+                        <space-limits-info :space="editingObj" :show-thank-you="false" v-if="isUpdate()" class="mt-6"></space-limits-info>
 
                     </v-form>
                 </v-tabs-window-item>
