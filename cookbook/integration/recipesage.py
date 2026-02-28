@@ -4,7 +4,7 @@ from io import BytesIO
 
 from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time, listify_keywords, parse_keywords
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step, Keyword
 
