@@ -1,11 +1,12 @@
 import json
+import html
 from io import BytesIO
 
 from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Recipe, Step
+from cookbook.models import Ingredient, Recipe, Step, Keyword
 
 
 class RecipeSage(Integration):
@@ -31,25 +32,44 @@ class RecipeSage(Integration):
         except Exception as e:
             print('failed to parse time ', str(e))
 
+        if 'isBasedOn' in file and file['isBasedOn']!="":
+            recipe.source_url = file['isBasedOn'].strip()
+        if 'description' in file and file['description'].strip()!="" and len(file['description'])<500:
+            recipe.description = html.unescape(file['description'].strip())
+
         recipe.save()
 
         ingredient_parser = IngredientParser(self.request, True)
         ingredients_added = False
         for s in file['recipeInstructions']:
-            step = Step.objects.create(
-                instruction=s['text'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
-            )
+            txt=html.unescape(s['text'].strip())
+            if txt != "":
+                if txt[0]=='[' and txt[-1]==']':
+                    step = Step.objects.create(
+                            instruction=txt[1:-1], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                    )
+                else:
+                    step = Step.objects.create(
+                            instruction=txt, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                    )
             if not ingredients_added:
                 ingredients_added = True
 
                 for ingredient in file['recipeIngredient']:
-                    amount, unit, food, note = ingredient_parser.parse(ingredient)
-                    f = ingredient_parser.get_food(food)
-                    u = ingredient_parser.get_unit(unit)
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
-                    ))
+                    ingredient=html.unescape(ingredient.strip())
+                    if ingredient!="":
+                        if ingredient[0]=='[' and ingredient[-1]==']':
+                            step.ingredients.add(Ingredient.objects.create(is_header=True, original_text=ingredient[1:-1],space=self.request.space,note=ingredient[1:-1],))
+                        else:
+                            amount, unit, food, note = ingredient_parser.parse(ingredient.strip())
+                            f = ingredient_parser.get_food(food)
+                            u = ingredient_parser.get_unit(unit)
+                            step.ingredients.add(Ingredient.objects.create(
+                                food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
+                            ))
             recipe.steps.add(step)
+
+                
 
         if len(file['image']) > 0:
             try:
@@ -59,6 +79,13 @@ class RecipeSage(Integration):
             except Exception as e:
                 print('failed to import image ', str(e))
 
+
+        if 'recipeCategory' in file and file['recipeCategory']!=[]:
+            try:
+                for k in file['recipeCategory']:
+                    recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=k)[0])
+            except Exception as e:
+                print("Failed to import keywords", str(e))
         return recipe
 
     def get_file_from_recipe(self, recipe):
@@ -102,4 +129,11 @@ class RecipeSage(Integration):
         return [[self.get_export_file_name('json'), json.dumps(json_list)]]
 
     def split_recipe_file(self, file):
-        return json.loads(file.read().decode("utf-8"))
+        try:
+            data=json.loads(file.read().decode("utf-8"))
+            if 'recipes' in data:
+                return data['recipes']
+            else:
+                return data
+        except Exception as e:
+            print("Failed to split file ", str(e))
