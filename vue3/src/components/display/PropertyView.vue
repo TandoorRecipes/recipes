@@ -27,7 +27,7 @@
                     <td v-if="sourceSelectedToShow == 'food'">
                         <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small" class="d-print-none"
                                v-if="p.missingValue"></v-btn>
-                        <v-btn @click="dialogProperty = p; dialog = true" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue" class="d-print-none"></v-btn>
+                        <v-btn @click="dialogProperty = p; dialog = true; originalFoodValues = Object.values(toRaw(p.foodValues)); isSorted = false;" variant="plain" icon="fa-solid fa-circle-info" size="small" v-if="!p.missingValue" class="d-print-none"></v-btn>
                     </td>
                 </tr>
                 </tbody>
@@ -39,7 +39,12 @@
         <v-card v-if="dialogProperty" :loading="loading">
             <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${(dialogProperty.unit != null) ? dialogProperty.unit : ''} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
                                    v-model="dialog"></v-closable-card-title>
-            <v-card-text>
+            <v-btn 
+                v-if="dialogProperty && !dialogProperty.missingValue"
+                @click="sortFoodValues" :variant="isSorted ? 'flat' : 'outlined'" color="primary" size="small" class="rounded-pill d-print-none px-3 align-self-start ms-2 text-body-2 text-medium-emphasis">
+                Sort Decreasing
+            </v-btn>
+            <v-card-text>        
                 <v-list>
                     <v-list-item border v-for="fv in dialogProperty.foodValues" :key="`${dialogProperty.id}_${fv.id}`">
                         <template #prepend>
@@ -81,24 +86,51 @@
 
 <script setup lang="ts">
 
-import {computed, nextTick, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {ApiApi, PropertyType, Recipe} from "@/openapi";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {roundDecimals} from "@/utils/number_utils.ts";
+import { toRaw } from 'vue';
 
 type PropertyWrapper = {
     id: number,
     name: string,
     description?: string,
-    foodValues: [],
+    foodValues: any[],
     propertyAmountPerServing: number,
     propertyAmountTotal: number,
     missingValue: boolean,
     unit?: string,
     type: PropertyType,
 }
+
+const originalFoodValues = ref<any[]>([]);
+const isSorted = ref(false);
+
+const sortFoodValues = () => {
+    if (!dialogProperty.value) return;
+    if (isSorted.value) {
+        dialogProperty.value.foodValues = originalFoodValues.value.slice();
+        isSorted.value = false;
+        return;
+    }
+    originalFoodValues.value = Object.values(toRaw(dialogProperty.value.foodValues));
+    const rawFoodValues = toRaw(dialogProperty.value.foodValues);
+    const foodValuesArray = Object.values(rawFoodValues);
+    const sorted = [...foodValuesArray].sort((a, b) => {
+        const percentageA = (a.value / dialogProperty.value.propertyAmountTotal) * 100;
+        const percentageB = (b.value / dialogProperty.value.propertyAmountTotal) * 100;
+        return percentageB - percentageA;
+    });
+
+    dialogProperty.value.foodValues = sorted;
+    isSorted.value = true;
+};
+
+
+
 
 const props = defineProps({
     ingredientFactor: {
