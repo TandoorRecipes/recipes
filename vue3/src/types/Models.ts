@@ -261,10 +261,10 @@ export const TFood = {
 
     tableHeaders: [
         {title: 'Name', key: 'name', type: 'text'},
-        {title: 'Category', key: 'supermarketCategory.name', type: 'text', hidden: true},
-        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Category', key: 'supermarketCategory.name', type: 'text'},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end'},
         {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true, emphasizeNonZero: true},
-        {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
+        {title: 'Plural', key: 'pluralName', type: 'text'},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
     filterDefs: FOOD_FILTER_DEFS,

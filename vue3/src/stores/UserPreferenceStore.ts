@@ -254,9 +254,9 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
             food_hiddenColumns: null,
             food_columnDisplayModes: {},
-            food_quickActions: ['onhand', 'shopping', 'edit'],
+            food_quickActions: ['shopping', 'recipe'],
             food_treeView: false,
-            food_showStats: false,
+            food_showStats: true,
             food_showColumnHeaders: true,
             food_settingsPinned: false,
             food_swipeEnabled: false,
@@ -264,7 +264,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             food_swipeRight: ['onhand', 'delete'],
             food_mobileSubtitle: ['supermarketCategory.name'],
             food_desktopSubtitle: [],
-            food_showMobileHeaders: false,
+            food_showMobileHeaders: true,
         }
     }
 

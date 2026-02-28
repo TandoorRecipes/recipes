@@ -353,9 +353,10 @@ const drawerTabs = computed(() => [
 
 // Settings from device preferences
 const settingsKey = computed(() => props.model.listSettings?.settingsKey ?? '')
+const settingsDefaults = computed(() => props.model.listSettings?.defaults)
 const {isPinned, showStats, showColumnHeaders, treeEnabled, quickActionKeys,
     desktopSubtitleKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys,
-    swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKey)
+    swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKey, settingsDefaults)
 
 // Computed model flags
 const treeAvailable = computed(() => !!props.model.isTree && !!props.model.listSettings?.treeEnabled)

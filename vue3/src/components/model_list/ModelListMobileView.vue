@@ -164,7 +164,7 @@
                                 :action-defs="actionDefs"
                                 :grouped-action-defs="groupedActionDefs"
                                 :get-toggle-state="getToggleState"
-                                :quick-action-keys="quickActionKeys.slice(0, 3)"
+                                :quick-action-keys="quickActionKeys.slice(0, 2)"
                                 @action="(key: string, actionItem: any) => $emit('action', key, actionItem)"
                             />
                         </template>
@@ -212,7 +212,7 @@
 <script setup lang="ts">
 import {computed, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {ActionDef, ModelItem} from '@/composables/modellist/types'
+import type {ActionDef, ModelItem, SettingsDefaults} from '@/composables/modellist/types'
 import {getAncestorPath} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
 import {buildSubtitleText} from '@/utils/utils'
@@ -241,13 +241,15 @@ const props = withDefaults(defineProps<{
     loadingIds: Set<number>,
     toggleExpand: (id: number) => void,
     settingsKey: string,
+    settingsDefaults?: SettingsDefaults,
     labelField?: string,
 }>(), {
     labelField: 'name',
 })
 
 const settingsKeyRef = computed(() => props.settingsKey)
-const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKeyRef)
+const modelDefaultsRef = computed(() => props.settingsDefaults)
+const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKeyRef, modelDefaultsRef)
 
 const emit = defineEmits<{
     'update:selectedItems': [items: ModelItem[]],
