@@ -34,7 +34,7 @@ class RecipeSage(Integration):
 
         if 'isBasedOn' in file and file['isBasedOn']!="":
             recipe.source_url = file['isBasedOn'].strip()
-        if 'description' in file and file['description']!="":
+        if 'description' in file and file['description'].strip()!="" and len(file['description'])<500:
             recipe.description = html.unescape(file['description'].strip())
 
         recipe.save()
