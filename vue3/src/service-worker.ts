@@ -20,11 +20,65 @@ const OFFLINE_CACHE_NAME = 'offline-html';
 let script_name = typeof window !== 'undefined' ? localStorage.getItem('SCRIPT_NAME') : '/'
 var OFFLINE_PAGE_URL = script_name + 'offline/';
 
+const FILES_CACHE_NAME = 'import-file';
+
 self.addEventListener('install', async (event) => {
     event.waitUntil(
-        caches.open(OFFLINE_CACHE_NAME).then((cache) => cache.add(new Request(OFFLINE_PAGE_URL, {cache: "reload"})))
+        Promise.all([
+            caches.open(OFFLINE_CACHE_NAME).then((cache) => cache.add(new Request(OFFLINE_PAGE_URL, {cache: "reload"}))),
+            caches.open(FILES_CACHE_NAME)
+        ])
     );
 });
+
+self.addEventListener("fetch", (event: FetchEvent) => {
+    if (event.request.url.includes('/recipe/import') && event.request.method === "POST") {
+        event.respondWith(
+            (async () => {
+                const formData: FormData = await event.request.formData();
+                const file = formData.get('data') as File;
+                if (!file) {
+                    const params = new URLSearchParams();
+                    formData.forEach((value, key) => params.append(key, value as string))
+                    return Response.redirect('/recipe/import?' + params.toString(), 303);
+                }
+
+                return await importRecipe(file);
+            })(),
+        );
+        return;
+    }
+
+    // Regular requests not related to recipe import
+    event.respondWith(fetch(event.request));
+    return;
+});
+
+async function importRecipe(file: File): Promise<Response> {
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: file.type });
+        const fileUrl = `/import-file/${file.name}`;
+        
+        const response = new Response(blob, {
+            headers: {
+                'File-Name': file.name,
+                'Content-Type': file.type,
+                'Content-Length': arrayBuffer.byteLength.toString(),
+            }
+        });
+
+        // Store the file in cache so that Vue app can access it later
+        const cache = await caches.open(FILES_CACHE_NAME);
+        await cache.put(fileUrl, response);
+
+        // Redirect to app with reference
+        return Response.redirect('/recipe/import?file=' + file.name, 303);
+    } catch (error) {
+        console.error('Error handling share target:', error);
+        return new Response('Error processing import files', { status: 500 });
+    }
+}
 
 // default handler if everything else fails
 setCatchHandler(({event}) => {

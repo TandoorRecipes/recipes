@@ -437,12 +437,18 @@ def web_manifest(request):
         }],
         "share_target": {
             "action": "/recipe/import",
-            "method": "GET",
-            "enctype": "application/x-www-form-urlencoded",
+            "method": "POST",
+            "enctype": "multipart/form-data",
             "params": {
                 "title": "title",
                 "url": "url",
-                "text": "text"
+                "text": "text",
+                "files": [
+                    {
+                        "name": "data",
+                        "accept": ["image/*", "text/plain", "application/pdf"]
+                    }
+                ]
             }
         }
     }
