@@ -290,12 +290,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, inject, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {Model, ModelTableHeaders} from '@/types/Models'
 import type {ActionDef, FilterDef} from '@/composables/modellist/types'
-import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
+import {MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
 import {useTouchDetect} from '@/composables/useTouchDetect'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
@@ -351,12 +351,10 @@ const drawerTabs = computed(() => [
     {key: 'settings', label: t('Settings'), icon: 'fa-solid fa-sliders'},
 ])
 
-// Settings from device preferences
-const settingsKey = computed(() => props.model.listSettings?.settingsKey ?? '')
-const settingsDefaults = computed(() => props.model.listSettings?.defaults)
+// Settings from parent via provide/inject (single instance shared across page, mobile view, settings panel)
 const {isPinned, showStats, showColumnHeaders, treeEnabled, quickActionKeys,
     desktopSubtitleKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys,
-    swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKey, settingsDefaults)
+    swipeRightKeys, showMobileHeaders} = inject(MODEL_LIST_SETTINGS_KEY)!
 
 // Computed model flags
 const treeAvailable = computed(() => !!props.model.isTree && !!props.model.listSettings?.treeEnabled)

@@ -163,8 +163,8 @@
 
                         <v-list-item-title>{{ item[props.labelField ?? 'name'] }}</v-list-item-title>
 
-                        <v-list-item-subtitle v-if="treeSuspended && getAncestorPath(item)" class="text-disabled">
-                            {{ getAncestorPath(item) }}
+                        <v-list-item-subtitle v-if="ancestorPathMap?.get(item.id)" class="text-disabled">
+                            {{ ancestorPathMap.get(item.id) }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle v-if="subtitleMap.has(item.id)">
                             {{ subtitleMap.get(item.id) }}
@@ -222,15 +222,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref, watch} from 'vue'
+import {computed, inject, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {ActionDef, ModelItem, SettingsDefaults} from '@/composables/modellist/types'
+import type {ActionDef, ModelItem} from '@/composables/modellist/types'
 import {getAncestorPath} from '@/composables/modellist/types'
 import type {ModelTableHeaders} from '@/types/Models'
 import {buildSubtitleText} from '@/utils/utils'
 import {useSwipeGesture, SLOT_WIDTH} from '@/composables/useSwipeGesture'
 import {useTouchDetect} from '@/composables/useTouchDetect'
-import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
+import {MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
 import ActionMenu from "@/components/common/ActionMenu.vue"
 
 const {t} = useI18n()
@@ -253,15 +253,12 @@ const props = withDefaults(defineProps<{
     loadingIds: Set<number>,
     toggleExpand: (id: number) => void,
     settingsKey: string,
-    settingsDefaults?: SettingsDefaults,
     labelField?: string,
 }>(), {
     labelField: 'name',
 })
 
-const settingsKeyRef = computed(() => props.settingsKey)
-const modelDefaultsRef = computed(() => props.settingsDefaults)
-const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders} = useModelListSettings(settingsKeyRef, modelDefaultsRef)
+const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders} = inject(MODEL_LIST_SETTINGS_KEY)!
 
 const emit = defineEmits<{
     'update:selectedItems': [items: ModelItem[]],
@@ -307,8 +304,9 @@ function handleFullSwipe(id: number, direction: 'left' | 'right') {
 
 const swipe = useSwipeGesture(enabledRef, leftSlotCount, rightSlotCount, handleFullSwipe)
 
-/** Reset swipe state when items change (pagination, filters, etc.) */
-watch(() => props.items, () => swipe.resetAll())
+/** Reset swipe state when item set changes (pagination, filters), not on in-place property mutations */
+const itemIdKey = computed(() => props.items.map(i => i.id).join(','))
+watch(itemIdKey, () => swipe.resetAll())
 
 /** Swipe hint banner */
 const hintStorageKey = computed(() => `${props.settingsKey}_swipeHintDismissed`)
@@ -407,7 +405,7 @@ const subtitleColumns = computed(() =>
 )
 
 function isSelected(item: ModelItem): boolean {
-    return props.selectedItems.some(s => s.id === item.id)
+    return selectedIdSet.value.has(item.id)
 }
 
 function toggleSelection(item: ModelItem) {
@@ -421,6 +419,18 @@ function toggleSelection(item: ModelItem) {
     emit('update:selectedItems', current)
 }
 
+
+/** Cache ancestor paths — avoids double getAncestorPath call per item in template */
+const ancestorPathMap = computed(() => {
+    if (!props.treeSuspended) return null
+    const map = new Map<number, string>()
+    for (const item of props.items) {
+        if (item._isLoadMore) continue
+        const path = getAncestorPath(item)
+        if (path) map.set(item.id, path)
+    }
+    return map
+})
 
 /** Build subtitle map — computed once per render, not twice per item */
 const subtitleMap = computed(() => {

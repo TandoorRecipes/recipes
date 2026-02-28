@@ -1,6 +1,9 @@
-import {computed, type ComputedRef, type WritableComputedRef} from 'vue'
+import {computed, type ComputedRef, type InjectionKey, type WritableComputedRef} from 'vue'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {SettingsDefaults} from './types'
+
+export type ModelListSettingsReturn = ReturnType<typeof useModelListSettings>
+export const MODEL_LIST_SETTINGS_KEY: InjectionKey<ModelListSettingsReturn> = Symbol('modelListSettings')
 
 /**
  * Provides typed, writable computed refs for all per-model device settings.
