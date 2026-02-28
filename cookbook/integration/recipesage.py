@@ -35,16 +35,22 @@ class RecipeSage(Integration):
         if 'isBasedOn' in file and file['isBasedOn']!="":
             recipe.source_url = file['isBasedOn'].strip()
         if 'description' in file and file['description']!="":
-            recipe.source_url = file['description']
+            recipe.description = html.unescape(file['description'].strip())
 
         recipe.save()
 
         ingredient_parser = IngredientParser(self.request, True)
         ingredients_added = False
         for s in file['recipeInstructions']:
-            step = Step.objects.create(
-                instruction=s['text'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
-            )
+            txt=html.unescape(s['text'].strip())
+            if txt[0]=='[' and txt[-1]==']':
+                step = Step.objects.create(
+                        instruction=txt[1:-1], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,is_header=True,
+                )
+            elif txt!="":
+                step = Step.objects.create(
+                        instruction=txt, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                )
             if not ingredients_added:
                 ingredients_added = True
 
