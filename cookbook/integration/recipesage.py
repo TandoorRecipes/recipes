@@ -45,7 +45,7 @@ class RecipeSage(Integration):
             txt=html.unescape(s['text'].strip())
             if txt[0]=='[' and txt[-1]==']':
                 step = Step.objects.create(
-                        instruction=txt[1:-1], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,is_header=True,
+                        instruction=txt[1:-1], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
             elif txt!="":
                 step = Step.objects.create(
