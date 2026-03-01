@@ -5,6 +5,7 @@ from django.db.models import F, OuterRef, Q, Subquery, Value
 from django.db.models.functions import Coalesce
 from django.utils.translation import gettext as _
 
+from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
                              SupermarketCategoryRelation, UserSpace)
 
@@ -74,9 +75,7 @@ class RecipeShoppingEditor():
     def get_shopping_list_recipe(id, user, space):
         # TODO this sucks since it wont find SLR's that no longer have any entries
         owner_user_space = user.userspace_set.filter(space=space).first()
-        user_ids = []
-        if owner_user_space and owner_user_space.household:
-            user_ids = UserSpace.objects.filter(space=space, household=owner_user_space.household).values_list('user_id', flat=True)
+        user_ids = get_household_user_ids(owner_user_space)
 
         return ShoppingListRecipe.objects.filter(id=id, space=space).filter(
             Q(entries__created_by=user)
@@ -87,9 +86,8 @@ class RecipeShoppingEditor():
         if exclude_onhand:
             queryset = Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
             owner_user_space = self.created_by.userspace_set.filter(space=self.space).first()
-            if owner_user_space and owner_user_space.household:
-                queryset = queryset.exclude(
-                    food__onhand_users__id__in=UserSpace.objects.filter(space=self.space, household=owner_user_space.household))
+            queryset = queryset.exclude(
+                food__onhand_users__id__in=get_household_user_ids(owner_user_space))
             return queryset
         else:
             return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)

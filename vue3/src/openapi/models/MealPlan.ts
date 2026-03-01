@@ -19,12 +19,6 @@ import {
     MealTypeFromJSONTyped,
     MealTypeToJSON,
 } from './MealType';
-import type { User } from './User';
-import {
-    UserFromJSON,
-    UserFromJSONTyped,
-    UserToJSON,
-} from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
@@ -100,12 +94,6 @@ export interface MealPlan {
     readonly createdBy: number;
     /**
      * 
-     * @type {Array<User>}
-     * @memberof MealPlan
-     */
-    shared?: Array<User>;
-    /**
-     * 
      * @type {string}
      * @memberof MealPlan
      */
@@ -165,7 +153,6 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'toDate': json['to_date'] == null ? undefined : (new Date(json['to_date'])),
         'mealType': MealTypeFromJSON(json['meal_type']),
         'createdBy': json['created_by'],
-        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
         'recipeName': json['recipe_name'],
         'mealTypeName': json['meal_type_name'],
         'shopping': json['shopping'],
@@ -187,7 +174,6 @@ export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'
         'from_date': ((value['fromDate']).toISOString()),
         'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
         'meal_type': MealTypeToJSON(value['mealType']),
-        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
         'addshopping': value['addshopping'],
     };
 }

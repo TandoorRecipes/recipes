@@ -5,8 +5,8 @@ from django.contrib import auth
 from django_scopes import scope
 
 from cookbook.helper.recipe_search import RecipeSearch
-from cookbook.models import Food, Recipe
-from cookbook.tests.factories import FoodFactory, RecipeFactory
+from cookbook.models import Food, Recipe, UserSpace
+from cookbook.tests.factories import FoodFactory, HouseholdFactory, RecipeFactory
 
 # TODO returns recipes with all ingredients via child substitute
 # TODO returns recipes with all ingredients via sibling substitute
@@ -36,14 +36,14 @@ def makenow_recipe(request, space_1):
 def user1(u1_s1, u2_s1, space_1):
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    user1.userpreference.shopping_share.add(user2)
-    user2.userpreference.shopping_share.add(user1)
+    household = HouseholdFactory(space=space_1)
+    UserSpace.objects.filter(space=space_1, user__in=[user1, user2]).update(household=household)
     return user1
 
 
 @pytest.mark.parametrize("makenow_recipe", [({'onhand_users': 'u1_s1'}), ({'onhand_users': 'u2_s1'})], indirect=['makenow_recipe'])
 def test_makenow_onhand(recipes, makenow_recipe, user1, space_1):
-    request = type('', (object, ), {'space': space_1, 'user': user1})()
+    request = type('', (object, ), {'space': space_1, 'user': user1, 'user_space': UserSpace.objects.filter(space=space_1, user=user1).first()})()
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
         search = search.get_queryset(Recipe.objects.all())
@@ -53,7 +53,7 @@ def test_makenow_onhand(recipes, makenow_recipe, user1, space_1):
 
 @pytest.mark.parametrize("makenow_recipe", [({'onhand_users': 'u1_s1'}), ({'onhand_users': 'u2_s1'})], indirect=['makenow_recipe'])
 def test_makenow_ignoreshopping(recipes, makenow_recipe, user1, space_1):
-    request = type('', (object, ), {'space': space_1, 'user': user1})()
+    request = type('', (object, ), {'space': space_1, 'user': user1, 'user_space': UserSpace.objects.filter(space=space_1, user=user1).first()})()
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
         food = Food.objects.filter(ingredient__step__recipe=makenow_recipe.id).first()
@@ -70,7 +70,7 @@ def test_makenow_ignoreshopping(recipes, makenow_recipe, user1, space_1):
 
 @pytest.mark.parametrize("makenow_recipe", [({'onhand_users': 'u1_s1'}), ({'onhand_users': 'u2_s1'})], indirect=['makenow_recipe'])
 def test_makenow_substitute(recipes, makenow_recipe, user1, space_1):
-    request = type('', (object, ), {'space': space_1, 'user': user1})()
+    request = type('', (object, ), {'space': space_1, 'user': user1, 'user_space': UserSpace.objects.filter(space=space_1, user=user1).first()})()
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
         food = Food.objects.filter(ingredient__step__recipe=makenow_recipe.id).first()
@@ -88,7 +88,7 @@ def test_makenow_substitute(recipes, makenow_recipe, user1, space_1):
 
 @pytest.mark.parametrize("makenow_recipe", [({'onhand_users': 'u1_s1'}), ({'onhand_users': 'u2_s1'})], indirect=['makenow_recipe'])
 def test_makenow_child_substitute(recipes, makenow_recipe, user1, space_1):
-    request = type('', (object, ), {'space': space_1, 'user': user1})()
+    request = type('', (object, ), {'space': space_1, 'user': user1, 'user_space': UserSpace.objects.filter(space=space_1, user=user1).first()})()
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
         food = Food.objects.filter(ingredient__step__recipe=makenow_recipe.id).first()
@@ -108,7 +108,7 @@ def test_makenow_child_substitute(recipes, makenow_recipe, user1, space_1):
 
 @pytest.mark.parametrize("makenow_recipe", [({'onhand_users': 'u1_s1'}), ({'onhand_users': 'u2_s1'})], indirect=['makenow_recipe'])
 def test_makenow_sibling_substitute(recipes, makenow_recipe, user1, space_1):
-    request = type('', (object, ), {'space': space_1, 'user': user1})()
+    request = type('', (object, ), {'space': space_1, 'user': user1, 'user_space': UserSpace.objects.filter(space=space_1, user=user1).first()})()
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
         food = Food.objects.filter(ingredient__step__recipe=makenow_recipe.id).first()
