@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import RecipeBook
+from cookbook.models import Household, RecipeBook, UserSpace
 
 LIST_URL = 'api:recipebook-list'
 DETAIL_URL = 'api:recipebook-detail'
@@ -117,3 +117,22 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert RecipeBook.objects.count() == 0
+
+
+def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
+    """Household members should see each other's recipe books"""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+
+    # user2 can't see user1's book before household
+    assert json.loads(u2_s1.get(reverse(LIST_URL)).content)['count'] == 0
+    assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 404
+
+    # put both users in the same household
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+
+    # user2 should now see user1's book
+    assert json.loads(u2_s1.get(reverse(LIST_URL)).content)['count'] == 1
+    assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200

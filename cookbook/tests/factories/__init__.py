@@ -77,6 +77,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
         django_get_or_create = ('username', 'space',)
+        skip_postgeneration_save = True
 
 
 @register
@@ -129,6 +130,7 @@ class FoodFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'cookbook.Food'
         django_get_or_create = ('name', 'plural_name', 'path', 'space',)
+        skip_postgeneration_save = True
 
 
 @register
@@ -293,7 +295,7 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
     checked = False
     created_by = factory.SubFactory(
         UserFactory, space=factory.SelfAttribute('..space'))
-    created_at = factory.LazyAttribute(lambda x: faker.past_date())
+    created_at = factory.LazyAttribute(lambda x: faker.past_datetime(tzinfo=timezone.utc))
     completed_at = None
     delay_until = None
     space = factory.SubFactory(SpaceFactory)
@@ -340,8 +342,10 @@ class StepFactory(factory.django.DjangoModelFactory):
             return
         if kwargs.get('has_recipe', False):
             self.step_recipe = RecipeFactory(space=self.space)
+            self.save()
         elif extracted:
             self.step_recipe = extracted
+            self.save()
 
     @factory.post_generation
     def ingredients(self, create, extracted, **kwargs):
@@ -370,6 +374,7 @@ class StepFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Step'
+        skip_postgeneration_save = True
 
 
 @register
@@ -448,6 +453,7 @@ class RecipeFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.Recipe'
+        skip_postgeneration_save = True
 
 
 @register
@@ -457,7 +463,7 @@ class CookLogFactory(factory.django.DjangoModelFactory):
         RecipeFactory, space=factory.SelfAttribute('..space'))
     created_by = factory.SubFactory(
         UserFactory, space=factory.SelfAttribute('..space'))
-    created_at = factory.LazyAttribute(lambda x: faker.date_this_decade())
+    created_at = factory.LazyAttribute(lambda x: faker.date_time_this_decade(tzinfo=timezone.utc))
     rating = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=5))
     servings = factory.LazyAttribute(lambda x: faker.random_int(min=1, max=32))
     space = factory.SubFactory(SpaceFactory)
@@ -484,7 +490,7 @@ class ViewLogFactory(factory.django.DjangoModelFactory):
     created_by = factory.SubFactory(
         UserFactory, space=factory.SelfAttribute('..space'))
     created_at = factory.LazyAttribute(
-        lambda x: faker.past_datetime(start_date='-365d'))
+        lambda x: faker.past_datetime(start_date='-365d', tzinfo=timezone.utc))
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
