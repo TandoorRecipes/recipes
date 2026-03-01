@@ -602,6 +602,49 @@ def test_onhand(obj_1, u1_s1, u2_s1, space_1):
         UserSpace.objects.filter(user=user1).update(household=household)
         UserSpace.objects.filter(user=user2).update(household=household)
 
-    caches['default'].set(f'shopping_shared_users_{space_1.id}_{user2.id}', None)
+    caches['default'].set(f'household_user_ids_{space_1.id}_{user2.id}', None)
 
     assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is True
+
+
+def test_batch_onhand_household(u1_s1, u2_s1, space_1):
+    """batch_update on_hand should propagate to all household members"""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+
+    with scopes_disabled():
+        food1 = FoodFactory(space=space_1)
+        food2 = FoodFactory(space=space_1)
+
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+
+    # batch mark on_hand=True via user1
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id, food2.id], 'on_hand': True},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        # both foods should be onhand for BOTH household members
+        assert food1.onhand_users.filter(id=user1.id).exists()
+        assert food1.onhand_users.filter(id=user2.id).exists()
+        assert food2.onhand_users.filter(id=user1.id).exists()
+        assert food2.onhand_users.filter(id=user2.id).exists()
+
+    # batch mark on_hand=False via user1
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id, food2.id], 'on_hand': False},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        # both foods should be off-hand for BOTH household members
+        assert not food1.onhand_users.filter(id=user1.id).exists()
+        assert not food1.onhand_users.filter(id=user2.id).exists()
+        assert not food2.onhand_users.filter(id=user1.id).exists()
+        assert not food2.onhand_users.filter(id=user2.id).exists()
