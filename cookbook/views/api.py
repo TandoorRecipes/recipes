@@ -1022,6 +1022,9 @@ class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='diet', description=_('Filter foods by dietary preference (e.g. VEGAN, VEGETARIAN, GLUTEN_FREE).'), type=str),
+]))
 class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Food.objects
     model = Food
@@ -1045,6 +1048,11 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         self.queryset = super().get_queryset()
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
                                                            checked=False).values('id')
+
+        diet = self.request.query_params.get('diet', None)
+        if diet:
+            self.queryset = self.queryset.filter(diet=diet)
+
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
         return self.queryset \
             .annotate(shopping_status=Exists(shopping_status)) \
