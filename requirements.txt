@@ -39,7 +39,7 @@ boto3==1.41.5
 django-prometheus==2.4.1
 django-hCaptcha==0.2.0
 python-ldap==3.4.5
-django-auth-ldap==4.6.0
+django-auth-ldap==5.3.0
 pyppeteer==2.0.0
 pytubefix==9.2.2
 aiohttp==3.13.3
