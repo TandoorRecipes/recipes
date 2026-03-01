@@ -71,7 +71,6 @@ function initializeRequest() {
         servings: 1,
         startDate: DateTime.now().toJSDate(),
         endDate: DateTime.now().plus({day: 7}).toJSDate(),
-        shared: useUserPreferenceStore().userSettings.planShare,
         addshopping: useUserPreferenceStore().userSettings.mealplanAutoaddShopping,
     } as AutoMealPlan
 

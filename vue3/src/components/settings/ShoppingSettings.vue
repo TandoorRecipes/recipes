@@ -3,10 +3,6 @@
         <p class="text-h6">{{ $t('Shopping_list') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-<!--        <ModelSelect :hint="$t('shopping_share_desc')" :label="$t('shopping_share')" model="User" :allow-create="false"-->
-<!--                     v-model="useUserPreferenceStore().userSettings.shoppingShare" item-label="displayName"-->
-<!--                     mode="tags"></ModelSelect>-->
-
         <v-number-input
             class="mt-2"
             :label="$t('shopping_auto_sync')"

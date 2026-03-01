@@ -528,8 +528,6 @@ class UserPreference(models.Model, PermissionModelMixin):
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
-    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
-    shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
@@ -1047,6 +1045,7 @@ class Property(models.Model, PermissionModelMixin):
         return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
 
     class Meta:
+        ordering = ('pk',)
         constraints = [
             models.UniqueConstraint(fields=['space', 'property_type', 'open_data_food_slug'], name='property_unique_import_food_per_space')
         ]
@@ -1238,6 +1237,7 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
             return None
 
     class Meta:
+        ordering = ('pk',)
         constraints = [
             models.UniqueConstraint(fields=['recipe', 'book'], name='rbe_unique_name_per_space')
         ]
@@ -1269,7 +1269,6 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
     title = models.CharField(max_length=64, blank=True, default='')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
     from_date = models.DateTimeField()

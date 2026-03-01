@@ -3,10 +3,6 @@
         <p class="text-h6">{{ $t('Meal_Plan') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-<!--        <ModelSelect :hint="$t('plan_share_desc')" :label="$t('Share')" model="User" :allow-create="false"-->
-<!--                     v-model="useUserPreferenceStore().userSettings.planShare" item-label="displayName"-->
-<!--                     mode="tags"></ModelSelect>-->
-
         <model-select model="MealType" v-model="useUserPreferenceStore().userSettings.defaultMealType"></model-select>
 
         <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>

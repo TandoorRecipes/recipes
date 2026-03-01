@@ -8,6 +8,7 @@ from django.db.models.functions import Coalesce, Lower, Substr
 from django.utils import timezone, translation
 
 from cookbook.helper.HelperFunctions import Round, str2bool
+from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY
 from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, ViewLog)
 from recipes import settings
@@ -526,7 +527,7 @@ class RecipeSearch():
     def _makenow_filter(self, missing=None):
         if missing is None or (isinstance(missing, bool) and missing == False):
             return
-        shopping_users = self._request.user_space.household.values_list('user_id', flat=True)
+        shopping_users = get_household_user_ids(self._request.user_space)
 
         onhand_filter = (
             Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
