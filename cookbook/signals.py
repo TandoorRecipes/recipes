@@ -101,6 +101,9 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
         # if supermarket_category is not set, do not cascade - if this becomes non-intuitive can change
         if 'supermarket_category' in inherit and parent.supermarket_category:
             instance.supermarket_category = parent.supermarket_category
+        # if diet is not set on the parent, do not cascade
+        if 'diet' in inherit and parent.diet:
+            instance.diet = parent.diet
         try:
             instance.skip_signal = True
             instance.save()
@@ -108,15 +111,20 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
             del instance.skip_signal
 
     # apply changes to direct children - depend on save signals for those objects to cascade inheritance down
+    inherit_fields_list = instance.inherit_fields.values_list('field', flat=True)
     for child in instance.get_children().filter(inherit_fields__in=Food.inheritable_fields):
         # set inherited field values
-        for field in (inherit_fields := ['ignore_shopping', 'substitute_children', 'substitute_siblings']):
-            if field in instance.inherit_fields.values_list('field', flat=True):
+        for field in ['ignore_shopping', 'substitute_children', 'substitute_siblings']:
+            if field in inherit_fields_list:
                 setattr(child, field, getattr(instance, field, None))
 
         # don't cascade empty supermarket category
-        if instance.supermarket_category and 'supermarket_category' in inherit_fields:
+        if instance.supermarket_category and 'supermarket_category' in inherit_fields_list:
             setattr(child, 'supermarket_category', getattr(instance, 'supermarket_category', None))
+
+        # don't cascade unset diet
+        if instance.diet and 'diet' in inherit_fields_list:
+            setattr(child, 'diet', instance.diet)
 
         child.save()
 
