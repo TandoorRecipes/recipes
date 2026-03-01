@@ -163,9 +163,4 @@ def test_ingredient_api_query_count(performance_test_data, u1_s1):
 
     print(f"{'='*60}\n")
 
-    # Return metrics for comparison
-    return {
-        'query_count': query_count,
-        'time_ms': elapsed_ms,
-        'query_breakdown': query_types,
-    }
+    assert query_count < 100, f"Expected fewer than 100 queries, got {query_count} (possible N+1)"
