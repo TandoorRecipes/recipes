@@ -224,7 +224,6 @@ function initializeEditor() {
             editingObj.value.toDate = noonToday.toJSDate()
             mealPlanTime.value = '12:00'
 
-            editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
             editingObj.value.servings = 1
 
             if (useUserPreferenceStore().userSettings.defaultMealType){

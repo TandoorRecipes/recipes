@@ -79,8 +79,8 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
                                                group_required, has_group_permission, is_space_owner,
-                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly, CustomIsHousehold
-                                               )
+                                               switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly, CustomIsHousehold,
+                                               get_household_user_ids)
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
@@ -1040,12 +1040,12 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
     def get_queryset(self):
         shared_users = []
-        if c := caches['default'].get(f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}', None):
+        if c := caches['default'].get(f'household_user_ids_{self.request.space.id}_{self.request.user.id}', None):
             shared_users = c
         else:
             try:
-                shared_users = UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True)
-                caches['default'].set(f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}',
+                shared_users = get_household_user_ids(self.request.user_space)
+                caches['default'].set(f'household_user_ids_{self.request.space.id}_{self.request.user.id}',
                                       shared_users, timeout=5 * 60)
                 # TODO ugly hack that improves API performance significantly, should be done properly
             except AttributeError:  # Anonymous users (using share links) don't have shared users
@@ -1073,7 +1073,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
-        shared_users = UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True)
+        shared_users = get_household_user_ids(self.request.user_space)
         if request.data.get('_delete', False) == 'true':
             ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space,
                                              created_by__in=shared_users).delete()
@@ -1287,13 +1287,15 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 foods.update(ignore_shopping=serializer.validated_data['ignore_shopping'])
 
             if 'on_hand' in serializer.validated_data and serializer.validated_data['on_hand'] is not None:
+                household_user_ids = list(get_household_user_ids(request.user_space))
                 if serializer.validated_data['on_hand']:
                     user_relation = []
                     for f in safe_food_ids:
-                        user_relation.append(Food.onhand_users.through(food_id=f, user_id=request.user.id))
+                        for uid in household_user_ids:
+                            user_relation.append(Food.onhand_users.through(food_id=f, user_id=uid))
                     Food.onhand_users.through.objects.bulk_create(user_relation, ignore_conflicts=True, unique_fields=('food_id', 'user_id',))
                 else:
-                    Food.onhand_users.through.objects.filter(food_id__in=safe_food_ids, user_id=request.user.id).delete()
+                    Food.onhand_users.through.objects.filter(food_id__in=safe_food_ids, user_id__in=household_user_ids).delete()
 
             if 'substitute_children' in serializer.validated_data and serializer.validated_data['substitute_children'] is not None:
                 foods.update(substitute_children=serializer.validated_data['substitute_children'])
@@ -1384,7 +1386,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | CustomIsShared | CustomIsHousehold) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1396,8 +1398,9 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
 
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
 
-        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct().order_by(ordering)
+        self.queryset = self.queryset.filter(
+            Q(created_by=self.request.user) | Q(shared=self.request.user) | Q(created_by__in=get_household_user_ids(self.request.user_space))
+        ).filter(space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 
@@ -1408,13 +1411,13 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
 class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | CustomIsShared | CustomIsHousehold) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = self.queryset.filter(
-            Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(
-            book__space=self.request.space).distinct()
+            Q(book__created_by=self.request.user) | Q(book__shared=self.request.user) | Q(book__created_by__in=get_household_user_ids(self.request.user_space))
+        ).filter(book__space=self.request.space).distinct()
 
         recipe_id = self.request.query_params.get('recipe', None)
         if recipe_id is not None:
@@ -1455,7 +1458,7 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(created_by=self.request.user) |
-                                        Q(created_by_id__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).filter(
+                                        Q(created_by_id__in=get_household_user_ids(self.request.user_space))).filter(
             space=self.request.space).distinct().all()
 
         from_date = self.request.query_params.get('from_date', timezone.now() - datetime.timedelta(days=90))
@@ -2142,7 +2145,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         return self.queryset.filter(Q(entries__isnull=True)
                                     | Q(entries__created_by=self.request.user)
-                                    | Q(entries__created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).distinct().all()
+                                    | Q(entries__created_by__in=get_household_user_ids(self.request.user_space))).distinct().all()
 
     @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
     def bulk_create_entries(self, request, pk):
@@ -2218,7 +2221,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         # select_related("list_recipe")
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
-            | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).prefetch_related('created_by',
+            | Q(created_by__in=get_household_user_ids(self.request.user_space))).prefetch_related('created_by',
                                                                                                'food',
                                                                                                'food__shopping_lists',
                                                                                                'shopping_lists',
@@ -2227,8 +2230,6 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                                                                'list_recipe__recipe__keywords',
                                                                                                'list_recipe__recipe__created_by',
                                                                                                'list_recipe__mealplan',
-                                                                                               'list_recipe__mealplan__shared',
-                                                                                               'list_recipe__mealplan__shared__userspace_set',
                                                                                                'list_recipe__mealplan__shoppinglistrecipe_set',
                                                                                                'list_recipe__mealplan__recipe',
                                                                                                'list_recipe__mealplan__recipe__keywords',
@@ -2264,14 +2265,15 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
+            household_user_ids = get_household_user_ids(self.request.user_space)
             bulk_entries = ShoppingListEntry.objects.filter(
-                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))
+                Q(created_by=self.request.user) | Q(created_by__in=household_user_ids)
             ).filter(
                 space=request.space, id__in=serializer.validated_data['ids']
             )
 
             safe_entry_ids = ShoppingListEntry.objects.filter(
-                Q(created_by=self.request.user) | Q(created_by__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))
+                Q(created_by=self.request.user) | Q(created_by__in=household_user_ids)
             ).filter(
                 space=request.space, id__in=serializer.validated_data['ids']
             ).values_list('id', flat=True)
@@ -2290,11 +2292,13 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                 if request.user.userpreference.shopping_add_onhand:
                     foods = Food.objects.filter(id__in=bulk_entries.values('food'))
                     if checked:
+                        household_users = User.objects.filter(id__in=get_household_user_ids(request.user_space))
                         for f in foods:
-                            f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
+                            f.onhand_users.add(*household_users)
                     elif not checked:
+                        household_users = User.objects.filter(id__in=get_household_user_ids(request.user_space))
                         for f in foods:
-                            f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
+                            f.onhand_users.remove(*household_users)
 
             # ---------- shopping lists -------------
             if 'shopping_lists_add' in serializer.validated_data:
