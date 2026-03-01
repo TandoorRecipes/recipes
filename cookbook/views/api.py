@@ -9,7 +9,7 @@ import threading
 import traceback
 import uuid
 from collections import OrderedDict
-from functools import wraps
+from functools import cached_property, wraps
 from json import JSONDecodeError
 from urllib.parse import unquote
 from zipfile import ZipFile
@@ -29,6 +29,7 @@ from django.core.files import File
 from django.db import DEFAULT_DB_ALIAS
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
 from django.db.models import Prefetch
+from django.db.models.fields import BooleanField
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -1038,27 +1039,37 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
-    def get_queryset(self):
-        shared_users = []
-        if c := caches['default'].get(f'household_user_ids_{self.request.space.id}_{self.request.user.id}', None):
-            shared_users = c
-        else:
-            try:
-                shared_users = get_household_user_ids(self.request.user_space)
-                caches['default'].set(f'household_user_ids_{self.request.space.id}_{self.request.user.id}',
-                                      shared_users, timeout=5 * 60)
-                # TODO ugly hack that improves API performance significantly, should be done properly
-            except AttributeError:  # Anonymous users (using share links) don't have shared users
-                pass
+    @cached_property
+    def _shared_users(self):
+        cache_key = f'household_user_ids_{self.request.space.id}_{self.request.user.id}'
+        if c := caches['default'].get(cache_key, None):
+            return c
+        try:
+            shared_users = get_household_user_ids(self.request.user_space)
+            caches['default'].set(cache_key, shared_users, timeout=5 * 60)
+            # TODO ugly hack that improves API performance significantly, should be done properly
+            return shared_users
+        except AttributeError:  # Anonymous users (using share links) don't have shared users
+            return []
 
-        self.queryset = super().get_queryset()
-        shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
-                                                           checked=False).values('id')
-        # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
-        return self.queryset \
-            .annotate(shopping_status=Exists(shopping_status)) \
+    def _annotate_and_prefetch(self, qs):
+        shared_users = self._shared_users
+        if shared_users:
+            shopping_status = ShoppingListEntry.objects.filter(
+                space=self.request.space, food=OuterRef('id'), checked=False,
+                created_by__in=shared_users,
+            ).values('id')
+            qs = qs.annotate(shopping_status=Exists(shopping_status))
+        else:
+            qs = qs.annotate(shopping_status=Value(False, output_field=BooleanField()))
+
+        return qs \
             .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
             .select_related('recipe', 'supermarket_category')
+
+    def get_queryset(self):
+        self.queryset = super().get_queryset()
+        return self._annotate_and_prefetch(self.queryset)
 
     def get_serializer_class(self):
         if self.request and self.request.query_params.get('simple', False):
@@ -1073,10 +1084,9 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
-        shared_users = get_household_user_ids(self.request.user_space)
         if request.data.get('_delete', False) == 'true':
             ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space,
-                                             created_by__in=shared_users).delete()
+                                             created_by__in=self._shared_users).delete()
             content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
             return Response(content, status=status.HTTP_204_NO_CONTENT)
 
