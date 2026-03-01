@@ -2291,12 +2291,11 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                 # update the onhand for food if shopping_add_onhand is True
                 if request.user.userpreference.shopping_add_onhand:
                     foods = Food.objects.filter(id__in=bulk_entries.values('food'))
+                    household_users = User.objects.filter(id__in=household_user_ids)
                     if checked:
-                        household_users = User.objects.filter(id__in=get_household_user_ids(request.user_space))
                         for f in foods:
                             f.onhand_users.add(*household_users)
                     elif not checked:
-                        household_users = User.objects.filter(id__in=get_household_user_ids(request.user_space))
                         for f in foods:
                             f.onhand_users.remove(*household_users)
 

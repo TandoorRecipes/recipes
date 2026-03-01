@@ -22,9 +22,4 @@ class Migration(migrations.Migration):
             model_name='userpreference',
             name='shopping_share',
         ),
-        migrations.AlterField(
-            model_name='userpreference',
-            name='use_fractions',
-            field=models.BooleanField(default=True),
-        ),
     ]
