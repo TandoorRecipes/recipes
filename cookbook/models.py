@@ -773,8 +773,26 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     # TODO when savings a food as substitute children - assume children and descednants are also substitutes for siblings
     # exclude fields not implemented yet
-    inheritable_fields = FoodInheritField.objects.exclude(field__in=['diet', 'substitute', ])
+    inheritable_fields = FoodInheritField.objects.exclude(field__in=['substitute', ])
     # TODO add inherit children_inherit, parent_inherit, Do Not Inherit
+
+    VEGAN = 'VEGAN'
+    VEGETARIAN = 'VEGETARIAN'
+    PESCATARIAN = 'PESCATARIAN'
+    GLUTEN_FREE = 'GLUTEN_FREE'
+    LACTOSE_FREE = 'LACTOSE_FREE'
+    HALAL = 'HALAL'
+    KOSHER = 'KOSHER'
+
+    DIET_CHOICES = (
+        (VEGAN, _('Vegan')),
+        (VEGETARIAN, _('Vegetarian')),
+        (PESCATARIAN, _('Pescatarian')),
+        (GLUTEN_FREE, _('Gluten Free')),
+        (LACTOSE_FREE, _('Lactose Free')),
+        (HALAL, _('Halal')),
+        (KOSHER, _('Kosher')),
+    )
 
     # WARNING: Food inheritance relies on post_save signals, avoid using UPDATE to update Food objects unless you intend to bypass those signals
     if SORT_TREE_BY_NAME:
@@ -786,6 +804,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
     shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
     ignore_shopping = models.BooleanField(default=False)  # inherited field
+    diet = models.CharField(max_length=32, choices=DIET_CHOICES, null=True, blank=True, default=None)  # inherited field
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
     inherit_fields = models.ManyToManyField(FoodInheritField, blank=True)
@@ -892,6 +911,16 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
                     category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
                     for root in category_roots:
                         root.get_descendants().update(supermarket_category=root.supermarket_category)
+
+            if 'diet' in inherit:
+                # when diet is null or blank assuming it is not set and not intended to be blank for all descendants
+                if food and food.diet:
+                    food.get_descendants().update(diet=food.diet)
+                elif food is None:
+                    # find top node that has diet set
+                    diet_roots = Food.exclude_descendants(queryset=Food.objects.filter(diet__isnull=False, numchild__gt=0, space=space))
+                    for root in diet_roots:
+                        root.get_descendants().update(diet=root.diet)
 
     class Meta:
         constraints = [
