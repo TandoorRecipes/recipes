@@ -648,3 +648,59 @@ def test_batch_onhand_household(u1_s1, u2_s1, space_1):
         assert not food1.onhand_users.filter(id=user2.id).exists()
         assert not food2.onhand_users.filter(id=user1.id).exists()
         assert not food2.onhand_users.filter(id=user2.id).exists()
+
+
+def test_shopping_status_scoped_to_household(u1_s1, u2_s1, space_1):
+    """shopping_status annotation should only reflect entries from household members, not all space users."""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        # user1 adds food to their shopping list
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user1, checked=False)
+
+    # user1 sees shopping=True (their own entry)
+    r1 = json.loads(u1_s1.get(reverse(DETAIL_URL, args={food.id})).content)
+    assert str(r1['shopping']) == 'True'
+
+    # user2 is NOT in user1's household — should NOT see shopping=True
+    r2 = json.loads(u2_s1.get(reverse(DETAIL_URL, args={food.id})).content)
+    assert str(r2['shopping']) == 'False', "shopping status should be scoped to household, not entire space"
+
+
+def test_shopping_status_household_shared(u1_s1, u2_s1, space_1):
+    """shopping_status annotation should be True for household members when any member has an entry."""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+        food = FoodFactory(space=space_1)
+        # user1 adds food to their shopping list
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user1, checked=False)
+
+    # clear cached household user ids
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user2.id}')
+
+    # user1 sees shopping=True (their own entry)
+    r1 = json.loads(u1_s1.get(reverse(DETAIL_URL, args={food.id})).content)
+    assert str(r1['shopping']) == 'True'
+
+    # user2 IS in user1's household — should also see shopping=True
+    r2 = json.loads(u2_s1.get(reverse(DETAIL_URL, args={food.id})).content)
+    assert str(r2['shopping']) == 'True'
+
+
+def test_shopping_status_checked_excluded(u1_s1, space_1):
+    """Checked shopping list entries should NOT set shopping_status=True."""
+    user1 = auth.get_user(u1_s1)
+
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user1, checked=True)
+
+    r = json.loads(u1_s1.get(reverse(DETAIL_URL, args={food.id})).content)
+    assert str(r['shopping']) == 'False'
