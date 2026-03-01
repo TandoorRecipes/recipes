@@ -8,8 +8,8 @@ from django.contrib import auth
 from django_scopes import scopes_disabled
 from pytest_factoryboy import register
 
-from cookbook.models import Food, Ingredient, Recipe, Step, Unit
-from cookbook.tests.factories import SpaceFactory, UserFactory
+from cookbook.models import Food, Household, Ingredient, Recipe, Step, Unit
+from cookbook.tests.factories import HouseholdFactory, SpaceFactory, UserFactory
 
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
@@ -306,3 +306,9 @@ def s1_s1(client, space_1):
     user.is_superuser = True
     user.save()
     return  client
+
+
+@pytest.fixture()
+def household_1(space_1):
+    with scopes_disabled():
+        return HouseholdFactory(space=space_1)
