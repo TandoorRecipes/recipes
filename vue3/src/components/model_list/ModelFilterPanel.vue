@@ -33,6 +33,19 @@
                             />
                         </div>
                     </div>
+                    <div v-else-if="def.type === 'select'" class="d-flex align-center px-4 py-1">
+                        <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
+                        <v-select
+                            :label="$t(def.labelKey)"
+                            :items="(def.options ?? []).map(o => ({value: o.value, title: $t(o.labelKey)}))"
+                            :model-value="getFilter(def.key) ?? null"
+                            @update:model-value="setFilter(def.key, $event != null ? String($event) : undefined)"
+                            density="compact"
+                            hide-details
+                            clearable
+                            class="flex-grow-1"
+                        />
+                    </div>
                     <div v-else-if="def.type === 'number'" class="d-flex align-center px-4 py-1">
                         <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
                         <v-text-field

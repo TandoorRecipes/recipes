@@ -45,7 +45,7 @@ export type ColumnType = 'text' | 'number' | 'boolean-indicator' | 'status-chip'
 /**
  * Filter control types for the filter panel.
  */
-export type FilterType = 'tristate' | 'model-select' | 'number'
+export type FilterType = 'tristate' | 'model-select' | 'number' | 'select'
 
 /**
  * Filter definition for a model list.
@@ -68,6 +68,8 @@ export type FilterDef = {
     defaultValue?: string,
     /** Suffix text for number-type filters (e.g., "days") — localization key */
     suffixKey?: string,
+    /** For select type: available options with value and localization key */
+    options?: {value: string, labelKey: string}[],
 }
 
 /**

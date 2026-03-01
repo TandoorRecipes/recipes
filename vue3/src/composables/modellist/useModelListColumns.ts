@@ -41,8 +41,8 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
         const storageKey = `${settingsKey.value}_hiddenColumns`
         const stored = deviceSettings[storageKey] as string[] | null
 
-        if (stored === null) {
-            // Sentinel: use header-level defaults
+        if (stored == null) {
+            // Sentinel (null) or never set (undefined): use header-level defaults
             return headers.value.filter(h => h.hidden).map(h => h.key)
         }
         return stored
@@ -95,7 +95,7 @@ export function useModelListColumns(model: ComputedRef<Model | undefined>, t: (k
         let current = deviceSettings[storageKey] as string[] | null
 
         // Initialize from defaults if still using sentinel
-        if (current === null) {
+        if (current == null) {
             current = headers.value.filter(h => h.hidden).map(h => h.key)
         }
 

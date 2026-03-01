@@ -225,7 +225,7 @@ export function useModelListTree(
                     onKeydown: (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleExpand(item.id) } },
                 }, [h('i', {class: 'fa-solid fa-chevron-right', style: {fontSize: '12px'}})]))
             }
-        } else if (depth > 0) {
+        } else {
             children.push(h('span', {style: {width: '28px', display: 'inline-block'}}))
         }
 

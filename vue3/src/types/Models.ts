@@ -243,6 +243,9 @@ export type EditorSupportedTypes =
     | Household
 
 import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_BATCH_ACTIONS, FOOD_STAT_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
+import {KEYWORD_FILTER_DEFS, KEYWORD_ACTION_DEFS, KEYWORD_STAT_DEFS, KEYWORD_LIST_SETTINGS, KEYWORD_SORT_OPTIONS} from "@/composables/modellist/KeywordList";
+import {UNIT_FILTER_DEFS, UNIT_ACTION_DEFS, UNIT_STAT_DEFS, UNIT_LIST_SETTINGS, UNIT_SORT_OPTIONS} from "@/composables/modellist/UnitList";
+import {AUTOMATION_FILTER_DEFS, AUTOMATION_ACTION_DEFS, AUTOMATION_STAT_DEFS, AUTOMATION_LIST_SETTINGS, AUTOMATION_SORT_OPTIONS} from "@/composables/modellist/AutomationList";
 
 export const TFood = {
     name: 'Food',
@@ -296,13 +299,11 @@ export const TUnit = {
         {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: [
-        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
-        {key: 'ingredient-editor', labelKey: 'Ingredient Editor', icon: 'fa-solid fa-table-list', group: 'Actions', routeName: 'IngredientEditorPage', routeQuery: (item) => ({unit_id: item.id})},
-        {key: 'merge', labelKey: 'Merge', icon: 'fa-solid fa-arrows-to-dot', group: 'Actions'},
-        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
-    ],
-    listSettings: {settingsKey: 'unit', settingsPanel: true, mobileList: true},
+    filterDefs: UNIT_FILTER_DEFS,
+    actionDefs: UNIT_ACTION_DEFS,
+    statDefs: UNIT_STAT_DEFS,
+    listSettings: UNIT_LIST_SETTINGS,
+    sortDefs: UNIT_SORT_OPTIONS,
 } as Model
 registerModel(TUnit)
 
@@ -323,21 +324,16 @@ export const TKeyword = {
 
     tableHeaders: [
         {title: 'Name', key: 'name', type: 'text'},
-        {title: 'Full Name', key: 'fullName', type: 'text', hidden: true},
+        {title: 'FullName', key: 'fullName', type: 'text', hidden: true},
         {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
         {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
-    actionDefs: [
-        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
-        {key: 'merge', labelKey: 'Merge', icon: 'fa-solid fa-arrows-to-dot', group: 'Actions'},
-        {key: 'move', labelKey: 'Move', icon: 'fa-solid fa-arrow-right', group: 'Actions',
-            routeName: 'ModelEditPage',
-            routeParams: (item, modelName) => ({model: modelName, id: item.id}),
-            routeQuery: () => ({tab: 'hierarchy'})},
-        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
-    ],
-    listSettings: {settingsKey: 'keyword', settingsPanel: true, mobileList: true, treeEnabled: true},
+    filterDefs: KEYWORD_FILTER_DEFS,
+    actionDefs: KEYWORD_ACTION_DEFS,
+    statDefs: KEYWORD_STAT_DEFS,
+    listSettings: KEYWORD_LIST_SETTINGS,
+    sortDefs: KEYWORD_SORT_OPTIONS,
 } as Model
 registerModel(TKeyword)
 
@@ -692,10 +688,17 @@ export const TAutomation = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Type', key: 'type'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Type', key: 'type', type: 'text'},
+        {title: 'Disabled', key: 'disabled', type: 'boolean-indicator', align: 'center', hidden: true},
+        {title: 'Order', key: 'order', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: AUTOMATION_FILTER_DEFS,
+    actionDefs: AUTOMATION_ACTION_DEFS,
+    statDefs: AUTOMATION_STAT_DEFS,
+    listSettings: AUTOMATION_LIST_SETTINGS,
+    sortDefs: AUTOMATION_SORT_OPTIONS,
 } as Model
 registerModel(TAutomation)
 

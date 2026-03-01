@@ -58,14 +58,16 @@ export function useUrlFilters(
     }
 
     /** Convert filter values to API-ready types and camelCase keys for the OpenAPI client */
-    const filterParams = computed<Record<string, string | number>>(() => {
+    const filterParams = computed<Record<string, string | number | string[]>>(() => {
         const map = parsedFilters.value
         if (map.size === 0) return {}
-        const params: Record<string, string | number> = {}
+        const params: Record<string, string | number | string[]> = {}
         for (const [key, val] of map) {
             const def = filterDefs.value.find(d => d.key === key)
             const paramKey = snakeToCamel(key)
-            if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
+            if (def?.type === 'select') {
+                params[paramKey] = [val]
+            } else if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
                 const num = Number(val)
                 if (!isNaN(num)) params[paramKey] = num
             } else {
