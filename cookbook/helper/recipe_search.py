@@ -1,5 +1,5 @@
 import json
-from datetime import date, timedelta
+from datetime import timedelta
 
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.core.cache import cache
@@ -23,31 +23,40 @@ class RecipeSearch():
     def __init__(self, request, **params):
         self._request = request
         self._queryset = None
+        self._params = self._resolve_params(params)
+        self._search_prefs = self._load_search_prefs()
+        self._parse_filter_params()
+        self._configure_text_search()
+        self.orderby = []
+
+    def _resolve_params(self, params):
         if f := params.get('filter', None):
             custom_filter = (
                 CustomFilter.objects.filter(id=f, space=self._request.space
                                             ).filter(Q(created_by=self._request.user) | Q(shared=self._request.user) | Q(recipebook__shared=self._request.user)).first()
             )
             if custom_filter:
-                self._params = {**json.loads(custom_filter.search)}
+                resolved = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
                 # json.loads casts rating as an integer, expecting string
-                if isinstance(self._params.get('rating', None), int):
-                    self._params['rating'] = str(self._params['rating'])
-            else:
-                self._params = {**(params or {})}
-        else:
-            self._params = {**(params or {})}
+                if isinstance(resolved.get('rating', None), int):
+                    resolved['rating'] = str(resolved['rating'])
+                return resolved
+        return {**(params or {})}
+
+    def _load_search_prefs(self):
         if self._request.user.is_authenticated:
-            CACHE_KEY = f'search_pref_{request.user.id}'
+            CACHE_KEY = f'search_pref_{self._request.user.id}'
             cached_result = cache.get(CACHE_KEY, default=None)
             if cached_result is not None:
-                self._search_prefs = cached_result
+                result = cached_result
             else:
-                self._search_prefs = request.user.searchpreference
-            cache.set(CACHE_KEY, self._search_prefs, timeout=10)
-        else:
-            self._search_prefs = SearchPreference()
+                result = self._request.user.searchpreference
+            cache.set(CACHE_KEY, result, timeout=10)
+            return result
+        return SearchPreference()
+
+    def _parse_filter_params(self):
         self._string = self._params.get('query').strip() if self._params.get('query', None) else None
 
         self._rating = self._params.get('rating', None)
@@ -115,33 +124,34 @@ class RecipeSearch():
             except (ValueError, TypeError):
                 self._makenow = None
 
+    def _configure_text_search(self):
         self._search_type = self._search_prefs.search or 'plain'
-        if self._string:
-            if self._postgres:
-                self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
-            else:
-                self._unaccent_include = []
-            self._icontains_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
-            self._istartswith_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
-            self._trigram_include = None
-            self._fulltext_include = None
         self._trigram = False
-        if self._postgres and self._string:
+        self._fulltext_include = None
+        self._trigram_include = None
+
+        if not self._string:
+            return
+
+        if self._postgres:
+            self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
+        else:
+            self._unaccent_include = []
+        self._icontains_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
+        self._istartswith_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
+
+        if self._postgres:
             self._language = DICTIONARY.get(translation.get_language(), 'simple')
             self._trigram_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.trigram.values_list('field', flat=True)]
             self._fulltext_include = self._search_prefs.fulltext.values_list('field', flat=True) or None
 
             if self._search_type not in ['websearch', 'raw'] and self._trigram_include:
                 self._trigram = True
-            self.search_query = SearchQuery(
+            self._search_query = SearchQuery(
                 self._string,
                 search_type=self._search_type,
                 config=self._language,
             )
-            self.search_rank = None
-        self.orderby = []
-        self._filters = None
-        self._fuzzy_match = None
 
     def get_queryset(self, queryset):
         self._queryset = queryset
@@ -231,37 +241,101 @@ class RecipeSearch():
         if not string:
             return
 
-        self.build_text_filters(self._string)
+        filters = self._build_text_filters(string)
+        search_rank = None
+        fuzzy_match = None
+
         if self._postgres:
-            self.build_fulltext_filters(self._string)
-            self.build_trigram(self._string)
+            ft_filters, search_rank = self._build_fulltext_filters(string)
+            tg_filters, fuzzy_match = self._build_trigram(string)
+            filters += ft_filters + tg_filters
 
-        query_filter = Q()
-        if self._filters:
-            for f in self._filters:
-                query_filter |= f
-
-            # this creates duplicate records which can screw up other aggregates, see makenow for workaround
-            self._queryset = self._queryset.filter(query_filter).distinct()
-            if self._fulltext_include:
-                if self._fuzzy_match is None:
-                    self._queryset = self._queryset.annotate(score=Coalesce(Max(self.search_rank), 0.0))
-                else:
-                    self._queryset = self._queryset.annotate(rank=Coalesce(Max(self.search_rank), 0.0))
-
-            if self._fuzzy_match is not None:
-                simularity = self._fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
-                if not self._fulltext_include:
-                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
-                else:
-                    self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
-            if self._sort_includes('score') and self._fulltext_include and self._fuzzy_match is not None:
-                self._queryset = self._queryset.annotate(score=F('rank') + F('simularity'))
-        else:
+        if not filters:
+            # no search prefs configured — fall back to iexact on all search fields
             query_filter = Q()
             for f in [x + '__unaccent__iexact' if x in self._unaccent_include else x + '__iexact' for x in SearchFields.objects.all().values_list('field', flat=True)]:
-                query_filter |= Q(**{"%s" % f: self._string})
+                query_filter |= Q(**{"%s" % f: string})
             self._queryset = self._queryset.filter(query_filter).distinct()
+            return
+
+        query_filter = Q()
+        for f in filters:
+            query_filter |= f
+
+        # this creates duplicate records which can screw up other aggregates, see makenow for workaround
+        self._queryset = self._queryset.filter(query_filter).distinct()
+
+        if search_rank is not None:
+            if fuzzy_match is None:
+                self._queryset = self._queryset.annotate(score=Coalesce(Max(search_rank), 0.0))
+            else:
+                self._queryset = self._queryset.annotate(rank=Coalesce(Max(search_rank), 0.0))
+
+        if fuzzy_match is not None:
+            simularity = fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
+            if search_rank is None:
+                self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
+            else:
+                self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
+
+        if self._sort_includes('score') and search_rank is not None and fuzzy_match is not None:
+            self._queryset = self._queryset.annotate(score=F('rank') + F('simularity'))
+
+    def _build_text_filters(self, string):
+        filters = []
+        for f in self._icontains_include:
+            filters.append(Q(**{"%s__icontains" % f: string}))
+        for f in self._istartswith_include:
+            filters.append(Q(**{"%s__istartswith" % f: string}))
+        return filters
+
+    def _build_fulltext_filters(self, string):
+        if not self._fulltext_include:
+            return [], None
+        vectors = []
+        rank = []
+        if 'name' in self._fulltext_include:
+            vectors.append('name_search_vector')
+            rank.append(SearchRank('name_search_vector', self._search_query, cover_density=True))
+        if 'description' in self._fulltext_include:
+            vectors.append('desc_search_vector')
+            rank.append(SearchRank('desc_search_vector', self._search_query, cover_density=True))
+        if 'steps__instruction' in self._fulltext_include:
+            vectors.append('steps__search_vector')
+            rank.append(SearchRank('steps__search_vector', self._search_query, cover_density=True))
+        if 'keywords__name' in self._fulltext_include:
+            # explicitly settings unaccent on keywords and foods so that they behave the same as search_vector fields
+            vectors.append('keywords__name__unaccent')
+            rank.append(SearchRank('keywords__name__unaccent', self._search_query, cover_density=True))
+        if 'steps__ingredients__food__name' in self._fulltext_include:
+            vectors.append('steps__ingredients__food__name__unaccent')
+            rank.append(SearchRank('steps__ingredients__food__name', self._search_query, cover_density=True))
+
+        search_rank = None
+        for r in rank:
+            if search_rank is None:
+                search_rank = r
+            else:
+                search_rank += r
+        # modifying queryset will annotation creates duplicate results
+        filters = [Q(id__in=Recipe.objects.annotate(vector=SearchVector(*vectors)).filter(Q(vector=self._search_query)))]
+        return filters, search_rank
+
+    def _build_trigram(self, string):
+        if not self._trigram:
+            return [], None
+        trigram = None
+        for f in self._trigram_include:
+            if trigram:
+                trigram += TrigramSimilarity(f, string)
+            else:
+                trigram = TrigramSimilarity(f, string)
+        fuzzy_match = (
+            Recipe.objects.annotate(trigram=trigram).distinct().annotate(simularity=Max('trigram')
+                                                                         ).values('id', 'simularity').filter(simularity__gt=self._search_prefs.trigram_threshold)
+        )
+        filters = [Q(pk__in=fuzzy_match.values('pk'))]
+        return filters, fuzzy_match
 
     def _cooked_on_filter(self):
         if self._sort_includes('lastcooked') or self._cookedon_gte or self._cookedon_lte:
@@ -471,66 +545,6 @@ class RecipeSearch():
         if not isinstance(steps, list):
             steps = [steps]
         self._queryset = self._queryset.filter(steps__id__in=steps)
-
-    def build_fulltext_filters(self, string=None):
-        if not string:
-            return
-        if self._fulltext_include:
-            vectors = []
-            rank = []
-            if 'name' in self._fulltext_include:
-                vectors.append('name_search_vector')
-                rank.append(SearchRank('name_search_vector', self.search_query, cover_density=True))
-            if 'description' in self._fulltext_include:
-                vectors.append('desc_search_vector')
-                rank.append(SearchRank('desc_search_vector', self.search_query, cover_density=True))
-            if 'steps__instruction' in self._fulltext_include:
-                vectors.append('steps__search_vector')
-                rank.append(SearchRank('steps__search_vector', self.search_query, cover_density=True))
-            if 'keywords__name' in self._fulltext_include:
-                # explicitly settings unaccent on keywords and foods so that they behave the same as search_vector fields
-                vectors.append('keywords__name__unaccent')
-                rank.append(SearchRank('keywords__name__unaccent', self.search_query, cover_density=True))
-            if 'steps__ingredients__food__name' in self._fulltext_include:
-                vectors.append('steps__ingredients__food__name__unaccent')
-                rank.append(SearchRank('steps__ingredients__food__name', self.search_query, cover_density=True))
-
-            for r in rank:
-                if self.search_rank is None:
-                    self.search_rank = r
-                else:
-                    self.search_rank += r
-            # modifying queryset will annotation creates duplicate results
-            self._filters.append(Q(id__in=Recipe.objects.annotate(vector=SearchVector(*vectors)).filter(Q(vector=self.search_query))))
-
-    def build_text_filters(self, string=None):
-        if not string:
-            return
-
-        if not self._filters:
-            self._filters = []
-        # dynamically build array of filters that will be applied
-        for f in self._icontains_include:
-            self._filters += [Q(**{"%s__icontains" % f: self._string})]
-
-        for f in self._istartswith_include:
-            self._filters += [Q(**{"%s__istartswith" % f: self._string})]
-
-    def build_trigram(self, string=None):
-        if not string:
-            return
-        if self._trigram:
-            trigram = None
-            for f in self._trigram_include:
-                if trigram:
-                    trigram += TrigramSimilarity(f, self._string)
-                else:
-                    trigram = TrigramSimilarity(f, self._string)
-            self._fuzzy_match = (
-                Recipe.objects.annotate(trigram=trigram).distinct().annotate(simularity=Max('trigram')
-                                                                             ).values('id', 'simularity').filter(simularity__gt=self._search_prefs.trigram_threshold)
-            )
-            self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
 
     def _makenow_filter(self, missing=None):
         if missing is None or (isinstance(missing, bool) and not missing):
