@@ -10,7 +10,8 @@ from django.utils import timezone, translation
 from django.contrib.auth.models import User
 
 from cookbook.helper.HelperFunctions import Round, str2bool
-from cookbook.helper.food_availability import recipe_availability_filter
+from cookbook.helper.food_availability_helper import recipe_availability_filter
+from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY
 from cookbook.models import (CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, UserSpace, ViewLog)
 from recipes import settings
@@ -519,12 +520,13 @@ class RecipeSearch():
     def _makenow_filter(self, missing=None):
         if missing is None or (isinstance(missing, bool) and not missing):
             return
-        household = getattr(self._request.user_space, 'household', None) if self._request.user_space else None
-        if household is None:
+        if not self._request.user_space:
             self._queryset = self._queryset.none()
             return
 
-        onhand_filter = recipe_availability_filter(household)
+        household = getattr(self._request.user_space, 'household', None)
+        shopping_users = get_household_user_ids(self._request.user_space)
+        onhand_filter = recipe_availability_filter(household, shopping_users)
         makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__isnull=False), distinct=True),
             count_onhand=Count('steps__ingredients__food__pk', filter=onhand_filter, distinct=True),
