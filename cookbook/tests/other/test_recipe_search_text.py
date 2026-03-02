@@ -306,6 +306,20 @@ class TestCombinedTextSearch:
         assert r1.id in ids
 
     @requires_postgres
+    def test_trigram_similarity_annotation_name(self, text_recipes, u1_s1, space_1, make_search_request):
+        """When fulltext+trigram are both active, the intermediate trigram
+        annotation must be named 'similarity' (not the old typo 'simularity')."""
+        r1, r2, r3, bg = text_recipes
+        user = auth.get_user(u1_s1)
+        _set_search_prefs(user, fulltext=True, trigram=True)
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, query=UNACCENTED, sort_order='score')
+        # The queryset should have 'similarity' as an annotation
+        assert 'similarity' in results.query.annotations, (
+            f"Expected 'similarity' annotation, got: {list(results.query.annotations.keys())}"
+        )
+
+    @requires_postgres
     def test_icontains_plus_unaccent_plus_trigram(self, text_recipes, u1_s1, space_1, make_search_request):
         """All search modes active together."""
         r1, r2, r3, bg = text_recipes
