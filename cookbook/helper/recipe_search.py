@@ -165,7 +165,23 @@ class RecipeSearch():
         self.unit_filters(units=self._units)
         self._makenow_filter(missing=self._makenow)
         self.string_filters(string=self._string)
-        return self._queryset.filter(space=self._request.space).order_by(*self.orderby)
+
+        # Convert nullable annotation fields to F-expressions with nulls_last
+        _NULLS_LAST = {'lastcooked', 'lastviewed', 'rating'}
+        final_order = []
+        for key in self.orderby:
+            if not isinstance(key, str):
+                final_order.append(key)
+                continue
+            bare = key.lstrip('-')
+            if bare in _NULLS_LAST:
+                if key.startswith('-'):
+                    final_order.append(F(bare).desc(nulls_last=True))
+                else:
+                    final_order.append(F(bare).asc(nulls_last=True))
+            else:
+                final_order.append(key)
+        return self._queryset.filter(space=self._request.space).order_by(*final_order)
 
     def _sort_includes(self, *args):
         for x in args:
@@ -247,31 +263,25 @@ class RecipeSearch():
 
     def _cooked_on_filter(self):
         if self._sort_includes('lastcooked') or self._cookedon_gte or self._cookedon_lte:
-            lessthan = self._sort_includes('-lastcooked') or self._cookedon_lte
-            if lessthan:
-                default = timezone.now() - timedelta(days=100000)
-            else:
-                default = timezone.now()
             self._queryset = self._queryset.annotate(
-                lastcooked=Coalesce(Max(Case(When(cooklog__created_by=self._request.user, cooklog__space=self._request.space, then='cooklog__created_at'))), Value(default))
+                lastcooked=Max('cooklog__created_at', filter=Q(cooklog__created_by=self._request.user, cooklog__space=self._request.space))
             )
 
         if self._cookedon_lte:
-            self._queryset = self._queryset.filter(lastcooked__date__lte=self._cookedon_lte).exclude(lastcooked=default)
+            self._queryset = self._queryset.filter(lastcooked__date__lte=self._cookedon_lte)
         if self._cookedon_gte:
-            self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte).exclude(lastcooked=default)
+            self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte)
 
-    def _viewed_on_filter(self, viewed_date=None):
+    def _viewed_on_filter(self):
         if self._sort_includes('lastviewed') or self._viewedon_gte or self._viewedon_lte:
-            longTimeAgo = timezone.now() - timedelta(days=100000)
             self._queryset = self._queryset.annotate(
-                lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__created_at'))), Value(longTimeAgo))
+                lastviewed=Max('viewlog__created_at', filter=Q(viewlog__created_by=self._request.user, viewlog__space=self._request.space))
             )
 
         if self._viewedon_lte:
-            self._queryset = self._queryset.filter(lastviewed__date__lte=self._viewedon_lte).exclude(lastviewed=longTimeAgo)
+            self._queryset = self._queryset.filter(lastviewed__date__lte=self._viewedon_lte)
         if self._viewedon_gte:
-            self._queryset = self._queryset.filter(lastviewed__date__gte=self._viewedon_gte).exclude(lastviewed=longTimeAgo)
+            self._queryset = self._queryset.filter(lastviewed__date__gte=self._viewedon_gte)
 
     def _created_on_filter(self):
         if self._createdon:
@@ -307,10 +317,6 @@ class RecipeSearch():
 
     def _recently_viewed(self, num_recent=None):
         if not num_recent:
-            if self._sort_includes('lastviewed'):
-                self._queryset = self._queryset.annotate(
-                    lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__pk'))), Value(0))
-                )
             return
 
         num_recent_recipes = (
@@ -320,16 +326,9 @@ class RecipeSearch():
 
     def _favorite_recipes(self):
         if self._sort_includes('favorite') or self._timescooked is not None or self._timescooked_gte is not None or self._timescooked_lte is not None:
-            less_than = self._timescooked_lte and not self._sort_includes('-favorite')
-            if less_than:
-                default = 1000
-            else:
-                default = 0
-            favorite_recipes = (
-                CookLog.objects.filter(created_by=self._request.user, space=self._request.space,
-                                       recipe=OuterRef('pk')).values('recipe').annotate(count=Count('pk', distinct=True)).values('count')
+            self._queryset = self._queryset.annotate(
+                favorite=Count('cooklog__pk', filter=Q(cooklog__created_by=self._request.user, cooklog__space=self._request.space), distinct=True)
             )
-            self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), default))
 
         if self._timescooked is not None:
             self._queryset = self._queryset.filter(favorite=self._timescooked)
@@ -417,17 +416,20 @@ class RecipeSearch():
 
     def rating_filter(self):
         if self._rating or self._rating_lte or self._rating_gte or self._sort_includes('rating'):
-            # Only consider CookLogs with non-null ratings to avoid null ratings
-            # affecting the average calculation (fixes GitHub issue #1939)
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, cooklog__rating__isnull=False, then='cooklog__rating'), default=0))))
+            self._queryset = self._queryset.annotate(
+                rating=Round(Avg('cooklog__rating', filter=Q(cooklog__created_by=self._request.user, cooklog__rating__isnull=False)))
+            )
 
         if self._rating:
-            self._queryset = self._queryset.filter(rating=round(int(self._rating)))
+            if int(self._rating) == 0:
+                self._queryset = self._queryset.filter(Q(rating__isnull=True) | Q(rating=0))
+            else:
+                self._queryset = self._queryset.filter(rating=round(int(self._rating)))
         else:
             if self._rating_gte:
                 self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
             if self._rating_lte:
-                self._queryset = self._queryset.filter(rating__lte=int(self._rating_lte)).exclude(rating=0)
+                self._queryset = self._queryset.filter(rating__lte=int(self._rating_lte))
 
     def internal_filter(self, internal=None):
         if not internal:
