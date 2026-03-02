@@ -343,6 +343,93 @@ class TestUpdatedOnFilter:
         assert s.r1.id not in ids
 
 
+# ========================== RANGE QUERIES (gte + lte) ==========================
+
+class TestRangeQueries:
+    """Verify gte + lte can be applied simultaneously on all filter methods."""
+
+    def test_createdon_range(self, with_createdates, u1_s1, space_1, make_search_request):
+        """createdon_gte + createdon_lte: only _lte applies due to elif, so gte is dropped.
+        We prove the defect by checking that r1 (3 days ago, above lte) is excluded by lte
+        but r2 (30 days ago, below gte) is wrongly INCLUDED because gte was never applied."""
+        s = with_createdates
+        req = make_search_request(u1_s1)
+        # Window: 15 days ago to 3 days ago — should include r1 and r3
+        gte = s.dates['days_15'].strftime('%Y-%m-%d')
+        lte = s.dates['days_3'].strftime('%Y-%m-%d')
+        results = do_search(req, space_1, createdon_gte=gte, createdon_lte=lte)
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids   # 3 days ago — in window
+        assert s.r3.id in ids   # 15 days ago — on boundary
+        assert s.r2.id not in ids  # 30 days ago — BELOW gte, should be excluded
+
+    def test_updatedon_range(self, with_createdates, u1_s1, space_1, make_search_request):
+        """updatedon_gte + updatedon_lte simultaneously."""
+        s = with_createdates
+        with scope(space=space_1):
+            for recipe in Recipe.objects.all():
+                Recipe.objects.filter(id=recipe.id).update(updated_at=recipe.created_at)
+        req = make_search_request(u1_s1)
+        gte = s.dates['days_15'].strftime('%Y-%m-%d')
+        lte = s.dates['days_3'].strftime('%Y-%m-%d')
+        results = do_search(req, space_1, updatedon_gte=gte, updatedon_lte=lte)
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids   # 3 days ago
+        assert s.r3.id in ids   # 15 days ago — boundary
+        assert s.r2.id not in ids  # 30 days ago — below gte
+
+    def test_cookedon_range(self, with_cookdates, u1_s1, space_1, make_search_request):
+        """cookedon_gte + cookedon_lte simultaneously.
+        Window: 15-3 days ago. r1 (3d) in, r2 (30d) out, r3 (user2) out."""
+        s = with_cookdates
+        req = make_search_request(u1_s1)
+        gte = s.dates['days_15'].strftime('%Y-%m-%d')
+        lte = s.dates['days_3'].strftime('%Y-%m-%d')
+        results = do_search(req, space_1, cookedon_gte=gte, cookedon_lte=lte)
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids   # cooked 3 days ago — in window
+        assert s.r2.id not in ids   # cooked 30 days ago — below gte
+        assert s.r3.id not in ids  # cooked by user2, not user1
+
+    def test_viewedon_range(self, with_viewdates, u1_s1, space_1, make_search_request):
+        """viewedon_gte + viewedon_lte simultaneously.
+        Window: 15-3 days ago. r1 (3d) in, r2 (30d) out, r3 (user2) out."""
+        s = with_viewdates
+        req = make_search_request(u1_s1)
+        gte = s.dates['days_15'].strftime('%Y-%m-%d')
+        lte = s.dates['days_3'].strftime('%Y-%m-%d')
+        results = do_search(req, space_1, viewedon_gte=gte, viewedon_lte=lte)
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids   # viewed 3 days ago — in window
+        assert s.r2.id not in ids   # viewed 30 days ago — below gte
+        assert s.r3.id not in ids  # viewed by user2, not user1
+
+    def test_rating_range(self, with_ratings, u1_s1, space_1, make_search_request):
+        """rating_gte + rating_lte: both must apply.
+        r1=5 (above lte=4), r2=1 (below gte=2). Only r3 is in range but
+        r3 is rated by user2 not user1, so no match for user1.
+        With elif bug, lte is skipped so gte alone returns r1(5) which is wrong."""
+        s = with_ratings
+        req = make_search_request(u1_s1)
+        # Window: 2-4. r1=5 (out, above lte), r2=1 (out, below gte)
+        results = do_search(req, space_1, rating_gte='2', rating_lte='4')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id not in ids  # rating 5 — above lte
+        assert s.r2.id not in ids  # rating 1 — below gte
+
+    def test_timescooked_range(self, with_timescooked, u1_s1, space_1, make_search_request):
+        """timescooked_gte + timescooked_lte: both must apply.
+        r1=5 (above lte=3), r2=1 (in range). With elif bug, gte is skipped
+        so lte alone excludes r1 but doesn't require gte."""
+        s = with_timescooked
+        req = make_search_request(u1_s1)
+        # Window: 2-3. r1=5 (out), r2=1 (out, below gte)
+        results = do_search(req, space_1, timescooked_gte='2', timescooked_lte='3')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r2.id not in ids   # cooked 1 time — below gte
+        assert s.r1.id not in ids  # cooked 5 times — above lte
+
+
 # ========================== RATING FILTERS ==========================
 
 class TestRatingFilter:
