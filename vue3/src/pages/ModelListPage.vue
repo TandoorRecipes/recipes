@@ -95,8 +95,10 @@
                         <v-chip label v-if="item.id == useUserPreferenceStore().activeSpace.id!" color="success">{{ $t('Active') }}</v-chip>
                         <v-chip label v-else color="info" @click="useUserPreferenceStore().switchSpace(item)">{{ $t('Select') }}</v-chip>
                     </template>
-                    <template v-slot:item.color="{ item }">
-                        <v-chip label :color="item.color">{{ item.color }}</v-chip>
+                    <template v-slot:item.name="{ item }" v-if="genericModel.model.name == 'Food'">
+                    <span class="food-link" @click="openFoodUsageDialog(item)">
+                        {{ item.name }}
+                    </span>
                     </template>
                     <template v-slot:item.isFreezer="{ item }" v-if="genericModel.model.name == 'InventoryLocation'">
                         <v-chip label v-if="item.isFreezer" color="success">{{ $t('Yes') }}</v-chip>
@@ -153,6 +155,44 @@
         <batch-edit-food-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'Food'" activator="model"
                                 @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-edit-food-dialog>
 
+        <v-dialog v-model="showFoodDialog" max-width="600" v-if="genericModel.model.name == 'Food'">
+        <v-card>
+            <v-card-title>
+            <span v-if="selectedFood">
+                Recipes Using: {{ selectedFood.name }}
+            </span>
+            </v-card-title>
+
+            <v-card-text>
+            <div v-if="loadingFoodRecipes">Loading…</div>
+
+            <div v-else-if="!foodRecipes.length">
+                <p>No recipes currently use this food (or recipes not loaded yet).</p>
+            </div>
+
+            <v-list v-else>
+                <v-list-item
+                    v-for="recipe in foodRecipes"
+                    :key="recipe.id"
+                    @click="goToRecipe(recipe)"
+                    class="recipe-link"
+                >
+                    <v-list-item-title>{{ recipe.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+
+
+            </v-card-text>
+
+            <v-card-actions>
+            <v-spacer />
+            <v-btn variant="text" @click="closeFoodUsageDialog">
+                Close
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+
     </v-container>
 </template>
 
@@ -170,6 +210,7 @@ import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 import {VDataTableUpdateOptions} from "@/vuetify";
 import SyncDialog from "@/components/dialogs/SyncDialog.vue";
 import {ApiApi, ApiRecipeListRequest, Group, RecipeImport, Space, UserSpace} from "@/openapi";
+import type {Food, Recipe} from "@/openapi"
 import {useTitle} from "@vueuse/core";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
@@ -201,6 +242,10 @@ const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
 
 const selectedItems = ref([] as EditorSupportedTypes[])
+const selectedFood = ref<Food | null>(null)
+const showFoodDialog = ref(false)
+const foodRecipes = ref<Recipe[]>([])
+const loadingFoodRecipes = ref(false)
 
 const batchDeleteDialog = ref(false)
 const batchMergeDialog = ref(false)
@@ -306,8 +351,44 @@ function leaveSpace(space: Space) {
     })
 }
 
+function openFoodUsageDialog(food: Food) {
+  selectedFood.value = food
+  showFoodDialog.value = true
+  loadingFoodRecipes.value = true
+
+  const api = new ApiApi()
+
+  api.apiRecipeList({
+    food: food.id,
+    pageSize: 350, // big number to catch all
+  })
+    .then((response) => {
+      foodRecipes.value = response.results || []
+    })
+    .catch((err) => {
+      useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+      foodRecipes.value = []
+    })
+    .finally(() => {
+      loadingFoodRecipes.value = false
+    })
+}
+
+function closeFoodUsageDialog() {
+  showFoodDialog.value = false
+  selectedFood.value = null
+  foodRecipes.value = []
+}
+function goToRecipe(recipe: Recipe) {
+  router.push(`/recipe/${recipe.id}`)
+}
+
 </script>
 
 <style scoped>
+.food-link {
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 </style>
