@@ -35,7 +35,6 @@ class RecipeSearch():
             )
             if custom_filter:
                 resolved = {**json.loads(custom_filter.search)}
-                self._original_params = {**(params or {})}
                 # json.loads casts rating as an integer, expecting string
                 if isinstance(resolved.get('rating', None), int):
                     resolved['rating'] = str(resolved['rating'])
@@ -85,7 +84,7 @@ class RecipeSearch():
         self._sort_order = self._params.get('sort_order', None)
         if self._sort_order == 'random':
             self._random = True
-            self.sort_order = None
+            self._sort_order = None
         else:
             self._random = str2bool(self._params.get('random', False))
         self._new = str2bool(self._params.get('new', False))
@@ -270,14 +269,14 @@ class RecipeSearch():
                 self._queryset = self._queryset.annotate(rank=Coalesce(Max(search_rank), 0.0))
 
         if fuzzy_match is not None:
-            simularity = fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
+            similarity = fuzzy_match.filter(pk=OuterRef('pk')).values('similarity')
             if search_rank is None:
-                self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
+                self._queryset = self._queryset.annotate(score=Coalesce(Subquery(similarity), 0.0))
             else:
-                self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
+                self._queryset = self._queryset.annotate(similarity=Coalesce(Subquery(similarity), 0.0))
 
         if self._sort_includes('score') and search_rank is not None and fuzzy_match is not None:
-            self._queryset = self._queryset.annotate(score=F('rank') + F('simularity'))
+            self._queryset = self._queryset.annotate(score=F('rank') + F('similarity'))
 
     def _build_text_filters(self, string):
         filters = []
@@ -329,8 +328,8 @@ class RecipeSearch():
             else:
                 trigram = TrigramSimilarity(f, string)
         fuzzy_match = (
-            Recipe.objects.annotate(trigram=trigram).distinct().annotate(simularity=Max('trigram')
-                                                                         ).values('id', 'simularity').filter(simularity__gt=self._search_prefs.trigram_threshold)
+            Recipe.objects.annotate(trigram=trigram).distinct().annotate(similarity=Max('trigram')
+                                                                         ).values('id', 'similarity').filter(similarity__gt=self._search_prefs.trigram_threshold)
         )
         filters = [Q(pk__in=fuzzy_match.values('pk'))]
         return filters, fuzzy_match
@@ -412,76 +411,65 @@ class RecipeSearch():
             if self._timescooked_gte is not None:
                 self._queryset = self._queryset.filter(favorite__gte=int(self._timescooked_gte))
 
-    def keyword_filters(self, **kwargs):
-        if all([kwargs[x] is None for x in kwargs]):
-            return
-        for kw_filter in kwargs:
-            if not kwargs[kw_filter]:
-                continue
-            if not isinstance(kwargs[kw_filter], list):
-                kwargs[kw_filter] = [kwargs[kw_filter]]
+    def _apply_entity_filter(self, kwargs, build_q_or, build_q_and, resolve=None):
+        """Shared OR/AND/NOT dispatch for entity filters.
 
-            keywords = Keyword.objects.filter(pk__in=kwargs[kw_filter])
-            if 'or' in kw_filter:
-                if self._include_children:
-                    f_or = Q(keywords__in=Keyword.include_descendants(keywords))
+        Args:
+            kwargs: dict with keys like 'or', 'and', 'or_not', 'and_not' → PK lists
+            build_q_or(entities_or_pks): Q for the OR case (entire collection)
+            build_q_and(entity_or_pk): Q for a single AND item
+            resolve(pks): optional callable to batch-fetch model instances from PKs
+        """
+        if all(v is None for v in kwargs.values()):
+            return
+        for key, pks in kwargs.items():
+            if not pks:
+                continue
+            if not isinstance(pks, list):
+                pks = [pks]
+            negate = 'not' in key
+            items = resolve(pks) if resolve else pks
+            if 'or' in key:
+                q = build_q_or(items)
+                if negate:
+                    self._queryset = self._queryset.exclude(q)
                 else:
-                    f_or = Q(keywords__in=keywords)
-                if 'not' in kw_filter:
-                    self._queryset = self._queryset.exclude(f_or)
+                    self._queryset = self._queryset.filter(q)
+            elif 'and' in key:
+                if negate:
+                    acc = Recipe.objects.all()
+                    for item in items:
+                        acc = acc.filter(build_q_and(item))
+                    self._queryset = self._queryset.exclude(id__in=acc.values('id'))
                 else:
-                    self._queryset = self._queryset.filter(f_or)
-            elif 'and' in kw_filter:
-                recipes = Recipe.objects.all()
-                for kw in keywords:
-                    if self._include_children:
-                        f_and = Q(keywords__in=kw.get_descendants_and_self())
-                    else:
-                        f_and = Q(keywords=kw)
-                    if 'not' in kw_filter:
-                        recipes = recipes.filter(f_and)
-                    else:
-                        self._queryset = self._queryset.filter(f_and)
-                if 'not' in kw_filter:
-                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
+                    for item in items:
+                        self._queryset = self._queryset.filter(build_q_and(item))
+
+    def keyword_filters(self, **kwargs):
+        def resolve(pks):
+            return Keyword.objects.filter(pk__in=pks)
+
+        def q_or(qs):
+            return Q(keywords__in=Keyword.include_descendants(qs) if self._include_children else qs)
+
+        def q_and(kw):
+            return Q(keywords__in=kw.get_descendants_and_self()) if self._include_children else Q(keywords=kw)
+
+        self._apply_entity_filter(kwargs, q_or, q_and, resolve=resolve)
 
     def food_filters(self, **kwargs):
-        if all([kwargs[x] is None for x in kwargs]):
-            return
-        for fd_filter in kwargs:
-            if not kwargs[fd_filter]:
-                continue
-            if not isinstance(kwargs[fd_filter], list):
-                kwargs[fd_filter] = [kwargs[fd_filter]]
+        def resolve(pks):
+            return Food.objects.filter(pk__in=pks)
 
-            foods = Food.objects.filter(pk__in=kwargs[fd_filter])
-            if 'or' in fd_filter:
-                if self._include_children:
-                    f_or = Q(steps__ingredients__food__in=Food.include_descendants(foods))
-                else:
-                    f_or = Q(steps__ingredients__food__in=foods)
+        def q_or(qs):
+            return Q(steps__ingredients__food__in=Food.include_descendants(qs) if self._include_children else qs)
 
-                if 'not' in fd_filter:
-                    self._queryset = self._queryset.exclude(f_or)
-                else:
-                    self._queryset = self._queryset.filter(f_or)
-            elif 'and' in fd_filter:
-                recipes = Recipe.objects.all()
-                for food in foods:
-                    if self._include_children:
-                        f_and = Q(steps__ingredients__food__in=food.get_descendants_and_self())
-                    else:
-                        f_and = Q(steps__ingredients__food=food)
-                    if 'not' in fd_filter:
-                        recipes = recipes.filter(f_and)
-                    else:
-                        self._queryset = self._queryset.filter(f_and)
-                if 'not' in fd_filter:
-                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
+        def q_and(food):
+            return Q(steps__ingredients__food__in=food.get_descendants_and_self()) if self._include_children else Q(steps__ingredients__food=food)
 
-    def unit_filters(self, units=None, operator=True):
-        if operator != True:
-            raise NotImplementedError
+        self._apply_entity_filter(kwargs, q_or, q_and, resolve=resolve)
+
+    def unit_filters(self, units=None):
         if not units:
             return
         if not isinstance(units, list):
@@ -511,33 +499,15 @@ class RecipeSearch():
         self._queryset = self._queryset.filter(internal=internal)
 
     def book_filters(self, **kwargs):
-        if all([kwargs[x] is None for x in kwargs]):
-            return
-        for bk_filter in kwargs:
-            if not kwargs[bk_filter]:
-                continue
-            if not isinstance(kwargs[bk_filter], list):
-                kwargs[bk_filter] = [kwargs[bk_filter]]
+        def q_or(pks):
+            return Q(recipebookentry__book__id__in=pks)
 
-            if 'or' in bk_filter:
-                f = Q(recipebookentry__book__id__in=kwargs[bk_filter])
-                if 'not' in bk_filter:
-                    self._queryset = self._queryset.exclude(f)
-                else:
-                    self._queryset = self._queryset.filter(f)
-            elif 'and' in bk_filter:
-                recipes = Recipe.objects.all()
-                for book in kwargs[bk_filter]:
-                    if 'not' in bk_filter:
-                        recipes = recipes.filter(recipebookentry__book__id=book)
-                    else:
-                        self._queryset = self._queryset.filter(recipebookentry__book__id=book)
-                if 'not' in bk_filter:
-                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
+        def q_and(pk):
+            return Q(recipebookentry__book__id=pk)
 
-    def step_filters(self, steps=None, operator=True):
-        if operator != True:
-            raise NotImplementedError
+        self._apply_entity_filter(kwargs, q_or, q_and)
+
+    def step_filters(self, steps=None):
         if not steps:
             return
         if not isinstance(steps, list):
