@@ -260,7 +260,7 @@ class RecipeSearch():
 
         if self._cookedon_lte:
             self._queryset = self._queryset.filter(lastcooked__date__lte=self._cookedon_lte).exclude(lastcooked=default)
-        elif self._cookedon_gte:
+        if self._cookedon_gte:
             self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte).exclude(lastcooked=default)
 
     def _viewed_on_filter(self, viewed_date=None):
@@ -272,24 +272,26 @@ class RecipeSearch():
 
         if self._viewedon_lte:
             self._queryset = self._queryset.filter(lastviewed__date__lte=self._viewedon_lte).exclude(lastviewed=longTimeAgo)
-        elif self._viewedon_gte:
+        if self._viewedon_gte:
             self._queryset = self._queryset.filter(lastviewed__date__gte=self._viewedon_gte).exclude(lastviewed=longTimeAgo)
 
     def _created_on_filter(self):
         if self._createdon:
             self._queryset = self._queryset.filter(created_at__date=self._createdon)
-        elif self._createdon_lte:
-            self._queryset = self._queryset.filter(created_at__date__lte=self._createdon_lte)
-        elif self._createdon_gte:
-            self._queryset = self._queryset.filter(created_at__date__gte=self._createdon_gte)
+        else:
+            if self._createdon_lte:
+                self._queryset = self._queryset.filter(created_at__date__lte=self._createdon_lte)
+            if self._createdon_gte:
+                self._queryset = self._queryset.filter(created_at__date__gte=self._createdon_gte)
 
     def _updated_on_filter(self):
         if self._updatedon:
             self._queryset = self._queryset.filter(updated_at__date=self._updatedon)
-        elif self._updatedon_lte:
-            self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
-        elif self._updatedon_gte:
-            self._queryset = self._queryset.filter(updated_at__date__gte=self._updatedon_gte)
+        else:
+            if self._updatedon_lte:
+                self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
+            if self._updatedon_gte:
+                self._queryset = self._queryset.filter(updated_at__date__gte=self._updatedon_gte)
 
     def _created_by_filter(self, created_by_user_id=None):
         if created_by_user_id is None:
@@ -333,10 +335,11 @@ class RecipeSearch():
 
         if self._timescooked is not None:
             self._queryset = self._queryset.filter(favorite=self._timescooked)
-        elif self._timescooked_lte is not None:
-            self._queryset = self._queryset.filter(favorite__lte=int(self._timescooked_lte)).exclude(favorite=0)
-        elif self._timescooked_gte is not None:
-            self._queryset = self._queryset.filter(favorite__gte=int(self._timescooked_gte))
+        else:
+            if self._timescooked_lte is not None:
+                self._queryset = self._queryset.filter(favorite__lte=int(self._timescooked_lte)).exclude(favorite=0)
+            if self._timescooked_gte is not None:
+                self._queryset = self._queryset.filter(favorite__gte=int(self._timescooked_gte))
 
     def keyword_filters(self, **kwargs):
         if all([kwargs[x] is None for x in kwargs]):
@@ -422,10 +425,11 @@ class RecipeSearch():
 
         if self._rating:
             self._queryset = self._queryset.filter(rating=round(int(self._rating)))
-        elif self._rating_gte:
-            self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
-        elif self._rating_lte:
-            self._queryset = self._queryset.filter(rating__lte=int(self._rating_lte)).exclude(rating=0)
+        else:
+            if self._rating_gte:
+                self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
+            if self._rating_lte:
+                self._queryset = self._queryset.filter(rating__lte=int(self._rating_lte)).exclude(rating=0)
 
     def internal_filter(self, internal=None):
         if not internal:
