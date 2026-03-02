@@ -1220,11 +1220,11 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                         },
                         {
                             "type": "text",
-                            "text": json.dumps(request.data)
+                            "text": json.dumps(request.data, ensure_ascii=False)
                         },
                         {
                             "type": "text",
-                            "text": json.dumps(property_type_list)
+                            "text": json.dumps(property_type_list, ensure_ascii=False)
                         },
                     ]
                 },
@@ -2005,11 +2005,11 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                         },
                         {
                             "type": "text",
-                            "text": json.dumps(request.data)
+                            "text": json.dumps(request.data, ensure_ascii=False)
                         },
                         {
                             "type": "text",
-                            "text": json.dumps(property_type_list)
+                            "text": json.dumps(property_type_list, ensure_ascii=False)
                         },
                     ]
                 },
@@ -2834,7 +2834,7 @@ class AiStepSortView(APIView):
                         },
                         {
                             "type": "text",
-                            "text": json.dumps(request.data)
+                            "text": json.dumps(request.data, ensure_ascii=False)
                         },
 
                     ]
