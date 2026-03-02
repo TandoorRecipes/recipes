@@ -895,5 +895,17 @@
     "Scaling": "Scalabilità",
     "CalendarIcsHelp": "Utilizza l'URL seguente per sincronizzare il tuo piano alimentare con il tuo calendario. ",
     "Calendar": "Calendario",
-    "LocalStoragePathHelp": "Il percorso locale deve essere compreso nei LOCAL_STORAGE_PATHS configurati dal server."
+    "LocalStoragePathHelp": "Il percorso locale deve essere compreso nei LOCAL_STORAGE_PATHS configurati dal server.",
+    "AddMore": "Aggiungi altro",
+    "AddMoreSameLocation": "Aggiungi altro (stessa posizione)",
+    "Added": "Aggiunto",
+    "Code": "Codice",
+    "CodeHelp": "Quando utilizzi i codici a barre, il loro valore può essere inserito qui. Diversamente un codice sarà generato automaticamente e può essere scritto sugli elementi. (ad es. sacchetti con chiusura a zip, etichette, ...).",
+    "Expires": "Scade",
+    "Freezer": "Congelatore",
+    "InventoryLogHelp": "Vedi tutte le modifiche al tuo inventario.",
+    "Months": "Mesi",
+    "Moved": "Spostato",
+    "Removed": "Rimosso",
+    "Saved": "Salvato"
 }
