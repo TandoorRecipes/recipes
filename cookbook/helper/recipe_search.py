@@ -3,11 +3,12 @@ from datetime import timedelta
 
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.core.cache import cache
-from django.db.models import Avg, Case, Count, Exists, F, Max, OuterRef, Q, Subquery, Value, When
-from django.db.models.functions import Coalesce, Lower, Substr
+from django.db.models import Avg, Case, Count, F, Max, OuterRef, Q, Subquery, Value, When
+from django.db.models.functions import Coalesce, Lower
 from django.utils import timezone, translation
 
 from cookbook.helper.HelperFunctions import Round, str2bool
+from cookbook.helper.food_onhand import children_substitute_filter, sibling_substitute_filter
 from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY
 from cookbook.models import (CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, ViewLog)
@@ -553,8 +554,8 @@ class RecipeSearch():
             Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
             # or substitute food onhand
             | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
-            | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
-            | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
+            | Q(steps__ingredients__food__in=children_substitute_filter(shopping_users))
+            | Q(steps__ingredients__food__in=sibling_substitute_filter(shopping_users))
         )
         makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__isnull=False), distinct=True),
@@ -562,35 +563,7 @@ class RecipeSearch():
             count_ignore_shopping=Count(
                 'steps__ingredients__food__pk', filter=Q(steps__ingredients__food__ignore_shopping=True, steps__ingredients__food__recipe__isnull=True), distinct=True
             ),
-            has_child_sub=Case(When(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users), then=Value(1)), default=Value(0)),
-            has_sibling_sub=Case(When(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users), then=Value(1)), default=Value(0))
+            has_child_sub=Case(When(steps__ingredients__food__in=children_substitute_filter(shopping_users), then=Value(1)), default=Value(0)),
+            has_sibling_sub=Case(When(steps__ingredients__food__in=sibling_substitute_filter(shopping_users), then=Value(1)), default=Value(0))
         ).annotate(missingfood=F('count_food') - F('count_onhand') - F('count_ignore_shopping')).filter(missingfood__lte=missing)
         self._queryset = self._queryset.distinct().filter(id__in=makenow_recipes.values('id'))
-
-    @staticmethod
-    def __children_substitute_filter(shopping_users=None):
-        children_onhand_subquery = Food.objects.filter(path__startswith=OuterRef('path'), depth__gt=OuterRef('depth'), onhand_users__in=shopping_users)
-        return (
-            Food.objects.exclude(  # list of foods that are onhand and children of: foods that are not onhand and are set to use children as substitutes
-                Q(onhand_users__in=shopping_users) | Q(ignore_shopping=True, recipe__isnull=True) | Q(substitute__onhand_users__in=shopping_users)
-            )
-            .exclude(depth=1, numchild=0)
-            .filter(substitute_children=True)
-            .annotate(child_onhand_count=Exists(children_onhand_subquery))
-            .filter(child_onhand_count=True)
-        )
-
-    @staticmethod
-    def __sibling_substitute_filter(shopping_users=None):
-        sibling_onhand_subquery = Food.objects.filter(
-            path__startswith=Substr(OuterRef('path'), 1, Food.steplen * (OuterRef('depth') - 1)), depth=OuterRef('depth'), onhand_users__in=shopping_users
-        )
-        return (
-            Food.objects.exclude(  # list of foods that are onhand and siblings of: foods that are not onhand and are set to use siblings as substitutes
-                Q(onhand_users__in=shopping_users) | Q(ignore_shopping=True, recipe__isnull=True) | Q(substitute__onhand_users__in=shopping_users)
-            )
-            .exclude(depth=1, numchild=0)
-            .filter(substitute_siblings=True)
-            .annotate(sibling_onhand=Exists(sibling_onhand_subquery))
-            .filter(sibling_onhand=True)
-        )
