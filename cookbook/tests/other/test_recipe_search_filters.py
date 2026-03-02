@@ -495,6 +495,24 @@ class TestRatingFilter:
         assert s.r1.id in ids
         assert s.r2.id not in ids
 
+    def test_rating_avg_ignores_other_users(self, search_recipes, u1_s1, u2_s1, space_1, make_search_request):
+        """Rating annotation must only average the current user's ratings.
+
+        With Avg(Case(When(...), default=0)), other users' CookLog rows
+        contribute 0 to the average, diluting the result.
+        e.g. user1 rates 5, user2 rates 1 → Avg(Case) = (5+0)/2 = 2 for user1.
+        Expected: user1's rating should be 5.
+        """
+        s = search_recipes
+        user1 = auth.get_user(u1_s1)
+        user2 = auth.get_user(u2_s1)
+        CookLogFactory.create(recipe=s.r1, created_by=user1, rating=5.0, space=space_1)
+        CookLogFactory.create(recipe=s.r1, created_by=user2, rating=1.0, space=space_1)
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, rating_gte='5')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids  # user1's rating is 5, should match gte=5
+
 
 # ========================== TIMES COOKED FILTERS ==========================
 
@@ -899,6 +917,48 @@ class TestSortOrders:
         results = do_search(req, space_1, sort_order='-lastcooked')
         ids = list(results.values_list('id', flat=True))
         assert ids.index(s.r1.id) < ids.index(s.r2.id)
+
+    def test_sort_lastcooked_never_cooked_last(self, search_recipes, u1_s1, space_1, make_search_request):
+        """Never-cooked recipes sort after cooked ones for both ASC and DESC."""
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, created_at=timezone.now() - timedelta(days=1), space=space_1)
+        # r2, r3, background: never cooked
+        req = make_search_request(u1_s1)
+
+        # DESC: most recently cooked first, never-cooked last
+        results = do_search(req, space_1, sort_order='-lastcooked')
+        ids = list(results.values_list('id', flat=True))
+        assert ids[0] == s.r1.id
+
+        # ASC: oldest-cooked first, never-cooked last
+        results = do_search(req, space_1, sort_order='lastcooked')
+        ids = list(results.values_list('id', flat=True))
+        assert ids[0] == s.r1.id  # only cooked recipe → first
+
+    def test_sort_lastviewed_never_viewed_last(self, search_recipes, u1_s1, space_1, make_search_request):
+        """Never-viewed recipes sort after viewed ones for DESC."""
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        ViewLogFactory.create(recipe=s.r1, created_by=user, created_at=timezone.now() - timedelta(days=1), space=space_1)
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, sort_order='-lastviewed')
+        ids = list(results.values_list('id', flat=True))
+        assert ids[0] == s.r1.id
+
+    def test_sort_rating_unrated_last(self, search_recipes, u1_s1, space_1, make_search_request):
+        """Unrated recipes sort after rated ones for DESC."""
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=5.0, space=space_1)
+        CookLogFactory.create(recipe=s.r2, created_by=user, rating=1.0, space=space_1)
+        # r3, background: unrated
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, sort_order='-rating')
+        ids = list(results.values_list('id', flat=True))
+        # Rated recipes should come before unrated
+        assert ids.index(s.r1.id) < ids.index(s.r3.id)
+        assert ids.index(s.r2.id) < ids.index(s.r3.id)
 
     def test_sort_random(self, search_recipes, u1_s1, space_1, make_search_request):
         """Random sort should return all recipes."""
