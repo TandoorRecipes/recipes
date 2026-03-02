@@ -737,6 +737,7 @@ def test_filter_onhand(filter_value, expected_count, u1_s1, space_1):
         food_onhand = FoodFactory(space=space_1, users_onhand=[user])
         food_not_onhand = FoodFactory(space=space_1)
 
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
     response = get_filter_results(u1_s1, f'?onhand={filter_value}')
     assert response['count'] == expected_count
 
@@ -747,27 +748,32 @@ def test_filter_onhand(filter_value, expected_count, u1_s1, space_1):
 
 
 def test_filter_onhand_shared_user(u1_s1, u2_s1, space_1):
-    """Onhand filter should respect shopping sharing — shared user's onhand foods should be visible."""
+    """Onhand filter should respect household sharing — household member's onhand foods should be visible."""
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    # user2 shares shopping with user1, so user1 can see user2's onhand foods
-    user2.userpreference.shopping_share.add(user1)
-    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
 
     with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
         food_onhand_user2 = FoodFactory(space=space_1, users_onhand=[user2])
         FoodFactory(space=space_1)
+
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
 
     response = get_filter_results(u1_s1, '?onhand=true')
     assert food_onhand_user2.id in [x['id'] for x in response['results']]
 
 
 def test_filter_onhand_no_duplicates(u1_s1, u2_s1, space_1):
-    """Onhand filter should not return duplicate rows when food is onhand for multiple shared users."""
+    """Onhand filter should not return duplicate rows when food is onhand for multiple household members."""
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    user2.userpreference.shopping_share.add(user1)
-    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
 
     with scopes_disabled():
         # food is onhand for both user1 AND user2 (both in shared_users)
@@ -819,6 +825,7 @@ def test_filter_in_shopping_list_true(u1_s1, space_1):
         food_not_in_list = FoodFactory(space=space_1)
         ShoppingListEntryFactory(food=food_in_list, space=space_1, created_by=user, checked=False)
 
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
     response = get_filter_results(u1_s1, '?in_shopping_list=true')
     result_ids = [x['id'] for x in response['results']]
     assert food_in_list.id in result_ids
@@ -832,6 +839,7 @@ def test_filter_in_shopping_list_false(u1_s1, space_1):
         food_not_in_list = FoodFactory(space=space_1)
         ShoppingListEntryFactory(food=food_in_list, space=space_1, created_by=user, checked=False)
 
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
     response = get_filter_results(u1_s1, '?in_shopping_list=false')
     result_ids = [x['id'] for x in response['results']]
     assert food_in_list.id not in result_ids
@@ -1120,15 +1128,17 @@ def test_ordering_applied_when_tree_active(u1_s1, space_1):
 
 
 def test_filter_onhand_false_shared_user(u1_s1, u2_s1, space_1):
-    """Onhand=false should exclude shared user's onhand foods."""
+    """Onhand=false should exclude household member's onhand foods."""
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    user2.userpreference.shopping_share.add(user1)
-    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
 
     with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
         food_onhand_user2 = FoodFactory(space=space_1, users_onhand=[user2])
         food_not_onhand = FoodFactory(space=space_1)
+
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
 
     response = get_filter_results(u1_s1, '?onhand=false')
     result_ids = [x['id'] for x in response['results']]
@@ -1158,6 +1168,7 @@ def test_stats_endpoint_returns_counts(u1_s1, space_1):
 def test_stats_counts_are_space_wide(u1_s1, space_1):
     """Stats should reflect totals for the entire space."""
     user = auth.get_user(u1_s1)
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
 
     # capture baseline before creating test data (parallel tests may add foods)
     baseline = get_stats(u1_s1)
@@ -1179,14 +1190,12 @@ def test_stats_counts_are_space_wide(u1_s1, space_1):
 
 
 def test_stats_shopping_is_user_scoped(u1_s1, u2_s1, space_1):
-    """Shopping stats should only count entries created by the user or their shared users."""
+    """Shopping stats should only count entries created by the user or their household members."""
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
 
-    # clear stale shared-user cache from parallel tests
-    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
-    # ensure user2 does NOT share with user1 at the start
-    user2.userpreference.shopping_share.remove(user1)
+    # clear stale cache from parallel tests
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
 
     # capture baseline before creating test data (parallel tests may add foods)
     baseline = get_stats(u1_s1)['shopping']
@@ -1197,14 +1206,16 @@ def test_stats_shopping_is_user_scoped(u1_s1, u2_s1, space_1):
         ShoppingListEntryFactory(food=food_u1, space=space_1, created_by=user1, checked=False)
         ShoppingListEntryFactory(food=food_u2, space=space_1, created_by=user2, checked=False)
 
-    # user1 should only see their own new shopping entry
-    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+    # user1 should only see their own new shopping entry (not in same household as user2)
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
     stats = get_stats(u1_s1)
     assert stats['shopping'] == baseline + 1
 
-    # After sharing, user1 should see both new entries
-    user2.userpreference.shopping_share.add(user1)
-    caches['default'].delete(f'shopping_shared_users_{space_1.id}_{user1.id}')
+    # After putting both users in the same household, user1 should see both new entries
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
 
     stats = get_stats(u1_s1)
     assert stats['shopping'] == baseline + 2
@@ -1213,6 +1224,7 @@ def test_stats_shopping_is_user_scoped(u1_s1, u2_s1, space_1):
 def test_stats_exclude_other_spaces(u1_s1, space_1, space_2):
     """Stats should only count foods in the requesting user's space."""
     user = auth.get_user(u1_s1)
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
 
     # capture baseline before creating test data (parallel tests may add foods)
     baseline = get_stats(u1_s1)

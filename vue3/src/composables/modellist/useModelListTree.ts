@@ -152,11 +152,6 @@ export function useModelListTree(
         return result
     }
 
-    /** Returns `{root: 0}` when tree is active so the API returns only roots */
-    function getTreeLoadParams(): Record<string, any> {
-        return treeActive.value ? {root: 0} : {}
-    }
-
     /** Update a single item inside the children cache (e.g. after a toggle action) */
     function updateCachedChild(itemId: number, field: string, value: unknown): boolean {
         for (const [parentId, entry] of childrenCache) {
@@ -247,7 +242,6 @@ export function useModelListTree(
         loadMoreChildren,
         buildFlatList,
         updateCachedChild,
-        getTreeLoadParams,
         clearTreeState,
         setOnCollapse,
         renderTreeCell,

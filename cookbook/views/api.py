@@ -1059,6 +1059,12 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             qs = qs.filter(false_q)
         return qs
 
+    def _inventory_subquery(self, space):
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=space)
+
+    def _expired_subquery(self, space):
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, expires__lt=datetime.date.today(), space=space)
+
     def _annotate_and_prefetch(self, qs):
         shared_users = self._shared_users
         if shared_users:
@@ -1068,12 +1074,8 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         else:
             qs = qs.annotate(shopping_status=Value(False, output_field=BooleanField()))
 
-        inventory_sub = InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=self.request.space)
-        qs = qs.annotate(has_inventory_status=Exists(inventory_sub))
-
-        expired_sub = InventoryEntry.objects.filter(
-            food=OuterRef('id'), amount__gt=0, expires__lt=datetime.date.today(), space=self.request.space)
-        qs = qs.annotate(has_expired_status=Exists(expired_sub))
+        qs = qs.annotate(has_inventory_status=Exists(self._inventory_subquery(self.request.space)))
+        qs = qs.annotate(has_expired_status=Exists(self._expired_subquery(self.request.space)))
 
         return qs \
             .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
@@ -1259,13 +1261,9 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         shared_users = self._shared_users
         base_qs = Food.objects.filter(space=request.space)
 
-        inventory_sub = InventoryEntry.objects.filter(
-            food=OuterRef('id'), amount__gt=0, space=request.space)
-        expired_sub = InventoryEntry.objects.filter(
-            food=OuterRef('id'), amount__gt=0, expires__lt=datetime.date.today(), space=request.space)
         base_qs = base_qs.annotate(
-            _has_inventory=Exists(inventory_sub),
-            _has_expired=Exists(expired_sub),
+            _has_inventory=Exists(self._inventory_subquery(request.space)),
+            _has_expired=Exists(self._expired_subquery(request.space)),
         )
 
         if shared_users:
@@ -1303,8 +1301,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         obj = self.get_object()
 
         if request.method == 'DELETE':
-            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space,
-                                             created_by__in=self._shared_users).delete()
+            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by_id__in=self._shared_users).delete()
             content = {'msg': _('%(name)s was removed from the shopping list.') % {'name': obj.name}}
             return Response(content, status=status.HTTP_200_OK)
 
