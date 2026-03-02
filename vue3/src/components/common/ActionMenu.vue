@@ -18,7 +18,7 @@
             </v-btn>
         </template>
 
-        <v-btn icon="$menu" variant="plain" :aria-label="$t('Actions')">
+        <v-btn icon="$menu" variant="plain" :aria-label="$t('Actions')" aria-haspopup="true">
             <v-icon icon="$menu" />
             <v-menu v-model="menuOpen" activator="parent" :close-on-content-click="false">
                 <v-list density="compact">
