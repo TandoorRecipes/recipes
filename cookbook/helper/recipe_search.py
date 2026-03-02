@@ -10,7 +10,7 @@ from django.utils import timezone, translation
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY
-from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, ViewLog)
+from cookbook.models import (CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, ViewLog)
 from recipes import settings
 
 
