@@ -8,8 +8,7 @@ from django.db.models.functions import Coalesce, Lower
 from django.utils import timezone, translation
 
 from cookbook.helper.HelperFunctions import Round, str2bool
-from cookbook.helper.food_onhand import children_substitute_filter, sibling_substitute_filter
-from cookbook.helper.permission_helper import get_household_user_ids
+from cookbook.helper.food_availability import recipe_availability_filter
 from cookbook.managers import DICTIONARY
 from cookbook.models import (CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, ViewLog)
 from recipes import settings
@@ -548,22 +547,17 @@ class RecipeSearch():
     def _makenow_filter(self, missing=None):
         if missing is None or (isinstance(missing, bool) and missing == False):
             return
-        shopping_users = get_household_user_ids(self._request.user_space)
+        household = getattr(self._request.user_space, 'household', None) if self._request.user_space else None
+        if household is None:
+            self._queryset = self._queryset.none()
+            return
 
-        onhand_filter = (
-            Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
-            # or substitute food onhand
-            | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
-            | Q(steps__ingredients__food__in=children_substitute_filter(shopping_users))
-            | Q(steps__ingredients__food__in=sibling_substitute_filter(shopping_users))
-        )
+        onhand_filter = recipe_availability_filter(household)
         makenow_recipes = Recipe.objects.annotate(
             count_food=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__isnull=False), distinct=True),
             count_onhand=Count('steps__ingredients__food__pk', filter=onhand_filter, distinct=True),
             count_ignore_shopping=Count(
                 'steps__ingredients__food__pk', filter=Q(steps__ingredients__food__ignore_shopping=True, steps__ingredients__food__recipe__isnull=True), distinct=True
             ),
-            has_child_sub=Case(When(steps__ingredients__food__in=children_substitute_filter(shopping_users), then=Value(1)), default=Value(0)),
-            has_sibling_sub=Case(When(steps__ingredients__food__in=sibling_substitute_filter(shopping_users), then=Value(1)), default=Value(0))
         ).annotate(missingfood=F('count_food') - F('count_onhand') - F('count_ignore_shopping')).filter(missingfood__lte=missing)
         self._queryset = self._queryset.distinct().filter(id__in=makenow_recipes.values('id'))
