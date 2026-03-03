@@ -1077,9 +1077,10 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         return f'Nutrition {self.pk}'
 
 
-class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
-    def get_queryset(self):
-        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
+class RecipeManager(models.Manager.from_queryset(
+    __import__('cookbook.querysets', fromlist=['RecipeQuerySet']).RecipeQuerySet
+)):
+    pass
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
