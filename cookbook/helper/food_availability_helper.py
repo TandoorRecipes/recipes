@@ -5,7 +5,12 @@ from cookbook.models import Food
 
 
 def _is_available(household, shopping_users):
-    """Q filter (Food-level): food is on hand OR in inventory."""
+    """
+    Q filter (Food-level): food is on hand via onhand_users or has inventory.
+    :param household: Household instance or None (skips InventoryEntry check)
+    :param shopping_users: QuerySet of user IDs from get_household_user_ids
+    :return: Q object for filtering Food querysets
+    """
     q = Q(onhand_users__in=shopping_users)
     if household is not None:
         q = q | Q(
@@ -16,7 +21,12 @@ def _is_available(household, shopping_users):
 
 
 def _substitute_available(household, shopping_users):
-    """Q filter (Food-level): explicit substitute food is on hand OR in inventory."""
+    """
+    Q filter (Food-level): explicit substitute food is on hand or has inventory.
+    :param household: Household instance or None (skips InventoryEntry check)
+    :param shopping_users: QuerySet of user IDs from get_household_user_ids
+    :return: Q object for filtering Food querysets via substitute relation
+    """
     q = Q(substitute__onhand_users__in=shopping_users)
     if household is not None:
         q = q | Q(
@@ -27,7 +37,12 @@ def _substitute_available(household, shopping_users):
 
 
 def children_substitute_filter(household, shopping_users):
-    """Food QS: foods with substitute_children=True and a child available."""
+    """
+    Food queryset: foods with substitute_children=True and a child that is available.
+    :param household: Household instance or None (skips InventoryEntry check)
+    :param shopping_users: QuerySet of user IDs from get_household_user_ids
+    :return: Food QuerySet suitable for use in __in subqueries
+    """
     available = _is_available(household, shopping_users)
     sub_available = _substitute_available(household, shopping_users)
     children_available = Food.objects.filter(
@@ -46,7 +61,12 @@ def children_substitute_filter(household, shopping_users):
 
 
 def sibling_substitute_filter(household, shopping_users):
-    """Food QS: foods with substitute_siblings=True and a sibling available."""
+    """
+    Food queryset: foods with substitute_siblings=True and a sibling that is available.
+    :param household: Household instance or None (skips InventoryEntry check)
+    :param shopping_users: QuerySet of user IDs from get_household_user_ids
+    :return: Food QuerySet suitable for use in __in subqueries
+    """
     available = _is_available(household, shopping_users)
     sub_available = _substitute_available(household, shopping_users)
     sibling_available = Food.objects.filter(
@@ -65,9 +85,11 @@ def sibling_substitute_filter(household, shopping_users):
 
 
 def recipe_availability_filter(household, shopping_users):
-    """Q filter (Recipe-level): composed filter for all 4 availability paths.
-
-    Returns Q object to be used as: Count('steps__ingredients__food__pk', filter=THIS)
+    """
+    Recipe-level Q filter composing all 4 availability paths (direct, substitute, children, siblings).
+    :param household: Household instance or None (skips InventoryEntry check)
+    :param shopping_users: QuerySet of user IDs from get_household_user_ids
+    :return: Q object for use as Count('steps__ingredients__food__pk', filter=THIS)
     """
     P = 'steps__ingredients__food__'
 
