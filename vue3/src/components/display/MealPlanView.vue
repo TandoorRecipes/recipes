@@ -5,6 +5,7 @@
                 <!-- TODO add hint about CTRL key while drag/drop -->
                 <!-- TODO multi selection? date range selection ? -->
                 <calendar-view
+                    :locale="locale"
                     :show-date="calendarDate"
                     :items="planItems"
                     class="theme-default"
@@ -50,6 +51,7 @@ import "vue-simple-calendar/dist/css/default.css"
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";
 import {IMealPlanCalendarItem, IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
 import {computed, onMounted, ref, watch} from "vue";
+import {useI18n} from "vue-i18n";
 import {DateTime, Duration} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
@@ -59,6 +61,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import MealPlanCalendarHeader from "@/components/display/MealPlanCalendarHeader.vue";
 
 const {lgAndUp} = useDisplay()
+const {locale} = useI18n()
 
 const calendarDate = ref(new Date())
 

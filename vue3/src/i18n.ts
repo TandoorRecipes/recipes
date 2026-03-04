@@ -5,6 +5,8 @@ import type {
     Locale,
 } from 'vue-i18n'
 
+import {Settings} from 'luxon'
+
 import {createI18n} from "vue-i18n";
 import en from "../../vue3/src/locales/en.json";
 import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
@@ -110,10 +112,11 @@ function getSupportedLocales(localeFiles = import.meta.glob('@/locales/*.json'))
 }
 
 /**
- * set the active locale (determining which messages to show) for Vue i18n
+ * set the active locale (determining which messages to show) for Vue i18n and Luxon date formatting
  * @param i18n instance of Vue i18n
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
 export function setLocale(i18n: I18n, locale: Locale): void {
     i18n.global.locale = locale
+    Settings.defaultLocale = locale
 }
