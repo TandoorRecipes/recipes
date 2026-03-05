@@ -7,6 +7,12 @@ import {createVuetify} from 'vuetify'
 import {DateTime} from "luxon";
 import {af, ar, az, bg, ca, ckb, cs, da, de, el, en, es, et, fi, fr, he, hr, hu, id, it, ja, km, ko, lt, lv, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, srLatn, sv, th, tr, uk, vi, zhHans, zhHant} from "vuetify/locale";
 
+function getVuetifyLocale(): string {
+    const lang = document.querySelector('html')?.getAttribute('lang') ?? 'en'
+    // Vuetify uses camelCase for compound locales (zh-Hans → zhHans, sr-Cyrl → srCyrl)
+    return lang.replace(/-([A-Z])/g, (_, c: string) => c.toLowerCase()).replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
+}
+
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
     defaults: {
@@ -36,7 +42,7 @@ export default createVuetify({
         // }
     },
     locale: {
-        locale: 'en',
+        locale: getVuetifyLocale(),
         fallback: 'en',
         messages: {af, ar, az, bg, ca, ckb, cs, da, de, el, en, es, et, fi, fr, he, hr, hu, id, it, ja, km, ko, lt, lv, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, srLatn, sv, th, tr, uk, vi, zhHans, zhHant},
         decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
