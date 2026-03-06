@@ -104,10 +104,10 @@ jobs:
               --base preview \
               --state all \
               --json number,state \
-              --jq '.[] | select(.state == "OPEN" or .state == "MERGED") | .number' | head -1)
+              --jq '.[0].number' | head -1)
 
             if [ -n "$EXISTING_PR" ]; then
-              echo "PR already exists or was merged for $branch -> preview"
+              echo "PR already exists for $branch -> preview (#$EXISTING_PR), skipping"
               continue
             fi
 
