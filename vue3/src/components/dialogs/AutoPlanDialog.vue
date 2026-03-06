@@ -20,7 +20,6 @@
                                   prepend-inner-icon="$calendar"
                     ></v-date-input>
 
-                    <model-select model="User" v-model="autoMealPlan.shared" mode="tags"></model-select>
                     <v-checkbox v-model="autoMealPlan.addshopping" :label="$t('AddToShopping')" hide-details></v-checkbox>
                 </v-form>
             </v-card-text>
@@ -71,7 +70,6 @@ function initializeRequest() {
         servings: 1,
         startDate: DateTime.now().toJSDate(),
         endDate: DateTime.now().plus({day: 7}).toJSDate(),
-        shared: useUserPreferenceStore().userSettings.planShare,
         addshopping: useUserPreferenceStore().userSettings.mealplanAutoaddShopping,
     } as AutoMealPlan
 
