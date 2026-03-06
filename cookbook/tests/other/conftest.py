@@ -171,7 +171,7 @@ def with_viewdates(search_recipes, space_1, u1_s1, u2_s1):
     """View dates: r1=3 days ago (user1), r2=30 days ago (user1), r3=15 days ago (user2)."""
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    now = timezone.now()
+    now = localtime()
     days_3 = now - timedelta(days=3)
     days_15 = now - timedelta(days=15)
     days_30 = now - timedelta(days=30)
@@ -187,7 +187,7 @@ def with_cookdates(search_recipes, space_1, u1_s1, u2_s1):
     """Cook dates: r1=3 days ago (user1), r2=30 days ago (user1), r3=15 days ago (user2)."""
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    now = timezone.now()
+    now = localtime()
     days_3 = now - timedelta(days=3)
     days_15 = now - timedelta(days=15)
     days_30 = now - timedelta(days=30)
