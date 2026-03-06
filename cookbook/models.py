@@ -13,7 +13,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Avg, Index, Max, ProtectedError, Q
+from django.db.models import Index, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
@@ -1077,10 +1077,7 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         return f'Nutrition {self.pk}'
 
 
-class RecipeManager(models.Manager.from_queryset(
-    __import__('cookbook.querysets', fromlist=['RecipeQuerySet']).RecipeQuerySet
-)):
-    pass
+from cookbook.managers import RecipeManager  # noqa: E402 — deferred to avoid circular import
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
