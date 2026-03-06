@@ -16,15 +16,7 @@ from django_scopes import scope
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.models import Food, Recipe, UserSpace
 from cookbook.tests.factories import (
-    CookLogFactory,
-    FoodFactory,
-    IngredientFactory,
-    KeywordFactory,
-    RecipeBookEntryFactory,
-    RecipeFactory,
-    StepFactory,
-    UnitFactory,
-    ViewLogFactory,
+    CookLogFactory, FoodFactory, IngredientFactory, KeywordFactory, RecipeBookEntryFactory, RecipeFactory, StepFactory, UnitFactory, ViewLogFactory
 )
 
 _postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
@@ -217,8 +209,13 @@ def with_createdates(space_1):
     r3 = RecipeFactory.create(space=space_1, created_at=days_15, steps__count=0, keywords__count=0)
     bg = RecipeFactory.create_batch(10, space=space_1, steps__count=0, keywords__count=0)
     return SearchScenario(
-        recipes=[r1, r2, r3], background=bg,
-        dates={'days_3': days_3, 'days_15': days_15, 'days_30': days_30},
+        recipes=[r1, r2, r3],
+        background=bg,
+        dates={
+            'days_3': days_3,
+            'days_15': days_15,
+            'days_30': days_30
+        },
     )
 
 
@@ -239,8 +236,10 @@ def do_search(request, space, queryset=None, **params):
 @pytest.fixture
 def make_search_request(space_1):
     """Create a mock request object for RecipeSearch."""
+
     def _make(user_client):
         user = auth.get_user(user_client)
         user_space = UserSpace.objects.filter(user=user, space=space_1).first()
         return type('MockRequest', (), {'space': space_1, 'user': user, 'user_space': user_space})()
+
     return _make

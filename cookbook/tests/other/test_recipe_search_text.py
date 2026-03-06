@@ -7,13 +7,7 @@ import pytest
 from django.contrib import auth
 
 from cookbook.models import SearchFields
-from cookbook.tests.factories import (
-    FoodFactory,
-    IngredientFactory,
-    KeywordFactory,
-    RecipeFactory,
-    StepFactory,
-)
+from cookbook.tests.factories import FoodFactory, IngredientFactory, KeywordFactory, RecipeFactory, StepFactory
 from cookbook.tests.other.conftest import do_search, requires_postgres
 
 ACCENTED = "àbçđêf ğĦìĵķĽmñ öPqŕşŧ úvŵxyž"
@@ -30,12 +24,18 @@ def text_recipes(space_1):
     bg: 10 background recipes (noise)
     """
     r1 = RecipeFactory.create(
-        space=space_1, name=UNACCENTED, description=UNACCENTED,
-        steps__count=0, keywords__count=0,
+        space=space_1,
+        name=UNACCENTED,
+        description=UNACCENTED,
+        steps__count=0,
+        keywords__count=0,
     )
     r2 = RecipeFactory.create(
-        space=space_1, name=ACCENTED, description=ACCENTED,
-        steps__count=0, keywords__count=0,
+        space=space_1,
+        name=ACCENTED,
+        description=ACCENTED,
+        steps__count=0,
+        keywords__count=0,
     )
     r3 = RecipeFactory.create(space=space_1, steps__count=0, keywords__count=0)
 
@@ -63,8 +63,7 @@ def text_recipes(space_1):
     return r1, r2, r3, bg
 
 
-def _set_search_prefs(user, *, icontains=False, istartswith=False,
-                      fulltext=False, trigram=False, unaccent=False, lookup=False):
+def _set_search_prefs(user, *, icontains=False, istartswith=False, fulltext=False, trigram=False, unaccent=False, lookup=False):
     """Configure search preferences for a user."""
     pref = user.searchpreference
     pref.lookup = lookup
@@ -79,6 +78,7 @@ def _set_search_prefs(user, *, icontains=False, istartswith=False,
 
 
 # ========================== ICONTAINS ==========================
+
 
 class TestIcontainsSearch:
     """Test icontains text search across fields."""
@@ -141,6 +141,7 @@ class TestIcontainsSearch:
 
 # ========================== ISTARTSWITH ==========================
 
+
 class TestIstartswithSearch:
     """Test istartswith text search."""
 
@@ -166,6 +167,7 @@ class TestIstartswithSearch:
 
 
 # ========================== UNACCENT ==========================
+
 
 class TestUnaccentSearch:
     """Test unaccent modifier with icontains."""
@@ -196,6 +198,7 @@ class TestUnaccentSearch:
 
 
 # ========================== FULLTEXT ==========================
+
 
 class TestFulltextSearch:
     """Test PostgreSQL full-text search."""
@@ -237,6 +240,7 @@ class TestFulltextSearch:
 
 
 # ========================== TRIGRAM ==========================
+
 
 class TestTrigramSearch:
     """Test PostgreSQL trigram similarity search."""
@@ -291,6 +295,7 @@ class TestTrigramSearch:
 
 # ========================== COMBINED MODES ==========================
 
+
 class TestCombinedTextSearch:
     """Test combining multiple search modes."""
 
@@ -315,9 +320,7 @@ class TestCombinedTextSearch:
         req = make_search_request(u1_s1)
         results = do_search(req, space_1, query=UNACCENTED, sort_order='score')
         # The queryset should have 'similarity' as an annotation
-        assert 'similarity' in results.query.annotations, (
-            f"Expected 'similarity' annotation, got: {list(results.query.annotations.keys())}"
-        )
+        assert 'similarity' in results.query.annotations, (f"Expected 'similarity' annotation, got: {list(results.query.annotations.keys())}")
 
     @requires_postgres
     def test_icontains_plus_unaccent_plus_trigram(self, text_recipes, u1_s1, space_1, make_search_request):
@@ -333,6 +336,7 @@ class TestCombinedTextSearch:
 
 
 # ========================== NO PREFS (IEXACT FALLBACK) ==========================
+
 
 class TestNoSearchPrefs:
     """When no search preferences are set, should fall back to iexact on all fields."""
@@ -359,6 +363,7 @@ class TestNoSearchPrefs:
 
 
 # ========================== EMPTY/NULL QUERY ==========================
+
 
 class TestEmptyQuery:
     """Test behavior with empty or missing query strings."""

@@ -5,7 +5,6 @@ Uses SearchScenario fixtures from conftest.py.
 """
 from datetime import timedelta
 
-import pytest
 from django.contrib import auth
 from django.utils import timezone
 from django_scopes import scope, scopes_disabled
@@ -21,8 +20,8 @@ from cookbook.tests.factories import (
 )
 from cookbook.tests.other.conftest import _make_recipe_with_step, do_search
 
-
 # ========================== FOOD FILTERS ==========================
+
 
 class TestFoodFilters:
     """OR/AND/NOT combinations for food-based filtering."""
@@ -90,6 +89,7 @@ class TestFoodFilters:
 
 # ========================== KEYWORD FILTERS ==========================
 
+
 class TestKeywordFilters:
     """OR/AND/NOT combinations for keyword-based filtering."""
 
@@ -135,6 +135,7 @@ class TestKeywordFilters:
 
 
 # ========================== BOOK FILTERS ==========================
+
 
 class TestBookFilters:
     """OR/AND/NOT combinations for book-based filtering."""
@@ -182,6 +183,7 @@ class TestBookFilters:
 
 # ========================== UNIT FILTERS ==========================
 
+
 class TestUnitFilters:
 
     def test_unit_single(self, with_units, u1_s1, space_1, make_search_request):
@@ -207,6 +209,7 @@ class TestUnitFilters:
 
 
 # ========================== DATE FILTERS ==========================
+
 
 class TestViewedOnFilter:
 
@@ -345,6 +348,7 @@ class TestUpdatedOnFilter:
 
 # ========================== RANGE QUERIES (gte + lte) ==========================
 
+
 class TestRangeQueries:
     """Verify gte + lte can be applied simultaneously on all filter methods."""
 
@@ -359,8 +363,8 @@ class TestRangeQueries:
         lte = s.dates['days_3'].strftime('%Y-%m-%d')
         results = do_search(req, space_1, createdon_gte=gte, createdon_lte=lte)
         ids = set(results.values_list('id', flat=True))
-        assert s.r1.id in ids   # 3 days ago — in window
-        assert s.r3.id in ids   # 15 days ago — on boundary
+        assert s.r1.id in ids  # 3 days ago — in window
+        assert s.r3.id in ids  # 15 days ago — on boundary
         assert s.r2.id not in ids  # 30 days ago — BELOW gte, should be excluded
 
     def test_updatedon_range(self, with_createdates, u1_s1, space_1, make_search_request):
@@ -374,8 +378,8 @@ class TestRangeQueries:
         lte = s.dates['days_3'].strftime('%Y-%m-%d')
         results = do_search(req, space_1, updatedon_gte=gte, updatedon_lte=lte)
         ids = set(results.values_list('id', flat=True))
-        assert s.r1.id in ids   # 3 days ago
-        assert s.r3.id in ids   # 15 days ago — boundary
+        assert s.r1.id in ids  # 3 days ago
+        assert s.r3.id in ids  # 15 days ago — boundary
         assert s.r2.id not in ids  # 30 days ago — below gte
 
     def test_cookedon_range(self, with_cookdates, u1_s1, space_1, make_search_request):
@@ -387,8 +391,8 @@ class TestRangeQueries:
         lte = s.dates['days_3'].strftime('%Y-%m-%d')
         results = do_search(req, space_1, cookedon_gte=gte, cookedon_lte=lte)
         ids = set(results.values_list('id', flat=True))
-        assert s.r1.id in ids   # cooked 3 days ago — in window
-        assert s.r2.id not in ids   # cooked 30 days ago — below gte
+        assert s.r1.id in ids  # cooked 3 days ago — in window
+        assert s.r2.id not in ids  # cooked 30 days ago — below gte
         assert s.r3.id not in ids  # cooked by user2, not user1
 
     def test_viewedon_range(self, with_viewdates, u1_s1, space_1, make_search_request):
@@ -400,8 +404,8 @@ class TestRangeQueries:
         lte = s.dates['days_3'].strftime('%Y-%m-%d')
         results = do_search(req, space_1, viewedon_gte=gte, viewedon_lte=lte)
         ids = set(results.values_list('id', flat=True))
-        assert s.r1.id in ids   # viewed 3 days ago — in window
-        assert s.r2.id not in ids   # viewed 30 days ago — below gte
+        assert s.r1.id in ids  # viewed 3 days ago — in window
+        assert s.r2.id not in ids  # viewed 30 days ago — below gte
         assert s.r3.id not in ids  # viewed by user2, not user1
 
     def test_rating_range(self, with_ratings, u1_s1, space_1, make_search_request):
@@ -426,11 +430,12 @@ class TestRangeQueries:
         # Window: 2-3. r1=5 (out), r2=1 (out, below gte)
         results = do_search(req, space_1, timescooked_gte='2', timescooked_lte='3')
         ids = set(results.values_list('id', flat=True))
-        assert s.r2.id not in ids   # cooked 1 time — below gte
+        assert s.r2.id not in ids  # cooked 1 time — below gte
         assert s.r1.id not in ids  # cooked 5 times — above lte
 
 
 # ========================== RATING FILTERS ==========================
+
 
 class TestRatingFilter:
 
@@ -516,6 +521,7 @@ class TestRatingFilter:
 
 # ========================== TIMES COOKED FILTERS ==========================
 
+
 class TestTimesCookedFilter:
 
     def test_timescooked_exact(self, with_timescooked, u1_s1, space_1, make_search_request):
@@ -561,6 +567,7 @@ class TestTimesCookedFilter:
 
 # ========================== INTERNAL FILTER ==========================
 
+
 class TestInternalFilter:
 
     def test_internal_true(self, search_recipes, u1_s1, space_1, make_search_request):
@@ -582,6 +589,7 @@ class TestInternalFilter:
 
 # ========================== CREATED BY FILTER ==========================
 
+
 class TestCreatedByFilter:
 
     def test_createdby(self, search_recipes, u1_s1, space_1, make_search_request):
@@ -602,6 +610,7 @@ class TestCreatedByFilter:
 
 # ========================== NEW RECIPES ==========================
 
+
 class TestNewRecipes:
 
     def test_new_recipes_sort(self, space_1, u1_s1, make_search_request):
@@ -621,6 +630,7 @@ class TestNewRecipes:
 
 # ========================== NUM RECENT ==========================
 
+
 class TestNumRecent:
 
     def test_num_recent(self, search_recipes, u1_s1, space_1, make_search_request):
@@ -635,6 +645,7 @@ class TestNumRecent:
 
 
 # ========================== INCLUDE CHILDREN ==========================
+
 
 class TestIncludeChildren:
 
@@ -693,6 +704,7 @@ class TestIncludeChildren:
 
 # ========================== COMBINED FILTERS ==========================
 
+
 class TestCombinedFilters:
 
     def test_keyword_and_food(self, search_recipes, u1_s1, space_1, make_search_request):
@@ -728,6 +740,7 @@ class TestCombinedFilters:
 
 
 # ========================== COOKLOG ANNOTATION SAFETY ==========================
+
 
 class TestCookLogAnnotationSafety:
     """Verify CookLog annotations from different methods don't conflict."""
@@ -825,6 +838,7 @@ class TestCookLogAnnotationSafety:
 
 # ========================== CROSS-SPACE SAFETY ==========================
 
+
 class TestCrossSpaceSafety:
     """Verify ScopedManager prevents cross-space leakage in AND-NOT subqueries."""
 
@@ -879,6 +893,7 @@ class TestCrossSpaceSafety:
 
 
 # ========================== SORT ORDERS ==========================
+
 
 class TestSortOrders:
 
