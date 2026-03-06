@@ -55,6 +55,10 @@ class SearchScenario:
     def r3(self):
         return self.recipes[2]
 
+    @property
+    def all_ids(self):
+        return [r.id for r in self.recipes] + [r.id for r in self.background]
+
 
 def _make_recipe_with_step(space):
     """Helper to create a recipe with one empty step for ingredient attachment."""
