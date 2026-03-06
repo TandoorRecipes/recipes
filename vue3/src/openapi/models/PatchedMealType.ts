@@ -51,12 +51,6 @@ export interface PatchedMealType {
     color?: string;
     /**
      * 
-     * @type {boolean}
-     * @memberof PatchedMealType
-     */
-    _default?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PatchedMealType
      */
@@ -85,7 +79,6 @@ export function PatchedMealTypeFromJSONTyped(json: any, ignoreDiscriminator: boo
         'order': json['order'] == null ? undefined : json['order'],
         'time': json['time'] == null ? undefined : json['time'],
         'color': json['color'] == null ? undefined : json['color'],
-        '_default': json['default'] == null ? undefined : json['default'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
@@ -101,7 +94,6 @@ export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'createdBy'>
         'order': value['order'],
         'time': value['time'],
         'color': value['color'],
-        'default': value['_default'],
     };
 }
 
