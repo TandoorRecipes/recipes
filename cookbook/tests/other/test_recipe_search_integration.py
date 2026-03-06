@@ -1,9 +1,3 @@
-"""Thin HTTP integration tests for RecipeSearch.
-
-One test per major filter type to verify the API layer correctly
-passes query params through to RecipeSearch. Detailed filter logic
-is tested directly in test_recipe_search_filters.py.
-"""
 import json
 
 import pytest
@@ -12,15 +6,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 
 from cookbook.models import Recipe, SearchFields
-from cookbook.tests.factories import (
-    CookLogFactory,
-    FoodFactory,
-    IngredientFactory,
-    KeywordFactory,
-    RecipeBookEntryFactory,
-    RecipeFactory,
-    UnitFactory,
-)
+from cookbook.tests.factories import CookLogFactory, FoodFactory, IngredientFactory, KeywordFactory, RecipeBookEntryFactory, RecipeFactory, UnitFactory
 from cookbook.tests.other.conftest import _make_recipe_with_step, requires_postgres
 
 LIST_URL = 'api:recipe-list'
@@ -41,6 +27,7 @@ def setup_recipes(space_1):
 
 
 class TestHTTPFoodFilter:
+
     def test_food_or_via_api(self, setup_recipes, u1_s1, space_1):
         r1, r2, r3, bg = setup_recipes
         with scopes_disabled():
@@ -52,6 +39,7 @@ class TestHTTPFoodFilter:
 
 
 class TestHTTPKeywordFilter:
+
     def test_keyword_or_via_api(self, setup_recipes, u1_s1, space_1):
         r1, r2, r3, bg = setup_recipes
         with scopes_disabled():
@@ -63,6 +51,7 @@ class TestHTTPKeywordFilter:
 
 
 class TestHTTPBookFilter:
+
     def test_book_or_via_api(self, setup_recipes, u1_s1, space_1):
         r1, r2, r3, bg = setup_recipes
         with scopes_disabled():
@@ -73,6 +62,7 @@ class TestHTTPBookFilter:
 
 
 class TestHTTPUnitFilter:
+
     def test_units_via_api(self, setup_recipes, u1_s1, space_1):
         r1, r2, r3, bg = setup_recipes
         with scopes_disabled():
@@ -84,6 +74,7 @@ class TestHTTPUnitFilter:
 
 
 class TestHTTPRatingFilter:
+
     def test_rating_gte_via_api(self, setup_recipes, u1_s1, space_1):
         r1, r2, r3, bg = setup_recipes
         user = auth.get_user(u1_s1)
@@ -94,6 +85,7 @@ class TestHTTPRatingFilter:
 
 
 class TestHTTPTextSearch:
+
     def test_query_via_api(self, u1_s1, space_1):
         with scopes_disabled():
             r = RecipeFactory.create(space=space_1, name='UniqueFindableTestName123')
@@ -105,6 +97,7 @@ class TestHTTPTextSearch:
 
 
 class TestHTTPInternalFilter:
+
     def test_internal_filter_via_api(self, setup_recipes, u1_s1, space_1):
         r1, r2, r3, bg = setup_recipes
         with scope(space=space_1):
