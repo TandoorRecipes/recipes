@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
 
@@ -19,8 +17,8 @@ _NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
 
 
 def _sort_includes(orderby, *fields):
-    for field in fields:
-        if field in orderby or f'-{field}' in orderby:
+    for f in fields:
+        if f in orderby or f'-{f}' in orderby:
             return True
     return False
 
@@ -50,17 +48,6 @@ def _parse_filter_params(params, prefix):
         'or_not': params.get(f'{prefix}_or_not', None),
         'and_not': params.get(f'{prefix}_and_not', None),
     }
-
-
-def _parse_makenow(value):
-    if isinstance(value, bool) and value is True:
-        return 0
-    if isinstance(value, str) and value in ('yes', 'true'):
-        return 0
-    try:
-        return int(value)
-    except (ValueError, TypeError):
-        return None
 
 
 @dataclass
@@ -96,6 +83,17 @@ class SearchParams:
     cookedon_lte: str | None = None
     createdby: str | int | None = None
     makenow: int | None = None
+
+    @staticmethod
+    def _parse_makenow(value):
+        if isinstance(value, bool) and value is True:
+            return 0
+        if isinstance(value, str) and value in ('yes', 'true'):
+            return 0
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            return None
 
     @classmethod
     def from_params(cls, params):
@@ -138,7 +136,7 @@ class SearchParams:
             cookedon_gte=params.get('cookedon_gte', None),
             cookedon_lte=params.get('cookedon_lte', None),
             createdby=params.get('createdby', None),
-            makenow=_parse_makenow(params.get('makenow', None)),
+            makenow=cls._parse_makenow(params.get('makenow', None)),
         )
 
 
@@ -178,31 +176,26 @@ def _build_text_search_config(string, prefs):
 
     use_postgres = _is_postgres()
     search_type = prefs.search or 'plain'
+    unaccent = set(prefs.unaccent.values_list('field', flat=True)) if use_postgres else set()
 
-    if use_postgres:
-        unaccent = set(prefs.unaccent.values_list('field', flat=True))
-    else:
-        unaccent = set()
-
-    def _apply_unaccent(fields):
+    def with_unaccent(fields):
         return tuple(f'{x}__unaccent' if x in unaccent else x for x in fields)
 
-    icontains = _apply_unaccent(prefs.icontains.values_list('field', flat=True))
-    istartswith = _apply_unaccent(prefs.istartswith.values_list('field', flat=True))
+    # Common fields (all backends)
+    icontains = with_unaccent(prefs.icontains.values_list('field', flat=True))
+    istartswith = with_unaccent(prefs.istartswith.values_list('field', flat=True))
 
+    # Postgres-only fields
     trigram_fields = ()
     fulltext_fields = ()
     search_query = None
-
     if use_postgres:
         language = DICTIONARY.get(translation.get_language(), 'simple')
-        trigram_fields = _apply_unaccent(prefs.trigram.values_list('field', flat=True))
-        fulltext_fields = tuple(prefs.fulltext.values_list('field', flat=True)) or ()
-
-        if search_type in ('websearch', 'raw'):
-            trigram_fields = ()
-
         search_query = SearchQuery(string, search_type=search_type, config=language)
+        fulltext_fields = tuple(prefs.fulltext.values_list('field', flat=True))
+        # websearch/raw modes don't support trigram
+        if search_type not in ('websearch', 'raw'):
+            trigram_fields = with_unaccent(prefs.trigram.values_list('field', flat=True))
 
     return TextSearchConfig(
         string=string,
@@ -230,7 +223,7 @@ class RecipeSearch:
 
     def get_queryset(self, queryset):
         params = self._params
-        qs = queryset.prefetch_related('keywords')
+        qs = queryset
         user, space = self._request.user, self._request.space
 
         orderby = self._build_sort_order()
@@ -298,30 +291,23 @@ class RecipeSearch:
         if params.random:
             return ['?']
 
+        # Pinned sorts: float recent/new recipes to the top
         order = []
-        # TODO add userpreference for default sort order and replace '-favorite'
-        default_order = ['name']
-        # recent and new_recipe are always first; they float a few recipes to the top
         if params.num_recent:
-            order += ['-recent']
+            order.append('-recent')
         if params.new:
-            order += ['-new_recipe']
+            order.append('-new_recipe')
 
-        # if a sort order is provided by user - use that order
+        # User-specified sort order
         if params.sort_order:
-            if not isinstance(params.sort_order, list):
-                order += [params.sort_order]
-            else:
-                order += params.sort_order
-            if not _is_postgres() or not params.query:
-                if 'score' in order:
-                    order.remove('score')
-                if '-score' in order:
-                    order.remove('-score')
-        # if no sort order provided prioritize text search, followed by the default search
+            user_order = params.sort_order if isinstance(params.sort_order, list) else [params.sort_order]
+            # score only works with postgres fulltext/trigram search
+            has_scoring = _is_postgres() and params.query
+            order += [s for s in user_order if s not in ('score', '-score') or has_scoring]
         elif self._text_config and (self._text_config.trigram_fields or self._text_config.fulltext_fields):
-            order += ['-score', *default_order]
-        # otherwise sort by the remaining order_by attributes or favorite by default
+            # No user sort, but text search active: rank by relevance then name
+            order += ['-score', 'name']
         else:
-            order += default_order
+            order.append('name')
+
         return order

@@ -1077,7 +1077,8 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         return f'Nutrition {self.pk}'
 
 
-from cookbook.managers import RecipeManager  # noqa: E402 — deferred to avoid circular import
+from cookbook.managers import RecipeQuerySet  # noqa: E402 — deferred to avoid circular import
+RecipeManager = models.Manager.from_queryset(RecipeQuerySet)
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
