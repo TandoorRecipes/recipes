@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from dataclasses import dataclass
 from datetime import timedelta
 
@@ -257,17 +255,13 @@ class RecipeQuerySet(models.QuerySet):
     # ------------------------------------------------------------------ #
 
     def by_text(self, config):
-        """Apply text search filters and score annotations.
-
-        Args:
-            config: TextSearchConfig with search string and field configuration.
-        Returns:
-            Filtered queryset, with 'score' annotation when relevance ranking is available.
-        """
         if not config or not config.string:
             return self
 
-        filters = self._build_icontains_filters(config) + self._build_istartswith_filters(config)
+        filters = (
+            [Q(**{f'{f}__icontains': config.string}) for f in config.icontains_fields]
+            + [Q(**{f'{f}__istartswith': config.string}) for f in config.istartswith_fields]
+        )
         search_rank = None
         fuzzy_match = None
 
@@ -277,7 +271,12 @@ class RecipeQuerySet(models.QuerySet):
             filters += ft_filters + tg_filters
 
         if not filters:
-            return self._build_fallback_text_filter(config)
+            from cookbook.models import SearchFields
+            query_filter = Q()
+            for f in SearchFields.objects.all().values_list('field', flat=True):
+                lookup = f'{f}__unaccent__iexact' if f in config.unaccent_fields else f'{f}__iexact'
+                query_filter |= Q(**{lookup: config.string})
+            return self.filter(query_filter)
 
         query_filter = Q()
         for f in filters:
@@ -302,12 +301,6 @@ class RecipeQuerySet(models.QuerySet):
             qs = qs.annotate(score=F('similarity'))
 
         return qs
-
-    def _build_icontains_filters(self, config):
-        return [Q(**{f'{f}__icontains': config.string}) for f in config.icontains_fields]
-
-    def _build_istartswith_filters(self, config):
-        return [Q(**{f'{f}__istartswith': config.string}) for f in config.istartswith_fields]
 
     def _build_fulltext_filters(self, config):
         if not config.fulltext_fields:
@@ -337,15 +330,15 @@ class RecipeQuerySet(models.QuerySet):
         rank_terms = []
         text_fields = []
 
-        for field in config.fulltext_fields:
-            if field in _PRECOMPUTED:
+        for f in config.fulltext_fields:
+            if f in _PRECOMPUTED:
                 # Query pre-computed vector directly (uses GIN index)
-                filters.append(Q(**{_PRECOMPUTED[field]: config.search_query}))
-            elif field in _TEXT_FIELDS:
-                text_fields.append(_TEXT_FIELDS[field])
+                filters.append(Q(**{_PRECOMPUTED[f]: config.search_query}))
+            elif f in _TEXT_FIELDS:
+                text_fields.append(_TEXT_FIELDS[f])
 
-            if field in _RANK_MAP:
-                rank_terms.append(SearchRank(_RANK_MAP[field], config.search_query, cover_density=True))
+            if f in _RANK_MAP:
+                rank_terms.append(SearchRank(_RANK_MAP[f], config.search_query, cover_density=True))
 
         # Text fields without stored vectors need SearchVector at query time
         if text_fields:
@@ -377,26 +370,20 @@ class RecipeQuerySet(models.QuerySet):
         )
         return [Q(pk__in=fuzzy_match.values('pk'))], fuzzy_match
 
-    def _build_fallback_text_filter(self, config):
-        from cookbook.models import SearchFields
-        query_filter = Q()
-        for f in SearchFields.objects.all().values_list('field', flat=True):
-            lookup = f'{f}__unaccent__iexact' if f in config.unaccent_fields else f'{f}__iexact'
-            query_filter |= Q(**{lookup: config.string})
-        return self.filter(query_filter)
-
     # ------------------------------------------------------------------ #
     #  Availability (makenow)
     # ------------------------------------------------------------------ #
 
     def cookable(self, household, shopping_users, missing=0):
         from cookbook.helper.food_availability_helper import (
-            _already_resolved,
+            _is_available, _substitute_available,
             children_substitute_filter, sibling_substitute_filter,
         )
         from cookbook.models import Food, Recipe
 
-        resolved = Food.objects.filter(_already_resolved(household, shopping_users))
+        available = _is_available(household, shopping_users)
+        ignorable = Q(ignore_shopping=True, recipe__isnull=True)
+        resolved = Food.objects.filter(available | _substitute_available(household, shopping_users) | ignorable)
         children_resolved = children_substitute_filter(household, shopping_users)
         siblings_resolved = sibling_substitute_filter(household, shopping_users)
 
@@ -449,6 +436,3 @@ class RecipeQuerySet(models.QuerySet):
                     for item in items:
                         qs = qs.filter(build_q_and(item))
         return qs
-
-
-RecipeManager = models.Manager.from_queryset(RecipeQuerySet)

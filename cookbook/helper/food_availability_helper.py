@@ -24,26 +24,14 @@ def _substitute_available(household, shopping_users):
     return q
 
 
-def _already_resolved(household, shopping_users):
-    """Foods already resolved via direct availability, substitutes, or ignore_shopping."""
-    return (
-        _is_available(household, shopping_users)
-        | _substitute_available(household, shopping_users)
-        | Q(ignore_shopping=True, recipe__isnull=True)
-    )
-
-
 def _tree_substitute_filter(household, shopping_users, *, tree_field, tree_q):
-    """Common logic for children/sibling substitute filters.
-
-    Args:
-        tree_field: The boolean field to filter on ('substitute_children' or 'substitute_siblings').
-        tree_q: Q filter for related foods in the tree (children or siblings).
-    """
     available = _is_available(household, shopping_users)
+    ignorable = Q(ignore_shopping=True, recipe__isnull=True)
     related_available = Food.objects.filter(tree_q).filter(available)
     return (
-        Food.objects.exclude(_already_resolved(household, shopping_users))
+        Food.objects.exclude(
+            available | _substitute_available(household, shopping_users) | ignorable
+        )
         .exclude(depth=1, numchild=0)
         .filter(**{tree_field: True})
         .annotate(has_available_relative=Exists(related_available))
