@@ -940,14 +940,16 @@ class TestSortOrders:
         CookLogFactory.create(recipe=s.r1, created_by=user, created_at=timezone.now() - timedelta(days=1), space=space_1)
         # r2, r3, background: never cooked
         req = make_search_request(u1_s1)
+        with scope(space=space_1):
+            qs = Recipe.objects.filter(id__in=s.all_ids)
 
         # DESC: most recently cooked first, never-cooked last
-        results = do_search(req, space_1, sort_order='-lastcooked')
+        results = do_search(req, space_1, queryset=qs, sort_order='-lastcooked')
         ids = list(results.values_list('id', flat=True))
         assert ids[0] == s.r1.id
 
         # ASC: oldest-cooked first, never-cooked last
-        results = do_search(req, space_1, sort_order='lastcooked')
+        results = do_search(req, space_1, queryset=qs, sort_order='lastcooked')
         ids = list(results.values_list('id', flat=True))
         assert ids[0] == s.r1.id  # only cooked recipe → first
 
@@ -957,7 +959,9 @@ class TestSortOrders:
         user = auth.get_user(u1_s1)
         ViewLogFactory.create(recipe=s.r1, created_by=user, created_at=timezone.now() - timedelta(days=1), space=space_1)
         req = make_search_request(u1_s1)
-        results = do_search(req, space_1, sort_order='-lastviewed')
+        with scope(space=space_1):
+            qs = Recipe.objects.filter(id__in=s.all_ids)
+        results = do_search(req, space_1, queryset=qs, sort_order='-lastviewed')
         ids = list(results.values_list('id', flat=True))
         assert ids[0] == s.r1.id
 
@@ -969,7 +973,9 @@ class TestSortOrders:
         CookLogFactory.create(recipe=s.r2, created_by=user, rating=1.0, space=space_1)
         # r3, background: unrated
         req = make_search_request(u1_s1)
-        results = do_search(req, space_1, sort_order='-rating')
+        with scope(space=space_1):
+            qs = Recipe.objects.filter(id__in=s.all_ids)
+        results = do_search(req, space_1, queryset=qs, sort_order='-rating')
         ids = list(results.values_list('id', flat=True))
         # Rated recipes should come before unrated
         assert ids.index(s.r1.id) < ids.index(s.r3.id)
