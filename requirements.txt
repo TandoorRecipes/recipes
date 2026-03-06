@@ -23,7 +23,7 @@ django-webpack-loader==3.2.3
 djangorestframework==3.16.1
 drf-writable-nested==0.7.2
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
-gunicorn==25.0.0
+gunicorn==25.1.0
 icalendar==6.3.2
 inflection==0.5.1
 Jinja2==3.1.6
@@ -35,7 +35,7 @@ Pillow==12.1.1
 psycopg2-binary==2.9.11
 pyjwt==2.11.0
 pyppeteer==2.0.0
-python-dotenv==1.2.1
+python-dotenv==1.2.2
 python-ldap==3.4.5
 python3-openid==3.2.0
 python3-saml==1.16.0
@@ -48,7 +48,7 @@ requests-oauthlib==2.0.0
 six==1.17.0
 uritemplate==4.2.0
 webdavclient3==3.14.7
-whitenoise==6.11.0
+whitenoise==6.12.0
 
 # Development
 autopep8==2.3.2
