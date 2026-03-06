@@ -4,6 +4,7 @@ Many of those shortcomings are planned to be fixed in future release but simply 
 
 ## Is there a Tandoor app?
 Tandoor can be installed as a progressive web app (PWA) on mobile and desktop devices. The PWA stores recently accessed recipes locally for offline use.
+**Note**: The PWA only stores recipes that are accessed via HTTPS (https://recipes.domain.tld or https://tandoor.dev) and not via HTTP (http://recipes.domain.tld or http://192.168.1.100). Browsers also treat http://localhost as a secure context.
 
 ### Mobile browsers
 
