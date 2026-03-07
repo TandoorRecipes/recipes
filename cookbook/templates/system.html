@@ -203,15 +203,15 @@
         {% endfor %}
     </table>
     {% endif %}
+    {% if social_providers or social_login_errors %}
     <h3 class="mt-5">{% trans 'Social Login' %}</h3>
 
     <h4 class="mt-3">{% trans 'Configured Providers' %}
-        <span class="badge text-bg-{% if social_providers %}success{% else %}info{% endif %}">
+        <span class="badge text-bg-success">
             {{ social_providers|length }}
         </span>
     </h4>
 
-    {% if social_providers %}
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -234,9 +234,6 @@
             {% endfor %}
         </tbody>
     </table>
-    {% else %}
-        <p class="text-muted">{% trans 'No social login providers configured.' %}</p>
-    {% endif %}
 
     <h4 class="mt-3">{% trans 'Recent Login Errors' %}
         <span class="badge text-bg-{% if social_login_errors %}warning{% else %}success{% endif %}">
@@ -268,6 +265,7 @@
     <p class="text-muted small">{% trans 'Errors are cached for 24 hours. Maximum 50 entries stored.' %}</p>
     {% else %}
         <p class="text-muted">{% trans 'No recent social login errors.' %}</p>
+    {% endif %}
     {% endif %}
 
     <h4 class="mt-3">Cache Test</h4>
