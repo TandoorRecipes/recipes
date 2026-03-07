@@ -92,6 +92,8 @@ You are now able to sign in using Keycloak after a restart of the service.
 By default, clicking a social login button shows an intermediate "Continue to provider" page before redirecting.
 To skip this and go directly to the provider:
 
+> default `0` - options `0`, `1`
+
 ```ini
 SOCIALACCOUNT_LOGIN_ON_GET=1
 ```
@@ -100,6 +102,8 @@ SOCIALACCOUNT_LOGIN_ON_GET=1
 
 By default, if a user signs in with a social provider whose email matches an existing Tandoor account, allauth will
 **not** automatically link them. You can enable email-based authentication to allow this:
+
+> default `0` - options `0`, `1`
 
 ```ini
 SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
@@ -110,6 +114,8 @@ matches. The user will receive an email confirmation to verify ownership before 
 
 To skip the email confirmation step and link accounts automatically (less secure, but simpler):
 
+> default `0` - options `0`, `1`
+
 ```ini
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
 ```
@@ -119,6 +125,98 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
     Enabling `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` means any social provider that reports a matching
     email address will be linked to the existing account without verification. Only enable this if you trust
     all configured social providers to return verified email addresses.
+
+<!-- prettier-ignore -->
+!!! warning "Verified Emails Required"
+    Email matching only works when the social provider marks the email address as **verified**.
+    If your provider returns unverified emails, matching is silently skipped and a new account is
+    created instead. A warning will appear in the server logs and on the System page when this happens.
+    Without `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT`, a working email configuration
+    (`EMAIL_HOST`) is also required to send the verification email to the user.
+
+### Social-Only Authentication
+
+There are two options for hiding the local username/password login form:
+
+**`HIDE_LOGIN_FORM`** — Hides the login form from the UI, but local authentication still works.
+An admin can force the form to appear by navigating to `/accounts/login/?form=1`. Use this if you want
+social login as the default but need a break-glass fallback for emergencies.
+
+> default `0` - options `0`, `1`
+
+```ini
+HIDE_LOGIN_FORM=1
+```
+
+**`SOCIALACCOUNT_ONLY`** — Fully disables local authentication at the allauth level. No password login,
+no password-based signup, no break-glass. Use this only if you are certain all users (including admins)
+will always authenticate through the social provider.
+
+> default `0` - options `0`, `1`
+
+```ini
+SOCIALACCOUNT_ONLY=1
+```
+
+<!-- prettier-ignore -->
+!!! tip
+    For most setups, `HIDE_LOGIN_FORM=1` is the safer choice. It keeps the UI clean while
+    preserving local admin access as a fallback via `/accounts/login/?form=1`.
+
+### Controlling Social Signup
+
+<!-- prettier-ignore -->
+!!! warning "ENABLE_SIGNUP does not affect social login"
+    `ENABLE_SIGNUP=0` only disables the local registration form. Social login will still create new
+    accounts automatically unless you also set `SOCIALACCOUNT_AUTO_SIGNUP=0`. If you want to prevent
+    all new account creation, you must disable both.
+
+By default, new users signing in via a social provider are automatically created.
+To require users to go through a signup form (e.g., to accept terms of service):
+
+> default `1` - options `0`, `1`
+
+```ini
+SOCIALACCOUNT_AUTO_SIGNUP=0
+```
+
+<!-- prettier-ignore -->
+!!! note
+    When `SOCIALACCOUNT_AUTO_SIGNUP=1` (the default) and `SOCIALACCOUNT_EMAIL_AUTHENTICATION=1`,
+    allauth will automatically match social logins to existing accounts by email without showing a signup form.
+
+### Example: Invite-Only Social Login
+
+To set up Tandoor so that only invited users can access the system, with no local login and no signup form:
+
+```ini
+SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
+SOCIALACCOUNT_PROVIDERS=<your provider config>
+SOCIALACCOUNT_ONLY=1
+SOCIALACCOUNT_LOGIN_ON_GET=1
+SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
+ENABLE_SIGNUP=0
+```
+
+With this configuration:
+
+1. The login page shows only the social login button (no username/password form)
+2. Clicking the button goes directly to the provider (no confirmation page)
+3. New users are created automatically via the social provider
+4. If a user's social email matches an existing account, the accounts are linked automatically
+5. Access to specific spaces is controlled via invite links — send users an invite link,
+   and after they authenticate with the social provider, they are added to the invited space
+
+<!-- prettier-ignore -->
+!!! note
+    Users who authenticate without an invite link will be created but will not have access to any space
+    unless `SOCIAL_DEFAULT_ACCESS=1` is also set.
+
+### Session Management
+
+Users can view and manage their active sessions at `/accounts/sessions/`. This page shows all active
+sessions and allows ending individual sessions or all other sessions ("logout everywhere").
 
 ### Linking accounts
 To link an account to an already existing normal user go to the settings page of the user and link it.
