@@ -87,9 +87,92 @@ SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"keycloak","n
 
 You are now able to sign in using Keycloak after a restart of the service.
 
+### Skipping the Confirmation Page
+
+By default, clicking a social login button shows an intermediate "Continue to provider" page before redirecting.
+To skip this and go directly to the provider:
+
+```ini
+SOCIALACCOUNT_LOGIN_ON_GET=1
+```
+
+### Email-Based Account Matching
+
+By default, if a user signs in with a social provider whose email matches an existing Tandoor account, allauth will
+**not** automatically link them. You can enable email-based authentication to allow this:
+
+```ini
+SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
+```
+
+When enabled, users who sign in via a social provider will be matched to an existing account if the email address
+matches. The user will receive an email confirmation to verify ownership before the accounts are linked.
+
+To skip the email confirmation step and link accounts automatically (less secure, but simpler):
+
+```ini
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
+```
+
+<!-- prettier-ignore -->
+!!! warning "Security"
+    Enabling `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` means any social provider that reports a matching
+    email address will be linked to the existing account without verification. Only enable this if you trust
+    all configured social providers to return verified email addresses.
+
 ### Linking accounts
 To link an account to an already existing normal user go to the settings page of the user and link it.
 Here you can also unlink your account if you no longer want to use a social login method.
+
+### Troubleshooting Social Login
+
+#### Error Details on Login Failure
+
+When a social login fails, the error page shows detailed information including the provider name,
+error code, and exception details. Share these details with your administrator if you need help resolving the issue.
+
+Common error codes:
+
+| Error Code | Meaning | Likely Cause |
+|------------|---------|--------------|
+| `unknown` | Unspecified failure | Provider misconfiguration, network issue, or server error |
+| `cancelled` | User cancelled login | User declined to authorize at the provider |
+| `denied` | Access denied | Provider rejected the request (invalid client ID/secret, wrong redirect URI) |
+
+#### System Page Diagnostics
+
+Administrators can view additional diagnostics on the **System** page (`/system/`):
+
+- **Configured Providers** — lists all social login providers (from both settings and database configuration),
+  including their client IDs and the number of linked accounts.
+- **Recent Login Errors** — shows the last 50 social login failures (cached for 24 hours) with timestamps,
+  provider names, error codes, and exception details.
+
+#### Common Issues
+
+**"Social Network Login Failure" with no details**
+:   Ensure `SOCIALACCOUNT_PROVIDERS` is correctly formatted. The value must be valid JSON or Python dict syntax
+    on a single line. Check for mismatched quotes or brackets.
+
+**Provider not appearing on login page**
+:   Verify that `SOCIAL_PROVIDERS` includes the correct allauth provider module path
+    (e.g., `allauth.socialaccount.providers.openid_connect`) and that `SOCIALACCOUNT_PROVIDERS` contains
+    valid configuration for that provider. Restart the container after changes.
+
+**Login succeeds at provider but fails returning to Tandoor**
+:   Check that the redirect URI configured at your provider matches your Tandoor URL exactly.
+    For OpenID Connect providers, the callback URL is typically
+    `https://your-tandoor-url/accounts/oidc/login/callback/` (or the provider-specific path).
+    Also verify that the `client_id` and `secret` in `SOCIALACCOUNT_PROVIDERS` match the provider configuration.
+
+**403 Forbidden from the provider's userinfo endpoint**
+:   The provider is rejecting the token exchange or user info request. Verify that the client credentials
+    are correct, the client is not disabled at the provider, and required scopes (typically `openid email profile`)
+    are granted.
+
+**User created but has no permissions**
+:   New social login users start with no space access by default. Use `SOCIAL_DEFAULT_ACCESS` and
+    `SOCIAL_DEFAULT_GROUP` environment variables to automatically grant permissions to new social login users.
 
 ## LDAP
 
