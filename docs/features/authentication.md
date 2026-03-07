@@ -169,12 +169,6 @@ SOCIALACCOUNT_ONLY=1
 
 ### Controlling Social Signup
 
-<!-- prettier-ignore -->
-!!! warning "ENABLE_SIGNUP does not affect social login"
-    `ENABLE_SIGNUP=0` only disables the local registration form. Social login will still create new
-    accounts automatically unless you also set `SOCIALACCOUNT_AUTO_SIGNUP=0`. If you want to prevent
-    all new account creation, you must disable both.
-
 By default, new users signing in via a social provider are automatically created.
 To require users to go through a signup form (e.g., to accept terms of service):
 
@@ -183,6 +177,12 @@ To require users to go through a signup form (e.g., to accept terms of service):
 ```ini
 SOCIALACCOUNT_AUTO_SIGNUP=0
 ```
+
+<!-- prettier-ignore -->
+!!! warning "ENABLE_SIGNUP does not affect social login"
+    `ENABLE_SIGNUP=0` only disables the local registration form. Social login will still create new
+    accounts automatically unless you also set `SOCIALACCOUNT_AUTO_SIGNUP=0`. If you want to prevent
+    all new account creation, you must disable both.
 
 ### Example: Social Login with Invite-Based Space Access
 
