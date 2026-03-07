@@ -231,9 +231,8 @@ Here you can also unlink your account if you no longer want to use a social logi
 
 #### Error Details on Login Failure
 
-When a social login fails, the error page shows the provider name and error code.
-Superuser accounts will also see detailed exception information.
-Share these details with your administrator if you need help resolving the issue.
+When a social login fails, the error page shows the provider name, error code, and
+exception details. Share these details with your administrator if you need help resolving the issue.
 
 Common error codes:
 

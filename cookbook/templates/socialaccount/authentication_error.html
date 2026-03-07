@@ -41,7 +41,7 @@
                             <td><strong>{% trans "Error Code" %}</strong></td>
                             <td><code>{{ auth_error.code }}</code></td>
                         </tr>
-                        {% if auth_error.exception and request.user.is_superuser %}
+                        {% if auth_error.exception %}
                         <tr>
                             <td><strong>{% trans "Details" %}</strong></td>
                             <td><code>{{ auth_error.exception }}</code></td>
