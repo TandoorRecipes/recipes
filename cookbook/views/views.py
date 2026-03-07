@@ -8,6 +8,7 @@ import redis
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
+from django.core.cache import caches
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
@@ -386,11 +387,57 @@ def system(request):
                 space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
             api_space_stats.append(space_stats)
 
+    cache_response = caches['default'].get('system_view_test_cache_entry', None)
+    if not cache_response:
+        caches['default'].set('system_view_test_cache_entry', timezone.now(), 10)
+
+    # Social login debug info
+    social_providers = []
+    social_login_errors = caches['default'].get('social_login_errors', [])
+    try:
+        from allauth.socialaccount.models import SocialApp, SocialAccount
+        from django_scopes import scopes_disabled
+
+        seen_providers = set()
+        with scopes_disabled():
+            # Providers configured in settings (SOCIALACCOUNT_PROVIDERS)
+            for provider_id, provider_config in settings.SOCIALACCOUNT_PROVIDERS.items():
+                for app in provider_config.get('APPS', []):
+                    pid = app.get('provider_id', provider_id)
+                    seen_providers.add(pid)
+                    client_id = app.get('client_id', '')
+                    social_providers.append({
+                        'name': app.get('name', pid),
+                        'provider': provider_id,
+                        'provider_id': pid,
+                        'client_id': client_id[:8] + '...' if client_id and len(client_id) > 8 else client_id,
+                        'source': 'settings',
+                        'account_count': SocialAccount.objects.filter(provider=pid).count(),
+                    })
+
+            # Providers configured in database (SocialApp model)
+            for app in SocialApp.objects.all():
+                pid = app.provider_id or app.provider
+                if pid not in seen_providers:
+                    social_providers.append({
+                        'name': app.name,
+                        'provider': app.provider,
+                        'provider_id': pid,
+                        'client_id': app.client_id[:8] + '...' if app.client_id and len(app.client_id) > 8 else app.client_id,
+                        'source': 'database',
+                        'account_count': SocialAccount.objects.filter(provider=pid).count(),
+                    })
+    except Exception:
+        pass
+
     return render(
         request, 'system.html', {
             'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'postgres_version': postgres_ver, 'postgres_status': database_status,
             'postgres_message': database_message, 'version_info': VERSION_INFO, 'plugins': PLUGINS, 'secret_key': secret_key, 'orphans': orphans, 'migration_info': migration_info,
-            'missing_migration': missing_migration, 'allowed_hosts': settings.ALLOWED_HOSTS, 'api_stats': api_stats, 'api_space_stats': api_space_stats
+            'missing_migration': missing_migration, 'allowed_hosts': settings.ALLOWED_HOSTS, 'api_stats': api_stats, 'api_space_stats': api_space_stats,
+            'cache_response': cache_response,
+            'social_providers': social_providers,
+            'social_login_errors': social_login_errors,
         })
 
 
