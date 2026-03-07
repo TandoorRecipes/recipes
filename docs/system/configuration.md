@@ -382,35 +382,17 @@ ENABLE_SIGNUP=0
 
 #### Social Auth
 
-Allows you to set up external OAuth providers.
+Allows you to set up external OAuth providers. See the [authentication feature docs](../features/authentication.md) for detailed configuration guides.
 
 ```
 SOCIAL_PROVIDERS = allauth.socialaccount.providers.github,allauth.socialaccount.providers.nextcloud
 ```
 
-> default `0` - options `0`, `1`
-
-If you enable Social Auth, you can also disable the display of the regular login form by setting:
-```
-HIDE_LOGIN_FORM=1
-```
-
-If you chose to enable this, the login page will only display the button to login with the configured social providers.
-
-To force the display of the login form (so you can login with a local admin account), you can add `form=1`
-as a parameter to the login URL - for example:
-```
-http://localhost/accounts/login/?form=1
-```
-
-To fully disable local authentication (no break-glass fallback), use `SOCIALACCOUNT_ONLY=1` instead.
-
-Additional social login settings (documented in the [authentication feature docs](../features/authentication.md)):
-
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `SOCIALACCOUNT_PROVIDERS` | — | Provider configuration (JSON or Python dict) |
 | `SOCIALACCOUNT_PROVIDERS_FILE` | — | Path to file containing provider configuration |
+| `HIDE_LOGIN_FORM` | `0` | Hide local login form, break-glass via `?form=1` ([details](../features/authentication.md#social-only-authentication)) |
 | `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth ([details](../features/authentication.md#social-only-authentication)) |
 | `SOCIALACCOUNT_LOGIN_ON_GET` | `0` | Skip confirmation page ([details](../features/authentication.md#skipping-the-confirmation-page)) |
 | `SOCIALACCOUNT_AUTO_SIGNUP` | `1` | Auto-create accounts on social login ([details](../features/authentication.md#controlling-social-signup)) |

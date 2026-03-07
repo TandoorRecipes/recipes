@@ -9,6 +9,7 @@ from django_scopes import scopes_disabled
 
 from cookbook.forms import AllAuthSocialSignupForm
 from cookbook.helper.AllAuthCustomAdapter import AllAuthCustomAdapter
+from cookbook.helper.social_adapter import TandoorSocialAccountAdapter, _mask_email
 from cookbook.models import InviteLink, Space, UserSpace
 
 pytestmark = pytest.mark.django_db
@@ -301,3 +302,122 @@ def test_invite_link_expired(client, invite_space):
     response = client.get(f'/invite/{expired.uuid}')
     assert response.status_code == 302
     assert 'signup' not in response.url
+
+
+def test_invite_link_authenticated_user_already_in_space(client, invite_link, invite_space):
+    """Authenticated user already in the invite space should redirect to index without error."""
+    user = User.objects.create_user(username='existing_member', password='test')
+    with scopes_disabled():
+        us = UserSpace.objects.create(user=user, space=invite_space, active=True)
+        us.groups.add(invite_link.group)
+    client.force_login(user)
+
+    response = client.get(f'/invite/{invite_link.uuid}')
+    assert response.status_code == 302
+    assert 'signup' not in response.url
+    # Should not create a duplicate UserSpace
+    with scopes_disabled():
+        assert UserSpace.objects.filter(user=user, space=invite_space).count() == 1
+
+
+def test_invite_link_authenticated_user_verifies_group(client, invite_link, invite_space):
+    """Authenticated user joining via invite should get the correct group."""
+    user = User.objects.create_user(username='group_check', password='test')
+    client.force_login(user)
+
+    client.get(f'/invite/{invite_link.uuid}')
+
+    with scopes_disabled():
+        user_space = UserSpace.objects.get(user=user, space=invite_space)
+        assert user_space.groups.filter(name='user').exists()
+        assert user_space.active is True
+
+
+def test_invite_link_deactivates_other_spaces(client, invite_link, invite_space):
+    """Following an invite link should deactivate the user's other active spaces."""
+    user = User.objects.create_user(username='multi_space', password='test')
+    with scopes_disabled():
+        other_space = Space.objects.create(name='Other Space')
+        existing_us = UserSpace.objects.create(user=user, space=other_space, active=True)
+        existing_us.groups.add(Group.objects.get_or_create(name='user')[0])
+    client.force_login(user)
+
+    client.get(f'/invite/{invite_link.uuid}')
+
+    with scopes_disabled():
+        existing_us.refresh_from_db()
+        assert existing_us.active is False
+        new_us = UserSpace.objects.get(user=user, space=invite_space)
+        assert new_us.active is True
+
+
+def test_invite_link_nonexistent_uuid(client):
+    """Valid UUID format but no matching invite should redirect to index."""
+    response = client.get(f'/invite/{uuid.uuid4()}')
+    assert response.status_code == 302
+    assert 'signup' not in response.url
+
+
+# ---------------------- SOCIAL ADAPTER TESTS -----------------------
+
+
+def test_mask_email_standard():
+    assert _mask_email('user@example.com') == 'u***@example.com'
+
+
+def test_mask_email_short_local():
+    assert _mask_email('a@example.com') == 'a***@example.com'
+
+
+def test_mask_email_no_domain():
+    assert _mask_email('nodomain') == '***'
+
+
+def test_mask_email_empty_local():
+    assert _mask_email('@example.com') == '***@example.com'
+
+
+def test_on_authentication_error_stores_in_cache(rf):
+    """on_authentication_error should store masked errors in cache."""
+    from django.core.cache import caches
+
+    caches['default'].delete('social_login_errors')
+    adapter = TandoorSocialAccountAdapter()
+    request = rf.get('/fake/')
+
+    class FakeProvider:
+        id = 'test_provider'
+
+    adapter.on_authentication_error(
+        request, FakeProvider(), error='denied',
+        exception=Exception('Failed for user@secret.com')
+    )
+
+    errors = caches['default'].get('social_login_errors', [])
+    assert len(errors) == 1
+    assert errors[0]['provider'] == 'test_provider'
+    assert errors[0]['error'] == 'denied'
+    # Email should be masked in cached exception
+    assert 'user@secret.com' not in errors[0]['exception']
+    assert 'u***@secret.com' in errors[0]['exception']
+    assert 'timestamp' in errors[0]
+
+
+def test_on_authentication_error_caps_at_50(rf):
+    """Error cache should keep max 50 entries."""
+    from django.core.cache import caches
+
+    caches['default'].delete('social_login_errors')
+    adapter = TandoorSocialAccountAdapter()
+    request = rf.get('/fake/')
+
+    class FakeProvider:
+        id = 'test'
+
+    for i in range(55):
+        adapter.on_authentication_error(request, FakeProvider(), error=f'err_{i}')
+
+    errors = caches['default'].get('social_login_errors', [])
+    assert len(errors) == 50
+    # Most recent should be first
+    assert errors[0]['error'] == 'err_54'

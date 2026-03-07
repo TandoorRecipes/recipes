@@ -306,8 +306,8 @@ def system(request):
                         'source': 'database',
                         'account_count': account_counts.get(pid, 0),
                     })
-    except Exception:
-        pass
+    except Exception as e:
+        print(f'WARNING: Failed to load social login info for system page: {e}')
 
     return render(
         request, 'system.html', {
@@ -386,15 +386,16 @@ def invite_link(request, token):
             return HttpResponseRedirect(reverse('index'))
 
         if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
-            if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
-                if not link.reusable:
-                    link.used_by = request.user
-                    link.save()
+            if request.user.is_authenticated:
+                if not request.user.userspace_set.filter(space=link.space).exists():
+                    if not link.reusable:
+                        link.used_by = request.user
+                        link.save()
 
-                UserSpace.objects.filter(user=request.user).update(active=False)
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
+                    UserSpace.objects.filter(user=request.user).update(active=False)
+                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
 
-                user_space.groups.add(link.group)
+                    user_space.groups.add(link.group)
 
                 return HttpResponseRedirect(reverse('index'))
             else:
