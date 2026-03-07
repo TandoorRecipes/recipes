@@ -385,7 +385,8 @@ ENABLE_SIGNUP=0
 Allows you to set up external OAuth providers. See the [authentication feature docs](../features/authentication.md) for detailed configuration guides.
 
 ```
-SOCIAL_PROVIDERS = allauth.socialaccount.providers.github,allauth.socialaccount.providers.nextcloud
+SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
+SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"myidp","name":"My Provider","client_id":"...","secret":"...","settings":{"server_url":"https://idp.example.com/.well-known/openid-configuration"}}]}}'
 ```
 
 | Setting | Default | Description |
