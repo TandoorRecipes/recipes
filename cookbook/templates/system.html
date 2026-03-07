@@ -268,14 +268,6 @@
     {% endif %}
     {% endif %}
 
-    <h3 class="mt-5">{% trans 'Session Management' %}</h3>
-    <p>
-        <a href="{% url 'usersessions_list' %}" class="btn btn-outline-primary btn-sm">
-            {% trans 'Manage Active Sessions' %}
-        </a>
-        <span class="text-muted small ms-2">{% trans 'View and end active login sessions' %}</span>
-    </p>
-
     <h4 class="mt-3">Cache Test</h4>
     On first load this should be None, on second load it should be the time of the first load. Expiration is set to 10 seconds after that it should be None again. <br/>
     {% if cache_response %}
