@@ -351,9 +351,9 @@ access to the data.
 !!! warning
     This feature might be deprecated in favor of a space join and public viewing system in the future
 
-> default `0` (disabled) - options `0`, `1-X` (space id)
+> default `0` (disabled) - options `0`, `1`
 
-When enabled will join user into space and apply group configured in `SOCIAL_DEFAULT_GROUP`.
+When enabled, new social login users will automatically join the first existing space with the group configured in `SOCIAL_DEFAULT_GROUP`.
 
 ```
 SOCIAL_DEFAULT_ACCESS = 1
@@ -373,7 +373,8 @@ Allow everyone to create local accounts on your application instance (without an
 You might want to setup HCAPTCHA to prevent bots from creating accounts/spam.
 
 !!! info
-    Social accounts will always be able to sign up, if providers are configured
+    `ENABLE_SIGNUP` only controls the local registration form. Social login can still create accounts
+    unless `SOCIALACCOUNT_AUTO_SIGNUP=0` is also set. See the [authentication docs](../features/authentication.md#controlling-social-signup) for details.
 
 ```
 ENABLE_SIGNUP=0
@@ -384,7 +385,7 @@ ENABLE_SIGNUP=0
 Allows you to set up external OAuth providers.
 
 ```
-SOCIAL_PROVIDERS = allauth.socialaccount.providers.github, allauth.socialaccount.providers.nextcloud,
+SOCIAL_PROVIDERS = allauth.socialaccount.providers.github,allauth.socialaccount.providers.nextcloud
 ```
 
 > default `0` - options `0`, `1`

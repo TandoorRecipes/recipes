@@ -270,9 +270,14 @@ def system(request):
     social_login_errors = caches['default'].get('social_login_errors', [])
     try:
         from allauth.socialaccount.models import SocialApp, SocialAccount
-        from django_scopes import scopes_disabled
+        from django.db.models import Count
 
         seen_providers = set()
+        # Batch query: count linked accounts per provider in one query
+        account_counts = dict(
+            SocialAccount.objects.values_list('provider').annotate(count=Count('id')).values_list('provider', 'count')
+        )
+
         with scopes_disabled():
             # Providers configured in settings (SOCIALACCOUNT_PROVIDERS)
             for provider_id, provider_config in settings.SOCIALACCOUNT_PROVIDERS.items():
@@ -286,7 +291,7 @@ def system(request):
                         'provider_id': pid,
                         'client_id': client_id[:8] + '...' if client_id and len(client_id) > 8 else client_id,
                         'source': 'settings',
-                        'account_count': SocialAccount.objects.filter(provider=pid).count(),
+                        'account_count': account_counts.get(pid, 0),
                     })
 
             # Providers configured in database (SocialApp model)
@@ -299,7 +304,7 @@ def system(request):
                         'provider_id': pid,
                         'client_id': app.client_id[:8] + '...' if app.client_id and len(app.client_id) > 8 else app.client_id,
                         'source': 'database',
-                        'account_count': SocialAccount.objects.filter(provider=pid).count(),
+                        'account_count': account_counts.get(pid, 0),
                     })
     except Exception:
         pass
