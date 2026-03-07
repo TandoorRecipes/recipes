@@ -59,15 +59,15 @@ SOCIALACCOUNT_PROVIDERS_FILE=/run/secrets/socialaccount_providers.txt
 
 ### Configuration, via Django Admin
 
-Instead of defining `SOCIALACCOUNT_PROVIDERS` in your environment, most configuration options can be done via the Admin interface. PKCE for `openid_connect` cannot currently be enabled this way.
-Use your superuser account to configure your authentication backend by opening the admin page and do the following
+Instead of defining `SOCIALACCOUNT_PROVIDERS` in your environment, most configuration options can be done via the Django Admin interface at `/admin/` (superuser account required). PKCE for `openid_connect` cannot currently be enabled this way.
 
-1. Select `Sites` and edit the default site with the URL of your installation (or create a new).
-2. Create a new `Social Application` with the required information as stated in the provider documentation of allauth.
-3. Make sure to add your site to the list of available sites
+1. Navigate to `/admin/` and log in with a superuser account.
+2. Under **Sites**, edit the default site to match the URL of your installation (or create a new one).
+3. Under **Social accounts → Social applications**, create a new application with the required information from the [allauth provider documentation](https://docs.allauth.org/en/latest/socialaccount/providers/index.html).
+4. Make sure to add your site to the application's list of available sites.
 
 Now the provider is configured and you should be able to sign up and sign in using the provider.
-Use the superuser account to grant permissions to the newly created users, or enable default access via `SOCIAL_DEFAULT_ACCESS` & `SOCIAL_DEFAULT_GROUP`.
+Use the superuser account to grant permissions to the newly created users, or enable default access via `SOCIAL_DEFAULT_ACCESS` & `SOCIAL_DEFAULT_GROUP` (see [configuration docs](../system/configuration.md)).
 
 !!! info "WIP"
     I do not have a ton of experience with using various single signon providers and also cannot test all of them.
@@ -81,8 +81,7 @@ At Keycloak, create a new client and assign a `Client-ID`, this client comes wit
 To enable Keycloak as a sign in option, set those variables to define the social provider and specify its configuration:
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
-SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"keycloak","name":"Keycloak","client_id":"KEYCLOAK_CLIENT_ID","secret":"KEYCLOAK_CLIENT_SECRET","settings":{"server_url":"https://auth.example.org/realms/KEYCLOAK_REALM/.well-known/openid-configuration"}}]}}
-'
+SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"keycloak","name":"Keycloak","client_id":"KEYCLOAK_CLIENT_ID","secret":"KEYCLOAK_CLIENT_SECRET","settings":{"server_url":"https://auth.example.org/realms/KEYCLOAK_REALM/.well-known/openid-configuration"}}]}}'
 ```
 
 You are now able to sign in using Keycloak after a restart of the service.
@@ -185,9 +184,9 @@ SOCIALACCOUNT_AUTO_SIGNUP=0
     When `SOCIALACCOUNT_AUTO_SIGNUP=1` (the default) and `SOCIALACCOUNT_EMAIL_AUTHENTICATION=1`,
     allauth will automatically match social logins to existing accounts by email without showing a signup form.
 
-### Example: Invite-Only Social Login
+### Example: Social-Only with Invite-Based Space Access
 
-To set up Tandoor so that only invited users can access the system, with no local login and no signup form:
+To set up Tandoor with social login only (no local login) and control space access via invite links:
 
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
@@ -196,7 +195,6 @@ SOCIALACCOUNT_ONLY=1
 SOCIALACCOUNT_LOGIN_ON_GET=1
 SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
-ENABLE_SIGNUP=0
 ```
 
 With this configuration:
@@ -210,8 +208,10 @@ With this configuration:
 
 <!-- prettier-ignore -->
 !!! note
-    Users who authenticate without an invite link will be created but will not have access to any space
-    unless `SOCIAL_DEFAULT_ACCESS=1` is also set.
+    Anyone who can authenticate with your social provider can create an account. They will not have
+    access to any space unless you send them an invite link or set `SOCIAL_DEFAULT_ACCESS=1`.
+    To truly restrict who can create accounts, configure access controls at your identity provider
+    (e.g., limit which users or groups can access the Tandoor application in Authentik/Keycloak).
 
 ### Session Management
 
@@ -226,8 +226,9 @@ Here you can also unlink your account if you no longer want to use a social logi
 
 #### Error Details on Login Failure
 
-When a social login fails, the error page shows detailed information including the provider name,
-error code, and exception details. Share these details with your administrator if you need help resolving the issue.
+When a social login fails, the error page shows the provider name and error code.
+Superuser accounts will also see detailed exception information.
+Share these details with your administrator if you need help resolving the issue.
 
 Common error codes:
 
