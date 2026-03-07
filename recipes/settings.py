@@ -247,6 +247,8 @@ ACCOUNT_LOGOUT_ON_GET = True
 USERSESSIONS_TRACK_ACTIVITY = True
 HEADLESS_SERVE_SPECIFICATION = True
 
+SOCIALACCOUNT_ADAPTER = 'cookbook.helper.social_adapter.TandoorSocialAccountAdapter'
+
 try:
     SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 except ValueError:
