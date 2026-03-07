@@ -61,20 +61,24 @@ SOCIALACCOUNT_PROVIDERS_FILE=/run/secrets/socialaccount_providers.txt
 
 ### Configuration, via Django Admin
 
-Instead of defining `SOCIALACCOUNT_PROVIDERS` in your environment, most configuration options can be done via the Django Admin interface at `/admin/` (superuser account required). PKCE for `openid_connect` cannot currently be enabled this way.
+Provider credentials (client ID, secret, provider type) can also be configured via the Django Admin
+interface instead of the `SOCIALACCOUNT_PROVIDERS` environment variable. All other social login
+settings (e.g., `SOCIALACCOUNT_LOGIN_ON_GET`, `SOCIALACCOUNT_EMAIL_AUTHENTICATION`) must still be
+set as environment variables.
 
 1. Navigate to `/admin/` and log in with a superuser account.
 2. Under **Sites**, edit the default site to match the URL of your installation (or create a new one).
 3. Under **Social accounts → Social applications**, create a new application with the required information from the [allauth provider documentation](https://docs.allauth.org/en/latest/socialaccount/providers/index.html).
 4. Make sure to add your site to the application's list of available sites.
 
+<!-- prettier-ignore -->
+!!! warning
+    You still need `SOCIAL_PROVIDERS` set in your environment to load the allauth provider module
+    (e.g., `allauth.socialaccount.providers.openid_connect`). The Django Admin only replaces the
+    `SOCIALACCOUNT_PROVIDERS` credential configuration, not the provider module registration.
+
 Now the provider is configured and you should be able to sign up and sign in using the provider.
 Use the superuser account to grant permissions to the newly created users, or enable default access via `SOCIAL_DEFAULT_ACCESS` & `SOCIAL_DEFAULT_GROUP` (see [configuration docs](../system/configuration.md)).
-
-<!-- prettier-ignore -->
-!!! info "WIP"
-    I do not have a ton of experience with using various single signon providers and also cannot test all of them.
-    If you have any Feedback or issues let me know.
 
 ### Third-party authentication example
 
