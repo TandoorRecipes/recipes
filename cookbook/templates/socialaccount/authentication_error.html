@@ -27,30 +27,7 @@
             <a class="btn btn-secondary" href="{% url 'account_login' %}">{% trans "Back" %}</a>
 
             {% if auth_error %}
-            <div class="card mt-3 mb-3">
-                <div class="card-header">{% trans "Error Details" %}</div>
-                <div class="card-body">
-                    <table class="table table-sm table-borderless mb-0">
-                        {% if auth_error.provider %}
-                        <tr>
-                            <td><strong>{% trans "Provider" %}</strong></td>
-                            <td>{{ auth_error.provider }}</td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td><strong>{% trans "Error Code" %}</strong></td>
-                            <td><code>{{ auth_error.code }}</code></td>
-                        </tr>
-                        {% if auth_error.exception %}
-                        <tr>
-                            <td><strong>{% trans "Details" %}</strong></td>
-                            <td><code>{{ auth_error.exception }}</code></td>
-                        </tr>
-                        {% endif %}
-                    </table>
-                </div>
-            </div>
-            <p class="text-muted small">{% trans "If this problem persists, please contact your administrator and provide the error details above." %}</p>
+            <p class="text-muted small mt-3">{% trans "If this problem persists, please contact your administrator." %}</p>
             {% endif %}
         </div>
     </div>

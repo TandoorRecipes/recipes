@@ -61,7 +61,14 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
     def on_authentication_error(self, request, provider, error=None, exception=None, extra_context=None):
         """Log social login failures and store recent errors for the system page."""
         provider_id = getattr(provider, 'id', provider) if provider else 'unknown'
-        exception_str = str(exception) if exception else None
+
+        # Build exception detail, including chained causes (e.g. JWT decode errors behind "invalid_token")
+        exception_parts = []
+        exc = exception
+        while exc is not None:
+            exception_parts.append(f"{type(exc).__name__}: {exc}")
+            exc = exc.__cause__
+        exception_str = ' → '.join(exception_parts) if exception_parts else None
 
         # Mask email addresses in exception details before caching
         if exception_str:
