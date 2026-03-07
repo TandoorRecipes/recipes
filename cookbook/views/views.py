@@ -117,9 +117,17 @@ def space_overview(request):
                 return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
         if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
-            user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=False)
-            user_space.groups.add(Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get())
-            return HttpResponseRedirect(reverse('index'))
+            space = Space.objects.first()
+            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+            if space and group:
+                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
+                user_space.groups.add(group)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                if not space:
+                    print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {request.user}.')
+                if not group:
+                    print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {request.user}.')
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
@@ -386,6 +394,8 @@ def invite_link(request, token):
                 return HttpResponseRedirect(reverse('index'))
             else:
                 request.session['signup_token'] = str(token)
+                if getattr(settings, 'SOCIALACCOUNT_ONLY', False):
+                    return HttpResponseRedirect(reverse('account_login'))
                 return HttpResponseRedirect(reverse('account_signup'))
 
     return HttpResponseRedirect(reverse('index'))
