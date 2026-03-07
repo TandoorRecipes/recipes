@@ -267,7 +267,8 @@ def system(request):
 
     # Social login debug info
     social_providers = []
-    social_login_errors = caches['default'].get('social_login_errors', [])
+    from cookbook.helper.social_adapter import get_social_login_errors
+    social_login_errors = get_social_login_errors()
     try:
         from allauth.socialaccount.models import SocialApp, SocialAccount
         from django.db.models import Count

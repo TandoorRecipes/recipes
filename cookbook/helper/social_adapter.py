@@ -1,9 +1,15 @@
+import json
+import os
 import re
+from datetime import timedelta
 
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
-from django.core.cache import caches
 from django.utils import timezone
+
+_ERROR_FILE = os.path.join(settings.MEDIA_ROOT, '.social_login_errors.json')
+_MAX_ERRORS = 50
+_MAX_AGE_HOURS = 24
 
 
 def _mask_email(email):
@@ -14,14 +20,28 @@ def _mask_email(email):
     return local[0] + '***@' + domain if local else '***@' + domain
 
 
+def get_social_login_errors():
+    """Read stored social login errors, pruning entries older than 24h."""
+    try:
+        with open(_ERROR_FILE) as f:
+            errors = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+    cutoff = (timezone.now() - timedelta(hours=_MAX_AGE_HOURS)).isoformat()
+    return [e for e in errors if e.get('timestamp', '') > cutoff]
+
+
 def _store_error(error_entry):
-    """Append an error entry to the cached social login errors list (max 50, 24h TTL)."""
-    cache = caches['default']
-    cache_key = 'social_login_errors'
+    """Append an error entry to the stored social login errors (max 50, 24h TTL)."""
     error_entry['timestamp'] = timezone.now().isoformat()
-    errors = cache.get(cache_key, [])
+    errors = get_social_login_errors()
     errors.insert(0, error_entry)
-    cache.set(cache_key, errors[:50], timeout=60 * 60 * 24)
+    errors = errors[:_MAX_ERRORS]
+    try:
+        with open(_ERROR_FILE, 'w') as f:
+            json.dump(errors, f)
+    except OSError:
+        pass
 
 
 class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
