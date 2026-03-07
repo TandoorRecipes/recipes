@@ -377,11 +377,11 @@ def test_mask_email_empty_local():
     assert _mask_email('@example.com') == '***@example.com'
 
 
-def test_on_authentication_error_stores_in_cache(rf):
-    """on_authentication_error should store masked errors in cache."""
-    from django.core.cache import caches
+def test_on_authentication_error_stores_errors(rf, tmp_path, settings):
+    """on_authentication_error should store masked errors to file."""
+    import cookbook.helper.social_adapter as sa
+    sa._ERROR_FILE = str(tmp_path / 'errors.json')
 
-    caches['default'].delete('social_login_errors')
     adapter = TandoorSocialAccountAdapter()
     request = rf.get('/fake/')
 
@@ -393,21 +393,21 @@ def test_on_authentication_error_stores_in_cache(rf):
         exception=Exception('Failed for user@secret.com')
     )
 
-    errors = caches['default'].get('social_login_errors', [])
+    errors = sa.get_social_login_errors()
     assert len(errors) == 1
     assert errors[0]['provider'] == 'test_provider'
     assert errors[0]['error'] == 'denied'
-    # Email should be masked in cached exception
+    # Email should be masked
     assert 'user@secret.com' not in errors[0]['exception']
     assert 'u***@secret.com' in errors[0]['exception']
     assert 'timestamp' in errors[0]
 
 
-def test_on_authentication_error_caps_at_50(rf):
-    """Error cache should keep max 50 entries."""
-    from django.core.cache import caches
+def test_on_authentication_error_caps_at_50(rf, tmp_path):
+    """Error storage should keep max 50 entries."""
+    import cookbook.helper.social_adapter as sa
+    sa._ERROR_FILE = str(tmp_path / 'errors.json')
 
-    caches['default'].delete('social_login_errors')
     adapter = TandoorSocialAccountAdapter()
     request = rf.get('/fake/')
 
@@ -417,17 +417,17 @@ def test_on_authentication_error_caps_at_50(rf):
     for i in range(55):
         adapter.on_authentication_error(request, FakeProvider(), error=f'err_{i}')
 
-    errors = caches['default'].get('social_login_errors', [])
+    errors = sa.get_social_login_errors()
     assert len(errors) == 50
     # Most recent should be first
     assert errors[0]['error'] == 'err_54'
 
 
-def test_on_authentication_error_includes_chained_cause(rf):
+def test_on_authentication_error_includes_chained_cause(rf, tmp_path):
     """on_authentication_error should include chained exception causes for debugging."""
-    from django.core.cache import caches
+    import cookbook.helper.social_adapter as sa
+    sa._ERROR_FILE = str(tmp_path / 'errors.json')
 
-    caches['default'].delete('social_login_errors')
     adapter = TandoorSocialAccountAdapter()
     request = rf.get('/fake/')
 
@@ -441,7 +441,7 @@ def test_on_authentication_error_includes_chained_cause(rf):
 
     adapter.on_authentication_error(request, FakeProvider(), error='unknown', exception=outer)
 
-    errors = caches['default'].get('social_login_errors', [])
+    errors = sa.get_social_login_errors()
     assert len(errors) == 1
     assert 'JWT audience mismatch' in errors[0]['exception']
     assert 'Invalid id_token' in errors[0]['exception']
