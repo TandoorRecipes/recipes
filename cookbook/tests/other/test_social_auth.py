@@ -421,3 +421,28 @@ def test_on_authentication_error_caps_at_50(rf):
     assert len(errors) == 50
     # Most recent should be first
     assert errors[0]['error'] == 'err_54'
+
+
+def test_on_authentication_error_includes_chained_cause(rf):
+    """on_authentication_error should include chained exception causes for debugging."""
+    from django.core.cache import caches
+
+    caches['default'].delete('social_login_errors')
+    adapter = TandoorSocialAccountAdapter()
+    request = rf.get('/fake/')
+
+    class FakeProvider:
+        id = 'oidc'
+
+    # Simulate allauth's pattern: ValidationError("invalid_token") from OAuth2Error("JWT ...")
+    root_cause = Exception('JWT audience mismatch: expected client123, got other456')
+    outer = Exception('Invalid id_token')
+    outer.__cause__ = root_cause
+
+    adapter.on_authentication_error(request, FakeProvider(), error='unknown', exception=outer)
+
+    errors = caches['default'].get('social_login_errors', [])
+    assert len(errors) == 1
+    assert 'JWT audience mismatch' in errors[0]['exception']
+    assert 'Invalid id_token' in errors[0]['exception']
+    assert '→' in errors[0]['exception']
