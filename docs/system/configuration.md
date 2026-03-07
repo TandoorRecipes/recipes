@@ -404,8 +404,18 @@ http://localhost/accounts/login/?form=1
 ```
 
 To fully disable local authentication (no break-glass fallback), use `SOCIALACCOUNT_ONLY=1` instead.
-See the [authentication docs](../features/authentication.md#social-only-authentication) for details on
-all social login settings.
+
+Additional social login settings (documented in the [authentication feature docs](../features/authentication.md)):
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `SOCIALACCOUNT_PROVIDERS` | — | Provider configuration (JSON or Python dict) |
+| `SOCIALACCOUNT_PROVIDERS_FILE` | — | Path to file containing provider configuration |
+| `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth ([details](../features/authentication.md#social-only-authentication)) |
+| `SOCIALACCOUNT_LOGIN_ON_GET` | `0` | Skip confirmation page ([details](../features/authentication.md#skipping-the-confirmation-page)) |
+| `SOCIALACCOUNT_AUTO_SIGNUP` | `1` | Auto-create accounts on social login ([details](../features/authentication.md#controlling-social-signup)) |
+| `SOCIALACCOUNT_EMAIL_AUTHENTICATION` | `0` | Match social logins to existing accounts by email ([details](../features/authentication.md#email-based-account-matching)) |
+| `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` | `0` | Skip email verification when matching ([details](../features/authentication.md#email-based-account-matching)) |
 
 #### Remote User Auth
 > default `0` - options `0`, `1`

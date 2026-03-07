@@ -2,7 +2,7 @@ Besides the normal django username and password authentication this application 
 methods of central account management and authentication.
 
 ## Allauth
-[Django Allauth](https://django-allauth.readthedocs.io/en/latest/index.html) is an awesome project that
+[Django Allauth](https://docs.allauth.org/en/latest/) is an awesome project that
 allows you to use a [huge number](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) of different
 authentication providers.
 
@@ -32,7 +32,7 @@ SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect,allauth.socialac
 
 Depending on your authentication provider you **might need** to configure it.
 This needs to be done through the settings system. To make the system flexible (allow multiple providers) and to
-not require another file to be mounted into the container the configuration ins done through a single
+not require another file to be mounted into the container the configuration is done through a single
 environment variable. The downside of this approach is that the configuration needs to be put into a single line
 as environment files loaded by docker compose don't support multiple lines for a single variable.
 
