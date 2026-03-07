@@ -179,19 +179,14 @@ To require users to go through a signup form (e.g., to accept terms of service):
 SOCIALACCOUNT_AUTO_SIGNUP=0
 ```
 
-<!-- prettier-ignore -->
-!!! note
-    When `SOCIALACCOUNT_AUTO_SIGNUP=1` (the default) and `SOCIALACCOUNT_EMAIL_AUTHENTICATION=1`,
-    allauth will automatically match social logins to existing accounts by email without showing a signup form.
+### Example: Social Login with Invite-Based Space Access
 
-### Example: Social-Only with Invite-Based Space Access
-
-To set up Tandoor with social login only (no local login) and control space access via invite links:
+To set up Tandoor with social login as the primary method and control space access via invite links:
 
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
 SOCIALACCOUNT_PROVIDERS=<your provider config>
-SOCIALACCOUNT_ONLY=1
+HIDE_LOGIN_FORM=1
 SOCIALACCOUNT_LOGIN_ON_GET=1
 SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
@@ -199,7 +194,7 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
 
 With this configuration:
 
-1. The login page shows only the social login button (no username/password form)
+1. The login page shows only the social login button (local login available via `/accounts/login/?form=1` as a break-glass fallback)
 2. Clicking the button goes directly to the provider (no confirmation page)
 3. New users are created automatically via the social provider
 4. If a user's social email matches an existing account, the accounts are linked automatically
@@ -212,6 +207,12 @@ With this configuration:
     access to any space unless you send them an invite link or set `SOCIAL_DEFAULT_ACCESS=1`.
     To truly restrict who can create accounts, configure access controls at your identity provider
     (e.g., limit which users or groups can access the Tandoor application in Authentik/Keycloak).
+
+<!-- prettier-ignore -->
+!!! note
+    `SOCIALACCOUNT_AUTO_SIGNUP` only controls whether **new** users are auto-created or shown a signup form.
+    Email matching for **existing** accounts (via `SOCIALACCOUNT_EMAIL_AUTHENTICATION`) works independently
+    and always bypasses the signup form when a match is found.
 
 ### Session Management
 

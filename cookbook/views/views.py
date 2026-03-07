@@ -440,8 +440,8 @@ def system(request):
                         'source': 'database',
                         'account_count': account_counts.get(pid, 0),
                     })
-    except Exception:
-        pass
+    except Exception as e:
+        print(f'WARNING: Failed to load social login info for system page: {e}')
 
     return render(
         request, 'system.html', {
@@ -495,19 +495,17 @@ def invite_link(request, token):
             messages.add_message(request, messages.ERROR, _('Malformed Invite Link supplied!'))
             return HttpResponseRedirect(reverse('index'))
 
-        if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
-            if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
-                if not link.reusable:
-                    link.used_by = request.user
-                    link.save()
+        if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
+            if request.user.is_authenticated:
+                if not request.user.userspace_set.filter(space=link.space).exists():
+                    if not link.reusable:
+                        link.used_by = request.user
+                        link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
+                    UserSpace.objects.filter(user=request.user).update(active=False)
+                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
 
-                if request.user.userspace_set.count() == 1:
-                    user_space.active = True
-                    user_space.save()
-
-                user_space.groups.add(link.group)
+                    user_space.groups.add(link.group)
 
                 messages.add_message(request, messages.SUCCESS, _('Successfully joined space.'))
                 return HttpResponseRedirect(reverse('view_space_overview'))
