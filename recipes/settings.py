@@ -68,6 +68,7 @@ LOGGING = {
 
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', False)))
+HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
 
 if os.getenv('REVERSE_PROXY_AUTH') is not None:
     print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
@@ -145,6 +146,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'django.contrib.postgres',
     'oauth2_provider',
     'django_tables2',
@@ -207,6 +209,18 @@ except Exception:
 
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = bool(int(os.getenv('SOCIALACCOUNT_EMAIL_AUTHENTICATION', False)))
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = bool(int(os.getenv('SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT', False)))
+SOCIALACCOUNT_LOGIN_ON_GET = bool(int(os.getenv('SOCIALACCOUNT_LOGIN_ON_GET', False)))
+if os.getenv('SOCIALACCOUNT_AUTO_SIGNUP') is not None:
+    SOCIALACCOUNT_AUTO_SIGNUP = bool(int(os.getenv('SOCIALACCOUNT_AUTO_SIGNUP', True)))
+SOCIALACCOUNT_ONLY = bool(int(os.getenv('SOCIALACCOUNT_ONLY', False)))
+if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
+    print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
+if HIDE_LOGIN_FORM and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
+    print('WARNING: HIDE_LOGIN_FORM is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
+if SOCIALACCOUNT_EMAIL_AUTHENTICATION and not SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT and os.getenv('EMAIL_HOST', '') == '':
+    print('WARNING: SOCIALACCOUNT_EMAIL_AUTHENTICATION requires a working email configuration (EMAIL_HOST) when SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT is not enabled.')
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
@@ -214,6 +228,12 @@ ACCOUNT_MAX_EMAIL_ADDRESSES = 3
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 90
 ACCOUNT_LOGOUT_ON_GET = True
+
+USERSESSIONS_TRACK_ACTIVITY = True
+HEADLESS_SERVE_SPECIFICATION = True
+
+SOCIALACCOUNT_ADAPTER = 'cookbook.helper.social_adapter.TandoorSocialAccountAdapter'
+
 
 try:
     SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
