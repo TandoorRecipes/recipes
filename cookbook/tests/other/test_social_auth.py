@@ -11,6 +11,8 @@ from cookbook.forms import AllAuthSocialSignupForm
 from cookbook.helper.AllAuthCustomAdapter import AllAuthCustomAdapter
 from cookbook.models import InviteLink, Space, UserSpace
 
+pytestmark = pytest.mark.django_db
+
 
 # ---------------------- FIXTURES -----------------------
 
@@ -240,7 +242,7 @@ def test_adapter_no_resolver_match(adapter):
 
 # ---------------------- INVITE LINK VIEW TESTS -----------------------
 
-@pytest.mark.django_db
+
 def test_invite_link_unauthenticated_redirects_to_signup(client, invite_link):
     """Unauthenticated user with invite should be redirected to signup."""
     response = client.get(f'/invite/{invite_link.uuid}')
@@ -248,7 +250,7 @@ def test_invite_link_unauthenticated_redirects_to_signup(client, invite_link):
     assert '/accounts/signup/' in response.url
 
 
-@pytest.mark.django_db
+
 @override_settings(SOCIALACCOUNT_ONLY=True)
 def test_invite_link_unauthenticated_social_only_redirects_to_login(client, invite_link):
     """With SOCIALACCOUNT_ONLY, unauthenticated user should be redirected to login."""
@@ -257,14 +259,14 @@ def test_invite_link_unauthenticated_social_only_redirects_to_login(client, invi
     assert '/accounts/login/' in response.url
 
 
-@pytest.mark.django_db
+
 def test_invite_link_stores_token_in_session(client, invite_link):
     """Invite link should store the token in the session."""
     client.get(f'/invite/{invite_link.uuid}')
     assert client.session.get('signup_token') == str(invite_link.uuid)
 
 
-@pytest.mark.django_db
+
 def test_invite_link_authenticated_user_joins_space(client, invite_link, invite_space):
     """Authenticated user following invite link should be added to the space."""
     user = User.objects.create_user(username='invitee', password='test')
@@ -277,14 +279,14 @@ def test_invite_link_authenticated_user_joins_space(client, invite_link, invite_
         assert UserSpace.objects.filter(user=user, space=invite_space).exists()
 
 
-@pytest.mark.django_db
+
 def test_invite_link_invalid_uuid(client):
     """Invalid UUID should redirect to index without crashing."""
     response = client.get('/invite/not-a-valid-uuid')
     assert response.status_code == 302
 
 
-@pytest.mark.django_db
+
 def test_invite_link_expired(client, invite_space):
     """Expired invite link should redirect to index."""
     with scopes_disabled():
