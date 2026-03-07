@@ -117,9 +117,17 @@ def space_overview(request):
                 return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
         if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
-            user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=False)
-            user_space.groups.add(Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get())
-            return HttpResponseRedirect(reverse('index'))
+            space = Space.objects.first()
+            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+            if space and group:
+                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
+                user_space.groups.add(group)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                if not space:
+                    print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {request.user}.')
+                if not group:
+                    print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {request.user}.')
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
@@ -257,6 +265,51 @@ def system(request):
     if not cache_response:
         caches['default'].set('system_view_test_cache_entry', timezone.now(), 10)
 
+    # Social login debug info
+    social_providers = []
+    from cookbook.helper.social_adapter import get_social_login_errors
+    social_login_errors = get_social_login_errors()
+    try:
+        from allauth.socialaccount.models import SocialApp, SocialAccount
+        from django.db.models import Count
+
+        seen_providers = set()
+        # Batch query: count linked accounts per provider in one query
+        account_counts = dict(
+            SocialAccount.objects.values_list('provider').annotate(count=Count('id')).values_list('provider', 'count')
+        )
+
+        with scopes_disabled():
+            # Providers configured in settings (SOCIALACCOUNT_PROVIDERS)
+            for provider_id, provider_config in settings.SOCIALACCOUNT_PROVIDERS.items():
+                for app in provider_config.get('APPS', []):
+                    pid = app.get('provider_id', provider_id)
+                    seen_providers.add(pid)
+                    client_id = app.get('client_id', '')
+                    social_providers.append({
+                        'name': app.get('name', pid),
+                        'provider': provider_id,
+                        'provider_id': pid,
+                        'client_id': client_id[:8] + '...' if client_id and len(client_id) > 8 else client_id,
+                        'source': 'settings',
+                        'account_count': account_counts.get(pid, 0),
+                    })
+
+            # Providers configured in database (SocialApp model)
+            for app in SocialApp.objects.all():
+                pid = app.provider_id or app.provider
+                if pid not in seen_providers:
+                    social_providers.append({
+                        'name': app.name,
+                        'provider': app.provider,
+                        'provider_id': pid,
+                        'client_id': app.client_id[:8] + '...' if app.client_id and len(app.client_id) > 8 else app.client_id,
+                        'source': 'database',
+                        'account_count': account_counts.get(pid, 0),
+                    })
+    except Exception as e:
+        print(f'WARNING: Failed to load social login info for system page: {e}')
+
     return render(
         request, 'system.html', {
             'gunicorn_media': settings.GUNICORN_MEDIA,
@@ -272,6 +325,8 @@ def system(request):
             'migration_info': migration_info,
             'missing_migration': missing_migration,
             'cache_response': cache_response,
+            'social_providers': social_providers,
+            'social_login_errors': social_login_errors,
         })
 
 
@@ -332,19 +387,22 @@ def invite_link(request, token):
             return HttpResponseRedirect(reverse('index'))
 
         if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
-            if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
-                if not link.reusable:
-                    link.used_by = request.user
-                    link.save()
+            if request.user.is_authenticated:
+                if not request.user.userspace_set.filter(space=link.space).exists():
+                    if not link.reusable:
+                        link.used_by = request.user
+                        link.save()
 
-                UserSpace.objects.filter(user=request.user).update(active=False)
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
+                    UserSpace.objects.filter(user=request.user).update(active=False)
+                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
 
-                user_space.groups.add(link.group)
+                    user_space.groups.add(link.group)
 
                 return HttpResponseRedirect(reverse('index'))
             else:
                 request.session['signup_token'] = str(token)
+                if settings.SOCIALACCOUNT_ONLY:
+                    return HttpResponseRedirect(reverse('account_login'))
                 return HttpResponseRedirect(reverse('account_signup'))
 
     return HttpResponseRedirect(reverse('index'))

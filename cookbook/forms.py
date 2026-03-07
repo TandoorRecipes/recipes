@@ -181,13 +181,17 @@ class AllAuthSocialSignupForm(SocialSignupForm):
         if settings.SOCIAL_DEFAULT_ACCESS:
             with scopes_disabled():
                 space = Space.objects.first()
-                if space:
+                group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+                if space and group:
                     user_space = UserSpace.objects.create(
                         space=space, user=user, active=True
                     )
-                    user_space.groups.add(
-                        Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get()
-                    )
+                    user_space.groups.add(group)
+                else:
+                    if not space:
+                        print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {user}.')
+                    if not group:
+                        print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {user}.')
 
 
 class CustomPasswordResetForm(ResetPasswordForm):

@@ -10,7 +10,7 @@ from icalendar import Calendar
 from oauth2_provider.models import AccessToken
 from rest_framework.test import APIClient
 
-from cookbook.models import MealPlan, MealType
+from cookbook.models import Household, MealPlan, MealType, UserSpace
 from cookbook.tests.factories import RecipeFactory
 
 LIST_URL = 'api:mealplan-list'
@@ -402,3 +402,23 @@ def test_create_explicit_time_preserved(u1_s1, recipe_1_s1, space_1):
         mp = MealPlan.objects.get(pk=response['id'])
     assert mp.from_date.hour == 19
     assert mp.from_date.minute == 30
+
+
+def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
+    """Household members should see each other's meal plans"""
+    user1 = auth.get_user(u1_s1)
+    user2 = auth.get_user(u2_s1)
+
+    # user2 should not see user1's meal plan before sharing a household
+    results = json.loads(u2_s1.get(reverse(LIST_URL)).content)['results']
+    assert len(results) == 0
+
+    # put both users in the same household
+    with scopes_disabled():
+        household = Household.objects.create(name='test', space=space_1)
+        UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+
+    # now user2 should see user1's meal plan
+    results = json.loads(u2_s1.get(reverse(LIST_URL)).content)['results']
+    assert len(results) == 1
+    assert results[0]['id'] == obj_1.id

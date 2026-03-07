@@ -22,6 +22,8 @@
         <br/>
         <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/social/connections/')" target="_blank">{{ $t('Social_Authentication') }}</v-btn>
         <br/>
+        <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/sessions/')" target="_blank">{{ $t('Manage_Sessions') }}</v-btn>
+        <br/>
 
         <p class="text-h6 mt-3">{{ $t('DeviceSettings') }}</p>
         <p class="text-disabled">{{ $t('DeviceSettingsHelp') }}</p>
