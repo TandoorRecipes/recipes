@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.cache import caches
 from django.utils import timezone
+from django_scopes import scopes_disabled
 
 from cookbook.models import InviteLink
 
@@ -30,9 +31,10 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         # Local signup form: require ENABLE_SIGNUP or a valid invite token
         if view_name == 'account_signup':
             signup_token = False
-            if 'signup_token' in request.session and InviteLink.objects.filter(
-                    valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).exists():
-                signup_token = True
+            with scopes_disabled():
+                if 'signup_token' in request.session and InviteLink.objects.filter(
+                        valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).exists():
+                    signup_token = True
             if not settings.ENABLE_SIGNUP and not signup_token:
                 return False
 
