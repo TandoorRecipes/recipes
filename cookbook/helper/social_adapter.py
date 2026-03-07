@@ -67,7 +67,7 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         if exception_str:
             exception_str = re.sub(r'[\w.+-]+@[\w-]+\.[\w.-]+', lambda m: _mask_email(m.group()), exception_str)
 
-        print(f"Social login error: provider={provider_id}, code={error}, exception={exception}")
+        print(f"Social login error: provider={provider_id}, code={error}, exception={exception_str}")
 
         _store_error({
             'provider': str(provider_id),

@@ -513,7 +513,7 @@ def invite_link(request, token):
                 return HttpResponseRedirect(reverse('view_space_overview'))
             else:
                 request.session['signup_token'] = str(token)
-                if getattr(settings, 'SOCIALACCOUNT_ONLY', False):
+                if settings.SOCIALACCOUNT_ONLY:
                     return HttpResponseRedirect(reverse('account_login'))
                 return HttpResponseRedirect(reverse('account_signup'))
 
