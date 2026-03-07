@@ -397,6 +397,10 @@ as a parameter to the login URL - for example:
 http://localhost/accounts/login/?form=1
 ```
 
+To fully disable local authentication (no break-glass fallback), use `SOCIALACCOUNT_ONLY=1` instead.
+See the [authentication docs](../features/authentication.md#social-only-authentication) for details on
+all social login settings.
+
 #### Remote User Auth
 > default `0` - options `0`, `1`
 
