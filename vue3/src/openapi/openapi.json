@@ -2380,56 +2380,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedGenericModelReferenceList'
           description: ''
-  /api/food/{id}/shopping/:
-    put:
-      operationId: apiFoodShoppingUpdate
-      description: logs request counts to redis cache total/per user/
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this food.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-      security:
-      - ApiKeyAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FoodShoppingUpdate'
-          description: ''
-    delete:
-      operationId: apiFoodShoppingDestroy
-      description: logs request counts to redis cache total/per user/
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this food.
-        required: true
-      tags:
-      - api
-      security:
-      - ApiKeyAuth: []
-      responses:
-        '204':
-          description: No response body
   /api/food/batch_update/:
     put:
       operationId: apiFoodBatchUpdateUpdate
@@ -11607,23 +11557,6 @@ components:
       - name
       - shopping_lists
       - supermarket_category
-    FoodShoppingUpdate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: false
-        amount:
-          type: integer
-          writeOnly: true
-          nullable: true
-          description: Amount of food to add to the shopping list
-        unit:
-          type: integer
-          writeOnly: true
-          nullable: true
-          description: ID of unit to use for the shopping list
-      required: []
     FoodSimple:
       type: object
       properties:

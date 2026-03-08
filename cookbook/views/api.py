@@ -96,7 +96,7 @@ from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import (
     AccessTokenSerializer, AutomationSerializer, AutoMealPlanSerializer, BookmarkletImportListSerializer, BookmarkletImportSerializer, CookLogSerializer, CustomFilterSerializer,
-    ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer, FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer, ImportLogSerializer,
+    ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer, FoodSimpleSerializer, GroupSerializer, ImportLogSerializer,
     IngredientSerializer, IngredientSimpleSerializer, InviteLinkSerializer, KeywordSerializer, MealPlanSerializer, MealTypeSerializer, PropertySerializer, PropertyTypeSerializer,
     RecipeBookEntrySerializer, RecipeBookSerializer, RecipeExportSerializer, RecipeFlatSerializer, RecipeFromSourceSerializer, RecipeImageSerializer, RecipeOverviewSerializer,
     RecipeSerializer, RecipeShoppingUpdateSerializer, RecipeSimpleSerializer, ShoppingListEntryBulkSerializer, ShoppingListEntrySerializer, ShoppingListRecipeSerializer,
@@ -1291,26 +1291,6 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             agg.update(onhand=0, shopping=0)
 
         return Response({k: v or 0 for k, v in agg.items()})
-
-    @extend_schema(request=FoodShoppingUpdateSerializer, methods=["PUT"])
-    @extend_schema(request=None, methods=["DELETE"])
-    @decorators.action(detail=True, methods=['PUT', 'DELETE'], serializer_class=FoodShoppingUpdateSerializer)
-    def shopping(self, request, pk):
-        if self.request.space.demo:
-            raise PermissionDenied(detail='Not available in demo', code=None)
-        obj = self.get_object()
-
-        if request.method == 'DELETE':
-            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by_id__in=self._shared_users).delete()
-            content = {'msg': _('%(name)s was removed from the shopping list.') % {'name': obj.name}}
-            return Response(content, status=status.HTTP_200_OK)
-
-        amount = request.data.get('amount', 1)
-        unit = request.data.get('unit', None)
-        content = {'msg': _('%(name)s was added to the shopping list.') % {'name': obj.name}}
-
-        ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space, created_by=request.user)
-        return Response(content, status=status.HTTP_200_OK)
 
     @decorators.action(detail=True, methods=['POST'])
     def fdc(self, request, pk):
