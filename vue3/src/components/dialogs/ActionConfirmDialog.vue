@@ -19,7 +19,27 @@
             </v-card-text>
 
             <v-list v-if="entries.length > 0" density="compact" class="py-0">
-                <v-list-item v-for="(entry, idx) in entries" :key="idx" :prepend-icon="entry.icon">
+                <v-list-item v-if="selectable && selectableEntryIds.length > 1" @click="toggleAll">
+                    <template #prepend>
+                        <v-checkbox-btn
+                            :model-value="allSelected"
+                            @update:model-value="toggleAll"
+                            density="compact"
+                            class="me-2"
+                        />
+                    </template>
+                    <v-list-item-title class="text-body-2 font-italic">{{ allSelected ? $t('DeselectAll') : $t('SelectAll') }}</v-list-item-title>
+                </v-list-item>
+                <v-divider v-if="selectable && selectableEntryIds.length > 1" />
+                <v-list-item v-for="(entry, idx) in entries" :key="idx" :prepend-icon="selectable ? undefined : entry.icon">
+                    <template v-if="selectable" #prepend>
+                        <v-checkbox-btn
+                            :model-value="entry.id != null && selectedIds.has(entry.id)"
+                            @update:model-value="toggleEntry(entry)"
+                            density="compact"
+                            class="me-2"
+                        />
+                    </template>
                     <v-list-item-title>{{ entry.text }}</v-list-item-title>
                     <v-list-item-subtitle v-if="entry.subtext">{{ entry.subtext }}</v-list-item-subtitle>
                 </v-list-item>
@@ -31,7 +51,7 @@
                 <v-btn
                     :color="confirmColor"
                     :prepend-icon="confirmIcon"
-                    :disabled="selectOptions.length > 0 && selectedValue == null"
+                    :disabled="(selectOptions.length > 0 && selectedValue == null) || (selectable && selectedIds.size === 0)"
                     variant="flat"
                     @click="confirm"
                 >
@@ -43,10 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watch} from 'vue'
+import {ref, computed, watch} from 'vue'
 import VClosableCardTitle from '@/components/dialogs/VClosableCardTitle.vue'
 
 export type ActionConfirmEntry = {
+    id?: number,
     text: string,
     subtext?: string,
     icon?: string,
@@ -63,6 +84,11 @@ const selectedValue = ref<number | string | null>(null)
 const confirmLabel = ref('')
 const confirmColor = ref('primary')
 const confirmIcon = ref('')
+const selectable = ref(false)
+const selectedIds = ref<Set<number>>(new Set())
+const selectedEntryIds = computed(() => [...selectedIds.value])
+const selectableEntryIds = computed(() => entries.value.filter(e => e.id != null).map(e => e.id!))
+const allSelected = computed(() => selectableEntryIds.value.length > 0 && selectableEntryIds.value.every(id => selectedIds.value.has(id)))
 
 let resolvePromise: ((confirmed: boolean) => void) | null = null
 
@@ -72,6 +98,7 @@ function open(opts: {
     message?: string,
     entries?: ActionConfirmEntry[],
     loading?: boolean,
+    selectable?: boolean,
     confirmLabel: string,
     confirmColor?: string,
     confirmIcon?: string,
@@ -82,6 +109,8 @@ function open(opts: {
     entries.value = opts.entries ?? []
     selectOptions.value = []
     selectedValue.value = null
+    selectable.value = opts.selectable ?? false
+    selectedIds.value = new Set((opts.entries ?? []).filter(e => e.id != null).map(e => e.id!))
     loading.value = opts.loading ?? false
     confirmLabel.value = opts.confirmLabel
     confirmColor.value = opts.confirmColor ?? 'primary'
@@ -97,6 +126,9 @@ function open(opts: {
 
 function setEntries(newEntries: ActionConfirmEntry[]) {
     entries.value = newEntries
+    if (selectable.value) {
+        selectedIds.value = new Set(newEntries.filter(e => e.id != null).map(e => e.id!))
+    }
     loading.value = false
 }
 
@@ -104,6 +136,25 @@ function setSelectOptions(opts: {value: number | string, label: string}[]) {
     selectOptions.value = opts
     selectedValue.value = null
     loading.value = false
+}
+
+function toggleAll() {
+    if (allSelected.value) {
+        selectedIds.value = new Set()
+    } else {
+        selectedIds.value = new Set(selectableEntryIds.value)
+    }
+}
+
+function toggleEntry(entry: ActionConfirmEntry) {
+    if (entry.id == null) return
+    const next = new Set(selectedIds.value)
+    if (next.has(entry.id)) {
+        next.delete(entry.id)
+    } else {
+        next.add(entry.id)
+    }
+    selectedIds.value = next
 }
 
 function confirm() {
@@ -126,5 +177,5 @@ watch(dialog, (val) => {
     }
 })
 
-defineExpose({open, setEntries, setSelectOptions, selectedValue})
+defineExpose({open, setEntries, setSelectOptions, selectedValue, selectedEntryIds})
 </script>

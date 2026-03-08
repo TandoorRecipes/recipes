@@ -2380,56 +2380,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedGenericModelReferenceList'
           description: ''
-  /api/food/{id}/shopping/:
-    put:
-      operationId: apiFoodShoppingUpdate
-      description: logs request counts to redis cache total/per user/
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this food.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-      security:
-      - ApiKeyAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FoodShoppingUpdate'
-          description: ''
-    delete:
-      operationId: apiFoodShoppingDestroy
-      description: logs request counts to redis cache total/per user/
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this food.
-        required: true
-      tags:
-      - api
-      security:
-      - ApiKeyAuth: []
-      responses:
-        '204':
-          description: No response body
   /api/food/batch_update/:
     put:
       operationId: apiFoodBatchUpdateUpdate
@@ -10837,14 +10787,12 @@ components:
           type: boolean
         input_tokens:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         output_tokens:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         start_time:
           type: string
           format: date-time
@@ -10984,9 +10932,8 @@ components:
           maxLength: 128
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         disabled:
           type: boolean
         created_by:
@@ -11131,15 +11078,13 @@ components:
           type: integer
         servings:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         rating:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         comment:
           type: string
@@ -11209,19 +11154,16 @@ components:
           type: boolean
         total_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         exported_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         cache_duration:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         possibly_not_expired:
           type: boolean
         created_by:
@@ -11362,9 +11304,8 @@ components:
           nullable: true
         fdc_id:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         food_onhand:
           type: boolean
@@ -11611,23 +11552,6 @@ components:
       - name
       - shopping_lists
       - supermarket_category
-    FoodShoppingUpdate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: false
-        amount:
-          type: integer
-          writeOnly: true
-          nullable: true
-          description: Amount of food to add to the shopping list
-        unit:
-          type: integer
-          writeOnly: true
-          nullable: true
-          description: ID of unit to use for the shopping list
-      required: []
     FoodSimple:
       type: object
       properties:
@@ -11767,14 +11691,12 @@ components:
           readOnly: true
         total_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         imported_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         created_by:
           type: integer
           readOnly: true
@@ -11953,9 +11875,8 @@ components:
           maxLength: 256
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         is_header:
           type: boolean
         no_amount:
@@ -12031,9 +11952,8 @@ components:
           maxLength: 256
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         is_header:
           type: boolean
         no_amount:
@@ -12421,9 +12341,8 @@ components:
           maxLength: 128
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         time:
           type: string
           format: time
@@ -13648,9 +13567,8 @@ components:
           maxLength: 128
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         disabled:
           type: boolean
         created_by:
@@ -13726,15 +13644,13 @@ components:
           type: integer
         servings:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         rating:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         comment:
           type: string
@@ -13784,19 +13700,16 @@ components:
           type: boolean
         total_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         exported_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         cache_duration:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         possibly_not_expired:
           type: boolean
         created_by:
@@ -13883,9 +13796,8 @@ components:
           nullable: true
         fdc_id:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
         food_onhand:
           type: boolean
@@ -13984,14 +13896,12 @@ components:
           readOnly: true
         total_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         imported_recipes:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         created_by:
           type: integer
           readOnly: true
@@ -14027,9 +13937,8 @@ components:
           maxLength: 256
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         is_header:
           type: boolean
         no_amount:
@@ -14316,9 +14225,8 @@ components:
           maxLength: 128
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         time:
           type: string
           format: time
@@ -14405,9 +14313,8 @@ components:
           maxLength: 128
         fdc_id:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
     PatchedRecipe:
       type: object
@@ -14438,14 +14345,12 @@ components:
             $ref: '#/components/schemas/Step'
         working_time:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         waiting_time:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         created_by:
           allOf:
           - $ref: '#/components/schemas/User'
@@ -14478,9 +14383,8 @@ components:
           readOnly: true
         servings:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         file_path:
           type: string
           maxLength: 512
@@ -14489,9 +14393,8 @@ components:
           maxLength: 32
         diameter:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         diameter_text:
           type: string
           maxLength: 32
@@ -14537,9 +14440,8 @@ components:
           nullable: true
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
     PatchedRecipeBookEntry:
       type: object
       properties:
@@ -14667,9 +14569,8 @@ components:
           format: double
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         checked:
           type: boolean
         ingredient:
@@ -14835,9 +14736,8 @@ components:
           nullable: true
         ai_credits_monthly:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         ai_credits_balance:
           type: number
           format: double
@@ -14877,14 +14777,12 @@ components:
           readOnly: true
         time:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         show_as_header:
           type: boolean
         file:
@@ -15066,9 +14964,8 @@ components:
           type: integer
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
     PatchedSync:
       type: object
       description: Adds nested create feature
@@ -15289,16 +15186,14 @@ components:
           type: boolean
         ingredient_decimals:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         comments:
           type: boolean
         shopping_auto_sync:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         mealplan_autoadd_shopping:
           type: boolean
         food_inherit_default:
@@ -15318,9 +15213,8 @@ components:
           type: boolean
         shopping_recent_days:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 0
-          format: int64
         csv_delim:
           type: string
           maxLength: 2
@@ -15476,9 +15370,8 @@ components:
           maxLength: 128
         fdc_id:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
           nullable: true
       required:
       - name
@@ -15511,14 +15404,12 @@ components:
             $ref: '#/components/schemas/Step'
         working_time:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         waiting_time:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         created_by:
           allOf:
           - $ref: '#/components/schemas/User'
@@ -15551,9 +15442,8 @@ components:
           readOnly: true
         servings:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         file_path:
           type: string
           maxLength: 512
@@ -15562,9 +15452,8 @@ components:
           maxLength: 32
         diameter:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         diameter_text:
           type: string
           maxLength: 32
@@ -15686,9 +15575,8 @@ components:
           nullable: true
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
       required:
       - created_by
       - name
@@ -16161,9 +16049,8 @@ components:
           format: double
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         checked:
           type: boolean
         ingredient:
@@ -16547,9 +16434,8 @@ components:
           nullable: true
         ai_credits_monthly:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         ai_credits_balance:
           type: number
           format: double
@@ -16629,14 +16515,12 @@ components:
           readOnly: true
         time:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         show_as_header:
           type: boolean
         file:
@@ -16831,9 +16715,8 @@ components:
           type: integer
         order:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
       required:
       - category
       - supermarket
@@ -17155,16 +17038,14 @@ components:
           type: boolean
         ingredient_decimals:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         comments:
           type: boolean
         shopping_auto_sync:
           type: integer
-          maximum: 9223372036854775807
-          minimum: -9223372036854775808
-          format: int64
+          maximum: 2147483647
+          minimum: -2147483648
         mealplan_autoadd_shopping:
           type: boolean
         food_inherit_default:
@@ -17184,9 +17065,8 @@ components:
           type: boolean
         shopping_recent_days:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 0
-          format: int64
         csv_delim:
           type: string
           maxLength: 2

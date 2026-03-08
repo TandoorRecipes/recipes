@@ -5,7 +5,7 @@
 
 import type {FilterDef, ActionDef, BatchAction, StatDef, ListSettings, SortDef, ModelItem} from './types'
 import type {ActionConfirmEntry} from '@/components/dialogs/ActionConfirmDialog.vue'
-import {ApiApi, type Food, type InventoryEntry, type InventoryLocation} from '@/openapi'
+import {ApiApi, type Food, type FoodShopping, type InventoryEntry, type InventoryLocation} from '@/openapi'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import {ErrorMessageType, useMessageStore} from '@/stores/MessageStore'
 
@@ -64,10 +64,15 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
         handler: async (item) => {
 
             if (isOnShoppingList(item)) {
-                await api.apiFoodShoppingDestroy({id: item.id})
+                // Removal is handled by confirmationHandler — this path shouldn't be reached
                 item.shopping = 'False'
             } else {
-                await api.apiFoodShoppingUpdate({id: item.id, foodShoppingUpdate: {}})
+                await api.apiShoppingListEntryCreate({
+                    shoppingListEntry: {
+                        food: {id: item.id, name: item.name} as FoodShopping,
+                        amount: 1,
+                    },
+                })
                 item.shopping = 'True'
             }
         },
@@ -76,12 +81,13 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
                 title: t('Confirm'),
                 message: t('RemoveFromShoppingConfirm', {name: item.name}),
                 loading: true,
+                selectable: true,
                 confirmLabel: t('Remove'),
                 confirmColor: 'warning',
                 confirmIcon: 'fa-solid fa-cart-shopping',
             })
             try {
-    
+
                 const result = await api.apiShoppingListEntryList({food: item.id, pageSize: 100})
                 const foodEntries = (result.results ?? []).filter((e: any) => !e.checked)
                 const entries: ActionConfirmEntry[] = foodEntries.map((e: any) => {
@@ -98,13 +104,32 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
                     if (e.createdAt) {
                         subtextParts.push(new Date(e.createdAt).toLocaleString())
                     }
-                    return {text, subtext: subtextParts.join(' · ') || undefined, icon: 'fa-solid fa-cart-shopping'} as ActionConfirmEntry
+                    return {id: e.id, text, subtext: subtextParts.join(' · ') || undefined, icon: 'fa-solid fa-cart-shopping'} as ActionConfirmEntry
                 })
                 confirmDialog.setEntries(entries)
             } catch {
                 confirmDialog.setEntries([])
             }
-            return (await confirmPromise) ?? false
+            const confirmed = (await confirmPromise) ?? false
+            if (confirmed) {
+                const idsToDelete = confirmDialog.selectedEntryIds.value
+                const results = await Promise.allSettled(
+                    idsToDelete.map(id => api.apiShoppingListEntryDestroy({id}))
+                )
+                const failures = results.filter(r => r.status === 'rejected')
+                if (failures.length > 0) {
+                    useMessageStore().addError(ErrorMessageType.DELETE_ERROR, new Error(`Failed to remove ${failures.length} entries`))
+                }
+                // Re-check if food still has unchecked entries
+                try {
+                    const recheck = await api.apiShoppingListEntryList({food: item.id, pageSize: 1})
+                    const remaining = (recheck.results ?? []).filter((e: any) => !e.checked)
+                    item.shopping = remaining.length > 0 ? 'True' : 'False'
+                } catch {
+                    item.shopping = 'False'
+                }
+            }
+            return confirmed
         },
     },
     {key: 'ignore', labelKey: 'IgnoreShopping', icon: 'fa-solid fa-ban', isToggle: true, toggleField: 'ignoreShopping', activeColor: 'error', inactiveColor: '', group: 'Status',

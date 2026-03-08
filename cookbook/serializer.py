@@ -2073,17 +2073,6 @@ class RecipeShoppingUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'list_recipe', 'ingredients', 'servings', ]
 
 
-class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
-    amount = serializers.IntegerField(write_only=True, allow_null=True, required=False,
-                                      help_text=_("Amount of food to add to the shopping list"))
-    unit = serializers.IntegerField(write_only=True, allow_null=True, required=False,
-                                    help_text=_("ID of unit to use for the shopping list"))
-
-    class Meta:
-        model = Recipe
-        fields = ['id', 'amount', 'unit']
-
-
 # non model serializers
 
 class RecipeFromSourceSerializer(serializers.Serializer):
