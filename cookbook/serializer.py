@@ -983,8 +983,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         reset_inherit = self.initial_data.get('reset_inherit', False)
         if onhand is not None:
             shared_users = []
-            if self.context["request"].user_space.household:
-                shared_users = self.context["request"].user_space.household.values_list('user_id', flat=True)
+            user_space = UserSpace.objects.filter(user=self.context["request"].user, space=instance.space).first()
+            if user_space and user_space.household:
+                shared_users = user_space.household.values_list('user_id', flat=True)
 
             if len(shared_users) == 0:
                 shared_users = [user := self.context['request'].user]
