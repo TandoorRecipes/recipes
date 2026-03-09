@@ -238,6 +238,7 @@
         <sync-dialog v-if="syncDialogItem" :sync="(syncDialogItem as any)" v-model="syncDialogOpen" activator="model" />
 
         <action-confirm-dialog ref="confirmDialogRef" />
+        <inventory-quick-add-dialog ref="inventoryQuickAddRef" />
 
     </v-container>
 </template>
@@ -275,9 +276,10 @@ import ModelListStatsFooter from "@/components/model_list/ModelListStatsFooter.v
 import {useModelListActions} from "@/composables/modellist/useModelListActions";
 import {useModelListSettings, MODEL_LIST_SETTINGS_KEY} from "@/composables/modellist/useModelListSettings";
 import {useModelListTree, CHILD_PAGE_SIZE} from "@/composables/modellist/useModelListTree";
-import type {ModelItem} from "@/composables/modellist/types";
+import type {ActionContext, ModelItem} from "@/composables/modellist/types";
 import {getAncestorPath} from "@/composables/modellist/types";
 import ActionConfirmDialog from "@/components/dialogs/ActionConfirmDialog.vue";
+import InventoryQuickAddDialog from "@/components/dialogs/InventoryQuickAddDialog.vue";
 import {useDisplay} from "vuetify";
 
 const {t} = useI18n()
@@ -392,6 +394,16 @@ const modelNameRef = toRef(props, 'model')
 const singleMergeDialog = ref(false)
 const singleMergeSource = ref<ModelItem[]>([])
 const confirmDialogRef = ref<InstanceType<typeof ActionConfirmDialog> | null>(null)
+const inventoryQuickAddRef = ref<InstanceType<typeof InventoryQuickAddDialog> | null>(null)
+
+const actionContext = computed<ActionContext | null>(() => {
+    if (!confirmDialogRef.value) return null
+    return {
+        confirmDialog: confirmDialogRef.value,
+        extraDialogs: {inventoryQuickAdd: inventoryQuickAddRef.value},
+        t,
+    }
+})
 
 const syncDialogItem = ref<ModelItem | null>(null)
 const syncDialogOpen = ref(false)
@@ -409,19 +421,22 @@ function handleAction(key: string, item: ModelItem) {
     }
 }
 
+function propagateToggle(item: ModelItem, field: string) {
+    const idx = rawItems.value.findIndex(i => i.id === item.id)
+    if (idx >= 0) {
+        rawItems.value[idx] = {...rawItems.value[idx], [field]: item[field]}
+        triggerRef(rawItems)
+    } else {
+        // Item is a tree child — update in the children cache
+        updateCachedChild(item.id, field, item[field])
+    }
+}
+
 const {actionDefs, groupedActionDefs, executeAction, getToggleState} = useModelListActions(
     currentModel, genericModel as Ref<GenericModel>, modelNameRef, handleAction,
-    (item: ModelItem, field: string) => {
-        const idx = rawItems.value.findIndex(i => i.id === item.id)
-        if (idx >= 0) {
-            rawItems.value[idx] = {...rawItems.value[idx], [field]: item[field]}
-            triggerRef(rawItems)
-        } else {
-            // Item is a tree child — update in the children cache
-            updateCachedChild(item.id, field, item[field])
-        }
-    },
+    propagateToggle,
     () => reloadAfterMutation(),
+    actionContext,
 )
 
 /**
@@ -439,6 +454,9 @@ async function handleActionWithConfirmation(key: string, item: ModelItem) {
             if (action.confirmationHandler && confirmDialogRef.value) {
                 const confirmed = await action.confirmationHandler(item, confirmDialogRef.value, t)
                 if (!confirmed) return
+                // confirmationHandler did the removal — propagate state and skip executeAction
+                if (action.toggleField) propagateToggle(item, action.toggleField)
+                return
             }
         } else if (action.isToggle && !getToggleState(action, item)) {
             // Toggle is inactive → user wants to activate → activation confirm

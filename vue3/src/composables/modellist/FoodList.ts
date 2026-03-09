@@ -86,21 +86,13 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
             if (item.substituteInventory) return 'warning'
             return undefined
         },
-        handler: async (item) => {
-            if (isInInventory(item)) {
-                // Removal is handled by confirmationHandler — this path shouldn't be reached
-                item.inInventory = 'False'
-            } else {
-                const {addToInventory, getDefaultLocation} = useInventoryActions()
-                const loc = getDefaultLocation()
-                if (!loc) return // activationConfirmationHandler ensures this is set
-                try {
-                    await addToInventory({id: item.id, name: item.name}, loc)
-                    item.inInventory = 'True'
-                } catch (err) {
-                    useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-                }
-            }
+        handler: async (item, _genericModel, context) => {
+            const dialog = context?.extraDialogs?.inventoryQuickAdd
+            const t = context?.t
+            if (!dialog || !t) return
+            const {quickAddToInventory} = useInventoryActions()
+            const added = await quickAddToInventory({id: item.id, name: item.name}, dialog, t)
+            if (added) item.inInventory = 'True'
         },
         confirmationHandler: async (item, confirmDialog, t) => {
             const {removeFromInventory, checkInventoryStatus} = useInventoryActions()
@@ -109,10 +101,6 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
                 item.inInventory = (await checkInventoryStatus(item.id)) ? 'True' : 'False'
             }
             return removed
-        },
-        activationConfirmationHandler: async (_item, confirmDialog, t) => {
-            const {ensureDefaultLocation} = useInventoryActions()
-            return await ensureDefaultLocation(confirmDialog, t)
         },
     },
 
