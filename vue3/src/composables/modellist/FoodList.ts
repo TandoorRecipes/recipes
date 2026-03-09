@@ -4,15 +4,9 @@
  */
 
 import type {FilterDef, ActionDef, BatchAction, StatDef, ListSettings, SortDef, ModelItem} from './types'
-import type {ActionConfirmEntry} from '@/components/dialogs/ActionConfirmDialog.vue'
-import {ApiApi, type Food, type FoodShopping, type InventoryEntry, type InventoryLocation} from '@/openapi'
-import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
+import {useShoppingActions} from '@/composables/useShoppingActions'
+import {useInventoryActions} from '@/composables/useInventoryActions'
 import {ErrorMessageType, useMessageStore} from '@/stores/MessageStore'
-
-const api = new ApiApi()
-
-/** Lightweight reference to an inventory location, saved in device settings. */
-type InventoryLocationRef = {id: number, name: string}
 
 /** The backend annotates shopping_status via Exists() → CharField, yielding "True"/"False" strings. */
 function isOnShoppingList(item: ModelItem): boolean {
@@ -62,74 +56,22 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
         isActive: isOnShoppingList,
         colorResolver: (item: ModelItem) => isOnShoppingList(item) ? 'success' : undefined,
         handler: async (item) => {
-
             if (isOnShoppingList(item)) {
                 // Removal is handled by confirmationHandler — this path shouldn't be reached
                 item.shopping = 'False'
             } else {
-                await api.apiShoppingListEntryCreate({
-                    shoppingListEntry: {
-                        food: {id: item.id, name: item.name} as FoodShopping,
-                        amount: 1,
-                    },
-                })
+                const {addToShopping} = useShoppingActions()
+                await addToShopping({id: item.id, name: item.name})
                 item.shopping = 'True'
             }
         },
         confirmationHandler: async (item, confirmDialog, t) => {
-            const confirmPromise = confirmDialog.open({
-                title: t('Confirm'),
-                message: t('RemoveFromShoppingConfirm', {name: item.name}),
-                loading: true,
-                selectable: true,
-                confirmLabel: t('Remove'),
-                confirmColor: 'warning',
-                confirmIcon: 'fa-solid fa-cart-shopping',
-            })
-            try {
-
-                const result = await api.apiShoppingListEntryList({food: item.id, pageSize: 100})
-                const foodEntries = (result.results ?? []).filter((e: any) => !e.checked)
-                const entries: ActionConfirmEntry[] = foodEntries.map((e: any) => {
-                    const parts: string[] = []
-                    if (e.amount) parts.push(String(e.amount))
-                    if (e.unit?.name) parts.push(e.unit.name)
-                    const text = parts.length > 0 ? parts.join(' ') : t('Shopping')
-                    const subtextParts: string[] = []
-                    const recipeName = e.listRecipeData?.recipeData?.name
-                    if (recipeName) subtextParts.push(recipeName)
-                    if (e.createdBy?.displayName || e.createdBy?.username) {
-                        subtextParts.push(e.createdBy.displayName || e.createdBy.username)
-                    }
-                    if (e.createdAt) {
-                        subtextParts.push(new Date(e.createdAt).toLocaleString())
-                    }
-                    return {id: e.id, text, subtext: subtextParts.join(' · ') || undefined, icon: 'fa-solid fa-cart-shopping'} as ActionConfirmEntry
-                })
-                confirmDialog.setEntries(entries)
-            } catch {
-                confirmDialog.setEntries([])
+            const {removeFromShopping, checkShoppingStatus} = useShoppingActions()
+            const removed = await removeFromShopping({id: item.id, name: item.name}, confirmDialog, t)
+            if (removed) {
+                item.shopping = (await checkShoppingStatus(item.id)) ? 'True' : 'False'
             }
-            const confirmed = (await confirmPromise) ?? false
-            if (confirmed) {
-                const idsToDelete = confirmDialog.selectedEntryIds.value
-                const results = await Promise.allSettled(
-                    idsToDelete.map(id => api.apiShoppingListEntryDestroy({id}))
-                )
-                const failures = results.filter(r => r.status === 'rejected')
-                if (failures.length > 0) {
-                    useMessageStore().addError(ErrorMessageType.DELETE_ERROR, new Error(`Failed to remove ${failures.length} entries`))
-                }
-                // Re-check if food still has unchecked entries
-                try {
-                    const recheck = await api.apiShoppingListEntryList({food: item.id, pageSize: 1})
-                    const remaining = (recheck.results ?? []).filter((e: any) => !e.checked)
-                    item.shopping = remaining.length > 0 ? 'True' : 'False'
-                } catch {
-                    item.shopping = 'False'
-                }
-            }
-            return confirmed
+            return removed
         },
     },
     {key: 'ignore', labelKey: 'IgnoreShopping', icon: 'fa-solid fa-ban', isToggle: true, toggleField: 'ignoreShopping', activeColor: 'error', inactiveColor: '', group: 'Status',
@@ -145,119 +87,32 @@ export const FOOD_ACTION_DEFS: ActionDef[] = [
             return undefined
         },
         handler: async (item) => {
-
-            try {
-                if (isInInventory(item)) {
-                    // Remove: delete all inventory entries for this food
-                    const result = await api.apiInventoryEntryList({foodId: item.id, pageSize: 100})
-                    const invEntries = result.results ?? []
-                    await Promise.all(invEntries.filter(e => e.id != null).map(e => api.apiInventoryEntryDestroy({id: e.id!})))
-                    item.inInventory = 'False'
-                } else {
-                    // Add: use saved default location
-                    const store = useUserPreferenceStore()
-                    const locData = store.deviceSettings.food_defaultInventoryLocation as InventoryLocationRef | null
-                    if (!locData) return // activationConfirmationHandler ensures this is set
-                    try {
-                        await api.apiInventoryEntryCreate({
-                            inventoryEntry: {
-                                food: {id: item.id, name: item.name} as Food,
-                                inventoryLocation: {id: locData.id, name: locData.name} as InventoryLocation,
-                                // TODO: update OpenAPI schema to make unit optional
-                                unit: null as any,
-                                amount: 1,
-                            },
-                        })
-                        item.inInventory = 'True'
-                    } catch (err: any) {
-                        // Stale location — clear saved default so next tap re-prompts
-                        if (err?.response?.status === 400 || err?.response?.status === 404) {
-                            store.deviceSettings.food_defaultInventoryLocation = null
-                        }
-                        throw err
-                    }
+            if (isInInventory(item)) {
+                // Removal is handled by confirmationHandler — this path shouldn't be reached
+                item.inInventory = 'False'
+            } else {
+                const {addToInventory, getDefaultLocation} = useInventoryActions()
+                const loc = getDefaultLocation()
+                if (!loc) return // activationConfirmationHandler ensures this is set
+                try {
+                    await addToInventory({id: item.id, name: item.name}, loc)
+                    item.inInventory = 'True'
+                } catch (err) {
+                    useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
                 }
-            } catch (err) {
-                useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
             }
         },
         confirmationHandler: async (item, confirmDialog, t) => {
-            const confirmPromise = confirmDialog.open({
-                title: t('Confirm'),
-                message: t('RemoveFromInventoryConfirm', {name: item.name}),
-                loading: true,
-                confirmLabel: t('Remove'),
-                confirmColor: 'warning',
-                confirmIcon: '$pantry',
-            })
-            try {
-    
-                const result = await api.apiInventoryEntryList({foodId: item.id, pageSize: 100})
-                const invEntries = result.results ?? []
-                const entries: ActionConfirmEntry[] = invEntries.map((e: InventoryEntry) => {
-                    const parts: string[] = []
-                    if (e.amount) parts.push(String(e.amount))
-                    if (e.unit?.name) parts.push(e.unit.name)
-                    const text = parts.length > 0 ? parts.join(' ') : t('Pantry')
-                    const subtextParts: string[] = []
-                    if (e.inventoryLocation?.name) subtextParts.push(e.inventoryLocation.name)
-                    if (e.createdAt) subtextParts.push(new Date(e.createdAt).toLocaleString())
-                    return {text, subtext: subtextParts.join(' · ') || undefined, icon: '$pantry'} as ActionConfirmEntry
-                })
-                confirmDialog.setEntries(entries)
-            } catch {
-                confirmDialog.setEntries([])
+            const {removeFromInventory, checkInventoryStatus} = useInventoryActions()
+            const removed = await removeFromInventory({id: item.id, name: item.name}, confirmDialog, t)
+            if (removed) {
+                item.inInventory = (await checkInventoryStatus(item.id)) ? 'True' : 'False'
             }
-            return (await confirmPromise) ?? false
+            return removed
         },
         activationConfirmationHandler: async (_item, confirmDialog, t) => {
-            const store = useUserPreferenceStore()
-            const saved = store.deviceSettings.food_defaultInventoryLocation as InventoryLocationRef | null
-            if (saved) return true // default location already set, proceed immediately
-
-            try {
-    
-                const result = await api.apiInventoryLocationList({pageSize: 100})
-                const locations = result.results ?? []
-
-                if (locations.length === 0) {
-                    await confirmDialog.open({
-                        title: t('Pantry'),
-                        message: t('NoInventoryLocations'),
-                        confirmLabel: t('OK'),
-                    })
-                    return false
-                }
-
-                if (locations.length === 1) {
-                    // Auto-save the only location
-                    store.deviceSettings.food_defaultInventoryLocation = {id: locations[0].id!, name: locations[0].name} as InventoryLocationRef
-                    return true
-                }
-
-                // Multiple locations — prompt user to select
-                const confirmPromise = confirmDialog.open({
-                    title: t('SelectDefaultLocation'),
-                    message: t('SelectDefaultLocationMessage'),
-                    loading: true,
-                    confirmLabel: t('Confirm'),
-                    confirmColor: 'primary',
-                    confirmIcon: 'fa-solid fa-location-dot',
-                })
-                confirmDialog.setSelectOptions(locations.map(l => ({value: l.id!, label: l.name})))
-                const confirmed = (await confirmPromise) ?? false
-                if (confirmed && confirmDialog.selectedValue.value != null) {
-                    const selected = locations.find(l => l.id === confirmDialog.selectedValue.value)
-                    if (selected) {
-                        store.deviceSettings.food_defaultInventoryLocation = {id: selected.id!, name: selected.name} as InventoryLocationRef
-                    }
-                    return true
-                }
-                return false
-            } catch (err) {
-                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-                return false
-            }
+            const {ensureDefaultLocation} = useInventoryActions()
+            return await ensureDefaultLocation(confirmDialog, t)
         },
     },
 
