@@ -5,7 +5,13 @@
  */
 import type ActionConfirmDialog from '@/components/dialogs/ActionConfirmDialog.vue'
 import type {EditorSupportedModels} from '@/types/Models'
-type ActionConfirmDialogInstance = InstanceType<typeof ActionConfirmDialog>
+export type ActionConfirmDialogInstance = InstanceType<typeof ActionConfirmDialog>
+
+/** Minimal food reference for composable actions. */
+export type FoodRef = {id: number, name: string}
+
+/** Translation function signature for composable actions. */
+export type TranslateFunc = (key: string, params?: Record<string, any>) => string
 
 /**
  * Base interface for items displayed in a model list.

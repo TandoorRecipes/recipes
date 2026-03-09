@@ -1728,7 +1728,7 @@ class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, Writ
 class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     inventory_location = InventoryLocationSerializer()
     food = FoodSerializer()
-    unit = UnitSerializer()
+    unit = UnitSerializer(allow_null=True)
     label = serializers.SerializerMethodField('get_label')
 
     def get_label(self, obj):
