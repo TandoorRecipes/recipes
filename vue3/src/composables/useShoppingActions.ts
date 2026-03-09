@@ -1,3 +1,4 @@
+import {unref} from 'vue'
 import type {ActionConfirmEntry} from '@/components/dialogs/ActionConfirmDialog.vue'
 import type {ActionConfirmDialogInstance, FoodRef, TranslateFunc} from '@/composables/modellist/types'
 import {ApiApi, type FoodShopping, type Unit} from '@/openapi'
@@ -39,7 +40,8 @@ export function useShoppingActions() {
 
         try {
             const result = await api.apiShoppingListEntryList({food: food.id, pageSize: 100})
-            const foodEntries = result.results ?? []
+            // API default returns unchecked + recently-checked; only show unchecked for removal
+            const foodEntries = (result.results ?? []).filter(e => !e.checked)
             const entries: ActionConfirmEntry[] = foodEntries.map((e: any) => {
                 const parts: string[] = []
                 if (e.amount) parts.push(String(e.amount))
@@ -62,7 +64,8 @@ export function useShoppingActions() {
         const confirmed = (await confirmPromise) ?? false
         if (!confirmed) return false
 
-        const idsToDelete = confirmDialog.selectedEntryIds.value
+        // unref handles both raw arrays (template ref auto-unwrap) and ComputedRef
+        const idsToDelete = unref(confirmDialog.selectedEntryIds)
         const results = await Promise.allSettled(
             idsToDelete.map(id => api.apiShoppingListEntryDestroy({id}))
         )
