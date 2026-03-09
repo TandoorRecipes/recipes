@@ -57,13 +57,8 @@
 
                         </template>
                     </td>
-                    <td v-if="useUserPreferenceStore().isPrintMode">
-                        <span class="text-disabled font-italic"> {{ i.note }}</span>
-                    </td>
-                    <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode">
-                        <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
-                            <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
-                        </v-icon>
+                    <td>
+                        <span class="text-disabled font-italic" v-if="i.note != '' && i.note != undefined"> {{ i.note }}</span>
                     </td>
                     <td v-if="showActions">
                         <v-btn density="compact" variant="plain" @click.stop="" icon>
