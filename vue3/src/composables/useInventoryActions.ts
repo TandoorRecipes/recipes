@@ -1,4 +1,6 @@
+import {unref} from 'vue'
 import type {ActionConfirmEntry} from '@/components/dialogs/ActionConfirmDialog.vue'
+import type {InventoryQuickAddResult} from '@/components/dialogs/InventoryQuickAddDialog.vue'
 import type {ActionConfirmDialogInstance, FoodRef, TranslateFunc} from '@/composables/modellist/types'
 import {ApiApi, type Food, type InventoryEntry, type InventoryLocation, type Unit} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from '@/stores/MessageStore'
@@ -10,6 +12,17 @@ export type InventoryLocationRef = {
     id: number
     name: string
     household: {id: number, name: string}
+}
+
+/** Instance type for InventoryQuickAddDialog template ref. */
+export type InventoryQuickAddDialogInstance = {
+    open: (opts: {
+        title: string,
+        locations: {value: number, label: string}[],
+        defaultLocationId?: number | null,
+        amount?: number,
+        unit?: Unit | null,
+    }) => Promise<InventoryQuickAddResult | null>
 }
 
 export function useInventoryActions() {
@@ -35,6 +48,68 @@ export function useInventoryActions() {
                 store.deviceSettings.food_defaultInventoryLocation = null
             }
             throw err
+        }
+    }
+
+    /**
+     * Open a quick-add dialog for inventory with location, amount, and unit fields.
+     * Pre-fills from caller context (e.g. ingredient amount/unit).
+     * Saves selected location as the default for future use.
+     * Returns true if entry was created, false if cancelled or no locations exist.
+     */
+    async function quickAddToInventory(
+        food: FoodRef,
+        dialog: InventoryQuickAddDialogInstance,
+        t: TranslateFunc,
+        defaults?: {amount?: number, unit?: Unit | null},
+    ): Promise<boolean> {
+        const store = useUserPreferenceStore()
+
+        let locations: InventoryLocationRef[]
+        try {
+            const result = await api.apiInventoryLocationList({pageSize: 100})
+            locations = (result.results ?? []).filter(l => l.id != null).map(l => ({
+                id: l.id!,
+                name: l.name,
+                household: {id: l.household.id!, name: l.household.name},
+            }))
+        } catch (err) {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            return false
+        }
+
+        if (locations.length === 0) {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, t('NoInventoryLocations'))
+            return false
+        }
+
+        const saved = getDefaultLocation()
+        const dialogResult = await dialog.open({
+            title: t('AddToInventory', {name: food.name}),
+            locations: locations.map(l => ({value: l.id, label: l.name})),
+            defaultLocationId: saved?.id ?? null,
+            amount: defaults?.amount ?? 1,
+            unit: defaults?.unit ?? null,
+        })
+
+        if (!dialogResult) return false
+
+        const selectedLoc = locations.find(l => l.id === dialogResult.locationId)
+        if (!selectedLoc) return false
+
+        // Save selected location as default
+        store.deviceSettings.food_defaultInventoryLocation = {
+            id: selectedLoc.id,
+            name: selectedLoc.name,
+            household: selectedLoc.household,
+        } as InventoryLocationRef
+
+        try {
+            await addToInventory(food, selectedLoc, dialogResult.amount, dialogResult.unit)
+            return true
+        } catch (err) {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            return false
         }
     }
 
@@ -75,7 +150,8 @@ export function useInventoryActions() {
         const confirmed = (await confirmPromise) ?? false
         if (!confirmed) return false
 
-        const idsToDelete = confirmDialog.selectedEntryIds.value
+        // unref handles both raw arrays (template ref auto-unwrap) and ComputedRef
+        const idsToDelete = unref(confirmDialog.selectedEntryIds)
         const results = await Promise.allSettled(
             idsToDelete.map(id => api.apiInventoryEntryDestroy({id}))
         )
@@ -134,16 +210,17 @@ export function useInventoryActions() {
             })
             confirmDialog.setSelectOptions(locations.map(l => ({value: l.id!, label: l.name})))
             const confirmed = (await confirmPromise) ?? false
-            if (confirmed && confirmDialog.selectedValue.value != null) {
-                const selected = locations.find(l => l.id === confirmDialog.selectedValue.value)
+            const selectedVal = unref(confirmDialog.selectedValue)
+            if (confirmed && selectedVal != null) {
+                const selected = locations.find(l => l.id === selectedVal)
                 if (selected) {
                     store.deviceSettings.food_defaultInventoryLocation = {
                         id: selected.id!,
                         name: selected.name,
                         household: {id: selected.household.id!, name: selected.household.name},
                     } as InventoryLocationRef
+                    return true
                 }
-                return true
             }
             return false
         } catch (err) {
@@ -177,5 +254,5 @@ export function useInventoryActions() {
         }
     }
 
-    return {addToInventory, removeFromInventory, ensureDefaultLocation, getDefaultLocation, checkInventoryStatus}
+    return {addToInventory, quickAddToInventory, removeFromInventory, ensureDefaultLocation, getDefaultLocation, checkInventoryStatus}
 }
