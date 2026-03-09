@@ -587,7 +587,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
             'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
-            'food_children_exist'
+            'show_ingredient_notes_inline', 'food_children_exist'
         )
         read_only_fields = ('user',)
 

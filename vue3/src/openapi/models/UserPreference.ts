@@ -237,13 +237,19 @@ export interface UserPreference {
      */
     leftHanded?: boolean;
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof UserPreference
      */
     showStepIngredients?: boolean;
     /**
-     * 
+     *
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    showIngredientNotesInline?: boolean;
+    /**
+     *
      * @type {boolean}
      * @memberof UserPreference
      */
@@ -300,6 +306,7 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
         'shoppingAddOnhand': json['shopping_add_onhand'] == null ? undefined : json['shopping_add_onhand'],
         'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
         'showStepIngredients': json['show_step_ingredients'] == null ? undefined : json['show_step_ingredients'],
+        'showIngredientNotesInline': json['show_ingredient_notes_inline'] == null ? undefined : json['show_ingredient_notes_inline'],
         'foodChildrenExist': json['food_children_exist'],
     };
 }
@@ -338,6 +345,7 @@ export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'foodIn
         'shopping_add_onhand': value['shoppingAddOnhand'],
         'left_handed': value['leftHanded'],
         'show_step_ingredients': value['showStepIngredients'],
+        'show_ingredient_notes_inline': value['showIngredientNotesInline'],
     };
 }
 

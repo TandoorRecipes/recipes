@@ -86,6 +86,10 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         return api.apiUserPreferenceList().then(r => {
             if (r.length == 1) {
                 userSettings.value = r[0]
+                // Ensure boolean fields have proper defaults
+                if (userSettings.value.showIngredientNotesInline === undefined) {
+                    userSettings.value.showIngredientNotesInline = true
+                }
                 isAuthenticated.value = true
                 updateTheme()
                 loadDefaultUnit()

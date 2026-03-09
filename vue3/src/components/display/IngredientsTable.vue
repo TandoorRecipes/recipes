@@ -57,8 +57,13 @@
 
                         </template>
                     </td>
-                    <td>
-                        <span class="text-disabled font-italic" v-if="i.note != '' && i.note != undefined"> {{ i.note }}</span>
+                    <td v-if="useUserPreferenceStore().userSettings.showIngredientNotesInline">
+                        <span class="text-disabled font-italic ingredient-note" v-if="i.note != '' && i.note != undefined"> {{ i.note }}</span>
+                    </td>
+                    <td style="width: 1%; text-wrap: nowrap" v-else>
+                        <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
+                            <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
+                        </v-icon>
                     </td>
                     <td v-if="showActions">
                         <v-btn density="compact" variant="plain" @click.stop="" icon>
@@ -162,5 +167,10 @@ function addToShopping(ingredient: Ingredient) {
 
 
 <style scoped>
-
+.ingredient-note {
+    display: inline-block;
+    max-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
+}
 </style>

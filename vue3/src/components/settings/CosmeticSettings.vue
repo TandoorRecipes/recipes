@@ -34,6 +34,7 @@
         <v-checkbox :label="$t('Comments_setting')" v-model="useUserPreferenceStore().userSettings.comments"></v-checkbox>
         <v-checkbox :label="$t('left_handed')" :hint="$t('left_handed_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.leftHanded"></v-checkbox>
         <v-checkbox :label="$t('show_step_ingredients_setting')" :hint="$t('show_step_ingredients_setting_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.showStepIngredients"></v-checkbox>
+        <v-checkbox :label="$t('show_ingredient_notes_inline')" :hint="$t('show_ingredient_notes_inline_help')" persistent-hint v-model="showIngredientNotesInline"></v-checkbox>
         <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{$t('Save')}}</v-btn>
     </v-form>
 </template>
@@ -42,7 +43,7 @@
 <script setup lang="ts">
 
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {ApiApi, Localization} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
@@ -57,6 +58,13 @@ const availableDefaultPages = ref([
     {page: 'PLAN', label: t('Meal_Plan')},
     {page: 'BOOKS', label: t('Books')},
 ])
+
+const showIngredientNotesInline = computed({
+    get: () => useUserPreferenceStore().userSettings.showIngredientNotesInline ?? true,
+    set: (value) => {
+        useUserPreferenceStore().userSettings.showIngredientNotesInline = value
+    }
+})
 
 onMounted(() => {
 

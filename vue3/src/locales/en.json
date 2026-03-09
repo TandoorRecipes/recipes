@@ -898,6 +898,8 @@
   "show_step_ingredients": "Show Step Ingredients",
   "show_step_ingredients_setting": "Show Ingredients Next To Recipe Steps",
   "show_step_ingredients_setting_help": "Show ingredients table next to recipe steps. Applies at creation time. Can be changed for each recipe step.",
+  "show_ingredient_notes_inline": "Show Ingredient Notes Inline",
+  "show_ingredient_notes_inline_help": "Display ingredient notes inline in italics instead of in a tooltip bubble. Notes will wrap for easier reading during cooking.",
   "show_units": "Show Units",
   "simple_mode": "Simple Mode",
   "sort_by": "Sort By",
