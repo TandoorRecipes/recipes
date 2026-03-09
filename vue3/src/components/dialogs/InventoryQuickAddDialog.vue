@@ -36,6 +36,7 @@
                     density="compact"
                     can-clear
                     hide-details
+                    append-to-body
                 />
             </v-card-text>
 

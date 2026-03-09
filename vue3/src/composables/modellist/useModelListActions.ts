@@ -5,7 +5,7 @@
  */
 import {computed, type ComputedRef, type Ref} from 'vue'
 import {useRouter} from 'vue-router'
-import type {ActionDef, ModelItem} from './types'
+import type {ActionContext, ActionDef, ModelItem} from './types'
 import type {Model, GenericModel} from '@/types/Models'
 import {ErrorMessageType, PreparedMessage, useMessageStore} from '@/stores/MessageStore'
 
@@ -16,6 +16,7 @@ export function useModelListActions(
     onAction?: (key: string, item: ModelItem) => void,
     onToggleComplete?: (item: ModelItem, field: string) => void,
     onReload?: () => void,
+    actionContext?: Ref<ActionContext | null>,
 ) {
     const router = useRouter()
 
@@ -46,9 +47,13 @@ export function useModelListActions(
             if (!field) return
             if (action.handler) {
                 try {
-                    await action.handler(item, genericModel.value)
+                    const before = item[field]
+                    await action.handler(item, genericModel.value, actionContext?.value ?? undefined)
                     onToggleComplete?.(item, field)
-                    useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+                    // Only show success if the handler actually changed the field
+                    if (item[field] !== before) {
+                        useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+                    }
                 } catch (e) {
                     useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, e)
                 }
@@ -74,7 +79,7 @@ export function useModelListActions(
             router.push({name: action.routeName, params, query})
         } else if (action.handler) {
             try {
-                await action.handler(item, genericModel.value)
+                await action.handler(item, genericModel.value, actionContext?.value ?? undefined)
                 useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
                 if (action.reloadAfterAction) onReload?.()
             } catch (e) {

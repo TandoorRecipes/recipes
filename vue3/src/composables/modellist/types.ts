@@ -4,6 +4,7 @@
  * activates enhanced rendering (configurable columns, filters, actions, settings).
  */
 import type ActionConfirmDialog from '@/components/dialogs/ActionConfirmDialog.vue'
+import type {InventoryQuickAddDialogInstance} from '@/composables/useInventoryActions'
 import type {EditorSupportedModels} from '@/types/Models'
 export type ActionConfirmDialogInstance = InstanceType<typeof ActionConfirmDialog>
 
@@ -12,6 +13,18 @@ export type FoodRef = {id: number, name: string}
 
 /** Translation function signature for composable actions. */
 export type TranslateFunc = (key: string, params?: Record<string, any>) => string
+
+/**
+ * Context passed to action handlers by ModelListPage.
+ * Provides access to dialogs and i18n for actions that need UI interaction.
+ */
+export type ActionContext = {
+    confirmDialog: ActionConfirmDialogInstance,
+    extraDialogs: {
+        inventoryQuickAdd?: InventoryQuickAddDialogInstance | null,
+    },
+    t: TranslateFunc,
+}
 
 /**
  * Base interface for items displayed in a model list.
@@ -89,7 +102,7 @@ export type ActionDef = {
     /** Query params builder for route navigation */
     routeQuery?: (item: ModelItem) => Record<string, any>,
     /** Custom async handler for non-standard actions (e.g., shopping toggle endpoint) */
-    handler?: (item: ModelItem, genericModel: any) => Promise<void>,
+    handler?: (item: ModelItem, genericModel: any, context?: ActionContext) => Promise<void>,
     /** Custom predicate for toggle state (overrides default !!item[toggleField] check) */
     isActive?: (item: ModelItem) => boolean,
     /** Custom color resolver for actions with more than 2 states (overrides activeColor/inactiveColor) */
