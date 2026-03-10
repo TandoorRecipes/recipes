@@ -312,9 +312,9 @@ access to the data.
 !!! warning
     This feature might be deprecated in favor of a space join and public viewing system in the future
 
-> default `0` (disabled) - options `0`, `1-X` (space id)
+> default `0` (disabled) - options `0`, `1`
 
-When enabled will join user into space and apply group configured in `SOCIAL_DEFAULT_GROUP`.
+When enabled, new social login users will automatically join the first existing space with the group configured in `SOCIAL_DEFAULT_GROUP`.
 
 ```
 SOCIAL_DEFAULT_ACCESS = 1
@@ -334,7 +334,8 @@ Allow everyone to create local accounts on your application instance (without an
 You might want to setup HCAPTCHA to prevent bots from creating accounts/spam.
 
 !!! info
-    Social accounts will always be able to sign up, if providers are configured
+    `ENABLE_SIGNUP` only controls the local registration form. Social login can still create accounts
+    unless `SOCIALACCOUNT_AUTO_SIGNUP=0` is also set. See the [authentication docs](../features/authentication.md#controlling-social-signup) for details.
 
 ```
 ENABLE_SIGNUP=0
@@ -342,11 +343,22 @@ ENABLE_SIGNUP=0
 
 #### Social Auth
 
-Allows you to set up external OAuth providers.
+Allows you to set up external OAuth providers. See the [authentication feature docs](../features/authentication.md) for detailed configuration guides.
 
 ```
-SOCIAL_PROVIDERS = allauth.socialaccount.providers.github, allauth.socialaccount.providers.nextcloud,
+SOCIAL_PROVIDERS = allauth.socialaccount.providers.github,allauth.socialaccount.providers.nextcloud
 ```
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `SOCIALACCOUNT_PROVIDERS` | — | Provider configuration (JSON or Python dict) |
+| `SOCIALACCOUNT_PROVIDERS_FILE` | — | Path to file containing provider configuration |
+| `HIDE_LOGIN_FORM` | `0` | Hide local login form, break-glass via `?form=1` ([details](../features/authentication.md#social-only-authentication)) |
+| `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth ([details](../features/authentication.md#social-only-authentication)) |
+| `SOCIALACCOUNT_LOGIN_ON_GET` | `0` | Skip confirmation page ([details](../features/authentication.md#skipping-the-confirmation-page)) |
+| `SOCIALACCOUNT_AUTO_SIGNUP` | `1` | Auto-create accounts on social login ([details](../features/authentication.md#controlling-social-signup)) |
+| `SOCIALACCOUNT_EMAIL_AUTHENTICATION` | `0` | Match social logins to existing accounts by email ([details](../features/authentication.md#email-based-account-matching)) |
+| `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` | `0` | Skip email verification when matching ([details](../features/authentication.md#email-based-account-matching)) |
 
 #### Remote User Auth
 > default `0` - options `0`, `1`
