@@ -1027,8 +1027,8 @@ class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
             OpenApiParameter(
                 name='ordering',
                 type=str,
-                description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe, numchild, -numchild,'
-                'supermarket_category__name, -supermarket_category__name. Ignored when query is active.'
+                description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe, numchild, -numchild, '
+                'supermarket_category__name, -supermarket_category__name, created_at, -created_at. Ignored when query is active.'
             ),
         ]
     )
@@ -1162,7 +1162,12 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             'numrecipe': 'recipe_count',
             '-numrecipe': '-recipe_count',
         }
-        allowed = lower_fields.keys() | field_map.keys() | {'numchild', '-numchild'}
+        allowed = lower_fields.keys() | field_map.keys() | {'numchild', '-numchild', 'created_at', '-created_at'}
+        # Food has no created_at field; use pk as a proxy for creation order
+        field_map.update({
+            'created_at': 'pk',
+            '-created_at': '-pk',
+        })
         if ordering_param in allowed:
             if ordering_param in lower_fields:
                 qs = qs.order_by(lower_fields[ordering_param])

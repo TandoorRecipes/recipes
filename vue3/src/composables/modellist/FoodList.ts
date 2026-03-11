@@ -158,6 +158,7 @@ export const FOOD_SORT_OPTIONS: SortDef[] = [
     {key: 'numrecipe', labelKey: 'Recipes', defaultDescending: true},
     {key: 'numchild', labelKey: 'Children', defaultDescending: true},
     {key: 'supermarket_category__name', labelKey: 'Shopping_Category'},
+    {key: 'created_at', labelKey: 'date_created', defaultDescending: true},
 ]
 
 export const FOOD_BATCH_ACTIONS: BatchAction[] = [
