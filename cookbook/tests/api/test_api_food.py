@@ -1114,6 +1114,21 @@ def test_ordering_supermarket_category_name(u1_s1, space_1, cat_1, cat_2):
     assert names.index('NoCat') > names.index('Bread')
 
 
+def test_ordering_created_at(u1_s1, space_1):
+    """Ordering by created_at should sort by creation date (recently added)."""
+    with scopes_disabled():
+        old = FoodFactory(name='OldFood', space=space_1)
+        new = FoodFactory(name='NewFood', space=space_1)
+
+    response = get_filter_results(u1_s1, '?ordering=created_at')
+    names = [x['name'] for x in response['results']]
+    assert names.index('OldFood') < names.index('NewFood')
+
+    response = get_filter_results(u1_s1, '?ordering=-created_at')
+    names = [x['name'] for x in response['results']]
+    assert names.index('NewFood') < names.index('OldFood')
+
+
 def test_ordering_applied_when_tree_active(u1_s1, space_1):
     """Backend applies ordering even with tree param (frontend controls suppression)."""
     with scopes_disabled():
