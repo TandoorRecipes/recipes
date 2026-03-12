@@ -1,0 +1,52 @@
+# Dev-capable Tandoor image: shell in, switch branches, rebuild, test.
+#
+# Builds from develop with all tools available (git, yarn, pip, vite).
+# Inside the container:
+#   git fetch && git checkout fix/my-branch
+#   cd vue3 && yarn install && yarn build && cd ..
+#   venv/bin/pip install -r requirements.txt
+#   venv/bin/python manage.py collectstatic --noinput --clear
+#   # restart container or re-run boot.sh
+
+FROM python:3.13-alpine3.23
+
+RUN apk add --no-cache \
+    postgresql-libs postgresql-client gettext zlib libjpeg libwebp \
+    libxml2-dev libxslt-dev openldap git libgcc libstdc++ \
+    nginx tini envsubst nodejs npm yarn bash
+
+ENV PYTHONUNBUFFERED=1 \
+    DOCKER=true
+
+EXPOSE 80 8080
+
+WORKDIR /opt/recipes
+
+# Clone full repo (not shallow — need to switch branches)
+RUN git clone https://github.com/smilerz/recipes.git . && \
+    git checkout develop
+
+# Python deps (keep build deps for pip install after branch switch)
+RUN apk add --no-cache gcc musl-dev postgresql-dev zlib-dev jpeg-dev \
+    libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev \
+    xmlsec-dev xmlsec build-base g++ curl rust && \
+    python -m venv venv && \
+    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
+    venv/bin/pip install wheel==0.45.1 && \
+    venv/bin/pip install setuptools_rust==1.10.2 && \
+    venv/bin/pip install -r requirements.txt --no-cache-dir
+
+# Install node deps and build Vue
+RUN cd vue3 && yarn install && yarn build
+
+# nginx setup (same as upstream Dockerfile)
+RUN rm -rf /etc/nginx/http.d && \
+    ln -s /opt/recipes/http.d /etc/nginx/http.d && \
+    chmod 1777 /opt/recipes/http.d/ && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
+
+RUN venv/bin/python version.py
+RUN chmod +x boot.sh
+
+ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]
