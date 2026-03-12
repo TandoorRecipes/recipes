@@ -34,3 +34,9 @@ Convert pictures of recipes to a structure that can be imported to Tandoor with 
 Maintained by [smilerz](https://github.com/smilerz/tandoor-menu-generator)
 
 Generate a meal plan based on complex criteria and optionally insert it into an SVG menu template.
+
+## Morsl
+
+Maintained by [featurecreep-cron](https://github.com/featurecreep-cron/morsl)
+
+Automate meal planning for Tandoor. Set up profiles with filter rules — rating, books, tags, recently cooked — and generate meal plans that sync directly to Tandoor. Supports automatic generation and a shareable menu for household members.
