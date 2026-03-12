@@ -58,12 +58,5 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='cookbook.mealtype'),
         ),
         migrations.RunPython(apply_migration),
-        migrations.RemoveConstraint(
-            model_name='mealtype',
-            name='mt_unique_name_per_space',
-        ),
-        migrations.AddConstraint(
-            model_name='mealtype',
-            constraint=models.UniqueConstraint(fields=('space', 'name'), name='mt_unique_name_per_space'),
-        ),
+
     ]
