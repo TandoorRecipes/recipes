@@ -11,7 +11,7 @@
         disable-sort
     >
         <template #item.code="{item}">
-            #{{ item.code }}
+            <v-chip size="small" label color="warning" class="me-2" prepend-icon="fa-solid fa-barcode">{{ item.code }}</v-chip>
         </template>
         <template #item.food="{item}">
             {{ ingredientToString({food: item.food, unit: item.unit, amount: item.amount} as Ingredient) }}
@@ -31,11 +31,12 @@
                                 </span>
         </template>
         <template #item.action="{item}">
-            <v-btn density="compact" icon="fa-solid fa-clock-rotate-left" variant="plain" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
-            <!--            <v-btn density="compact" icon="fa-solid fa-minus" variant="plain"-->
-            <!--                   ></v-btn>-->
-            <!--            <v-btn density="compact" icon="fa-solid fa-arrow-right" variant="plain"-->
-            <!--                   ></v-btn>-->
+            <v-btn-group divided border density="comfortable">
+                <v-btn icon="fa-solid fa-clock-rotate-left" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
+                <v-btn icon="fa-solid fa-minus" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'remove'}}"></v-btn>
+                <v-btn icon="fa-solid fa-arrow-right" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'move'}}"></v-btn>
+            </v-btn-group>
+
         </template>
     </v-data-table-server>
 

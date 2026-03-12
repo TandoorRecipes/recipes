@@ -31,12 +31,23 @@
 
                             <model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)"
                                           @update:modelValue="inventoryEntrySelected()">
-                                <template #append>
-                                    <v-btn icon="fa-solid fa-barcode"></v-btn>
-                                </template>
                             </model-select>
 
-                            <model-select model="Food" allow-create v-model="food"></model-select>
+                            <model-select model="Food" allow-create v-model="food" v-if="['add'].includes(bookingMode)"></model-select>
+
+                            <v-card variant="outlined" class="mb-4" v-if="inventoryEntry">
+                                <v-card-title>
+                                    {{ ingredientToString({food: inventoryEntry.food, unit: inventoryEntry.unit, amount: inventoryEntry.amount} as Ingredient) }}
+                                    <v-btn class="float-right" density="compact" icon="fa-solid fa-clock-rotate-left" variant="plain" @click="entryLogDialog = true; entryLogEntry = inventoryEntry"></v-btn>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-chip size="small" label color="warning" class="me-2" prepend-icon="fa-solid fa-barcode">{{inventoryEntry.code}}</v-chip>
+                                    <v-chip size="small" label color="info" class="me-2" :prepend-icon="TInventoryLocation.icon">{{inventoryEntry.inventoryLocation.name}}</v-chip>
+                                    <v-chip size="small" label :color="(inventoryEntry.expires < DateTime.now() ? 'error' : 'success')">
+                                        {{ DateTime.fromJSDate(inventoryEntry.expires).toLocaleString(DateTime.DATE_MED) }}
+                                    </v-chip>
+                                </v-card-text>
+                            </v-card>
 
                             <model-select model="InventoryLocation" allow-create v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)"></model-select>
                             <v-text-field :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" v-model="subLocation" v-if="['add','move'].includes(bookingMode)"></v-text-field>
@@ -44,7 +55,7 @@
                             <closable-help-alert :text="$t('CodeHelp')" class="mb-2"></closable-help-alert>
                             <v-text-field :label="$t('Code')" v-model="code" v-if="['add'].includes(bookingMode)"></v-text-field>
 
-                            <v-number-input :label="$t('Amount')" :precision="2" v-model="amount"></v-number-input>
+                            <v-number-input :label="$t('Amount')" :precision="2" v-model="amount" v-if="['add', 'remove'].includes(bookingMode)"></v-number-input>
                             <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)"></model-select>
 
                             <v-date-input :label="$t('Expires')" v-model="expires" v-if="['add'].includes(bookingMode)">
@@ -85,7 +96,12 @@
                                 #{{ item.code }}
                             </template>
                             <template #item.food="{item}">
-                                {{ ingredientToString({food: item.food, unit: item.unit, amount: item.amount} as Ingredient) }}
+                                {{ ingredientToString({food: item.food, unit: item.unit, amount: item.amount} as Ingredient) }} <br/>
+                                <v-chip size="small" label color="warning" class="me-2" prepend-icon="fa-solid fa-barcode">{{item.code}}</v-chip>
+                                    <v-chip size="small" label color="info" class="me-2" :prepend-icon="TInventoryLocation.icon">{{item.inventoryLocation.name}}</v-chip>
+                                    <v-chip size="small" label :color="(item.expires < DateTime.now() ? 'error' : 'success')">
+                                        {{ DateTime.fromJSDate(item.expires).toLocaleString(DateTime.DATE_MED) }}
+                                    </v-chip>
                             </template>
                             <template #item.expires="{item}">
                                 <template v-if="item.expires ">
@@ -102,11 +118,14 @@
                                 </span>
                             </template>
                             <template #item.action="{item}">
-                                <v-btn density="compact" icon="fa-solid fa-clock-rotate-left" variant="plain" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
-                                <v-btn density="compact" icon="fa-solid fa-minus" variant="plain"
+                                <v-btn-group divided border density="comfortable">
+                                      <v-btn  icon="fa-solid fa-clock-rotate-left"  @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
+                                <v-btn  icon="fa-solid fa-minus"
                                        @click="bookingMode='remove'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
-                                <v-btn density="compact" icon="fa-solid fa-arrow-right" variant="plain"
+                                <v-btn  icon="fa-solid fa-arrow-right"
                                        @click="bookingMode='move'; inventoryEntry = item; inventoryEntrySelected()"></v-btn>
+                                </v-btn-group>
+
                             </template>
                         </v-data-table-server>
                     </v-card-text>
@@ -114,11 +133,17 @@
             </v-col>
 
         </v-row>
+
+        <v-row>
+            <v-col>
+                <inventory-entry-log-table></inventory-entry-log-table>
+            </v-col>
+        </v-row>
     </v-container>
 
     <inventory-entry-log-dialog v-model="entryLogDialog" :inventory-entry="entryLogEntry"></inventory-entry-log-dialog>
 
-    <v-dialog max-width="400" v-model="bookingConfirmDialog">
+    <v-dialog max-width="400" v-model="bookingConfirmDialog" persistent>
         <v-card prepend-icon="$save" :title="$t('Saved')">
 
             <v-card-text v-if="bookingConfirmEntry" class="text-center">
@@ -151,6 +176,7 @@
                         {{ $t('InventoryBooking') }}
                     </v-btn>
                     <v-btn color="primary" class="mt-2" prepend-icon="$pantry" block :to="{name: 'PantryPage'}">{{ $t('Pantry') }}</v-btn>
+                    <v-btn class="mt-2" block @click="bookingConfirmDialog = false; resetForm(true, true)">{{ $t('Close') }}</v-btn>
                 </p>
             </v-card-text>
         </v-card>
@@ -173,6 +199,10 @@ import FreezerExpiryDialog from "@/components/dialogs/FreezerExpiryDialog.vue";
 import InventoryEntryLogDialog from "@/components/dialogs/InventoryEntryLogDialog.vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
+import {useRouteQuery} from "@vueuse/router";
+import {toNumberArray} from "@/utils/utils.ts";
+import InventoryEntryLogTable from "@/components/tables/InventoryEntryLogTable.vue";
+import {TInventoryLocation} from "@/types/Models.ts";
 
 const {t} = useI18n()
 
@@ -180,7 +210,7 @@ const {t} = useI18n()
 const formLoading = ref(false)
 const freezerExpiryDialog = ref(false)
 
-const bookingMode = ref('add')
+const bookingMode = useRouteQuery('bookingMode', 'add')
 const food = ref<Food | null>(null)
 const inventoryEntry = ref<InventoryEntry | null>(null)
 const inventoryLocation = ref<InventoryLocation | null>(null)
@@ -204,12 +234,13 @@ const entryLogEntry = ref<InventoryEntry | null>(null)
 
 const bookingConfirmDialog = ref(false)
 const bookingConfirmEntry = ref<InventoryEntry | null>(null)
+const inventoryEntryId = useRouteQuery('inventoryEntryId')
 
 const tableHeaders = ref([
-    {title: t('Code'), key: 'code'},
+    // {title: t('Code'), key: 'code'},
     {title: t('Food'), key: 'food'},
-    {title: t('Expires'), key: 'expires',},
-    {title: t('InventoryLocation'), key: 'inventoryLocation',},
+    // {title: t('Expires'), key: 'expires',},
+    // {title: t('InventoryLocation'), key: 'inventoryLocation',},
     {title: 'Actions', key: 'action', align: 'end'},
 ])
 
@@ -217,6 +248,16 @@ watch([() => food.value, () => inventoryLocation.value], () => {
     loadItems({page: 1, itemsPerPage: 10})
 })
 
+onMounted(() => {
+    if (inventoryEntryId.value) {
+        let api = new ApiApi()
+        api.apiInventoryEntryRetrieve({id: inventoryEntryId.value}).then(r => {
+            inventoryEntry.value = r
+            inventoryEntryId.value = undefined
+            inventoryEntrySelected()
+        })
+    }
+})
 
 /**
  * save form depending on selected booking mode
@@ -279,8 +320,12 @@ function removeInventory() {
 
         api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-            bookingConfirmEntry.value = r
-            bookingConfirmDialog.value = true
+            if (inventoryEntry.value && inventoryEntry.value.amount == 0) {
+                bookingMode.value = 'add'
+                resetForm(true, true)
+            } else {
+                inventoryEntrySelected()
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
@@ -308,13 +353,14 @@ function moveInventory() {
         if (changed) {
             api.apiInventoryEntryUpdate({id: inventoryEntry.value.id!, inventoryEntry: inventoryEntry.value}).then(r => {
                 useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-                bookingConfirmEntry.value = r
-                bookingConfirmDialog.value = true
+                inventoryEntrySelected()
             }).catch(err => {
                 useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
             }).finally(() => {
                 formLoading.value = false
             })
+        } else {
+            formLoading.value = false
         }
 
     }
@@ -337,6 +383,7 @@ function resetForm(resetFood: boolean = true, resetInventoryLocation: boolean = 
     amount.value = 1
     unit.value = useUserPreferenceStore().defaultUnitObj
     expires.value = undefined
+    code.value = ''
     loadItems({page: 1, itemsPerPage: 10})
 }
 
