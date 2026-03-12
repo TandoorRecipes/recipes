@@ -20,11 +20,13 @@ ENV PYTHONUNBUFFERED=1 \
 
 EXPOSE 80 8080
 
-# Clone full repo (not shallow — need to switch branches)
-RUN git clone https://github.com/smilerz/recipes.git /opt/recipes
+# Clone from upstream (default branch = develop), add fork as origin
+RUN git clone https://github.com/TandoorRecipes/recipes.git /opt/recipes
 
 WORKDIR /opt/recipes
-RUN git checkout develop
+RUN git remote rename origin upstream && \
+    git remote add origin https://github.com/smilerz/recipes.git && \
+    git fetch origin
 
 # Python deps (keep build deps for pip install after branch switch)
 RUN apk add --no-cache gcc musl-dev postgresql-dev zlib-dev jpeg-dev \
