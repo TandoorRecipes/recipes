@@ -602,7 +602,7 @@ def test_onhand(obj_1, u1_s1, u2_s1, space_1):
         UserSpace.objects.filter(user=user1).update(household=household)
         UserSpace.objects.filter(user=user2).update(household=household)
 
-    caches['default'].set(f'household_user_ids_{space_1.id}_{user2.id}', None)
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{household.id}')
 
     assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is True
 
@@ -682,8 +682,7 @@ def test_shopping_status_household_shared(u1_s1, u2_s1, space_1):
         ShoppingListEntryFactory(food=food, space=space_1, created_by=user1, checked=False)
 
     # clear cached household user ids
-    caches['default'].delete(f'household_user_ids_{space_1.id}_{user1.id}')
-    caches['default'].delete(f'household_user_ids_{space_1.id}_{user2.id}')
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{household.id}')
 
     # user1 sees shopping=True (their own entry)
     r1 = json.loads(u1_s1.get(reverse(DETAIL_URL, args={food.id})).content)

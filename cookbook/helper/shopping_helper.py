@@ -7,14 +7,12 @@ from django.utils.translation import gettext as _
 
 from cookbook.connectors.connector_manager import ActionType, ConnectorManager
 from cookbook.helper.permission_helper import get_household_user_ids
-from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
-                             SupermarketCategoryRelation, UserSpace)
+from cookbook.models import Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe, SupermarketCategoryRelation
 
 
 def shopping_helper(qs, request):
     supermarket = request.query_params.get('supermarket', None)
     checked = request.query_params.get('checked', 'recent')
-    user = request.user
     supermarket_order = [F('food__supermarket_category__name').asc(nulls_first=True), 'food__name']
 
     # TODO created either scheduled task or startup task to delete very old shopping list entries
@@ -87,8 +85,7 @@ class RecipeShoppingEditor():
         if exclude_onhand:
             queryset = Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
             owner_user_space = self.created_by.userspace_set.filter(space=self.space).first()
-            queryset = queryset.exclude(
-                food__onhand_users__id__in=get_household_user_ids(owner_user_space))
+            queryset = queryset.exclude(food__onhand_users__id__in=get_household_user_ids(owner_user_space))
             return queryset
         else:
             return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)

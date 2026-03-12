@@ -9,7 +9,7 @@ import threading
 import traceback
 import uuid
 from collections import OrderedDict
-from functools import cached_property, wraps
+from functools import wraps
 from json import JSONDecodeError
 from urllib.parse import unquote
 from zipfile import ZipFile
@@ -1039,16 +1039,10 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
-    @cached_property
+    @property
     def _shared_users(self):
-        cache_key = f'household_user_ids_{self.request.space.id}_{self.request.user.id}'
-        if c := caches['default'].get(cache_key, None):
-            return c
         try:
-            shared_users = get_household_user_ids(self.request.user_space)
-            caches['default'].set(cache_key, shared_users, timeout=5 * 60)
-            # TODO ugly hack that improves API performance significantly, should be done properly
-            return shared_users
+            return get_household_user_ids(self.request.user_space)
         except AttributeError:  # Anonymous users (using share links) don't have shared users
             return []
 
@@ -1396,7 +1390,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared | CustomIsHousehold) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1408,9 +1402,8 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
 
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
 
-        self.queryset = self.queryset.filter(
-            Q(created_by=self.request.user) | Q(shared=self.request.user) | Q(created_by__in=get_household_user_ids(self.request.user_space))
-        ).filter(space=self.request.space).distinct().order_by(ordering)
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
+            space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 
@@ -1421,13 +1414,13 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
 class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared | CustomIsHousehold) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = self.queryset.filter(
-            Q(book__created_by=self.request.user) | Q(book__shared=self.request.user) | Q(book__created_by__in=get_household_user_ids(self.request.user_space))
-        ).filter(book__space=self.request.space).distinct()
+            Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(
+            book__space=self.request.space).distinct()
 
         recipe_id = self.request.query_params.get('recipe', None)
         if recipe_id is not None:

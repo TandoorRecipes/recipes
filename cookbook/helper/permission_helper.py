@@ -130,19 +130,29 @@ def is_object_household(user, obj):
 def get_household_user_ids(user_space):
     """
     Return user IDs sharing the same household, or just the user's own ID if no household.
+    Results are cached for 5 minutes per space/household (or space/user if no household).
     :param user_space: UserSpace instance (e.g. request.user_space)
-    :return: QuerySet of user IDs
+    :return: list of user IDs
     """
     if user_space is None:
-        return UserSpace.objects.none().values_list('user_id', flat=True)
-    if user_space.household:
-        return UserSpace.objects.filter(
-            space=user_space.space,
-            household=user_space.household,
-        ).values_list('user_id', flat=True)
-    return UserSpace.objects.filter(
-        pk=user_space.pk
-    ).values_list('user_id', flat=True)
+        return []
+
+    if user_space.household_id:
+        cache_key = f'household_user_ids_{user_space.space_id}_{user_space.household_id}'
+    else:
+        cache_key = f'household_user_ids_{user_space.space_id}_user_{user_space.user_id}'
+
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    if user_space.household_id:
+        result = list(UserSpace.objects.filter(space=user_space.space, household=user_space.household).values_list('user_id', flat=True))
+    else:
+        result = list(UserSpace.objects.filter(pk=user_space.pk).values_list('user_id', flat=True))
+
+    cache.set(cache_key, result, timeout=5 * 60)
+    return result
 
 
 def share_link_valid(recipe, share):

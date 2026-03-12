@@ -525,7 +525,7 @@ class RecipeSearch():
             self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
 
     def _makenow_filter(self, missing=None):
-        if missing is None or (isinstance(missing, bool) and missing == False):
+        if missing is None or (isinstance(missing, bool) and not missing):
             return
         shopping_users = get_household_user_ids(self._request.user_space)
 
