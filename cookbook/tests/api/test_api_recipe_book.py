@@ -66,6 +66,24 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     assert response['results'][0]['name'] == obj_1.name
 
 
+def test_list_ordering(space_1, u1_s1):
+    book1 = RecipeBook.objects.create(name='+3 book1', created_by=auth.get_user(u1_s1), space=space_1, order=3)
+    book2 = RecipeBook.objects.create(name='+1 book2', created_by=auth.get_user(u1_s1), space=space_1, order=1)
+    book3 = RecipeBook.objects.create(name='+2 book3', created_by=auth.get_user(u1_s1), space=space_1, order=2)
+    book4 = RecipeBook.objects.create(name='+0 book4', created_by=auth.get_user(u1_s1), space=space_1, order=0)
+    book5 = RecipeBook.objects.create(name='-1 book5', created_by=auth.get_user(u1_s1), space=space_1, order=-1)
+    book6 = RecipeBook.objects.create(name='+0 book6', created_by=auth.get_user(u1_s1), space=space_1, order=0)
+
+    response = json.loads(u1_s1.get(reverse(LIST_URL)).content)
+    assert response['count'] == 6
+    assert response['results'][0]['name'] == '-1 book5'
+    assert response['results'][1]['name'] == '+0 book4'
+    assert response['results'][2]['name'] == '+0 book6'
+    assert response['results'][3]['name'] == '+1 book2'
+    assert response['results'][4]['name'] == '+2 book3'
+    assert response['results'][5]['name'] == '+3 book1'
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 404],
