@@ -10,7 +10,7 @@ from icalendar import Calendar
 from oauth2_provider.models import AccessToken
 from rest_framework.test import APIClient
 
-from cookbook.models import Household, MealPlan, MealType, UserSpace
+from cookbook.models import Household, Keyword, MealPlan, MealType, Recipe, UserSpace
 from cookbook.tests.factories import RecipeFactory
 
 LIST_URL = 'api:mealplan-list'
@@ -404,6 +404,7 @@ def test_create_explicit_time_preserved(u1_s1, recipe_1_s1, space_1):
     assert mp.from_date.minute == 30
 
 
+<<<<<<< HEAD
 def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
     """Household members should see each other's meal plans"""
     user1 = auth.get_user(u1_s1)
@@ -422,3 +423,150 @@ def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
     results = json.loads(u2_s1.get(reverse(LIST_URL)).content)['results']
     assert len(results) == 1
     assert results[0]['id'] == obj_1.id
+
+
+# ==================== Auto Plan Tests ====================
+AUTO_PLAN_URL = 'api:auto-plan-list'
+
+
+def _auto_plan_payload(meal_type, **overrides):
+    now = timezone.now()
+    payload = {
+        'start_date': now.isoformat(),
+        'end_date': (now + timedelta(days=2)).isoformat(),
+        'meal_type_id': meal_type.id,
+        'keywords': [],
+        'servings': 1,
+        'addshopping': False,
+    }
+    payload.update(overrides)
+    return payload
+
+
+@pytest.fixture()
+def auto_plan_keywords(space_1):
+    with scopes_disabled():
+        kw_a = Keyword.objects.create(name='KW_A', space=space_1)
+        kw_b = Keyword.objects.create(name='KW_B', space=space_1)
+    return kw_a, kw_b
+
+
+@pytest.fixture()
+def auto_plan_recipes(space_1, u1_s1, auto_plan_keywords):
+    kw_a, kw_b = auto_plan_keywords
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        r_a = Recipe.objects.create(name='Recipe A', space=space_1, created_by=user, internal=True)
+        r_a.keywords.add(kw_a)
+        r_b = Recipe.objects.create(name='Recipe B', space=space_1, created_by=user, internal=True)
+        r_b.keywords.add(kw_b)
+        r_ab = Recipe.objects.create(name='Recipe AB', space=space_1, created_by=user, internal=True)
+        r_ab.keywords.add(kw_a, kw_b)
+    return r_a, r_b, r_ab
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_auto_plan_permission(request, arg, meal_type, recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    r = c.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type),
+        content_type='application/json',
+    )
+    assert r.status_code == arg[1]
+
+
+def test_auto_plan_or_mode(u1_s1, meal_type, auto_plan_recipes, auto_plan_keywords):
+    kw_a, kw_b = auto_plan_keywords
+    r = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type, keywords=[kw_a.id, kw_b.id], keyword_mode='or'),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+    with scopes_disabled():
+        plans = MealPlan.objects.all()
+        assert plans.count() == 3
+        recipe_ids = set(plans.values_list('recipe_id', flat=True))
+        assert recipe_ids.issubset({r.id for r in auto_plan_recipes})
+
+
+def test_auto_plan_and_mode(u1_s1, meal_type, auto_plan_recipes, auto_plan_keywords):
+    """AND is the default mode - no need to pass keyword_mode."""
+    kw_a, kw_b = auto_plan_keywords
+    r_a, r_b, r_ab = auto_plan_recipes
+    r = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type, keywords=[kw_a.id, kw_b.id]),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+    with scopes_disabled():
+        plans = MealPlan.objects.all()
+        assert plans.count() == 3
+        recipe_ids = set(plans.values_list('recipe_id', flat=True))
+        assert recipe_ids == {r_ab.id}
+
+
+def test_auto_plan_invalid_keyword_mode(u1_s1, meal_type, recipe_1_s1, auto_plan_keywords):
+    kw_a, kw_b = auto_plan_keywords
+    r = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type, keywords=[kw_a.id], keyword_mode='xor'),
+        content_type='application/json',
+    )
+    assert r.status_code == 400
+
+
+def test_auto_plan_no_keywords_returns_all(u1_s1, meal_type, recipe_1_s1):
+    """Request with no keyword filters returns all internal recipes."""
+    r = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+
+def test_auto_plan_empty_results_400(u1_s1, meal_type, space_1):
+    with scopes_disabled():
+        kw = Keyword.objects.create(name='Unused', space=space_1)
+    r = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type, keywords=[kw.id]),
+        content_type='application/json',
+    )
+    assert r.status_code == 400
+
+
+def test_auto_plan_space_scoping(u1_s1, meal_type, space_2, u1_s2):
+    user2 = auth.get_user(u1_s2)
+    with scopes_disabled():
+        kw = Keyword.objects.create(name='SpaceKW', space=space_2)
+        r = Recipe.objects.create(name='Other Space Recipe', space=space_2, created_by=user2, internal=True)
+        r.keywords.add(kw)
+    resp = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type, keywords=[kw.id]),
+        content_type='application/json',
+    )
+    assert resp.status_code == 400
+
+
+def test_auto_plan_internal_only(u1_s1, meal_type, space_1, auto_plan_keywords):
+    kw_a, kw_b = auto_plan_keywords
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        r_ext = Recipe.objects.create(name='External', space=space_1, created_by=user, internal=False)
+        r_ext.keywords.add(kw_a)
+    resp = u1_s1.post(
+        reverse(AUTO_PLAN_URL),
+        _auto_plan_payload(meal_type, keywords=[kw_a.id]),
+        content_type='application/json',
+    )
+    assert resp.status_code == 400
