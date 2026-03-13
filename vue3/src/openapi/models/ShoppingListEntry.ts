@@ -190,7 +190,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'> | null): any {
+export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

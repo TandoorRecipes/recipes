@@ -125,7 +125,7 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'> | null): any {
+export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'> | null): any {
     if (value == null) {
         return value;
     }

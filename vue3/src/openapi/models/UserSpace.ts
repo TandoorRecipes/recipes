@@ -136,7 +136,7 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
+export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

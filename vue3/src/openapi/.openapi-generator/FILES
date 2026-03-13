@@ -47,6 +47,7 @@ models/InventoryLog.ts
 models/InviteLink.ts
 models/Keyword.ts
 models/KeywordLabel.ts
+models/KeywordModeEnum.ts
 models/Localization.ts
 models/MealPlan.ts
 models/MealType.ts

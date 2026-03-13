@@ -93,7 +93,7 @@ export function RecipeImportFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function RecipeImportToJSON(value?: Omit<RecipeImport, 'createdAt'> | null): any {
+export function RecipeImportToJSON(value?: Omit<RecipeImport, 'created_at'> | null): any {
     if (value == null) {
         return value;
     }
