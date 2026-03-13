@@ -372,9 +372,6 @@ SOCIAL_DEFAULT_GROUP=guest
 Allow everyone to create local accounts on your application instance (without an invite link)
 You might want to setup HCAPTCHA to prevent bots from creating accounts/spam.
 
-!!! info
-    Social accounts will always be able to sign up, if providers are configured
-
 ```
 ENABLE_SIGNUP=0
 ```

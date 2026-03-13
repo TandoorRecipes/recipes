@@ -13,7 +13,7 @@ They basically explain everything in their documentation, but the following is a
     If you choose Google, Github or any other publicly available service as your authentication provider anyone
     with an account on that site can create an account on your installation.
     A new account does not have any permission but it is still **not recommended** to give public access to
-    your installation.
+    your installation. It's recommended set `ENABLE_SIGNUP` to 0 to prevent users from signing up.
 
 Choose a provider from the [list](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) and install it using the environment variable `SOCIAL_PROVIDERS` as shown
 in the example below.
