@@ -633,15 +633,15 @@ const {mobile} = useDisplay()
 const router = useRouter()
 const {t} = useI18n()
 const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
-const {getDjangoUrl} = useDjangoUrls()
+const {getFullUrl} = useDjangoUrls()
 
 const bookmarkletContent = computed(() => {
     return 'javascript:(function(){' +
         'if(window.bookmarkletTandoor!==undefined){' +
         'bookmarkletTandoor();' +
         '} else {' +
-        `localStorage.setItem("importURL", "${getDjangoUrl('/api/bookmarklet-import/')}");` +
-        `localStorage.setItem("redirectURL", "${getDjangoUrl('/recipe/import/')}");` +
+        `localStorage.setItem("importURL", "${getFullUrl('/api/bookmarklet-import/')}");` +
+        `localStorage.setItem("redirectURL", "${getFullUrl('/recipe/import/')}");` +
         `localStorage.setItem("token", "${bookmarkletToken.value}");` +
         `document.body.appendChild(document.createElement("script")).src="${bookmarkletJs}"}` +
         `})()`

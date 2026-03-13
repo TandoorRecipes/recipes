@@ -17,8 +17,8 @@ self.skipWaiting()
 clientsClaim()
 
 const OFFLINE_CACHE_NAME = 'offline-html';
-let script_name = typeof window !== 'undefined' ? localStorage.getItem('SCRIPT_NAME') : '/'
-var OFFLINE_PAGE_URL = script_name + 'offline/';
+const scope = self.registration?.scope ? new URL(self.registration.scope).pathname : '/'
+const OFFLINE_PAGE_URL = scope.endsWith('/') ? scope + 'offline/' : scope + '/offline/';
 
 self.addEventListener('install', async (event) => {
     event.waitUntil(

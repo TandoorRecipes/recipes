@@ -40,8 +40,9 @@ def extract_comma_list(env_key, default=None):
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPT_NAME = os.getenv('SCRIPT_NAME', '')
+FORCE_SCRIPT_NAME = SCRIPT_NAME or None
 
-STATIC_URL = os.getenv('STATIC_URL', '/static/')
+STATIC_URL = os.getenv('STATIC_URL', f'{SCRIPT_NAME}/static/')
 STATIC_ROOT = os.getenv('STATIC_ROOT', os.path.join(BASE_DIR, "staticfiles"))
 
 # Get vars from .env files
