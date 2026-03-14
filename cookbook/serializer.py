@@ -1037,12 +1037,11 @@ class IngredientSerializer(IngredientSimpleSerializer):
         read_only_fields = ['conversions', ]
 
 
-class StepSerializer(WritableNestedModelSerializer, RecipeCountMixin):
+class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
     instructions_markdown = serializers.SerializerMethodField('get_instructions_markdown')
     file = UserFileViewSerializer(allow_null=True, required=False)
     step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
-    recipe_filter = 'steps'
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -1068,7 +1067,7 @@ class StepSerializer(WritableNestedModelSerializer, RecipeCountMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'instructions_markdown', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
-            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
+            'step_recipe_data', 'show_ingredients_table'
         )
 
 
@@ -1148,7 +1147,6 @@ class CommentSerializer(serializers.ModelSerializer):
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True, read_only=True)
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
-    recent = serializers.CharField(read_only=True)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
@@ -1164,7 +1162,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'private', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
+            'internal', 'private', 'servings', 'servings_text', 'rating', 'last_cooked', 'new'
         )
         # TODO having these readonly fields makes "RecipeOverview.ts" (API Client) not generate the RecipeOverviewToJSON second else block which leads to errors when using the api
         # TODO find a solution (custom schema?) to have these fields readonly (to save performance) and generate a proper client (two serializers would probably do the trick)
