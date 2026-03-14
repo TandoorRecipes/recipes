@@ -1398,7 +1398,7 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
         order_direction = self.request.GET.get('order_direction')
 
         if not order_field:
-            order_field = 'id'
+            order_field = 'order'
 
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
 
