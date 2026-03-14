@@ -85,7 +85,8 @@ class RecipeShoppingEditor():
         if exclude_onhand:
             queryset = Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
             owner_user_space = self.created_by.userspace_set.filter(space=self.space).first()
-            queryset = queryset.exclude(food__onhand_users__id__in=get_household_user_ids(owner_user_space))
+            if owner_user_space and owner_user_space.household_id:
+                queryset = queryset.exclude(food__onhand_users__id__in=get_household_user_ids(owner_user_space))
             return queryset
         else:
             return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
