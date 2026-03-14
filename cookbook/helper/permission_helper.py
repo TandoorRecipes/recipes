@@ -130,6 +130,7 @@ def is_object_household(user, obj):
 def get_household_user_ids(user_space):
     """
     Return user IDs sharing the same household, or just the user's own ID if no household.
+    Also includes legacy shopping_share users as a bridge until that feature is deprecated.
     Results are cached for 5 minutes per space/household (or space/user if no household).
     :param user_space: UserSpace instance (e.g. request.user_space)
     :return: list of user IDs
@@ -147,10 +148,17 @@ def get_household_user_ids(user_space):
         return cached
 
     if user_space.household_id:
-        result = list(UserSpace.objects.filter(space=user_space.space, household=user_space.household).values_list('user_id', flat=True))
+        result = set(UserSpace.objects.filter(space=user_space.space, household=user_space.household).values_list('user_id', flat=True))
     else:
-        result = list(UserSpace.objects.filter(pk=user_space.pk).values_list('user_id', flat=True))
+        result = {user_space.user_id}
 
+    # Bridge: include legacy shopping_share users until the feature is deprecated
+    try:
+        result.update(user_space.user.userpreference.shopping_share.values_list('id', flat=True))
+    except Exception:
+        pass
+
+    result = list(result)
     cache.set(cache_key, result, timeout=5 * 60)
     return result
 

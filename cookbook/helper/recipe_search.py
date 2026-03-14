@@ -7,6 +7,8 @@ from django.db.models import Avg, Case, Count, Exists, F, Max, OuterRef, Q, Subq
 from django.db.models.functions import Coalesce, Lower, Substr
 from django.utils import timezone, translation
 
+from django.contrib.auth.models import User
+
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY
@@ -531,17 +533,10 @@ class RecipeSearch():
             self._queryset = self._queryset.none()
             return
 
-        # Use a queryset (not a list) so substitute subqueries with OuterRef
-        # are embedded as SQL subqueries rather than literal IN (...) values.
-        user_space = self._request.user_space
-        if user_space.household_id:
-            shopping_users = UserSpace.objects.filter(
-                space=user_space.space, household=user_space.household
-            ).values_list('user_id', flat=True)
-        else:
-            shopping_users = UserSpace.objects.filter(
-                pk=user_space.pk
-            ).values_list('user_id', flat=True)
+        # Use cached list for simple filters, but wrap as a queryset for
+        # substitute subqueries that use OuterRef (needs SQL subquery semantics).
+        shopping_user_ids = get_household_user_ids(self._request.user_space)
+        shopping_users = User.objects.filter(id__in=shopping_user_ids)
 
         onhand_filter = (
             Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
