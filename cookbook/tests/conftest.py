@@ -40,7 +40,8 @@ def pytest_sessionfinish(session, exitstatus):
 
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
-    pass
+    from django.core.cache import cache
+    cache.clear()
 
 
 # ---------------------- OBJECT FIXTURES ---------------------
