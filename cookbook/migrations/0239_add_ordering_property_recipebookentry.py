@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0238_remove_dead_sharing_fields'),
+        ('cookbook', '0238_auto_20260312_1920'),
     ]
 
     operations = [
