@@ -136,3 +136,32 @@ def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
     # user2 still should NOT see user1's book (books are private)
     assert json.loads(u2_s1.get(reverse(LIST_URL)).content)['count'] == 0
     assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 404
+
+
+def test_default_ordering(u1_s1, space_1):
+    """Default ordering should respect the 'order' field, not 'id'."""
+    user = auth.get_user(u1_s1)
+    book_c = RecipeBook.objects.create(name='C', order=1, created_by=user, space=space_1)
+    book_a = RecipeBook.objects.create(name='A', order=3, created_by=user, space=space_1)
+    book_b = RecipeBook.objects.create(name='B', order=2, created_by=user, space=space_1)
+
+    r = u1_s1.get(reverse(LIST_URL))
+    results = json.loads(r.content)['results']
+    result_ids = [r['id'] for r in results]
+
+    # Default order_direction is descending, so highest order first
+    assert result_ids == [book_a.id, book_b.id, book_c.id]
+
+
+def test_explicit_ordering(u1_s1, space_1):
+    """Explicit order_field/order_direction params should work."""
+    user = auth.get_user(u1_s1)
+    book_c = RecipeBook.objects.create(name='C', order=1, created_by=user, space=space_1)
+    book_a = RecipeBook.objects.create(name='A', order=3, created_by=user, space=space_1)
+    book_b = RecipeBook.objects.create(name='B', order=2, created_by=user, space=space_1)
+
+    r = u1_s1.get(f'{reverse(LIST_URL)}?order_field=order&order_direction=asc')
+    results = json.loads(r.content)['results']
+    result_ids = [r['id'] for r in results]
+
+    assert result_ids == [book_c.id, book_b.id, book_a.id]
