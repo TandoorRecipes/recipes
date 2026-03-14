@@ -14,6 +14,9 @@
                         <v-btn class="float-right" icon="fa-solid fa-boxes-stacked fa-fw" color="create" :to="{name: 'InventoryBookingPage'}">
                         </v-btn>
                     </template>
+                    <v-card-actions>
+                        <v-btn prepend-icon="fa-solid fa-boxes-stacked fa-fw" color="create" :to="{name: 'InventoryBookingPage'}">{{$t('InventoryBooking')}}</v-btn>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>

@@ -868,7 +868,7 @@ class InventoryLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
         if food_id := self.request.query_params.get('food_id'):
             queryset = queryset.filter(entry__food_id=food_id)
 
-        return queryset
+        return queryset.order_by('-created_at')
 
 
 class SyncViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
