@@ -139,7 +139,7 @@ def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
 
 
 def test_default_ordering(u1_s1, space_1):
-    """Default ordering should respect the 'order' field, not 'id'."""
+    """Default ordering should respect the 'order' field with id tiebreaker."""
     user = auth.get_user(u1_s1)
     book_c = RecipeBook.objects.create(name='C', order=1, created_by=user, space=space_1)
     book_a = RecipeBook.objects.create(name='A', order=3, created_by=user, space=space_1)
@@ -149,8 +149,23 @@ def test_default_ordering(u1_s1, space_1):
     results = json.loads(r.content)['results']
     result_ids = [r['id'] for r in results]
 
-    # Default order_direction is descending, so highest order first
+    # Default order_direction is descending, so highest order first, then newest id first
     assert result_ids == [book_a.id, book_b.id, book_c.id]
+
+
+def test_default_ordering_tiebreaker(u1_s1, space_1):
+    """Books with same order value should be sorted by id descending (newest first)."""
+    user = auth.get_user(u1_s1)
+    book_1 = RecipeBook.objects.create(name='First', order=0, created_by=user, space=space_1)
+    book_2 = RecipeBook.objects.create(name='Second', order=0, created_by=user, space=space_1)
+    book_3 = RecipeBook.objects.create(name='Third', order=0, created_by=user, space=space_1)
+
+    r = u1_s1.get(reverse(LIST_URL))
+    results = json.loads(r.content)['results']
+    result_ids = [r['id'] for r in results]
+
+    # Same order=0, so tiebreak by -id (newest first)
+    assert result_ids == [book_3.id, book_2.id, book_1.id]
 
 
 def test_explicit_ordering(u1_s1, space_1):

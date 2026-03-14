@@ -1403,7 +1403,7 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
 
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct().order_by(ordering)
+            space=self.request.space).distinct().order_by(ordering, '-id')
         return super().get_queryset()
 
 
