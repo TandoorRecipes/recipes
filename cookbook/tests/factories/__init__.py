@@ -48,7 +48,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     """User factory."""
     username = factory.LazyAttribute(
-        lambda x: faker.simple_profile()['username'])
+        lambda x: f'{faker.simple_profile()["username"]}_{faker.uuid4()[:8]}')
     first_name = factory.LazyAttribute(lambda x: faker.first_name())
     last_name = factory.LazyAttribute(lambda x: faker.last_name())
     email = factory.LazyAttribute(lambda x: faker.email())
@@ -76,7 +76,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = User
-        django_get_or_create = ('username', 'space',)
+        django_get_or_create = ('username',)
         skip_postgeneration_save = True
 
 
