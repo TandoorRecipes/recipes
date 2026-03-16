@@ -1,6 +1,6 @@
 aiohttp==3.13.3
 beautifulsoup4==4.14.3
-boto3==1.42.64
+boto3==1.42.67
 bleach==6.3.0
 cryptography===46.0.5
 crispy-bootstrap4==2025.6
@@ -18,7 +18,7 @@ django-prometheus==2.4.1
 django-scopes==2.0.0
 django-storages==1.14.6
 django-tables2==2.8.0
-django-treebeard==5.0.0
+django-treebeard==5.0.5
 django-webpack-loader==3.2.3
 djangorestframework==3.16.1
 drf-writable-nested==0.7.2
