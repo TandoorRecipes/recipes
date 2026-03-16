@@ -39,7 +39,6 @@ export default createVuetify({
         locale: 'en',
         fallback: 'en',
         messages: vuetifyLocales,
-        decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
     },
     theme: {
         defaultTheme: 'light',

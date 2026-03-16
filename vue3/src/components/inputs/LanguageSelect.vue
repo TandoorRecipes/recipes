@@ -8,6 +8,7 @@
             :hint="currentCoverage < 100 ? currentCoverage + '% ' + $t('translated') : ''"
             persistent-hint
             @update:model-value="updateLanguage()"
+            class="language-select"
         >
         <template #item="{item, props: itemProps}">
             <v-list-item v-bind="itemProps">
@@ -18,12 +19,30 @@
                 </template>
             </v-list-item>
         </template>
+        <template #append>
+            <div class="info-btn" @click="helpDialog = true" role="button" :aria-label="$t('Help')">
+                <div class="info-btn__overlay" />
+                <v-icon icon="fa-solid fa-info" size="x-small" />
+            </div>
+        </template>
     </v-select>
-    <div class="text-caption mt-1 ms-4">
-        <a href="https://translate.tandoor.dev" target="_blank" class="text-decoration-none">
-            {{ $t('help_translate') }}
-        </a>
-    </div>
+
+    <v-dialog v-model="helpDialog" max-width="1200px">
+        <v-card>
+            <v-closable-card-title v-model="helpDialog" :title="$t('Help')" icon="fa-solid fa-question">
+                <template #content>
+                    <div class="d-flex align-center">
+                        <v-btn variant="text" icon="fa-solid fa-bars" @click.stop="helpDrawer = !helpDrawer"></v-btn>
+                        <span>{{ $t('Help') }}</span>
+                    </div>
+                </template>
+            </v-closable-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="pa-0">
+                <help-view v-model="helpDrawer" default-section="translations"></help-view>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup lang="ts">
@@ -33,6 +52,8 @@ import {ApiApi, Localization} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
 import {SUPPORT_LOCALES, resolveLocale, localeCoverage, LOCALE_MIN_COVERAGE} from "@/i18n.ts";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import HelpView from "@/components/display/HelpView.vue";
 
 interface LocalizationWithCoverage {
     code: string
@@ -43,6 +64,8 @@ interface LocalizationWithCoverage {
 
 const availableLocalizations = ref([] as LocalizationWithCoverage[])
 const {locale} = useI18n()
+const helpDialog = ref(false)
+const helpDrawer = ref(true)
 
 const currentCoverage = computed(() => {
     const resolved = resolveLocale(locale.value)
@@ -108,6 +131,53 @@ function updateLanguage() {
 </script>
 
 
-<style scoped>
+<style>
+.language-select .v-input__append {
+    margin-inline-start: 0;
+}
 
+.language-select .v-field {
+    border-top-right-radius: 0;
+}
+</style>
+
+<style scoped>
+.info-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    align-self: stretch;
+    border-radius: 0 4px 0 0;
+    cursor: pointer;
+}
+
+.info-btn::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: var(--v-field-border-width, 1px) solid currentColor;
+    opacity: var(--v-field-border-opacity, 0.38);
+    pointer-events: none;
+}
+
+.info-btn .v-icon {
+    opacity: var(--v-medium-emphasis-opacity);
+}
+
+.info-btn:hover .v-icon {
+    opacity: var(--v-high-emphasis-opacity);
+}
+
+.info-btn__overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: currentColor;
+    opacity: 0.04;
+    pointer-events: none;
+}
 </style>

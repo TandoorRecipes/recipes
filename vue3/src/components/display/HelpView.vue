@@ -458,11 +458,20 @@
 import {ref, computed} from "vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useI18n} from "vue-i18n";
+import {useRoute} from "vue-router";
 import {localeCoverage, LOCALE_MIN_COVERAGE as minCoverage} from "@/i18n.ts";
 
+const props = withDefaults(defineProps<{
+    defaultSection?: string
+}>(), {
+    defaultSection: undefined,
+})
+
 const {t} = useI18n()
+const route = useRoute()
 const drawer = defineModel()
-const window = ref('start')
+const section = props.defaultSection || (typeof route.query.section === 'string' ? route.query.section : null)
+const window = ref(section || 'start')
 
 const mobileMenuItems = ref([
     {title: t('Start'), props: {prependIcon: 'fa-solid fa-house'}, value: 'start'},
