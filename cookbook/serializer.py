@@ -1389,6 +1389,32 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
     addshopping = serializers.BooleanField(write_only=True, required=False)
+    nutrition = serializers.SerializerMethodField("get_nutrition", read_only=True)
+
+    def get_nutrition(self, obj):
+        if not obj.recipe:
+            return None
+        result = {}
+        try:
+            from cookbook.helper.property_helper import FoodPropertyHelper
+            food_props = FoodPropertyHelper(self.context["request"].space).calculate_recipe_properties(obj.recipe)
+            if food_props:
+                for prop_id, prop_data in food_props.items():
+                    name = prop_data.get("name", "")
+                    total = prop_data.get("total_value", 0)
+                    if name == "Calories": result["calories"] = total
+                    elif name == "Proteins": result["proteins"] = total
+                    elif name == "Fats": result["fats"] = total
+                    elif name == "Carbohydrates": result["carbohydrates"] = total
+                    elif name == "Saturated fats": result["saturated_fat"] = total
+                    elif name == "Sugars": result["sugars"] = total
+        except Exception:
+            pass
+        has_meaningful = result and any(v > 0 for v in result.values() if isinstance(v, (int, float)))
+        if not has_meaningful and obj.recipe.nutrition:
+            n = obj.recipe.nutrition
+            result = {"calories": float(n.calories), "proteins": float(n.proteins), "fats": float(n.fats), "carbohydrates": float(n.carbohydrates)}
+        return result if result else None
 
     to_date = serializers.DateTimeField(required=False)
 
@@ -1458,9 +1484,9 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
             'from_date', 'to_date', 'meal_type', 'created_by', 'shared', 'recipe_name',
-            'meal_type_name', 'shopping', 'addshopping'
+            'meal_type_name', 'shopping', 'addshopping', 'nutrition'
         )
-        read_only_fields = ('created_by',)
+        read_only_fields = ('created_by', 'nutrition')
 
 
 class AutoMealPlanSerializer(serializers.Serializer):

@@ -56,6 +56,21 @@
                                         </v-btn>
                                     </template>
                                 </v-list-item>
+                                <!-- Daily Nutrition Totals -->
+                                <template v-if="getDayNutrition(mealPlanGridItem.date)">
+                                    <v-divider></v-divider>
+                                    <v-list-item density="compact" class="text-caption pa-2">
+                                        <div class="d-flex flex-column" style="gap: 3px; font-size: 0.75rem">
+                                            <div><strong style="color: #e65100">{{ Math.round(getDayNutrition(mealPlanGridItem.date).calories) }} kcal</strong></div>
+                                            <div style="color: #c62828">Protein: {{ Math.round(getDayNutrition(mealPlanGridItem.date).proteins) }}g</div>
+                                            <div style="color: #1565c0">Carbs: {{ Math.round(getDayNutrition(mealPlanGridItem.date).carbohydrates) }}g</div>
+                                            <div style="color: #2e7d32">Fat: {{ Math.round(getDayNutrition(mealPlanGridItem.date).fats) }}g</div>
+                                            <div style="color: #6a1b9a">Sat. fat: {{ Math.round(getDayNutrition(mealPlanGridItem.date).saturatedFats) }}g</div>
+                                            <div style="color: #00838f">Sugar: {{ Math.round(getDayNutrition(mealPlanGridItem.date).sugars) }}g</div>
+                                        </div>
+                                    </v-list-item>
+                                </template>
+
                                 <v-list-item class="text-center cursor-pointer" variant="tonal">
                                     <model-edit-dialog model="MealPlan" :item-defaults="{fromDate: mealPlanGridItem.date.toJSDate()}" :close-after-create="false"
                                                        :close-after-save="false"></model-edit-dialog>
@@ -145,6 +160,11 @@ onMounted(() => {
         loading.value = false
     })
 })
+
+function getDayNutrition(date: DateTime): { calories: number; proteins: number; fats: number; carbohydrates: number; saturatedFats: number; sugars: number; mealCount: number } | null {
+    const dateKey = date.toISODate() as string
+    return useMealPlanStore().dailyNutritionTotals.get(dateKey) ?? null
+}
 
 function clickMealPlan(plan: MealPlan) {
     if (plan.recipe) {

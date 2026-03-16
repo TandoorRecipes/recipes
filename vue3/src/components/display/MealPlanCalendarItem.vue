@@ -1,5 +1,21 @@
 <template>
-    <v-card class="card cv-item pa-0" hover
+    <!-- Daily nutrition summary card -->
+    <v-card v-if="mealPlan.id === -999" class="card cv-item pa-0"
+            :style="{'top': itemTop, 'height': 'auto', 'background-color': '#f5f5f5', 'border-color': '#ccc'}"
+            :key="value.id"
+            :class="value.classes"
+            flat>
+        <v-card-text class="pa-1" style="font-size: 0.7rem; line-height: 1.3">
+            <div><strong style="color: #e65100">{{ Math.round(mealPlan.nutrition?.calories ?? 0) }} kcal</strong></div>
+            <div style="color: #c62828">Protein: {{ Math.round(mealPlan.nutrition?.proteins ?? 0) }}g</div>
+            <div style="color: #1565c0">Carbs: {{ Math.round(mealPlan.nutrition?.carbohydrates ?? 0) }}g</div>
+            <div style="color: #2e7d32">Fat: {{ Math.round(mealPlan.nutrition?.fats ?? 0) }}g</div>
+            <div style="color: #6a1b9a">Sat. fat: {{ Math.round(mealPlan.nutrition?.saturatedFats ?? 0) }}g</div>
+            <div style="color: #00838f">Sugar: {{ Math.round(mealPlan.nutrition?.sugars ?? 0) }}g</div>
+        </v-card-text>
+    </v-card>
+    <!-- Regular meal plan card -->
+    <v-card v-else class="card cv-item pa-0" hover
             :style="{'top': itemTop, 'height': itemHeight, 'border-color': mealPlan.mealType.color}"
             :draggable="true"
             :key="value.id"

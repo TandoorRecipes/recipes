@@ -128,6 +128,7 @@ export interface MealPlan {
      * @memberof MealPlan
      */
     addshopping?: boolean;
+    readonly nutrition?: any;
 }
 
 /**
@@ -170,6 +171,7 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'mealTypeName': json['meal_type_name'],
         'shopping': json['shopping'],
         'addshopping': json['addshopping'] == null ? undefined : json['addshopping'],
+        'nutrition': json['nutrition'] == null ? undefined : json['nutrition'],
     };
 }
 

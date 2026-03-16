@@ -81,6 +81,38 @@ const planItems = computed(() => {
             mealPlan: mp,
         } as IMealPlanCalendarItem)
     })
+    // Add daily nutrition summary after the last meal plan item for each day
+    const lastItemPerDay = new Map()
+    useMealPlanStore().planList.forEach(mp => {
+        if (!mp.fromDate) return
+        const dk = DateTime.fromJSDate(mp.fromDate).toISODate()
+        const existing = lastItemPerDay.get(dk)
+        if (!existing || mp.fromDate.getTime() > existing.date.getTime()) {
+            lastItemPerDay.set(dk, { date: mp.fromDate, mp })
+        }
+    })
+
+    useMealPlanStore().dailyNutritionTotals.forEach((totals, dateKey) => {
+        const last = lastItemPerDay.get(dateKey)
+        if (!last) return
+        const summaryDate = new Date(last.date.getTime() + 60000)
+        items.push({
+            startDate: summaryDate,
+            endDate: summaryDate,
+            id: last.mp.id + 900000,
+            title: Math.round(totals.calories) + ' kcal',
+            mealPlan: {
+                id: -999,
+                fromDate: summaryDate,
+                toDate: summaryDate,
+                servings: 1,
+                title: Math.round(totals.calories) + ' kcal',
+                mealType: last.mp.mealType,
+                nutrition: totals,
+            },
+        })
+    })
+
     return items
 })
 

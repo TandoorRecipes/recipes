@@ -160,7 +160,27 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //         return JSON.parse(s)
     //     }
     // }
-    return {plans, currently_updating, planList, loading, refreshFromAPI, createObject, updateObject, deleteObject, refreshLastUpdatedPeriod, createOrUpdate}
+    const dailyNutritionTotals = computed(() => {
+        const totals = new Map<string, { calories: number; proteins: number; fats: number; carbohydrates: number; saturatedFats: number; sugars: number; mealCount: number }>()
+        planList.value.forEach((mp: MealPlan) => {
+            if (!mp.nutrition || !mp.fromDate) return
+            const dateKey = DateTime.fromJSDate(new Date(mp.fromDate as unknown as string)).toISODate() as string
+            if (!dateKey) return
+            const servingScale = (mp.servings ?? 1) / (mp.recipe?.servings ?? 1)
+            const existing = totals.get(dateKey) ?? { calories: 0, proteins: 0, fats: 0, carbohydrates: 0, saturatedFats: 0, sugars: 0, mealCount: 0 }
+            existing.calories += (mp.nutrition.calories ?? 0) * servingScale
+            existing.proteins += (mp.nutrition.proteins ?? 0) * servingScale
+            existing.fats += (mp.nutrition.fats ?? 0) * servingScale
+            existing.carbohydrates += (mp.nutrition.carbohydrates ?? 0) * servingScale
+            existing.saturatedFats += (mp.nutrition.saturated_fat ?? 0) * servingScale
+            existing.sugars += (mp.nutrition.sugars ?? 0) * servingScale
+            existing.mealCount += 1
+            totals.set(dateKey, existing)
+        })
+        return totals
+    })
+
+    return {plans, currently_updating, planList, loading, refreshFromAPI, createObject, updateObject, deleteObject, refreshLastUpdatedPeriod, createOrUpdate, dailyNutritionTotals}
 })
 
 // enable hot reload for store

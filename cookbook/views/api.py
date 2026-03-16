@@ -1454,7 +1454,7 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
     required_scopes = ['mealplan']
 
     def get_queryset(self):
-        queryset = self.queryset.filter(Q(created_by=self.request.user) |
+        queryset = self.queryset.select_related("recipe__nutrition").filter(Q(created_by=self.request.user) |
                                         Q(created_by_id__in=UserSpace.objects.filter(household=self.request.user_space.household, household__isnull=False).values_list('user_id', flat=True))).filter(
             space=self.request.space).distinct().all()
 
