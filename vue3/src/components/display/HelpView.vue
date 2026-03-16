@@ -25,6 +25,8 @@
                 <v-list-item link :title="$t('Books')" @click="window = 'books'" prepend-icon="$books"></v-list-item>
                 <v-list-item link :title="$t('Shopping')" @click="window = 'shopping'" prepend-icon="$shopping"></v-list-item>
                 <v-list-item link :title="$t('Meal_Plan')" @click="window = 'meal_plan'" prepend-icon="$mealplan"></v-list-item>
+                <v-divider></v-divider>
+                <v-list-item link :title="$t('Translations')" @click="window = 'translations'" prepend-icon="fa-solid fa-language"></v-list-item>
             </v-list>
 
         </v-navigation-drawer>
@@ -371,6 +373,78 @@
                         </v-btn>
 
                     </v-window-item>
+                    <v-window-item value="translations">
+                        <h2>{{ $t('Translations') }}</h2>
+                        <p class="mt-3">
+                            Tandoor is translated by volunteers using
+                            <a href="https://translate.tandoor.dev" target="_blank">Weblate</a>.
+                            Languages with at least {{ minCoverage }}% frontend translation are available in the language picker.
+                        </p>
+
+                        <v-table density="compact" class="mt-4">
+                            <thead>
+                                <tr>
+                                    <th>{{ $t('Language') }}</th>
+                                    <th>Frontend</th>
+                                    <th>Backend</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="lang in sortedCoverage" :key="lang.filename">
+                                    <td>
+                                        <span :class="{'text-disabled': lang.fe < minCoverage}">
+                                            {{ lang.name }}
+                                        </span>
+                                    </td>
+                                    <td style="min-width: 160px">
+                                        <div class="d-flex align-center ga-2">
+                                            <v-progress-linear
+                                                :model-value="lang.fe"
+                                                :color="barColor(lang.fe)"
+                                                height="14"
+                                                rounded
+                                                style="max-width: 100px"
+                                            >
+                                                <template #default>
+                                                    <span class="text-caption" style="font-size: 10px !important">{{ lang.fe }}%</span>
+                                                </template>
+                                            </v-progress-linear>
+                                        </div>
+                                    </td>
+                                    <td style="min-width: 160px">
+                                        <div class="d-flex align-center ga-2">
+                                            <v-progress-linear
+                                                :model-value="lang.be"
+                                                :color="barColor(lang.be)"
+                                                height="14"
+                                                rounded
+                                                style="max-width: 100px"
+                                            >
+                                                <template #default>
+                                                    <span class="text-caption" style="font-size: 10px !important">{{ lang.be }}%</span>
+                                                </template>
+                                            </v-progress-linear>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <v-btn
+                                            size="x-small"
+                                            variant="text"
+                                            icon="fa-solid fa-pen"
+                                            :href="weblateUrl(lang.filename)"
+                                            target="_blank"
+                                            :title="'Translate ' + lang.name"
+                                        ></v-btn>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </v-table>
+
+                        <v-btn class="mt-4" color="primary" href="https://translate.tandoor.dev" target="_blank" prepend-icon="fa-solid fa-language">
+                            {{ $t('help_translate') }}
+                        </v-btn>
+                    </v-window-item>
                 </v-window>
             </v-container>
         </v-main>
@@ -381,9 +455,10 @@
 
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useI18n} from "vue-i18n";
+import {localeCoverage, LOCALE_MIN_COVERAGE as minCoverage} from "@/i18n.ts";
 
 const {t} = useI18n()
 const drawer = defineModel()
@@ -404,8 +479,39 @@ const mobileMenuItems = ref([
     {title: t('SavedSearch'), props: {prependIcon: 'fa-solid fa-sd-card'}, value: 'search_filter'},
     {title: t('Books'), props: {prependIcon: '$books'}, value: 'books'},
     {title: t('Shopping'), props: {prependIcon: '$shopping'}, value: 'shopping'},
-    {title: t('Meal_Plan'), props: {prependIcon: '$mealplan'}, value: 'meal_plan'}
+    {title: t('Meal_Plan'), props: {prependIcon: '$mealplan'}, value: 'meal_plan'},
+    {title: t('Translations'), props: {prependIcon: 'fa-solid fa-language'}, value: 'translations'}
 ])
+
+// Weblate directory names use underscore format (nb_NO, zh_Hant)
+function weblateUrl(filename: string): string {
+    return `https://translate.tandoor.dev/projects/tandoor/-/${filename}/`
+}
+
+function barColor(pct: number): string {
+    if (pct >= 80) return 'success'
+    if (pct >= minCoverage) return 'warning'
+    return 'error'
+}
+
+// Use Intl.DisplayNames to get native language names
+const displayNames = new Intl.DisplayNames(['en'], {type: 'language'})
+
+const sortedCoverage = computed(() => {
+    return Object.entries(localeCoverage)
+        .filter(([filename]) => filename !== 'en')  // exclude source language
+        .map(([filename, data]) => {
+            const code = filename.replaceAll('_', '-').toLowerCase()
+            let name: string
+            try {
+                name = displayNames.of(code) || filename
+            } catch {
+                name = filename
+            }
+            return {filename, code, name, fe: data.fe, be: data.be}
+        })
+        .sort((a, b) => b.fe - a.fe || b.be - a.be)
+})
 
 </script>
 

@@ -3,46 +3,100 @@
             :label="$t('Language')"
             v-model="$i18n.locale"
             :items="availableLocalizations"
-            item-title="language"
+            item-title="display"
             item-value="code"
             @update:model-value="updateLanguage()"
-        ></v-select>
+        >
+        <template #item="{item, props: itemProps}">
+            <v-list-item v-bind="itemProps">
+                <template #append>
+                    <span class="text-caption" :style="{color: coverageColor(item.raw.coverage)}">
+                        {{ item.raw.coverage }}%
+                    </span>
+                </template>
+            </v-list-item>
+        </template>
+        <template #append-inner>
+            <v-tooltip location="top">
+                <template #activator="{props: tooltipProps}">
+                    <v-icon v-bind="tooltipProps" icon="fa-solid fa-info-circle" size="small" class="ms-1" />
+                </template>
+                {{ $t('Language') }}: {{ currentCoverage }}% translated
+            </v-tooltip>
+        </template>
+    </v-select>
+    <div class="text-caption mt-n4 ms-4">
+        <a href="https://translate.tandoor.dev" target="_blank" class="text-decoration-none">
+            {{ $t('help_translate') }}
+        </a>
+    </div>
 </template>
 
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {ApiApi, Localization} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
-import {SUPPORT_LOCALES, resolveLocale} from "@/i18n.ts";
+import {SUPPORT_LOCALES, resolveLocale, localeCoverage, LOCALE_MIN_COVERAGE} from "@/i18n.ts";
 
-const availableLocalizations = ref([] as Localization[])
+interface LocalizationWithCoverage {
+    code: string
+    language: string
+    display: string
+    coverage: number
+}
+
+const availableLocalizations = ref([] as LocalizationWithCoverage[])
 const {locale} = useI18n()
 
+const currentCoverage = computed(() => {
+    const resolved = resolveLocale(locale.value)
+    if (!resolved || resolved === 'en') return 100
+    // Find the FE file that matches
+    for (const [filename, data] of Object.entries(localeCoverage)) {
+        if (filename.replaceAll('_', '-').toLowerCase() === resolved) {
+            return data.fe
+        }
+    }
+    return 0
+})
+
+function coverageColor(pct: number): string {
+    if (pct >= 80) return '#4CAF50'  // green
+    if (pct >= 50) return '#FB8C00'  // amber
+    return '#E53935'                  // red
+}
 
 onMounted(() => {
     const api = new ApiApi()
 
     api.apiLocalizationList().then(r => {
         availableLocalizations.value = r.filter(l => resolveLocale(l.code!) !== null)
-            .map(l => ({...l, code: resolveLocale(l.code!)!}))
+            .map(l => {
+                const resolved = resolveLocale(l.code!)!
+                // Find FE coverage for this locale
+                let fe = 0
+                if (resolved === 'en') {
+                    fe = 100
+                } else {
+                    for (const [filename, data] of Object.entries(localeCoverage)) {
+                        if (filename.replaceAll('_', '-').toLowerCase() === resolved) {
+                            fe = data.fe
+                            break
+                        }
+                    }
+                }
+                return {
+                    code: resolved,
+                    language: l.language!,
+                    display: l.language!,
+                    coverage: fe
+                }
+            })
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
-
-    // console.log(locale.value)
-    // const regionNames = new Intl.DisplayNames([locale.value], { type: "language" });
-    //
-    // availableLocalizations.value = []
-    // SUPPORT_LOCALES.forEach(locale => {
-    //     const lang = new Intl.Locale(locale.replace('_', '-'))
-    //     console.log(lang)
-    //     availableLocalizations.value.push({
-    //         code: lang.baseName,
-    //         language: `${regionNames.of(lang.baseName)} [${lang.baseName}]`
-    //     } as Localization)
-    // })
 })
 
 /**
@@ -58,7 +112,6 @@ function updateLanguage() {
 }
 
 </script>
-
 
 
 <style scoped>

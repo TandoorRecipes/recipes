@@ -6,7 +6,7 @@ import type {
 import {createI18n} from "vue-i18n";
 import en from "@/locales/en.json";
 import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
-import qualifiedLocales from 'virtual:locale-coverage'
+import {qualified as qualifiedLocales, coverage as localeCoverage, minCoverage as LOCALE_MIN_COVERAGE} from 'virtual:locale-coverage'
 
 /**
  * lazy loading of translation, resources:
@@ -36,6 +36,7 @@ function buildLocaleMap(localeFiles = import.meta.glob('@/locales/*.json'), chec
 
 const LOCALE_MAP = buildLocaleMap()
 export const SUPPORT_LOCALES = Array.from(LOCALE_MAP.keys())
+export {localeCoverage, LOCALE_MIN_COVERAGE}
 
 // Django locale codes that map to different frontend locale codes
 // (Weblate directory name differs from frontend filename)

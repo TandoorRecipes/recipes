@@ -10,7 +10,7 @@ import vue from '@vitejs/plugin-vue'
 import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
 import {VitePWA} from "vite-plugin-pwa";
 import {PluginModule} from "./src/types/Plugins";
-import {readFileSync} from "node:fs";
+import {readFileSync, existsSync} from "node:fs";
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({command, mode, isSsrBuild, isPreview}) => {
@@ -68,8 +68,8 @@ const LOCALE_MIN_COVERAGE = 25
 
 /**
  * Vite plugin that computes translation coverage at build time and exposes
- * qualifying locale filenames as `virtual:locale-coverage`.
- * Locales below LOCALE_MIN_COVERAGE are excluded. 
+ * locale coverage data as `virtual:locale-coverage`.
+ * Exports: { coverage: Record<filename, {fe, be}>, qualified: Set<filename>, minCoverage: number }
  */
 function localeCoveragePlugin(): Plugin {
     const virtualModuleId = 'virtual:locale-coverage'
@@ -83,21 +83,76 @@ function localeCoveragePlugin(): Plugin {
         load(id) {
             if (id !== resolvedId) return
 
+            // Frontend coverage: count non-empty keys vs en.json
             const localesDir = resolve(__dirname, 'src/locales')
             const en = JSON.parse(readFileSync(join(localesDir, 'en.json'), 'utf-8'))
             const totalKeys = Object.keys(en).length
 
-            const qualifiedLocales: string[] = []
+            const coverage: Record<string, {fe: number, be: number}> = {}
+            const qualified: string[] = []
+
             for (const file of readdirSync(localesDir)) {
                 if (!file.endsWith('.json') || file === 'en.json') continue
                 const data = JSON.parse(readFileSync(join(localesDir, file), 'utf-8'))
-                const pct = Math.round(Object.values(data).filter(v => v !== '').length / totalKeys * 100)
-                if (pct >= LOCALE_MIN_COVERAGE) {
-                    qualifiedLocales.push(file.replace('.json', ''))
+                const fe = Math.round(Object.values(data).filter(v => v !== '').length / totalKeys * 100)
+                const filename = file.replace('.json', '')
+                coverage[filename] = {fe, be: 0}
+                if (fe >= LOCALE_MIN_COVERAGE) {
+                    qualified.push(filename)
                 }
             }
 
-            return `export default new Set(${JSON.stringify(qualifiedLocales)})`
+            // Backend coverage: count translated msgstr in .po files (referenced strings only)
+            // Must match DIR_CODE_MAP from settings.py for Weblate/Django mismatches
+            const beDirMap: Record<string, string> = {
+                'hu_HU': 'hu',
+                'zh_CN': 'zh_Hans',
+            }
+            const beLocaleDir = resolve(__dirname, '..', 'cookbook', 'locale')
+            if (existsSync(beLocaleDir)) {
+                for (const entry of readdirSync(beLocaleDir)) {
+                    if (entry === 'en') continue  // skip source language
+                    const poPath = join(beLocaleDir, entry, 'LC_MESSAGES', 'django.po')
+                    if (!existsSync(poPath)) continue
+                    const content = readFileSync(poPath, 'utf-8')
+
+                    // Count referenced msgid/msgstr pairs (skip header and orphaned strings)
+                    const blocks = content.split(/\n\n+/)
+                    let referenced = 0, translated = 0
+                    for (const block of blocks) {
+                        if (block.includes('msgid ""') && block.includes('Project-Id')) continue
+                        if (!(/^msgid ".+"/m).test(block)) continue
+                        if (!(/#: /).test(block)) continue // skip orphaned (no source reference)
+                        referenced++
+                        if ((/^msgstr ".+"/m).test(block)) translated++
+                    }
+                    const be = referenced > 0 ? Math.round(translated / referenced * 100) : 0
+
+                    // Map BE directory to FE filename (handles hu_HU→hu, zh_CN→zh_Hans)
+                    const feKey = beDirMap[entry] || entry
+                    if (coverage[feKey]) {
+                        coverage[feKey].be = be
+                    } else {
+                        // Try case-insensitive match
+                        const dirCode = feKey.replace('_', '-').toLowerCase()
+                        const feMatch = Object.keys(coverage).find(k =>
+                            k.replace('_', '-').toLowerCase() === dirCode
+                        )
+                        if (feMatch) {
+                            coverage[feMatch].be = be
+                        } else {
+                            // BE-only locale (no FE file)
+                            coverage[entry] = {fe: 0, be}
+                        }
+                    }
+                }
+            }
+
+            return [
+                `export const coverage = ${JSON.stringify(coverage)};`,
+                `export const qualified = new Set(${JSON.stringify(qualified)});`,
+                `export const minCoverage = ${LOCALE_MIN_COVERAGE};`,
+            ].join('\n')
         }
     }
 }
