@@ -5,7 +5,7 @@ import {aliases, fa} from 'vuetify/iconsets/fa'
 // Composables
 import {createVuetify} from 'vuetify'
 import {DateTime} from "luxon";
-import {af, ar, az, bg, ca, ckb, cs, da, de, el, en, es, et, fi, fr, he, hr, hu, id, it, ja, km, ko, lt, lv, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, srLatn, sv, th, tr, uk, vi, zhHans, zhHant} from "vuetify/locale";
+import * as vuetifyLocales from "vuetify/locale";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
@@ -38,7 +38,7 @@ export default createVuetify({
     locale: {
         locale: 'en',
         fallback: 'en',
-        messages: {af, ar, az, bg, ca, ckb, cs, da, de, el, en, es, et, fi, fr, he, hr, hu, id, it, ja, km, ko, lt, lv, nl, no, pl, pt, ro, ru, sk, sl, srCyrl, srLatn, sv, th, tr, uk, vi, zhHans, zhHant},
+        messages: vuetifyLocales,
         decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
     },
     theme: {
@@ -126,4 +126,22 @@ export type VDataTableUpdateOptions = {
     search: string;
     sortBy?: string;
     groupBy?: string;
+}
+
+const VUETIFY_LOCALES = new Set(Object.keys(vuetifyLocales))
+
+const VUETIFY_LOCALE_MAP: Record<string, string> = {
+    'nb-no': 'no',
+    'nb': 'no',
+    'pt-br': 'pt',
+    'zh-hans': 'zhHans',
+    'zh-hant': 'zhHant',
+    'sr-cyrl': 'srCyrl',
+    'sr-latn': 'srLatn',
+}
+
+export function toVuetifyLocale(djangoCode: string): string {
+    const lc = djangoCode.toLowerCase()
+    const mapped = VUETIFY_LOCALE_MAP[lc] || lc
+    return VUETIFY_LOCALES.has(mapped) ? mapped : 'en'
 }

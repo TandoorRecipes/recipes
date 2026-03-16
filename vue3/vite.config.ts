@@ -5,6 +5,7 @@ import {resolve, join} from "path"
 import 'esbuild-register/dist/node'
 
 import {defineConfig} from 'vite'
+import type {Plugin} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify, {transformAssetUrls} from 'vite-plugin-vuetify'
 import {VitePWA} from "vite-plugin-pwa";
@@ -18,6 +19,7 @@ export default defineConfig(async ({command, mode, isSsrBuild, isPreview}) => {
     return {
         base: mode == 'development' ? '/static/vue3/' : './',
         plugins: [
+            localeCoveragePlugin(),
             vue({
                 template: {transformAssetUrls}
             }),
@@ -59,8 +61,51 @@ export default defineConfig(async ({command, mode, isSsrBuild, isPreview}) => {
 })
 
 /**
+ * Minimum translation coverage (%) for a locale to appear in the language picker.
+ * Locales below this threshold silently fall back to English.
+ */
+const LOCALE_MIN_COVERAGE = 25
+
+/**
+ * Vite plugin that computes translation coverage at build time and exposes
+ * qualifying locale filenames as `virtual:locale-coverage`.
+ * Locales below LOCALE_MIN_COVERAGE are excluded. 
+ */
+function localeCoveragePlugin(): Plugin {
+    const virtualModuleId = 'virtual:locale-coverage'
+    const resolvedId = '\0' + virtualModuleId
+
+    return {
+        name: 'locale-coverage',
+        resolveId(id) {
+            if (id === virtualModuleId) return resolvedId
+        },
+        load(id) {
+            if (id !== resolvedId) return
+
+            const localesDir = resolve(__dirname, 'src/locales')
+            const en = JSON.parse(readFileSync(join(localesDir, 'en.json'), 'utf-8'))
+            const totalKeys = Object.keys(en).length
+
+            const qualifiedLocales: string[] = []
+            for (const file of readdirSync(localesDir)) {
+                if (!file.endsWith('.json') || file === 'en.json') continue
+                const data = JSON.parse(readFileSync(join(localesDir, file), 'utf-8'))
+                const pct = Math.round(Object.values(data).filter(v => v !== '').length / totalKeys * 100)
+                if (pct >= LOCALE_MIN_COVERAGE) {
+                    qualifiedLocales.push(file.replace('.json', ''))
+                }
+            }
+
+            return `export default new Set(${JSON.stringify(qualifiedLocales)})`
+        }
+    }
+}
+
+/**
  * function to load plugin configs and find additional build inputs
  */
+
 async function collectBuildInputs() {
     try {
         const pluginsDir = resolve(__dirname, "src/plugins")
