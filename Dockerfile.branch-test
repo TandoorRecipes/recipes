@@ -8,7 +8,7 @@
 #   venv/bin/python manage.py collectstatic --noinput --clear
 #   # restart container or re-run boot.sh
 
-FROM python:3.13-alpine3.23
+FROM python:3.14-alpine3.23
 
 RUN apk add --no-cache \
     postgresql-libs postgresql-client gettext zlib libjpeg libwebp \
