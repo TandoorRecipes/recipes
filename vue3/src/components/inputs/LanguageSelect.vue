@@ -66,7 +66,7 @@ onMounted(() => {
     const api = new ApiApi()
 
     api.apiLocalizationList().then(r => {
-        availableLocalizations.value = r.filter(l => resolveLocale(l.code!) !== null)
+        availableLocalizations.value = r.filter(l => l.code && resolveLocale(l.code) !== null)
             .map(l => {
                 const resolved = resolveLocale(l.code!)!
                 // Find FE coverage for this locale

@@ -25,7 +25,6 @@
                 <v-list-item link :title="$t('Books')" @click="window = 'books'" prepend-icon="$books"></v-list-item>
                 <v-list-item link :title="$t('Shopping')" @click="window = 'shopping'" prepend-icon="$shopping"></v-list-item>
                 <v-list-item link :title="$t('Meal_Plan')" @click="window = 'meal_plan'" prepend-icon="$mealplan"></v-list-item>
-                <v-divider></v-divider>
                 <v-list-item link :title="$t('Translations')" @click="window = 'translations'" prepend-icon="fa-solid fa-language"></v-list-item>
             </v-list>
 
@@ -374,7 +373,12 @@
 
                     </v-window-item>
                     <v-window-item value="translations">
-                        <h2>{{ $t('Translations') }}</h2>
+                        <div class="d-flex align-center justify-space-between">
+                            <h2>{{ $t('Translations') }}</h2>
+                            <v-btn variant="tonal" color="primary" href="https://translate.tandoor.dev" target="_blank" prepend-icon="fa-solid fa-language">
+                                {{ $t('help_translate') }}
+                            </v-btn>
+                        </div>
                         <p class="mt-3">
                             Tandoor is translated by volunteers using
                             <a href="https://translate.tandoor.dev" target="_blank">Weblate</a>.
@@ -434,16 +438,12 @@
                                             icon="fa-solid fa-pen"
                                             :href="weblateUrl(lang.filename)"
                                             target="_blank"
-                                            :title="'Translate ' + lang.name"
+                                            :aria-label="'Translate ' + lang.name"
                                         ></v-btn>
                                     </td>
                                 </tr>
                             </tbody>
                         </v-table>
-
-                        <v-btn class="mt-4" color="primary" href="https://translate.tandoor.dev" target="_blank" prepend-icon="fa-solid fa-language">
-                            {{ $t('help_translate') }}
-                        </v-btn>
                     </v-window-item>
                 </v-window>
             </v-container>

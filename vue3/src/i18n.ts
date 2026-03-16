@@ -87,7 +87,7 @@ export function setupI18n() {
     })
 
     // async load user locale into existing i18n instance
-    loadLocaleMessages(i18n, locale).then()
+    loadLocaleMessages(i18n, locale).catch(console.error)
 
     return i18n
 }

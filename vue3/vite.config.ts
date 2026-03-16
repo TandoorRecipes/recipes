@@ -117,6 +117,7 @@ function localeCoveragePlugin(): Plugin {
                     const content = readFileSync(poPath, 'utf-8')
 
                     // Count referenced msgid/msgstr pairs (skip header and orphaned strings)
+                    // Handles both single-line (msgstr "text") and multi-line (msgstr ""\n"text") formats
                     const blocks = content.split(/\n\n+/)
                     let referenced = 0, translated = 0
                     for (const block of blocks) {
@@ -124,7 +125,15 @@ function localeCoveragePlugin(): Plugin {
                         if (!(/^msgid ".+"/m).test(block)) continue
                         if (!(/#: /).test(block)) continue // skip orphaned (no source reference)
                         referenced++
-                        if ((/^msgstr ".+"/m).test(block)) translated++
+                        // Extract all msgstr content: concatenate quoted strings after msgstr
+                        const msgstrMatch = block.match(/^msgstr\s+"(.*)"([\s\S]*?)(?=\n\n|\n#|$)/m)
+                        if (msgstrMatch) {
+                            const firstLine = msgstrMatch[1]
+                            const continuation = msgstrMatch[2] || ''
+                            const extraLines = continuation.match(/^"(.+)"/gm) || []
+                            const fullStr = firstLine + extraLines.map(l => l.slice(1, -1)).join('')
+                            if (fullStr.length > 0) translated++
+                        }
                     }
                     const be = referenced > 0 ? Math.round(translated / referenced * 100) : 0
 
@@ -134,9 +143,9 @@ function localeCoveragePlugin(): Plugin {
                         coverage[feKey].be = be
                     } else {
                         // Try case-insensitive match
-                        const dirCode = feKey.replace('_', '-').toLowerCase()
+                        const dirCode = feKey.replaceAll('_', '-').toLowerCase()
                         const feMatch = Object.keys(coverage).find(k =>
-                            k.replace('_', '-').toLowerCase() === dirCode
+                            k.replaceAll('_', '-').toLowerCase() === dirCode
                         )
                         if (feMatch) {
                             coverage[feMatch].be = be
