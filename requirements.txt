@@ -3,7 +3,7 @@ beautifulsoup4==4.14.3
 boto3==1.42.67
 bleach==6.3.0
 cryptography===46.0.5
-crispy-bootstrap4==2025.6
+crispy-bootstrap4==2026.2
 Django==5.2.11
 django-allauth==65.14.3
 django-annoying==0.10.8
