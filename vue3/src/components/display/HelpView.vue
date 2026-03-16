@@ -31,7 +31,7 @@
 
         </v-navigation-drawer>
 
-        <v-main>
+        <v-main scrollable>
             <v-container>
                 <v-select v-model="window" :items="mobileMenuItems" class="d-block d-lg-none">  </v-select>
 

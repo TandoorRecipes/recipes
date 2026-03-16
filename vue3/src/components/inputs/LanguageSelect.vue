@@ -5,6 +5,8 @@
             :items="availableLocalizations"
             item-title="display"
             item-value="code"
+            :hint="currentCoverage < 100 ? currentCoverage + '% ' + $t('translated') : ''"
+            persistent-hint
             @update:model-value="updateLanguage()"
         >
         <template #item="{item, props: itemProps}">
@@ -16,16 +18,8 @@
                 </template>
             </v-list-item>
         </template>
-        <template #append-inner>
-            <v-tooltip location="top">
-                <template #activator="{props: tooltipProps}">
-                    <v-icon v-bind="tooltipProps" icon="fa-solid fa-info-circle" size="small" class="ms-1" />
-                </template>
-                {{ $t('Language') }}: {{ currentCoverage }}% translated
-            </v-tooltip>
-        </template>
     </v-select>
-    <div class="text-caption mt-n4 ms-4">
+    <div class="text-caption mt-1 ms-4">
         <a href="https://translate.tandoor.dev" target="_blank" class="text-decoration-none">
             {{ $t('help_translate') }}
         </a>
