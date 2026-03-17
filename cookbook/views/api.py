@@ -2332,7 +2332,7 @@ class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
-    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -2354,17 +2354,17 @@ class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 class ExportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ExportLog.objects
     serializer_class = ExportLogSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space, created_by=self.request.user)
 
 
 class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasScope]
+    permission_classes = [CustomIsOwner & CustomTokenHasScope]
     pagination_class = DefaultPagination
     required_scopes = ['bookmarklet']
 
@@ -2374,7 +2374,7 @@ class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.serializer_class
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space).all()
+        return self.queryset.filter(space=self.request.space, created_by=self.request.user).all()
 
 
 class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
