@@ -134,7 +134,7 @@ class CustomDecimalField(serializers.Field):
     def to_representation(self, value):
         if not isinstance(value, Decimal):
             value = Decimal(value)
-        return round(value, 2).normalize()
+        return round(value, 4).normalize()
 
     def to_internal_value(self, data):
         if isinstance(data, int) or isinstance(data, float):
