@@ -570,37 +570,51 @@ USE_I18N = True
 
 USE_TZ = True
 
-LANGUAGES = [
-    ('hy', _('Armenian ')),
-    ('bg', _('Bulgarian')),
-    ('ca', _('Catalan')),
-    ('cs', _('Czech')),
-    ('cr', _('Croatian')),
-    ('da', _('Danish')),
-    ('nl', _('Dutch')),
-    ('en', _('English')),
-    ('fr', _('French')),
-    ('fi', _('Finnish')),
-    ('de', _('German')),
-    ('el', _('Greek')),
-    ('he', _('Hebrew')),
-    ('hu', _('Hungarian')),
-    ('it', _('Italian')),
-    ('lv', _('Latvian')),
-    ('nb', _('Norwegian')),
-    # ('nb-NO', _('Norwegian Bokmål')),
-    ('pl', _('Polish')),
-    ('pt', _('Portuguese')),
-    ('ru', _('Russian')),
-    ('ro', _('Romanian')),
-    ('es', _('Spanish')),
-    ('sl', _('Slovenian')),
-    ('sv', _('Swedish')),
-    ('tr', _('Turkish')),
-    ('uk', _('Ukranian')),
-    # ('zh-Hant', _('Chinese (Traditional Han script)')),
-    # ('zh-Hans', _('Chinese (Simplified Han script)')),
-]
+
+def _discover_languages():
+    """Auto-discover languages from Weblate-created locale directories."""
+    from django.conf.locale import LANG_INFO
+
+    # Weblate directory names that map to different Django LANG_INFO keys.
+    # The value becomes both the LANG_INFO lookup key AND the language code.
+    DIR_CODE_MAP = {
+        'hu-hu': 'hu',       # Weblate uses hu_HU, Django uses hu
+        'zh-cn': 'zh-hans',  # Weblate uses zh_CN, Django uses zh-hans
+    }
+
+    locale_dir = os.path.join(BASE_DIR, 'cookbook', 'locale')
+    languages = []
+
+    if not os.path.isdir(locale_dir):
+        return [('en', _('English'))]
+
+    for entry in sorted(os.listdir(locale_dir)):
+        po_path = os.path.join(locale_dir, entry, 'LC_MESSAGES', 'django.po')
+        if not os.path.isfile(po_path):
+            continue
+
+        dir_code = entry.replace('_', '-').lower()  # nb_NO → nb-no
+
+        # Remap known mismatches, otherwise use directory-derived code
+        lang_code = DIR_CODE_MAP.get(dir_code, dir_code)
+
+        # Get English name from LANG_INFO
+        name = None
+        for candidate in [lang_code, lang_code.split('-')[0]]:
+            info = LANG_INFO.get(candidate, {})
+            name = info.get('name')
+            if name:
+                break
+
+        languages.append((lang_code, _(name) if name else entry))
+
+    if not any(code == 'en' for code, _name in languages):
+        languages.append(('en', _('English')))
+
+    return sorted(languages, key=lambda x: x[0])
+
+
+LANGUAGES = _discover_languages()
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
