@@ -167,8 +167,10 @@ function recLoadFilter(filterId: number, page: number) {
     let api = new ApiApi()
 
     api.apiRecipeList({filter: filterId, page: page, pageSize: 50}).then(r => {
-        recipes.value = recipes.value.concat(r.results)
-        filterItems.value = r.count
+        const existingIds = new Set(recipes.value.map(rec => rec.id))
+        const newRecipes = r.results.filter(rec => !existingIds.has(rec.id))
+        recipes.value = recipes.value.concat(newRecipes)
+        filterItems.value = recipes.value.length - manualItems.value
         if (r.next) {
             recLoadFilter(filterId, page + 1)
         } else {
