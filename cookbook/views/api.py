@@ -1763,7 +1763,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         return self.queryset
 
     def list(self, request, *args, **kwargs):
-        if self.request.GET.get('debug', False):
+        if self.request.GET.get('debug', False) and settings.DEBUG:
             return JsonResponse({'new': str(self.get_queryset().query), })
         return super().list(request, *args, **kwargs)
 
