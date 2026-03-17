@@ -1,6 +1,6 @@
 aiohttp==3.13.3
 beautifulsoup4==4.14.3
-boto3==1.42.67
+boto3==1.42.68
 bleach==6.3.0
 cryptography===46.0.5
 crispy-bootstrap4==2026.2
@@ -24,7 +24,7 @@ djangorestframework==3.16.1
 drf-writable-nested==0.7.2
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 gunicorn==25.1.0
-icalendar==7.0.0
+icalendar==7.0.3
 inflection==0.5.1
 Jinja2==3.1.6
 lxml==6.0.2
