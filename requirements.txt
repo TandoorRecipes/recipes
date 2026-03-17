@@ -13,7 +13,7 @@ django-debug-toolbar==6.2.0
 bleach==6.2.0
 gunicorn==23.0.0
 lxml==6.0.2
-Markdown==3.7
+Markdown==3.8.1
 Pillow==12.1.1
 psycopg2-binary==2.9.10
 python-dotenv==1.1.1
