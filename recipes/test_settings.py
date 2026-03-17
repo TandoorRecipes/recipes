@@ -28,3 +28,7 @@ for x in UNINSTALL_MIDDLEWARE:
 
 for y in UNINSTALL_INSTALLED_APPS:
     INSTALLED_APPS.remove(y)  # noqa: F405
+
+# Disable external connectors during tests to prevent the ConnectorManager
+# daemon thread from holding a DB connection that blocks test DB teardown
+DISABLE_EXTERNAL_CONNECTORS = True

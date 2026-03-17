@@ -5,6 +5,7 @@ from django.db.models import F, OuterRef, Q, Subquery, Value
 from django.db.models.functions import Coalesce
 from django.utils.translation import gettext as _
 
+from cookbook.connectors.connector_manager import ActionType, ConnectorManager
 from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
                              SupermarketCategoryRelation, UserSpace)
 
@@ -197,6 +198,7 @@ class RecipeShoppingEditor():
             entries.append(entry)
 
         ShoppingListEntry.objects.bulk_create(entries)
+        ConnectorManager.add_work(ActionType.CREATED, *entries)
         for e in entries:
             if e.food.shopping_lists.count() > 0:
                 e.shopping_lists.set(e.food.shopping_lists.all())

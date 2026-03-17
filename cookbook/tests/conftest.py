@@ -8,6 +8,7 @@ from django.contrib import auth
 from django_scopes import scopes_disabled
 from pytest_factoryboy import register
 
+from cookbook.connectors.connector_manager import ConnectorManager
 from cookbook.models import Food, Ingredient, Recipe, Step, Unit
 from cookbook.tests.factories import SpaceFactory, UserFactory
 
@@ -29,6 +30,12 @@ def pytest_fixture_setup(fixturedef, request):
     else:
         with scopes_disabled():
             yield
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """Stop ConnectorManager worker thread before database teardown."""
+    if ConnectorManager.is_initialized():
+        ConnectorManager().stop()
 
 
 @pytest.fixture(autouse=True)
