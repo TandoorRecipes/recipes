@@ -307,7 +307,8 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
         obj = super(ShoppingListEntryFactory, cls)._create(
             target_class, *args, **kwargs)
         if created_at is not None:
-            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
+            with scopes_disabled():
+                target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
         return obj
 
@@ -407,7 +408,8 @@ class RecipeFactory(factory.django.DjangoModelFactory):
         created_at = kwargs.pop('created_at', None)
         obj = super(RecipeFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
-            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
+            with scopes_disabled():
+                target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
         return obj
 
@@ -473,7 +475,8 @@ class CookLogFactory(factory.django.DjangoModelFactory):
         created_at = kwargs.pop('created_at', None)
         obj = super(CookLogFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
-            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
+            with scopes_disabled():
+                target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
         return obj
 
@@ -498,7 +501,8 @@ class ViewLogFactory(factory.django.DjangoModelFactory):
         created_at = kwargs.pop('created_at', None)
         obj = super(ViewLogFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
-            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
+            with scopes_disabled():
+                target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
         return obj
 
