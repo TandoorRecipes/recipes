@@ -1540,6 +1540,17 @@ export interface ApiMealPlanListRequest {
     toDate?: string;
 }
 
+export interface ApiMealPlanBulkDeleteRequest {
+    ids?: Array<number>;
+    fromDate?: string;
+    toDate?: string;
+}
+
+export interface MealPlanBulkDeleteResponse {
+    deleted?: number;
+    ids?: Array<number>;
+}
+
 export interface ApiMealPlanPartialUpdateRequest {
     id: number;
     patchedMealPlan?: Omit<PatchedMealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'>;
@@ -10914,6 +10925,50 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiMealPlanList(requestParameters: ApiMealPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedMealPlanList> {
         const response = await this.apiMealPlanListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Delete multiple meal plan entries at once by IDs and/or date range.
+     */
+    async apiMealPlanBulkDeleteRaw(requestParameters: ApiMealPlanBulkDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlanBulkDeleteResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const body: any = {};
+        if (requestParameters['ids'] != null) {
+            body['ids'] = requestParameters['ids'];
+        }
+        if (requestParameters['fromDate'] != null) {
+            body['from_date'] = requestParameters['fromDate'];
+        }
+        if (requestParameters['toDate'] != null) {
+            body['to_date'] = requestParameters['toDate'];
+        }
+
+        const response = await this.request({
+            path: `/api/meal-plan/bulk-delete/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: body,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<MealPlanBulkDeleteResponse>(response, (jsonValue) => jsonValue as MealPlanBulkDeleteResponse);
+    }
+
+    /**
+     * Delete multiple meal plan entries at once by IDs and/or date range.
+     */
+    async apiMealPlanBulkDelete(requestParameters: ApiMealPlanBulkDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlanBulkDeleteResponse> {
+        const response = await this.apiMealPlanBulkDeleteRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

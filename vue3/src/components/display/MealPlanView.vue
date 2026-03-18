@@ -3,7 +3,27 @@
         <v-col class="pb-0">
             <v-card class="h-100" :loading="useMealPlanStore().loading">
                 <!-- TODO add hint about CTRL key while drag/drop -->
-                <!-- TODO multi selection? date range selection ? -->
+                <v-toolbar flat density="compact" class="px-2">
+                    <v-btn
+                        color="primary"
+                        variant="elevated"
+                        :disabled="useMealPlanStore().selectedCount === 0"
+                        @click="useMealPlanStore().bulkDeleteSelected()"
+                    >
+                        {{ $t('Delete selected') }}
+                    </v-btn>
+                    <v-btn
+                        class="ml-2"
+                        variant="outlined"
+                        @click="useMealPlanStore().bulkDeleteDateRange(visibleRange.from, visibleRange.to)"
+                    >
+                        {{ $t('Clear visible range') }}
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <span class="text-caption">
+                        {{ useMealPlanStore().selectedCount }} {{ $t('selected') }}
+                    </span>
+                </v-toolbar>
                 <calendar-view
                     :locale="locale"
                     :show-date="calendarDate"
@@ -28,6 +48,8 @@
                             :value="value"
                             :item-top="top"
                             @onDragStart="currentlyDraggedMealplan = value"
+                            :selected="useMealPlanStore().isSelected(value.mealPlan.id)"
+                            @toggleSelection="(mealPlan: MealPlan, checked: boolean) => useMealPlanStore().setSelected(mealPlan, checked)"
                             @delete="(arg: MealPlan) => {useMealPlanStore().plans.delete(arg.id)}"
                             :detailed-items="lgAndUp"
                         ></meal-plan-calendar-item>
@@ -96,6 +118,21 @@ const calendarItemHeight = computed(() => {
     } else {
         return '1.6rem'
     }
+})
+
+const visibleRange = computed(() => {
+    let daysInPeriod = 7
+    const displayPeriod = useUserPreferenceStore().deviceSettings.mealplan_displayPeriod
+    if (displayPeriod === 'month') {
+        daysInPeriod = 31
+    } else if (displayPeriod === 'year') {
+        daysInPeriod = 365
+    }
+
+    const days = useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount * daysInPeriod
+    const from = DateTime.fromJSDate(calendarDate.value).toJSDate()
+    const to = DateTime.fromJSDate(calendarDate.value).plus({days}).toJSDate()
+    return {from, to}
 })
 
 /**

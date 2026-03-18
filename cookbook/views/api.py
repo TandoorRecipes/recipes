@@ -102,7 +102,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer,
                                  ImportLogSerializer, IngredientSerializer, IngredientSimpleSerializer,
-                                 InviteLinkSerializer, KeywordSerializer, MealPlanSerializer, MealTypeSerializer,
+                                 InviteLinkSerializer, KeywordSerializer, MealPlanSerializer, MealPlanBulkDeleteSerializer, MealTypeSerializer,
                                  PropertySerializer, PropertyTypeSerializer,
                                  RecipeBookEntrySerializer, RecipeBookSerializer, RecipeExportSerializer,
                                  RecipeFlatSerializer, RecipeFromSourceSerializer, RecipeImageSerializer,
@@ -1486,6 +1486,55 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
             # When using classes, DRF instantiates them.
             return [permission() for permission in permission_classes]
         return super().get_permissions()
+
+    @extend_schema(
+        request=MealPlanBulkDeleteSerializer,
+        responses={
+            200: OpenApiTypes.OBJECT,
+        },
+    )
+    @decorators.action(
+        detail=False,
+        methods=['POST'],
+        serializer_class=MealPlanBulkDeleteSerializer,
+        permission_classes=[(CustomIsOwner | CustomIsHousehold) & CustomTokenHasReadWriteScope],
+        url_path='bulk-delete',
+    )
+    def bulk_delete(self, request):
+        """
+        Delete multiple meal plans at once, by IDs and/or date range.
+        """
+        serializer = MealPlanBulkDeleteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        ids = serializer.validated_data.get('ids') or []
+        from_date = serializer.validated_data.get('from_date')
+        to_date = serializer.validated_data.get('to_date')
+
+        queryset = self.get_queryset()
+
+        if ids:
+            queryset = queryset.filter(id__in=ids)
+
+        if from_date and to_date:
+            from_date_local = timezone.localdate(from_date)
+            to_date_local = timezone.localdate(to_date)
+            # Select meal plans whose date span overlaps the given range
+            queryset = queryset.filter(
+                from_date__date__lte=to_date_local,
+                to_date__date__gte=from_date_local,
+            )
+
+        mealplan_ids = list(queryset.values_list('id', flat=True))
+        deleted_count = queryset.count()
+        queryset.delete()
+
+        return Response(
+            {
+                'deleted': deleted_count,
+                'ids': mealplan_ids,
+            }
+        )
 
     @extend_schema(parameters=MealPlanViewQueryParameters,
                    responses={(200, 'text/calendar'): OpenApiTypes.STR})

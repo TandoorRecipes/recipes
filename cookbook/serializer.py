@@ -1473,6 +1473,41 @@ class AutoMealPlanSerializer(serializers.Serializer):
     addshopping = serializers.BooleanField()
 
 
+class MealPlanBulkDeleteSerializer(serializers.Serializer):
+    ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        help_text=_('IDs of specific meal plans to delete.')
+    )
+    from_date = serializers.DateTimeField(
+        required=False,
+        help_text=_('Start of date range (inclusive) to delete meal plans for.')
+    )
+    to_date = serializers.DateTimeField(
+        required=False,
+        help_text=_('End of date range (inclusive) to delete meal plans for.')
+    )
+
+    def validate(self, attrs):
+        ids = attrs.get('ids') or []
+        from_date = attrs.get('from_date')
+        to_date = attrs.get('to_date')
+
+        if not ids and not (from_date and to_date):
+            raise serializers.ValidationError(
+                _('You must provide either ids or both from_date and to_date.'))
+
+        if (from_date and not to_date) or (to_date and not from_date):
+            raise serializers.ValidationError(
+                _('Both from_date and to_date are required when using a date range.'))
+
+        if from_date and to_date and from_date > to_date:
+            raise serializers.ValidationError(
+                _('from_date must be before or equal to to_date.'))
+
+        return attrs
+
+
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     recipe_data = RecipeOverviewSerializer(source='recipe', read_only=True, required=False)
     meal_plan_data = MealPlanSerializer(source='mealplan', read_only=True, required=False)
