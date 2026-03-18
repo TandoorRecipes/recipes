@@ -67,6 +67,7 @@ class UserPreferenceAdmin(admin.ModelAdmin):
     search_fields = ('user__username',)
     list_filter = ('theme', 'default_page',)
     date_hierarchy = 'created_at'
+    filter_horizontal = ('plan_share', 'shopping_share',)
 
     @staticmethod
     def name(obj):
