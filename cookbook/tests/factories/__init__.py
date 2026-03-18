@@ -301,15 +301,15 @@ class ShoppingListEntryFactory(factory.django.DjangoModelFactory):
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
-    # override create to prevent auto_add_now from changing the created_at date
+    # override create to prevent auto_now_add from ignoring the created_at date
     def _create(cls, target_class, *args, **kwargs):
         created_at = kwargs.pop('created_at', None)
         obj = super(ShoppingListEntryFactory, cls)._create(
             target_class, *args, **kwargs)
         if created_at is not None:
+            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
-            obj.save()
-            return obj
+        return obj
 
     class Params:
         has_mealplan = False
@@ -402,15 +402,14 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
-    # override create to prevent auto_add_now from changing the created_at date
+    # override create to prevent auto_now_add from ignoring the created_at date
     def _create(cls, target_class, *args, **kwargs):
         created_at = kwargs.pop('created_at', None)
-        # updated_at = kwargs.pop('updated_at', None)
         obj = super(RecipeFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
+            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
-            obj.save()
-            return obj
+        return obj
 
     @factory.post_generation
     def keywords(self, create, extracted, **kwargs):
@@ -469,14 +468,14 @@ class CookLogFactory(factory.django.DjangoModelFactory):
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
-    # override create to prevent auto_add_now from changing the created_at date
+    # override create to prevent auto_now_add from ignoring the created_at date
     def _create(cls, target_class, *args, **kwargs):
         created_at = kwargs.pop('created_at', None)
         obj = super(CookLogFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
+            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
-            obj.save()
-            return obj
+        return obj
 
     class Meta:
         model = 'cookbook.CookLog'
@@ -494,14 +493,14 @@ class ViewLogFactory(factory.django.DjangoModelFactory):
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
-    # override create to prevent auto_add_now from changing the created_at date
+    # override create to prevent auto_now_add from ignoring the created_at date
     def _create(cls, target_class, *args, **kwargs):
         created_at = kwargs.pop('created_at', None)
         obj = super(ViewLogFactory, cls)._create(target_class, *args, **kwargs)
         if created_at is not None:
+            target_class.objects.filter(pk=obj.pk).update(created_at=created_at)
             obj.created_at = created_at
-            obj.save()
-            return obj
+        return obj
 
     class Meta:
         model = 'cookbook.ViewLog'
