@@ -163,6 +163,12 @@ def get_household_user_ids(user_space):
     return result
 
 
+def invalidate_household_cache(user_space):
+    """Delete the cached household_user_ids for a UserSpace's household."""
+    if user_space.household_id:
+        cache.delete(f'household_user_ids_{user_space.space_id}_{user_space.household_id}')
+
+
 def share_link_valid(recipe, share):
     """
     Verifies the validity of a share uuid
