@@ -1,11 +1,21 @@
 <template>
-    <v-card class="card cv-item pa-0" hover
+    <v-card class="card cv-item pa-0 mealplan-card" hover
             :style="{'top': itemTop, 'height': itemHeight, 'border-color': mealPlan.mealType.color}"
             :draggable="true"
             :key="value.id"
             @dragstart="emit('onDragStart', value, $event)"
-            :class="value.classes">
+            :class="value.classes?.concat(selected ? ['mealplan-selected'] : [])">
         <v-card-text class="pa-0">
+            <v-checkbox
+                class="mealplan-selection-checkbox"
+                density="compact"
+                hide-details
+                color="primary"
+                :model-value="selected"
+                @click.stop
+                @mousedown.stop
+                @update:modelValue="(checked: boolean) => emit('toggleSelection', mealPlan.value, checked)"
+            />
             <div class="d-flex flex-row align-items-center">
                 <div class="flex-column" v-if="detailedItems">
                     <recipe-image :height="itemHeight" :width="itemHeight" :recipe="mealPlan.recipe"></recipe-image>
@@ -34,6 +44,9 @@ const emit = defineEmits({
     onDragStart: (value: IMealPlanNormalizedCalendarItem, event: DragEvent) => {
         return true
     },
+    toggleSelection: (value: MealPlan, selected: boolean) => {
+        return true
+    },
     delete: (value: MealPlan) => {
         return true
     }
@@ -43,7 +56,8 @@ let props = defineProps({
     value: {type: {} as PropType<IMealPlanNormalizedCalendarItem>, required: true},
     itemHeight: {type: String,},
     itemTop: {type: String,},
-    detailedItems: {type: Boolean, default: true}
+    detailedItems: {type: Boolean, default: true},
+    selected: {type: Boolean, default: false},
 })
 
 const mealPlan = computed(() => {
@@ -64,6 +78,21 @@ const itemTitle = computed(() => {
 </script>
 
 <style scoped>
+
+.mealplan-card {
+    position: relative;
+}
+
+.mealplan-selection-checkbox {
+    position: absolute;
+    top: 0.2rem;
+    left: 0.2rem;
+    z-index: 2;
+}
+
+.mealplan-selected {
+    background-color: rgba(33, 150, 243, 0.08);
+}
 
 .two-line-text {
     display: -webkit-box;

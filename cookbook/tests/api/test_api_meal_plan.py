@@ -10,12 +10,13 @@ from icalendar import Calendar
 from oauth2_provider.models import AccessToken
 from rest_framework.test import APIClient
 
-from cookbook.models import MealPlan, MealType
-from cookbook.tests.factories import RecipeFactory
+from cookbook.models import MealPlan, MealType, ShoppingListEntry
+from cookbook.tests.factories import RecipeFactory, ShoppingListEntryFactory, ShoppingListRecipeFactory
 
 LIST_URL = 'api:mealplan-list'
 DETAIL_URL = 'api:mealplan-detail'
 ICAL_URL = 'api:mealplan-ical'
+BULK_DELETE_URL = 'api:mealplan-bulk-delete'
 
 # NOTE: auto adding shopping list from meal plan is tested in test_shopping_recipe as tests are identical
 
@@ -402,3 +403,108 @@ def test_create_explicit_time_preserved(u1_s1, recipe_1_s1, space_1):
         mp = MealPlan.objects.get(pk=response['id'])
     assert mp.from_date.hour == 19
     assert mp.from_date.minute == 30
+
+
+def test_bulk_delete_by_ids_deletes_meal_plans_and_shopping(u1_s1, u2_s1, obj_1, obj_2, obj_3, recipe_1_s1, meal_type, space_1):
+    other_mealplan = MealPlan.objects.create(
+        recipe=recipe_1_s1,
+        space=space_1,
+        meal_type=meal_type,
+        from_date=timezone.now(),
+        to_date=timezone.now(),
+        created_by=auth.get_user(u2_s1),
+    )
+
+    # Shopping data tied to each meal plan
+    with scopes_disabled():
+        slr_1 = ShoppingListRecipeFactory(mealplan=obj_1, space=space_1, created_by=auth.get_user(u1_s1))
+        slr_2 = ShoppingListRecipeFactory(mealplan=obj_2, space=space_1, created_by=auth.get_user(u1_s1))
+        slr_other = ShoppingListRecipeFactory(mealplan=other_mealplan, space=space_1, created_by=auth.get_user(u2_s1))
+
+        ShoppingListEntryFactory(list_recipe=slr_1, space=space_1)
+        ShoppingListEntryFactory(list_recipe=slr_2, space=space_1)
+        ShoppingListEntryFactory(list_recipe=slr_other, space=space_1)
+
+    r = u1_s1.post(
+        reverse(BULK_DELETE_URL),
+        {'ids': [obj_1.id, obj_2.id]},
+        content_type='application/json',
+    )
+
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert not MealPlan.objects.filter(id__in=[obj_1.id, obj_2.id]).exists()
+        assert MealPlan.objects.filter(id=obj_3.id).exists()
+        assert MealPlan.objects.filter(id=other_mealplan.id).exists()
+
+        assert not ShoppingListEntry.objects.filter(list_recipe__mealplan_id__in=[obj_1.id, obj_2.id]).exists()
+        assert ShoppingListEntry.objects.filter(list_recipe__mealplan_id=other_mealplan.id).exists()
+
+
+def test_bulk_delete_by_date_range_deletes_overlapping_meal_plans(u1_s1, recipe_1_s1, meal_type, space_1):
+    now = timezone.localtime(timezone.now()).replace(second=0, microsecond=0, hour=12, minute=0)
+    from_dt = now
+    to_dt = now + timedelta(days=3)
+
+    in_range_1 = MealPlan.objects.create(
+        recipe=recipe_1_s1,
+        space=space_1,
+        meal_type=meal_type,
+        from_date=now - timedelta(days=1),
+        to_date=now + timedelta(days=1),
+        created_by=auth.get_user(u1_s1),
+    )
+    in_range_2 = MealPlan.objects.create(
+        recipe=recipe_1_s1,
+        space=space_1,
+        meal_type=meal_type,
+        from_date=now + timedelta(days=2),
+        to_date=now + timedelta(days=2),
+        created_by=auth.get_user(u1_s1),
+    )
+    out_of_range = MealPlan.objects.create(
+        recipe=recipe_1_s1,
+        space=space_1,
+        meal_type=meal_type,
+        from_date=now + timedelta(days=10),
+        to_date=now + timedelta(days=11),
+        created_by=auth.get_user(u1_s1),
+    )
+
+    with scopes_disabled():
+        ShoppingListEntryFactory(
+            list_recipe=ShoppingListRecipeFactory(mealplan=in_range_1, space=space_1, created_by=auth.get_user(u1_s1)),
+            space=space_1,
+        )
+        ShoppingListEntryFactory(
+            list_recipe=ShoppingListRecipeFactory(mealplan=in_range_2, space=space_1, created_by=auth.get_user(u1_s1)),
+            space=space_1,
+        )
+        ShoppingListEntryFactory(
+            list_recipe=ShoppingListRecipeFactory(mealplan=out_of_range, space=space_1, created_by=auth.get_user(u1_s1)),
+            space=space_1,
+        )
+
+    r = u1_s1.post(
+        reverse(BULK_DELETE_URL),
+        {'from_date': from_dt.isoformat(), 'to_date': to_dt.isoformat()},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert not MealPlan.objects.filter(id__in=[in_range_1.id, in_range_2.id]).exists()
+        assert MealPlan.objects.filter(id=out_of_range.id).exists()
+
+        assert not ShoppingListEntry.objects.filter(list_recipe__mealplan_id__in=[in_range_1.id, in_range_2.id]).exists()
+        assert ShoppingListEntry.objects.filter(list_recipe__mealplan_id=out_of_range.id).exists()
+
+
+def test_bulk_delete_invalid_payload_rejected(u1_s1):
+    r = u1_s1.post(
+        reverse(BULK_DELETE_URL),
+        {},
+        content_type='application/json',
+    )
+    assert r.status_code == 400

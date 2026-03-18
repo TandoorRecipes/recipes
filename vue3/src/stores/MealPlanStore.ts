@@ -12,6 +12,7 @@ const _LOCAL_STORAGE_KEY = "MEAL_PLAN_CLIENT_SETTINGS"
 export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     let plans = ref(new Map<number, MealPlan>)
+    const selectedIds = ref(new Set<number>())
     let currently_updating = ref([new Date(0), new Date(0)])
     const loading = ref(false)
     let settings = ref({})
@@ -28,6 +29,38 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
         return plan_list
     })
+
+    const selectedCount = computed(() => selectedIds.value.size)
+
+    function isSelected(id: number | undefined) {
+        return id !== undefined && selectedIds.value.has(id)
+    }
+
+    function setSelected(object: MealPlan, selected: boolean) {
+        if (object.id == undefined) {
+            return
+        }
+        if (selected) {
+            selectedIds.value.add(object.id)
+        } else {
+            selectedIds.value.delete(object.id)
+        }
+    }
+
+    function toggleSelection(object: MealPlan) {
+        if (object.id == undefined) {
+            return
+        }
+        if (selectedIds.value.has(object.id)) {
+            selectedIds.value.delete(object.id)
+        } else {
+            selectedIds.value.add(object.id)
+        }
+    }
+
+    function clearSelection() {
+        selectedIds.value.clear()
+    }
 
     const empty_meal_plan = computed(() => {
         return {
@@ -67,6 +100,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
             loading.value = true
             plans.value = new Map<number, MealPlan>()
+            selectedIds.value.clear()
             return recLoadMealPlans(from_date, to_date)
         }
         return new Promise(() => {
@@ -142,6 +176,61 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
         })
     }
 
+    function _mealPlanOverlapsRange(mp: MealPlan, rangeStart: DateTime, rangeEnd: DateTime): boolean {
+        const mpStart = DateTime.fromJSDate(mp.fromDate).toLocal().startOf('day')
+        const mpEnd = mp.toDate ? DateTime.fromJSDate(mp.toDate).toLocal().startOf('day') : mpStart
+        return mpStart <= rangeEnd && mpEnd >= rangeStart
+    }
+
+    function bulkDeleteSelected() {
+        const idsToDelete = Array.from(selectedIds.value)
+        if (idsToDelete.length === 0) {
+            return
+        }
+
+        const api = new ApiApi()
+        loading.value = true
+
+        return api.apiMealPlanBulkDelete({ids: idsToDelete}).then((r) => {
+            useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS, r)
+            idsToDelete.forEach((id) => plans.value.delete(id))
+            clearSelection()
+        }).catch((err) => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            loading.value = false
+        })
+    }
+
+    function bulkDeleteDateRange(fromDate: Date, toDate: Date) {
+        const api = new ApiApi()
+        loading.value = true
+
+        const rangeStart = DateTime.fromJSDate(fromDate).toLocal().startOf('day')
+        const rangeEnd = DateTime.fromJSDate(toDate).toLocal().startOf('day')
+
+        const requestFrom = rangeStart.toISO()
+        const requestTo = rangeEnd.toISO()
+
+        return api.apiMealPlanBulkDelete({fromDate: requestFrom as string, toDate: requestTo as string}).then((r) => {
+            // Optimistically remove overlapping meal plans from the local cache
+            const idsToDelete: number[] = []
+            plans.value.forEach((mp: MealPlan, id: number) => {
+                if (_mealPlanOverlapsRange(mp, rangeStart, rangeEnd)) {
+                    idsToDelete.push(id)
+                }
+            })
+
+            idsToDelete.forEach((id) => plans.value.delete(id))
+            clearSelection()
+            useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS, r)
+        }).catch((err) => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        }).finally(() => {
+            loading.value = false
+        })
+    }
+
     // function updateClientSettings(settings) {
     //     this.settings = settings
     //     localStorage.setItem(_LOCAL_STORAGE_KEY, JSON.stringify(this.settings))
@@ -160,7 +249,26 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //         return JSON.parse(s)
     //     }
     // }
-    return {plans, currently_updating, planList, loading, refreshFromAPI, createObject, updateObject, deleteObject, refreshLastUpdatedPeriod, createOrUpdate}
+    return {
+        plans,
+        selectedIds,
+        currently_updating,
+        planList,
+        selectedCount,
+        loading,
+        refreshFromAPI,
+        createObject,
+        updateObject,
+        deleteObject,
+        refreshLastUpdatedPeriod,
+        createOrUpdate,
+        isSelected,
+        setSelected,
+        toggleSelection,
+        clearSelection,
+        bulkDeleteSelected,
+        bulkDeleteDateRange,
+    }
 })
 
 // enable hot reload for store
