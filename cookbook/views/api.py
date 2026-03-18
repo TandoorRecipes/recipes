@@ -2941,8 +2941,11 @@ class AppExportView(APIView):
 
             integration = get_integration(request, serializer.validated_data['type'])
 
-            if serializer.validated_data['type'] == ImportExportBase.PDF and not settings.ENABLE_PDF_EXPORT:
-                return JsonResponse({'error': _('The PDF Exporter is not enabled on this instance as it is still in an experimental state.')})
+            # if serializer.validated_data['type'] == ImportExportBase.PDF and not settings.ENABLE_PDF_EXPORT:
+            #     return JsonResponse({'error': _('The PDF Exporter is not enabled on this instance as it is still in an experimental state.')})
+            # pyppeteer dependency removed — always reject PDF export
+            if serializer.validated_data['type'] == ImportExportBase.PDF:
+                return JsonResponse({'error': _('PDF export is no longer available. Use your browser\'s print function (Ctrl+P) to save recipes as PDF.')})
 
             el = ExportLog.objects.create(type=serializer.validated_data['type'], created_by=request.user, space=request.space)
 
@@ -3156,7 +3159,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s = dict()
         # Attention: No login required, do not return sensitive data
         s['shopping_min_autosync_interval'] = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
-        s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT
+        # s['enable_pdf_export'] = settings.ENABLE_PDF_EXPORT  # Removed: pyppeteer dependency removed
         s['disable_external_connectors'] = settings.DISABLE_EXTERNAL_CONNECTORS
         s['terms_url'] = settings.TERMS_URL
         s['privacy_url'] = settings.PRIVACY_URL

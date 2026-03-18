@@ -1914,7 +1914,7 @@ class LocalizationSerializer(serializers.Serializer):
 class ServerSettingsSerializer(serializers.Serializer):
     # TODO add all other relevant settings including path/url related ones?
     shopping_min_autosync_interval = serializers.CharField()
-    enable_pdf_export = serializers.BooleanField()
+    # enable_pdf_export = serializers.BooleanField()  # Removed: pyppeteer dependency removed
     disable_external_connectors = serializers.BooleanField()
     terms_url = serializers.CharField()
     privacy_url = serializers.CharField()

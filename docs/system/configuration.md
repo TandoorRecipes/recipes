@@ -305,16 +305,11 @@ SORT_TREE_BY_NAME=0
 
 #### PDF Export
 
-> default `0` - options `0`, `1`
+> **Removed.** The pyppeteer-based PDF export has been removed. Use your browser's print function (Ctrl+P) to save recipes as PDF.
 
-Exporting PDF's is a community contributed feature to export recipes as PDF files. This requires the server to download
-a chromium binary and is generally implemented only rudimentary and somewhat slow depending on your server device.
-
-See [Export feature docs](https://docs.tandoor.dev/features/import_export/#pdf) for additional information.
-
-```
+<!--
 ENABLE_PDF_EXPORT=1
-```
+-->
 
 #### Legal URLS
 
