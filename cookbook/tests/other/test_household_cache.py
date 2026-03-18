@@ -3,8 +3,17 @@ from django.core.cache import caches
 from django_scopes import scopes_disabled
 
 from cookbook.helper.permission_helper import get_household_user_ids
-from cookbook.models import Household, UserSpace
+from cookbook.models import UserSpace
 from cookbook.tests.factories import HouseholdFactory, SpaceFactory, UserFactory
+
+
+def _make_userspace(user, space, household=None):
+    """Create a UserSpace for a user in a space, optionally with a household."""
+    us = UserSpace.objects.create(user=user, space=space, active=True)
+    if household:
+        us.household = household
+        us.save()
+    return us
 
 
 @pytest.mark.parametrize("cache_backend", ["default"])
@@ -24,9 +33,7 @@ class TestHouseholdCacheInvalidation:
             space = SpaceFactory()
             household = HouseholdFactory(space=space)
             user1 = UserFactory(space=space)
-            us1 = user1.userspace_set.first()
-            us1.household = household
-            us1.save()
+            us1 = _make_userspace(user1, space, household)
 
             # Prime the cache
             result = get_household_user_ids(us1)
@@ -35,9 +42,7 @@ class TestHouseholdCacheInvalidation:
 
             # Add a second user to the household
             user2 = UserFactory(space=space)
-            us2 = user2.userspace_set.first()
-            us2.household = household
-            us2.save()
+            _make_userspace(user2, space, household)
 
             # Cache should be invalidated
             assert caches[cache_backend].get(self._cache_key_household(space.id, household.id)) is None
@@ -55,12 +60,8 @@ class TestHouseholdCacheInvalidation:
             household = HouseholdFactory(space=space)
             user1 = UserFactory(space=space)
             user2 = UserFactory(space=space)
-            us1 = user1.userspace_set.first()
-            us2 = user2.userspace_set.first()
-            us1.household = household
-            us1.save()
-            us2.household = household
-            us2.save()
+            us1 = _make_userspace(user1, space, household)
+            us2 = _make_userspace(user2, space, household)
 
             # Prime the cache — both users in household
             result = get_household_user_ids(us1)
@@ -88,12 +89,8 @@ class TestHouseholdCacheInvalidation:
             household_b = HouseholdFactory(space=space)
             user1 = UserFactory(space=space)
             user2 = UserFactory(space=space)
-            us1 = user1.userspace_set.first()
-            us2 = user2.userspace_set.first()
-            us1.household = household_a
-            us1.save()
-            us2.household = household_b
-            us2.save()
+            us1 = _make_userspace(user1, space, household_a)
+            us2 = _make_userspace(user2, space, household_b)
 
             # Prime both caches
             get_household_user_ids(us1)
@@ -126,12 +123,8 @@ class TestHouseholdCacheInvalidation:
             household = HouseholdFactory(space=space)
             user1 = UserFactory(space=space)
             user2 = UserFactory(space=space)
-            us1 = user1.userspace_set.first()
-            us2 = user2.userspace_set.first()
-            us1.household = household
-            us1.save()
-            us2.household = household
-            us2.save()
+            us1 = _make_userspace(user1, space, household)
+            us2 = _make_userspace(user2, space, household)
 
             # Prime the cache
             result = get_household_user_ids(us1)
@@ -154,9 +147,7 @@ class TestHouseholdCacheInvalidation:
         with scopes_disabled():
             space = SpaceFactory()
             user1 = UserFactory(space=space)
-            us1 = user1.userspace_set.first()
-            us1.household = None
-            us1.save()
+            us1 = _make_userspace(user1, space)
 
             result = get_household_user_ids(us1)
             assert result == [user1.id]
@@ -164,14 +155,12 @@ class TestHouseholdCacheInvalidation:
 
     @pytest.mark.django_db
     def test_removed_from_household_invalidates_per_user_cache(self, cache_backend):
-        """When user is removed from household, the per-user fallback cache is also set up correctly."""
+        """When user is removed from household, the per-user fallback cache works correctly."""
         with scopes_disabled():
             space = SpaceFactory()
             household = HouseholdFactory(space=space)
             user1 = UserFactory(space=space)
-            us1 = user1.userspace_set.first()
-            us1.household = household
-            us1.save()
+            us1 = _make_userspace(user1, space, household)
 
             # Prime household cache
             get_household_user_ids(us1)
