@@ -106,14 +106,13 @@ class TestHouseholdCacheInvalidation:
             assert caches[cache_backend].get(self._cache_key_household(space.id, household_a.id)) is None
             assert caches[cache_backend].get(self._cache_key_household(space.id, household_b.id)) is None
 
-            # Fresh calls should reflect the move
-            result_a = get_household_user_ids(
-                UserSpace.objects.filter(space=space, household=household_a).first() or us1
-            )
+            # Fresh call for household_b should include both users
             result_b = get_household_user_ids(us1)
-            assert user1.id not in result_a
             assert user1.id in result_b
             assert user2.id in result_b
+
+            # Household_a is now empty — no UserSpace to query with,
+            # so just verify the cache was cleared (asserted above)
 
     @pytest.mark.django_db
     def test_user_deleted_from_household_invalidates_cache(self, cache_backend):
