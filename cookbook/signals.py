@@ -4,17 +4,15 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
 from django.core.cache import caches
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django.utils import translation
-from django_scopes import scope, scopes_disabled
+from django_scopes import scopes_disabled
 
 from cookbook.helper.cache_helper import CacheHelper
-from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.managers import DICTIONARY
-from cookbook.models import (Food, MealPlan, PropertyType, Recipe, SearchFields, SearchPreference,
-                             Step, Unit, UserPreference, UserSpace)
+from cookbook.models import Food, PropertyType, Recipe, SearchFields, SearchPreference, Step, Unit, UserPreference, UserSpace
 
 SQLITE = True
 if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
@@ -135,10 +133,32 @@ def clear_property_type_cache(sender, instance=None, created=False, **kwargs):
         caches['default'].delete(CacheHelper(instance.space).PROPERTY_TYPE_CACHE_KEY)
 
 
+@receiver(pre_save, sender=UserSpace)
+def capture_old_household(sender, instance=None, **kwargs):
+    """Stash the previous household_id so post_save can invalidate the old cache."""
+    if instance and instance.pk:
+        try:
+            instance._old_household_id = UserSpace.objects.filter(pk=instance.pk).values_list('household_id', flat=True).first()
+        except Exception:
+            instance._old_household_id = None
+    else:
+        instance._old_household_id = None
+
+
 @receiver(post_save, sender=UserSpace)
 def invalidate_household_cache_on_save(sender, instance=None, **kwargs):
-    if instance and instance.household_id:
+    if not instance:
+        return
+    # Invalidate the new household's cache
+    if instance.household_id:
         caches['default'].delete(f'household_user_ids_{instance.space_id}_{instance.household_id}')
+    # Invalidate the old household's cache if it changed
+    old_household_id = getattr(instance, '_old_household_id', None)
+    if old_household_id and old_household_id != instance.household_id:
+        caches['default'].delete(f'household_user_ids_{instance.space_id}_{old_household_id}')
+    # Invalidate the per-user fallback cache if user has no household
+    if not instance.household_id:
+        caches['default'].delete(f'household_user_ids_{instance.space_id}_user_{instance.user_id}')
 
 
 @receiver(post_delete, sender=UserSpace)

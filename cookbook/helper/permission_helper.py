@@ -155,7 +155,7 @@ def get_household_user_ids(user_space):
     # Bridge: include legacy shopping_share users until the feature is deprecated
     try:
         result.update(user_space.user.userpreference.shopping_share.values_list('id', flat=True))
-    except Exception:
+    except (AttributeError, ObjectDoesNotExist):
         pass
 
     result = list(result)
