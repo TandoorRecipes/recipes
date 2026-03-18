@@ -9,7 +9,7 @@ from django_scopes import scopes_disabled
 from pytest_factoryboy import register
 
 from cookbook.connectors.connector_manager import ConnectorManager
-from cookbook.models import Food, Household, Ingredient, Recipe, Step, Unit
+from cookbook.models import Food, Ingredient, Recipe, Step, Unit
 from cookbook.tests.factories import HouseholdFactory, SpaceFactory, UserFactory
 
 register(SpaceFactory, 'space_1')
@@ -36,6 +36,22 @@ def pytest_sessionfinish(session, exitstatus):
     """Stop ConnectorManager worker thread before database teardown."""
     if ConnectorManager.is_initialized():
         ConnectorManager().stop()
+
+
+@pytest.fixture(scope='session')
+def django_db_setup(django_db_setup, django_db_blocker):
+    """Force-terminate stale DB connections after all tests so teardown can DROP the test database."""
+    yield
+    with django_db_blocker.unblock():
+        from django.db import connections
+        conn = connections['default']
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT pg_terminate_backend(pid) "
+                "FROM pg_stat_activity "
+                "WHERE datname = %s AND pid <> pg_backend_pid()",
+                [conn.settings_dict['NAME']]
+            )
 
 
 @pytest.fixture(autouse=True)
@@ -313,7 +329,7 @@ def s1_s1(client, space_1):
     user = auth.get_user(client)
     user.is_superuser = True
     user.save()
-    return  client
+    return client
 
 
 @pytest.fixture()
