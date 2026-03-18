@@ -404,7 +404,6 @@ def test_create_explicit_time_preserved(u1_s1, recipe_1_s1, space_1):
     assert mp.from_date.minute == 30
 
 
-<<<<<<< HEAD
 def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
     """Household members should see each other's meal plans"""
     user1 = auth.get_user(u1_s1)
