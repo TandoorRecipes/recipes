@@ -44,15 +44,16 @@ def django_db_setup(django_db_setup, django_db_blocker):
     yield
     with django_db_blocker.unblock():
         from django.db import connections
-        conn = connections['default']
-        if conn.vendor == 'postgresql':
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    "SELECT pg_terminate_backend(pid) "
-                    "FROM pg_stat_activity "
-                    "WHERE datname = %s AND pid <> pg_backend_pid()",
-                    [conn.settings_dict['NAME']]
-                )
+        for alias in connections:
+            conn = connections[alias]
+            if conn.vendor == 'postgresql':
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT pg_terminate_backend(pid) "
+                        "FROM pg_stat_activity "
+                        "WHERE datname = %s AND pid <> pg_backend_pid()",
+                        [conn.settings_dict['NAME']]
+                    )
 
 
 @pytest.fixture(autouse=True)

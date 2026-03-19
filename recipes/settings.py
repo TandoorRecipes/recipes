@@ -462,6 +462,8 @@ POSTGRES_DB = os.getenv('POSTGRES_DB', None)
 def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, pg_port=None, pg_user=None, pg_password=None, pg_db=None):
     global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
 
+    has_individual_overrides = any(v is not None for v in [pg_host, pg_port, pg_user, pg_password, pg_db, db_engine])
+
     DATABASE_URL = db_url or DATABASE_URL
     DB_OPTIONS = db_options or DB_OPTIONS
     DB_ENGINE = db_engine or DB_ENGINE
@@ -470,6 +472,9 @@ def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, p
     POSTGRES_USER = pg_user or POSTGRES_USER
     POSTGRES_PASSWORD = pg_password or POSTGRES_PASSWORD
     POSTGRES_DB = pg_db or POSTGRES_DB
+
+    if has_individual_overrides and not db_url:
+        DATABASE_URL = None
 
     if DATABASE_URL:
         match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?', DATABASE_URL)
