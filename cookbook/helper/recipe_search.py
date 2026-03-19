@@ -11,7 +11,7 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY, TextSearchConfig
 from cookbook.models import CustomFilter, SearchPreference
-from django.conf import settings
+from recipes import settings
 
 _NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
 
