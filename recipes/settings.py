@@ -460,7 +460,7 @@ POSTGRES_DB = os.getenv('POSTGRES_DB', None)
 
 
 def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, pg_port=None, pg_user=None, pg_password=None, pg_db=None):
-    global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+    global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, DATABASES
 
     has_individual_overrides = any(v is not None for v in [pg_host, pg_port, pg_user, pg_password, pg_db, db_engine])
 
