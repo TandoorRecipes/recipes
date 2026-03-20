@@ -120,7 +120,7 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function AutomationToJSON(value?: Omit<Automation, 'createdBy'> | null): any {
+export function AutomationToJSON(value?: Omit<Automation, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

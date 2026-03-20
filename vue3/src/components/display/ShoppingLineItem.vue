@@ -21,7 +21,7 @@
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
                             <i class="fas fa-clock-rotate-left text-info fa-fw" v-if="a.delayed"></i> <b>
                             <span :class="{'text-disabled': a.checked || a.delayed}" class="text-no-wrap">
-                                <span v-if="amounts.length > 1 || (amounts.length == 1 && a.amount != 1) || a.unit">{{ $n(a.amount) }}</span>
+                                <span v-if="amounts.length > 1 || (amounts.length == 1 && !isSingularAmount(a.amount)) || a.unit">{{ $n(a.amount) }}</span>
                                 <span class="ms-1" v-if="a.unit">{{ pluralString(a.unit, a.amount) }}</span>
                             </span>
                             </b>
@@ -30,7 +30,7 @@
                     </span>
                 </div>
                 <div class="d-flex  flex-column flex-grow-1 align-self-center">
-                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 || (amounts.length == 1 && amounts[0].amount > 1) ? 2 : 1)) }} <br/>
+                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0].amount)) }} <br/>
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
             </div>
@@ -72,7 +72,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
 import {isDelayed, isEntryVisible, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
-import {pluralString} from "@/utils/model_utils.ts";
+import {pluralString, isSingularAmount} from "@/utils/model_utils.ts";
 import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
 
 const emit = defineEmits(['clicked'])
