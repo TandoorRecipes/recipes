@@ -37,7 +37,7 @@
 
     <v-dialog max-width="900px" v-model="dialog">
         <v-card v-if="dialogProperty" :loading="loading">
-            <v-closable-card-title :title="`${dialogProperty.propertyAmountTotal} ${(dialogProperty.unit != null) ? dialogProperty.unit : ''} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
+            <v-closable-card-title :title="`${roundDecimals(dialogProperty.propertyAmountTotal)} ${(dialogProperty.unit != null) ? dialogProperty.unit : ''} ${dialogProperty.name}`" :sub-title="$t('total')" icon="$properties"
                                    v-model="dialog"></v-closable-card-title>
             <v-card-text>
                 <v-list>
@@ -59,7 +59,7 @@
                                 <model-edit-dialog model="UnitConversion" @create="refreshRecipe()"
                                                    :item-defaults="{baseAmount: 1, baseUnit: fv.missing_conversion.base_unit,  convertedUnit: fv.missing_conversion.converted_unit, food: fv.food}"></model-edit-dialog>
                             </v-chip>
-                            <v-chip v-else-if="fv.value != undefined">{{ $n(fv.value * props.ingredientFactor) }} {{ dialogProperty.unit }}</v-chip>
+                            <v-chip v-else-if="fv.value != undefined">{{ $n(roundDecimals(fv.value * props.ingredientFactor)) }} {{ dialogProperty.unit }}</v-chip>
                             <v-chip color="warning" prepend-icon="$edit" class="cursor-pointer" :to="{name: 'ModelEditPage', params: {model: 'Recipe', id: recipe.id}}" v-else-if="fv.missing_unit">
                                 {{ $t('NoUnit') }}
                             </v-chip>
