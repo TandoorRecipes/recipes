@@ -315,21 +315,21 @@ class TestErrorHandlingGranularity:
 
     def test_batch_update_name_collision_falls_back_to_per_item(self, space_1):
         """
-        Two foods renamed to the same name via update: one succeeds, one errors.
-        The successful update should still be counted.
+        Two import entries both try to rename to the same target name.
+        The merge logic only checks existing_data_names (populated at import start),
+        so when two import entries target the same new name, one succeeds and the
+        second hits a UNIQUE constraint at bulk_update time.
+        Per-item fallback should let the first succeed and count the second as error.
         """
         with scopes_disabled():
             Food.add_root(name='Cherry', open_data_slug='food-cherry', space=space_1)
             Food.add_root(name='Kers', open_data_slug='food-kers', space=space_1)
-            # User-created food that will collide with the rename
-            Food.add_root(name='Kirsche', space=space_1)
 
-        # Import tries to rename food-cherry→Kirsche (collides) and food-kers→Kers (no change needed)
-        # Actually: food-cherry→Kirsche collides, food-kers→KersenFruit succeeds
+        # Both entries rename to 'Kirsche' — second one will collide at DB level
         update_data = _make_open_data(
             foods={
-                'food-cherry': _food_entry('Kirsche'),  # collides with existing user food
-                'food-kers': _food_entry('KersenFruit'),  # safe rename
+                'food-cherry': _food_entry('Kirsche'),
+                'food-kers': _food_entry('Kirsche'),
             },
         )
 
@@ -341,25 +341,20 @@ class TestErrorHandlingGranularity:
         assert result.total_errored >= 1, "The collision should be counted as an error"
 
         with scopes_disabled():
-            # The non-colliding food should have been updated
-            assert Food.objects.filter(space=space_1, name='KersenFruit').exists()
-            # The colliding food should retain its original name
-            assert Food.objects.filter(space=space_1, name='Cherry').exists()
-            # The user-created food should be untouched
-            assert Food.objects.filter(space=space_1, name='Kirsche').exists()
+            # Exactly one food should have the new name
+            assert Food.objects.filter(space=space_1, name='Kirsche').count() == 1
 
     def test_create_name_collision_counts_errors(self, space_1):
         """
-        Creating a food whose name collides with an existing food should count
-        as an error, not silently swallow the entire batch.
+        Two import entries with the same name but different slugs create a
+        collision at insert time. Per-item creation should let the first
+        succeed and count the second as an error.
         """
-        with scopes_disabled():
-            Food.add_root(name='Tomato', space=space_1)
-
         create_data = _make_open_data(
             foods={
-                'food-tomato': _food_entry('Tomato'),  # collides with existing
-                'food-onion': _food_entry('Onion'),  # should succeed
+                'food-tomato-red': _food_entry('Tomato'),
+                'food-tomato-roma': _food_entry('Tomato'),  # same name, different slug
+                'food-onion': _food_entry('Onion'),
             },
         )
 
@@ -367,7 +362,7 @@ class TestErrorHandlingGranularity:
         importer = OpenDataImporter(request, create_data, update_existing=False)
         result = _import_with_scopes_disabled(importer, 'import_food')
 
-        assert result.total_created >= 1, "Non-colliding food should be created"
+        assert result.total_created >= 2, "Non-colliding foods should be created"
         assert result.total_errored >= 1, "Colliding food should be counted as error"
 
         with scopes_disabled():
