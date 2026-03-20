@@ -1086,11 +1086,11 @@ export class GenericModel {
      * @param genericListRequestParameter parameters
      * @return promise of request
      */
-    list(genericListRequestParameter: GenericListRequestParameter) {
+    list(genericListRequestParameter: GenericListRequestParameter, initOverrides?: RequestInit) {
         if (this.model.disableList) {
             throw new Error('Cannot list on this model!')
         } else {
-            return this.api[`api${this.model.name}List`](genericListRequestParameter)
+            return this.api[`api${this.model.name}List`](genericListRequestParameter, initOverrides)
         }
     }
 
