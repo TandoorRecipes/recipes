@@ -46,17 +46,17 @@
             </v-avatar>
 
         </v-app-bar>
-        <v-app-bar color="info" density="compact"
+        <v-app-bar color="info"
                    v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
-                <v-btn color="success" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
+                <v-btn color="success" size="small" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
             </p>
         </v-app-bar>
-        <v-app-bar color="warning" density="compact" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
+        <v-app-bar color="warning" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
             <p class="text-center w-100">
                 {{ $t('SpaceLimitExceeded') }}
-                <v-btn color="success" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
+                <v-btn color="success" size="small" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
             </p>
         </v-app-bar>
 
