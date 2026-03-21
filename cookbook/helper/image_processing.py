@@ -28,6 +28,31 @@ def rescale_image_png(image_object, base_width=1020):
     return im_io
 
 
+def rescale_image_webp(image_object, base_width=1020):
+    image_object = Image.open(image_object)
+    wpercent = (base_width / float(image_object.size[0]))
+    hsize = int((float(image_object.size[1]) * float(wpercent)))
+    img = image_object.resize((base_width, hsize), Image.LANCZOS)
+
+    im_io = BytesIO()
+    img.save(im_io, 'WEBP', quality=90)
+    return im_io
+
+
+def rescale_image_gif(image_object, base_width=1020):
+    image_object = Image.open(image_object)
+    im_io = BytesIO()
+    
+    if getattr(image_object, "is_animated", False):
+        image_object.save(im_io, 'GIF', save_all=True)
+    else:
+        wpercent = (base_width / float(image_object.size[0]))
+        hsize = int((float(image_object.size[1]) * float(wpercent)))
+        img = image_object.convert('RGBA').resize((base_width, hsize), Image.LANCZOS).convert('P', dither=Image.NONE)
+        img.save(im_io, 'GIF')
+    return im_io
+
+
 def get_filetype(name):
     try:
         return os.path.splitext(name)[1]
@@ -53,6 +78,14 @@ def is_file_type_allowed(filename, image_only=False):
 def strip_image_meta(image_object, file_format):
     image_object = Image.open(image_object)
 
+    if file_format == 'GIF':
+        im_io = BytesIO()
+        if getattr(image_object, "is_animated", False):
+            image_object.save(im_io, file_format, save_all=True)
+        else:
+            image_object.save(im_io, file_format)
+        return im_io
+
     data = list(image_object.getdata())
     image_without_exif = Image.new(image_object.mode, image_object.size)
     image_without_exif.putdata(data)
@@ -75,18 +108,24 @@ def handle_image(request, image_object, filetype):
     file_format = None
     if filetype == '.jpeg' or filetype == '.jpg':
         file_format = 'JPEG'
-    if filetype == '.png':
+    elif filetype == '.png':
         file_format = 'PNG'
-    if filetype == '.webp':
+    elif filetype == '.webp':
         file_format = 'WEBP'
+    elif filetype == '.gif':
+        file_format = 'GIF'
+
+    if not file_format:
+        return image_object
 
     if (image_object.size / 1000) > 500:  # if larger than 500 kb compress
-        if filetype == '.jpeg' or filetype == '.jpg':
+        if file_format == 'JPEG':
             return rescale_image_jpeg(image_object)
-        if filetype == '.png':
+        elif file_format == 'PNG':
             return rescale_image_png(image_object)
-    else:
-        return strip_image_meta(image_object, file_format)
-
-    # TODO webp and gifs bypass the scaling and metadata checks, fix
-    return image_object
+        elif file_format == 'WEBP':
+            return rescale_image_webp(image_object)
+        elif file_format == 'GIF':
+            return rescale_image_gif(image_object)
+    
+    return strip_image_meta(image_object, file_format)
