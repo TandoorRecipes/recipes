@@ -58,7 +58,7 @@
                     :items="items"
                     :items-length="itemCount"
                     :loading="loading"
-                    :search="query"
+                    :search="debouncedQuery"
                     :headers="genericModel.getTableHeaders()"
                     :items-per-page-options="itemsPerPageOptions"
                     :show-select="!genericModel.model.disableDelete || genericModel.model.isMerge"
@@ -114,7 +114,7 @@
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" v-if="genericModel.model.isMerge" link>
                                         {{ $t('Merge') }}
                                         <model-merge-dialog :model="model" :source="[item]"
-                                                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
+                                                            @change="loadItems({page: page, itemsPerPage: pageSize, search: debouncedQuery})"></model-merge-dialog>
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-table-list" :to="{name: 'IngredientEditorPage', query: {food_id: item.id}}"
                                                  v-if="genericModel.model.name == 'Food'">
@@ -145,13 +145,13 @@
         </v-row>
 
         <batch-delete-dialog :items="selectedItems" :model="props.model" v-model="batchDeleteDialog" activator="model"
-                             @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-delete-dialog>
+                             @change="loadItems({page: page, itemsPerPage: pageSize, search: debouncedQuery})"></batch-delete-dialog>
 
         <model-merge-dialog :model="model" :source="selectedItems" v-model="batchMergeDialog" activator="model"
-                            @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></model-merge-dialog>
+                            @change="loadItems({page: page, itemsPerPage: pageSize, search: debouncedQuery})"></model-merge-dialog>
 
         <batch-edit-food-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'Food'" activator="model"
-                                @change="loadItems({page: page, itemsPerPage: pageSize, search: query})"></batch-edit-food-dialog>
+                                @change="loadItems({page: page, itemsPerPage: pageSize, search: debouncedQuery})"></batch-edit-food-dialog>
 
     </v-container>
 </template>
@@ -176,6 +176,7 @@ import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
 import {useRouteQuery} from "@vueuse/router";
 import BatchEditFoodDialog from "@/components/dialogs/BatchEditFoodDialog.vue";
+import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
 
 const {t} = useI18n()
 const router = useRouter()
@@ -196,7 +197,7 @@ const itemsPerPageOptions = [
     {value: 50, title: '50'},
 ]
 
-const query = useRouteQuery('query', "")
+const {inputValue: query, debouncedValue: debouncedQuery, signal} = useDebouncedSearch({routeQueryKey: 'query'})
 const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
 
@@ -248,11 +249,13 @@ function loadItems(options: VDataTableUpdateOptions) {
     page.value = options.page
     pageSize.value = options.itemsPerPage
 
-    genericModel.value.list({query: query.value, page: options.page, pageSize: pageSize.value}).then((r: any) => {
+    genericModel.value.list({query: debouncedQuery.value, page: options.page, pageSize: pageSize.value}, {signal: signal.value}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        if (err.name !== 'AbortError') {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }
     }).finally(() => {
         loading.value = false
     })
