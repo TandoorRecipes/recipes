@@ -253,6 +253,170 @@ router.afterEach((to, from) => {
     .add-image-link .op-btn {
         color: #fff !important;
     }
+
+    /* mavon-editor dark mode — container + toolbar */
+
+    .v-note-wrapper {
+        background-color: #212121 !important;
+        border-color: #555 !important;
+    }
+
+    .v-note-wrapper .v-note-op {
+        background-color: #303030 !important;
+        border-bottom-color: #555 !important;
+    }
+
+    /* mavon-editor dark mode — toolbar icons */
+
+    .v-note-wrapper .op-icon {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .v-note-wrapper .op-icon:hover {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .v-note-wrapper .op-icon.selected {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .v-note-wrapper .op-icon-divider {
+        border-left-color: #555 !important;
+    }
+
+    /* mavon-editor dark mode — textarea and wrappers */
+
+    .auto-textarea-input,
+    .content-input-wrapper,
+    .auto-textarea-wrapper {
+        color: #e0e0e0 !important;
+        background-color: #212121 !important;
+    }
+
+    .v-note-wrapper .v-show-content,
+    .v-note-wrapper .v-show-content-html,
+    .v-note-wrapper .v-note-read-model {
+        background-color: #212121 !important;
+    }
+
+    .v-note-wrapper .v-note-navigation-wrapper {
+        background-color: rgba(33, 33, 33, 0.98) !important;
+    }
+
+    .v-note-wrapper .op-header.popup-dropdown {
+        background-color: #303030 !important;
+        border-color: #555 !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* mavon-editor dark mode — preview panel */
+
+    .v-note-wrapper .markdown-body {
+        color: #e0e0e0 !important;
+    }
+
+    .v-note-wrapper .markdown-body a {
+        color: #b98766 !important;
+    }
+
+    .v-note-wrapper .markdown-body h1,
+    .v-note-wrapper .markdown-body h2 {
+        border-bottom-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body h6 {
+        color: #999 !important;
+    }
+
+    .v-note-wrapper .markdown-body hr {
+        background-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body blockquote {
+        color: #999 !important;
+        border-left-color: #555 !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .v-note-wrapper .markdown-body table tr {
+        background-color: #212121 !important;
+        border-top-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body table tr:nth-child(2n) {
+        background-color: #2a2a2a !important;
+    }
+
+    .v-note-wrapper .markdown-body table td,
+    .v-note-wrapper .markdown-body table th {
+        border-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body code {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #e0e0e0 !important;
+    }
+
+    .v-note-wrapper .markdown-body .highlight pre,
+    .v-note-wrapper .markdown-body pre {
+        background-color: #2a2a2a !important;
+        color: #e0e0e0 !important;
+    }
+
+    .v-note-wrapper .markdown-body kbd {
+        color: #e0e0e0 !important;
+        background-color: #333 !important;
+        border-color: #555 !important;
+        box-shadow: inset 0 -1px 0 #444 !important;
+    }
+
+    .v-note-wrapper .markdown-body img {
+        background-color: transparent !important;
+    }
+
+    /* mavon-editor dark mode — dropdown menus */
+
+    .v-note-wrapper .op-icon.dropdown-wrapper .dropdown-item {
+        color: #e0e0e0 !important;
+        background-color: #303030 !important;
+    }
+
+    .v-note-wrapper .op-icon.dropdown-wrapper .dropdown-item:hover {
+        color: #fff !important;
+        background-color: #424242 !important;
+    }
+
+    /* mavon-editor dark mode — scrollbar */
+
+    .v-note-wrapper .scroll-style::-webkit-scrollbar {
+        background-color: #333 !important;
+    }
+
+    .v-note-wrapper .scroll-style::-webkit-scrollbar-thumb {
+        background-color: #555 !important;
+    }
+
+    /* markdown display (read-only view in StepView) */
+
+    .markdown-body {
+        color: #e0e0e0 !important;
+    }
+
+    .markdown-body a {
+        color: #b98766 !important;
+    }
+
+    .markdown-body blockquote {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-left-color: #555 !important;
+    }
+
+    .markdown-body code {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #e0e0e0 !important;
+    }
 }
 
 .v-theme--light {
