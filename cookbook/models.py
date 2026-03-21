@@ -940,8 +940,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
-    always_use_plural_unit = models.BooleanField(default=False)
-    always_use_plural_food = models.BooleanField(default=False)
+
     order = models.IntegerField(default=0)
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 

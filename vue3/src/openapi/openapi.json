@@ -11835,10 +11835,6 @@ components:
           type: array
           items: {}
           readOnly: true
-        always_use_plural_unit:
-          type: boolean
-        always_use_plural_food:
-          type: boolean
         checked:
           type: boolean
           readOnly: true
@@ -11913,10 +11909,6 @@ components:
           readOnly: true
           default: false
           description: Just laziness to have a checked field on the frontend API client
-        always_use_plural_unit:
-          type: boolean
-        always_use_plural_food:
-          type: boolean
       required:
       - amount
       - checked
@@ -13897,10 +13889,6 @@ components:
           type: array
           items: {}
           readOnly: true
-        always_use_plural_unit:
-          type: boolean
-        always_use_plural_food:
-          type: boolean
         checked:
           type: boolean
           readOnly: true
@@ -15893,8 +15881,6 @@ components:
       properties:
         shopping_min_autosync_interval:
           type: string
-        enable_pdf_export:
-          type: boolean
         disable_external_connectors:
           type: boolean
         terms_url:
@@ -15937,7 +15923,6 @@ components:
       required:
       - debug
       - disable_external_connectors
-      - enable_pdf_export
       - force_theme_from_space
       - hosted
       - imprint_url

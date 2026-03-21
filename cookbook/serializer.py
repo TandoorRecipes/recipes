@@ -1008,7 +1008,6 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'food', 'unit', 'amount', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'checked',
-            'always_use_plural_unit', 'always_use_plural_food',
         )
 
 
@@ -1041,8 +1040,7 @@ class IngredientSerializer(IngredientSimpleSerializer):
         model = Ingredient
         fields = (
             'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
-            'is_header', 'no_amount', 'original_text', 'used_in_recipes',
-            'always_use_plural_unit', 'always_use_plural_food', 'checked',
+            'is_header', 'no_amount', 'original_text', 'used_in_recipes', 'checked',
         )
         read_only_fields = ['conversions', ]
 
@@ -2007,8 +2005,7 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount', 'always_use_plural_unit',
-                  'always_use_plural_food')
+        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
 
 
 class StepExportSerializer(WritableNestedModelSerializer):

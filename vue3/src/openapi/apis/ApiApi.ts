@@ -1668,11 +1668,6 @@ export interface ApiOpenDataFoodDestroyRequest {
     id: number;
 }
 
-export interface ApiOpenDataFoodFdcCreateRequest {
-    id: number;
-    openDataFood: Omit<OpenDataFood, 'createdBy'>;
-}
-
 export interface ApiOpenDataFoodListRequest {
     page?: number;
     pageSize?: number;
@@ -1683,8 +1678,6 @@ export interface ApiOpenDataFoodPartialUpdateRequest {
     patchedOpenDataFood?: Omit<PatchedOpenDataFood, 'createdBy'>;
 }
 
-export interface ApiOpenDataFoodRetrieveRequest {
-    id: number;
 }
 
 export interface ApiOpenDataFoodUpdateRequest {
@@ -1692,32 +1685,7 @@ export interface ApiOpenDataFoodUpdateRequest {
     openDataFood: Omit<OpenDataFood, 'createdBy'>;
 }
 
-export interface ApiOpenDataPropertyCreateRequest {
-    openDataProperty: Omit<OpenDataProperty, 'createdBy'>;
-}
-
 export interface ApiOpenDataPropertyDestroyRequest {
-    id: number;
-}
-
-export interface ApiOpenDataPropertyListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
-export interface ApiOpenDataPropertyPartialUpdateRequest {
-    id: number;
-    patchedOpenDataProperty?: Omit<PatchedOpenDataProperty, 'createdBy'>;
-}
-
-export interface ApiOpenDataPropertyRetrieveRequest {
-    id: number;
-}
-
-export interface ApiOpenDataPropertyUpdateRequest {
-    id: number;
-    openDataProperty: Omit<OpenDataProperty, 'createdBy'>;
-}
 
 export interface ApiOpenDataStoreCreateRequest {
     openDataStore: Omit<OpenDataStore, 'createdBy'>;
