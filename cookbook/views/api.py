@@ -2987,7 +2987,7 @@ class FdcSearchView(APIView):
                     json_dumps_params={'indent': 4})
             if response.status_code != 200:
                 return JsonResponse({
-                    'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/foods/search?api_key=*****&query={quote(query)}'},
+                    'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/foods/search?api_key=*****&query={quote(query)}'})
             return Response(FdcQuerySerializer(context={'request': request}).to_representation(json.loads(response.content)), status=status.HTTP_200_OK)
 
 
