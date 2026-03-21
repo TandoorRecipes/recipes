@@ -525,7 +525,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     nav_sticky = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
     max_owned_spaces = models.IntegerField(default=MAX_OWNED_SPACES_PREF_DEFAULT)
     default_unit = models.CharField(max_length=32, default='g')
-    use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
+    use_fractions = models.BooleanField(default=False)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
@@ -1047,6 +1047,7 @@ class Property(models.Model, PermissionModelMixin):
         return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
 
     class Meta:
+        ordering = ('pk',)
         constraints = [
             models.UniqueConstraint(fields=['space', 'property_type', 'open_data_food_slug'], name='property_unique_import_food_per_space')
         ]
@@ -1238,6 +1239,7 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
             return None
 
     class Meta:
+        ordering = ('pk',)
         constraints = [
             models.UniqueConstraint(fields=['recipe', 'book'], name='rbe_unique_name_per_space')
         ]

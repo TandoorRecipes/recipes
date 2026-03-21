@@ -101,9 +101,12 @@ def recipes(space_1):
 def found_recipe(request, space_1, accent, unaccent, u1_s1, u2_s1):
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
-    days_3 = timezone.now() - timedelta(days=3)
-    days_15 = timezone.now() - timedelta(days=15)
-    days_30 = timezone.now() - timedelta(days=30)
+    # Use noon UTC to prevent timezone conversions from shifting the date
+    # (Django uses TIME_ZONE='Europe/Berlin' for __date lookups in PostgreSQL)
+    now = timezone.now().replace(hour=12, minute=0, second=0, microsecond=0)
+    days_3 = now - timedelta(days=3)
+    days_15 = now - timedelta(days=15)
+    days_30 = now - timedelta(days=30)
     if request.param.get('createdon', None):
         recipe1 = RecipeFactory.create(space=space_1, created_at=days_3)
         recipe2 = RecipeFactory.create(space=space_1, created_at=days_30)
@@ -355,8 +358,9 @@ def test_search_date(found_recipe, recipes, param_type, result, u1_s1, u2_s1, sp
             Recipe.objects.filter(id=recipe.id).update(
                 updated_at=recipe.created_at)
 
-    # use the same reference point as the fixture to avoid date boundary flakiness
-    date = (timezone.now() - timedelta(days=15)).strftime("%Y-%m-%d")
+    # use noon-anchored reference matching the fixture to avoid timezone boundary issues
+    now = timezone.now().replace(hour=12, minute=0, second=0, microsecond=0)
+    date = (now - timedelta(days=15)).strftime("%Y-%m-%d")
     param1 = f"?{param_type}_gte={date}"
     param2 = f"?{param_type}_lte={date}"
     r = json.loads(u1_s1.get(reverse(LIST_URL) + f'{param1}').content)

@@ -7,9 +7,12 @@ from django.db.models import Avg, Case, Count, Exists, F, Max, OuterRef, Q, Subq
 from django.db.models.functions import Coalesce, Lower, Substr
 from django.utils import timezone, translation
 
+from django.contrib.auth.models import User
+
 from cookbook.helper.HelperFunctions import Round, str2bool
+from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY
-from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, ViewLog)
+from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, UserSpace, ViewLog)
 from recipes import settings
 
 
@@ -524,9 +527,16 @@ class RecipeSearch():
             self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
 
     def _makenow_filter(self, missing=None):
-        if missing is None or (isinstance(missing, bool) and missing == False):
+        if missing is None or (isinstance(missing, bool) and not missing):
             return
-        shopping_users = self._request.user_space.household.values_list('user_id', flat=True)
+        if not self._request.user_space:
+            self._queryset = self._queryset.none()
+            return
+
+        # Use cached list for simple filters, but wrap as a queryset for
+        # substitute subqueries that use OuterRef (needs SQL subquery semantics).
+        shopping_user_ids = get_household_user_ids(self._request.user_space)
+        shopping_users = User.objects.filter(id__in=shopping_user_ids)
 
         onhand_filter = (
             Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand

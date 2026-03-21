@@ -10,7 +10,7 @@ from pytest_factoryboy import register
 
 from cookbook.connectors.connector_manager import ConnectorManager
 from cookbook.models import Food, Ingredient, Recipe, Step, Unit
-from cookbook.tests.factories import SpaceFactory, UserFactory
+from cookbook.tests.factories import HouseholdFactory, SpaceFactory, UserFactory
 
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
@@ -38,9 +38,27 @@ def pytest_sessionfinish(session, exitstatus):
         ConnectorManager().stop()
 
 
+@pytest.fixture(scope='session')
+def django_db_setup(django_db_setup, django_db_blocker):
+    """Force-terminate stale DB connections after all tests so teardown can DROP the test database."""
+    yield
+    with django_db_blocker.unblock():
+        from django.db import connections
+        conn = connections['default']
+        if conn.vendor == 'postgresql':
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    "SELECT pg_terminate_backend(pid) "
+                    "FROM pg_stat_activity "
+                    "WHERE datname = %s AND pid <> pg_backend_pid()",
+                    [conn.settings_dict['NAME']]
+                )
+
+
 @pytest.fixture(autouse=True)
 def enable_db_access_for_all_tests(db):
-    pass
+    from django.core.cache import cache
+    cache.clear()
 
 
 # ---------------------- OBJECT FIXTURES ---------------------
@@ -312,4 +330,10 @@ def s1_s1(client, space_1):
     user = auth.get_user(client)
     user.is_superuser = True
     user.save()
-    return  client
+    return client
+
+
+@pytest.fixture()
+def household_1(space_1):
+    with scopes_disabled():
+        return HouseholdFactory(space=space_1)

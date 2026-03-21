@@ -259,7 +259,7 @@ ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
 
 ENABLE_METRICS = extract_bool('ENABLE_METRICS', False)
 
-ENABLE_PDF_EXPORT = extract_bool('ENABLE_PDF_EXPORT', False)
+# ENABLE_PDF_EXPORT = extract_bool('ENABLE_PDF_EXPORT', False)  # Removed: pyppeteer dependency removed
 EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
 
 MIDDLEWARE = [
