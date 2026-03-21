@@ -53,7 +53,13 @@ registerRoute(
 registerRoute(
     ({request}) => (request.destination === 'script' || request.destination === 'style'),
     new NetworkFirst({
-        cacheName: 'assets'
+        cacheName: 'assets',
+        plugins: [
+            new ExpirationPlugin({
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7,
+            }),
+        ],
     })
 )
 
