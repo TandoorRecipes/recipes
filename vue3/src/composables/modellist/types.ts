@@ -224,25 +224,3 @@ export type ModelStatDef = {
     color: string,
 }
 
-/**
- * Sort option definition for a model list.
- * Each option maps to a backend `ordering` query parameter value.
- */
-export type ModelSortDef = {
-    /** Value sent as the `ordering` query param (e.g. 'name', '-name') */
-    key: string,
-    /** Localization key for the display label */
-    labelKey: string,
-    /** Icon (FontAwesome class), optional */
-    icon?: string,
-    /** When true, selecting this sort starts descending (e.g. highest count first) */
-    defaultDescending?: boolean,
-}
-
-/** Extract the ancestor path from an item's fullName (everything before the last " > "). */
-export function getAncestorPath(item: ModelItem): string | null {
-    const fn = item.fullName
-    if (!fn) return null
-    const lastSep = fn.lastIndexOf(' > ')
-    return lastSep > 0 ? fn.substring(0, lastSep) : null
-}
