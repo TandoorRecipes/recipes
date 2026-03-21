@@ -7,10 +7,13 @@ DATABASES = setup_database(  # noqa: F405
     db_engine=os.getenv('TEST_DB_ENGINE'),
     pg_host=os.getenv('TEST_POSTGRES_HOST'),
     pg_port=os.getenv('TEST_POSTGRES_PORT'),
-    pg_user=os.getenv('TEST_POSTGRES_PORT'),
+    pg_user=os.getenv('TEST_POSTGRES_USER'),
     pg_password=os.getenv('TEST_POSTGRES_PASSWORD'),
     pg_db=os.getenv('TEST_POSTGRES_DB')
     )
+
+DATABASES['default']['TEST'] = {'SERIALIZE': False}
+DATABASES['default']['CONN_MAX_AGE'] = 0
 
 
 UNINSTALL_MIDDLEWARE = [
@@ -32,3 +35,5 @@ for y in UNINSTALL_INSTALLED_APPS:
 # Disable external connectors during tests to prevent the ConnectorManager
 # daemon thread from holding a DB connection that blocks test DB teardown
 DISABLE_EXTERNAL_CONNECTORS = True
+
+PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
