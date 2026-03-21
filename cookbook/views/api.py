@@ -1730,7 +1730,11 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
-                self.queryset = self.queryset.filter(
+                self.queryset = self.queryset.with_rating(
+                    self.request.user
+                ).with_last_cooked(
+                    self.request.user, self.request.space
+                ).filter(
                     space=self.request.space).prefetch_related('keywords', 'shared', 'properties',
                                                                'properties__property_type', 'steps',
                                                                'steps__ingredients',
