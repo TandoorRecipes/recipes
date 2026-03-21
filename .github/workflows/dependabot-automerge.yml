@@ -25,18 +25,18 @@ jobs:
         uses: actions-ecosystem/action-add-labels@1a9c3715c0037e96b97bb38cb4c4b56a1f1d4871  # v1.1.0
         with:
           labels: invalid
-
+          
       - name: Comment restriction
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043  # v4.0.0
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             ⚠️ **Automerge Restriction Notice**
-
+            
             The `automerge` label has been removed from this PR because it has restricted use. Only PRs created by `dependabot[bot]` are allowed to use the automerge functionality.
-
+            
             If you believe this is an error, please contact a repository maintainer.
-
+  
   auto-merge:
     if: github.actor == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'automerge')
     runs-on: ubuntu-latest
@@ -57,9 +57,9 @@ jobs:
           github-token: ${{ steps.generate_token.outputs.token }}
           review-message: |
             🤖 **Dependabot Auto-merge**
-
+            
             This PR has been automatically approved and enabled for auto-merge. It will be merged automatically once all required checks pass.
-
+          
       - name: Enable auto-merge
         uses: daneden/enable-automerge-action@f8558b65c5b8d8bfb592c4e74e3d491624a38fbd  # v1.0.0
         with:
