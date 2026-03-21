@@ -95,7 +95,7 @@ function initializeEditor(){
  * @param inviteLink InviteLink object to create url for
  */
 function inviteLinkUrl(inviteLink: InviteLink) {
-    return useDjangoUrls().getDjangoUrl(`/invite/${inviteLink.uuid}`)
+    return useDjangoUrls().getFullUrl(`/invite/${inviteLink.uuid}`)
 }
 
 /**
