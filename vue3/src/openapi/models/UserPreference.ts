@@ -13,6 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
+import type { MealType } from './MealType';
+import {
+    MealTypeFromJSON,
+    MealTypeFromJSONTyped,
+    MealTypeToJSON,
+} from './MealType';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -118,12 +124,6 @@ export interface UserPreference {
     useKj?: boolean;
     /**
      * 
-     * @type {Array<User>}
-     * @memberof UserPreference
-     */
-    planShare?: Array<User>;
-    /**
-     * 
      * @type {boolean}
      * @memberof UserPreference
      */
@@ -178,12 +178,6 @@ export interface UserPreference {
     mealplanAutoexcludeOnhand?: boolean;
     /**
      * 
-     * @type {Array<User>}
-     * @memberof UserPreference
-     */
-    shoppingShare?: Array<User>;
-    /**
-     * 
      * @type {number}
      * @memberof UserPreference
      */
@@ -206,6 +200,12 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     shoppingUpdateFoodLists?: boolean;
+    /**
+     * 
+     * @type {MealType}
+     * @memberof UserPreference
+     */
+    defaultMealType?: MealType;
     /**
      * 
      * @type {boolean}
@@ -268,7 +268,6 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
         'defaultPage': json['default_page'] == null ? undefined : DefaultPageEnumFromJSON(json['default_page']),
         'useFractions': json['use_fractions'] == null ? undefined : json['use_fractions'],
         'useKj': json['use_kj'] == null ? undefined : json['use_kj'],
-        'planShare': json['plan_share'] == null ? undefined : ((json['plan_share'] as Array<any>).map(UserFromJSON)),
         'navSticky': json['nav_sticky'] == null ? undefined : json['nav_sticky'],
         'ingredientDecimals': json['ingredient_decimals'] == null ? undefined : json['ingredient_decimals'],
         'comments': json['comments'] == null ? undefined : json['comments'],
@@ -278,11 +277,11 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
         'defaultDelay': json['default_delay'] == null ? undefined : json['default_delay'],
         'mealplanAutoincludeRelated': json['mealplan_autoinclude_related'] == null ? undefined : json['mealplan_autoinclude_related'],
         'mealplanAutoexcludeOnhand': json['mealplan_autoexclude_onhand'] == null ? undefined : json['mealplan_autoexclude_onhand'],
-        'shoppingShare': json['shopping_share'] == null ? undefined : ((json['shopping_share'] as Array<any>).map(UserFromJSON)),
         'shoppingRecentDays': json['shopping_recent_days'] == null ? undefined : json['shopping_recent_days'],
         'csvDelim': json['csv_delim'] == null ? undefined : json['csv_delim'],
         'csvPrefix': json['csv_prefix'] == null ? undefined : json['csv_prefix'],
         'shoppingUpdateFoodLists': json['shopping_update_food_lists'] == null ? undefined : json['shopping_update_food_lists'],
+        'defaultMealType': json['default_meal_type'] == null ? undefined : MealTypeFromJSON(json['default_meal_type']),
         'filterToSupermarket': json['filter_to_supermarket'] == null ? undefined : json['filter_to_supermarket'],
         'shoppingAddOnhand': json['shopping_add_onhand'] == null ? undefined : json['shopping_add_onhand'],
         'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
@@ -306,7 +305,6 @@ export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'foodIn
         'default_page': DefaultPageEnumToJSON(value['defaultPage']),
         'use_fractions': value['useFractions'],
         'use_kj': value['useKj'],
-        'plan_share': value['planShare'] == null ? undefined : ((value['planShare'] as Array<any>).map(UserToJSON)),
         'nav_sticky': value['navSticky'],
         'ingredient_decimals': value['ingredientDecimals'],
         'comments': value['comments'],
@@ -315,11 +313,11 @@ export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'foodIn
         'default_delay': value['defaultDelay'],
         'mealplan_autoinclude_related': value['mealplanAutoincludeRelated'],
         'mealplan_autoexclude_onhand': value['mealplanAutoexcludeOnhand'],
-        'shopping_share': value['shoppingShare'] == null ? undefined : ((value['shoppingShare'] as Array<any>).map(UserToJSON)),
         'shopping_recent_days': value['shoppingRecentDays'],
         'csv_delim': value['csvDelim'],
         'csv_prefix': value['csvPrefix'],
         'shopping_update_food_lists': value['shoppingUpdateFoodLists'],
+        'default_meal_type': MealTypeToJSON(value['defaultMealType']),
         'filter_to_supermarket': value['filterToSupermarket'],
         'shopping_add_onhand': value['shoppingAddOnhand'],
         'left_handed': value['leftHanded'],

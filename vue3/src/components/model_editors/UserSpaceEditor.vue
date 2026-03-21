@@ -13,6 +13,7 @@
         <v-card-text>
             <v-form>
                 <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object multiple v-model="editingObj.groups"></v-select>
+                <model-select model="Household" v-model="editingObj.household" allow-create></model-select>
             </v-form>
         </v-card-text>
     </model-editor-base>
@@ -29,6 +30,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<UserSpace>, required: false, default: null},
@@ -58,7 +60,7 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
+function initializeEditor() {
     const api = new ApiApi()
     api.apiGroupList().then(r => {
         groups.value = r

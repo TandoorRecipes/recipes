@@ -86,8 +86,8 @@ class ConnectorManager(metaclass=Singleton):
                 self._logger.info(f"queue was full, so skipping {action_type} of type {type(instance)}")
 
     def stop(self):
-        self._queue.join()
-        self._worker.join()
+        self._queue.put(None)
+        self._worker.join(timeout=5)
 
     @classmethod
     def is_initialized(cls):
@@ -165,6 +165,9 @@ class ConnectorManager(metaclass=Singleton):
             worker_queue.task_done()
 
         logger.info(f"terminating ConnectionManager worker {worker_id}")
+
+        from django.db import connection
+        connection.close()
 
         asyncio.set_event_loop(None)
         loop.close()

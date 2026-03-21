@@ -19,10 +19,10 @@
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile &&  step.file == null">{{ $t('File') }}</v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showRecipe = true" v-if="!showRecipe && step.stepRecipe == null">{{ $t('Recipe') }}</v-list-item>
 
-                        <v-list-item link>
+                        <v-list-item>
                             <v-switch v-model="step.showIngredientsTable" :label="$t('ShowIngredients')" hide-details></v-switch>
                         </v-list-item>
-                        <v-list-item link>
+                        <v-list-item>
                             <v-switch v-model="step.showAsHeader" :label="$t('Show_as_header')" hide-details></v-switch>
                         </v-list-item>
                         <v-list-item @click="emit('move')" prepend-icon="fa-solid fa-sort">
@@ -67,14 +67,13 @@
                                 </div>
                                 <div class="d-flex flex-nowrap">
                                     <div class="flex-col flex-grow-0 ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
-                                        <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" density="compact"
-                                                        hide-details control-variant="hidden" :disabled="ingredient.noAmount"
-                                                        :precision="useUserPreferenceStore().userSettings.ingredientDecimals">
-
-                                            <template #prepend>
-                                                <v-icon icon="$dragHandle" class="drag-handle cursor-grab"></v-icon>
-                                            </template>
-                                        </v-number-input>
+                                        <div class="d-flex align-center">
+                                            <v-icon icon="$dragHandle" class="drag-handle cursor-grab me-4"></v-icon>
+                                            <v-number-input :id="`id_input_amount_${props.stepIndex}_${index}`" :label="$t('Amount')" v-model="ingredient.amount" density="compact"
+                                                            hide-details control-variant="hidden" :disabled="ingredient.noAmount"
+                                                            :precision="useUserPreferenceStore().userSettings.ingredientDecimals">
+                                            </v-number-input>
+                                        </div>
                                     </div>
                                     <div class="flex-col flex-grow-0  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader ">
                                         <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details
@@ -97,10 +96,10 @@
                                                 <v-icon icon="$menu"></v-icon>
                                                 <v-menu activator="parent">
                                                     <v-list>
-                                                        <v-list-item link>
+                                                        <v-list-item>
                                                             <v-switch v-model="step.ingredients[index].isHeader" :label="$t('Headline')" hide-details></v-switch>
                                                         </v-list-item>
-                                                        <v-list-item link>
+                                                        <v-list-item>
                                                             <v-switch v-model="step.ingredients[index].noAmount" :label="$t('Disable_Amount')" hide-details></v-switch>
                                                         </v-list-item>
                                                         <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">
@@ -198,8 +197,10 @@
                                   v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
                                     :min="0" :precision="useUserPreferenceStore().userSettings.ingredientDecimals"
+                                    :disabled="step.ingredients[editingIngredientIndex].noAmount"
                                     v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                                  :disabled="step.ingredients[editingIngredientIndex].noAmount"
                                   allow-create></model-select>
                     <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
                                   allow-create></model-select>
@@ -212,6 +213,11 @@
                         :hint="$t('HeaderWarning')"
                         persistent-hint
                         @update:modelValue="step.ingredients[editingIngredientIndex].unit = null; step.ingredients[editingIngredientIndex].food = null; step.ingredients[editingIngredientIndex].amount = 0"
+                    ></v-checkbox>
+                    <v-checkbox
+                        v-model="step.ingredients[editingIngredientIndex].noAmount"
+                        :label="$t('Disable_Amount')"
+                        v-if="!step.ingredients[editingIngredientIndex].isHeader"
                     ></v-checkbox>
                 </v-form>
                 <v-btn color="info" class="mt-2" @click="dialogIngredientEditor = false; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{ $t('Move') }}</v-btn>

@@ -1,5 +1,6 @@
 import io
 import os
+from django.conf import settings
 from django.utils import timezone
 from os import listdir
 from os.path import isfile, join
@@ -12,7 +13,7 @@ class Local(Provider):
 
     @staticmethod
     def import_all(monitor):
-        if '/etc/' in monitor.path or '/root/' in monitor.path or '/mediafiles/' in monitor.path or '/usr/' in monitor.path:
+        if not Local.is_path_allowed(monitor.path):
             return False
 
         files = [f for f in listdir(monitor.path) if isfile(join(monitor.path, f))]
@@ -46,17 +47,33 @@ class Local(Provider):
 
     @staticmethod
     def get_file(recipe):
+        if not Local.is_path_allowed(recipe.file_path):
+            raise Exception('Path not allowed')
+
         file = io.BytesIO(open(recipe.file_path, 'rb').read())
 
         return file
 
     @staticmethod
+    def is_path_allowed(path):
+        normalized_path = os.path.normpath(os.path.abspath(path))
+        for allowed_path in settings.LOCAL_STORAGE_PATHS:
+            normalized_allowed_path = os.path.normpath(os.path.abspath(allowed_path))
+            if normalized_path.startswith(normalized_allowed_path + os.sep) or normalized_path == normalized_allowed_path:
+                return True
+        return False
+
+    @staticmethod
     def rename_file(recipe, new_name):
+        if not Local.is_path_allowed(recipe.file_path):
+            raise Exception('Path not allowed')
         os.rename(recipe.file_path, os.path.join(os.path.dirname(recipe.file_path), (new_name + os.path.splitext(recipe.file_path)[1])))
 
         return True
 
     @staticmethod
     def delete_file(recipe):
+        if not Local.is_path_allowed(recipe.file_path):
+            raise Exception('Path not allowed')
         os.remove(recipe.file_path)
         return True

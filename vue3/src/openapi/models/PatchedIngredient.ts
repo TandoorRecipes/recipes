@@ -99,17 +99,11 @@ export interface PatchedIngredient {
      */
     readonly usedInRecipes?: Array<any>;
     /**
-     * 
+     * Just laziness to have a checked field on the frontend API client
      * @type {boolean}
      * @memberof PatchedIngredient
      */
-    alwaysUsePluralUnit?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedIngredient
-     */
-    alwaysUsePluralFood?: boolean;
+    readonly checked?: boolean;
 }
 
 /**
@@ -140,12 +134,11 @@ export function PatchedIngredientFromJSONTyped(json: any, ignoreDiscriminator: b
         'noAmount': json['no_amount'] == null ? undefined : json['no_amount'],
         'originalText': json['original_text'] == null ? undefined : json['original_text'],
         'usedInRecipes': json['used_in_recipes'] == null ? undefined : json['used_in_recipes'],
-        'alwaysUsePluralUnit': json['always_use_plural_unit'] == null ? undefined : json['always_use_plural_unit'],
-        'alwaysUsePluralFood': json['always_use_plural_food'] == null ? undefined : json['always_use_plural_food'],
+        'checked': json['checked'] == null ? undefined : json['checked'],
     };
 }
 
-export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'> | null): any {
+export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'> | null): any {
     if (value == null) {
         return value;
     }
@@ -160,8 +153,6 @@ export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'convers
         'is_header': value['isHeader'],
         'no_amount': value['noAmount'],
         'original_text': value['originalText'],
-        'always_use_plural_unit': value['alwaysUsePluralUnit'],
-        'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
 

@@ -97,7 +97,7 @@ function updateNumber(operation: string) {
  */
 function changeDiameter(value: number) {
     if (props.recipe && props.recipe.diameter && props.recipe.diameter > 0) {
-        mutableNumber.value = Math.round(Math.pow(value / props.recipe?.diameter!, 2) * 100) / 100
+        mutableNumber.value = (props.recipe.servings ? props.recipe.servings : 1) * Math.round(Math.pow(value / props.recipe?.diameter!, 2) * 100) / 100
         updateNumber('set')
     }
 }

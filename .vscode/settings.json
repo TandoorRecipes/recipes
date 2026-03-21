@@ -10,5 +10,6 @@
         "editor.defaultFormatter": "eeyore.yapf",
     },
     "yapf.args": [],
-    "isort.args": []
+    "isort.args": [],
+    "snyk.advanced.autoSelectOrganization": true
 }

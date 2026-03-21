@@ -9,11 +9,12 @@ import {
     Property, PropertyType,
     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchFields, ShoppingList, ShoppingListEntry, Space,
     Step,
+    Storage, InventoryLocation, InventoryEntry, InventoryLog,
     Supermarket,
     SupermarketCategory, Sync, SyncLog,
     Unit,
     UnitConversion, User, UserFile,
-    UserSpace, ViewLog
+    UserSpace, ViewLog, Household
 } from "@/openapi";
 import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
@@ -29,7 +30,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * @param t translation function from calling context
  * @return instance of GenericModel
  */
-export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false|GenericModel {
+export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false | GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
         return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
@@ -162,6 +163,10 @@ export type EditorSupportedModels =
     | 'AiLog'
     | 'Space'
     | 'FoodInheritField'
+    | 'InventoryLocation'
+    | 'InventoryEntry'
+    | 'InventoryLog'
+    | 'Household'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -201,6 +206,10 @@ export type EditorSupportedTypes =
     | AiLog
     | Space
     | FoodInheritField
+    | InventoryLocation
+    | InventoryEntry
+    | InventoryLog
+    | Household
 
 export const TFood = {
     name: 'Food',
@@ -689,6 +698,25 @@ export const TAccessToken = {
 } as Model
 registerModel(TAccessToken)
 
+
+export const THousehold = {
+    name: 'Household',
+    localizationKey: 'Household',
+    localizationKeyDescription: 'HouseholdHelp',
+    icon: 'fa-solid fa-house-chimney-user',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/HouseholdEditor.vue`)),
+
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(THousehold)
+
 export const TUserSpace = {
     name: 'UserSpace',
     localizationKey: 'SpaceMembers',
@@ -706,6 +734,7 @@ export const TUserSpace = {
     tableHeaders: [
         {title: 'User', key: 'user.displayName'},
         {title: 'Group', key: 'groups'},
+        {title: 'Household', key: 'household.name'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
@@ -772,6 +801,73 @@ export const TStorage = {
     ]
 } as Model
 registerModel(TStorage)
+
+export const TInventoryLocation = {
+    name: 'InventoryLocation',
+    localizationKey: 'InventoryLocation',
+    localizationKeyDescription: 'InventoryLocationHelp',
+    icon: 'fa-solid fa-warehouse',
+
+    editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/InventoryLocationEditor.vue`)),
+
+    isPaginated: true,
+    isAdvancedDelete: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Household', key: 'household.name'},
+        {title: 'Freezer', key: 'isFreezer'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TInventoryLocation)
+
+export const TInventoryEntry = {
+    name: 'InventoryEntry',
+    localizationKey: 'InventoryEntry',
+    localizationKeyDescription: 'InventoryEntryHelp',
+    icon: 'fa-solid fa-jar-wheat',
+
+    isPaginated: true,
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+    toStringKeys: ['label'],
+    itemLabel: 'label',
+
+    tableHeaders: [
+        {title: 'Food', key: 'food.name'},
+        {title: 'Amount', key: 'amount'},
+        {title: 'Unit', key: 'unit.name'},
+        {title: 'Location', key: 'inventoryLocation.name'},
+        {title: 'Expires', key: 'expires'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TInventoryEntry)
+
+export const TInventoryLog = {
+    name: 'InventoryLog',
+    localizationKey: 'InventoryLog',
+    localizationKeyDescription: 'InventoryLogHelp',
+    icon: 'fa-solid fa-clipboard-list',
+
+    isPaginated: true,
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+
+    tableHeaders: [
+        {title: 'Food', key: 'entry.food.name'},
+        {title: 'Type', key: 'bookingType'},
+        {title: 'Old Amount', key: 'oldAmount'},
+        {title: 'New Amount', key: 'newAmount'},
+        {title: 'Date', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TInventoryLog)
 
 export const TSync = {
     name: 'Sync',
@@ -990,11 +1086,11 @@ export class GenericModel {
      * @param genericListRequestParameter parameters
      * @return promise of request
      */
-    list(genericListRequestParameter: GenericListRequestParameter) {
+    list(genericListRequestParameter: GenericListRequestParameter, initOverrides?: RequestInit) {
         if (this.model.disableList) {
             throw new Error('Cannot list on this model!')
         } else {
-            return this.api[`api${this.model.name}List`](genericListRequestParameter)
+            return this.api[`api${this.model.name}List`](genericListRequestParameter, initOverrides)
         }
     }
 

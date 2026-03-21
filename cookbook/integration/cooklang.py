@@ -4,7 +4,7 @@ from io import BytesIO, StringIO
 from recipe_scrapers._utils import get_minutes
 
 from cookbook.helper.cooklang_parser import Recipe as CooklangRecipe
-from cookbook.helper.HelperFunctions import match_or_fuzzymatch, validate_import_url
+from cookbook.helper.HelperFunctions import match_or_fuzzymatch
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
 from cookbook.models import Food, Ingredient, Keyword, Recipe, Step, Unit
@@ -43,8 +43,7 @@ class Cooklang(Integration):
                     case "working time":
                         tandoor_recipe.working_time = get_minutes(cooklang_metadata[key])
                     case "source url":
-                        if validate_import_url(cooklang_metadata[key]):
-                            tandoor_recipe.source_url = cooklang_metadata[key]
+                        tandoor_recipe.source_url = cooklang_metadata[key]
                     # case "nutrition":
                     #     pass
                     case _:

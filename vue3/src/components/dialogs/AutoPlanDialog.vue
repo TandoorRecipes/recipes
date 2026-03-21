@@ -7,7 +7,13 @@
 
                 <v-form>
                     <model-select model="MealType" v-model="autoMealPlan.mealTypeId" :object="false"></model-select>
-                    <model-select model="Keyword" v-model="autoMealPlan.keywordIds" mode="tags" :object="false"></model-select>
+                    <div class="d-flex keyword-row">
+                        <model-select model="Keyword" v-model="keywordIds" mode="tags" :object="false" class="flex-grow-1 keyword-select" hide-details></model-select>
+                        <v-btn-toggle v-model="keywordMode" mandatory divided border class="keyword-toggle">
+                            <v-btn value="and">AND</v-btn>
+                            <v-btn value="or">OR</v-btn>
+                        </v-btn-toggle>
+                    </div>
 
                     <v-number-input :label="$t('Servings')" v-model="autoMealPlan.servings"></v-number-input>
 
@@ -20,7 +26,6 @@
                                   prepend-inner-icon="$calendar"
                     ></v-date-input>
 
-                    <model-select model="User" v-model="autoMealPlan.shared" mode="tags"></model-select>
                     <v-checkbox v-model="autoMealPlan.addshopping" :label="$t('AddToShopping')" hide-details></v-checkbox>
                 </v-form>
             </v-card-text>
@@ -57,7 +62,9 @@ const dialog = defineModel<boolean>({default: false})
 const loading = ref(false)
 
 const dateRangeValue = ref([] as Date[])
-const autoMealPlan = ref({} as AutoMealPlan)
+const autoMealPlan = ref<Partial<AutoMealPlan>>({})
+const keywordIds = ref([] as number[])
+const keywordMode = ref('and')
 
 onMounted(() => {
     initializeRequest()
@@ -71,9 +78,11 @@ function initializeRequest() {
         servings: 1,
         startDate: DateTime.now().toJSDate(),
         endDate: DateTime.now().plus({day: 7}).toJSDate(),
-        shared: useUserPreferenceStore().userSettings.planShare,
         addshopping: useUserPreferenceStore().userSettings.mealplanAutoaddShopping,
-    } as AutoMealPlan
+    }
+
+    keywordIds.value = []
+    keywordMode.value = 'and'
 
     dateRangeValue.value = []
     let currentDate = DateTime.fromJSDate(autoMealPlan.value.startDate).plus({day: 1}).toJSDate()
@@ -93,6 +102,10 @@ function doAutoPlan() {
 
     autoMealPlan.value.startDate = dateRangeValue.value[0]
     autoMealPlan.value.endDate = dateRangeValue.value[dateRangeValue.value.length - 1]
+
+    autoMealPlan.value.keywords = keywordIds.value
+    autoMealPlan.value.keywordMode = keywordMode.value
+
     console.log('requesting auto plan from ', autoMealPlan.value.startDate, ' to ', autoMealPlan.value.endDate)
 
     api.apiAutoPlanCreate({autoMealPlan: autoMealPlan.value}).then(r => {
@@ -110,5 +123,29 @@ function doAutoPlan() {
 </script>
 
 <style scoped>
+.keyword-row {
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 8px;
+}
 
+.keyword-select {
+    min-width: 0;
+}
+
+.keyword-row :deep(.multiselect) {
+    border: thin solid rgba(0, 0, 0, 0.12) !important;
+    border-right: none !important;
+    border-radius: 4px 0 0 4px !important;
+}
+
+.keyword-toggle {
+    height: auto !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.keyword-toggle .v-btn {
+    height: 100% !important;
+}
 </style>

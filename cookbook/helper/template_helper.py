@@ -1,3 +1,4 @@
+import html
 from gettext import gettext as _
 
 import bleach
@@ -9,6 +10,50 @@ from markdown.extensions.tables import TableExtension
 
 from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
+
+
+def _resolve_unit_name(ingredient):
+    """Return the appropriate unit name (singular or plural) for an ingredient."""
+    if not ingredient.unit:
+        return ""
+    if ingredient.no_amount:
+        return str(ingredient.unit)
+    if ingredient.unit.plural_name in (None, ""):
+        return str(ingredient.unit)
+    if ingredient.amount == 1:
+        return str(ingredient.unit)
+    return ingredient.unit.plural_name
+
+
+def _resolve_food_name(ingredient):
+    """Return the appropriate food name (singular or plural) for an ingredient."""
+    if not ingredient.food:
+        return ""
+    if ingredient.no_amount:
+        return str(ingredient.food)
+    if ingredient.food.plural_name in (None, ""):
+        return str(ingredient.food)
+    if ingredient.amount == 1:
+        return str(ingredient.food)
+    return ingredient.food.plural_name
+
+
+def _plural_name_tag(singular, plural_name, amount, no_amount):
+    """Build a <plural-name> Vue component tag for reactive pluralization.
+
+    Returns a static string if no plural_name exists, otherwise a reactive tag.
+    """
+    if plural_name in (None, ""):
+        return html.escape(singular)
+    return (
+        f"<plural-name"
+        f' singular="{html.escape(singular)}"'
+        f' plural="{html.escape(plural_name)}"'
+        f" v-bind:amount='{float(amount)}'"
+        f" v-bind:factor='ingredient_factor'"
+        f" :no-amount='{str(no_amount).lower()}'"
+        f"></plural-name>"
+    )
 
 
 class IngredientObject(object):
@@ -24,24 +69,17 @@ class IngredientObject(object):
         else:
             self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='ingredient_factor'></scalable-number>"
             self.numeric_amount = float(ingredient.amount)
-        if ingredient.unit:
-            if ingredient.unit.plural_name in (None, ""):
-                self.unit = bleach.clean(str(ingredient.unit))
-            else:
-                if ingredient.always_use_plural_unit or ingredient.amount > 1 and not ingredient.no_amount:
-                    self.unit = bleach.clean(ingredient.unit.plural_name)
-                else:
-                    self.unit = bleach.clean(str(ingredient.unit))
-        else:
-            self.unit = ""
+        self.unit = bleach.clean(_resolve_unit_name(ingredient))
         if ingredient.food:
             if ingredient.food.plural_name in (None, ""):
-                self.food = bleach.clean(str(ingredient.food))
+                self.food = bleach.clean(_resolve_food_name(ingredient))
             else:
-                if ingredient.always_use_plural_food or ingredient.amount > 1 and not ingredient.no_amount:
-                    self.food = bleach.clean(str(ingredient.food.plural_name))
-                else:
-                    self.food = bleach.clean(str(ingredient.food))
+                self.food = _plural_name_tag(
+                    str(ingredient.food),
+                    ingredient.food.plural_name,
+                    ingredient.amount,
+                    ingredient.no_amount,
+                )
         else:
             self.food = ""
         self.note = bleach.clean(str(ingredient.note))
@@ -95,9 +133,13 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         instructions = env.from_string(instructions).render(ingredients=ingredients, scale=scale)
     except TemplateSyntaxError:
         return _('Could not parse template code.') + ' Error: Template Syntax broken'
+    except TypeError:
+        return _('Could not parse template code.') + ' Error: Unsupported types'
     except UndefinedError:
         return _('Could not parse template code.') + ' Error: Undefined Error'
     except SecurityError:
         return _('Could not parse template code.') + ' Error: Security Error'
+    except Exception as e:
+        return _('Could not parse template code.') + f' Error generating template.'
 
     return instructions

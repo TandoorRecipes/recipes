@@ -33,9 +33,22 @@
 
 import {Ingredient, Step} from "@/openapi";
 import IngredientString from "@/components/display/IngredientString.vue";
-import {computed, nextTick, useTemplateRef} from "vue";
+import {computed, nextTick, onMounted, useTemplateRef} from "vue";
 
 const step = defineModel<Step>({required: true})
+
+function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Backspace' && (e.ctrlKey || e.metaKey)) {
+        e.stopPropagation()
+    }
+}
+
+onMounted(() => {
+    const textarea = markdownEditor.value?.getTextareaDom()
+    if (textarea) {
+        textarea.addEventListener('keydown', handleKeydown, true)
+    }
+})
 const markdownEditor = useTemplateRef('markdownEditor')
 
 type IngredientTemplate = {

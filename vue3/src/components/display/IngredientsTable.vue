@@ -27,7 +27,7 @@
 
     <v-table density="compact">
         <tbody>
-        <template v-for="i in ingredients" :key="i.id">
+        <template v-for="(i, idx) in ingredients" :key="i.id">
             <tr @click="i.checked = !i.checked">
                 <template v-if="i.isHeader">
                     <td colspan="5" class="font-weight-bold">{{ i.note }}</td>
@@ -61,8 +61,10 @@
                         <span class="text-disabled font-italic"> {{ i.note }}</span>
                     </td>
                     <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode">
-                        <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
-                            <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
+                        <v-icon class="far fa-comment float-right"
+                                v-if="i.note != '' && i.note != undefined"
+                                @click.stop="openNoteIdx = openNoteIdx === idx ? null : idx">
+                            <v-tooltip :model-value="openNoteIdx === idx" activator="parent" location="start">{{ i.note }}</v-tooltip>
                         </v-icon>
                     </td>
                     <td v-if="showActions">
@@ -98,7 +100,7 @@
 
 <script lang="ts" setup>
 import {ApiApi, Ingredient, ShoppingListEntry} from "@/openapi";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {calculateFoodAmount} from "../../utils/number_utils";
 import {useUserPreferenceStore} from "../../stores/UserPreferenceStore";
 import {ingredientToFoodString, ingredientToUnitString} from "@/utils/model_utils.ts";
@@ -128,6 +130,8 @@ const props = defineProps({
 })
 
 const ingredients = defineModel<Ingredient[]>({required: true})
+
+const openNoteIdx = ref<number | null>(null)
 
 const tableHeaders = computed(() => {
     let headers = [

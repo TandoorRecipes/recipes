@@ -11,6 +11,7 @@ models/AutoMealPlan.ts
 models/Automation.ts
 models/AutomationTypeEnum.ts
 models/BaseUnitEnum.ts
+models/BookingTypeEnum.ts
 models/BookmarkletImport.ts
 models/BookmarkletImportList.ts
 models/ConnectorConfig.ts
@@ -36,6 +37,7 @@ models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
 models/GenericModelReference.ts
 models/Group.ts
+models/Household.ts
 models/ImportLog.ts
 models/ImportOpenData.ts
 models/ImportOpenDataMetaData.ts
@@ -46,9 +48,13 @@ models/Ingredient.ts
 models/IngredientParserRequest.ts
 models/IngredientParserResponse.ts
 models/IngredientSimple.ts
+models/InventoryEntry.ts
+models/InventoryLocation.ts
+models/InventoryLog.ts
 models/InviteLink.ts
 models/Keyword.ts
 models/KeywordLabel.ts
+models/KeywordModeEnum.ts
 models/Localization.ts
 models/MealPlan.ts
 models/MealType.ts
@@ -77,8 +83,12 @@ models/PaginatedEnterpriseSpaceList.ts
 models/PaginatedExportLogList.ts
 models/PaginatedFoodList.ts
 models/PaginatedGenericModelReferenceList.ts
+models/PaginatedHouseholdList.ts
 models/PaginatedImportLogList.ts
 models/PaginatedIngredientList.ts
+models/PaginatedInventoryEntryList.ts
+models/PaginatedInventoryLocationList.ts
+models/PaginatedInventoryLogList.ts
 models/PaginatedInviteLinkList.ts
 models/PaginatedKeywordList.ts
 models/PaginatedMealPlanList.ts
@@ -123,8 +133,11 @@ models/PatchedEnterpriseSocialEmbed.ts
 models/PatchedEnterpriseSpace.ts
 models/PatchedExportLog.ts
 models/PatchedFood.ts
+models/PatchedHousehold.ts
 models/PatchedImportLog.ts
 models/PatchedIngredient.ts
+models/PatchedInventoryEntry.ts
+models/PatchedInventoryLocation.ts
 models/PatchedInviteLink.ts
 models/PatchedKeyword.ts
 models/PatchedMealPlan.ts

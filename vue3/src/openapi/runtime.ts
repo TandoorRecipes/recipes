@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import {getCookie} from "@/utils/cookie";
+import {getCookie} from "@/utils/cookie"; // MANUAL: CSRF cookie reader
 
 /**
  * Tandoor
@@ -14,8 +14,6 @@ import {getCookie} from "@/utils/cookie";
  * Do not edit the class manually.
  */
 
-
-export let BASE_PATH = typeof window !== 'undefined' ? localStorage.getItem('BASE_PATH') || '' : location.protocol + '//' + location.host;
 
 export interface ConfigurationParameters {
     basePath?: string; // override base path
@@ -38,7 +36,8 @@ export class Configuration {
     }
 
     get basePath(): string {
-        return this.configuration.basePath != null ? this.configuration.basePath : BASE_PATH;
+        if (this.configuration.basePath != null) return this.configuration.basePath;
+        return new URL(document.baseURI).pathname.replace(/\/+$/, ''); // MANUAL: use <base href> instead of localStorage
     }
 
     get fetchApi(): FetchAPI | undefined {
@@ -151,7 +150,7 @@ export class BaseAPI {
             url += '?' + this.configuration.queryParamsStringify(context.query);
         }
 
-        const headers = Object.assign({}, this.configuration.headers, context.headers, { 'X-CSRFToken': getCookie('csrftoken'), });
+        const headers = Object.assign({}, this.configuration.headers, context.headers, { 'X-CSRFToken': getCookie('csrftoken'), }); // MANUAL: CSRF header
         Object.keys(headers).forEach(key => headers[key] === undefined ? delete headers[key] : {});
 
         const initOverrideFn =

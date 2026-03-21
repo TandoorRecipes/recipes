@@ -5,6 +5,7 @@
                 <!-- TODO add hint about CTRL key while drag/drop -->
                 <!-- TODO multi selection? date range selection ? -->
                 <calendar-view
+                    :locale="locale"
                     :show-date="calendarDate"
                     :items="planItems"
                     class="theme-default"
@@ -18,7 +19,8 @@
                     :current-period-label="$t('Today')"
                     @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
                     <template #header="{ headerProps }">
-                        <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>
+                        <!--                        <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>-->
+                        <meal-plan-calendar-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></meal-plan-calendar-header>
                     </template>
                     <template #item="{ value, weekStartDate, top }">
                         <meal-plan-calendar-item
@@ -55,8 +57,11 @@ import {useMealPlanStore} from "@/stores/MealPlanStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {MealPlan} from "@/openapi";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import MealPlanCalendarHeader from "@/components/display/MealPlanCalendarHeader.vue";
+import {useI18n} from "vue-i18n";
 
 const {lgAndUp} = useDisplay()
+const {locale} = useI18n()
 
 const calendarDate = ref(new Date())
 

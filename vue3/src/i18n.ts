@@ -1,13 +1,13 @@
-import {nextTick} from 'vue'
-
 import type {
     I18n,
     Locale,
 } from 'vue-i18n'
 
 import {createI18n} from "vue-i18n";
-import en from "../../vue3/src/locales/en.json";
+import en from "@/locales/en.json";
 import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import {qualified as qualifiedLocales, coverage as localeCoverage, minCoverage as LOCALE_MIN_COVERAGE} from 'virtual:locale-coverage'
+import {Settings} from "luxon";
 
 /**
  * lazy loading of translation, resources:
@@ -16,18 +16,62 @@ import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
  */
 
 /**
- * constant list of supported locales for app to check if requested locale is supported
+ * Build a map from lowercase Django locale codes to the actual filename stems.
+ * e.g. 'nb-no' → 'nb_NO', 'zh-hans' → 'zh_Hans', 'en' → 'en'
+ * When checkCoverage is true (default for main app), locales below the
+ * coverage threshold (set in vite.config.ts) are excluded.
+ * Plugin locales skip coverage checks since they have independent translations.
  */
-export const SUPPORT_LOCALES = getSupportedLocales()
+function buildLocaleMap(localeFiles = import.meta.glob('@/locales/*.json'), checkCoverage = true): Map<string, string> {
+    const map = new Map<string, string>()
+    for (const path in localeFiles) {
+        const filename = path.split('/').slice(-1)[0].split('.')[0]
+        if (checkCoverage && filename !== 'en' && !qualifiedLocales.has(filename)) {
+            continue
+        }
+        const djangoCode = filename.replaceAll('_', '-').toLowerCase()
+        map.set(djangoCode, filename)
+    }
+    return map
+}
+
+const LOCALE_MAP = buildLocaleMap()
+export const SUPPORT_LOCALES = Array.from(LOCALE_MAP.keys())
+export {localeCoverage, LOCALE_MIN_COVERAGE}
+
+// Django locale codes that map to different frontend locale codes
+// (Weblate directory name differs from frontend filename)
+const LOCALE_ALIASES: Record<string, string> = {
+    'zh-cn': 'zh-hans',
+}
+
+/**
+ * Resolve a Django/browser locale code to a supported locale key.
+ * Fallback chain: exact → alias → prefix → base language.
+ */
+export function resolveLocale(code: string): string | null {
+    const lc = code.toLowerCase()
+    if (LOCALE_MAP.has(lc)) return lc                                    // exact: 'nb-no' → 'nb-no'
+    const alias = LOCALE_ALIASES[lc]
+    if (alias && LOCALE_MAP.has(alias)) return alias                     // alias: 'zh-cn' → 'zh-hans'
+    const prefix = SUPPORT_LOCALES.find(l => l.startsWith(lc + '-'))
+    if (prefix) return prefix                                            // prefix: 'nb' → 'nb-no'
+    const base = lc.split('-')[0]
+    if (LOCALE_MAP.has(base)) return base                                // base: 'hu-hu' → 'hu'
+    return null
+}
 
 export function setupI18n() {
-    let locale = document.querySelector('html')!.getAttribute('lang')
-    if (locale == null || !SUPPORT_LOCALES.includes(locale)) {
-        console.warn('Falling back to locale en because ', locale, ' is not supported as a locale.')
+    const htmlLang = document.querySelector('html')!.getAttribute('lang')
+    let locale = htmlLang ? resolveLocale(htmlLang) : null
+    if (!locale) {
+        if (htmlLang && htmlLang !== 'en') {
+            console.warn('Falling back to locale en because', htmlLang, 'is not supported.')
+        }
         locale = 'en'
     }
 
-    // load i18n as with locale en by default
+    // load i18n with locale en by default (Legacy mode — locale is a plain string, not a Ref)
     const i18n = createI18n({
         locale: 'en',
         fallbackLocale: 'en',
@@ -44,7 +88,7 @@ export function setupI18n() {
     })
 
     // async load user locale into existing i18n instance
-    loadLocaleMessages(i18n, locale).then()
+    loadLocaleMessages(i18n, locale).catch(console.error)
 
     return i18n
 }
@@ -55,10 +99,12 @@ export function setupI18n() {
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
 export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
-    // load locale messages
-    let messages = en
+    // load locale messages, clone to avoid mutating the imported module object
+    let messages = {...en}
     if (locale != 'en') {
-        messages = await import(`./locales/${locale}.json`).then((r: any) => r.default || r)
+        const filename = LOCALE_MAP.get(locale) || locale
+        const mod = await import(`./locales/${filename}.json`).then((r: any) => r.default || r)
+        messages = {...mod}
     }
 
     // remove empty strings
@@ -71,12 +117,13 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
     // set messages for locale
     i18n.global.setLocaleMessage(locale, messages)
 
-    // async load and merge messages from plugins
+    // async load and merge messages from plugins (skip coverage — plugin translations are independent)
     TANDOOR_PLUGINS.forEach(plugin => {
-        let pluginLocales = getSupportedLocales(plugin.localeFiles)
-        if (pluginLocales.includes(locale)) {
-            import(`@/plugins/${plugin.basePath}/locales/${locale}.json`).then((r: any) => {
-                let pluginMessages = r.default || r
+        const pluginLocaleMap = buildLocaleMap(plugin.localeFiles, false)
+        const pluginFilename = pluginLocaleMap.get(locale)
+        if (pluginFilename) {
+            import(`@/plugins/${plugin.basePath}/locales/${pluginFilename}.json`).then((r: any) => {
+                const pluginMessages = {...(r.default || r)}
 
                 // remove empty strings
                 Object.entries(pluginMessages).forEach(([key, value]) => {
@@ -95,25 +142,12 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
 }
 
 /**
- * loop through translation files to determine for which locales a translation is available
- * @return string[] of supported locales
- * @param localeFiles module import of locale files to loop through
- */
-function getSupportedLocales(localeFiles = import.meta.glob('@/locales/*.json')) {
-    let supportedLocales: string[] = []
-
-    for (const path in localeFiles) {
-        let locale = path.split('/').slice(-1)[0].split('.')[0].replace('_', '-')
-        supportedLocales.push(locale);
-    }
-    return supportedLocales
-}
-
-/**
  * set the active locale (determining which messages to show) for Vue i18n
  * @param i18n instance of Vue i18n
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
 export function setLocale(i18n: I18n, locale: Locale): void {
     i18n.global.locale = locale
+    // set luxon locale
+    Settings.defaultLocale = locale
 }

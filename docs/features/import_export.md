@@ -280,6 +280,9 @@ Upload all `.melarecipe` files you want to import to Tandoor and start the impor
 
 ## PDF
 
+The pyppeteer-based PDF export has been removed. To save a recipe as PDF, use your browser's built-in print function (Ctrl+P / Cmd+P).
+
+<!--
 The PDF exporter is an experimental feature that uses the Puppeteer browser renderer to render each recipe and export it to PDF.
 For that to work, it downloads a Chromium binary of about 140 MB to your server and then renders the PDF files using that.
 
@@ -287,6 +290,7 @@ As that is something some server administrators might not want, the PDF exporter
 
 See [this issue](https://github.com/TandoorRecipes/recipes/pull/1211) for more discussion on this and
 [this issue](https://github.com/TandoorRecipes/recipes/issues/781) for the future plans to support server-side rendering.
+-->
 
 ## Gourmet
 

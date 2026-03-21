@@ -51,14 +51,15 @@ class ImportExportBase(forms.Form):
     COPYMETHAT = 'COPYMETHAT'
     COOKMATE = 'COOKMATE'
     REZEPTSUITEDE = 'REZEPTSUITEDE'
-    PDF = 'PDF'
+    PDF = 'PDF'  # Deprecated: pyppeteer removed, kept for DB/migration compat
     GOURMET = 'GOURMET'
 
     type = forms.ChoiceField(
         choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (MEALIE1, 'Mealie1'), (CHOWDOWN, 'Chowdown'),
                  (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'), (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
                  (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'), (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'),
-                 (COOKLANG, 'Cooklang Markdown'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'), (COOKMATE, 'Cookmate'),
+                 # (COOKLANG, 'Cooklang Markdown'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'), (COOKMATE, 'Cookmate'),
+                 (COOKLANG, 'Cooklang Markdown'), (COPYMETHAT, 'CopyMeThat'), (MELARECIPES, 'Melarecipes'), (COOKMATE, 'Cookmate'),
                  (REZEPTSUITEDE, 'Recipesuite.de'), (GOURMET, 'Gourmet'))
     )
 
@@ -181,13 +182,17 @@ class AllAuthSocialSignupForm(SocialSignupForm):
         if settings.SOCIAL_DEFAULT_ACCESS:
             with scopes_disabled():
                 space = Space.objects.first()
-                if space:
+                group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+                if space and group:
                     user_space = UserSpace.objects.create(
                         space=space, user=user, active=True
                     )
-                    user_space.groups.add(
-                        Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get()
-                    )
+                    user_space.groups.add(group)
+                else:
+                    if not space:
+                        print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {user}.')
+                    if not group:
+                        print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {user}.')
 
 
 class CustomPasswordResetForm(ResetPasswordForm):

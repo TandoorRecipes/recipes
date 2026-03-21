@@ -1,5 +1,6 @@
 import json
 import os
+from unittest.mock import MagicMock, patch
 
 import pytest
 from django.urls import reverse
@@ -47,6 +48,40 @@ RECIPES = [
 def test_import_permission(arg, request):
     c = request.getfixturevalue(arg[0])
     assert c.get(reverse(IMPORT_SOURCE_URL)).status_code == arg[1]
+
+
+@pytest.mark.parametrize("status_code", [403, 404, 500])
+def test_url_import_returns_error_on_non_ok_response(status_code, u1_s1):
+    mock_resp = MagicMock()
+    mock_resp.ok = False
+    mock_resp.status_code = status_code
+
+    with patch('cookbook.views.api.safe_request', return_value=mock_resp):
+        response = u1_s1.post(
+            reverse(IMPORT_SOURCE_URL),
+            {'url': 'https://example.com/recipe'},
+            content_type='application/json',
+        )
+    assert response.status_code == 400
+    data = json.loads(response.content)
+    assert data['error'] is True
+    assert str(status_code) in data['msg']
+
+
+def test_url_import_sends_accept_header(u1_s1):
+    mock_resp = MagicMock()
+    mock_resp.ok = True
+    mock_resp.content = b'<html><body>no recipe here</body></html>'
+
+    with patch('cookbook.views.api.safe_request', return_value=mock_resp) as mock_request:
+        u1_s1.post(
+            reverse(IMPORT_SOURCE_URL),
+            {'url': 'https://example.com/recipe'},
+            content_type='application/json',
+        )
+    mock_request.assert_called_once()
+    headers = mock_request.call_args.kwargs.get('headers', {})
+    assert 'Accept' in headers
 
 
 @pytest.mark.parametrize("arg", RECIPES, ids=[x['file'][0] for x in RECIPES])

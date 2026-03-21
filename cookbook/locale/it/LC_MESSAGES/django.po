@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-11-18 07:01+0000\n"
+"PO-Revision-Date: 2026-02-02 11:45+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -37,7 +37,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:108
 msgid "Maximum number of users for this space reached."
-msgstr "È stato raggiunto il numero massimo di utenti per questa istanza."
+msgstr "È stato raggiunto il numero massimo di utenti per questo spazio."
 
 #: .\cookbook\forms.py:114
 msgid "Email address already taken!"

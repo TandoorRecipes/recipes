@@ -75,6 +75,7 @@ class ScopeMiddleware:
                 return views.no_groups(request)
 
             request.space = user_space.space
+            request.user_space = user_space
             with scope(space=request.space):
                 return self.get_response(request)
         else:
@@ -84,6 +85,7 @@ class ScopeMiddleware:
                         user_space = auth[0].userspace_set.filter(active=True).first()
                         if user_space:
                             request.space = user_space.space
+                            request.user_space = user_space
                             with scope(space=request.space):
                                 return self.get_response(request)
                 except AuthenticationFailed:
