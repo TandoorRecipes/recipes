@@ -19,10 +19,10 @@
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile &&  step.file == null">{{ $t('File') }}</v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showRecipe = true" v-if="!showRecipe && step.stepRecipe == null">{{ $t('Recipe') }}</v-list-item>
 
-                        <v-list-item link>
+                        <v-list-item>
                             <v-switch v-model="step.showIngredientsTable" :label="$t('ShowIngredients')" hide-details></v-switch>
                         </v-list-item>
-                        <v-list-item link>
+                        <v-list-item>
                             <v-switch v-model="step.showAsHeader" :label="$t('Show_as_header')" hide-details></v-switch>
                         </v-list-item>
                         <v-list-item @click="emit('move')" prepend-icon="fa-solid fa-sort">
@@ -96,10 +96,10 @@
                                                 <v-icon icon="$menu"></v-icon>
                                                 <v-menu activator="parent">
                                                     <v-list>
-                                                        <v-list-item link>
+                                                        <v-list-item>
                                                             <v-switch v-model="step.ingredients[index].isHeader" :label="$t('Headline')" hide-details></v-switch>
                                                         </v-list-item>
-                                                        <v-list-item link>
+                                                        <v-list-item>
                                                             <v-switch v-model="step.ingredients[index].noAmount" :label="$t('Disable_Amount')" hide-details></v-switch>
                                                         </v-list-item>
                                                         <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">
