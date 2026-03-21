@@ -1,11 +1,11 @@
 aiohttp==3.13.3
 beautifulsoup4==4.14.3
-boto3==1.42.67
+boto3==1.42.69
 bleach==6.3.0
 cryptography===46.0.5
 crispy-bootstrap4==2026.2
 Django==5.2.11
-django-allauth==65.14.3
+django-allauth==65.15.0
 django-annoying==0.10.8
 django-auth-ldap==5.3.0
 django-cleanup==9.0.0
@@ -24,7 +24,7 @@ djangorestframework==3.16.1
 drf-writable-nested==0.7.2
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 gunicorn==25.1.0
-icalendar==7.0.0
+icalendar==7.0.3
 inflection==0.5.1
 Jinja2==3.1.6
 lxml==6.0.2
@@ -33,7 +33,7 @@ microdata==0.8.0
 mock==5.2.0
 Pillow==12.1.1
 psycopg2-binary==2.9.11
-pyjwt==2.11.0
+pyjwt==2.12.0
 pyppeteer==2.0.0
 python-dotenv==1.2.2
 python-ldap==3.4.5
