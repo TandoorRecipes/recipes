@@ -1805,7 +1805,7 @@ class InventoryLogSerializer(SpacedModelSerializer):
 
 class InviteLinkSerializer(WritableNestedModelSerializer):
     group = GroupSerializer()
-    household = HouseholdSerializer()
+    household = HouseholdSerializer(allow_null=True, required=False)
     email_sent = serializers.SerializerMethodField()
 
     @extend_schema_field(bool)
