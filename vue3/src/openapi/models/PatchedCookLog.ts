@@ -104,7 +104,7 @@ export function PatchedCookLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedCookLogToJSON(value?: Omit<PatchedCookLog, 'created_by'|'updated_at'> | null): any {
+export function PatchedCookLogToJSON(value?: Omit<PatchedCookLog, 'createdBy'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

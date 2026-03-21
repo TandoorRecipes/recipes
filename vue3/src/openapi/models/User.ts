@@ -102,7 +102,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
     };
 }
 
-export function UserToJSON(value?: Omit<User, 'username'|'display_name'|'is_staff'|'is_superuser'|'is_active'> | null): any {
+export function UserToJSON(value?: Omit<User, 'username'|'displayName'|'isStaff'|'isSuperuser'|'isActive'> | null): any {
     if (value == null) {
         return value;
     }

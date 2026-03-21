@@ -2,7 +2,6 @@ import {fileURLToPath, pathToFileURL, URL} from 'node:url'
 
 import {readdirSync} from "fs"
 import {resolve, join} from "path"
-import 'esbuild-register/dist/node'
 
 import {defineConfig} from 'vite'
 import type {Plugin} from 'vite'

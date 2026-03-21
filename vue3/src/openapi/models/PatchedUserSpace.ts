@@ -130,7 +130,7 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null): any {
+export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

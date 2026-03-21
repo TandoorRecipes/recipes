@@ -290,7 +290,7 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null): any {
+export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'foodInheritDefault'|'foodChildrenExist'> | null): any {
     if (value == null) {
         return value;
     }

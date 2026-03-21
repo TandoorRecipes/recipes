@@ -287,7 +287,7 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null): any {
+export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 'user'|'foodInheritDefault'|'foodChildrenExist'> | null): any {
     if (value == null) {
         return value;
     }

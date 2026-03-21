@@ -92,7 +92,7 @@ export function FoodShoppingFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function FoodShoppingToJSON(value?: Omit<FoodShopping, 'supermarket_category'|'shopping_lists'> | null): any {
+export function FoodShoppingToJSON(value?: Omit<FoodShopping, 'supermarketCategory'|'shoppingLists'> | null): any {
     if (value == null) {
         return value;
     }

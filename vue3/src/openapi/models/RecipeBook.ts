@@ -106,7 +106,7 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeBookToJSON(value?: Omit<RecipeBook, 'created_by'> | null): any {
+export function RecipeBookToJSON(value?: Omit<RecipeBook, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
