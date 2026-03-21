@@ -21,7 +21,6 @@
                 <v-text-field
                     id="id_global_search_input"
                     v-model="searchQuery"
-                    @update:modelValue="debouncedAsyncSearch"
                     autocomplete="off"
                     clearable
                     placeholder="Search"
@@ -63,16 +62,15 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, ref, watch} from 'vue'
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
 import {SearchResult} from "@/types/SearchTypes";
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import {useRouter} from "vue-router";
 import {useDisplay} from "vuetify";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {useDebounceFn} from "@vueuse/core";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import SearchPage from "@/pages/SearchPage.vue";
+import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
 
 const router = useRouter()
 const {mobile} = useDisplay()
@@ -81,7 +79,7 @@ const {t} = useI18n()
 const dialog = ref(false)
 const recipes = ref([] as Recipe[])
 const flatRecipes = ref([] as RecipeFlat[])
-const searchQuery = ref(null as string | null)
+const {inputValue: searchQuery, debouncedValue: debouncedSearchQuery, signal, reset: resetSearch} = useDebouncedSearch()
 const selectedResult = ref(0)
 const asyncSearchResults = ref([] as RecipeOverview[])
 
@@ -132,7 +130,8 @@ watch(dialog, (newValue) => {
     /**
      * since dialog has no opened event watch the variable and focus input after delay (nextTick/directly does not work)
      */
-    searchQuery.value = ""
+    resetSearch()
+    asyncSearchResults.value = []
     setTimeout(() => {
         if (newValue) {
             let search = document.getElementById('id_global_search_input')
@@ -152,25 +151,27 @@ watch(searchQuery, () => {
     }
 })
 
-onMounted(() => {
-    window.addEventListener('keydown', (e) => {
-        if (dialog.value) {
-            if (e.key == 'ArrowUp') {
-                selectedResult.value = Math.max(0, selectedResult.value - 1)
-            }
-            if (e.key == 'ArrowDown') {
-                selectedResult.value = Math.min(searchResults.value.length, selectedResult.value + 1)
-            }
-            if (e.key == 'Enter') {
-                goToSelectedRecipe(selectedResult.value)
-            }
-        } else {
-            if (e.key == 'k' && e.ctrlKey) {
-                e.preventDefault();
-                dialog.value = true
-            }
+function handleKeydown(e: KeyboardEvent) {
+    if (dialog.value) {
+        if (e.key == 'ArrowUp') {
+            selectedResult.value = Math.max(0, selectedResult.value - 1)
         }
-    })
+        if (e.key == 'ArrowDown') {
+            selectedResult.value = Math.min(searchResults.value.length, selectedResult.value + 1)
+        }
+        if (e.key == 'Enter') {
+            goToSelectedRecipe(selectedResult.value)
+        }
+    } else {
+        if (e.key == 'k' && e.ctrlKey) {
+            e.preventDefault();
+            dialog.value = true
+        }
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
 
     flatListLoading.value = true
     const api = new ApiApi()
@@ -184,21 +185,27 @@ onMounted(() => {
 })
 
 /**
- * search for query on server but debounce search so its not searched on every keypress
+ * search for query on server after debounce
  */
-const debouncedAsyncSearch = useDebounceFn(() => {
-    if (searchQuery.value != null && searchQuery.value != '') {
+watch(debouncedSearchQuery, (val) => {
+    if (val != null && val != '') {
         let api = new ApiApi()
         asyncLoading.value = true
-        api.apiRecipeList({query: searchQuery.value}).then(r => {
+        api.apiRecipeList({query: val}, {signal: signal.value}).then(r => {
             asyncSearchResults.value = r.results
         }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            if (err.name !== 'AbortError') {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
         }).finally(() => {
             asyncLoading.value = false
         })
     }
-}, 300)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeydown)
+})
 
 /**
  * determines the style for selected elements

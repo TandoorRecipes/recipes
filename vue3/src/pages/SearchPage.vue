@@ -5,9 +5,8 @@
                 <v-text-field :label="$t('Search')"
                               v-model="query"
                               :loading="loading"
-                              @submit="searchRecipes({page: 1})"
-                              @keydown.enter="searchRecipes({page: 1})"
-                              @click:clear="query = ''"
+                              @keydown.enter="flushQuery()"
+                              @click:clear="resetQuery()"
                               clearable hide-details>
                     <template v-slot:append>
                         <v-badge bordered :offset-x="5" :offset-y="5" color="secondary" v-model="hasFiltersApplied">
@@ -185,6 +184,7 @@ import {useDisplay} from "vuetify";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
 import {boolOrUndefinedTransformer, numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
+import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
@@ -196,7 +196,7 @@ const {t} = useI18n()
 const router = useRouter()
 const {mdAndUp} = useDisplay()
 
-const query = useRouteQuery('query', "")
+const {inputValue: query, debouncedValue: debouncedQuery, signal, flush: flushQuery, reset: resetQuery} = useDebouncedSearch({routeQueryKey: 'query'})
 const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.search_itemsPerPage, {transform: Number})
 
@@ -249,8 +249,7 @@ const batchEditDialog = ref(false)
 /**
  * handle query updates when using the GlobalSearchDialog on the search page directly
  */
-// TODO this also makes the search update on every stroke, do we want this?
-watch(() => query.value, () => {
+watch(debouncedQuery, () => {
     searchRecipes({page: 1})
 })
 
@@ -283,7 +282,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
 
     page.value = options.page
     let searchParameters = {
-        query: query.value,
+        query: debouncedQuery.value,
         page: options.page,
         pageSize: pageSize.value,
     } as ApiRecipeListRequest
@@ -297,11 +296,13 @@ function searchRecipes(options: VDataTableUpdateOptions) {
         }
     })
 
-    api.apiRecipeList(searchParameters).then((r) => {
+    api.apiRecipeList(searchParameters, {signal: signal.value}).then((r) => {
         recipes.value = r.results
         tableItemCount.value = r.count
     }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        if (err.name !== 'AbortError') {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }
     }).finally(() => {
         loading.value = false
         window.scrollTo({top: 0, behavior: 'smooth'})
@@ -313,7 +314,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
  */
 function reset() {
     page.value = 1
-    query.value = ''
+    resetQuery()
     Object.values(filters.value).forEach((filter) => {
         //filter.enabled = false
         filter.modelValue = filter.default

@@ -197,8 +197,10 @@
                                   v-if="step.ingredients[editingIngredientIndex].originalText"></v-text-field>
                     <v-number-input v-model="step.ingredients[editingIngredientIndex].amount" inset control-variant="stacked" autofocus :label="$t('Amount')"
                                     :min="0" :precision="useUserPreferenceStore().userSettings.ingredientDecimals"
+                                    :disabled="step.ingredients[editingIngredientIndex].noAmount"
                                     v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
                     <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                                  :disabled="step.ingredients[editingIngredientIndex].noAmount"
                                   allow-create></model-select>
                     <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
                                   allow-create></model-select>
@@ -211,6 +213,11 @@
                         :hint="$t('HeaderWarning')"
                         persistent-hint
                         @update:modelValue="step.ingredients[editingIngredientIndex].unit = null; step.ingredients[editingIngredientIndex].food = null; step.ingredients[editingIngredientIndex].amount = 0"
+                    ></v-checkbox>
+                    <v-checkbox
+                        v-model="step.ingredients[editingIngredientIndex].noAmount"
+                        :label="$t('Disable_Amount')"
+                        v-if="!step.ingredients[editingIngredientIndex].isHeader"
                     ></v-checkbox>
                 </v-form>
                 <v-btn color="info" class="mt-2" @click="dialogIngredientEditor = false; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{ $t('Move') }}</v-btn>

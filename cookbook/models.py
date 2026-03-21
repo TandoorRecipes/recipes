@@ -13,7 +13,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Avg, Index, Max, ProtectedError, Q
+from django.db.models import Index, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
@@ -1078,9 +1078,8 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         return f'Nutrition {self.pk}'
 
 
-class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
-    def get_queryset(self):
-        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
+from cookbook.managers import RecipeQuerySet  # noqa: E402 — deferred to avoid circular import
+RecipeManager = models.Manager.from_queryset(RecipeQuerySet)
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):

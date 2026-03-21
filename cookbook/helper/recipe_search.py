@@ -1,585 +1,313 @@
 import json
-from datetime import date, timedelta
+from dataclasses import dataclass, field
 
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
+from django.contrib.postgres.search import SearchQuery
 from django.core.cache import cache
-from django.db.models import Avg, Case, Count, Exists, F, Max, OuterRef, Q, Subquery, Value, When
-from django.db.models.functions import Coalesce, Lower, Substr
-from django.utils import timezone, translation
+from django.db.models import F, Q
+from django.db.models.functions import Lower
+from django.utils import translation
 
-from django.contrib.auth.models import User
-
-from cookbook.helper.HelperFunctions import Round, str2bool
+from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import get_household_user_ids
-from cookbook.managers import DICTIONARY
-from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields, SearchPreference, UserSpace, ViewLog)
+from cookbook.managers import DICTIONARY, TextSearchConfig
+from cookbook.models import CustomFilter, SearchPreference
 from recipes import settings
+
+_NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
+
+
+def _sort_includes(orderby, *fields):
+    for f in fields:
+        if f in orderby or f'-{f}' in orderby:
+            return True
+    return False
+
+
+def _finalize_ordering(orderby):
+    result = []
+    for key in orderby:
+        if not isinstance(key, str):
+            result.append(key)
+        elif key == 'name':
+            result.append(Lower('name').asc())
+        elif key == '-name':
+            result.append(Lower('name').desc())
+        elif key.lstrip('-') in _NULLS_LAST:
+            bare = key.lstrip('-')
+            expr = F(bare).desc(nulls_last=True) if key.startswith('-') else F(bare).asc(nulls_last=True)
+            result.append(expr)
+        else:
+            result.append(key)
+    return result
+
+
+def _parse_filter_params(params, prefix):
+    return {
+        'or': params.get(f'{prefix}_or', None) or params.get(prefix, None),
+        'and': params.get(f'{prefix}_and', None),
+        'or_not': params.get(f'{prefix}_or_not', None),
+        'and_not': params.get(f'{prefix}_and_not', None),
+    }
+
+
+@dataclass
+class SearchParams:
+    """Typed, validated filter parameters parsed from HTTP query params."""
+    query: str | None = None
+    rating: str | None = None
+    rating_gte: str | None = None
+    rating_lte: str | None = None
+    keywords: dict = field(default_factory=dict)
+    foods: dict = field(default_factory=dict)
+    books: dict = field(default_factory=dict)
+    steps: list | str | None = None
+    units: list | str | None = None
+    internal: bool | None = None
+    sort_order: list | str | None = None
+    random: bool = False
+    new: bool = False
+    num_recent: int = 0
+    include_children: bool = True
+    timescooked: str | None = None
+    timescooked_gte: str | None = None
+    timescooked_lte: str | None = None
+    createdon: str | None = None
+    createdon_gte: str | None = None
+    createdon_lte: str | None = None
+    updatedon: str | None = None
+    updatedon_gte: str | None = None
+    updatedon_lte: str | None = None
+    viewedon_gte: str | None = None
+    viewedon_lte: str | None = None
+    cookedon_gte: str | None = None
+    cookedon_lte: str | None = None
+    createdby: str | int | None = None
+    makenow: int | None = None
+
+    @staticmethod
+    def _parse_makenow(value):
+        if isinstance(value, bool) and value is True:
+            return 0
+        if isinstance(value, str) and value in ('yes', 'true'):
+            return 0
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            return None
+
+    @classmethod
+    def from_params(cls, params):
+        sort_order = params.get('sort_order', None)
+        if sort_order == 'random':
+            random = True
+            sort_order = None
+        else:
+            random = str2bool(params.get('random', False))
+
+        query_raw = params.get('query', None)
+
+        return cls(
+            query=query_raw.strip() if query_raw else None,
+            rating=params.get('rating', None),
+            rating_gte=params.get('rating_gte', None),
+            rating_lte=params.get('rating_lte', None),
+            keywords=_parse_filter_params(params, 'keywords'),
+            foods=_parse_filter_params(params, 'foods'),
+            books=_parse_filter_params(params, 'books'),
+            steps=params.get('steps', None),
+            units=params.get('units', None),
+            internal=str2bool(params.get('internal', None)),
+            sort_order=sort_order,
+            random=random,
+            new=str2bool(params.get('new', False)),
+            num_recent=int(params.get('num_recent', 0)),
+            include_children=str2bool(params.get('include_children', True)),
+            timescooked=params.get('timescooked', None),
+            timescooked_gte=params.get('timescooked_gte', None),
+            timescooked_lte=params.get('timescooked_lte', None),
+            createdon=params.get('createdon', None),
+            createdon_gte=params.get('createdon_gte', None),
+            createdon_lte=params.get('createdon_lte', None),
+            updatedon=params.get('updatedon', None),
+            updatedon_gte=params.get('updatedon_gte', None),
+            updatedon_lte=params.get('updatedon_lte', None),
+            viewedon_gte=params.get('viewedon_gte', None),
+            viewedon_lte=params.get('viewedon_lte', None),
+            cookedon_gte=params.get('cookedon_gte', None),
+            cookedon_lte=params.get('cookedon_lte', None),
+            createdby=params.get('createdby', None),
+            makenow=cls._parse_makenow(params.get('makenow', None)),
+        )
+
+
+def _is_postgres():
+    return settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
+
+
+def _resolve_params(request, params):
+    if filter_id := params.get('filter', None):
+        custom_filter = (
+            CustomFilter.objects.filter(id=filter_id, space=request.space)
+            .filter(Q(created_by=request.user) | Q(shared=request.user) | Q(recipebook__shared=request.user))
+            .first()
+        )
+        if custom_filter:
+            resolved = {**json.loads(custom_filter.search)}
+            if isinstance(resolved.get('rating', None), int):
+                resolved['rating'] = str(resolved['rating'])
+            return resolved
+    return {**(params or {})}
+
+
+def _load_search_prefs(user):
+    if user.is_authenticated:
+        cache_key = f'search_pref_{user.id}'
+        result = cache.get(cache_key, default=None)
+        if result is None:
+            result = user.searchpreference
+        cache.set(cache_key, result, timeout=10)
+        return result
+    return SearchPreference()
+
+
+def _build_text_search_config(string, prefs):
+    if not string:
+        return None
+
+    use_postgres = _is_postgres()
+    search_type = prefs.search or 'plain'
+    unaccent = set(prefs.unaccent.values_list('field', flat=True)) if use_postgres else set()
+
+    def with_unaccent(fields):
+        return tuple(f'{x}__unaccent' if x in unaccent else x for x in fields)
+
+    # Common fields (all backends)
+    icontains = with_unaccent(prefs.icontains.values_list('field', flat=True))
+    istartswith = with_unaccent(prefs.istartswith.values_list('field', flat=True))
+
+    # Postgres-only fields
+    trigram_fields = ()
+    fulltext_fields = ()
+    search_query = None
+    if use_postgres:
+        language = DICTIONARY.get(translation.get_language(), 'simple')
+        search_query = SearchQuery(string, search_type=search_type, config=language)
+        fulltext_fields = tuple(prefs.fulltext.values_list('field', flat=True))
+        # websearch/raw modes don't support trigram
+        if search_type not in ('websearch', 'raw'):
+            trigram_fields = with_unaccent(prefs.trigram.values_list('field', flat=True))
+
+    return TextSearchConfig(
+        string=string,
+        search_type=search_type,
+        icontains_fields=icontains,
+        istartswith_fields=istartswith,
+        fulltext_fields=fulltext_fields,
+        trigram_fields=trigram_fields,
+        unaccent_fields=tuple(unaccent),
+        trigram_threshold=prefs.trigram_threshold,
+        use_postgres=use_postgres,
+        search_query=search_query,
+    )
 
 
 # TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
-class RecipeSearch():
-    _postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
+class RecipeSearch:
 
     def __init__(self, request, **params):
         self._request = request
-        self._queryset = None
-        if f := params.get('filter', None):
-            custom_filter = (
-                CustomFilter.objects.filter(id=f, space=self._request.space
-                                            ).filter(Q(created_by=self._request.user) | Q(shared=self._request.user) | Q(recipebook__shared=self._request.user)).first()
-            )
-            if custom_filter:
-                self._params = {**json.loads(custom_filter.search)}
-                self._original_params = {**(params or {})}
-                # json.loads casts rating as an integer, expecting string
-                if isinstance(self._params.get('rating', None), int):
-                    self._params['rating'] = str(self._params['rating'])
-            else:
-                self._params = {**(params or {})}
-        else:
-            self._params = {**(params or {})}
-        if self._request.user.is_authenticated:
-            CACHE_KEY = f'search_pref_{request.user.id}'
-            cached_result = cache.get(CACHE_KEY, default=None)
-            if cached_result is not None:
-                self._search_prefs = cached_result
-            else:
-                self._search_prefs = request.user.searchpreference
-            cache.set(CACHE_KEY, self._search_prefs, timeout=10)
-        else:
-            self._search_prefs = SearchPreference()
-        self._string = self._params.get('query').strip() if self._params.get('query', None) else None
-
-        self._rating = self._params.get('rating', None)
-        self._rating_gte = self._params.get('rating_gte', None)
-        self._rating_lte = self._params.get('rating_lte', None)
-
-        self._keywords = {
-            'or': self._params.get('keywords_or', None) or self._params.get('keywords', None),
-            'and': self._params.get('keywords_and', None),
-            'or_not': self._params.get('keywords_or_not', None),
-            'and_not': self._params.get('keywords_and_not', None)
-        }
-        self._foods = {
-            'or': self._params.get('foods_or', None) or self._params.get('foods', None),
-            'and': self._params.get('foods_and', None),
-            'or_not': self._params.get('foods_or_not', None),
-            'and_not': self._params.get('foods_and_not', None)
-        }
-        self._books = {
-            'or': self._params.get('books_or', None) or self._params.get('books', None),
-            'and': self._params.get('books_and', None),
-            'or_not': self._params.get('books_or_not', None),
-            'and_not': self._params.get('books_and_not', None)
-        }
-        self._steps = self._params.get('steps', None)
-        self._units = self._params.get('units', None)
-        self._internal = str2bool(self._params.get('internal', None))
-        self._sort_order = self._params.get('sort_order', None)
-        if self._sort_order == 'random':
-            self._random = True
-            self.sort_order = None
-        else:
-            self._random = str2bool(self._params.get('random', False))
-        self._new = str2bool(self._params.get('new', False))
-        self._num_recent = int(self._params.get('num_recent', 0))
-        self._include_children = str2bool(self._params.get('include_children', True))
-        self._timescooked = self._params.get('timescooked', None)
-        self._timescooked_gte = self._params.get('timescooked_gte', None)
-        self._timescooked_lte = self._params.get('timescooked_lte', None)
-
-        self._createdon = self._params.get('createdon', None)
-        self._createdon_gte = self._params.get('createdon_gte', None)
-        self._createdon_lte = self._params.get('createdon_lte', None)
-
-        self._updatedon = self._params.get('updatedon', None)
-        self._updatedon_gte = self._params.get('updatedon_gte', None)
-        self._updatedon_lte = self._params.get('updatedon_lte', None)
-
-        self._viewedon_gte = self._params.get('viewedon_gte', None)
-        self._viewedon_lte = self._params.get('viewedon_lte', None)
-
-        self._cookedon_gte = self._params.get('cookedon_gte', None)
-        self._cookedon_lte = self._params.get('cookedon_lte', None)
-
-        self._createdby = self._params.get('createdby', None)
-        self._makenow = self._params.get('makenow', None)
-        # this supports hidden feature to find recipes missing X ingredients
-        if isinstance(self._makenow, bool) and self._makenow == True:
-            self._makenow = 0
-        elif isinstance(self._makenow, str) and self._makenow in ["yes", "true"]:
-            self._makenow = 0
-        else:
-            try:
-                self._makenow = int(self._makenow)
-            except (ValueError, TypeError):
-                self._makenow = None
-
-        self._search_type = self._search_prefs.search or 'plain'
-        if self._string:
-            if self._postgres:
-                self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
-            else:
-                self._unaccent_include = []
-            self._icontains_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
-            self._istartswith_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
-            self._trigram_include = None
-            self._fulltext_include = None
-        self._trigram = False
-        if self._postgres and self._string:
-            self._language = DICTIONARY.get(translation.get_language(), 'simple')
-            self._trigram_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.trigram.values_list('field', flat=True)]
-            self._fulltext_include = self._search_prefs.fulltext.values_list('field', flat=True) or None
-
-            if self._search_type not in ['websearch', 'raw'] and self._trigram_include:
-                self._trigram = True
-            self.search_query = SearchQuery(
-                self._string,
-                search_type=self._search_type,
-                config=self._language,
-            )
-            self.search_rank = None
-        self.orderby = []
-        self._filters = None
-        self._fuzzy_match = None
+        resolved = _resolve_params(request, params)
+        self._prefs = _load_search_prefs(request.user)
+        self._params = SearchParams.from_params(resolved)
+        self._text_config = _build_text_search_config(self._params.query, self._prefs)
 
     def get_queryset(self, queryset):
-        self._queryset = queryset
-        self._queryset = self._queryset.prefetch_related('keywords')
+        params = self._params
+        qs = queryset
+        user, space = self._request.user, self._request.space
 
-        self._build_sort_order()
-        self._recently_viewed(num_recent=self._num_recent)
+        orderby = self._build_sort_order()
 
-        self._cooked_on_filter()
-        self._created_on_filter()
-        self._updated_on_filter()
-        self._viewed_on_filter()
+        # Sort-only annotations (idempotent — filter methods below won't duplicate)
+        if _sort_includes(orderby, 'rating'):
+            qs = qs.with_rating(user)
+        if _sort_includes(orderby, 'lastcooked'):
+            qs = qs.with_last_cooked(user, space)
+        if _sort_includes(orderby, 'lastviewed'):
+            qs = qs.with_last_viewed(user, space)
+        if _sort_includes(orderby, 'favorite'):
+            qs = qs.with_favorite(user, space)
+        if params.num_recent:
+            qs = qs.with_recent(user, space, params.num_recent)
+        if params.new:
+            qs = qs.with_new_flag()
 
-        self._created_by_filter(created_by_user_id=self._createdby)
-        self._favorite_recipes()
-        self._new_recipes()
-        self.keyword_filters(**self._keywords)
-        self.food_filters(**self._foods)
-        self.book_filters(**self._books)
-        self.rating_filter()
-        self.internal_filter(internal=self._internal)
-        self.step_filters(steps=self._steps)
-        self.unit_filters(units=self._units)
-        self._makenow_filter(missing=self._makenow)
-        self.string_filters(string=self._string)
-        return self._queryset.filter(space=self._request.space).order_by(*self.orderby)
+        # Annotation + filter methods
+        qs = qs.by_rating(user, exact=params.rating, gte=params.rating_gte, lte=params.rating_lte)
+        qs = qs.by_times_cooked(user, space, exact=params.timescooked, gte=params.timescooked_gte, lte=params.timescooked_lte)
+        qs = qs.by_cooked_on(user, space, gte=params.cookedon_gte, lte=params.cookedon_lte)
+        qs = qs.by_viewed_on(user, space, gte=params.viewedon_gte, lte=params.viewedon_lte)
 
-    def _sort_includes(self, *args):
-        for x in args:
-            if x in self.orderby:
-                return True
-            elif '-' + x in self.orderby:
-                return True
-        return False
+        # Pure filters
+        qs = qs.by_created_on(exact=params.createdon, gte=params.createdon_gte, lte=params.createdon_lte)
+        qs = qs.by_updated_on(exact=params.updatedon, gte=params.updatedon_gte, lte=params.updatedon_lte)
+        qs = qs.by_created_by(params.createdby)
+        qs = qs.by_internal(params.internal)
+        qs = qs.by_steps(params.steps)
+        qs = qs.by_units(params.units)
+
+        # Entity filters
+        qs = qs.by_keywords(
+            or_=params.keywords['or'], and_=params.keywords['and'],
+            or_not=params.keywords['or_not'], and_not=params.keywords['and_not'],
+            include_children=params.include_children,
+        )
+        qs = qs.by_foods(
+            or_=params.foods['or'], and_=params.foods['and'],
+            or_not=params.foods['or_not'], and_not=params.foods['and_not'],
+            include_children=params.include_children,
+        )
+        qs = qs.by_books(
+            or_=params.books['or'], and_=params.books['and'],
+            or_not=params.books['or_not'], and_not=params.books['and_not'],
+        )
+
+        # Makenow
+        if params.makenow is not None:
+            if not self._request.user_space:
+                qs = qs.none()
+            else:
+                household = getattr(self._request.user_space, 'household', None)
+                shopping_users = get_household_user_ids(self._request.user_space)
+                qs = qs.cookable(household, shopping_users, missing=params.makenow)
+
+        # Text search
+        qs = qs.by_text(self._text_config)
+
+        return qs.distinct().order_by(*_finalize_ordering(orderby))
 
     def _build_sort_order(self):
-        if self._random:
-            self.orderby = ['?']
+        params = self._params
+        if params.random:
+            return ['?']
+
+        # Pinned sorts: float recent/new recipes to the top
+        order = []
+        if params.num_recent:
+            order.append('-recent')
+        if params.new:
+            order.append('-new_recipe')
+
+        # User-specified sort order
+        if params.sort_order:
+            user_order = params.sort_order if isinstance(params.sort_order, list) else [params.sort_order]
+            # score only works with postgres fulltext/trigram search
+            has_scoring = _is_postgres() and params.query
+            order += [s for s in user_order if s not in ('score', '-score') or has_scoring]
+        elif self._text_config and (self._text_config.trigram_fields or self._text_config.fulltext_fields):
+            # No user sort, but text search active: rank by relevance then name
+            order += ['-score', 'name']
         else:
-            order = []
-            # TODO add userpreference for default sort order and replace '-favorite'
-            default_order = ['name']
-            # recent and new_recipe are always first; they float a few recipes to the top
-            if self._num_recent:
-                order += ['-recent']
-            if self._new:
-                order += ['-new_recipe']
+            order.append('name')
 
-            # if a sort order is provided by user - use that order
-            if self._sort_order:
-                if not isinstance(self._sort_order, list):
-                    order += [self._sort_order]
-                else:
-                    order += self._sort_order
-                if not self._postgres or not self._string:
-                    if 'score' in order:
-                        order.remove('score')
-                    if '-score' in order:
-                        order.remove('-score')
-            # if no sort order provided prioritize text search, followed by the default search
-            elif self._postgres and self._string and (self._trigram or self._fulltext_include):
-                order += ['-score', *default_order]
-            # otherwise sort by the remaining order_by attributes or favorite by default
-            else:
-                order += default_order
-            order[:] = [Lower('name').asc() if x == 'name' else x for x in order]
-            order[:] = [Lower('name').desc() if x == '-name' else x for x in order]
-            self.orderby = order
-
-    def string_filters(self, string=None):
-        if not string:
-            return
-
-        self.build_text_filters(self._string)
-        if self._postgres:
-            self.build_fulltext_filters(self._string)
-            self.build_trigram(self._string)
-
-        query_filter = Q()
-        if self._filters:
-            for f in self._filters:
-                query_filter |= f
-
-            # this creates duplicate records which can screw up other aggregates, see makenow for workaround
-            self._queryset = self._queryset.filter(query_filter).distinct()
-            if self._fulltext_include:
-                if self._fuzzy_match is None:
-                    self._queryset = self._queryset.annotate(score=Coalesce(Max(self.search_rank), 0.0))
-                else:
-                    self._queryset = self._queryset.annotate(rank=Coalesce(Max(self.search_rank), 0.0))
-
-            if self._fuzzy_match is not None:
-                simularity = self._fuzzy_match.filter(pk=OuterRef('pk')).values('simularity')
-                if not self._fulltext_include:
-                    self._queryset = self._queryset.annotate(score=Coalesce(Subquery(simularity), 0.0))
-                else:
-                    self._queryset = self._queryset.annotate(simularity=Coalesce(Subquery(simularity), 0.0))
-            if self._sort_includes('score') and self._fulltext_include and self._fuzzy_match is not None:
-                self._queryset = self._queryset.annotate(score=F('rank') + F('simularity'))
-        else:
-            query_filter = Q()
-            for f in [x + '__unaccent__iexact' if x in self._unaccent_include else x + '__iexact' for x in SearchFields.objects.all().values_list('field', flat=True)]:
-                query_filter |= Q(**{"%s" % f: self._string})
-            self._queryset = self._queryset.filter(query_filter).distinct()
-
-    def _cooked_on_filter(self):
-        if self._sort_includes('lastcooked') or self._cookedon_gte or self._cookedon_lte:
-            lessthan = self._sort_includes('-lastcooked') or self._cookedon_lte
-            if lessthan:
-                default = timezone.now() - timedelta(days=100000)
-            else:
-                default = timezone.now()
-            self._queryset = self._queryset.annotate(
-                lastcooked=Coalesce(Max(Case(When(cooklog__created_by=self._request.user, cooklog__space=self._request.space, then='cooklog__created_at'))), Value(default))
-            )
-
-        if self._cookedon_lte:
-            self._queryset = self._queryset.filter(lastcooked__date__lte=self._cookedon_lte).exclude(lastcooked=default)
-        elif self._cookedon_gte:
-            self._queryset = self._queryset.filter(lastcooked__date__gte=self._cookedon_gte).exclude(lastcooked=default)
-
-    def _viewed_on_filter(self, viewed_date=None):
-        if self._sort_includes('lastviewed') or self._viewedon_gte or self._viewedon_lte:
-            longTimeAgo = timezone.now() - timedelta(days=100000)
-            self._queryset = self._queryset.annotate(
-                lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__created_at'))), Value(longTimeAgo))
-            )
-
-        if self._viewedon_lte:
-            self._queryset = self._queryset.filter(lastviewed__date__lte=self._viewedon_lte).exclude(lastviewed=longTimeAgo)
-        elif self._viewedon_gte:
-            self._queryset = self._queryset.filter(lastviewed__date__gte=self._viewedon_gte).exclude(lastviewed=longTimeAgo)
-
-    def _created_on_filter(self):
-        if self._createdon:
-            self._queryset = self._queryset.filter(created_at__date=self._createdon)
-        elif self._createdon_lte:
-            self._queryset = self._queryset.filter(created_at__date__lte=self._createdon_lte)
-        elif self._createdon_gte:
-            self._queryset = self._queryset.filter(created_at__date__gte=self._createdon_gte)
-
-    def _updated_on_filter(self):
-        if self._updatedon:
-            self._queryset = self._queryset.filter(updated_at__date=self._updatedon)
-        elif self._updatedon_lte:
-            self._queryset = self._queryset.filter(updated_at__date__lte=self._updatedon_lte)
-        elif self._updatedon_gte:
-            self._queryset = self._queryset.filter(updated_at__date__gte=self._updatedon_gte)
-
-    def _created_by_filter(self, created_by_user_id=None):
-        if created_by_user_id is None:
-            return
-        self._queryset = self._queryset.filter(created_by__id=created_by_user_id)
-
-    def _new_recipes(self, new_days=7):
-        # TODO make new days a user-setting
-        if not self._new:
-            return
-        self._queryset = self._queryset.annotate(new_recipe=Case(
-            When(created_at__gte=(timezone.now() - timedelta(days=new_days)), then=('pk')),
-            default=Value(0),
-        ))
-
-    def _recently_viewed(self, num_recent=None):
-        if not num_recent:
-            if self._sort_includes('lastviewed'):
-                self._queryset = self._queryset.annotate(
-                    lastviewed=Coalesce(Max(Case(When(viewlog__created_by=self._request.user, viewlog__space=self._request.space, then='viewlog__pk'))), Value(0))
-                )
-            return
-
-        num_recent_recipes = (
-            ViewLog.objects.filter(created_by=self._request.user, space=self._request.space).values('recipe').annotate(recent=Max('created_at')).order_by('-recent')[:num_recent]
-        )
-        self._queryset = self._queryset.annotate(recent=Coalesce(Max(Case(When(pk__in=num_recent_recipes.values('recipe'), then='viewlog__pk'))), Value(0)))
-
-    def _favorite_recipes(self):
-        if self._sort_includes('favorite') or self._timescooked is not None or self._timescooked_gte is not None or self._timescooked_lte is not None:
-            less_than = self._timescooked_lte and not self._sort_includes('-favorite')
-            if less_than:
-                default = 1000
-            else:
-                default = 0
-            favorite_recipes = (
-                CookLog.objects.filter(created_by=self._request.user, space=self._request.space,
-                                       recipe=OuterRef('pk')).values('recipe').annotate(count=Count('pk', distinct=True)).values('count')
-            )
-            self._queryset = self._queryset.annotate(favorite=Coalesce(Subquery(favorite_recipes), default))
-
-        if self._timescooked is not None:
-            self._queryset = self._queryset.filter(favorite=self._timescooked)
-        elif self._timescooked_lte is not None:
-            self._queryset = self._queryset.filter(favorite__lte=int(self._timescooked_lte)).exclude(favorite=0)
-        elif self._timescooked_gte is not None:
-            self._queryset = self._queryset.filter(favorite__gte=int(self._timescooked_gte))
-
-    def keyword_filters(self, **kwargs):
-        if all([kwargs[x] is None for x in kwargs]):
-            return
-        for kw_filter in kwargs:
-            if not kwargs[kw_filter]:
-                continue
-            if not isinstance(kwargs[kw_filter], list):
-                kwargs[kw_filter] = [kwargs[kw_filter]]
-
-            keywords = Keyword.objects.filter(pk__in=kwargs[kw_filter])
-            if 'or' in kw_filter:
-                if self._include_children:
-                    f_or = Q(keywords__in=Keyword.include_descendants(keywords))
-                else:
-                    f_or = Q(keywords__in=keywords)
-                if 'not' in kw_filter:
-                    self._queryset = self._queryset.exclude(f_or)
-                else:
-                    self._queryset = self._queryset.filter(f_or)
-            elif 'and' in kw_filter:
-                recipes = Recipe.objects.all()
-                for kw in keywords:
-                    if self._include_children:
-                        f_and = Q(keywords__in=kw.get_descendants_and_self())
-                    else:
-                        f_and = Q(keywords=kw)
-                    if 'not' in kw_filter:
-                        recipes = recipes.filter(f_and)
-                    else:
-                        self._queryset = self._queryset.filter(f_and)
-                if 'not' in kw_filter:
-                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
-
-    def food_filters(self, **kwargs):
-        if all([kwargs[x] is None for x in kwargs]):
-            return
-        for fd_filter in kwargs:
-            if not kwargs[fd_filter]:
-                continue
-            if not isinstance(kwargs[fd_filter], list):
-                kwargs[fd_filter] = [kwargs[fd_filter]]
-
-            foods = Food.objects.filter(pk__in=kwargs[fd_filter])
-            if 'or' in fd_filter:
-                if self._include_children:
-                    f_or = Q(steps__ingredients__food__in=Food.include_descendants(foods))
-                else:
-                    f_or = Q(steps__ingredients__food__in=foods)
-
-                if 'not' in fd_filter:
-                    self._queryset = self._queryset.exclude(f_or)
-                else:
-                    self._queryset = self._queryset.filter(f_or)
-            elif 'and' in fd_filter:
-                recipes = Recipe.objects.all()
-                for food in foods:
-                    if self._include_children:
-                        f_and = Q(steps__ingredients__food__in=food.get_descendants_and_self())
-                    else:
-                        f_and = Q(steps__ingredients__food=food)
-                    if 'not' in fd_filter:
-                        recipes = recipes.filter(f_and)
-                    else:
-                        self._queryset = self._queryset.filter(f_and)
-                if 'not' in fd_filter:
-                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
-
-    def unit_filters(self, units=None, operator=True):
-        if operator != True:
-            raise NotImplementedError
-        if not units:
-            return
-        if not isinstance(units, list):
-            units = [units]
-        self._queryset = self._queryset.filter(steps__ingredients__unit__in=units)
-
-    def rating_filter(self):
-        if self._rating or self._rating_lte or self._rating_gte or self._sort_includes('rating'):
-            # Only consider CookLogs with non-null ratings to avoid null ratings
-            # affecting the average calculation (fixes GitHub issue #1939)
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, cooklog__rating__isnull=False, then='cooklog__rating'), default=0))))
-
-        if self._rating:
-            self._queryset = self._queryset.filter(rating=round(int(self._rating)))
-        elif self._rating_gte:
-            self._queryset = self._queryset.filter(rating__gte=int(self._rating_gte))
-        elif self._rating_lte:
-            self._queryset = self._queryset.filter(rating__lte=int(self._rating_lte)).exclude(rating=0)
-
-    def internal_filter(self, internal=None):
-        if not internal:
-            return
-        self._queryset = self._queryset.filter(internal=internal)
-
-    def book_filters(self, **kwargs):
-        if all([kwargs[x] is None for x in kwargs]):
-            return
-        for bk_filter in kwargs:
-            if not kwargs[bk_filter]:
-                continue
-            if not isinstance(kwargs[bk_filter], list):
-                kwargs[bk_filter] = [kwargs[bk_filter]]
-
-            if 'or' in bk_filter:
-                f = Q(recipebookentry__book__id__in=kwargs[bk_filter])
-                if 'not' in bk_filter:
-                    self._queryset = self._queryset.exclude(f)
-                else:
-                    self._queryset = self._queryset.filter(f)
-            elif 'and' in bk_filter:
-                recipes = Recipe.objects.all()
-                for book in kwargs[bk_filter]:
-                    if 'not' in bk_filter:
-                        recipes = recipes.filter(recipebookentry__book__id=book)
-                    else:
-                        self._queryset = self._queryset.filter(recipebookentry__book__id=book)
-                if 'not' in bk_filter:
-                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
-
-    def step_filters(self, steps=None, operator=True):
-        if operator != True:
-            raise NotImplementedError
-        if not steps:
-            return
-        if not isinstance(steps, list):
-            steps = [steps]
-        self._queryset = self._queryset.filter(steps__id__in=steps)
-
-    def build_fulltext_filters(self, string=None):
-        if not string:
-            return
-        if self._fulltext_include:
-            vectors = []
-            rank = []
-            if 'name' in self._fulltext_include:
-                vectors.append('name_search_vector')
-                rank.append(SearchRank('name_search_vector', self.search_query, cover_density=True))
-            if 'description' in self._fulltext_include:
-                vectors.append('desc_search_vector')
-                rank.append(SearchRank('desc_search_vector', self.search_query, cover_density=True))
-            if 'steps__instruction' in self._fulltext_include:
-                vectors.append('steps__search_vector')
-                rank.append(SearchRank('steps__search_vector', self.search_query, cover_density=True))
-            if 'keywords__name' in self._fulltext_include:
-                # explicitly settings unaccent on keywords and foods so that they behave the same as search_vector fields
-                vectors.append('keywords__name__unaccent')
-                rank.append(SearchRank('keywords__name__unaccent', self.search_query, cover_density=True))
-            if 'steps__ingredients__food__name' in self._fulltext_include:
-                vectors.append('steps__ingredients__food__name__unaccent')
-                rank.append(SearchRank('steps__ingredients__food__name', self.search_query, cover_density=True))
-
-            for r in rank:
-                if self.search_rank is None:
-                    self.search_rank = r
-                else:
-                    self.search_rank += r
-            # modifying queryset will annotation creates duplicate results
-            self._filters.append(Q(id__in=Recipe.objects.annotate(vector=SearchVector(*vectors)).filter(Q(vector=self.search_query))))
-
-    def build_text_filters(self, string=None):
-        if not string:
-            return
-
-        if not self._filters:
-            self._filters = []
-        # dynamically build array of filters that will be applied
-        for f in self._icontains_include:
-            self._filters += [Q(**{"%s__icontains" % f: self._string})]
-
-        for f in self._istartswith_include:
-            self._filters += [Q(**{"%s__istartswith" % f: self._string})]
-
-    def build_trigram(self, string=None):
-        if not string:
-            return
-        if self._trigram:
-            trigram = None
-            for f in self._trigram_include:
-                if trigram:
-                    trigram += TrigramSimilarity(f, self._string)
-                else:
-                    trigram = TrigramSimilarity(f, self._string)
-            self._fuzzy_match = (
-                Recipe.objects.annotate(trigram=trigram).distinct().annotate(simularity=Max('trigram')
-                                                                             ).values('id', 'simularity').filter(simularity__gt=self._search_prefs.trigram_threshold)
-            )
-            self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
-
-    def _makenow_filter(self, missing=None):
-        if missing is None or (isinstance(missing, bool) and not missing):
-            return
-        if not self._request.user_space:
-            self._queryset = self._queryset.none()
-            return
-
-        # Use cached list for simple filters, but wrap as a queryset for
-        # substitute subqueries that use OuterRef (needs SQL subquery semantics).
-        shopping_user_ids = get_household_user_ids(self._request.user_space)
-        shopping_users = User.objects.filter(id__in=shopping_user_ids)
-
-        onhand_filter = (
-            Q(steps__ingredients__food__onhand_users__in=shopping_users)  # food onhand
-            # or substitute food onhand
-            | Q(steps__ingredients__food__substitute__onhand_users__in=shopping_users)
-            | Q(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users))
-            | Q(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users))
-        )
-        makenow_recipes = Recipe.objects.annotate(
-            count_food=Count('steps__ingredients__food__pk', filter=Q(steps__ingredients__food__isnull=False), distinct=True),
-            count_onhand=Count('steps__ingredients__food__pk', filter=onhand_filter, distinct=True),
-            count_ignore_shopping=Count(
-                'steps__ingredients__food__pk', filter=Q(steps__ingredients__food__ignore_shopping=True, steps__ingredients__food__recipe__isnull=True), distinct=True
-            ),
-            has_child_sub=Case(When(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users), then=Value(1)), default=Value(0)),
-            has_sibling_sub=Case(When(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users), then=Value(1)), default=Value(0))
-        ).annotate(missingfood=F('count_food') - F('count_onhand') - F('count_ignore_shopping')).filter(missingfood__lte=missing)
-        self._queryset = self._queryset.distinct().filter(id__in=makenow_recipes.values('id'))
-
-    @staticmethod
-    def __children_substitute_filter(shopping_users=None):
-        children_onhand_subquery = Food.objects.filter(path__startswith=OuterRef('path'), depth__gt=OuterRef('depth'), onhand_users__in=shopping_users)
-        return (
-            Food.objects.exclude(  # list of foods that are onhand and children of: foods that are not onhand and are set to use children as substitutes
-                Q(onhand_users__in=shopping_users) | Q(ignore_shopping=True, recipe__isnull=True) | Q(substitute__onhand_users__in=shopping_users)
-            )
-            .exclude(depth=1, numchild=0)
-            .filter(substitute_children=True)
-            .annotate(child_onhand_count=Exists(children_onhand_subquery))
-            .filter(child_onhand_count=True)
-        )
-
-    @staticmethod
-    def __sibling_substitute_filter(shopping_users=None):
-        sibling_onhand_subquery = Food.objects.filter(
-            path__startswith=Substr(OuterRef('path'), 1, Food.steplen * (OuterRef('depth') - 1)), depth=OuterRef('depth'), onhand_users__in=shopping_users
-        )
-        return (
-            Food.objects.exclude(  # list of foods that are onhand and siblings of: foods that are not onhand and are set to use siblings as substitutes
-                Q(onhand_users__in=shopping_users) | Q(ignore_shopping=True, recipe__isnull=True) | Q(substitute__onhand_users__in=shopping_users)
-            )
-            .exclude(depth=1, numchild=0)
-            .filter(substitute_siblings=True)
-            .annotate(sibling_onhand=Exists(sibling_onhand_subquery))
-            .filter(sibling_onhand=True)
-        )
+        return order

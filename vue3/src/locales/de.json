@@ -787,6 +787,7 @@
   "food_recipe_help": "Wird ein Rezept hier verknüpft, wird diese Verknüpfung in allen anderen Rezepten übernommen, die dieses Lebensmittel beinhalten",
   "g": "Gramm [g] (metrisch, Gewicht)",
   "gallon": "Gallone",
+  "help_translate": "Hilf Übersetzten",
   "hide_step_ingredients": "Schritt Zutaten ausblenden",
   "hours": "Stunden",
   "ignore_shopping_help": "Zutat nie auf Einkaufsliste setzen (z.B. Wasser)",

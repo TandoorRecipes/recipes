@@ -39,7 +39,7 @@ import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 
-const {getDjangoUrl} = useDjangoUrls()
+const {getFullUrl} = useDjangoUrls()
 
 const dialog = ref(false);
 const loading = ref(false);
@@ -47,7 +47,7 @@ const loading = ref(false);
 const apiToken = ref('')
 
 const icalUrl = computed(() => {
-    return getDjangoUrl('/api/meal-plan/ical/') + "?access_token=" + apiToken.value
+    return getFullUrl('/api/meal-plan/ical/') + "?access_token=" + apiToken.value
 })
 
 onMounted(() => {

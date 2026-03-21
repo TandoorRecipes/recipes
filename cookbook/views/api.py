@@ -11,7 +11,7 @@ import uuid
 from collections import OrderedDict
 from functools import wraps
 from json import JSONDecodeError
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
 from zipfile import ZipFile
 
 import PIL.Image
@@ -1398,12 +1398,15 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
         order_direction = self.request.GET.get('order_direction')
 
         if not order_field:
-            order_field = 'id'
+            order_field = 'order'
 
-        ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
+        primary_ordering = f"{'-' if order_direction == 'desc' else ''}{order_field}"
+        ordering = [primary_ordering]
+        if order_field != 'id':
+            ordering.append('id')
 
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct().order_by(ordering)
+            space=self.request.space).distinct().order_by(*ordering)
         return super().get_queryset()
 
 
@@ -1510,7 +1513,6 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
         serializer = AutoMealPlanSerializer(data=request.data)
 
         if serializer.is_valid():
-            keyword_ids = serializer.validated_data['keyword_ids']
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             servings = serializer.validated_data['servings']
@@ -1522,14 +1524,23 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
 
             days = min((end_date - start_date).days + 1, 14)
 
-            recipes = Recipe.objects.values('id', 'name')
+            recipes = Recipe.objects.filter(space=request.space, internal=True)
+
+            keywords = serializer.validated_data.get('keywords', [])
+            keyword_mode = serializer.validated_data.get('keyword_mode', 'and')
+            if keywords:
+                search_key = 'keywords_and' if keyword_mode == 'and' else 'keywords_or'
+                search = RecipeSearch(request, **{search_key: keywords})
+                recipes = search.get_queryset(recipes)
+
+            recipes = recipes.values('id', 'name').distinct()
             meal_plans = list()
 
-            for keyword_id in keyword_ids:
-                recipes = recipes.filter(keywords__id=keyword_id)
-
             if len(recipes) == 0:
-                return Response(serializer.data)
+                return Response(
+                    {'error': True, 'msg': _('No recipes found.')},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             recipes = list(recipes.order_by('?')[:days])
 
             for i in range(0, days):
@@ -1730,7 +1741,11 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
-                self.queryset = self.queryset.filter(
+                self.queryset = self.queryset.with_rating(
+                    self.request.user
+                ).with_last_cooked(
+                    self.request.user, self.request.space
+                ).filter(
                     space=self.request.space).prefetch_related('keywords', 'shared', 'properties',
                                                                'properties__property_type', 'steps',
                                                                'steps__ingredients',
@@ -1769,7 +1784,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         return self.queryset
 
     def list(self, request, *args, **kwargs):
-        if self.request.GET.get('debug', False) and settings.DEBUG:
+        if self.request.GET.get('debug', False) and settings.DEBUG and request.user.is_superuser:
             return JsonResponse({'new': str(self.get_queryset().query), })
         return super().list(request, *args, **kwargs)
 
@@ -2465,7 +2480,7 @@ class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
         # TODO add tests for filter
         filter_type = self.request.query_params.getlist('type', [])
         if filter_type:
-            self.queryset.filter(type__in=filter_type)
+            self.queryset = self.queryset.filter(type__in=filter_type)
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
         return super().get_queryset()
@@ -2969,7 +2984,7 @@ class FdcSearchView(APIView):
         if query is not None:
             data_types = self.request.query_params.getlist('dataType', ['Foundation'])
 
-            url = f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={query}&dataType={",".join(data_types)}'
+            url = f'https://api.nal.usda.gov/fdc/v1/foods/search?api_key={FDC_API_KEY}&query={quote(query)}&dataType={quote(",".join(data_types))}'
             response = safe_request('GET', url)
 
             if response.status_code == 429:
@@ -2977,16 +2992,13 @@ class FdcSearchView(APIView):
                     {
                         'msg':
                             'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
-                                    Configure your key in Tandoor using environment FDC_API_KEY variable.'
+                                Configure your key in Tandoor using environment FDC_API_KEY variable.'
                     },
                     status=429,
                     json_dumps_params={'indent': 4})
             if response.status_code != 200:
                 return JsonResponse({
-                    'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/foods/search?api_key=*****&query={query}'},
-                    status=response.status_code,
-                    json_dumps_params={'indent': 4})
-
+                    'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/foods/search?api_key=*****&query={quote(query)}'})
             return Response(FdcQuerySerializer(context={'request': request}).to_representation(json.loads(response.content)), status=status.HTTP_200_OK)
 
 

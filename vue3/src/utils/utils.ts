@@ -3,6 +3,9 @@ import {Recipe, RecipeFromJSON, RecipeImageFromJSON, UserFileFromJSON} from "@/o
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 
+/** Standard debounce delay for search/filter inputs (milliseconds) */
+export const SEARCH_DEBOUNCE_MS = 300
+
 /**
  * Gets a nested property of an object given a dot-notation path.
  *

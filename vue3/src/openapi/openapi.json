@@ -10827,9 +10827,15 @@ components:
           format: date-time
         meal_type_id:
           type: integer
-        keyword_ids:
+        keywords:
           type: array
-          items: {}
+          items:
+            type: integer
+          default: []
+        keyword_mode:
+          allOf:
+          - $ref: '#/components/schemas/KeywordModeEnum'
+          default: and
         servings:
           type: number
           format: double
@@ -10843,7 +10849,6 @@ components:
       required:
       - addshopping
       - end_date
-      - keyword_ids
       - meal_type_id
       - servings
       - start_date
@@ -12191,6 +12196,14 @@ components:
           readOnly: true
       required:
       - label
+    KeywordModeEnum:
+      enum:
+      - or
+      - and
+      type: string
+      description: |-
+        * `or` - or
+        * `and` - and
     Localization:
       type: object
       properties:
@@ -12237,6 +12250,11 @@ components:
         created_by:
           type: integer
           readOnly: true
+        shared:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          nullable: true
         recipe_name:
           type: string
           readOnly: true
@@ -14114,6 +14132,11 @@ components:
         created_by:
           type: integer
           readOnly: true
+        shared:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          nullable: true
         recipe_name:
           type: string
           readOnly: true
@@ -15092,6 +15115,11 @@ components:
           type: boolean
         use_kj:
           type: boolean
+        plan_share:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          nullable: true
         nav_sticky:
           type: boolean
         ingredient_decimals:
@@ -15121,6 +15149,11 @@ components:
           type: boolean
         mealplan_autoexclude_onhand:
           type: boolean
+        shopping_share:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          nullable: true
         shopping_recent_days:
           type: integer
           maximum: 2147483647
@@ -16937,6 +16970,11 @@ components:
           type: boolean
         use_kj:
           type: boolean
+        plan_share:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          nullable: true
         nav_sticky:
           type: boolean
         ingredient_decimals:
@@ -16966,6 +17004,11 @@ components:
           type: boolean
         mealplan_autoexclude_onhand:
           type: boolean
+        shopping_share:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          nullable: true
         shopping_recent_days:
           type: integer
           maximum: 2147483647
