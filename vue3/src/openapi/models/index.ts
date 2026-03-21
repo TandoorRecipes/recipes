@@ -52,6 +52,7 @@ export * from './InventoryLog';
 export * from './InviteLink';
 export * from './Keyword';
 export * from './KeywordLabel';
+export * from './KeywordModeEnum';
 export * from './Localization';
 export * from './MealPlan';
 export * from './MealType';

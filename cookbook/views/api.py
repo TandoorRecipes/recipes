@@ -1513,7 +1513,6 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
         serializer = AutoMealPlanSerializer(data=request.data)
 
         if serializer.is_valid():
-            keyword_ids = serializer.validated_data['keyword_ids']
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             servings = serializer.validated_data['servings']
@@ -1525,14 +1524,23 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
 
             days = min((end_date - start_date).days + 1, 14)
 
-            recipes = Recipe.objects.values('id', 'name')
+            recipes = Recipe.objects.filter(space=request.space, internal=True)
+
+            keywords = serializer.validated_data.get('keywords', [])
+            keyword_mode = serializer.validated_data.get('keyword_mode', 'and')
+            if keywords:
+                search_key = 'keywords_and' if keyword_mode == 'and' else 'keywords_or'
+                search = RecipeSearch(request, **{search_key: keywords})
+                recipes = search.get_queryset(recipes)
+
+            recipes = recipes.values('id', 'name').distinct()
             meal_plans = list()
 
-            for keyword_id in keyword_ids:
-                recipes = recipes.filter(keywords__id=keyword_id)
-
             if len(recipes) == 0:
-                return Response(serializer.data)
+                return Response(
+                    {'error': True, 'msg': _('No recipes found.')},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             recipes = list(recipes.order_by('?')[:days])
 
             for i in range(0, days):
@@ -2472,7 +2480,7 @@ class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
         # TODO add tests for filter
         filter_type = self.request.query_params.getlist('type', [])
         if filter_type:
-            self.queryset.filter(type__in=filter_type)
+            self.queryset = self.queryset.filter(type__in=filter_type)
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
         return super().get_queryset()
