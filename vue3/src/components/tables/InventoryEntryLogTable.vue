@@ -25,10 +25,10 @@
 
         <template #item.amount="{item}">
             <template v-if="item.oldAmount != item.newAmount">
-                {{ item.oldAmount }} <i class="fa-solid fa-arrow-right"></i> {{ item.newAmount }}
+                {{ $n(item.oldAmount) }} <i class="fa-solid fa-arrow-right"></i> {{ $n(item.newAmount) }}
             </template>
             <template v-else>
-                {{ item.newAmount }}
+                {{ $n(item.newAmount) }}
             </template>
         </template>
 
@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {PropType, ref} from "vue";
+import {computed, PropType, ref, watch} from "vue";
 import {ApiApi, ApiInventoryLogListRequest, Ingredient, InventoryEntry, InventoryLog} from "@/openapi";
 import {DateTime} from "luxon";
 import {ingredientToString} from "@/utils/model_utils.ts";
@@ -58,7 +58,8 @@ import {useI18n} from "vue-i18n";
 const {t} = useI18n()
 
 const props = defineProps({
-    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: false}
+    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: false},
+    updateTrigger: {type: Boolean, required: false},
 })
 
 const tableLoading = ref(false)
@@ -68,13 +69,27 @@ const itemCount = ref(0)
 const page = ref(1)
 const pageSize = ref(10)
 
-const tableHeaders = ref([
-    {title: t('BookingType'), key: 'bookingType'},
-    {title: t('Date'), key: 'createdAt'},
-    {title: t('Amount'), key: 'amount'},
-    {title: t('InventoryLocation'), key: 'location'},
-])
 
+const tableHeaders = computed(() => {
+    let headers = [
+        {title: t('BookingType'), key: 'bookingType'},
+        {title: t('Date'), key: 'createdAt'},
+
+    ]
+
+    if (!props.inventoryEntry) {
+        headers.push({title: t('Food'), key: 'entry.food.name'})
+    }
+
+    headers.push({title: t('Amount'), key: 'amount'})
+    headers.push({title: t('InventoryLocation'), key: 'location'})
+
+    return headers
+})
+
+watch(() => props.updateTrigger, () => {
+    loadItems({page: 1, itemsPerPage: pageSize.value})
+})
 
 /**
  * load logs for selected inventory entry
@@ -87,8 +102,8 @@ function loadItems(options: VDataTableUpdateOptions) {
     page.value = options.page
     pageSize.value = options.itemsPerPage
 
-    let parameters = {page: page.value, pageSize: pageSize.value} as  ApiInventoryLogListRequest
-    if(props.inventoryEntry){
+    let parameters = {page: page.value, pageSize: pageSize.value} as ApiInventoryLogListRequest
+    if (props.inventoryEntry) {
         parameters.entryId = props.inventoryEntry.id!
     }
 

@@ -21,7 +21,7 @@ import InventoryEntryLogTable from "@/components/tables/InventoryEntryLogTable.v
 
 
 const props = defineProps({
-    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: false}
+    inventoryEntry: {type: {} as PropType<InventoryEntry>, required: false},
 })
 
 const dialog = defineModel<boolean>()

@@ -1452,6 +1452,7 @@ class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, Permis
     uuid = models.UUIDField(default=uuid.uuid4)
     email = models.EmailField(blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    household = models.ForeignKey(Household, null=True, blank=True, on_delete=models.SET_NULL)
     valid_until = models.DateField(default=default_valid_until)
     used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
     reusable = models.BooleanField(default=False)

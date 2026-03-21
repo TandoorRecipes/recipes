@@ -31,13 +31,7 @@
                 <v-menu activator="parent">
 
                     <v-list density="compact">
-                        <v-list-item class="mb-1">
-                            <template #prepend>
-                                <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                            </template>
-                            <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-                        </v-list-item>
+                        <menu-user-info></menu-user-info>
                         <v-divider></v-divider>
 
                         <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
@@ -72,14 +66,8 @@
 
         <!-- completely hide in print mode because setting d-print-node keeps layout -->
         <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
-            <v-list nav>
-                <v-list-item :to="{ name: 'SettingsPage', params: {} }">
-                    <template #prepend>
-                        <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                    </template>
-                    <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-                </v-list-item>
+            <v-list>
+                <menu-user-info></menu-user-info>
                 <v-divider></v-divider>
                 <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
 
@@ -145,6 +133,8 @@ import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
+import {THousehold, TSpace} from "@/types/Models.ts";
+import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
 
 const {lgAndUp} = useDisplay()
 const {t} = useI18n()

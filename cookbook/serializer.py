@@ -1802,6 +1802,7 @@ class InventoryLogSerializer(SpacedModelSerializer):
 
 class InviteLinkSerializer(WritableNestedModelSerializer):
     group = GroupSerializer()
+    household = HouseholdSerializer()
     email_sent = serializers.SerializerMethodField()
 
     @extend_schema_field(bool)
@@ -1850,7 +1851,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
     class Meta:
         model = InviteLink
         fields = (
-            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
+            'id', 'uuid', 'email', 'group', 'household', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
             'created_at', 'email_sent',)
         read_only_fields = ('id', 'uuid', 'used_by', 'created_by', 'created_at', 'email_sent',)
 

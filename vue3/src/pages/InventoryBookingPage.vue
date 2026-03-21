@@ -49,7 +49,14 @@
                                 </v-card-text>
                             </v-card>
 
-                            <model-select model="InventoryLocation" allow-create v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)"></model-select>
+                            <model-select model="InventoryLocation" v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)">
+                                <template #append>
+                                    <v-btn icon>
+                                        <v-icon icon="$create"></v-icon>
+                                        <model-edit-dialog model="InventoryLocation" @create="args => inventoryLocation = args"></model-edit-dialog>
+                                    </v-btn>
+                                </template>
+                            </model-select>
                             <v-text-field :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" v-model="subLocation" v-if="['add','move'].includes(bookingMode)"></v-text-field>
 
                             <closable-help-alert :text="$t('CodeHelp')" class="mb-2"></closable-help-alert>
@@ -136,7 +143,7 @@
 
         <v-row>
             <v-col>
-                <inventory-entry-log-table></inventory-entry-log-table>
+                <inventory-entry-log-table :update-trigger="logUpdateTrigger"></inventory-entry-log-table>
             </v-col>
         </v-row>
     </v-container>
@@ -203,6 +210,7 @@ import {useRouteQuery} from "@vueuse/router";
 import {toNumberArray} from "@/utils/utils.ts";
 import InventoryEntryLogTable from "@/components/tables/InventoryEntryLogTable.vue";
 import {TInventoryLocation} from "@/types/Models.ts";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const {t} = useI18n()
 
@@ -235,6 +243,8 @@ const entryLogEntry = ref<InventoryEntry | null>(null)
 const bookingConfirmDialog = ref(false)
 const bookingConfirmEntry = ref<InventoryEntry | null>(null)
 const inventoryEntryId = useRouteQuery('inventoryEntryId')
+
+const logUpdateTrigger = ref(false)
 
 const tableHeaders = ref([
     // {title: t('Code'), key: 'code'},
@@ -302,6 +312,7 @@ function addInventory() {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     }).finally(() => {
         formLoading.value = false
+        logUpdateTrigger.value = !logUpdateTrigger.value
     })
 }
 
@@ -330,6 +341,7 @@ function removeInventory() {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }).finally(() => {
             formLoading.value = false
+            logUpdateTrigger.value = !logUpdateTrigger.value
         })
     }
 }
@@ -361,6 +373,7 @@ function moveInventory() {
             })
         } else {
             formLoading.value = false
+            logUpdateTrigger.value = !logUpdateTrigger.value
         }
 
     }

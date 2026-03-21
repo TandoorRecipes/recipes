@@ -394,7 +394,7 @@ def invite_link(request, token):
                         link.save()
 
                     UserSpace.objects.filter(user=request.user).update(active=False)
-                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=True)
+                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household, active=True)
 
                     user_space.groups.add(link.group)
 

@@ -15,6 +15,11 @@
 
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
 
+                <v-checkbox v-model="joinAfterSave" v-if="!isUpdate() || editingObj.id != useUserPreferenceStore().activeUserSpace?.household?.id" :label="$t('Join')"></v-checkbox>
+
+                <p>
+                    {{ $t('AssignHouseholdHelp') }}
+                </p>
                 <database-model-col model="UserSpace"></database-model-col>
             </v-form>
         </v-card-text>
@@ -24,11 +29,14 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, watch} from "vue";
-import {ConnectorConfig, Household} from "@/openapi";
+import {onMounted, PropType, ref, watch} from "vue";
+import {ApiApi, Household} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import DatabaseModelCol from "@/components/display/DatabaseModelCol.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {tr} from "vuetify/locale";
 
 const props = defineProps({
     item: {type: {} as PropType<Household>, required: false, default: null},
@@ -60,6 +68,8 @@ watch([() => props.item, () => props.itemId], () => {
 
 // object specific data (for selects/display)
 
+let joinAfterSave = ref(false)
+
 onMounted(() => {
     initializeEditor()
 })
@@ -67,8 +77,26 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
-    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
+function initializeEditor() {
+    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults, onAfterSave: onAfterSave},)
+}
+
+function onAfterSave() {
+    let userSpace = useUserPreferenceStore().activeUserSpace
+    console.log("onAfterSave", userSpace, joinAfterSave.value)
+    if (joinAfterSave.value && userSpace) {
+        let api = new ApiApi()
+
+        loading.value = true
+        userSpace.household = editingObj.value
+        api.apiUserSpaceUpdate({id: userSpace.id!, userSpace: userSpace}).then(r => {
+             useUserPreferenceStore().activeUserSpace = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        }).finally(() => {
+            loading.value = false
+        })
+    }
 }
 
 </script>

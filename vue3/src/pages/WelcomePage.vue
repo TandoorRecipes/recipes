@@ -69,7 +69,7 @@
                         <v-card-text class="text-center">
                             <v-card variant="outlined">
                                 <v-card-title class="text-h4 pb-0 mb-0 text-center">{{ $t('Space') }}</v-card-title>
-                                <v-card-subtitle class="text-subtitle-1 text-center mb-4">{{ $t('SpaceHelp') }}</v-card-subtitle>
+                                <v-card-subtitle class="text-subtitle-1 text-center mb-4 text-wrap">{{ $t('SpaceHelp') }}</v-card-subtitle>
                                 <v-card-text>
                                     <v-row>
                                         <v-col class="text-center" v-for="model in [TRecipe, TFood, TUnit, TSupermarket, TKeyword]">
@@ -84,10 +84,10 @@
 
                                     <div class="border-md border-opacity-75 border-dotted rounded mt-5 w-md-75 ml-auto mr-auto">
                                         <v-card-subtitle class="text-subtitle-1 text-center mb-4 mt-2 text-wrap">
-                                            {{ $t('SpacePrivateObjectsHelp') }}
+                                            {{ $t('SpaceHouseholdHelp') }}
                                         </v-card-subtitle>
                                         <v-row>
-                                            <v-col class="text-center" v-for="model in [TMealPlan, TShoppingListEntry, TRecipeBook]">
+                                            <v-col class="text-center" v-for="model in [TMealPlan, TShoppingListEntry, TInventoryEntry]">
                                                 <v-icon :icon="model.icon" size="x-large"></v-icon>
                                                 <p class="text-h6">{{ $t(model.localizationKey) }}</p>
                                             </v-col>
@@ -174,7 +174,7 @@ import {onMounted, ref} from "vue";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import OpenDataImportSettings from "@/components/settings/OpenDataImportSettings.vue";
-import {TFood, TKeyword, TMealPlan, TRecipe, TRecipeBook, TShoppingListEntry, TSupermarket, TUnit} from "@/types/Models.ts";
+import {TFood, TInventoryEntry, TInventoryLocation, TKeyword, TMealPlan, TRecipe, TRecipeBook, TShoppingListEntry, TSupermarket, TUnit} from "@/types/Models.ts";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {RouteLocationRaw, useRouter} from "vue-router";
 
