@@ -2584,12 +2584,19 @@ class RecipeUrlImportView(APIView):
                         return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
                 else:
                     try:
-                        html = safe_request(
+                        resp = safe_request(
                             'GET',
                             url,
                             headers={
-                                "User-Agent": request.META['HTTP_USER_AGENT']}
-                        ).content
+                                "User-Agent": request.META.get('HTTP_USER_AGENT', 'Mozilla/5.0'),
+                                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                            }
+                        )
+                        if not resp.ok:
+                            response['error'] = True
+                            response['msg'] = _('The requested page could not be loaded. The server returned %(status_code)s.') % {'status_code': resp.status_code}
+                            return Response(RecipeFromSourceResponseSerializer().to_representation(response), status=status.HTTP_400_BAD_REQUEST)
+                        html = resp.content
                         scrape = scrape_html(org_url=url, html=html, supported_only=False)
                     except NoSchemaFoundInWildMode:
                         pass
