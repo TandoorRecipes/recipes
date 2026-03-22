@@ -91,6 +91,12 @@ export interface Keyword {
     readonly numchild: number;
     /**
      * 
+     * @type {number}
+     * @memberof Keyword
+     */
+    readonly numrecipe: number;
+    /**
+     * 
      * @type {Date}
      * @memberof Keyword
      */
@@ -118,6 +124,7 @@ export function instanceOfKeyword(value: object): value is Keyword {
     if (!('label' in value) || value['label'] === undefined) return false;
     if (!('parent' in value) || value['parent'] === undefined) return false;
     if (!('numchild' in value) || value['numchild'] === undefined) return false;
+    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     if (!('fullName' in value) || value['fullName'] === undefined) return false;
@@ -140,13 +147,14 @@ export function KeywordFromJSONTyped(json: any, ignoreDiscriminator: boolean): K
         'description': json['description'] == null ? undefined : json['description'],
         'parent': json['parent'],
         'numchild': json['numchild'],
+        'numrecipe': json['numrecipe'],
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
         'fullName': json['full_name'],
     };
 }
 
-export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'> | null): any {
+export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'> | null): any {
     if (value == null) {
         return value;
     }

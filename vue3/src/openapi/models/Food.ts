@@ -188,6 +188,12 @@ export interface Food {
     readonly numchild: number;
     /**
      * 
+     * @type {number}
+     * @memberof Food
+     */
+    readonly numrecipe: number;
+    /**
+     * 
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
@@ -247,6 +253,18 @@ export interface Food {
      * @memberof Food
      */
     shoppingLists?: Array<ShoppingList>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
+    readonly inInventory: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    readonly substituteInventory: boolean;
 }
 
 /**
@@ -257,8 +275,11 @@ export function instanceOfFood(value: object): value is Food {
     if (!('shopping' in value) || value['shopping'] === undefined) return false;
     if (!('parent' in value) || value['parent'] === undefined) return false;
     if (!('numchild' in value) || value['numchild'] === undefined) return false;
+    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     if (!('fullName' in value) || value['fullName'] === undefined) return false;
     if (!('substituteOnhand' in value) || value['substituteOnhand'] === undefined) return false;
+    if (!('inInventory' in value) || value['inInventory'] === undefined) return false;
+    if (!('substituteInventory' in value) || value['substituteInventory'] === undefined) return false;
     return true;
 }
 
@@ -287,6 +308,7 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'supermarketCategory': json['supermarket_category'] == null ? undefined : SupermarketCategoryFromJSON(json['supermarket_category']),
         'parent': json['parent'],
         'numchild': json['numchild'],
+        'numrecipe': json['numrecipe'],
         'inheritFields': json['inherit_fields'] == null ? undefined : ((json['inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'fullName': json['full_name'],
         'ignoreShopping': json['ignore_shopping'] == null ? undefined : json['ignore_shopping'],
@@ -297,10 +319,12 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
+        'inInventory': json['in_inventory'],
+        'substituteInventory': json['substitute_inventory'],
     };
 }
 
-export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'> | null): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'> | null): any {
     if (value == null) {
         return value;
     }
