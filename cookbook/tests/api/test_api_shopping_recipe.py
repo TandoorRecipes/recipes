@@ -49,9 +49,9 @@ def recipe(request, space_1, u1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['g1_s1', 403],
-    ['u1_s1', 204],
+    ['u1_s1', 200],
     ['u1_s2', 404],
-    ['a1_s1', 204],
+    ['a1_s1', 200],
 ])
 @pytest.mark.parametrize("recipe, sle_count", [
     ({}, 10),
@@ -74,7 +74,7 @@ def test_shopping_recipe_method(request, arg, recipe, sle_count, u1_s1, u2_s1, s
     r = c.put(url)
     assert r.status_code == arg[1]
     # only PUT method should work
-    if r.status_code == 204:  # skip anonymous user
+    if r.status_code == 200:  # skip anonymous user
 
         r = json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)
         # recipe factory creates 10 ingredients by default
