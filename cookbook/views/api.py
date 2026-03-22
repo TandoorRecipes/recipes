@@ -2096,7 +2096,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             http_status = status.HTTP_500_INTERNAL_SERVER_ERROR
         else:
             content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-            http_status = status.HTTP_204_NO_CONTENT
+            http_status = status.HTTP_200_OK
 
         return Response(content, status=http_status)
 
