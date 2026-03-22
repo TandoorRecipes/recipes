@@ -98,12 +98,17 @@ class CustomDecimalField(serializers.Field):
     and allow commas as decimal separators
     """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def to_representation(self, value):
         if not isinstance(value, Decimal):
             value = Decimal(value)
         return round(value, 4).normalize()
 
     def to_internal_value(self, data):
+        if data is None:
+            return None
         if isinstance(data, int) or isinstance(data, float):
             return data
         elif isinstance(data, str):
@@ -984,8 +989,14 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
 class IngredientSimpleSerializer(WritableNestedModelSerializer):
     food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True)
-    amount = CustomDecimalField()
+    amount = CustomDecimalField(allow_null=True)
     checked = serializers.BooleanField(read_only=True, default=False, help_text='Just laziness to have a checked field on the frontend API client')
+
+    def validate(self, attrs):
+        if attrs.get('amount') is None:
+            attrs['no_amount'] = True
+            attrs['amount'] = Decimal('0')
+        return attrs
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
