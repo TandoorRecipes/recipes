@@ -167,6 +167,7 @@ export type EditorSupportedModels =
     | 'InventoryEntry'
     | 'InventoryLog'
     | 'Household'
+    | 'Group'
 
 // used to type methods/parameters in conjunction with configuration type
 export type EditorSupportedTypes =
@@ -210,6 +211,7 @@ export type EditorSupportedTypes =
     | InventoryEntry
     | InventoryLog
     | Household
+    | Group
 
 export const TFood = {
     name: 'Food',
@@ -455,6 +457,28 @@ export const TUser = {
     ]
 } as Model
 registerModel(TUser)
+
+export const TGroup = {
+    name: 'Group',
+    localizationKey: 'Group',
+    localizationKeyDescription: 'Group',
+    icon: 'fa-solid fa-user-group',
+
+    disableCreate: true,
+    disableDelete: true,
+    disableUpdate: true,
+    disableListView: true,
+
+    isPaginated: false,
+    toStringKeys: ['name'],
+    itemLabel: 'name',
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TGroup)
 
 export const TSupermarket = {
     name: 'Supermarket',

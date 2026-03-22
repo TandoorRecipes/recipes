@@ -120,7 +120,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer, ExportRequestSerializer,
                                  RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
                                  AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, GenericModelReferenceSerializer, ShoppingListSerializer,
-                                 IngredientParserRequestSerializer, IngredientParserResponseSerializer, HouseholdSerializer
+                                 IngredientParserRequestSerializer, IngredientParserResponseSerializer, HouseholdSerializer, UserSpaceBatchUpdateSerializer
                                  )
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
@@ -760,6 +760,27 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         with scopes_disabled():
             self.queryset = self.queryset.filter(user=self.request.user)
             return Response(self.serializer_class(self.queryset.all(), many=True, context={'request': self.request}).data)
+
+    @decorators.action(detail=False, methods=['PUT'], serializer_class=UserSpaceBatchUpdateSerializer)
+    def batch_update(self, request):
+        if self.request.space.created_by != self.request.user:
+            return Response({"msg":"No Permission"}, 403)
+
+        serializer = self.serializer_class(data=request.data, partial=True)
+
+        if serializer.is_valid():
+            user_spaces = UserSpace.objects.filter(id__in=serializer.validated_data['user_spaces'], space=self.request.space)
+            safe_user_space_ids = UserSpace.objects.filter(id__in=serializer.validated_data['user_spaces'], space=self.request.space).values_list('id', flat=True)
+
+            if 'household' in serializer.validated_data:
+                user_spaces.update(household_id=serializer.validated_data['household'])
+
+            if 'group_set' in serializer.validated_data and len(serializer.validated_data['group_set']) > 0:
+                set_relation(UserSpace.groups.through, 'userspace_id', safe_user_space_ids, 'group_id', serializer.validated_data['group_set'])
+
+            return Response({}, 200)
+
+        return Response(serializer.errors, 400)
 
 
 class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -2240,18 +2261,18 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
             | Q(created_by__in=get_household_user_ids(self.request.user_space))).prefetch_related('created_by',
-                                                                                               'food',
-                                                                                               'food__shopping_lists',
-                                                                                               'shopping_lists',
-                                                                                               'unit',
-                                                                                               'list_recipe',
-                                                                                               'list_recipe__recipe__keywords',
-                                                                                               'list_recipe__recipe__created_by',
-                                                                                               'list_recipe__mealplan',
-                                                                                               'list_recipe__mealplan__shoppinglistrecipe_set',
-                                                                                               'list_recipe__mealplan__recipe',
-                                                                                               'list_recipe__mealplan__recipe__keywords',
-                                                                                               ).distinct().all()
+                                                                                                  'food',
+                                                                                                  'food__shopping_lists',
+                                                                                                  'shopping_lists',
+                                                                                                  'unit',
+                                                                                                  'list_recipe',
+                                                                                                  'list_recipe__recipe__keywords',
+                                                                                                  'list_recipe__recipe__created_by',
+                                                                                                  'list_recipe__mealplan',
+                                                                                                  'list_recipe__mealplan__shoppinglistrecipe_set',
+                                                                                                  'list_recipe__mealplan__recipe',
+                                                                                                  'list_recipe__mealplan__recipe__keywords',
+                                                                                                  ).distinct().all()
 
         updated_after = self.request.query_params.get('updated_after', None)
         mealplan = self.request.query_params.get('mealplan', None)

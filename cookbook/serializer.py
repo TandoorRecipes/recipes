@@ -1303,6 +1303,14 @@ class FoodBatchUpdateSerializer(serializers.Serializer):
     parent_set = serializers.IntegerField(required=False, allow_null=True)
 
 
+class UserSpaceBatchUpdateSerializer(serializers.Serializer):
+    user_spaces = serializers.ListField(child=serializers.IntegerField())
+
+    household = serializers.IntegerField(required=False, allow_null=True)
+    group_set = serializers.ListField(child=serializers.IntegerField())
+
+
+
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
 
@@ -1802,7 +1810,7 @@ class InventoryLogSerializer(SpacedModelSerializer):
 
 class InviteLinkSerializer(WritableNestedModelSerializer):
     group = GroupSerializer()
-    household = HouseholdSerializer()
+    household = HouseholdSerializer(required=False, allow_null=True)
     email_sent = serializers.SerializerMethodField()
 
     @extend_schema_field(bool)

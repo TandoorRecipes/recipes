@@ -71,7 +71,7 @@
                             <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
                             <v-menu activator="parent" close-on-content-click>
                                 <v-list density="compact" class="pt-1 pb-1" activatable>
-                                    <v-list-item prepend-icon="fa-solid fa-list-check" @click="batchEditDialog = true" v-if="genericModel.model.name == 'Food'">
+                                    <v-list-item prepend-icon="fa-solid fa-list-check" @click="batchEditDialog = true" v-if="genericModel.model.name == 'Food' || genericModel.model.name == 'UserSpace'">
                                         {{ $t('BatchEdit') }}
                                     </v-list-item>
                                     <v-list-item prepend-icon="fa-solid fa-arrows-to-dot" @click="batchMergeDialog = true" v-if="genericModel.model.isMerge">
@@ -153,6 +153,9 @@
         <batch-edit-food-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'Food'" activator="model"
                                 @change="loadItems({page: page, itemsPerPage: pageSize, search: debouncedQuery})"></batch-edit-food-dialog>
 
+        <batch-edit-user-space-dialog :items="selectedItems" v-model="batchEditDialog" v-if="model == 'UserSpace'" activator="model"
+                                @change="loadItems({page: page, itemsPerPage: pageSize, search: debouncedQuery})"></batch-edit-user-space-dialog>
+
     </v-container>
 </template>
 
@@ -177,6 +180,7 @@ import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
 import {useRouteQuery} from "@vueuse/router";
 import BatchEditFoodDialog from "@/components/dialogs/BatchEditFoodDialog.vue";
 import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
+import BatchEditUserSpaceDialog from "@/components/dialogs/BatchEditUserSpaceDialog.vue";
 
 const {t} = useI18n()
 const router = useRouter()

@@ -14,6 +14,8 @@
             <v-form>
                 <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object multiple v-model="editingObj.groups"></v-select>
                 <model-select model="Household" v-model="editingObj.household" allow-create></model-select>
+
+                <v-spacer class="mt-10"></v-spacer>
             </v-form>
         </v-card-text>
     </model-editor-base>
