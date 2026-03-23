@@ -24,6 +24,7 @@ import type {
   ConnectorConfig,
   CookLog,
   CustomFilter,
+  EnterpriseBillingPlan,
   EnterpriseSocialEmbed,
   EnterpriseSpace,
   ExportLog,
@@ -64,6 +65,7 @@ import type {
   PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
+  PaginatedEnterpriseBillingPlanList,
   PaginatedEnterpriseSocialEmbedList,
   PaginatedEnterpriseSocialRecipeSearchList,
   PaginatedEnterpriseSpaceList,
@@ -116,6 +118,7 @@ import type {
   PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
+  PatchedEnterpriseBillingPlan,
   PatchedEnterpriseSocialEmbed,
   PatchedEnterpriseSpace,
   PatchedExportLog,
@@ -195,6 +198,7 @@ import type {
   UserFile,
   UserPreference,
   UserSpace,
+  UserSpaceBatchUpdate,
   ViewLog,
 } from '../models/index';
 import {
@@ -216,6 +220,8 @@ import {
     CookLogToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanToJSON,
     EnterpriseSocialEmbedFromJSON,
     EnterpriseSocialEmbedToJSON,
     EnterpriseSpaceFromJSON,
@@ -296,6 +302,8 @@ import {
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
     PaginatedCustomFilterListToJSON,
+    PaginatedEnterpriseBillingPlanListFromJSON,
+    PaginatedEnterpriseBillingPlanListToJSON,
     PaginatedEnterpriseSocialEmbedListFromJSON,
     PaginatedEnterpriseSocialEmbedListToJSON,
     PaginatedEnterpriseSocialRecipeSearchListFromJSON,
@@ -400,6 +408,8 @@ import {
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
     PatchedCustomFilterToJSON,
+    PatchedEnterpriseBillingPlanFromJSON,
+    PatchedEnterpriseBillingPlanToJSON,
     PatchedEnterpriseSocialEmbedFromJSON,
     PatchedEnterpriseSocialEmbedToJSON,
     PatchedEnterpriseSpaceFromJSON,
@@ -558,6 +568,8 @@ import {
     UserPreferenceToJSON,
     UserSpaceFromJSON,
     UserSpaceToJSON,
+    UserSpaceBatchUpdateFromJSON,
+    UserSpaceBatchUpdateToJSON,
     ViewLogFromJSON,
     ViewLogToJSON,
 } from '../models/index';
@@ -822,6 +834,33 @@ export interface ApiCustomFilterUpdateRequest {
 
 export interface ApiDownloadFileRetrieveRequest {
     fileId: number;
+}
+
+export interface ApiEnterpriseBillingPlanCreateRequest {
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingPlanPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingPlan?: PatchedEnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanUpdateRequest {
+    id: number;
+    enterpriseBillingPlan: EnterpriseBillingPlan;
 }
 
 export interface ApiEnterpriseSocialEmbedCreateRequest {
@@ -2738,6 +2777,10 @@ export interface ApiUserPreferenceRetrieveRequest {
 
 export interface ApiUserRetrieveRequest {
     id: number;
+}
+
+export interface ApiUserSpaceBatchUpdateUpdateRequest {
+    userSpaceBatchUpdate: UserSpaceBatchUpdate;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -5058,6 +5101,232 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiDownloadFileRetrieve(requestParameters: ApiDownloadFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiDownloadFileRetrieveRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanCreateRaw(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanCreate(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroyRaw(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroy(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingPlanDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanListRaw(requestParameters: ApiEnterpriseBillingPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingPlanList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingPlanListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanList(requestParameters: ApiEnterpriseBillingPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingPlanList> {
+        const response = await this.apiEnterpriseBillingPlanListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingPlanToJSON(requestParameters['patchedEnterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdate(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieveRaw(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieve(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdateRaw(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdate(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -20881,6 +21150,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
         const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdateRaw(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpaceBatchUpdate>> {
+        if (requestParameters['userSpaceBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'userSpaceBatchUpdate',
+                'Required parameter "userSpaceBatchUpdate" was null or undefined when calling apiUserSpaceBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-space/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserSpaceBatchUpdateToJSON(requestParameters['userSpaceBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserSpaceBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdate(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpaceBatchUpdate> {
+        const response = await this.apiUserSpaceBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

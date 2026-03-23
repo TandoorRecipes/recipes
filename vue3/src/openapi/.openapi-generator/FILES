@@ -20,6 +20,7 @@ models/CookLog.ts
 models/CustomFilter.ts
 models/DefaultPageEnum.ts
 models/DeleteEnum.ts
+models/EnterpriseBillingPlan.ts
 models/EnterpriseKeyword.ts
 models/EnterpriseSocialEmbed.ts
 models/EnterpriseSocialEmbedTypeEnum.ts
@@ -77,6 +78,7 @@ models/PaginatedBookmarkletImportListList.ts
 models/PaginatedConnectorConfigList.ts
 models/PaginatedCookLogList.ts
 models/PaginatedCustomFilterList.ts
+models/PaginatedEnterpriseBillingPlanList.ts
 models/PaginatedEnterpriseSocialEmbedList.ts
 models/PaginatedEnterpriseSocialRecipeSearchList.ts
 models/PaginatedEnterpriseSpaceList.ts
@@ -129,6 +131,7 @@ models/PatchedBookmarkletImport.ts
 models/PatchedConnectorConfig.ts
 models/PatchedCookLog.ts
 models/PatchedCustomFilter.ts
+models/PatchedEnterpriseBillingPlan.ts
 models/PatchedEnterpriseSocialEmbed.ts
 models/PatchedEnterpriseSpace.ts
 models/PatchedExportLog.ts
@@ -225,5 +228,6 @@ models/UserFileView.ts
 models/UserPreference.ts
 models/UserPreferenceNavTextColorEnum.ts
 models/UserSpace.ts
+models/UserSpaceBatchUpdate.ts
 models/ViewLog.ts
 models/index.ts

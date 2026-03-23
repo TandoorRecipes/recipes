@@ -61,7 +61,7 @@ export interface InviteLink {
      * @type {Household}
      * @memberof InviteLink
      */
-    household: Household;
+    household?: Household;
     /**
      * 
      * @type {Date}
@@ -112,7 +112,6 @@ export interface InviteLink {
 export function instanceOfInviteLink(value: object): value is InviteLink {
     if (!('uuid' in value) || value['uuid'] === undefined) return false;
     if (!('group' in value) || value['group'] === undefined) return false;
-    if (!('household' in value) || value['household'] === undefined) return false;
     if (!('usedBy' in value) || value['usedBy'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
@@ -134,7 +133,7 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'uuid': json['uuid'],
         'email': json['email'] == null ? undefined : json['email'],
         'group': GroupFromJSON(json['group']),
-        'household': HouseholdFromJSON(json['household']),
+        'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
         'validUntil': json['valid_until'] == null ? undefined : (new Date(json['valid_until'])),
         'usedBy': json['used_by'],
         'reusable': json['reusable'] == null ? undefined : json['reusable'],
