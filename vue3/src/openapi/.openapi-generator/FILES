@@ -214,6 +214,9 @@ models/SpaceNavTextColorEnum.ts
 models/SpaceThemeEnum.ts
 models/Step.ts
 models/Storage.ts
+models/StripeCheckoutSessionRequest.ts
+models/StripeCheckoutSessionResponse.ts
+models/StripePortal.ts
 models/Supermarket.ts
 models/SupermarketCategory.ts
 models/SupermarketCategoryRelation.ts

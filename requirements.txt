@@ -53,6 +53,7 @@ django-vite==3.1.0
 litellm==1.82.1
 thefuzz==0.22.1
 stripe==14.0.0
+frappe-client==0.1.0.dev0
 
 # Development
 pytest==8.4.2

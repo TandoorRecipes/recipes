@@ -187,6 +187,9 @@ import type {
   Space,
   Step,
   Storage,
+  StripeCheckoutSessionRequest,
+  StripeCheckoutSessionResponse,
+  StripePortal,
   Supermarket,
   SupermarketCategory,
   SupermarketCategoryRelation,
@@ -546,6 +549,12 @@ import {
     StepToJSON,
     StorageFromJSON,
     StorageToJSON,
+    StripeCheckoutSessionRequestFromJSON,
+    StripeCheckoutSessionRequestToJSON,
+    StripeCheckoutSessionResponseFromJSON,
+    StripeCheckoutSessionResponseToJSON,
+    StripePortalFromJSON,
+    StripePortalToJSON,
     SupermarketFromJSON,
     SupermarketToJSON,
     SupermarketCategoryFromJSON,
@@ -861,6 +870,10 @@ export interface ApiEnterpriseBillingPlanRetrieveRequest {
 export interface ApiEnterpriseBillingPlanUpdateRequest {
     id: number;
     enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingStripeCheckoutSessionCreateRequest {
+    stripeCheckoutSessionRequest?: StripeCheckoutSessionRequest;
 }
 
 export interface ApiEnterpriseSocialEmbedCreateRequest {
@@ -5326,6 +5339,65 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseBillingPlanUpdate(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
         const response = await this.apiEnterpriseBillingPlanUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripeCheckoutSessionResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-stripe/checkout_session/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: StripeCheckoutSessionRequestToJSON(requestParameters['stripeCheckoutSessionRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripeCheckoutSessionResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreate(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripeCheckoutSessionResponse> {
+        const response = await this.apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripePortal>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-stripe/portal/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripePortalFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripePortal> {
+        const response = await this.apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides);
         return await response.value();
     }
 
