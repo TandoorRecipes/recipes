@@ -24,6 +24,9 @@ import type {
   ConnectorConfig,
   CookLog,
   CustomFilter,
+  EnterpriseBillingPlan,
+  EnterpriseSocialEmbed,
+  EnterpriseSpace,
   ExportLog,
   ExportRequest,
   FdcQuery,
@@ -55,6 +58,10 @@ import type {
   PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
+  PaginatedEnterpriseBillingPlanList,
+  PaginatedEnterpriseSocialEmbedList,
+  PaginatedEnterpriseSocialRecipeSearchList,
+  PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedGenericModelReferenceList,
@@ -97,6 +104,9 @@ import type {
   PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
+  PatchedEnterpriseBillingPlan,
+  PatchedEnterpriseSocialEmbed,
+  PatchedEnterpriseSpace,
   PatchedExportLog,
   PatchedFood,
   PatchedHousehold,
@@ -156,6 +166,9 @@ import type {
   Space,
   Step,
   Storage,
+  StripeCheckoutSessionRequest,
+  StripeCheckoutSessionResponse,
+  StripePortal,
   Supermarket,
   SupermarketCategory,
   SupermarketCategoryRelation,
@@ -167,6 +180,7 @@ import type {
   UserFile,
   UserPreference,
   UserSpace,
+  UserSpaceBatchUpdate,
   ViewLog,
 } from '../models/index';
 import {
@@ -188,6 +202,12 @@ import {
     CookLogToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanToJSON,
+    EnterpriseSocialEmbedFromJSON,
+    EnterpriseSocialEmbedToJSON,
+    EnterpriseSpaceFromJSON,
+    EnterpriseSpaceToJSON,
     ExportLogFromJSON,
     ExportLogToJSON,
     ExportRequestFromJSON,
@@ -250,6 +270,14 @@ import {
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
     PaginatedCustomFilterListToJSON,
+    PaginatedEnterpriseBillingPlanListFromJSON,
+    PaginatedEnterpriseBillingPlanListToJSON,
+    PaginatedEnterpriseSocialEmbedListFromJSON,
+    PaginatedEnterpriseSocialEmbedListToJSON,
+    PaginatedEnterpriseSocialRecipeSearchListFromJSON,
+    PaginatedEnterpriseSocialRecipeSearchListToJSON,
+    PaginatedEnterpriseSpaceListFromJSON,
+    PaginatedEnterpriseSpaceListToJSON,
     PaginatedExportLogListFromJSON,
     PaginatedExportLogListToJSON,
     PaginatedFoodListFromJSON,
@@ -334,6 +362,12 @@ import {
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
     PatchedCustomFilterToJSON,
+    PatchedEnterpriseBillingPlanFromJSON,
+    PatchedEnterpriseBillingPlanToJSON,
+    PatchedEnterpriseSocialEmbedFromJSON,
+    PatchedEnterpriseSocialEmbedToJSON,
+    PatchedEnterpriseSpaceFromJSON,
+    PatchedEnterpriseSpaceToJSON,
     PatchedExportLogFromJSON,
     PatchedExportLogToJSON,
     PatchedFoodFromJSON,
@@ -452,6 +486,12 @@ import {
     StepToJSON,
     StorageFromJSON,
     StorageToJSON,
+    StripeCheckoutSessionRequestFromJSON,
+    StripeCheckoutSessionRequestToJSON,
+    StripeCheckoutSessionResponseFromJSON,
+    StripeCheckoutSessionResponseToJSON,
+    StripePortalFromJSON,
+    StripePortalToJSON,
     SupermarketFromJSON,
     SupermarketToJSON,
     SupermarketCategoryFromJSON,
@@ -474,6 +514,8 @@ import {
     UserPreferenceToJSON,
     UserSpaceFromJSON,
     UserSpaceToJSON,
+    UserSpaceBatchUpdateFromJSON,
+    UserSpaceBatchUpdateToJSON,
     ViewLogFromJSON,
     ViewLogToJSON,
 } from '../models/index';
@@ -738,6 +780,283 @@ export interface ApiCustomFilterUpdateRequest {
 
 export interface ApiDownloadFileRetrieveRequest {
     fileId: number;
+}
+
+export interface ApiEnterpriseBillingPlanCreateRequest {
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingPlanPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingPlan?: PatchedEnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanUpdateRequest {
+    id: number;
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingStripeCheckoutSessionCreateRequest {
+    stripeCheckoutSessionRequest?: StripeCheckoutSessionRequest;
+}
+
+export interface ApiEnterpriseSocialEmbedCreateRequest {
+    enterpriseSocialEmbed: EnterpriseSocialEmbed;
+}
+
+export interface ApiEnterpriseSocialEmbedDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialEmbedListRequest {
+    page?: number;
+    pageSize?: number;
+    token?: string;
+}
+
+export interface ApiEnterpriseSocialEmbedPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseSocialEmbed?: PatchedEnterpriseSocialEmbed;
+}
+
+export interface ApiEnterpriseSocialEmbedRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialEmbedUpdateRequest {
+    id: number;
+    enterpriseSocialEmbed: EnterpriseSocialEmbed;
+}
+
+export interface ApiEnterpriseSocialKeywordCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSocialKeywordCreateRequest {
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialKeywordListRequest {
+    limit?: string;
+    page?: number;
+    pageSize?: number;
+    query?: string;
+    random?: string;
+    root?: number;
+    rootTree?: number;
+    tree?: number;
+    updatedAt?: string;
+}
+
+export interface ApiEnterpriseSocialKeywordMergeUpdateRequest {
+    id: number;
+    target: number;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordMoveUpdateRequest {
+    id: number;
+    parent: number;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSocialKeywordPartialUpdateRequest {
+    id: number;
+    patchedKeyword?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialKeywordProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSocialKeywordRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialKeywordUpdateRequest {
+    id: number;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'createdAt'|'updatedAt'|'fullName'>;
+}
+
+export interface ApiEnterpriseSocialRecipeAipropertiesCreateRequest {
+    id: number;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    provider?: number;
+}
+
+export interface ApiEnterpriseSocialRecipeBatchUpdateUpdateRequest {
+    recipeBatchUpdate: RecipeBatchUpdate;
+}
+
+export interface ApiEnterpriseSocialRecipeCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSocialRecipeCreateRequest {
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSocialRecipeDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialRecipeImageUpdateRequest {
+    id: number;
+    image?: string;
+    imageUrl?: string;
+}
+
+export interface ApiEnterpriseSocialRecipeListRequest {
+    books?: Array<number>;
+    booksAnd?: Array<number>;
+    booksAndNot?: Array<number>;
+    booksOr?: Array<number>;
+    booksOrNot?: Array<number>;
+    cookedonGte?: Date;
+    cookedonLte?: Date;
+    createdby?: number;
+    createdon?: Date;
+    createdonGte?: Date;
+    createdonLte?: Date;
+    filter?: number;
+    foods?: Array<number>;
+    foodsAnd?: Array<number>;
+    foodsAndNot?: Array<number>;
+    foodsOr?: Array<number>;
+    foodsOrNot?: Array<number>;
+    includeChildren?: boolean;
+    internal?: boolean;
+    keyword?: number;
+    keywords?: Array<number>;
+    keywordsAnd?: Array<number>;
+    keywordsAndNot?: Array<number>;
+    keywordsOr?: Array<number>;
+    keywordsOrNot?: Array<number>;
+    makenow?: boolean;
+    _new?: boolean;
+    numRecent?: number;
+    page?: number;
+    pageSize?: number;
+    query?: string;
+    random?: boolean;
+    rating?: number;
+    ratingGte?: number;
+    ratingLte?: number;
+    sortOrder?: string;
+    timescooked?: number;
+    timescookedGte?: number;
+    timescookedLte?: number;
+    token?: string;
+    units?: number;
+    updatedon?: Date;
+    updatedonGte?: Date;
+    updatedonLte?: Date;
+    viewedonGte?: Date;
+    viewedonLte?: Date;
+}
+
+export interface ApiEnterpriseSocialRecipeNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSocialRecipePartialUpdateRequest {
+    id: number;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSocialRecipeProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSocialRecipeRelatedListRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseSocialRecipeRetrieveRequest {
+    id: number;
+    share?: string;
+    token?: string;
+}
+
+export interface ApiEnterpriseSocialRecipeShoppingUpdateRequest {
+    id: number;
+    recipeShoppingUpdate: RecipeShoppingUpdate;
+}
+
+export interface ApiEnterpriseSocialRecipeUpdateRequest {
+    id: number;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+}
+
+export interface ApiEnterpriseSpaceCreateRequest {
+    enterpriseSpace: EnterpriseSpace;
+}
+
+export interface ApiEnterpriseSpaceDestroyRequest {
+    space: number;
+}
+
+export interface ApiEnterpriseSpaceListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseSpacePartialUpdateRequest {
+    space: number;
+    patchedEnterpriseSpace?: PatchedEnterpriseSpace;
+}
+
+export interface ApiEnterpriseSpaceRetrieveRequest {
+    space: number;
+}
+
+export interface ApiEnterpriseSpaceUpdateRequest {
+    space: number;
+    enterpriseSpace: EnterpriseSpace;
 }
 
 export interface ApiExportCreateRequest {
@@ -2216,6 +2535,10 @@ export interface ApiUserPreferenceRetrieveRequest {
 
 export interface ApiUserRetrieveRequest {
     id: number;
+}
+
+export interface ApiUserSpaceBatchUpdateUpdateRequest {
+    userSpaceBatchUpdate: UserSpaceBatchUpdate;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -4540,11 +4863,11 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiExportCreateRaw(requestParameters: ApiExportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
-        if (requestParameters['exportRequest'] == null) {
+    async apiEnterpriseBillingPlanCreateRaw(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['enterpriseBillingPlan'] == null) {
             throw new runtime.RequiredError(
-                'exportRequest',
-                'Required parameter "exportRequest" was null or undefined when calling apiExportCreate().'
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanCreate().'
             );
         }
 
@@ -4559,28 +4882,274 @@ export class ApiApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/export/`,
+            path: `/api/enterprise-billing-plan/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ExportRequestToJSON(requestParameters['exportRequest']),
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => ExportLogFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiExportCreate(requestParameters: ApiExportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ExportLog> {
-        const response = await this.apiExportCreateRaw(requestParameters, initOverrides);
+    async apiEnterpriseBillingPlanCreate(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * logs request counts to redis cache total/per user/
      */
-    async apiExportLogCreateRaw(requestParameters: ApiExportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
-        if (requestParameters['exportLog'] == null) {
+    async apiEnterpriseBillingPlanDestroyRaw(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroy(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingPlanDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanListRaw(requestParameters: ApiEnterpriseBillingPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingPlanList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingPlanListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanList(requestParameters: ApiEnterpriseBillingPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingPlanList> {
+        const response = await this.apiEnterpriseBillingPlanListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingPlanToJSON(requestParameters['patchedEnterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdate(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieveRaw(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieve(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdateRaw(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdate(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripeCheckoutSessionResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-stripe/checkout_session/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: StripeCheckoutSessionRequestToJSON(requestParameters['stripeCheckoutSessionRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripeCheckoutSessionResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreate(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripeCheckoutSessionResponse> {
+        const response = await this.apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripePortal>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-stripe/portal/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripePortalFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripePortal> {
+        const response = await this.apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseSocialEmbedCreateRaw(requestParameters: ApiEnterpriseSocialEmbedCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSocialEmbed>> {
+        if (requestParameters['enterpriseSocialEmbed'] == null) {
             throw new runtime.RequiredError(
                 'exportLog',
                 'Required parameter "exportLog" was null or undefined when calling apiExportLogCreate().'
@@ -16817,6 +17386,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
         const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdateRaw(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpaceBatchUpdate>> {
+        if (requestParameters['userSpaceBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'userSpaceBatchUpdate',
+                'Required parameter "userSpaceBatchUpdate" was null or undefined when calling apiUserSpaceBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-space/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserSpaceBatchUpdateToJSON(requestParameters['userSpaceBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserSpaceBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdate(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpaceBatchUpdate> {
+        const response = await this.apiUserSpaceBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
