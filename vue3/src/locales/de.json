@@ -273,6 +273,7 @@
   "Hours": "Stunden",
   "Household": "Haushalt",
   "HouseholdHelp": "Nutzer eines Haushalts Teilen automatisch Speisepläne, Einkaufslisten und Vorräte. ",
+  "HouseholdSettingsHelp": "Um deine Einkaufslisten und Speisepläne mit den anderen Mitgliedern deines Spaces zu teilen, erstelle Haushalte und weise allen die miteinander Teilen sollen den gleichen Haushalt zu.",
   "Icon": "Icon",
   "IgnoreAccents": "Akzente Ignorien",
   "IgnoreAccentsHelp": "Ignoriere Akzente beim Suchen in den angegebenen Feldern. ",

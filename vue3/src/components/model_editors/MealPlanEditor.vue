@@ -90,6 +90,9 @@
                                 <v-textarea :label="$t('Note')" v-model="editingObj.note" rows="3"></v-textarea>
                             </v-col>
                         </v-row>
+
+                        <closable-help-alert :text="$t('HouseholdSettingsHelp')" :title="$t('Household')"></closable-help-alert>
+
                     </v-form>
                 </v-tabs-window-item>
 
