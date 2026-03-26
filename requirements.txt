@@ -20,7 +20,7 @@ django-storages==1.14.6
 django-tables2==2.8.0
 django-treebeard==5.0.5
 django-webpack-loader==3.2.3
-djangorestframework==3.16.1
+djangorestframework==3.17.0
 drf-writable-nested==0.7.2
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 gunicorn==25.1.0
