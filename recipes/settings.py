@@ -40,8 +40,9 @@ def extract_comma_list(env_key, default=None):
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPT_NAME = os.getenv('SCRIPT_NAME', '')
+FORCE_SCRIPT_NAME = SCRIPT_NAME or None
 
-STATIC_URL = os.getenv('STATIC_URL', '/static/')
+STATIC_URL = os.getenv('STATIC_URL', f'{SCRIPT_NAME}/static/')
 STATIC_ROOT = os.getenv('STATIC_ROOT', os.path.join(BASE_DIR, "staticfiles"))
 
 # Get vars from .env files
@@ -173,6 +174,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'django.contrib.postgres',
     'oauth2_provider',
     'corsheaders',
@@ -237,6 +239,18 @@ except Exception:
 
 SOCIAL_PROVIDERS = extract_comma_list('SOCIAL_PROVIDERS')
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION', False)
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT', False)
+SOCIALACCOUNT_LOGIN_ON_GET = extract_bool('SOCIALACCOUNT_LOGIN_ON_GET', False)
+if os.getenv('SOCIALACCOUNT_AUTO_SIGNUP') is not None:
+    SOCIALACCOUNT_AUTO_SIGNUP = extract_bool('SOCIALACCOUNT_AUTO_SIGNUP', True)
+SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
+if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
+    print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
+if HIDE_LOGIN_FORM and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
+    print('WARNING: HIDE_LOGIN_FORM is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
+if SOCIALACCOUNT_EMAIL_AUTHENTICATION and not SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT and os.getenv('EMAIL_HOST', '') == '':
+    print('WARNING: SOCIALACCOUNT_EMAIL_AUTHENTICATION requires a working email configuration (EMAIL_HOST) when SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT is not enabled.')
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
 ACCOUNT_MAX_EMAIL_ADDRESSES = 3
@@ -246,6 +260,8 @@ ACCOUNT_LOGOUT_ON_GET = True
 
 USERSESSIONS_TRACK_ACTIVITY = True
 HEADLESS_SERVE_SPECIFICATION = True
+
+SOCIALACCOUNT_ADAPTER = 'cookbook.helper.social_adapter.TandoorSocialAccountAdapter'
 
 try:
     SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
@@ -259,7 +275,7 @@ ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
 
 ENABLE_METRICS = extract_bool('ENABLE_METRICS', False)
 
-ENABLE_PDF_EXPORT = extract_bool('ENABLE_PDF_EXPORT', False)
+# ENABLE_PDF_EXPORT = extract_bool('ENABLE_PDF_EXPORT', False)  # Removed: pyppeteer dependency removed
 EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
 
 MIDDLEWARE = [
@@ -371,7 +387,8 @@ WRITE_SCOPE = 'write'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication', 'oauth2_provider.contrib.rest_framework.OAuth2Authentication', 'rest_framework.authentication.BasicAuthentication'
+        'rest_framework.authentication.SessionAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -459,7 +476,9 @@ POSTGRES_DB = os.getenv('POSTGRES_DB', None)
 
 
 def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, pg_port=None, pg_user=None, pg_password=None, pg_db=None):
-    global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+    global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB, DATABASES
+
+    has_individual_overrides = any(v is not None for v in [pg_host, pg_port, pg_user, pg_password, pg_db, db_engine])
 
     DATABASE_URL = db_url or DATABASE_URL
     DB_OPTIONS = db_options or DB_OPTIONS
@@ -469,6 +488,9 @@ def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, p
     POSTGRES_USER = pg_user or POSTGRES_USER
     POSTGRES_PASSWORD = pg_password or POSTGRES_PASSWORD
     POSTGRES_DB = pg_db or POSTGRES_DB
+
+    if has_individual_overrides and not db_url:
+        DATABASE_URL = None
 
     if DATABASE_URL:
         match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?', DATABASE_URL)
@@ -570,37 +592,51 @@ USE_I18N = True
 
 USE_TZ = True
 
-LANGUAGES = [
-    ('hy', _('Armenian ')),
-    ('bg', _('Bulgarian')),
-    ('ca', _('Catalan')),
-    ('cs', _('Czech')),
-    ('cr', _('Croatian')),
-    ('da', _('Danish')),
-    ('nl', _('Dutch')),
-    ('en', _('English')),
-    ('fr', _('French')),
-    ('fi', _('Finnish')),
-    ('de', _('German')),
-    ('el', _('Greek')),
-    ('he', _('Hebrew')),
-    ('hu', _('Hungarian')),
-    ('it', _('Italian')),
-    ('lv', _('Latvian')),
-    ('nb', _('Norwegian')),
-    # ('nb-NO', _('Norwegian Bokmål')),
-    ('pl', _('Polish')),
-    ('pt', _('Portuguese')),
-    ('ru', _('Russian')),
-    ('ro', _('Romanian')),
-    ('es', _('Spanish')),
-    ('sl', _('Slovenian')),
-    ('sv', _('Swedish')),
-    ('tr', _('Turkish')),
-    ('uk', _('Ukranian')),
-    # ('zh-Hant', _('Chinese (Traditional Han script)')),
-    # ('zh-Hans', _('Chinese (Simplified Han script)')),
-]
+
+def _discover_languages():
+    """Auto-discover languages from Weblate-created locale directories."""
+    from django.conf.locale import LANG_INFO
+
+    # Weblate directory names that map to different Django LANG_INFO keys.
+    # The value becomes both the LANG_INFO lookup key AND the language code.
+    DIR_CODE_MAP = {
+        'hu-hu': 'hu',       # Weblate uses hu_HU, Django uses hu
+        'zh-cn': 'zh-hans',  # Weblate uses zh_CN, Django uses zh-hans
+    }
+
+    locale_dir = os.path.join(BASE_DIR, 'cookbook', 'locale')
+    languages = []
+
+    if not os.path.isdir(locale_dir):
+        return [('en', _('English'))]
+
+    for entry in sorted(os.listdir(locale_dir)):
+        po_path = os.path.join(locale_dir, entry, 'LC_MESSAGES', 'django.po')
+        if not os.path.isfile(po_path):
+            continue
+
+        dir_code = entry.replace('_', '-').lower()  # nb_NO → nb-no
+
+        # Remap known mismatches, otherwise use directory-derived code
+        lang_code = DIR_CODE_MAP.get(dir_code, dir_code)
+
+        # Get English name from LANG_INFO
+        name = None
+        for candidate in [lang_code, lang_code.split('-')[0]]:
+            info = LANG_INFO.get(candidate, {})
+            name = info.get('name')
+            if name:
+                break
+
+        languages.append((lang_code, _(name) if name else entry))
+
+    if not any(code == 'en' for code, _name in languages):
+        languages.append(('en', _('English')))
+
+    return sorted(languages, key=lambda x: x[0])
+
+
+LANGUAGES = _discover_languages()
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

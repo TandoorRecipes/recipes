@@ -4,7 +4,9 @@
 
         </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor"
-                   flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode" :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? '' : 'hide'">
+                   flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode"
+                   :absolute="!useUserPreferenceStore().userSettings.navSticky"
+                   :scroll-behavior="useUserPreferenceStore().userSettings.navSticky ? 'elevate' : ''">
             <router-link :to="{ name: 'StartPage', params: {} }">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"
                        v-if="useUserPreferenceStore().userSettings.navShowLogo && !useUserPreferenceStore().activeSpace.navLogo"></v-img>
@@ -29,13 +31,7 @@
                 <v-menu activator="parent">
 
                     <v-list density="compact">
-                        <v-list-item class="mb-1">
-                            <template #prepend>
-                                <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                            </template>
-                            <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-                        </v-list-item>
+                        <menu-user-info></menu-user-info>
                         <v-divider></v-divider>
 
                         <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
@@ -44,17 +40,17 @@
             </v-avatar>
 
         </v-app-bar>
-        <v-app-bar color="info" density="compact"
+        <v-app-bar color="info"
                    v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
-                <v-btn color="success" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
+                <v-btn color="success" size="small" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
             </p>
         </v-app-bar>
-        <v-app-bar color="warning" density="compact" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
+        <v-app-bar color="warning" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
             <p class="text-center w-100">
                 {{ $t('SpaceLimitExceeded') }}
-                <v-btn color="success" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
+                <v-btn color="success" size="small" variant="flat" :to="{name: 'SpaceSettings'}">{{ $t('SpaceSettings') }}</v-btn>
             </p>
         </v-app-bar>
 
@@ -70,14 +66,8 @@
 
         <!-- completely hide in print mode because setting d-print-node keeps layout -->
         <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
-            <v-list nav>
-                <v-list-item :to="{ name: 'SettingsPage', params: {} }">
-                    <template #prepend>
-                        <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
-                    </template>
-                    <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ useUserPreferenceStore().activeSpace.name }}</v-list-item-subtitle>
-                </v-list-item>
+            <v-list>
+                <menu-user-info></menu-user-info>
                 <v-divider></v-divider>
                 <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
 
@@ -132,6 +122,7 @@
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
 import {useDisplay, useLocale} from "vuetify"
+import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
@@ -142,6 +133,8 @@ import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
+import {THousehold, TSpace} from "@/types/Models.ts";
+import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
 
 const {lgAndUp} = useDisplay()
 const {t} = useI18n()
@@ -160,7 +153,7 @@ onMounted(() => {
     const {current} = useLocale()
     let locale = document.querySelector('html')!.getAttribute('lang')
     if (locale != null) {
-        current.value = locale
+        current.value = toVuetifyLocale(locale.toLowerCase())
     }
 })
 
@@ -259,6 +252,170 @@ router.afterEach((to, from) => {
 
     .add-image-link .op-btn {
         color: #fff !important;
+    }
+
+    /* mavon-editor dark mode — container + toolbar */
+
+    .v-note-wrapper {
+        background-color: #212121 !important;
+        border-color: #555 !important;
+    }
+
+    .v-note-wrapper .v-note-op {
+        background-color: #303030 !important;
+        border-bottom-color: #555 !important;
+    }
+
+    /* mavon-editor dark mode — toolbar icons */
+
+    .v-note-wrapper .op-icon {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .v-note-wrapper .op-icon:hover {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .v-note-wrapper .op-icon.selected {
+        color: #fff !important;
+        background-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    .v-note-wrapper .op-icon-divider {
+        border-left-color: #555 !important;
+    }
+
+    /* mavon-editor dark mode — textarea and wrappers */
+
+    .auto-textarea-input,
+    .content-input-wrapper,
+    .auto-textarea-wrapper {
+        color: #e0e0e0 !important;
+        background-color: #212121 !important;
+    }
+
+    .v-note-wrapper .v-show-content,
+    .v-note-wrapper .v-show-content-html,
+    .v-note-wrapper .v-note-read-model {
+        background-color: #212121 !important;
+    }
+
+    .v-note-wrapper .v-note-navigation-wrapper {
+        background-color: rgba(33, 33, 33, 0.98) !important;
+    }
+
+    .v-note-wrapper .op-header.popup-dropdown {
+        background-color: #303030 !important;
+        border-color: #555 !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    /* mavon-editor dark mode — preview panel */
+
+    .v-note-wrapper .markdown-body {
+        color: #e0e0e0 !important;
+    }
+
+    .v-note-wrapper .markdown-body a {
+        color: #b98766 !important;
+    }
+
+    .v-note-wrapper .markdown-body h1,
+    .v-note-wrapper .markdown-body h2 {
+        border-bottom-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body h6 {
+        color: #999 !important;
+    }
+
+    .v-note-wrapper .markdown-body hr {
+        background-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body blockquote {
+        color: #999 !important;
+        border-left-color: #555 !important;
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .v-note-wrapper .markdown-body table tr {
+        background-color: #212121 !important;
+        border-top-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body table tr:nth-child(2n) {
+        background-color: #2a2a2a !important;
+    }
+
+    .v-note-wrapper .markdown-body table td,
+    .v-note-wrapper .markdown-body table th {
+        border-color: #555 !important;
+    }
+
+    .v-note-wrapper .markdown-body code {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #e0e0e0 !important;
+    }
+
+    .v-note-wrapper .markdown-body .highlight pre,
+    .v-note-wrapper .markdown-body pre {
+        background-color: #2a2a2a !important;
+        color: #e0e0e0 !important;
+    }
+
+    .v-note-wrapper .markdown-body kbd {
+        color: #e0e0e0 !important;
+        background-color: #333 !important;
+        border-color: #555 !important;
+        box-shadow: inset 0 -1px 0 #444 !important;
+    }
+
+    .v-note-wrapper .markdown-body img {
+        background-color: transparent !important;
+    }
+
+    /* mavon-editor dark mode — dropdown menus */
+
+    .v-note-wrapper .op-icon.dropdown-wrapper .dropdown-item {
+        color: #e0e0e0 !important;
+        background-color: #303030 !important;
+    }
+
+    .v-note-wrapper .op-icon.dropdown-wrapper .dropdown-item:hover {
+        color: #fff !important;
+        background-color: #424242 !important;
+    }
+
+    /* mavon-editor dark mode — scrollbar */
+
+    .v-note-wrapper .scroll-style::-webkit-scrollbar {
+        background-color: #333 !important;
+    }
+
+    .v-note-wrapper .scroll-style::-webkit-scrollbar-thumb {
+        background-color: #555 !important;
+    }
+
+    /* markdown display (read-only view in StepView) */
+
+    .markdown-body {
+        color: #e0e0e0 !important;
+    }
+
+    .markdown-body a {
+        color: #b98766 !important;
+    }
+
+    .markdown-body blockquote {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-left-color: #555 !important;
+    }
+
+    .markdown-body code {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: #e0e0e0 !important;
     }
 }
 

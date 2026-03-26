@@ -14,6 +14,7 @@
             <v-form :disabled="loading">
                 <v-text-field :label="$t('Email')" v-model="editingObj.email"></v-text-field>
                 <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object v-model="editingObj.group"></v-select>
+                <model-select model="Household" v-model="editingObj.household" allow-create></model-select>
                 <v-date-input :label="$t('Valid Until')" v-model="editingObj.validUntil"></v-date-input>
                 <v-textarea :label="$t('Note')" v-model="editingObj.internalNote"></v-textarea>
                 <v-checkbox :label="$t('Reusable')" v-model="editingObj.reusable"></v-checkbox>
@@ -40,6 +41,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 import {useI18n} from "vue-i18n";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const {t} = useI18n()
 
@@ -95,7 +97,7 @@ function initializeEditor(){
  * @param inviteLink InviteLink object to create url for
  */
 function inviteLinkUrl(inviteLink: InviteLink) {
-    return useDjangoUrls().getDjangoUrl(`/invite/${inviteLink.uuid}`)
+    return useDjangoUrls().getFullUrl(`/invite/${inviteLink.uuid}`)
 }
 
 /**

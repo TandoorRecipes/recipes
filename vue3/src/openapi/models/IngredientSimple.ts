@@ -92,18 +92,6 @@ export interface IngredientSimple {
      * @memberof IngredientSimple
      */
     readonly checked: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof IngredientSimple
-     */
-    alwaysUsePluralUnit?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof IngredientSimple
-     */
-    alwaysUsePluralFood?: boolean;
 }
 
 /**
@@ -137,8 +125,6 @@ export function IngredientSimpleFromJSONTyped(json: any, ignoreDiscriminator: bo
         'noAmount': json['no_amount'] == null ? undefined : json['no_amount'],
         'originalText': json['original_text'] == null ? undefined : json['original_text'],
         'checked': json['checked'],
-        'alwaysUsePluralUnit': json['always_use_plural_unit'] == null ? undefined : json['always_use_plural_unit'],
-        'alwaysUsePluralFood': json['always_use_plural_food'] == null ? undefined : json['always_use_plural_food'],
     };
 }
 
@@ -157,8 +143,6 @@ export function IngredientSimpleToJSON(value?: Omit<IngredientSimple, 'checked'>
         'is_header': value['isHeader'],
         'no_amount': value['noAmount'],
         'original_text': value['originalText'],
-        'always_use_plural_unit': value['alwaysUsePluralUnit'],
-        'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
 

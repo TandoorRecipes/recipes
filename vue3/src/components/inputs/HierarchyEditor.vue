@@ -90,7 +90,7 @@ const searchLink = computed(() => {
         if (props.model == 'Keyword') {
             return {name: 'SearchPage', query: {keywords: activeObjs.value[0].id!}}
         } else if (props.model == 'Food') {
-            return {name: 'SearchPage', query: {keywords: activeObjs.value[0].id!}}
+            return {name: 'SearchPage', query: {foods: activeObjs.value[0].id!}}
         }
     }
     return undefined

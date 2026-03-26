@@ -99,17 +99,11 @@ export interface Ingredient {
      */
     readonly usedInRecipes: Array<any>;
     /**
-     * 
+     * Just laziness to have a checked field on the frontend API client
      * @type {boolean}
      * @memberof Ingredient
      */
-    alwaysUsePluralUnit?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Ingredient
-     */
-    alwaysUsePluralFood?: boolean;
+    readonly checked: boolean;
 }
 
 /**
@@ -121,6 +115,7 @@ export function instanceOfIngredient(value: object): value is Ingredient {
     if (!('amount' in value) || value['amount'] === undefined) return false;
     if (!('conversions' in value) || value['conversions'] === undefined) return false;
     if (!('usedInRecipes' in value) || value['usedInRecipes'] === undefined) return false;
+    if (!('checked' in value) || value['checked'] === undefined) return false;
     return true;
 }
 
@@ -145,12 +140,11 @@ export function IngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'noAmount': json['no_amount'] == null ? undefined : json['no_amount'],
         'originalText': json['original_text'] == null ? undefined : json['original_text'],
         'usedInRecipes': json['used_in_recipes'],
-        'alwaysUsePluralUnit': json['always_use_plural_unit'] == null ? undefined : json['always_use_plural_unit'],
-        'alwaysUsePluralFood': json['always_use_plural_food'] == null ? undefined : json['always_use_plural_food'],
+        'checked': json['checked'],
     };
 }
 
-export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'usedInRecipes'> | null): any {
+export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'> | null): any {
     if (value == null) {
         return value;
     }
@@ -165,8 +159,6 @@ export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'usedInR
         'is_header': value['isHeader'],
         'no_amount': value['noAmount'],
         'original_text': value['originalText'],
-        'always_use_plural_unit': value['alwaysUsePluralUnit'],
-        'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
 

@@ -13,7 +13,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Avg, Index, Max, ProtectedError, Q
+from django.db.models import Index, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
@@ -47,20 +47,7 @@ def get_active_space(self):
         return None
 
 
-def get_shopping_share(self):
-    # get list of users that shared shopping list with user. Django ORM forbids this type of query, so raw is required
-    return User.objects.raw(' '.join([
-        'SELECT auth_user.id FROM auth_user',
-        'INNER JOIN cookbook_userpreference',
-        'ON (auth_user.id = cookbook_userpreference.user_id)',
-        'INNER JOIN cookbook_userpreference_shopping_share',
-        'ON (cookbook_userpreference.user_id = cookbook_userpreference_shopping_share.userpreference_id)',
-        'WHERE cookbook_userpreference_shopping_share.user_id ={}'.format(self.id)
-    ]))
-
-
 auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
-auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
 auth.models.User.add_to_class('get_active_space', get_active_space)
 
 
@@ -387,6 +374,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SupermarketCategory.objects.filter(space=self).delete()
         Supermarket.objects.filter(space=self).delete()
 
+        InventoryEntry.objects.filter(space=self).delete()
+        InventoryLocation.objects.filter(space=self).delete()
+
         UserFile.objects.filter(space=self).delete()
         UserSpace.objects.filter(space=self).delete()
         Automation.objects.filter(space=self).delete()
@@ -535,7 +525,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     nav_sticky = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
     max_owned_spaces = models.IntegerField(default=MAX_OWNED_SPACES_PREF_DEFAULT)
     default_unit = models.CharField(max_length=32, default='g')
-    use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
+    use_fractions = models.BooleanField(default=False)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
     default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
@@ -555,6 +545,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_update_food_lists = models.BooleanField(default=True)
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
+    default_meal_type = models.ForeignKey("MealType", on_delete=models.SET_NULL, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
@@ -573,9 +564,19 @@ class UserPreference(models.Model, PermissionModelMixin):
         return str(self.user)
 
 
+class Household(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=128)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class UserSpace(models.Model, PermissionModelMixin):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    household = models.ForeignKey(Household, on_delete=models.PROTECT, null=True, blank=True)
     groups = models.ManyToManyField(Group)
 
     # there should always only be one active space although permission methods are written in such a way
@@ -939,8 +940,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
-    always_use_plural_unit = models.BooleanField(default=False)
-    always_use_plural_food = models.BooleanField(default=False)
+
     order = models.IntegerField(default=0)
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
@@ -1046,6 +1046,7 @@ class Property(models.Model, PermissionModelMixin):
         return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
 
     class Meta:
+        ordering = ('pk',)
         constraints = [
             models.UniqueConstraint(fields=['space', 'property_type', 'open_data_food_slug'], name='property_unique_import_food_per_space')
         ]
@@ -1077,9 +1078,8 @@ class NutritionInformation(models.Model, PermissionModelMixin):
         return f'Nutrition {self.pk}'
 
 
-class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
-    def get_queryset(self):
-        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
+from cookbook.managers import RecipeQuerySet  # noqa: E402 — deferred to avoid circular import
+RecipeManager = models.Manager.from_queryset(RecipeQuerySet)
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
@@ -1237,6 +1237,7 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
             return None
 
     class Meta:
+        ordering = ('pk',)
         constraints = [
             models.UniqueConstraint(fields=['recipe', 'book'], name='rbe_unique_name_per_space')
         ]
@@ -1258,7 +1259,7 @@ class MealType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name', 'created_by'], name='mt_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'name'], name='mt_unique_name_per_space'),
         ]
         ordering = ('name',)
 
@@ -1347,9 +1348,6 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     def __str__(self):
         return f'Shopping list entry {self.id}'
 
-    def get_shared(self):
-        return self.created_by.userpreference.shopping_share.all()
-
     def get_owner(self):
         try:
             return self.created_by
@@ -1358,6 +1356,74 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
 
     class Meta:
         ordering = ('pk',)
+
+
+class InventoryLocation(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=64)
+    is_freezer = models.BooleanField(default=False)
+    household = models.ForeignKey(Household, on_delete=models.PROTECT)
+
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+
+class InventoryEntry(models.Model, PermissionModelMixin):
+    inventory_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE)
+    sub_location = models.CharField(max_length=64, blank=True, null=True)
+    code = models.CharField(max_length=16, null=True, blank=True)
+
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
+
+    expires = models.DateField(null=True, blank=True)
+
+    note = models.CharField(max_length=256, null=True, blank=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'code'], name='code_unique_per_space'),
+        ]
+        ordering = ('id',)
+
+
+class InventoryLog(models.Model, PermissionModelMixin):
+    B_ADD = 'add'
+    B_REMOVE = 'remove'
+    B_MOVE = 'move'
+    BOOKING_TYPES = [
+        (B_ADD, _('Add')),
+        (B_REMOVE, _('Remove')),
+        (B_MOVE, _('Move')),
+    ]
+
+    entry = models.ForeignKey(InventoryEntry, on_delete=models.CASCADE)
+    booking_type = models.CharField(max_length=10, choices=BOOKING_TYPES, default=B_ADD)
+    old_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    new_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+
+    old_inventory_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='old_inventory_location')
+    new_inventory_location = models.ForeignKey(InventoryLocation, on_delete=models.CASCADE, related_name='new_inventory_location')
+
+    note = models.CharField(max_length=256, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    class Meta:
+        ordering = ('created_at',)
 
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):
@@ -1386,6 +1452,7 @@ class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, Permis
     uuid = models.UUIDField(default=uuid.uuid4)
     email = models.EmailField(blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    household = models.ForeignKey(Household, null=True, blank=True, on_delete=models.SET_NULL)
     valid_until = models.DateField(default=default_valid_until)
     used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
     reusable = models.BooleanField(default=False)

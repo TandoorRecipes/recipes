@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { EnterpriseBillingPlan } from './EnterpriseBillingPlan';
+import {
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanFromJSONTyped,
+    EnterpriseBillingPlanToJSON,
+} from './EnterpriseBillingPlan';
+
 /**
  * 
  * @export
@@ -30,7 +37,37 @@ export interface PatchedEnterpriseSpace {
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    licensedModules?: string;
+    billingLicensedModules?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedEnterpriseSpace
+     */
+    billingCustomerId?: string;
+    /**
+     * 
+     * @type {EnterpriseBillingPlan}
+     * @memberof PatchedEnterpriseSpace
+     */
+    billingPlan?: EnterpriseBillingPlan;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedEnterpriseSpace
+     */
+    billingSubscriptionId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedEnterpriseSpace
+     */
+    billingSubscriptionStatus?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedEnterpriseSpace
+     */
+    billingMonthlyPrice?: number;
 }
 
 /**
@@ -51,7 +88,12 @@ export function PatchedEnterpriseSpaceFromJSONTyped(json: any, ignoreDiscriminat
     return {
         
         'space': json['space'] == null ? undefined : json['space'],
-        'licensedModules': json['licensed_modules'] == null ? undefined : json['licensed_modules'],
+        'billingLicensedModules': json['billing_licensed_modules'] == null ? undefined : json['billing_licensed_modules'],
+        'billingCustomerId': json['billing_customer_id'] == null ? undefined : json['billing_customer_id'],
+        'billingPlan': json['billing_plan'] == null ? undefined : EnterpriseBillingPlanFromJSON(json['billing_plan']),
+        'billingSubscriptionId': json['billing_subscription_id'] == null ? undefined : json['billing_subscription_id'],
+        'billingSubscriptionStatus': json['billing_subscription_status'] == null ? undefined : json['billing_subscription_status'],
+        'billingMonthlyPrice': json['billing_monthly_price'] == null ? undefined : json['billing_monthly_price'],
     };
 }
 
@@ -62,7 +104,12 @@ export function PatchedEnterpriseSpaceToJSON(value?: PatchedEnterpriseSpace | nu
     return {
         
         'space': value['space'],
-        'licensed_modules': value['licensedModules'],
+        'billing_licensed_modules': value['billingLicensedModules'],
+        'billing_customer_id': value['billingCustomerId'],
+        'billing_plan': EnterpriseBillingPlanToJSON(value['billingPlan']),
+        'billing_subscription_id': value['billingSubscriptionId'],
+        'billing_subscription_status': value['billingSubscriptionStatus'],
+        'billing_monthly_price': value['billingMonthlyPrice'],
     };
 }
 

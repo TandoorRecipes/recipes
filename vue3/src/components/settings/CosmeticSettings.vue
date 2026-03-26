@@ -20,7 +20,7 @@
         <v-divider class="mb-3"></v-divider>
 
         <v-text-field v-model="useUserPreferenceStore().userSettings.defaultUnit" :label="$t('Default_Unit')"></v-text-field>
-        <v-number-input v-model="useUserPreferenceStore().userSettings.ingredientDecimals" :label="$t('Decimals')"></v-number-input>
+        <v-number-input v-model="useUserPreferenceStore().userSettings.ingredientDecimals" :label="$t('Decimals')" :step="1" :min="0" :max="4"></v-number-input>
 
 <!--        <v-select-->
 <!--            :label="$t('DefaultPage')"-->

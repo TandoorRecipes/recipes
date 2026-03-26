@@ -32,7 +32,8 @@
 
                                             <v-list-item link prepend-icon="$automation" :disabled="!selectedFood">
                                                 {{ $t('Automate') }}
-                                                <model-edit-dialog model="Automation"  activator="parent" :item-defaults="{param1: selectedFood.name, type: 'FOOD_ALIAS'}" v-if="selectedFood"></model-edit-dialog>
+                                                <model-edit-dialog model="Automation" activator="parent" :item-defaults="{param1: selectedFood.name, type: 'FOOD_ALIAS'}"
+                                                                   v-if="selectedFood"></model-edit-dialog>
                                             </v-list-item>
 
                                             <v-list-item link prepend-icon="$delete" :disabled="!selectedFood">
@@ -66,7 +67,8 @@
                                             </v-list-item>
                                             <v-list-item link prepend-icon="$automation" :disabled="!selectedUnit">
                                                 {{ $t('Automate') }}
-                                                <model-edit-dialog model="Automation"  activator="parent" :item-defaults="{param1: selectedUnit.name, type: 'UNIT_ALIAS'}" v-if="selectedUnit"></model-edit-dialog>
+                                                <model-edit-dialog model="Automation" activator="parent" :item-defaults="{param1: selectedUnit.name, type: 'UNIT_ALIAS'}"
+                                                                   v-if="selectedUnit"></model-edit-dialog>
                                             </v-list-item>
                                             <v-list-item link prepend-icon="$delete" :disabled="!selectedUnit">
                                                 {{ $t('Delete') }}
@@ -117,12 +119,12 @@
                                     @update:modelValue="item.changed = true" :precision="2"></v-number-input>
                 </template>
                 <template v-slot:item.unit="{ item }">
-                    <model-select model="Unit" v-model="item.unit"  density="compact" hide-details allow-create append-to-body
+                    <model-select model="Unit" v-model="item.unit" density="compact" hide-details allow-create append-to-body
                                   @update:modelValue="item.changed = true">
                     </model-select>
                 </template>
                 <template v-slot:item.food="{ item }">
-                    <model-select model="Food" v-model="item.food"  density="compact" hide-details allow-create append-to-body
+                    <model-select model="Food" v-model="item.food" density="compact" hide-details allow-create append-to-body
                                   @update:modelValue="item.changed = true"></model-select>
                 </template>
                 <template v-slot:item.note="{ item }">
@@ -197,9 +199,10 @@ onMounted(() => {
  * update all changed ingredients
  */
 function updateAllIngredients() {
+    let promises = [] as Promise<any>[]
     items.value.forEach((item) => {
         if (item.changed) {
-            updateIngredient(item)
+            promises.push(updateIngredient(item))
         }
     })
 }
@@ -211,8 +214,9 @@ function updateAllIngredients() {
 function updateIngredient(ingredient: EditorIngredient) {
     let api = new ApiApi()
     ingredient.loading = true
-    api.apiIngredientUpdate({id: ingredient.id!, ingredient: ingredient}).then(r => {
+    return api.apiIngredientUpdate({id: ingredient.id!, ingredient: ingredient}).then(r => {
 
+        items.value = items.value.map(i => i.id == ingredient.id ? {...r, changed: false, loading: false} : i)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     }).finally(() => {
@@ -300,7 +304,9 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     }
 
     api.apiIngredientList(requestParameters).then(r => {
-        items.value = r.results
+        items.value = r.results.map(i => {
+            return {...i, changed: false, loading: false}
+        })
         tableItemCount.value = r.count
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)

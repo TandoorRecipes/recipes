@@ -3,9 +3,7 @@
         <p class="text-h6">{{ $t('Shopping_list') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-        <ModelSelect :hint="$t('shopping_share_desc')" :label="$t('shopping_share')" model="User" :allow-create="false"
-                     v-model="useUserPreferenceStore().userSettings.shoppingShare" item-label="displayName"
-                     mode="tags"></ModelSelect>
+        <closable-help-alert :text="$t('HouseholdSettingsHelp')" :title="$t('Household')"></closable-help-alert>
 
         <v-number-input
             class="mt-2"
@@ -64,6 +62,7 @@
 
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 
 </script>
 

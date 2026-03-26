@@ -3,45 +3,117 @@
             :label="$t('Language')"
             v-model="$i18n.locale"
             :items="availableLocalizations"
-            item-title="language"
+            item-title="display"
             item-value="code"
+            :hint="currentCoverage < 100 ? currentCoverage + '% ' + $t('translated') : ''"
+            persistent-hint
             @update:model-value="updateLanguage()"
-        ></v-select>
+            class="language-select"
+        >
+        <template #item="{item, props: itemProps}">
+            <v-list-item v-bind="itemProps">
+                <template #append>
+                    <span class="text-caption" :style="{color: coverageColor(item.raw.coverage)}">
+                        {{ item.raw.coverage }}%
+                    </span>
+                </template>
+            </v-list-item>
+        </template>
+        <template #append>
+            <div class="info-btn" @click="helpDialog = true" role="button" :aria-label="$t('Help')">
+                <div class="info-btn__overlay" />
+                <v-icon icon="fa-solid fa-info" size="x-small" />
+            </div>
+        </template>
+    </v-select>
+
+    <v-dialog v-model="helpDialog" max-width="1200px">
+        <v-card>
+            <v-closable-card-title v-model="helpDialog" :title="$t('Help')" icon="fa-solid fa-question">
+                <template #content>
+                    <div class="d-flex align-center">
+                        <v-btn variant="text" icon="fa-solid fa-bars" @click.stop="helpDrawer = !helpDrawer"></v-btn>
+                        <span>{{ $t('Help') }}</span>
+                    </div>
+                </template>
+            </v-closable-card-title>
+            <v-divider></v-divider>
+            <v-card-text class="pa-0">
+                <help-view v-model="helpDrawer" default-section="translations"></help-view>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {ApiApi, Localization} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
-import {SUPPORT_LOCALES} from "@/i18n.ts";
+import {SUPPORT_LOCALES, resolveLocale, localeCoverage, LOCALE_MIN_COVERAGE} from "@/i18n.ts";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
+import HelpView from "@/components/display/HelpView.vue";
 
-const availableLocalizations = ref([] as Localization[])
+interface LocalizationWithCoverage {
+    code: string
+    language: string
+    display: string
+    coverage: number
+}
+
+const availableLocalizations = ref([] as LocalizationWithCoverage[])
 const {locale} = useI18n()
+const helpDialog = ref(false)
+const helpDrawer = ref(true)
 
+const currentCoverage = computed(() => {
+    const resolved = resolveLocale(locale.value)
+    if (!resolved || resolved === 'en') return 100
+    // Find the FE file that matches
+    for (const [filename, data] of Object.entries(localeCoverage)) {
+        if (filename.replaceAll('_', '-').toLowerCase() === resolved) {
+            return data.fe
+        }
+    }
+    return 0
+})
+
+function coverageColor(pct: number): string {
+    if (pct >= 80) return '#4CAF50'  // green
+    if (pct >= 50) return '#FB8C00'  // amber
+    return '#E53935'                  // red
+}
 
 onMounted(() => {
     const api = new ApiApi()
 
     api.apiLocalizationList().then(r => {
-        availableLocalizations.value = r
+        availableLocalizations.value = r.filter(l => l.code && resolveLocale(l.code) !== null)
+            .map(l => {
+                const resolved = resolveLocale(l.code!)!
+                // Find FE coverage for this locale
+                let fe = 0
+                if (resolved === 'en') {
+                    fe = 100
+                } else {
+                    for (const [filename, data] of Object.entries(localeCoverage)) {
+                        if (filename.replaceAll('_', '-').toLowerCase() === resolved) {
+                            fe = data.fe
+                            break
+                        }
+                    }
+                }
+                return {
+                    code: resolved,
+                    language: l.language!,
+                    display: l.language!,
+                    coverage: fe
+                }
+            })
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
-
-    // console.log(locale.value)
-    // const regionNames = new Intl.DisplayNames([locale.value], { type: "language" });
-    //
-    // availableLocalizations.value = []
-    // SUPPORT_LOCALES.forEach(locale => {
-    //     const lang = new Intl.Locale(locale.replace('_', '-'))
-    //     console.log(lang)
-    //     availableLocalizations.value.push({
-    //         code: lang.baseName,
-    //         language: `${regionNames.of(lang.baseName)} [${lang.baseName}]`
-    //     } as Localization)
-    // })
 })
 
 /**
@@ -59,7 +131,53 @@ function updateLanguage() {
 </script>
 
 
+<style>
+.language-select .v-input__append {
+    margin-inline-start: 0;
+}
+
+.language-select .v-field {
+    border-top-right-radius: 0;
+}
+</style>
 
 <style scoped>
+.info-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    align-self: stretch;
+    border-radius: 0 4px 0 0;
+    cursor: pointer;
+}
 
+.info-btn::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-bottom: var(--v-field-border-width, 1px) solid currentColor;
+    opacity: var(--v-field-border-opacity, 0.38);
+    pointer-events: none;
+}
+
+.info-btn .v-icon {
+    opacity: var(--v-medium-emphasis-opacity);
+}
+
+.info-btn:hover .v-icon {
+    opacity: var(--v-high-emphasis-opacity);
+}
+
+.info-btn__overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: currentColor;
+    opacity: 0.04;
+    pointer-events: none;
+}
 </style>

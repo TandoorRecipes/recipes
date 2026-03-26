@@ -2,6 +2,8 @@ import traceback
 from collections import defaultdict
 from decimal import Decimal
 
+from django.db import IntegrityError, transaction
+
 from cookbook.models import (Food, FoodProperty, Property, PropertyType, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Unit, UnitConversion)
 import re
@@ -319,7 +321,7 @@ class OpenDataImporter:
         od_response = OpenDataImportResponse()
         datatype = 'food'
         model_type = Food
-        field_list = ['name', 'open_data_slug']
+        field_list = ['name', 'plural_name', 'supermarket_category_id', 'fdc_id', 'open_data_slug', 'properties_food_unit_id']
 
         existing_data_slugs = {}
         existing_data_names = {}
@@ -342,7 +344,7 @@ class OpenDataImporter:
                 'name': self.data[datatype][k]['name'],
                 'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
                 'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']] if self.data[datatype][k]['store_category'] in self.slug_id_cache['category'] else None,
-                'fdc_id': re.sub(r'\D', '', str(self.data[datatype][k]['fdc_id'])) if self.data[datatype][k]['fdc_id'] != '' else None,
+                'fdc_id': int(re.sub(r'\D', '', str(self.data[datatype][k]['fdc_id']))) if self.data[datatype][k]['fdc_id'] != '' else None,
                 'open_data_slug': k,
                 'properties_food_unit_id': None,
                 'space_id': self.request.space.id,
@@ -370,27 +372,32 @@ class OpenDataImporter:
 
         if self.update_existing and len(update_list) > 0:
             try:
-                model_type.objects.bulk_update(update_list, field_list)
+                with transaction.atomic():
+                    model_type.objects.bulk_update(update_list, field_list)
                 od_response.total_updated += len(update_list)
-            except Exception:
-                if DEBUG:
-                    print('========= LOAD FOOD FAILED ============')
-                    print(update_list)
-                    print(existing_data_names)
-                    print(existing_data_slugs)
-                    traceback.print_exc()
+            except IntegrityError:
+                for obj in update_list:
+                    try:
+                        with transaction.atomic():
+                            model_type.objects.filter(pk=obj.pk).update(
+                                **{field: getattr(obj, field) for field in field_list}
+                            )
+                        od_response.total_updated += 1
+                    except IntegrityError:
+                        od_response.total_errored += 1
+                        if DEBUG:
+                            traceback.print_exc()
 
         if len(create_list) > 0:
-            try:
-                Food.load_bulk(create_list, None)
-                od_response.total_created += len(create_list)
-            except Exception:
-                if DEBUG:
-                    print('========= LOAD FOOD FAILED ============')
-                    print(create_list)
-                    print(existing_data_names)
-                    print(existing_data_slugs)
-                    traceback.print_exc()
+            for item in create_list:
+                try:
+                    with transaction.atomic():
+                        Food.add_root(**item['data'])
+                    od_response.total_created += 1
+                except IntegrityError:
+                    od_response.total_errored += 1
+                    if DEBUG:
+                        traceback.print_exc()
 
         # --------------- PROPERTY STUFF -----------------------
         model_type = Property

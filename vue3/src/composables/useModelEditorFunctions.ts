@@ -94,8 +94,8 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                             itemDefaults?: T,
                             newItemFunction?: () => void,
                             existingItemFunction?: () => void,
-                            onBeforeSave?: () => Promise<any> | any,
-                            onAfterSave?: () => Promise<any> | any
+                            onBeforeSave?: () => Promise<any> | any | void,
+                            onAfterSave?: () => Promise<any> | any | void,
                         } = {}
     ): Promise<T | undefined> {
 

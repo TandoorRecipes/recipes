@@ -24,6 +24,10 @@ import type {
   ConnectorConfig,
   CookLog,
   CustomFilter,
+  EnterpriseBillingInvoice,
+  EnterpriseBillingPlan,
+  EnterpriseBillingProduct,
+  EnterpriseBillingReferralLink,
   EnterpriseSocialEmbed,
   EnterpriseSpace,
   ExportLog,
@@ -34,6 +38,7 @@ import type {
   FoodInheritField,
   FoodShoppingUpdate,
   Group,
+  Household,
   ImportLog,
   ImportOpenData,
   ImportOpenDataMetaData,
@@ -41,6 +46,9 @@ import type {
   Ingredient,
   IngredientParserRequest,
   IngredientParserResponse,
+  InventoryEntry,
+  InventoryLocation,
+  InventoryLog,
   InviteLink,
   Keyword,
   Localization,
@@ -60,14 +68,22 @@ import type {
   PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
+  PaginatedEnterpriseBillingInvoiceList,
+  PaginatedEnterpriseBillingPlanList,
+  PaginatedEnterpriseBillingProductList,
+  PaginatedEnterpriseBillingReferralLinkList,
   PaginatedEnterpriseSocialEmbedList,
   PaginatedEnterpriseSocialRecipeSearchList,
   PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedGenericModelReferenceList,
+  PaginatedHouseholdList,
   PaginatedImportLogList,
   PaginatedIngredientList,
+  PaginatedInventoryEntryList,
+  PaginatedInventoryLocationList,
+  PaginatedInventoryLogList,
   PaginatedInviteLinkList,
   PaginatedKeywordList,
   PaginatedMealPlanList,
@@ -108,12 +124,19 @@ import type {
   PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
+  PatchedEnterpriseBillingInvoice,
+  PatchedEnterpriseBillingPlan,
+  PatchedEnterpriseBillingProduct,
+  PatchedEnterpriseBillingReferralLink,
   PatchedEnterpriseSocialEmbed,
   PatchedEnterpriseSpace,
   PatchedExportLog,
   PatchedFood,
+  PatchedHousehold,
   PatchedImportLog,
   PatchedIngredient,
+  PatchedInventoryEntry,
+  PatchedInventoryLocation,
   PatchedInviteLink,
   PatchedKeyword,
   PatchedMealPlan,
@@ -173,6 +196,9 @@ import type {
   Space,
   Step,
   Storage,
+  StripeCheckoutSessionRequest,
+  StripeCheckoutSessionResponse,
+  StripePortal,
   Supermarket,
   SupermarketCategory,
   SupermarketCategoryRelation,
@@ -184,6 +210,7 @@ import type {
   UserFile,
   UserPreference,
   UserSpace,
+  UserSpaceBatchUpdate,
   ViewLog,
 } from '../models/index';
 import {
@@ -205,6 +232,14 @@ import {
     CookLogToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
+    EnterpriseBillingInvoiceFromJSON,
+    EnterpriseBillingInvoiceToJSON,
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanToJSON,
+    EnterpriseBillingProductFromJSON,
+    EnterpriseBillingProductToJSON,
+    EnterpriseBillingReferralLinkFromJSON,
+    EnterpriseBillingReferralLinkToJSON,
     EnterpriseSocialEmbedFromJSON,
     EnterpriseSocialEmbedToJSON,
     EnterpriseSpaceFromJSON,
@@ -225,6 +260,8 @@ import {
     FoodShoppingUpdateToJSON,
     GroupFromJSON,
     GroupToJSON,
+    HouseholdFromJSON,
+    HouseholdToJSON,
     ImportLogFromJSON,
     ImportLogToJSON,
     ImportOpenDataFromJSON,
@@ -239,6 +276,12 @@ import {
     IngredientParserRequestToJSON,
     IngredientParserResponseFromJSON,
     IngredientParserResponseToJSON,
+    InventoryEntryFromJSON,
+    InventoryEntryToJSON,
+    InventoryLocationFromJSON,
+    InventoryLocationToJSON,
+    InventoryLogFromJSON,
+    InventoryLogToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
     KeywordFromJSON,
@@ -277,6 +320,14 @@ import {
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
     PaginatedCustomFilterListToJSON,
+    PaginatedEnterpriseBillingInvoiceListFromJSON,
+    PaginatedEnterpriseBillingInvoiceListToJSON,
+    PaginatedEnterpriseBillingPlanListFromJSON,
+    PaginatedEnterpriseBillingPlanListToJSON,
+    PaginatedEnterpriseBillingProductListFromJSON,
+    PaginatedEnterpriseBillingProductListToJSON,
+    PaginatedEnterpriseBillingReferralLinkListFromJSON,
+    PaginatedEnterpriseBillingReferralLinkListToJSON,
     PaginatedEnterpriseSocialEmbedListFromJSON,
     PaginatedEnterpriseSocialEmbedListToJSON,
     PaginatedEnterpriseSocialRecipeSearchListFromJSON,
@@ -289,10 +340,18 @@ import {
     PaginatedFoodListToJSON,
     PaginatedGenericModelReferenceListFromJSON,
     PaginatedGenericModelReferenceListToJSON,
+    PaginatedHouseholdListFromJSON,
+    PaginatedHouseholdListToJSON,
     PaginatedImportLogListFromJSON,
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
     PaginatedIngredientListToJSON,
+    PaginatedInventoryEntryListFromJSON,
+    PaginatedInventoryEntryListToJSON,
+    PaginatedInventoryLocationListFromJSON,
+    PaginatedInventoryLocationListToJSON,
+    PaginatedInventoryLogListFromJSON,
+    PaginatedInventoryLogListToJSON,
     PaginatedInviteLinkListFromJSON,
     PaginatedInviteLinkListToJSON,
     PaginatedKeywordListFromJSON,
@@ -373,6 +432,14 @@ import {
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
     PatchedCustomFilterToJSON,
+    PatchedEnterpriseBillingInvoiceFromJSON,
+    PatchedEnterpriseBillingInvoiceToJSON,
+    PatchedEnterpriseBillingPlanFromJSON,
+    PatchedEnterpriseBillingPlanToJSON,
+    PatchedEnterpriseBillingProductFromJSON,
+    PatchedEnterpriseBillingProductToJSON,
+    PatchedEnterpriseBillingReferralLinkFromJSON,
+    PatchedEnterpriseBillingReferralLinkToJSON,
     PatchedEnterpriseSocialEmbedFromJSON,
     PatchedEnterpriseSocialEmbedToJSON,
     PatchedEnterpriseSpaceFromJSON,
@@ -381,10 +448,16 @@ import {
     PatchedExportLogToJSON,
     PatchedFoodFromJSON,
     PatchedFoodToJSON,
+    PatchedHouseholdFromJSON,
+    PatchedHouseholdToJSON,
     PatchedImportLogFromJSON,
     PatchedImportLogToJSON,
     PatchedIngredientFromJSON,
     PatchedIngredientToJSON,
+    PatchedInventoryEntryFromJSON,
+    PatchedInventoryEntryToJSON,
+    PatchedInventoryLocationFromJSON,
+    PatchedInventoryLocationToJSON,
     PatchedInviteLinkFromJSON,
     PatchedInviteLinkToJSON,
     PatchedKeywordFromJSON,
@@ -503,6 +576,12 @@ import {
     StepToJSON,
     StorageFromJSON,
     StorageToJSON,
+    StripeCheckoutSessionRequestFromJSON,
+    StripeCheckoutSessionRequestToJSON,
+    StripeCheckoutSessionResponseFromJSON,
+    StripeCheckoutSessionResponseToJSON,
+    StripePortalFromJSON,
+    StripePortalToJSON,
     SupermarketFromJSON,
     SupermarketToJSON,
     SupermarketCategoryFromJSON,
@@ -525,6 +604,8 @@ import {
     UserPreferenceToJSON,
     UserSpaceFromJSON,
     UserSpaceToJSON,
+    UserSpaceBatchUpdateFromJSON,
+    UserSpaceBatchUpdateToJSON,
     ViewLogFromJSON,
     ViewLogToJSON,
 } from '../models/index';
@@ -789,6 +870,122 @@ export interface ApiCustomFilterUpdateRequest {
 
 export interface ApiDownloadFileRetrieveRequest {
     fileId: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceCreateRequest {
+    enterpriseBillingInvoice: Omit<EnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingInvoiceDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceDownloadRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingInvoicePartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingInvoice?: Omit<PatchedEnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingInvoiceRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceUpdateRequest {
+    id: number;
+    enterpriseBillingInvoice: Omit<EnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingPlanCreateRequest {
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingPlanPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingPlan?: PatchedEnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanUpdateRequest {
+    id: number;
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingProductCreateRequest {
+    enterpriseBillingProduct: EnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingProductDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingProductListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingProductPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingProduct?: PatchedEnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingProductRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingProductUpdateRequest {
+    id: number;
+    enterpriseBillingProduct: EnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingReferralLinkCreateRequest {
+    enterpriseBillingReferralLink: Omit<EnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingReferralLinkDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingReferralLink?: Omit<PatchedEnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingReferralLinkRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkUpdateRequest {
+    id: number;
+    enterpriseBillingReferralLink: Omit<EnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingStripeCheckoutSessionCreateRequest {
+    stripeCheckoutSessionRequest?: StripeCheckoutSessionRequest;
 }
 
 export interface ApiEnterpriseSocialEmbedCreateRequest {
@@ -1176,6 +1373,33 @@ export interface ApiGroupRetrieveRequest {
     id: number;
 }
 
+export interface ApiHouseholdCreateRequest {
+    household: Omit<Household, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiHouseholdDestroyRequest {
+    id: number;
+}
+
+export interface ApiHouseholdListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiHouseholdPartialUpdateRequest {
+    id: number;
+    patchedHousehold?: Omit<PatchedHousehold, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiHouseholdRetrieveRequest {
+    id: number;
+}
+
+export interface ApiHouseholdUpdateRequest {
+    id: number;
+    household: Omit<Household, 'createdAt'|'updatedAt'>;
+}
+
 export interface ApiImportCreateRequest {
     aiProviderId: number;
     file: string | null;
@@ -1215,7 +1439,7 @@ export interface ApiImportOpenDataCreateRequest {
 }
 
 export interface ApiIngredientCreateRequest {
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'>;
+    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
 }
 
 export interface ApiIngredientDestroyRequest {
@@ -1235,7 +1459,7 @@ export interface ApiIngredientParserPostCreateRequest {
 
 export interface ApiIngredientPartialUpdateRequest {
     id: number;
-    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'>;
+    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'>;
 }
 
 export interface ApiIngredientRetrieveRequest {
@@ -1244,7 +1468,118 @@ export interface ApiIngredientRetrieveRequest {
 
 export interface ApiIngredientUpdateRequest {
     id: number;
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'>;
+    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
+}
+
+export interface ApiInventoryEntryCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryCreateRequest {
+    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
+}
+
+export interface ApiInventoryEntryDestroyRequest {
+    id: number;
+}
+
+export interface ApiInventoryEntryListRequest {
+    code?: string;
+    empty?: boolean;
+    foodId?: number;
+    inventoryLocationId?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryPartialUpdateRequest {
+    id: number;
+    patchedInventoryEntry?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'>;
+}
+
+export interface ApiInventoryEntryProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInventoryEntryUpdateRequest {
+    id: number;
+    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
+}
+
+export interface ApiInventoryLocationCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationCreateRequest {
+    inventoryLocation: InventoryLocation;
+}
+
+export interface ApiInventoryLocationDestroyRequest {
+    id: number;
+}
+
+export interface ApiInventoryLocationListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationPartialUpdateRequest {
+    id: number;
+    patchedInventoryLocation?: PatchedInventoryLocation;
+}
+
+export interface ApiInventoryLocationProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInventoryLocationUpdateRequest {
+    id: number;
+    inventoryLocation: InventoryLocation;
+}
+
+export interface ApiInventoryLogListRequest {
+    entryId?: number;
+    foodId?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLogRetrieveRequest {
+    id: number;
 }
 
 export interface ApiInviteLinkCreateRequest {
@@ -2567,6 +2902,10 @@ export interface ApiUserPreferenceRetrieveRequest {
 
 export interface ApiUserRetrieveRequest {
     id: number;
+}
+
+export interface ApiUserSpaceBatchUpdateUpdateRequest {
+    userSpaceBatchUpdate: UserSpaceBatchUpdate;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -4887,6 +5226,1032 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiDownloadFileRetrieve(requestParameters: ApiDownloadFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiDownloadFileRetrieveRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceCreateRaw(requestParameters: ApiEnterpriseBillingInvoiceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['enterpriseBillingInvoice'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingInvoice',
+                'Required parameter "enterpriseBillingInvoice" was null or undefined when calling apiEnterpriseBillingInvoiceCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingInvoiceToJSON(requestParameters['enterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceCreate(requestParameters: ApiEnterpriseBillingInvoiceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDestroyRaw(requestParameters: ApiEnterpriseBillingInvoiceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDestroy(requestParameters: ApiEnterpriseBillingInvoiceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingInvoiceDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDownloadRetrieveRaw(requestParameters: ApiEnterpriseBillingInvoiceDownloadRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceDownloadRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/download/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDownloadRetrieve(requestParameters: ApiEnterpriseBillingInvoiceDownloadRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceDownloadRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceListRaw(requestParameters: ApiEnterpriseBillingInvoiceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingInvoiceList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingInvoiceListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceList(requestParameters: ApiEnterpriseBillingInvoiceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingInvoiceList> {
+        const response = await this.apiEnterpriseBillingInvoiceListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoicePartialUpdateRaw(requestParameters: ApiEnterpriseBillingInvoicePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoicePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingInvoiceToJSON(requestParameters['patchedEnterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoicePartialUpdate(requestParameters: ApiEnterpriseBillingInvoicePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoicePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceRetrieveRaw(requestParameters: ApiEnterpriseBillingInvoiceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceRetrieve(requestParameters: ApiEnterpriseBillingInvoiceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceUpdateRaw(requestParameters: ApiEnterpriseBillingInvoiceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingInvoice'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingInvoice',
+                'Required parameter "enterpriseBillingInvoice" was null or undefined when calling apiEnterpriseBillingInvoiceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingInvoiceToJSON(requestParameters['enterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceUpdate(requestParameters: ApiEnterpriseBillingInvoiceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanCreateRaw(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanCreate(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroyRaw(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroy(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingPlanDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanListRaw(requestParameters: ApiEnterpriseBillingPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingPlanList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingPlanListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanList(requestParameters: ApiEnterpriseBillingPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingPlanList> {
+        const response = await this.apiEnterpriseBillingPlanListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingPlanToJSON(requestParameters['patchedEnterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdate(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieveRaw(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieve(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdateRaw(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdate(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductCreateRaw(requestParameters: ApiEnterpriseBillingProductCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['enterpriseBillingProduct'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingProduct',
+                'Required parameter "enterpriseBillingProduct" was null or undefined when calling apiEnterpriseBillingProductCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingProductToJSON(requestParameters['enterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductCreate(requestParameters: ApiEnterpriseBillingProductCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductDestroyRaw(requestParameters: ApiEnterpriseBillingProductDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductDestroy(requestParameters: ApiEnterpriseBillingProductDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingProductDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductListRaw(requestParameters: ApiEnterpriseBillingProductListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingProductList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingProductListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductList(requestParameters: ApiEnterpriseBillingProductListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingProductList> {
+        const response = await this.apiEnterpriseBillingProductListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductPartialUpdateRaw(requestParameters: ApiEnterpriseBillingProductPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingProductToJSON(requestParameters['patchedEnterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductPartialUpdate(requestParameters: ApiEnterpriseBillingProductPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductRetrieveRaw(requestParameters: ApiEnterpriseBillingProductRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductRetrieve(requestParameters: ApiEnterpriseBillingProductRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductUpdateRaw(requestParameters: ApiEnterpriseBillingProductUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingProduct'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingProduct',
+                'Required parameter "enterpriseBillingProduct" was null or undefined when calling apiEnterpriseBillingProductUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingProductToJSON(requestParameters['enterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductUpdate(requestParameters: ApiEnterpriseBillingProductUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkCreateRaw(requestParameters: ApiEnterpriseBillingReferralLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['enterpriseBillingReferralLink'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingReferralLink',
+                'Required parameter "enterpriseBillingReferralLink" was null or undefined when calling apiEnterpriseBillingReferralLinkCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingReferralLinkToJSON(requestParameters['enterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkCreate(requestParameters: ApiEnterpriseBillingReferralLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkDestroyRaw(requestParameters: ApiEnterpriseBillingReferralLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkDestroy(requestParameters: ApiEnterpriseBillingReferralLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingReferralLinkDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkGetLinkRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/get_link/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkGetLinkRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkGetLinkRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkListRaw(requestParameters: ApiEnterpriseBillingReferralLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingReferralLinkList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingReferralLinkListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkList(requestParameters: ApiEnterpriseBillingReferralLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingReferralLinkList> {
+        const response = await this.apiEnterpriseBillingReferralLinkListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkPartialUpdateRaw(requestParameters: ApiEnterpriseBillingReferralLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingReferralLinkToJSON(requestParameters['patchedEnterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkPartialUpdate(requestParameters: ApiEnterpriseBillingReferralLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkRetrieveRaw(requestParameters: ApiEnterpriseBillingReferralLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkRetrieve(requestParameters: ApiEnterpriseBillingReferralLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkUpdateRaw(requestParameters: ApiEnterpriseBillingReferralLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingReferralLink'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingReferralLink',
+                'Required parameter "enterpriseBillingReferralLink" was null or undefined when calling apiEnterpriseBillingReferralLinkUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingReferralLinkToJSON(requestParameters['enterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkUpdate(requestParameters: ApiEnterpriseBillingReferralLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripeCheckoutSessionResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-stripe/checkout_session/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: StripeCheckoutSessionRequestToJSON(requestParameters['stripeCheckoutSessionRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripeCheckoutSessionResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreate(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripeCheckoutSessionResponse> {
+        const response = await this.apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripePortal>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-stripe/portal/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripePortalFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripePortal> {
+        const response = await this.apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides);
+        return await response.value();
     }
 
     /**
@@ -7989,6 +9354,244 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdCreateRaw(requestParameters: ApiHouseholdCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['household'] == null) {
+            throw new runtime.RequiredError(
+                'household',
+                'Required parameter "household" was null or undefined when calling apiHouseholdCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HouseholdToJSON(requestParameters['household']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdCreate(requestParameters: ApiHouseholdCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdDestroyRaw(requestParameters: ApiHouseholdDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdDestroy(requestParameters: ApiHouseholdDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiHouseholdDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdListRaw(requestParameters: ApiHouseholdListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedHouseholdList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedHouseholdListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdList(requestParameters: ApiHouseholdListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedHouseholdList> {
+        const response = await this.apiHouseholdListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdPartialUpdateRaw(requestParameters: ApiHouseholdPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedHouseholdToJSON(requestParameters['patchedHousehold']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdPartialUpdate(requestParameters: ApiHouseholdPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdRetrieveRaw(requestParameters: ApiHouseholdRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdRetrieve(requestParameters: ApiHouseholdRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdUpdateRaw(requestParameters: ApiHouseholdUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdUpdate().'
+            );
+        }
+
+        if (requestParameters['household'] == null) {
+            throw new runtime.RequiredError(
+                'household',
+                'Required parameter "household" was null or undefined when calling apiHouseholdUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/household/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HouseholdToJSON(requestParameters['household']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdUpdate(requestParameters: ApiHouseholdUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      */
     async apiImportCreateRaw(requestParameters: ApiImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFromSourceResponse>> {
         if (requestParameters['aiProviderId'] == null) {
@@ -8653,6 +10256,875 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientUpdate(requestParameters: ApiIngredientUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryEntryCascadingListRaw(requestParameters: ApiInventoryEntryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryEntryCascadingList(requestParameters: ApiInventoryEntryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryCreateRaw(requestParameters: ApiInventoryEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['inventoryEntry'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryEntry',
+                'Required parameter "inventoryEntry" was null or undefined when calling apiInventoryEntryCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryEntryToJSON(requestParameters['inventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryCreate(requestParameters: ApiInventoryEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryDestroyRaw(requestParameters: ApiInventoryEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryDestroy(requestParameters: ApiInventoryEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiInventoryEntryDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryListRaw(requestParameters: ApiInventoryEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryEntryList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['code'] != null) {
+            queryParameters['code'] = requestParameters['code'];
+        }
+
+        if (requestParameters['empty'] != null) {
+            queryParameters['empty'] = requestParameters['empty'];
+        }
+
+        if (requestParameters['foodId'] != null) {
+            queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['inventoryLocationId'] != null) {
+            queryParameters['inventory_location_id'] = requestParameters['inventoryLocationId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryEntryListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryList(requestParameters: ApiInventoryEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryEntryList> {
+        const response = await this.apiInventoryEntryListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryEntryNullingListRaw(requestParameters: ApiInventoryEntryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryEntryNullingList(requestParameters: ApiInventoryEntryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryPartialUpdateRaw(requestParameters: ApiInventoryEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedInventoryEntryToJSON(requestParameters['patchedInventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryPartialUpdate(requestParameters: ApiInventoryEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryEntryProtectingListRaw(requestParameters: ApiInventoryEntryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryEntryProtectingList(requestParameters: ApiInventoryEntryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryProtectingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryRetrieveRaw(requestParameters: ApiInventoryEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryRetrieve(requestParameters: ApiInventoryEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryUpdateRaw(requestParameters: ApiInventoryEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryUpdate().'
+            );
+        }
+
+        if (requestParameters['inventoryEntry'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryEntry',
+                'Required parameter "inventoryEntry" was null or undefined when calling apiInventoryEntryUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryEntryToJSON(requestParameters['inventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryUpdate(requestParameters: ApiInventoryEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryLocationCascadingListRaw(requestParameters: ApiInventoryLocationCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryLocationCascadingList(requestParameters: ApiInventoryLocationCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationCreateRaw(requestParameters: ApiInventoryLocationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['inventoryLocation'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryLocation',
+                'Required parameter "inventoryLocation" was null or undefined when calling apiInventoryLocationCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryLocationToJSON(requestParameters['inventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationCreate(requestParameters: ApiInventoryLocationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationDestroyRaw(requestParameters: ApiInventoryLocationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationDestroy(requestParameters: ApiInventoryLocationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiInventoryLocationDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationListRaw(requestParameters: ApiInventoryLocationListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryLocationList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryLocationListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationList(requestParameters: ApiInventoryLocationListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryLocationList> {
+        const response = await this.apiInventoryLocationListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryLocationNullingListRaw(requestParameters: ApiInventoryLocationNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryLocationNullingList(requestParameters: ApiInventoryLocationNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationPartialUpdateRaw(requestParameters: ApiInventoryLocationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedInventoryLocationToJSON(requestParameters['patchedInventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationPartialUpdate(requestParameters: ApiInventoryLocationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryLocationProtectingListRaw(requestParameters: ApiInventoryLocationProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryLocationProtectingList(requestParameters: ApiInventoryLocationProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationProtectingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationRetrieveRaw(requestParameters: ApiInventoryLocationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationRetrieve(requestParameters: ApiInventoryLocationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationUpdateRaw(requestParameters: ApiInventoryLocationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationUpdate().'
+            );
+        }
+
+        if (requestParameters['inventoryLocation'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryLocation',
+                'Required parameter "inventoryLocation" was null or undefined when calling apiInventoryLocationUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-location/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryLocationToJSON(requestParameters['inventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationUpdate(requestParameters: ApiInventoryLocationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogListRaw(requestParameters: ApiInventoryLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryLogList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['entryId'] != null) {
+            queryParameters['entry_id'] = requestParameters['entryId'];
+        }
+
+        if (requestParameters['foodId'] != null) {
+            queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-log/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryLogListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogList(requestParameters: ApiInventoryLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryLogList> {
+        const response = await this.apiInventoryLogListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogRetrieveRaw(requestParameters: ApiInventoryLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLog>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLogRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/inventory-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLogFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogRetrieve(requestParameters: ApiInventoryLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLog> {
+        const response = await this.apiInventoryLogRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -19603,6 +22075,46 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
         const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdateRaw(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpaceBatchUpdate>> {
+        if (requestParameters['userSpaceBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'userSpaceBatchUpdate',
+                'Required parameter "userSpaceBatchUpdate" was null or undefined when calling apiUserSpaceBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-space/batch_update/`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserSpaceBatchUpdateToJSON(requestParameters['userSpaceBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserSpaceBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdate(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpaceBatchUpdate> {
+        const response = await this.apiUserSpaceBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

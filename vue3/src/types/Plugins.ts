@@ -6,7 +6,9 @@ export type TandoorPlugin = {
     basePath: string,
     defaultLocale: any,
     localeFiles: any,
+
     routes: RouteRecordRaw[]
+    settingRoutes?: RouteRecordRaw[],
 
     navigationDrawer: any[],
     bottomNavigation: any[],
@@ -15,6 +17,7 @@ export type TandoorPlugin = {
     buildInputs?: string[],
 
     databasePageComponent?: Component,
+    settingsComponent?: Component,
 
     disabled?: boolean
 }
