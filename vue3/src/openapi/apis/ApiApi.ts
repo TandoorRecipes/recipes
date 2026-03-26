@@ -24,7 +24,10 @@ import type {
   ConnectorConfig,
   CookLog,
   CustomFilter,
+  EnterpriseBillingInvoice,
   EnterpriseBillingPlan,
+  EnterpriseBillingProduct,
+  EnterpriseBillingReferralLink,
   EnterpriseSocialEmbed,
   EnterpriseSpace,
   ExportLog,
@@ -65,7 +68,10 @@ import type {
   PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
+  PaginatedEnterpriseBillingInvoiceList,
   PaginatedEnterpriseBillingPlanList,
+  PaginatedEnterpriseBillingProductList,
+  PaginatedEnterpriseBillingReferralLinkList,
   PaginatedEnterpriseSocialEmbedList,
   PaginatedEnterpriseSocialRecipeSearchList,
   PaginatedEnterpriseSpaceList,
@@ -118,7 +124,10 @@ import type {
   PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
+  PatchedEnterpriseBillingInvoice,
   PatchedEnterpriseBillingPlan,
+  PatchedEnterpriseBillingProduct,
+  PatchedEnterpriseBillingReferralLink,
   PatchedEnterpriseSocialEmbed,
   PatchedEnterpriseSpace,
   PatchedExportLog,
@@ -223,8 +232,14 @@ import {
     CookLogToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
+    EnterpriseBillingInvoiceFromJSON,
+    EnterpriseBillingInvoiceToJSON,
     EnterpriseBillingPlanFromJSON,
     EnterpriseBillingPlanToJSON,
+    EnterpriseBillingProductFromJSON,
+    EnterpriseBillingProductToJSON,
+    EnterpriseBillingReferralLinkFromJSON,
+    EnterpriseBillingReferralLinkToJSON,
     EnterpriseSocialEmbedFromJSON,
     EnterpriseSocialEmbedToJSON,
     EnterpriseSpaceFromJSON,
@@ -305,8 +320,14 @@ import {
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
     PaginatedCustomFilterListToJSON,
+    PaginatedEnterpriseBillingInvoiceListFromJSON,
+    PaginatedEnterpriseBillingInvoiceListToJSON,
     PaginatedEnterpriseBillingPlanListFromJSON,
     PaginatedEnterpriseBillingPlanListToJSON,
+    PaginatedEnterpriseBillingProductListFromJSON,
+    PaginatedEnterpriseBillingProductListToJSON,
+    PaginatedEnterpriseBillingReferralLinkListFromJSON,
+    PaginatedEnterpriseBillingReferralLinkListToJSON,
     PaginatedEnterpriseSocialEmbedListFromJSON,
     PaginatedEnterpriseSocialEmbedListToJSON,
     PaginatedEnterpriseSocialRecipeSearchListFromJSON,
@@ -411,8 +432,14 @@ import {
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
     PatchedCustomFilterToJSON,
+    PatchedEnterpriseBillingInvoiceFromJSON,
+    PatchedEnterpriseBillingInvoiceToJSON,
     PatchedEnterpriseBillingPlanFromJSON,
     PatchedEnterpriseBillingPlanToJSON,
+    PatchedEnterpriseBillingProductFromJSON,
+    PatchedEnterpriseBillingProductToJSON,
+    PatchedEnterpriseBillingReferralLinkFromJSON,
+    PatchedEnterpriseBillingReferralLinkToJSON,
     PatchedEnterpriseSocialEmbedFromJSON,
     PatchedEnterpriseSocialEmbedToJSON,
     PatchedEnterpriseSpaceFromJSON,
@@ -845,6 +872,37 @@ export interface ApiDownloadFileRetrieveRequest {
     fileId: number;
 }
 
+export interface ApiEnterpriseBillingInvoiceCreateRequest {
+    enterpriseBillingInvoice: Omit<EnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingInvoiceDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceDownloadRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingInvoicePartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingInvoice?: Omit<PatchedEnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingInvoiceRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceUpdateRequest {
+    id: number;
+    enterpriseBillingInvoice: Omit<EnterpriseBillingInvoice, 'createdAt'>;
+}
+
 export interface ApiEnterpriseBillingPlanCreateRequest {
     enterpriseBillingPlan: EnterpriseBillingPlan;
 }
@@ -870,6 +928,60 @@ export interface ApiEnterpriseBillingPlanRetrieveRequest {
 export interface ApiEnterpriseBillingPlanUpdateRequest {
     id: number;
     enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingProductCreateRequest {
+    enterpriseBillingProduct: EnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingProductDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingProductListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingProductPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingProduct?: PatchedEnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingProductRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingProductUpdateRequest {
+    id: number;
+    enterpriseBillingProduct: EnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingReferralLinkCreateRequest {
+    enterpriseBillingReferralLink: Omit<EnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingReferralLinkDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingReferralLink?: Omit<PatchedEnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingReferralLinkRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkUpdateRequest {
+    id: number;
+    enterpriseBillingReferralLink: Omit<EnterpriseBillingReferralLink, 'createdAt'>;
 }
 
 export interface ApiEnterpriseBillingStripeCheckoutSessionCreateRequest {
@@ -5118,6 +5230,267 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiEnterpriseBillingInvoiceCreateRaw(requestParameters: ApiEnterpriseBillingInvoiceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['enterpriseBillingInvoice'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingInvoice',
+                'Required parameter "enterpriseBillingInvoice" was null or undefined when calling apiEnterpriseBillingInvoiceCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingInvoiceToJSON(requestParameters['enterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceCreate(requestParameters: ApiEnterpriseBillingInvoiceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDestroyRaw(requestParameters: ApiEnterpriseBillingInvoiceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDestroy(requestParameters: ApiEnterpriseBillingInvoiceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingInvoiceDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDownloadRetrieveRaw(requestParameters: ApiEnterpriseBillingInvoiceDownloadRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceDownloadRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/download/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDownloadRetrieve(requestParameters: ApiEnterpriseBillingInvoiceDownloadRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceDownloadRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceListRaw(requestParameters: ApiEnterpriseBillingInvoiceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingInvoiceList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingInvoiceListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceList(requestParameters: ApiEnterpriseBillingInvoiceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingInvoiceList> {
+        const response = await this.apiEnterpriseBillingInvoiceListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoicePartialUpdateRaw(requestParameters: ApiEnterpriseBillingInvoicePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoicePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingInvoiceToJSON(requestParameters['patchedEnterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoicePartialUpdate(requestParameters: ApiEnterpriseBillingInvoicePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoicePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceRetrieveRaw(requestParameters: ApiEnterpriseBillingInvoiceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceRetrieve(requestParameters: ApiEnterpriseBillingInvoiceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceUpdateRaw(requestParameters: ApiEnterpriseBillingInvoiceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingInvoice'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingInvoice',
+                'Required parameter "enterpriseBillingInvoice" was null or undefined when calling apiEnterpriseBillingInvoiceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-invoice/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingInvoiceToJSON(requestParameters['enterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceUpdate(requestParameters: ApiEnterpriseBillingInvoiceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiEnterpriseBillingPlanCreateRaw(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
         if (requestParameters['enterpriseBillingPlan'] == null) {
             throw new runtime.RequiredError(
@@ -5339,6 +5712,486 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiEnterpriseBillingPlanUpdate(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
         const response = await this.apiEnterpriseBillingPlanUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductCreateRaw(requestParameters: ApiEnterpriseBillingProductCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['enterpriseBillingProduct'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingProduct',
+                'Required parameter "enterpriseBillingProduct" was null or undefined when calling apiEnterpriseBillingProductCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingProductToJSON(requestParameters['enterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductCreate(requestParameters: ApiEnterpriseBillingProductCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductDestroyRaw(requestParameters: ApiEnterpriseBillingProductDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductDestroy(requestParameters: ApiEnterpriseBillingProductDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingProductDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductListRaw(requestParameters: ApiEnterpriseBillingProductListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingProductList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingProductListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductList(requestParameters: ApiEnterpriseBillingProductListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingProductList> {
+        const response = await this.apiEnterpriseBillingProductListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductPartialUpdateRaw(requestParameters: ApiEnterpriseBillingProductPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingProductToJSON(requestParameters['patchedEnterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductPartialUpdate(requestParameters: ApiEnterpriseBillingProductPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductRetrieveRaw(requestParameters: ApiEnterpriseBillingProductRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductRetrieve(requestParameters: ApiEnterpriseBillingProductRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductUpdateRaw(requestParameters: ApiEnterpriseBillingProductUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingProduct'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingProduct',
+                'Required parameter "enterpriseBillingProduct" was null or undefined when calling apiEnterpriseBillingProductUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-product/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingProductToJSON(requestParameters['enterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductUpdate(requestParameters: ApiEnterpriseBillingProductUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkCreateRaw(requestParameters: ApiEnterpriseBillingReferralLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['enterpriseBillingReferralLink'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingReferralLink',
+                'Required parameter "enterpriseBillingReferralLink" was null or undefined when calling apiEnterpriseBillingReferralLinkCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingReferralLinkToJSON(requestParameters['enterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkCreate(requestParameters: ApiEnterpriseBillingReferralLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkDestroyRaw(requestParameters: ApiEnterpriseBillingReferralLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkDestroy(requestParameters: ApiEnterpriseBillingReferralLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingReferralLinkDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkGetLinkRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/get_link/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkGetLinkRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkGetLinkRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkListRaw(requestParameters: ApiEnterpriseBillingReferralLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingReferralLinkList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingReferralLinkListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkList(requestParameters: ApiEnterpriseBillingReferralLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingReferralLinkList> {
+        const response = await this.apiEnterpriseBillingReferralLinkListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkPartialUpdateRaw(requestParameters: ApiEnterpriseBillingReferralLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingReferralLinkToJSON(requestParameters['patchedEnterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkPartialUpdate(requestParameters: ApiEnterpriseBillingReferralLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkRetrieveRaw(requestParameters: ApiEnterpriseBillingReferralLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkRetrieve(requestParameters: ApiEnterpriseBillingReferralLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkUpdateRaw(requestParameters: ApiEnterpriseBillingReferralLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingReferralLink'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingReferralLink',
+                'Required parameter "enterpriseBillingReferralLink" was null or undefined when calling apiEnterpriseBillingReferralLinkUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/enterprise-billing-referral-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingReferralLinkToJSON(requestParameters['enterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkUpdate(requestParameters: ApiEnterpriseBillingReferralLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
