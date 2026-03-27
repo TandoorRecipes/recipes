@@ -19,13 +19,15 @@
                 <v-select :label="$t('Type')" v-model="editingObj.method" :items="['DB', 'NEXTCLOUD', 'LOCAL']"></v-select>
 
                 <v-text-field :label="$t('Username')" v-model="editingObj.username" v-if="editingObj.method == 'NEXTCLOUD' || editingObj.method == 'DB'"></v-text-field>
-
+                
                 <v-text-field :label="$t('Password')" :hint="$t('StoragePasswordTokenHelp')" persistent-hint v-model="editingObj.password" v-if="editingObj.method == 'NEXTCLOUD'"></v-text-field>
                 <v-text-field :label="$t('Access_Token')" :hint="$t('StoragePasswordTokenHelp')" persistent-hint v-model="editingObj.token" v-if="editingObj.method == 'DB'"></v-text-field>
 
+                <v-text-field :label="$t('Url')" v-model="editingObj.url" v-if="editingObj.method == 'NEXTCLOUD'"></v-text-field>
                 <v-text-field :label="$t('Path')" v-model="editingObj.path"></v-text-field>
 
-                <p v-if="editingObj.method === 'LOCAL'">{{$t('LocalStoragePathHelp')}} <a href="https://docs.tandoor.dev/system/configuration/#local-storage-paths" target="_blank" rel="nofollow noreferrer">{{$t('Help')}}</a></p>
+                <p v-if="editingObj.method === 'LOCAL'">{{ $t('LocalStoragePathHelp') }} <a href="https://docs.tandoor.dev/system/configuration/#local-storage-paths" target="_blank"
+                                                                                            rel="nofollow noreferrer">{{ $t('Help') }}</a></p>
             </v-form>
         </v-card-text>
     </model-editor-base>
