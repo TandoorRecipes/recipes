@@ -702,6 +702,7 @@ SOCIALACCOUNT_FORMS = {
 }
 
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ALLAUTH_TRUSTED_PROXY_COUNT = int(os.getenv('ALLAUTH_TRUSTED_PROXY_COUNT', 1))
 ACCOUNT_RATE_LIMITS = {
     "change_password": "1/m/user",
     "reset_password": "1/m/ip,1/m/key",
