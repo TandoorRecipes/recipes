@@ -14,7 +14,7 @@ class HomeAssistant(Connector):
     _logger: Logger
 
     def __init__(self, config: ConnectorConfig):
-        if not config.token or not config.url or not config.todo_entity:
+        if not config.token or not config.url or not config.list_id:
             raise ValueError("config for HomeAssistantConnector in incomplete")
 
         self._logger = logging.getLogger(f"recipes.connector.homeassistant.{config.name}")
@@ -38,10 +38,10 @@ class HomeAssistant(Connector):
 
         item, description = _format_shopping_list_entry(shopping_list_entry)
 
-        self._logger.debug(f"adding {item=} with {description=} to {self._config.todo_entity}")
+        self._logger.debug(f"adding {item=} with {description=} to {self._config.list_id}")
 
         data = {
-            "entity_id": self._config.todo_entity,
+            "entity_id": self._config.list_id,
             "item": item,
         }
 
@@ -64,10 +64,10 @@ class HomeAssistant(Connector):
 
         item, _ = _format_shopping_list_entry(shopping_list_entry)
 
-        self._logger.debug(f"removing {item=} from {self._config.todo_entity}")
+        self._logger.debug(f"removing {item=} from {self._config.list_id}")
 
         data = {
-            "entity_id": self._config.todo_entity,
+            "entity_id": self._config.list_id,
             "item": item,
         }
 

@@ -449,7 +449,8 @@ class AiLog(models.Model, PermissionModelMixin):
 
 class ConnectorConfig(models.Model, PermissionModelMixin):
     HOMEASSISTANT = 'HomeAssistant'
-    CONNECTER_TYPE = ((HOMEASSISTANT, 'HomeAssistant'),)
+    BRING = 'Bring'
+    CONNECTER_TYPE = ((HOMEASSISTANT, 'HomeAssistant'), (BRING, 'Bring'),)
 
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     type = models.CharField(
@@ -464,7 +465,10 @@ class ConnectorConfig(models.Model, PermissionModelMixin):
 
     url = models.URLField(blank=True, null=True)
     token = models.CharField(max_length=512, blank=True, null=True)
-    todo_entity = models.CharField(max_length=128, blank=True, null=True)
+    list_id = models.CharField(max_length=128, blank=True, null=True)
+
+    email = models.CharField(max_length=256, blank=True, null=True)
+    password = models.CharField(max_length=512, blank=True, null=True)
 
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
