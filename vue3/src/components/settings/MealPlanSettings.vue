@@ -3,6 +3,8 @@
         <p class="text-h6">{{ $t('Meal_Plan') }}</p>
         <v-divider class="mb-3"></v-divider>
 
+        <closable-help-alert :text="$t('HouseholdSettingsHelp')" :title="$t('Household')"></closable-help-alert>
+
         <model-select model="MealType" v-model="useUserPreferenceStore().userSettings.defaultMealType"></model-select>
 
         <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
@@ -21,6 +23,7 @@
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import MealPlanDeviceSettings from "@/components/settings/MealPlanDeviceSettings.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 
 
 
