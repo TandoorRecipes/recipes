@@ -395,6 +395,29 @@ SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"myidp","name
 | `SOCIALACCOUNT_EMAIL_AUTHENTICATION` | `0` | Match social logins to existing accounts by email ([details](../features/authentication.md#email-based-account-matching)) |
 | `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` | `0` | Skip email verification when matching ([details](../features/authentication.md#email-based-account-matching)) |
 
+#### Trusted Proxy Count
+
+> default `1`
+
+Tandoor uses IP-based rate limiting on login, signup, and password reset to prevent brute-force attacks.
+Because Tandoor's built-in nginx proxies to the application server via a unix socket, the application
+cannot see client IP addresses directly and must read them from the `X-Forwarded-For` header.
+
+This setting tells Tandoor how many reverse proxies sit between the client and the application server.
+The default value of `1` accounts for Tandoor's built-in nginx and works for most deployments. If you
+run additional reverse proxies, increase this value to match your total proxy count so that rate limiting
+uses the real client IP instead of a proxy IP.
+
+| Setup | Value |
+| :--- | :--- |
+| Direct access (no external proxy) | `1` |
+| One external reverse proxy | `2` |
+| Two external reverse proxies (e.g. CDN + local proxy) | `3` |
+
+```
+ALLAUTH_TRUSTED_PROXY_COUNT=1
+```
+
 #### Remote User Auth
 > default `0` - options `0`, `1`
 
