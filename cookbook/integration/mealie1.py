@@ -25,7 +25,7 @@ class Mealie1(Integration):
     def get_recipe_from_file(self, file):
         mealie_database = json.loads(BytesIO(file.read('database.json')).getvalue().decode("utf-8"))
         self.import_log.total_recipes = len(mealie_database['recipes'])
-        self.import_log.msg += f"Importing {len(mealie_database["categories"]) + len(mealie_database["tags"])} tags and categories as keywords...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['categories']) + len(mealie_database['tags'])} tags and categories as keywords...\n"
         self.import_log.save()
 
         keywords_categories_dict = {}
@@ -44,7 +44,7 @@ class Mealie1(Integration):
                 keyword = Keyword.objects.create(name=t['name'], space=self.request.space)
                 keywords_tags_dict[t['id']] = keyword.pk
 
-        self.import_log.msg += f"Importing {len(mealie_database["multi_purpose_labels"])} multi purpose labels as supermarket categories...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['multi_purpose_labels'])} multi purpose labels as supermarket categories...\n"
         self.import_log.save()
 
         supermarket_categories_dict = {}
@@ -55,7 +55,7 @@ class Mealie1(Integration):
                 supermarket_category = SupermarketCategory.objects.create(name=m['name'], space=self.request.space)
                 supermarket_categories_dict[m['id']] = supermarket_category.pk
 
-        self.import_log.msg += f"Importing {len(mealie_database["ingredient_foods"])} foods...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['ingredient_foods'])} foods...\n"
         self.import_log.save()
 
         foods_dict = {}
@@ -76,7 +76,7 @@ class Mealie1(Integration):
                     food.onhand_users.add(self.request.user)
                 foods_dict[f['id']] = food.pk
 
-        self.import_log.msg += f"Importing {len(mealie_database["ingredient_units"])} units...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['ingredient_units'])} units...\n"
         self.import_log.save()
 
         units_dict = {}
@@ -135,7 +135,7 @@ class Mealie1(Integration):
 
         Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation, ignore_conflicts=True)
 
-        self.import_log.msg += f"Importing {len(mealie_database["recipe_instructions"])} instructions...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['recipe_instructions'])} instructions...\n"
         self.import_log.save()
 
         steps_relation = []
@@ -174,7 +174,7 @@ class Mealie1(Integration):
 
         ingredient_parser = IngredientParser(self.request, True)
 
-        self.import_log.msg += f"Importing {len(mealie_database["recipes_ingredients"])} ingredients...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['recipes_ingredients'])} ingredients...\n"
         self.import_log.save()
 
         # mealie stores the reference to a step (instruction) from an ingredient (reference) in the recipe_ingredient_ref_link table
@@ -221,7 +221,7 @@ class Mealie1(Integration):
                     ingredients_relation.append(Step.ingredients.through(step_id=get_step_id(i, first_step_of_recipe_dict, step_id_dict,recipe_ingredient_ref_link_dict), ingredient_id=ingredient.pk))
         Step.ingredients.through.objects.bulk_create(ingredients_relation)
 
-        self.import_log.msg += f"Importing {len(mealie_database["recipes_to_categories"]) + len(mealie_database["recipes_to_tags"])} category and keyword relations...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['recipes_to_categories']) + len(mealie_database['recipes_to_tags'])} category and keyword relations...\n"
         self.import_log.save()
 
         recipe_keyword_relation = []
@@ -235,7 +235,7 @@ class Mealie1(Integration):
 
         Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation, ignore_conflicts=True)
 
-        self.import_log.msg += f"Importing {len(mealie_database["recipe_nutrition"])} properties...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['recipe_nutrition'])} properties...\n"
         self.import_log.save()
 
         property_types_dict = {
@@ -280,7 +280,7 @@ class Mealie1(Integration):
             except:
                 pass
 
-        self.import_log.msg += f"Importing {len(mealie_database["recipe_comments"]) + len(mealie_database["recipe_timeline_events"])} comments and cook logs...\n"
+        self.import_log.msg += f"Importing {len(mealie_database['recipe_comments']) + len(mealie_database['recipe_timeline_events'])} comments and cook logs...\n"
         self.import_log.save()
 
         cook_log_list = []
@@ -308,7 +308,7 @@ class Mealie1(Integration):
         CookLog.objects.bulk_create(cook_log_list)
 
         if self.import_meal_plans:
-            self.import_log.msg += f"Importing {len(mealie_database["group_meal_plans"])} meal plans...\n"
+            self.import_log.msg += f"Importing {len(mealie_database['group_meal_plans'])} meal plans...\n"
             self.import_log.save()
 
             meal_types_dict = {}
@@ -332,7 +332,7 @@ class Mealie1(Integration):
             MealPlan.objects.bulk_create(meal_plans)
 
         if self.import_shopping_lists:
-            self.import_log.msg += f"Importing {len(mealie_database["shopping_list_items"])} shopping list items...\n"
+            self.import_log.msg += f"Importing {len(mealie_database['shopping_list_items'])} shopping list items...\n"
             self.import_log.save()
 
             shopping_list_items = []
