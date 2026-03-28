@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2024-09-27 13:58+0000\n"
-"Last-Translator: supaeasy <crafty_renewably854@supaeasy.de>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2026-03-28 17:02+0000\n"
+"Last-Translator: throny <tandoor@throny.dev>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -238,7 +238,7 @@ msgstr "Kohlenhydrate"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "Cholesterin"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -247,33 +247,31 @@ msgstr "Fett"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Ballaststoffe"
 
 #: .\cookbook\integration\mealie1.py:215
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
 msgstr "Proteine"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Gesättigte Fette"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Natrium"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Zucker"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr ""
+msgstr "Trans-Fette"
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "ungesättigte Fette"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -487,7 +485,7 @@ msgstr "Du hast Dein Datei-Uploadlimit erreicht."
 
 #: .\cookbook\serializer.py:281
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Der Dateityp ist nicht zulässig."
 
 #: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
 msgid ""
@@ -497,7 +495,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Der Space-Name muss einmalig sein."
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
@@ -852,10 +850,8 @@ msgid "We are sorry, but the sign up is currently closed."
 msgstr "Es tut uns Leid, aber die Registrierung ist derzeit geschlossen."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
-#, fuzzy
-#| msgid "Tandoor Recipes Invite"
 msgid "Tandoor Recipe Manager"
-msgstr "Tandoor Recipes Einladung"
+msgstr "Tandoor Rezept Manager"
 
 #: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
@@ -1431,8 +1427,6 @@ msgstr ""
 "        %(site_name)s. Fülle bitte vorher noch diese Formular aus:"
 
 #: .\cookbook\templates\socialaccount\signup.html:32
-#, fuzzy
-#| msgid "I accept the follwoing"
 msgid "I accept the following"
 msgstr "Ich akzeptiere folgendes"
 
@@ -1520,15 +1514,6 @@ msgid "System"
 msgstr "System"
 
 #: .\cookbook\templates\system.html:24
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "        Django Recipes is an open source free software application. It "
-#| "can be found on\n"
-#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-#| "recipes/releases\">here</a>.\n"
-#| "    "
 msgid ""
 "\n"
 "        Tandoor Recipes is an open source free software application. It can "
@@ -1539,11 +1524,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Django Recipes ist eine kostenlose OpenSource-Anwendung. Der "
+"        Tandoor Recipes ist eine kostenlose OpenSource-Anwendung. Der "
 "Quellcode befindet sich auf\n"
-"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"        Eine Übersicht über alle Änderungen findet sich <a href=\"https://"
-"github.com/vabene1111/recipes/releases\">hier</a>.\n"
+"        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>.\n"
+"        Eine Übersicht über alle Änderungen findet sich <a href="
+"\"https://github.com/TandoorRecipes/recipes/releases\">hier</a>.\n"
 "    "
 
 #: .\cookbook\templates\system.html:30
@@ -1565,7 +1550,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:56
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: .\cookbook\templates\system.html:67
 msgid "Media Serving"
@@ -1795,15 +1780,13 @@ msgstr "{obj.name} wurde der Einkaufsliste hinzugefügt."
 #, fuzzy
 #| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgid "Filter meal plans from date (inclusive)."
-msgstr ""
-"Filtern Sie Essenspläne ab Datum (einschließlich) im Format JJJJ-MM-TT."
+msgstr "Speisepläne ab einschließlich Datum filtern."
 
 #: .\cookbook\views\api.py:1241
 #, fuzzy
 #| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgid "Filter meal plans to date (inclusive)."
-msgstr ""
-"Filtern Sie die Essenspläne nach Datum (einschließlich) im Format JJJJ-MM-TT."
+msgstr "Speisepläne bis einschließlich Datum filtern."
 
 #: .\cookbook\views\api.py:1244
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
