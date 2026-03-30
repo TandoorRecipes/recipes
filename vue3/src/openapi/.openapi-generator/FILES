@@ -20,7 +20,10 @@ models/CookLog.ts
 models/CustomFilter.ts
 models/DefaultPageEnum.ts
 models/DeleteEnum.ts
+models/EnterpriseBillingInvoice.ts
 models/EnterpriseBillingPlan.ts
+models/EnterpriseBillingProduct.ts
+models/EnterpriseBillingReferralLink.ts
 models/EnterpriseKeyword.ts
 models/EnterpriseSocialEmbed.ts
 models/EnterpriseSocialEmbedTypeEnum.ts
@@ -53,6 +56,7 @@ models/InventoryEntry.ts
 models/InventoryLocation.ts
 models/InventoryLog.ts
 models/InviteLink.ts
+models/InvoiceSystemEnum.ts
 models/Keyword.ts
 models/KeywordLabel.ts
 models/KeywordModeEnum.ts
@@ -78,7 +82,10 @@ models/PaginatedBookmarkletImportListList.ts
 models/PaginatedConnectorConfigList.ts
 models/PaginatedCookLogList.ts
 models/PaginatedCustomFilterList.ts
+models/PaginatedEnterpriseBillingInvoiceList.ts
 models/PaginatedEnterpriseBillingPlanList.ts
+models/PaginatedEnterpriseBillingProductList.ts
+models/PaginatedEnterpriseBillingReferralLinkList.ts
 models/PaginatedEnterpriseSocialEmbedList.ts
 models/PaginatedEnterpriseSocialRecipeSearchList.ts
 models/PaginatedEnterpriseSpaceList.ts
@@ -131,7 +138,10 @@ models/PatchedBookmarkletImport.ts
 models/PatchedConnectorConfig.ts
 models/PatchedCookLog.ts
 models/PatchedCustomFilter.ts
+models/PatchedEnterpriseBillingInvoice.ts
 models/PatchedEnterpriseBillingPlan.ts
+models/PatchedEnterpriseBillingProduct.ts
+models/PatchedEnterpriseBillingReferralLink.ts
 models/PatchedEnterpriseSocialEmbed.ts
 models/PatchedEnterpriseSpace.ts
 models/PatchedExportLog.ts

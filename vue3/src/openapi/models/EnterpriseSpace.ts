@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { EnterpriseBillingPlan } from './EnterpriseBillingPlan';
+import {
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanFromJSONTyped,
+    EnterpriseBillingPlanToJSON,
+} from './EnterpriseBillingPlan';
+
 /**
  * 
  * @export
@@ -39,10 +46,10 @@ export interface EnterpriseSpace {
     billingCustomerId?: string;
     /**
      * 
-     * @type {number}
+     * @type {EnterpriseBillingPlan}
      * @memberof EnterpriseSpace
      */
-    billingPlan?: number;
+    billingPlan: EnterpriseBillingPlan;
     /**
      * 
      * @type {string}
@@ -69,6 +76,7 @@ export interface EnterpriseSpace {
 export function instanceOfEnterpriseSpace(value: object): value is EnterpriseSpace {
     if (!('space' in value) || value['space'] === undefined) return false;
     if (!('billingLicensedModules' in value) || value['billingLicensedModules'] === undefined) return false;
+    if (!('billingPlan' in value) || value['billingPlan'] === undefined) return false;
     return true;
 }
 
@@ -85,7 +93,7 @@ export function EnterpriseSpaceFromJSONTyped(json: any, ignoreDiscriminator: boo
         'space': json['space'],
         'billingLicensedModules': json['billing_licensed_modules'],
         'billingCustomerId': json['billing_customer_id'] == null ? undefined : json['billing_customer_id'],
-        'billingPlan': json['billing_plan'] == null ? undefined : json['billing_plan'],
+        'billingPlan': EnterpriseBillingPlanFromJSON(json['billing_plan']),
         'billingSubscriptionId': json['billing_subscription_id'] == null ? undefined : json['billing_subscription_id'],
         'billingSubscriptionStatus': json['billing_subscription_status'] == null ? undefined : json['billing_subscription_status'],
         'billingMonthlyPrice': json['billing_monthly_price'] == null ? undefined : json['billing_monthly_price'],
@@ -101,7 +109,7 @@ export function EnterpriseSpaceToJSON(value?: EnterpriseSpace | null): any {
         'space': value['space'],
         'billing_licensed_modules': value['billingLicensedModules'],
         'billing_customer_id': value['billingCustomerId'],
-        'billing_plan': value['billingPlan'],
+        'billing_plan': EnterpriseBillingPlanToJSON(value['billingPlan']),
         'billing_subscription_id': value['billingSubscriptionId'],
         'billing_subscription_status': value['billingSubscriptionStatus'],
         'billing_monthly_price': value['billingMonthlyPrice'],

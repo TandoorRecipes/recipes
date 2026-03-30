@@ -116,7 +116,7 @@ FORCE_THEME_FROM_SPACE = int(os.getenv('FORCE_THEME_FROM_SPACE', 0))
 # minimum interval that users can set for automatic sync of shopping lists
 SHOPPING_MIN_AUTOSYNC_INTERVAL = int(os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
 
-ALLOWED_HOSTS = extract_comma_list('ALLOWED_HOSTS', '*')
+ALLOWED_HOSTS = extract_comma_list('ALLOWED_HOSTS', '')
 CSRF_TRUSTED_ORIGINS = extract_comma_list('CSRF_TRUSTED_ORIGINS')
 
 if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
@@ -702,6 +702,7 @@ SOCIALACCOUNT_FORMS = {
 }
 
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ALLAUTH_TRUSTED_PROXY_COUNT = int(os.getenv('ALLAUTH_TRUSTED_PROXY_COUNT', 1))
 ACCOUNT_RATE_LIMITS = {
     "change_password": "1/m/user",
     "reset_password": "1/m/ip,1/m/key",
