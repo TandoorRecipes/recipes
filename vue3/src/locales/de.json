@@ -973,5 +973,6 @@
     "Status": "Status",
     "Subtitle_Description": "Informationen unterhalb des Namen des Gerichts (max. 2).",
     "TreeView": "Baumansicht",
-    "UsedInRecipes": "In Rezepten verwendet"
+    "UsedInRecipes": "In Rezepten verwendet",
+    "CollapseAll": "alles aufklappen"
 }
