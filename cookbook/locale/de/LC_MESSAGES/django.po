@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2026-03-28 17:02+0000\n"
-"Last-Translator: throny <tandoor@throny.dev>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
-"recipes-backend/de/>\n"
+"PO-Revision-Date: 2026-04-03 01:22+0000\n"
+"Last-Translator: am9zZWY <tandoor@jmueller.simplelogin.com>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
+"backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -1911,7 +1911,7 @@ msgstr "ID der Einheit, die ein Rezept haben sollte."
 
 #: .\cookbook\views\api.py:1464
 msgid "Exact rating of recipe"
-msgstr ""
+msgstr "Genaue Rezeptbewertung"
 
 #: .\cookbook\views\api.py:1465
 #, fuzzy
@@ -2030,6 +2030,9 @@ msgid ""
 "lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
 "created_at,lastviewed,-lastviewed"
 msgstr ""
+"Bestimmt die Reihenfolge der Ergebnisse. Optionen sind: score,-score,name,-"
+"name,lastcooked,-lastcooked,rating,-rating,times_cooked,-"
+"times_cooked,created_at,-created_at,lastviewed,-lastviewed"
 
 #: .\cookbook\views\api.py:1492
 msgid "Returns new results first in search results. [true/<b>false</b>]"
@@ -2041,6 +2044,8 @@ msgid ""
 "Returns the given number of recently viewed recipes before search results "
 "(if given)"
 msgstr ""
+"Gibt die Anzahl der zuletzt gesehenen Rezepte vor jedem Suchergebnis zurück "
+"(wenn gegeben)"
 
 #: .\cookbook\views\api.py:1494
 msgid "ID of a custom filter. Returns all recipes matched by that filter."
@@ -2057,6 +2062,8 @@ msgid ""
 "Return the PropertyTypes matching the property category.  Repeat for "
 "multiple."
 msgstr ""
+"Gibt die PropertyTypes zurück, die der property Kategorie entsprechen.  "
+"Wiederhole für mehrere."
 
 #: .\cookbook\views\api.py:1804 .\cookbook\views\api.py:1860
 #, fuzzy
