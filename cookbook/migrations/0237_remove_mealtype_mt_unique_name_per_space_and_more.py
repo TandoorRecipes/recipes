@@ -5,12 +5,13 @@ from django.db import migrations, models
 import django.db.models.deletion
 from django_scopes import scopes_disabled
 
-from cookbook.models import UserPreference
+from cookbook.models import UserPreference, MealPlan
 
 
 def apply_migration(apps, schema_editor):
     with scopes_disabled():
         MealType = apps.get_model('cookbook', 'MealType')
+        MealPlan = apps.get_model('cookbook', 'MealPlan')
         Space = apps.get_model('cookbook', 'Space')
 
         delete_mealtype_ids = []
@@ -29,6 +30,8 @@ def apply_migration(apps, schema_editor):
 
                 if not replaced_by:
                     space_mealtypes.append(mt)
+                else:
+                    MealPlan.objects.filter(meal_type=mt).update(meal_type=replaced_by)
 
                 # migrate default to userpreference
                 if mt.default:
