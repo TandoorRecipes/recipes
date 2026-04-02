@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2025-08-10 11:36+0000\n"
-"Last-Translator: Elias Sjögreen <eliassjogreen1@gmail.com>\n"
+"PO-Revision-Date: 2026-03-28 03:02+0000\n"
+"Last-Translator: Johan <johanden@gmail.com>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -37,7 +37,7 @@ msgstr "Maximalt antal användare för detta utrymme har uppnåtts."
 
 #: .\cookbook\forms.py:114
 msgid "Email address already taken!"
-msgstr "E-postadressen har redan tagits!"
+msgstr "E-postadressen är redan upptagen!"
 
 #: .\cookbook\forms.py:121
 msgid ""
@@ -86,23 +86,24 @@ msgstr "Du har inte behörighet att se denna sida!"
 #: .\cookbook\helper\permission_helper.py:236
 #: .\cookbook\helper\permission_helper.py:251
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr "Du kan inte interagera med detta objekt för att det ägs inte av dig!"
+msgstr ""
+"Du kan inte interagera med det här objektet eftersom det inte ägs av dig!"
 
 #: .\cookbook\helper\permission_helper.py:420
 msgid "You have reached the maximum number of recipes for your space."
-msgstr "Du har nått det maximala antalet recept för din utrymme."
+msgstr "Du har nått det maximala antalet recept för ditt utrymme."
 
 #: .\cookbook\helper\permission_helper.py:432
 msgid "You have more users than allowed in your space."
-msgstr "Du har mer användare än tillåtet för ditt utrymme."
+msgstr "Du har fler användare än vad som är tillåtet för ditt utrymme."
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "reverse rotation"
-msgstr "återvänd rotering"
+msgstr "omvänd rotation"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "careful rotation"
-msgstr "försiktig rotering"
+msgstr "noggrann rotation"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "knead"
@@ -110,11 +111,11 @@ msgstr "knåda"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "thicken"
-msgstr "förtjocka"
+msgstr "tjockna"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "warm up"
-msgstr "Uppvärm"
+msgstr "Värm upp"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "ferment"
