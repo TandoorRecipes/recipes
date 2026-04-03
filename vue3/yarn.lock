@@ -1381,22 +1381,22 @@
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.1.0.tgz#70fc2e94775e4a07369f11f86f6f0a465b04a381"
   integrity sha512-7hK4g015rWn2PhKcZ99NyT+ZD9sbwm7SGvp7k+k+rKGWnLjS/oQozoIZzWfCewSUeBmnJkIb+CNr7Zc/EyRnnA==
 
-"@vueuse/router@^13.9.0":
-  version "13.9.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/router/-/router-13.9.0.tgz#44235e6732a30b53d1c8e2ef13ce783fdd189ca6"
-  integrity sha512-7AYay8Pv/0fC4D0eygbIyZuLyVs+9D7dsnO5D8aqat9qcOz91v/XFWR667WE1+p+OkU0ib+FjQUdnTVBNoIw8g==
+"@vueuse/router@^14.2.1":
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/router/-/router-14.2.1.tgz#8267e9c1aafe6cda638c1eea59cf7261d0ef4872"
+  integrity sha512-SbZfJe+qn5bj78zNOXT4nYbnp8OIFMyAsdcJb4Y0y9vXi1TsOfglF+YIazi5DPO2lk6/ZukpN5DEQe6KrNOjMw==
   dependencies:
-    "@vueuse/shared" "13.9.0"
-
-"@vueuse/shared@13.9.0":
-  version "13.9.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-13.9.0.tgz#7168b4ed647e625b05eb4e7e80fe8aabd00e3923"
-  integrity sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==
+    "@vueuse/shared" "14.2.1"
 
 "@vueuse/shared@14.1.0":
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.1.0.tgz#49b2face86a9c0c52e20eaf4c732a0223276c11f"
   integrity sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==
+
+"@vueuse/shared@14.2.1":
+  version "14.2.1"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.2.1.tgz#829a271147937f6b105bb1422d3171e6142f47ba"
+  integrity sha512-shTJncjV9JTI4oVNyF1FQonetYAiTBd+Qj7cY89SWbXSkx7gyhrgtEdF2ZAVWS1S3SHlaROO6F2IesJxQEkZBw==
 
 acorn@^8.14.0:
   version "8.15.0"
