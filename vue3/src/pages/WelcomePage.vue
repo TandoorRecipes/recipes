@@ -17,7 +17,8 @@
             <v-stepper-window>
                 <v-stepper-window-item value="1">
                     <v-card flat>
-                        <v-card-title class="text-h4">{{ $t('WelcometoTandoor') }} <span class="text-tandoor">{{useUserPreferenceStore().userSettings.user.displayName}}</span></v-card-title>
+                        <v-card-title class="text-h4">{{ $t('WelcometoTandoor') }} <span class="text-tandoor">{{ useUserPreferenceStore().userSettings.user.displayName }}</span>
+                        </v-card-title>
                         <v-card-text v-if="space">
                             <p class="text-subtitle-1 mb-4">{{ $t('WelcomeSettingsHelp') }}</p>
 
@@ -28,8 +29,6 @@
                             </v-select>
 
                             <v-text-field v-model="useUserPreferenceStore().userSettings.defaultUnit" :label="$t('Default_Unit')"></v-text-field>
-
-                            <v-checkbox :label="$t('Use_Fractions')" :hint="$t('Use_Fractions_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.useFractions"></v-checkbox>
 
                         </v-card-text>
                     </v-card>
@@ -96,6 +95,13 @@
                                 </v-card-text>
                             </v-card>
 
+                            <v-row class="mt-2" v-if="useUserPreferenceStore().activeUserSpace?.household == undefined">
+                                <v-col>
+                                    <p class="text-body-1">{{ $t('HouseholdWelcome') }}</p>
+                                    <v-text-field v-model="householdName" :label="$t('Household')"></v-text-field>
+                                </v-col>
+                            </v-row>
+
                             <v-btn size="x-large" class="mt-4" variant="outlined">{{ $t('CreateInvitation') }}
                                 <model-edit-dialog model="InviteLink" :close-after-create="false" :close-after-save="false"></model-edit-dialog>
                             </v-btn>
@@ -107,7 +113,7 @@
                             <v-btn @click="stepper = '2'" color="success">{{ $t('Back') }}</v-btn>
                         </template>
                         <template #next>
-                            <v-btn @click="stepper = '4'" color="success">{{ $t('Next') }}</v-btn>
+                            <v-btn @click="householdAndNext('4')" color="success" :loading="loading">{{ $t('Next') }}</v-btn>
                         </template>
                     </v-stepper-actions>
                 </v-stepper-window-item>
@@ -150,7 +156,7 @@
 
                     <v-stepper-actions>
                         <template #prev>
-                            <v-btn @click="stepper = '2'" color="success">{{ $t('Back') }}</v-btn>
+                            <v-btn @click="stepper = '3'" color="success">{{ $t('Back') }}</v-btn>
                         </template>
                         <template #next>
                             <v-btn @click="finishWelcome()" color="success" :disabled="false">{{ $t('Finish') }}</v-btn>
@@ -181,6 +187,7 @@ import {RouteLocationRaw, useRouter} from "vue-router";
 const router = useRouter()
 
 const space = ref<undefined | Space>(undefined)
+const householdName = ref("")
 const stepper = ref("1")
 const loading = ref(false)
 
@@ -195,6 +202,7 @@ onMounted(() => {
 function finishWelcome(target: RouteLocationRaw = {name: 'StartPage'}) {
     if (space.value) {
         space.value.spaceSetupCompleted = true
+        space.value.householdSetupCompleted = true
         loading.value = true
         updateSpace().then(() => {
             router.push(target)
@@ -232,6 +240,33 @@ function updateSpaceAndUserSettings() {
         loading.value = false
         stepper.value = "2"
     })
+}
+
+function householdAndNext(nextStep: string) {
+    let api = new ApiApi()
+    let userSpace = useUserPreferenceStore().activeUserSpace
+
+    if (householdName.value != "" && userSpace != null && userSpace.household == undefined) {
+        loading.value = true
+
+        api.apiHouseholdCreate({household: {name: householdName.value}}).then(r => {
+            userSpace.household = r
+
+            api.apiUserSpaceUpdate({id: userSpace.id!, userSpace: userSpace}).then(r => {
+                stepper.value = nextStep
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            }).finally(() => {
+                loading.value = false
+            })
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            loading.value = false
+        })
+    } else {
+        stepper.value = nextStep
+    }
+
 }
 
 /**

@@ -114,11 +114,13 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         }
 
         if(!(useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY && useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only)){
-            structure.categories.forEach(category => {
-                if (category.foods.size > 0) {
-                    orderedStructure.push(category)
-                }
-            })
+            Array.from(structure.categories.values())
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .forEach(category => {
+                    if (category.foods.size > 0) {
+                        orderedStructure.push(category)
+                    }
+                })
         }
 
         return orderedStructure

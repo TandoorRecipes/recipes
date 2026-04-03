@@ -9,6 +9,7 @@ import threading
 import traceback
 import uuid
 from collections import OrderedDict
+from decimal import Decimal, InvalidOperation
 from functools import wraps
 from json import JSONDecodeError
 from urllib.parse import unquote, quote
@@ -689,7 +690,7 @@ class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
 class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsGuest & IsReadOnlyDRF & CustomTokenHasReadWriteScope]
     pagination_disabled = True
     http_method_names = ['get', ]
 
@@ -1109,6 +1110,16 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         unit = request.data.get('unit', None)
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
 
+        try:
+            amount = Decimal(str(amount))
+        except (InvalidOperation, ValueError):
+            raise APIException({'error': 'Invalid amount — must be a numeric value'}, code=status.HTTP_400_BAD_REQUEST)
+
+        if unit is not None:
+            unit = Unit.objects.filter(pk=unit, space=request.space).first()
+            if unit and unit is None:
+                raise APIException({'error': 'Unit not found in current space'}, code=status.HTTP_400_BAD_REQUEST)
+
         ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space,
                                          created_by=request.user)
         return Response(content, status=status.HTTP_204_NO_CONTENT)
@@ -1411,7 +1422,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | (CustomIsShared & IsReadOnlyDRF)) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1438,7 +1449,7 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
 class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsOwner | (CustomIsShared & IsReadOnlyDRF)) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1931,8 +1942,8 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         serializer = self.serializer_class(data=request.data, partial=True)
 
         if serializer.is_valid():
-            recipes = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space)
-            safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).values_list('id', flat=True)
+            recipes = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
+            safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values_list('id', flat=True)
 
             if 'keywords_add' in serializer.validated_data:
                 keyword_relations = []

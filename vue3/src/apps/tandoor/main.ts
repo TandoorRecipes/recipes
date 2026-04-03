@@ -19,6 +19,7 @@ let routes = [
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
+    {path: '/household-setup', component: () => import("@/pages/HouseholdPage.vue"), name: 'HouseholdPage', meta: {title: 'Household'}},
     {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage', meta: {title: 'Help'}},
 
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},

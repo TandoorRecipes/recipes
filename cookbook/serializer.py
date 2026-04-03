@@ -477,7 +477,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed', 'household_setup_completed')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_monthly_credits_used')
@@ -499,6 +499,11 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     user = UserSerializer(read_only=True)
     groups = GroupSerializer(many=True)
     household = HouseholdSerializer(allow_null=True, required=False)
+
+    def validate(self, data):
+        if len(data['groups']) == 0:
+            raise ValidationError(_('You must select at least one group.'))
+        return super().validate(data)
 
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')

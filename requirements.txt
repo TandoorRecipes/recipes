@@ -1,10 +1,10 @@
 Django==5.2.12
-cryptography===46.0.5
+cryptography===46.0.6
 django-annoying==0.10.6
 django-cleanup==9.0.0
 django-crispy-forms==2.4
 crispy-bootstrap4==2026.2
-djangorestframework==3.16.1
+djangorestframework==3.17.1
 drf-spectacular==0.29.0
 drf-spectacular-sidecar==2026.1.1
 drf-writable-nested==0.7.2
@@ -22,7 +22,7 @@ requests_hardened==1.2.0
 six==1.17.0
 webdavclient3==3.14.6
 whitenoise==6.12.0
-icalendar==6.3.1
+icalendar==7.0.3
 pyyaml==6.0.3
 uritemplate==4.1.1
 beautifulsoup4==4.12.3
@@ -41,12 +41,12 @@ django-hCaptcha==0.2.0
 python-ldap==3.4.5
 django-auth-ldap==5.3.0
 pytubefix==10.3.8
-aiohttp==3.13.3
+aiohttp==3.13.4
 inflection==0.5.1
 redis==7.1.0
 hiredis==3.3.0
 requests-oauthlib==2.0.0
-pyjwt==2.12.0
+pyjwt==2.12.1
 python3-openid==3.2.0
 python3-saml==1.16.0
 django-vite==3.1.0
@@ -56,7 +56,7 @@ stripe==14.0.0
 frappe-client==0.1.0.dev0
 
 # Development
-pytest==8.4.2
+pytest== 8.4.2
 pytest-django==4.11.1
 pytest-cov===6.2.1
 pytest-factoryboy==2.8.1
