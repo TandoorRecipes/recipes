@@ -254,6 +254,12 @@ export interface PatchedSpace {
      * @memberof PatchedSpace
      */
     spaceSetupCompleted?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedSpace
+     */
+    householdSetupCompleted?: boolean;
 }
 
 /**
@@ -306,6 +312,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
         'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
+        'householdSetupCompleted': json['household_setup_completed'] == null ? undefined : json['household_setup_completed'],
     };
 }
 
@@ -337,6 +344,7 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'creat
         'ai_enabled': value['aiEnabled'],
         'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
         'space_setup_completed': value['spaceSetupCompleted'],
+        'household_setup_completed': value['householdSetupCompleted'],
     };
 }
 

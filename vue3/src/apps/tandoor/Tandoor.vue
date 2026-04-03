@@ -54,7 +54,8 @@
             </p>
         </v-app-bar>
 
-        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
+        <v-app-bar color="info" density="compact"
+                   v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
             <p class="text-center w-100">
                 {{ useUserPreferenceStore().activeSpace.message }}
             </p>
@@ -163,6 +164,8 @@ onMounted(() => {
 router.afterEach((to, from) => {
     if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
+    } else if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().activeSpace.spaceSetupCompleted && !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.householdSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
+        router.push({name: 'HouseholdPage'})
     }
     nextTick(() => {
         if (to.meta.title) {

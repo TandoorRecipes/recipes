@@ -318,6 +318,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
 
     space_setup_completed = models.BooleanField(default=True)
+    household_setup_completed = models.BooleanField(default=False)
 
     ai_enabled = models.BooleanField(default=True)
     ai_credits_monthly = models.IntegerField(default=100)
