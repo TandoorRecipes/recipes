@@ -103,7 +103,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         "img",
         "a",
         "sub", "sup",
-        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'thead'
     }
     parsed_md = md.markdown(
         instructions,
