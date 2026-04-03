@@ -500,6 +500,11 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     groups = GroupSerializer(many=True)
     household = HouseholdSerializer(allow_null=True, required=False)
 
+    def validate(self, data):
+        if len(data['groups']) == 0:
+            raise ValidationError(_('You must select at least one group.'))
+        return super().validate(data)
+
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
 

@@ -690,7 +690,7 @@ class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
 class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsGuest & IsReadOnlyDRF & CustomTokenHasReadWriteScope]
     pagination_disabled = True
     http_method_names = ['get', ]
 
