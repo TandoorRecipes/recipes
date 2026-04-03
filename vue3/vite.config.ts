@@ -52,6 +52,9 @@ export default defineConfig(async ({command, mode, isSsrBuild, isPreview}) => {
                 ].concat(buildInputs),
             },
         },
+        optimizeDeps: {
+            exclude: ['vue-simple-calendar'],
+        },
         server: {
             host: '0.0.0.0', // only needed to expose dev server to network bound IPs
             origin: 'http://localhost:5173',
