@@ -33,6 +33,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
 const props = defineProps({
     item: {type: {} as PropType<UserSpace>, required: false, default: null},
@@ -70,7 +71,12 @@ function initializeEditor() {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 
-    setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
+    setupState(props.item, props.itemId, {
+        itemDefaults: props.itemDefaults,
+        onAfterSave: () => {
+            useUserPreferenceStore().loadUserSpaces()
+        }
+    })
 }
 
 </script>

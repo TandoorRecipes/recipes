@@ -164,7 +164,13 @@ onMounted(() => {
 router.afterEach((to, from) => {
     if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
-    } else if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().activeSpace.spaceSetupCompleted && !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.householdSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
+    } else if (to.name == 'StartPage' &&
+        useUserPreferenceStore().initCompleted &&
+        useUserPreferenceStore().activeSpace.spaceSetupCompleted &&
+        !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined &&
+        !useUserPreferenceStore().activeSpace.householdSetupCompleted &&
+        useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id! &&
+        useUserPreferenceStore().activeUserSpace?.household == undefined ) {
         router.push({name: 'HouseholdPage'})
     }
     nextTick(() => {
