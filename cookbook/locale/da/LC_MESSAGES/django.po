@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-22 20:15+0200\n"
-"PO-Revision-Date: 2023-04-12 11:55+0000\n"
-"Last-Translator: noxonad <noxonad@proton.me>\n"
+"PO-Revision-Date: 2026-04-06 15:23+0000\n"
+"Last-Translator: Mathias Bøgelund Madsen <mathiasmadsen8@gmail.com>\n"
 "Language-Team: Danish <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/da/>\n"
 "Language: da\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:50
 msgid "Default"
@@ -98,30 +98,28 @@ msgid "You have more users than allowed in your space."
 msgstr "Du har flere brugere end tilladt i dit rum."
 
 #: .\cookbook\helper\recipe_url_import.py:319
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Benyt brøker"
+msgstr "vend rotation"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "careful rotation"
-msgstr ""
+msgstr "forsigtig rotation"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "knead"
-msgstr ""
+msgstr "ælt"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "thicken"
-msgstr ""
+msgstr "fortyk"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "warm up"
-msgstr ""
+msgstr "opvarm"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "ferment"
-msgstr ""
+msgstr "fermentér"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 #, fuzzy
@@ -131,51 +129,51 @@ msgstr "Sidst tilberedt"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "egg boiler"
-msgstr ""
+msgstr "æggekoger"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "kettle"
-msgstr ""
+msgstr "keddel"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "blend"
-msgstr ""
+msgstr "bland"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "pre-clean"
-msgstr ""
+msgstr "forrens"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "high temperature"
-msgstr ""
+msgstr "høj temperatur"
 
 #: .\cookbook\helper\recipe_url_import.py:331
 msgid "rice cooker"
-msgstr ""
+msgstr "riskoger"
 
 #: .\cookbook\helper\recipe_url_import.py:332
 msgid "caramelize"
-msgstr ""
+msgstr "karamelliser"
 
 #: .\cookbook\helper\recipe_url_import.py:333
 msgid "peeler"
-msgstr ""
+msgstr "skræller"
 
 #: .\cookbook\helper\recipe_url_import.py:334
 msgid "slicer"
-msgstr ""
+msgstr "udskærer"
 
 #: .\cookbook\helper\recipe_url_import.py:335
 msgid "grater"
-msgstr ""
+msgstr "rivejern"
 
 #: .\cookbook\helper\recipe_url_import.py:336
 msgid "spiralizer"
-msgstr ""
+msgstr "spiralizer"
 
 #: .\cookbook\helper\recipe_url_import.py:337
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
@@ -185,7 +183,7 @@ msgstr "Du skal angive en portionstørrelse"
 #: .\cookbook\helper\template_helper.py:99
 #: .\cookbook\helper\template_helper.py:101
 msgid "Could not parse template code."
-msgstr "Kunne ikke indsætte skabelonkode."
+msgstr "Kunne ikke parse skabelonkode."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
@@ -194,7 +192,7 @@ msgstr "Favorit"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Jeg har lavet det"
 
 #: .\cookbook\integration\integration.py:238
 msgid ""
@@ -224,57 +222,53 @@ msgstr "Importerede %s opskrifter."
 #: .\cookbook\integration\mealie1.py:210
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Kalorier"
 
 #: .\cookbook\integration\mealie1.py:211
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "kulhydrater"
 
 #: .\cookbook\integration\mealie1.py:212
 msgid "Cholesterol"
-msgstr ""
+msgstr "kolesterol"
 
 #: .\cookbook\integration\mealie1.py:213
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "fedt"
 
 #: .\cookbook\integration\mealie1.py:214
 msgid "Fiber"
-msgstr ""
+msgstr "Fibre"
 
 #: .\cookbook\integration\mealie1.py:215
-#, fuzzy
-#| msgid "Protected"
 msgid "Protein"
-msgstr "Beskyttet"
+msgstr "Protein"
 
 #: .\cookbook\integration\mealie1.py:216
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Mættet Fedt"
 
 #: .\cookbook\integration\mealie1.py:217
 msgid "Sodium"
-msgstr ""
+msgstr "Salt"
 
 #: .\cookbook\integration\mealie1.py:218
 msgid "Sugar"
-msgstr ""
+msgstr "Sukker"
 
 #: .\cookbook\integration\mealie1.py:219
 msgid "Trans Fat"
-msgstr ""
+msgstr "Trans-fedtsyre"
 
 #: .\cookbook\integration\mealie1.py:220
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Umættet fedt"
 
 #: .\cookbook\integration\openeats.py:28
-#, fuzzy
-#| msgid "Recipe Home"
 msgid "Recipe source:"
-msgstr "Opskrift hjem"
+msgstr "Opskriftskilde"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -315,7 +309,7 @@ msgstr "Sektion"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Ordner mad med "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -355,23 +349,23 @@ msgstr "Andet"
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "Proteiner"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
-"Maksimal fil lager for rum i MB. 0 for ubegrænset, -1 for at slå upload af "
-"filer fra."
+"Maksimal fil lager for rum i MB. 0 for ubegrænset, -1 for at deaktivere "
+"upload af filer."
 
 #: .\cookbook\models.py:513
 msgid "Search"
@@ -391,24 +385,20 @@ msgid "Shopping"
 msgstr "Indkøb"
 
 #: .\cookbook\models.py:967
-#, fuzzy
-#| msgid "Automations"
 msgid "Nutrition"
-msgstr "Automationer"
+msgstr "Ernæring"
 
 #: .\cookbook\models.py:968
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Sammenflet"
+msgstr "Allergen"
 
 #: .\cookbook\models.py:969
 msgid "Price"
-msgstr ""
+msgstr "Pris"
 
 #: .\cookbook\models.py:970
 msgid "Goal"
-msgstr ""
+msgstr "Mål"
 
 #: .\cookbook\models.py:1467 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -440,19 +430,19 @@ msgstr "Alternativt navn til nøgleord"
 
 #: .\cookbook\models.py:1528
 msgid "Description Replace"
-msgstr ""
+msgstr "Alternativ beskrivelse"
 
 #: .\cookbook\models.py:1529
 msgid "Instruction Replace"
-msgstr ""
+msgstr "Alternativ instruktion"
 
 #: .\cookbook\models.py:1530
 msgid "Never Unit"
-msgstr ""
+msgstr "Unlad altid at give en enhed"
 
 #: .\cookbook\models.py:1531
 msgid "Transpose Words"
-msgstr ""
+msgstr "Omsætte Ord"
 
 #: .\cookbook\models.py:1532
 #, fuzzy
@@ -468,7 +458,7 @@ msgstr "Alternativt navn til enhed"
 
 #: .\cookbook\models.py:1534
 msgid "Name Replace"
-msgstr ""
+msgstr "Alternativt navn til navn"
 
 #: .\cookbook\models.py:1564
 msgid "Recipe"
@@ -492,7 +482,7 @@ msgstr "Du har nået grænsen for upload af filer."
 
 #: .\cookbook\serializer.py:281
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Den givne filtype er ikke tilladt."
 
 #: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
 #, fuzzy
@@ -503,11 +493,11 @@ msgstr "Du har nået det maksimale antal opskrifter for dit rum."
 
 #: .\cookbook\serializer.py:434
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "rum-navne skal være unikke."
 
 #: .\cookbook\serializer.py:469
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Kan ikke ændre rum ejerskabs tilladelse."
 
 #: .\cookbook\serializer.py:1596
 msgid "Hello"
@@ -1413,26 +1403,27 @@ msgstr "Registrer"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "tilkobl %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
-msgstr ""
+msgstr "Du er ved at tilkoble en ny tredje-parts konto fra %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Log ind via %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
+"Du er ved at logge ind ved brug af en trejde-parts konto fra %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Fortsæt"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -1470,7 +1461,7 @@ msgstr "Log ind med"
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Oversigt"
 
 #: .\cookbook\templates\space_overview.html:13
 #, fuzzy
@@ -1500,7 +1491,7 @@ msgstr "Ingen plads"
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr ""
+msgstr "Ejer"
 
 #: .\cookbook\templates\space_overview.html:73
 #: .\cookbook\templates\space_overview.html:83
@@ -1575,10 +1566,14 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            Du er nød til at eksekvere <code>version.py</code> i dit script "
+"for at generere versions information (gjort automatisk i docker).\n"
+"        "
 
 #: .\cookbook\templates\system.html:56
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: .\cookbook\templates\system.html:67
 msgid "Media Serving"
@@ -1666,7 +1661,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:107
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Tilladte værter"
 
 #: .\cookbook\templates\system.html:111
 msgid ""
@@ -1676,6 +1671,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            Dine tilladte værter er konfiguret til at tillade alle værter. "
+"Dette kan være ok i nogle konfigurationer, men burde undgåes. Venligst læs "
+"dokumentationen om dette.\n"
+"        "
 
 #: .\cookbook\templates\system.html:118
 msgid "Database"
