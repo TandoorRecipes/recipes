@@ -29,11 +29,9 @@ const REMOVED_IDS = new Set<string>([
     'rating', 'timescooked',
 ])
 
-const LEGACY_SORT_VALUES = [
-    'random', 'score', '-score', 'name', '-name',
-    'lastcooked', '-lastcooked', 'rating', '-rating',
-    'times_cooked', '-times_cooked', 'created_at', '-created_at',
-    'lastviewed', '-lastviewed',
+const LEGACY_SORT_FIELDS = [
+    'random', 'score', 'name', 'lastcooked', 'rating',
+    'times_cooked', 'created_at', 'lastviewed',
 ] as const
 
 function emittedKeysFor(def: FilterDef): string[] {
@@ -99,9 +97,9 @@ describe('RECIPE_FILTER_DEFS', () => {
 })
 
 describe('RECIPE_SORT_DEFS', () => {
-    it('covers every legacy sortOrderOptions value', () => {
+    it('covers every legacy sort field', () => {
         const keys = new Set(RECIPE_SORT_DEFS.map(s => s.key))
-        const missing = LEGACY_SORT_VALUES.filter(v => !keys.has(v))
+        const missing = LEGACY_SORT_FIELDS.filter(v => !keys.has(v))
         expect(missing).toEqual([])
     })
 

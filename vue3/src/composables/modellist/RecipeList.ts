@@ -60,21 +60,14 @@ export const RECIPE_FILTER_DEFS: FilterDef[] = [
 ]
 
 export const RECIPE_SORT_DEFS: SortDef[] = [
-    {key: 'score',           labelKey: 'SortByScoreAsc'},
-    {key: '-score',          labelKey: 'SortByScoreDesc'},
-    {key: 'name',            labelKey: 'SortByNameAsc'},
-    {key: '-name',           labelKey: 'SortByNameDesc'},
-    {key: 'lastcooked',      labelKey: 'SortByLastCookedAsc'},
-    {key: '-lastcooked',     labelKey: 'SortByLastCookedDesc'},
-    {key: 'rating',          labelKey: 'SortByRatingAsc'},
-    {key: '-rating',         labelKey: 'SortByRatingDesc'},
-    {key: 'times_cooked',    labelKey: 'SortByTimesCookedAsc'},
-    {key: '-times_cooked',   labelKey: 'SortByTimesCookedDesc'},
-    {key: 'created_at',      labelKey: 'SortByCreatedAtAsc'},
-    {key: '-created_at',     labelKey: 'SortByCreatedAtDesc'},
-    {key: 'lastviewed',      labelKey: 'SortByLastViewedAsc'},
-    {key: '-lastviewed',     labelKey: 'SortByLastViewedDesc'},
-    {key: 'random',          labelKey: 'RandomOrder'},
+    {key: 'score',        labelKey: 'Score'},
+    {key: 'name',         labelKey: 'Name'},
+    {key: 'lastcooked',   labelKey: 'LastCooked',   defaultDescending: true},
+    {key: 'rating',       labelKey: 'Rating',        defaultDescending: true},
+    {key: 'times_cooked', labelKey: 'TimesCooked',   defaultDescending: true},
+    {key: 'created_at',   labelKey: 'CreatedAt',     defaultDescending: true},
+    {key: 'lastviewed',   labelKey: 'LastViewed',    defaultDescending: true},
+    {key: 'random',       labelKey: 'Random'},
 ]
 
 export const RECIPE_LIST_SETTINGS: ListSettings = {
