@@ -566,7 +566,35 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
 
+    def check_start_page_sections(self, validated_data):
+        if 'start_page_sections' not in validated_data:
+            return
+        value = validated_data['start_page_sections']
+        allowed_keys = {"mode", "enabled", "min_recipes", "filter_id"}
+        if not isinstance(value, list):
+            raise ValidationError("start_page_sections must be a list")
+        if len(value) > 20:
+            raise ValidationError("Max 20 start_page_sections")
+        for entry in value:
+            if not isinstance(entry, dict):
+                raise ValidationError("Each start_page_sections entry must be an object")
+            if set(entry.keys()) - allowed_keys:
+                raise ValidationError(f"Unknown start_page_sections keys: {set(entry.keys()) - allowed_keys}")
+            if "mode" not in entry or "enabled" not in entry:
+                raise ValidationError("start_page_sections mode and enabled are required")
+            if entry["mode"] not in UserPreference.SECTION_MODES:
+                raise ValidationError(f"Invalid start_page_sections mode: {entry['mode']}")
+            if not isinstance(entry["enabled"], bool):
+                raise ValidationError("start_page_sections enabled must be boolean")
+            if "min_recipes" in entry:
+                if not isinstance(entry["min_recipes"], int) or entry["min_recipes"] < 0:
+                    raise ValidationError("start_page_sections min_recipes must be a non-negative integer")
+            if "filter_id" in entry:
+                if not isinstance(entry["filter_id"], int) or entry["filter_id"] < 1:
+                    raise ValidationError("start_page_sections filter_id must be a positive integer")
+
     def update(self, instance, validated_data):
+        self.check_start_page_sections(validated_data)
         with scopes_disabled():
             return super().update(instance, validated_data)
 
@@ -576,15 +604,15 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = UserPreference
         fields = (
-            'user', 'image', 'theme', 'nav_bg_color', 'nav_text_color', 'nav_show_logo', 'default_unit', 'default_page',
-            'use_fractions', 'use_kj',
+            'user', 'image', 'theme', 'nav_bg_color', 'nav_show_logo', 'default_unit', 'default_page',
+            'use_fractions',
             'nav_sticky',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
-            'food_children_exist'
+            'food_children_exist', 'start_page_sections'
         )
         read_only_fields = ('user',)
 
@@ -1352,6 +1380,7 @@ class UserSpaceBatchUpdateSerializer(serializers.Serializer):
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
+    created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1359,7 +1388,7 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
     class Meta:
         model = CustomFilter
-        fields = ('id', 'name', 'search', 'shared', 'created_by')
+        fields = ('id', 'name', 'type', 'search', 'shared', 'created_by')
         read_only_fields = ('created_by',)
 
 

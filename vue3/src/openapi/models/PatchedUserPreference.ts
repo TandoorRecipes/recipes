@@ -31,12 +31,6 @@ import {
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
 } from './UserFileView';
-import type { UserPreferenceNavTextColorEnum } from './UserPreferenceNavTextColorEnum';
-import {
-    UserPreferenceNavTextColorEnumFromJSON,
-    UserPreferenceNavTextColorEnumFromJSONTyped,
-    UserPreferenceNavTextColorEnumToJSON,
-} from './UserPreferenceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
@@ -88,12 +82,6 @@ export interface PatchedUserPreference {
     navBgColor?: string;
     /**
      * 
-     * @type {UserPreferenceNavTextColorEnum}
-     * @memberof PatchedUserPreference
-     */
-    navTextColor?: UserPreferenceNavTextColorEnum;
-    /**
-     * 
      * @type {boolean}
      * @memberof PatchedUserPreference
      */
@@ -116,12 +104,6 @@ export interface PatchedUserPreference {
      * @memberof PatchedUserPreference
      */
     useFractions?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    useKj?: boolean;
     /**
      * 
      * @type {boolean}
@@ -236,6 +218,12 @@ export interface PatchedUserPreference {
      * @memberof PatchedUserPreference
      */
     readonly foodChildrenExist?: boolean;
+    /**
+     * 
+     * @type {any}
+     * @memberof PatchedUserPreference
+     */
+    startPageSections?: any;
 }
 
 /**
@@ -259,12 +247,10 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
         'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
         'theme': json['theme'] == null ? undefined : ThemeEnumFromJSON(json['theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
-        'navTextColor': json['nav_text_color'] == null ? undefined : UserPreferenceNavTextColorEnumFromJSON(json['nav_text_color']),
         'navShowLogo': json['nav_show_logo'] == null ? undefined : json['nav_show_logo'],
         'defaultUnit': json['default_unit'] == null ? undefined : json['default_unit'],
         'defaultPage': json['default_page'] == null ? undefined : DefaultPageEnumFromJSON(json['default_page']),
         'useFractions': json['use_fractions'] == null ? undefined : json['use_fractions'],
-        'useKj': json['use_kj'] == null ? undefined : json['use_kj'],
         'navSticky': json['nav_sticky'] == null ? undefined : json['nav_sticky'],
         'ingredientDecimals': json['ingredient_decimals'] == null ? undefined : json['ingredient_decimals'],
         'comments': json['comments'] == null ? undefined : json['comments'],
@@ -284,6 +270,7 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
         'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
         'showStepIngredients': json['show_step_ingredients'] == null ? undefined : json['show_step_ingredients'],
         'foodChildrenExist': json['food_children_exist'] == null ? undefined : json['food_children_exist'],
+        'startPageSections': json['start_page_sections'] == null ? undefined : json['start_page_sections'],
     };
 }
 
@@ -296,12 +283,10 @@ export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 
         'image': UserFileViewToJSON(value['image']),
         'theme': ThemeEnumToJSON(value['theme']),
         'nav_bg_color': value['navBgColor'],
-        'nav_text_color': UserPreferenceNavTextColorEnumToJSON(value['navTextColor']),
         'nav_show_logo': value['navShowLogo'],
         'default_unit': value['defaultUnit'],
         'default_page': DefaultPageEnumToJSON(value['defaultPage']),
         'use_fractions': value['useFractions'],
-        'use_kj': value['useKj'],
         'nav_sticky': value['navSticky'],
         'ingredient_decimals': value['ingredientDecimals'],
         'comments': value['comments'],
@@ -319,6 +304,7 @@ export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 
         'shopping_add_onhand': value['shoppingAddOnhand'],
         'left_handed': value['leftHanded'],
         'show_step_ingredients': value['showStepIngredients'],
+        'start_page_sections': value['startPageSections'],
     };
 }
 

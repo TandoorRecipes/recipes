@@ -56,6 +56,7 @@ let settings = {
         {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings', meta: {title: 'Settings'}},
         {path: 'meal-plan', component: () => import("@/components/settings/MealPlanSettings.vue"), name: 'MealPlanSettings', meta: {title: 'Settings'}},
         {path: 'search', component: () => import("@/components/settings/SearchSettings.vue"), name: 'SearchSettings', meta: {title: 'Settings'}},
+        {path: 'start-page', component: () => import("@/components/settings/StartPageSettings.vue"), name: 'StartPageSettingsPage', meta: {title: 'Settings'}},
         {path: 'space', component: () => import("@/components/settings/SpaceSettings.vue"), name: 'SpaceSettings', meta: {title: 'Settings'}},
         {path: 'open-data-import', component: () => import("@/components/settings/OpenDataImportSettings.vue"), name: 'OpenDataImportSettings', meta: {title: 'Settings'}},
         {path: 'export', component: () => import("@/components/settings/ExportDataSettings.vue"), name: 'ExportDataSettings', meta: {title: 'Settings'}},
