@@ -20,6 +20,12 @@ import {
     UserToJSON,
     UserToJSONTyped,
 } from './User';
+import type { CustomFilterTypeEnum } from './CustomFilterTypeEnum';
+import {
+    CustomFilterTypeEnumFromJSON,
+    CustomFilterTypeEnumFromJSONTyped,
+    CustomFilterTypeEnumToJSON,
+} from './CustomFilterTypeEnum';
 
 /**
  * Adds nested create feature
@@ -41,10 +47,16 @@ export interface PatchedCustomFilter {
     name?: string;
     /**
      * 
-     * @type {string}
+     * @type {CustomFilterTypeEnum}
      * @memberof PatchedCustomFilter
      */
-    search?: string;
+    type?: CustomFilterTypeEnum;
+    /**
+     * 
+     * @type {any}
+     * @memberof PatchedCustomFilter
+     */
+    search?: any;
     /**
      * 
      * @type {Array<User>}
@@ -53,10 +65,10 @@ export interface PatchedCustomFilter {
     shared?: Array<User>;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof PatchedCustomFilter
      */
-    readonly createdBy?: number;
+    readonly createdBy?: User;
 }
 
 /**
@@ -78,9 +90,10 @@ export function PatchedCustomFilterFromJSONTyped(json: any, ignoreDiscriminator:
         
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
+        'type': json['type'] == null ? undefined : CustomFilterTypeEnumFromJSON(json['type']),
         'search': json['search'] == null ? undefined : json['search'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
-        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
     };
 }
 
@@ -97,6 +110,7 @@ export function PatchedCustomFilterToJSONTyped(value?: Omit<PatchedCustomFilter,
         
         'id': value['id'],
         'name': value['name'],
+        'type': CustomFilterTypeEnumToJSON(value['type']),
         'search': value['search'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };

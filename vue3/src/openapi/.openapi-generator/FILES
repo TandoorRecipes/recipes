@@ -16,6 +16,7 @@ models/ConnectorConfig.ts
 models/ConnectorConfigTypeEnum.ts
 models/CookLog.ts
 models/CustomFilter.ts
+models/CustomFilterTypeEnum.ts
 models/DefaultPageEnum.ts
 models/DeleteEnum.ts
 models/ExportLog.ts
@@ -52,6 +53,7 @@ models/Localization.ts
 models/MealPlan.ts
 models/MealType.ts
 models/MethodEnum.ts
+models/NavTextColorEnum.ts
 models/NutritionInformation.ts
 models/PaginatedAiLogList.ts
 models/PaginatedAiProviderList.ts
@@ -171,7 +173,6 @@ models/SourceImportRecipe.ts
 models/SourceImportStep.ts
 models/SourceImportUnit.ts
 models/Space.ts
-models/SpaceNavTextColorEnum.ts
 models/SpaceThemeEnum.ts
 models/Step.ts
 models/Storage.ts
@@ -187,7 +188,6 @@ models/User.ts
 models/UserFile.ts
 models/UserFileView.ts
 models/UserPreference.ts
-models/UserPreferenceNavTextColorEnum.ts
 models/UserSpace.ts
 models/UserSpaceBatchUpdate.ts
 models/ViewLog.ts

@@ -504,17 +504,25 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     # Default Page
+    HOME = 'HOME'
     SEARCH = 'SEARCH'
     PLAN = 'PLAN'
     BOOKS = 'BOOKS'
     SHOPPING = 'SHOPPING'
 
     PAGES = (
+        (HOME, _('Home')),
         (SEARCH, _('Search')),
         (PLAN, _('Meal-Plan')),
         (BOOKS, _('Books')),
         (SHOPPING, _('Shopping')),
     )
+
+    # Valid modes for start_page_sections JSONField (validation set, not Django choices)
+    SECTION_MODES = {
+        "meal_plan", "recent", "new", "keyword", "random",
+        "created_by", "rating", "books", "saved_search", "food",
+    }
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
@@ -528,7 +536,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=False)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
-    default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
+    default_page = models.CharField(choices=PAGES, max_length=64, default=HOME)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
     shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
@@ -547,6 +555,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
     default_meal_type = models.ForeignKey("MealType", on_delete=models.SET_NULL, null=True, blank=True)
+    start_page_sections = models.JSONField(default=list, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
@@ -1727,9 +1736,8 @@ class CustomFilter(models.Model, PermissionModelMixin):
     )
 
     name = models.CharField(max_length=128, null=False, blank=False)
-    type = models.CharField(max_length=128, choices=(MODELS), default=MODELS[0])
-    # could use JSONField, but requires installing extension on SQLite,  don't need to search the objects, so seems unecessary
-    search = models.TextField(blank=False, null=False)
+    type = models.CharField(max_length=128, choices=MODELS, default=RECIPE)
+    search = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shared = models.ManyToManyField(User, blank=True, related_name='f_shared_with')
