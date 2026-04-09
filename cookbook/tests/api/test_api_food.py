@@ -1,4 +1,5 @@
 import json
+import uuid
 from datetime import date
 from unittest.mock import PropertyMock, patch
 
@@ -9,7 +10,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace
+from cookbook.models import Food, Ingredient, Recipe, ShoppingListEntry, Step, Household, Unit, UserSpace
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, InventoryEntryFactory,
                                       InventoryLocationFactory, RecipeFactory,
                                       ShoppingListEntryFactory, StepFactory,
@@ -1677,3 +1678,150 @@ def test_tree_search_excludes_unrelated_siblings(u1_s1, space_1):
     assert leaf_b.id not in ids  # unrelated leaf
     assert branch_b.id not in ids  # unrelated ancestor branch
 
+
+@pytest.fixture
+def recipe_with_food(space_1, u1_s1):
+    """Create a recipe with a single ingredient whose food we can test."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        household = Household.objects.create(name='test-household', space=space_1)
+        UserSpace.objects.filter(user=user, space=space_1).update(household=household)
+
+        food = Food.objects.create(name=f'test-food-{uuid.uuid4()}', space=space_1)
+        substitute = Food.objects.create(name=f'test-sub-{uuid.uuid4()}', space=space_1)
+        food.substitute.add(substitute)
+
+        recipe = Recipe.objects.create(
+            name='test-recipe', working_time=10, waiting_time=10,
+            servings=4, created_by=user, space=space_1, internal=True,
+        )
+        step = Step.objects.create(name='step1', instruction='do stuff', space=space_1)
+        recipe.steps.add(step)
+        unit = Unit.objects.create(name=f'unit-{uuid.uuid4()}', space=space_1)
+        ingredient = Ingredient.objects.create(
+            amount=1, food=food, unit=unit, space=space_1,
+        )
+        step.ingredients.add(ingredient)
+
+        location = InventoryLocationFactory(
+            household=household, space=space_1, created_by=user,
+        )
+
+    return recipe, food, substitute, household, location
+
+
+@pytest.mark.parametrize("use_inventory", [False], ids=["onhand_users"])
+def test_food_onhand(recipe_with_food, u1_s1, space_1, use_inventory):
+    """food_onhand should be True when food has onhand_users."""
+    recipe, food, _, household, location = recipe_with_food
+    user = auth.get_user(u1_s1)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['food_onhand'] is False
+
+    with scopes_disabled():
+        if use_inventory:
+            InventoryEntryFactory(
+                food=food, amount=1, inventory_location=location,
+                space=space_1, created_by=user,
+            )
+        else:
+            food.onhand_users.add(user)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['food_onhand'] is True
+
+
+@pytest.mark.parametrize("use_inventory", [False], ids=["onhand_users"])
+def test_substitute_onhand(recipe_with_food, u1_s1, space_1, use_inventory):
+    """substitute_onhand should be True when a substitute has onhand_users."""
+    recipe, food, substitute, household, location = recipe_with_food
+    user = auth.get_user(u1_s1)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['substitute_onhand'] is False
+
+    with scopes_disabled():
+        if use_inventory:
+            InventoryEntryFactory(
+                food=substitute, amount=1, inventory_location=location,
+                space=space_1, created_by=user,
+            )
+        else:
+            substitute.onhand_users.add(user)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['substitute_onhand'] is True
+@pytest.fixture
+def recipe_with_food(space_1, u1_s1):
+    """Create a recipe with a single ingredient whose food we can test."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        household = Household.objects.create(name='test-household', space=space_1)
+        UserSpace.objects.filter(user=user, space=space_1).update(household=household)
+
+        food = Food.objects.create(name=f'test-food-{uuid.uuid4()}', space=space_1)
+        substitute = Food.objects.create(name=f'test-sub-{uuid.uuid4()}', space=space_1)
+        food.substitute.add(substitute)
+
+        recipe = Recipe.objects.create(
+            name='test-recipe', working_time=10, waiting_time=10,
+            servings=4, created_by=user, space=space_1, internal=True,
+        )
+        step = Step.objects.create(name='step1', instruction='do stuff', space=space_1)
+        recipe.steps.add(step)
+        unit = Unit.objects.create(name=f'unit-{uuid.uuid4()}', space=space_1)
+        ingredient = Ingredient.objects.create(
+            amount=1, food=food, unit=unit, space=space_1,
+        )
+        step.ingredients.add(ingredient)
+
+        location = InventoryLocationFactory(
+            household=household, space=space_1, created_by=user,
+        )
+
+    return recipe, food, substitute, household, location
+
+
+@pytest.mark.parametrize("use_inventory", [False], ids=["onhand_users"])
+def test_food_onhand(recipe_with_food, u1_s1, space_1, use_inventory):
+    """food_onhand should be True when food has onhand_users."""
+    recipe, food, _, household, location = recipe_with_food
+    user = auth.get_user(u1_s1)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['food_onhand'] is False
+
+    with scopes_disabled():
+        if use_inventory:
+            InventoryEntryFactory(
+                food=food, amount=1, inventory_location=location,
+                space=space_1, created_by=user,
+            )
+        else:
+            food.onhand_users.add(user)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['food_onhand'] is True
+
+
+@pytest.mark.parametrize("use_inventory", [False], ids=["onhand_users"])
+def test_substitute_onhand(recipe_with_food, u1_s1, space_1, use_inventory):
+    """substitute_onhand should be True when a substitute has onhand_users."""
+    recipe, food, substitute, household, location = recipe_with_food
+    user = auth.get_user(u1_s1)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['substitute_onhand'] is False
+
+    with scopes_disabled():
+        if use_inventory:
+            InventoryEntryFactory(
+                food=substitute, amount=1, inventory_location=location,
+                space=space_1, created_by=user,
+            )
+        else:
+            substitute.onhand_users.add(user)
+
+    response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    assert json.loads(response.content)['substitute_onhand'] is True

@@ -1370,6 +1370,12 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
         return Response({k: v or 0 for k, v in agg.items()})
 
+    @decorators.action(detail=True, methods=['GET'], serializer_class=FoodSimpleSerializer)
+    def substitutes(self, request, pk):
+        obj = self.get_object()
+        qs = obj.get_substitutes()
+        return Response(FoodSimpleSerializer(qs, many=True).data)
+
     @decorators.action(detail=True, methods=['POST'])
     def fdc(self, request, pk):
         """
@@ -2031,6 +2037,26 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     permission_classes = [CustomRecipePermission & CustomTokenHasReadWriteScope]
     pagination_class = RecipePagination
 
+    def _annotated_food_prefetch(self):
+        """Build a Prefetch for ingredient foods with inventory/shopping annotations,
+        matching the same pattern used by FoodViewSet._annotate_and_prefetch()."""
+        try:
+            shared_users = get_household_user_ids(self.request.user_space)
+        except AttributeError:
+            shared_users = []
+
+        food_qs = Food.objects.all()
+        if shared_users:
+            shopping_filter = {'space': self.request.space, 'food': OuterRef('id'), 'checked': False, 'created_by__in': shared_users}
+            food_qs = food_qs.annotate(shopping_status=Exists(ShoppingListEntry.objects.filter(**shopping_filter).values('id')))
+        else:
+            food_qs = food_qs.annotate(shopping_status=Value(False, output_field=BooleanField()))
+
+        food_qs = food_qs.annotate(
+            has_inventory_status=Exists(InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=self.request.space))
+        )
+        return Prefetch('steps__ingredients__food', queryset=food_qs)
+
     def get_queryset(self):
         share = self.request.GET.get('share', None)
 
@@ -2046,7 +2072,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                                                                'steps__ingredients',
                                                                'steps__ingredients__step_set',
                                                                'steps__ingredients__step_set__recipe_set',
-                                                               'steps__ingredients__food',
+                                                               self._annotated_food_prefetch(),
                                                                'steps__ingredients__food__properties',
                                                                'steps__ingredients__food__properties__property_type',
                                                                'steps__ingredients__food__inherit_fields',
@@ -2554,12 +2580,17 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         updated_after = self.request.query_params.get('updated_after', None)
         mealplan = self.request.query_params.get('mealplan', None)
+        food = self.request.query_params.get('food', None)
+        checked = self.request.query_params.get('checked', None)
 
         if not self.detail:
-            # to keep the endpoint small, only return entries as old as user preference recent days
-            today_start = timezone.now().replace(hour=0, minute=0, second=0)
-            week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
-            self.queryset = self.queryset.filter((Q(checked=False) | Q(completed_at__gte=week_ago)))
+            if checked is not None:
+                self.queryset = self.queryset.filter(checked=str2bool(checked))
+            else:
+                # to keep the endpoint small, only return entries as old as user preference recent days
+                today_start = timezone.now().replace(hour=0, minute=0, second=0)
+                week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
+                self.queryset = self.queryset.filter((Q(checked=False) | Q(completed_at__gte=week_ago)))
 
             if mealplan is not None:
                 self.queryset = self.queryset.filter(list_recipe__mealplan_id=mealplan)

@@ -6,6 +6,7 @@ import {DateTime} from "luxon";
 /** Standard debounce delay for search/filter inputs (milliseconds) */
 export const SEARCH_DEBOUNCE_MS = 300
 
+
 /**
  * Builds a dot-separated subtitle string from an item's column values.
  * Used by both mobile and desktop subtitle displays.

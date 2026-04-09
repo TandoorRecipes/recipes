@@ -1,5 +1,5 @@
 <template>
-    <v-btn v-bind="props" icon="fa-solid fa-ellipsis-v" variant="plain" :size="props.size" class="d-print-none">
+    <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" :size="props.size" class="d-print-none">
         <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
         <v-menu activator="parent" close-on-content-click>
             <v-list density="compact" class="pt-1 pb-1">
@@ -29,6 +29,10 @@
                 <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true', servings: props.servings} }" :active="false" target="_blank" prepend-icon="fa-solid fa-print">
                     {{ $t('Print') }}
                 </v-list-item>
+                <v-divider />
+                <v-list-item prepend-icon="fa-solid fa-gear" @click="recipeSettingsOpen = true">
+                    {{ $t('DisplaySettings') }}
+                </v-list-item>
             </v-list>
         </v-menu>
     </v-btn>
@@ -46,12 +50,12 @@ import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useRouter} from "vue-router";
-import {useFileApi} from "@/composables/useFileApi.ts";
 import {useI18n} from "vue-i18n";
+import {useRecipeViewSettings} from '@/composables/useRecipeViewSettings'
 
 const router = useRouter()
 const {t} = useI18n()
-const {updateRecipeImage} = useFileApi()
+const {isOpen: recipeSettingsOpen} = useRecipeViewSettings()
 
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeOverview>, required: true},
@@ -90,17 +94,9 @@ function duplicateRecipe() {
         }
 
         api.apiRecipeCreate({recipe: recipe}).then(newRecipe => {
-
-            if (originalRecipe.image) {
-                updateRecipeImage(newRecipe.id!, null, originalRecipe.image).then(r => {
-                    router.push({name: 'RecipeViewPage', params: {id: newRecipe.id!}})
-                }).catch(err => {
-                    useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-                    duplicateLoading.value = false
-                })
-            } else {
-                router.push({name: 'RecipeViewPage', params: {id: newRecipe.id!}})
-            }
+            // By design: duplicated recipes start without an image. The user
+            // can add one fresh via the normal image editor.
+            router.push({name: 'RecipeViewPage', params: {id: newRecipe.id!}})
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
             duplicateLoading.value = false

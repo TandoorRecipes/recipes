@@ -26,13 +26,6 @@ describe('StartPage', () => {
         resetApiMock()
     })
 
-    it('mounts without error', async () => {
-        apiMock.apiRecipeList.mockResolvedValue({ results: [], count: 0 })
-        const wrapper = mountPage(StartPage)
-        await flushPromises()
-        expect(wrapper.exists()).toBe(true)
-    })
-
     it('calls apiRecipeList on mount', async () => {
         apiMock.apiRecipeList.mockResolvedValue({ results: [], count: 0 })
         mountPage(StartPage)

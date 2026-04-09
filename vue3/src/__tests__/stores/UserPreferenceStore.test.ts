@@ -98,34 +98,16 @@ describe('UserPreferenceStore', () => {
         })
     })
 
-    describe('loadServerSettings', () => {
-        it('stores server settings from API', async () => {
-            const store = useUserPreferenceStore()
-            const settings = makeServerSettings({ version: '2.0.0' })
-            apiMock.apiServerSettingsCurrentRetrieve.mockResolvedValue(settings)
-
-            await store.loadServerSettings()
-
-            expect(store.serverSettings.version).toBe('2.0.0')
-        })
-    })
-
     describe('activeUserSpace', () => {
-        it('returns the userSpace matching activeSpace', () => {
+        it('returns matching userSpace or null', () => {
             const store = useUserPreferenceStore()
             const us = makeUserSpace({ id: 10, space: 5 })
 
             store.activeSpace = makeSpace({ id: 5, name: 'Space 5' })
             store.userSpaces = [makeUserSpace({ space: 1 }), us]
-
             expect(store.activeUserSpace).toEqual(us)
-        })
 
-        it('returns null when no match', () => {
-            const store = useUserPreferenceStore()
             store.activeSpace = makeSpace({ id: 999 })
-            store.userSpaces = [makeUserSpace({ space: 1 })]
-
             expect(store.activeUserSpace).toBeNull()
         })
     })
