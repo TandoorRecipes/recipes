@@ -114,6 +114,12 @@
                 <v-tabs-window-item value="hierarchy">
                     <hierarchy-editor v-model="editingObj" :model="modelClass.model.name"></hierarchy-editor>
 
+                    <v-divider class="my-4" />
+                    <div class="text-caption text-medium-emphasis mb-2">
+                        <v-icon size="x-small" class="mr-1" icon="fa-solid fa-location-crosshairs" />
+                        {{ $t('Settings') }}: <strong>{{ editingObj.name }}</strong>
+                    </div>
+
                     <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
                     <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
 
