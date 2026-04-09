@@ -53,6 +53,7 @@ models/Localization.ts
 models/MealPlan.ts
 models/MealType.ts
 models/MethodEnum.ts
+models/NavTextColorEnum.ts
 models/NutritionInformation.ts
 models/PaginatedAiLogList.ts
 models/PaginatedAiProviderList.ts
