@@ -1816,8 +1816,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             space=self.request.space).filter(
             Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
 
-        params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x
-                  in list(self.request.GET)}
+        params = {k: v if len(v) > 1 else v[0] for k, v in self.request.GET.lists()}
         search = RecipeSearch(self.request, **params)
         self.queryset = search.get_queryset(self.queryset).prefetch_related('keywords', 'cooklog_set')
         return self.queryset
@@ -2516,7 +2515,6 @@ class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        # TODO add tests for filter
         filter_type = self.request.query_params.getlist('type', [])
         if filter_type:
             self.queryset = self.queryset.filter(type__in=filter_type)
