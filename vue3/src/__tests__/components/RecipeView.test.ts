@@ -7,7 +7,8 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 import { makeRecipe, makeStep, makeIngredient, makeFood, makeUnit, makeKeyword, makeUserPreference, makeSpace } from '@/__tests__/factories'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))

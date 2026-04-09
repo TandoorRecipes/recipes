@@ -3070,3 +3070,20 @@ msgstr "Oglejte si nakupovalne sezname"
 
 #~ msgid "URL"
 #~ msgstr "URL"
+
+
+#: .\cookbook\serializer.py:469
+msgid "Cannot modify Space owner permission."
+msgstr "Dovoljenja lastnika prostora ni mogoče spremeniti."
+
+#: .\cookbook\views\api.py:1239
+msgid "Filter meal plans from date (inclusive)."
+msgstr "Filtriraj načrte obrokov od datuma (vključno)."
+
+#: .\cookbook\views\api.py:1241
+msgid "Filter meal plans to date (inclusive)."
+msgstr "Filtriraj načrte obrokov do danes (vključno)."
+
+#: .\cookbook\views\api.py:2222
+msgid "Invalid Url"
+msgstr "Neveljaven URL"

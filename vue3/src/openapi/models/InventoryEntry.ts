@@ -73,7 +73,7 @@ export interface InventoryEntry {
      * @type {Unit}
      * @memberof InventoryEntry
      */
-    unit: Unit;
+    unit: Unit | null;
     /**
      * 
      * @type {number}

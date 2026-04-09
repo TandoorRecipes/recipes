@@ -5,7 +5,8 @@ import {createI18n} from 'vue-i18n'
 import {createVuetify} from 'vuetify'
 import {createRouter, createMemoryHistory} from 'vue-router'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class {},
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))

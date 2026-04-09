@@ -48,7 +48,8 @@ import {
     makeEdgeCaseFoodShopping,
 } from '@/__tests__/factories.generated'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))

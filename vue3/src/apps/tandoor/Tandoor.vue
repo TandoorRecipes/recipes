@@ -54,8 +54,7 @@
             </p>
         </v-app-bar>
 
-        <v-app-bar color="info" density="compact"
-                   v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
             <p class="text-center w-100">
                 {{ useUserPreferenceStore().activeSpace.message }}
             </p>
@@ -66,7 +65,7 @@
         </v-main>
 
         <!-- completely hide in print mode because setting d-print-node keeps layout -->
-        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
+        <v-navigation-drawer v-if="!mobile && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
             <v-list>
                 <menu-user-info></menu-user-info>
                 <v-divider></v-divider>
@@ -87,7 +86,7 @@
 
         </v-navigation-drawer>
 
-        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp && !useUserPreferenceStore().isPrintMode">
+        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && mobile && !useUserPreferenceStore().isPrintMode">
             <v-btn value="recent" :to="{ name: 'StartPage', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
@@ -134,10 +133,9 @@ import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
-import {THousehold, TSpace} from "@/types/Models.ts";
 import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
 
-const {lgAndUp} = useDisplay()
+const {mobile} = useDisplay()
 const {t} = useI18n()
 
 const title = useTitle()
@@ -164,14 +162,6 @@ onMounted(() => {
 router.afterEach((to, from) => {
     if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
-    } else if (to.name == 'StartPage' &&
-        useUserPreferenceStore().initCompleted &&
-        useUserPreferenceStore().activeSpace.spaceSetupCompleted &&
-        !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined &&
-        !useUserPreferenceStore().activeSpace.householdSetupCompleted &&
-        useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id! &&
-        useUserPreferenceStore().activeUserSpace?.household == undefined ) {
-        router.push({name: 'HouseholdPage'})
     }
     nextTick(() => {
         if (to.meta.title) {

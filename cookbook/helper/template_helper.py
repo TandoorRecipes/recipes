@@ -1,10 +1,9 @@
 import html
-import re
 from gettext import gettext as _
 
 import bleach
 import markdown as md
-from jinja2 import Template, TemplateSyntaxError, UndefinedError
+from jinja2 import TemplateSyntaxError, UndefinedError
 from jinja2.exceptions import SecurityError
 from jinja2.sandbox import SandboxedEnvironment
 from markdown.extensions.tables import TableExtension
@@ -46,19 +45,13 @@ def _plural_name_tag(singular, plural_name, amount, no_amount):
     """
     if plural_name in (None, ""):
         return html.escape(singular)
-
-    try:
-        amount_val = float(amount)
-    except (ValueError, TypeError):
-        amount_val = 0.0
-
     return (
         f"<plural-name"
         f' singular="{html.escape(singular)}"'
         f' plural="{html.escape(plural_name)}"'
-        f" v-bind:amount='{amount_val}'"
+        f" v-bind:amount='{float(amount)}'"
         f" v-bind:factor='ingredient_factor'"
-        f" :no-amount='{'true' if no_amount else 'false'}'"
+        f" :no-amount='{str(no_amount).lower()}'"
         f"></plural-name>"
     )
 
@@ -74,12 +67,8 @@ class IngredientObject(object):
         if ingredient.no_amount:
             self.amount = ""
         else:
-            try:
-                amount_val = float(ingredient.amount)
-            except (ValueError, TypeError):
-                amount_val = 0.0
-            self.amount = f"<scalable-number v-bind:number='{amount_val}' v-bind:factor='ingredient_factor'></scalable-number>"
-            self.numeric_amount = amount_val
+            self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='ingredient_factor'></scalable-number>"
+            self.numeric_amount = float(ingredient.amount)
         self.unit = bleach.clean(_resolve_unit_name(ingredient))
         if ingredient.food:
             if ingredient.food.plural_name in (None, ""):
@@ -105,7 +94,7 @@ class IngredientObject(object):
 def render_instructions(step):  # TODO deduplicate markdown cleanup code
     instructions = step.instruction
 
-    allowed_tags = [
+    tags = {
         "h1", "h2", "h3", "h4", "h5", "h6",
         "b", "i", "strong", "em", "tt",
         "p", "br",
@@ -114,41 +103,31 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         "img",
         "a",
         "sub", "sup",
-        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'thead',
-    ]
-
-    allowed_attributes = {
-        "*": ["id", "class", 'width', 'height'],
-        "img": ["src", "alt", "title"],
-        "a": ["href", "alt", "title"],
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
     }
-
-    # do a first, strict round of cleaning
-    instructions = bleach.clean(instructions, allowed_tags, allowed_attributes)
-
-    # parse markdown
-    instructions = md.markdown(
+    parsed_md = md.markdown(
         instructions,
         extensions=[
             'markdown.extensions.fenced_code', 'markdown.extensions.sane_lists', 'markdown.extensions.nl2br', TableExtension(),
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )
+    markdown_attrs = {
+        "*": ["id", "class", 'width', 'height'],
+        "img": ["src", "alt", "title"],
+        "a": ["href", "alt", "title"],
+    }
 
-    # prepare template context
+    instructions = bleach.clean(parsed_md, tags, markdown_attrs)
+
     ingredients = []
 
     for i in step.ingredients.all():
         ingredients.append(IngredientObject(i))
 
     def scale(number):
-        try:
-            number_val = float(number)
-        except (ValueError, TypeError):
-            number_val = 0.0
-        return f"<scalable-number v-bind:number='{number_val}' v-bind:factor='ingredient_factor'></scalable-number>"
+        return f"<scalable-number v-bind:number='{bleach.clean(str(number))}' v-bind:factor='ingredient_factor'></scalable-number>"
 
-    # compile template
     try:
         env = SandboxedEnvironment()
         instructions = env.from_string(instructions).render(ingredients=ingredients, scale=scale)
@@ -160,46 +139,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         return _('Could not parse template code.') + ' Error: Undefined Error'
     except SecurityError:
         return _('Could not parse template code.') + ' Error: Security Error'
-    except Exception as e:
-        return _('Could not parse template code.') + f' Error generating template.'
-
-    # do second cleaning that allows scalable-number
-    def validate_scalable_number_attributes(tag, name, value):
-        if name == 'v-bind:number':
-            try:
-                float(value)
-                return True
-            except (ValueError, TypeError):
-                return False
-        if name == 'v-bind:factor':
-            return value == 'ingredient_factor'
-        return False
-
-    def validate_plural_name_attributes(tag, name, value):
-        if name == 'v-bind:amount':
-            try:
-                float(value)
-                return True
-            except (ValueError, TypeError):
-                return False
-        if name == 'v-bind:factor':
-            return value == 'ingredient_factor'
-        if name == ':no-amount':
-            return value == 'true' or value == 'false'
-        if name in ["singular", "plural", ]:
-            return True
-        return False
-
-    allowed_attributes["scalable-number"] = validate_scalable_number_attributes
-    allowed_attributes["plural-name"] = validate_plural_name_attributes
-
-    allowed_tags.append('scalable-number')
-    allowed_tags.append('plural-name')
-
-    instructions = bleach.clean(instructions, allowed_tags, allowed_attributes)
-
-    # remove any left over { }
-    instructions = instructions.replace('{','')
-    instructions = instructions.replace('}','')
+    except Exception:
+        return _('Could not parse template code.') + ' Error generating template.'
 
     return instructions

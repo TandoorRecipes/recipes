@@ -54,6 +54,19 @@ const DEFAULT_STUBS: Record<string, Component> = {
     Multiselect: { template: '<div class="stub-multiselect"/>' },
     SyncDialog: { template: '<div class="stub-sync-dialog"/>' },
     BatchEditUserSpaceDialog: { template: '<div class="stub-batch-edit-user-space-dialog"/>' },
+    // Model list components (food-filters)
+    ModelListToolbar: { template: '<div class="stub-model-list-toolbar"/>' },
+    ModelListDataTable: { template: '<div class="stub-model-list-data-table"/>' },
+    ModelListSettingsPanel: { template: '<div class="stub-model-list-settings-panel"/>' },
+    ModelListCreateButton: { template: '<div class="stub-model-list-create-button"/>' },
+    ModelListFilterChips: { template: '<div class="stub-model-list-filter-chips"/>' },
+    ModelListCellRenderer: { template: '<div class="stub-model-list-cell-renderer"/>' },
+    ModelListMobileView: { template: '<div class="stub-model-list-mobile-view"/>' },
+    ModelListStatsFooter: { template: '<div class="stub-model-list-stats-footer"/>' },
+    SelectionBar: { template: '<div class="stub-selection-bar"/>' },
+    ActionMenu: { template: '<div class="stub-action-menu"/>' },
+    ActionConfirmDialog: { template: '<div class="stub-action-confirm-dialog"/>' },
+    InventoryQuickAddDialog: { template: '<div class="stub-inventory-quick-add-dialog"/>' },
 }
 
 export function mountPage(component: Component, options: ComponentMountingOptions<any> = {}) {

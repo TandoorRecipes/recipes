@@ -3938,3 +3938,26 @@ msgstr "Voire vos listes de course"
 
 #~ msgid "Preference for given user already exists"
 #~ msgstr "Les préférences pour cet utilisateur existent déjà"
+
+
+#: .\cookbook\serializer.py:469
+msgid "Cannot modify Space owner permission."
+msgstr "Impossible de modifier les permissions du propriétaire de groupe."
+
+#: .\cookbook\views\api.py:1239
+#, fuzzy
+#| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
+msgid "Filter meal plans from date (inclusive)."
+msgstr "Filtrer les repas depuis la date (incluse) avec le format YYYY-MM-DD."
+
+#: .\cookbook\views\api.py:1241
+#, fuzzy
+#| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
+msgid "Filter meal plans to date (inclusive)."
+msgstr ""
+"Filtrer les plannings de repas depuis la date (incluse) avec le format YYYY-"
+"MM-DD."
+
+#: .\cookbook\views\api.py:2222
+msgid "Invalid Url"
+msgstr "Url non valide"

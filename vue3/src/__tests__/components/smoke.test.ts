@@ -16,7 +16,8 @@ import {
 } from '@/__tests__/factories'
 import type { Component } from 'vue'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))
@@ -28,6 +29,8 @@ vi.mock('@vueuse/core', async () => {
         useClipboard: () => ({ copy: vi.fn(), copied: ref(false) }),
         useWakeLock: () => ({ request: vi.fn(), release: vi.fn() }),
         useUrlSearchParams: () => ({}),
+        useResizeObserver: () => ({ stop: vi.fn() }),
+        useDebounceFn: (fn: any) => fn,
     }
 })
 

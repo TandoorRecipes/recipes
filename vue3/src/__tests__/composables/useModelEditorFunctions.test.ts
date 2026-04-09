@@ -6,7 +6,8 @@ import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 import { makeFood } from '@/__tests__/factories'
 import type { Food } from '@/openapi'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error {
         response: any

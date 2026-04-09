@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group, User
-from django.db.migrations.recorder import MigrationRecorder
 from django.contrib.postgres.search import SearchVector
 from django.utils import translation
 from django_scopes import scopes_disabled
@@ -32,8 +31,6 @@ admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 admin.site.unregister(Group)
-
-admin.site.register(MigrationRecorder.Migration)
 
 
 @admin.action(description='Delete all data from a space')
@@ -103,7 +100,6 @@ admin.site.register(AiProvider, AiProviderAdmin)
 
 class AiLogAdmin(admin.ModelAdmin):
     list_display = ('ai_provider', 'function', 'credit_cost', 'created_by', 'created_at',)
-
 
 admin.site.register(AiLog, AiLogAdmin)
 
@@ -207,7 +203,6 @@ class StepAdmin(admin.ModelAdmin):
     list_display = ('recipe_and_name', 'order', 'space')
     ordering = ('recipe__name', 'name', 'space',)
     search_fields = ('name', 'recipe__name')
-    autocomplete_fields = ('ingredients', 'space', 'step_recipe')
     actions = [delete_unattached_steps]
 
     @staticmethod
@@ -235,7 +230,6 @@ def rebuild_index(modeladmin, request, queryset):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage', 'space')
     search_fields = ('name', 'created_by__username')
-    autocomplete_fields = ('keywords','steps', 'properties','shared','created_by', 'space')
     ordering = ('name', 'created_by__username',)
     list_filter = ('internal',)
     date_hierarchy = 'created_at'
@@ -395,7 +389,6 @@ admin.site.register(ShoppingListRecipe, ShoppingListRecipeAdmin)
 
 
 class ShoppingListEntryAdmin(admin.ModelAdmin):
-    autocomplete_fields = ('created_by', 'food', 'unit', 'ingredient')
     list_display = ('id', 'food', 'unit', 'list_recipe', 'created_by', 'created_at', 'checked')
 
 
@@ -427,7 +420,6 @@ admin.site.register(PropertyType, PropertyTypeAdmin)
 
 class PropertyAdmin(admin.ModelAdmin):
     list_display = ('property_amount', 'property_type')
-    search_fields = ('property_type__name',)
 
 
 admin.site.register(Property, PropertyAdmin)

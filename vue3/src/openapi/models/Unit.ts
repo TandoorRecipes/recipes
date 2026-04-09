@@ -85,6 +85,12 @@ export interface Unit {
     baseUnit?: string;
     /**
      * 
+     * @type {number}
+     * @memberof Unit
+     */
+    readonly numrecipe: number;
+    /**
+     * 
      * @type {string}
      * @memberof Unit
      */
@@ -96,6 +102,7 @@ export interface Unit {
  */
 export function instanceOfUnit(value: object): value is Unit {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     return true;
 }
 
@@ -114,11 +121,12 @@ export function UnitFromJSONTyped(json: any, ignoreDiscriminator: boolean): Unit
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'baseUnit': json['base_unit'] == null ? undefined : json['base_unit'],
+        'numrecipe': json['numrecipe'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
-export function UnitToJSON(value?: Unit | null): any {
+export function UnitToJSON(value?: Omit<Unit, 'numrecipe'> | null): any {
     if (value == null) {
         return value;
     }
