@@ -31,6 +31,27 @@
                     @reset="resetAll"
                 />
 
+                <v-row dense class="mt-1">
+                    <v-col cols="12" md="6">
+                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
+                            <template #append>
+                                <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
+                                       :disabled="selectedCustomFilter == null"
+                                       @click="loadSelectedCustomFilter()" class="text-none ms-1">
+                                    {{ $t('Load') }}
+                                </v-btn>
+                                <v-btn variant="text" size="small" prepend-icon="$save"
+                                       @click="saveCustomFilter()" class="text-none ms-1">
+                                    {{ $t('Save') }}
+                                </v-btn>
+                            </template>
+                        </model-select>
+                    </v-col>
+                    <v-col v-if="savedFilterModified" cols="12" md="6">
+                        <closable-help-alert :text="$t('saved_filter_override_hint')" />
+                    </v-col>
+                </v-row>
+
                 <ModelListFilterChips
                     v-if="activeFilterCount > 0"
                     :filter-defs="filterDefs"
@@ -74,28 +95,6 @@
                         />
                     </v-col>
                 </v-row>
-
-                <v-row dense class="mt-2">
-                    <v-col cols="12" md="6">
-                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
-                            <template #append>
-                                <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
-                                       :disabled="selectedCustomFilter == null"
-                                       @click="loadSelectedCustomFilter()" class="text-none ms-1">
-                                    {{ $t('Load') }}
-                                </v-btn>
-                                <v-btn variant="text" size="small" prepend-icon="$save"
-                                       @click="saveCustomFilter()" class="text-none ms-1">
-                                    {{ $t('Save') }}
-                                </v-btn>
-                            </template>
-                        </model-select>
-                    </v-col>
-                </v-row>
-                <closable-help-alert
-                    v-if="savedFilterModified"
-                    :text="$t('saved_filter_override_hint')"
-                />
             </v-col>
         </v-row>
 
