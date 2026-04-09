@@ -75,8 +75,9 @@
                         <v-card-text class="flex-grow-1">
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"
-                                                     class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
+                                <div class="flex-column mb-auto mt-2 float-right" v-if="useUserPreferenceStore().isAuthenticated">
+                                    <recipe-context-menu :recipe="recipe" :servings="servings"></recipe-context-menu>
+                                </div>
                             </div>
                             <p>
                                 {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
@@ -223,7 +224,7 @@ const {doAiImport, fileApiLoading} = useFileApi()
 const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
 const props = defineProps<{
-    servings: {type: Number, required: false},
+    servings?: number,
 }>()
 
 const servings = ref(props.servings ?? recipe.value.servings ?? 1)
