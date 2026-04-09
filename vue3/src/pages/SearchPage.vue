@@ -194,6 +194,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useRouteQuery} from "@vueuse/router";
 import {boolOrUndefinedTransformer, numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
 import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
+import {useUnratedOnlyFilter} from "@/composables/useUnratedOnlyFilter";
 import RandomIcon from "@/components/display/RandomIcon.vue";
 import {VSelect, VTextField, VNumberInput} from "vuetify/components";
 import RatingField from "@/components/inputs/RatingField.vue";
@@ -270,6 +271,12 @@ onMounted(() => {
     // load filters that were previously enabled
     useUserPreferenceStore().deviceSettings.search_visibleFilters.forEach(f => {
         if (f in filters.value) {
+            // Carve-out matching enableFiltersWithValues: the `rating` filter
+            // shares its route-query key with `unratedOnly`. When rating===0 the
+            // semantic is "unrated" — skip restoring the numeric rating UI.
+            if (f === 'rating' && filters.value[f].modelValue === 0) {
+                return
+            }
             filters.value[f].enabled = true
         } else {
             useUserPreferenceStore().deviceSettings.search_visibleFilters.splice(useUserPreferenceStore().deviceSettings.search_visibleFilters.indexOf(f), 1)
@@ -358,6 +365,13 @@ function handleRowClick(event: PointerEvent, data: any) {
  */
 function enableFiltersWithValues() {
     Object.values(filters.value).forEach((filter) => {
+        // The `rating` filter shares its route-query key with the `unratedOnly`
+        // filter (via the useUnratedOnlyFilter computed). When rating === 0 the
+        // semantic is "unrated", which belongs to unratedOnly — don't double-enable
+        // the numeric rating filter for that sentinel value.
+        if (filter.id === 'rating' && filter.modelValue === 0) {
+            return
+        }
         if (!isFilterDefaultValue(filter)) {
             filter.enabled = true
         }
@@ -556,6 +570,18 @@ function transformTandoor1Filter(customFilterParams: any) {
 [this.$t("date_created"), "created_at", "↑", "↓"],
 [this.$t("date_viewed"), "lastviewed", "↑", "↓"],
 */
+/**
+ * Rating filter refs are constructed up-front so the `unratedOnly` computed
+ * can derive from them. Once wrapped inside `filters`, reactive auto-unwrapping
+ * makes direct `.value` access awkward from a composable — so we keep the raw
+ * refs here and reference them from both `filters.rating.modelValue` and
+ * `useUnratedOnlyFilter`.
+ */
+const ratingRouteQuery = useRouteQuery<number | undefined>('rating', undefined, {transform: numberOrUndefinedTransformer})
+const ratingGteRouteQuery = useRouteQuery<number | undefined>('ratingGte', undefined, {transform: numberOrUndefinedTransformer})
+const ratingLteRouteQuery = useRouteQuery<number | undefined>('ratingLte', undefined, {transform: numberOrUndefinedTransformer})
+const unratedOnlyModel = useUnratedOnlyFilter(ratingRouteQuery, ratingGteRouteQuery, ratingLteRouteQuery)
+
 /**
  * all filters available to enable
  */
@@ -790,33 +816,43 @@ const filters = ref({
     // },
     rating: {
         id: 'rating',
-        label: `${t('Rating')} (${t('exact')})`,
+        label: `${t('Rating')} (=)`,
         hint: '',
         enabled: false,
         clearable: true,
         default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('rating', undefined, {transform: numberOrUndefinedTransformer}),
+        modelValue: ratingRouteQuery,
     },
     ratingGte: {
         id: 'ratingGte',
-        label: `${t('Rating')} (>=)`,
+        label: `${t('Rating')} (≥)`,
         hint: '',
         enabled: false,
         clearable: true,
         default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('ratingGte', undefined, {transform: numberOrUndefinedTransformer}),
+        modelValue: ratingGteRouteQuery,
     },
     ratingLte: {
         id: 'ratingLte',
-        label: `${t('Rating')} (<=)`,
+        label: `${t('Rating')} (≤)`,
         hint: '',
         enabled: false,
         clearable: true,
         default: undefined,
         is: RatingField,
-        modelValue: useRouteQuery('ratingLte', undefined, {transform: numberOrUndefinedTransformer}),
+        modelValue: ratingLteRouteQuery,
+    },
+    unratedOnly: {
+        id: 'unratedOnly',
+        label: t('UnratedOnly'),
+        hint: '',
+        enabled: false,
+        default: undefined,
+        is: VSelect,
+        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
+        modelValue: unratedOnlyModel,
     },
     timescooked: {
         id: 'timescooked',

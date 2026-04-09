@@ -240,6 +240,15 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             mealplan_displayWeekNumbers: true,
 
             recipe_mergeStepOverview: false,
+            recipe_showIngredientActions: false,
+            recipe_showCheckboxes: true,
+            recipe_overviewExpanded: false,
+            recipe_overviewInlineStatus: false,
+            recipe_overviewNotesDisplay: 'bubble',
+            recipe_stepInlineStatus: false,
+            recipe_stepNotesDisplay: 'bubble',
+            recipe_notesTruncateLength: 30,
+            recipe_contextMenuColor: 'onhand',
 
             search_itemsPerPage: 50,
             search_viewMode: 'grid',

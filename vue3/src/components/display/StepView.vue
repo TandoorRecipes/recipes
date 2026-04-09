@@ -23,7 +23,10 @@
             <v-card-text v-if="step.ingredients.length > 0 || step.instruction != ''">
                 <v-row>
                     <v-col :cols="(useUserPreferenceStore().isPrintMode) ? 6 : 12" md="6" v-if="step.ingredients.length > 0 && (step.showIngredientsTable || step.show_ingredients_table)">
-                        <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"></ingredients-table>
+                        <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"
+                                           :show-actions="showStepActions"
+                                           :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_showCheckboxes"
+                                           @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
                     </v-col>
                     <v-col :cols="(useUserPreferenceStore().isPrintMode) ? 6 : 12" md="6" class="markdown-body">
                         <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="ingredientFactor"
@@ -64,6 +67,8 @@ import Instructions from "@/components/display/Instructions.vue";
 import Timer from "@/components/display/Timer.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 
+const emit = defineEmits(['scale'])
+
 const step = defineModel<Step>({required: true})
 
 const props = defineProps({
@@ -77,6 +82,8 @@ const props = defineProps({
         required: true,
     },
 })
+
+const showStepActions = computed(() => useUserPreferenceStore().deviceSettings.recipe_showIngredientActions)
 
 const timerRunning = ref(false)
 const stepChecked = ref(false)

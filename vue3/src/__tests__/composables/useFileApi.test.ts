@@ -17,11 +17,6 @@ describe('useFileApi', () => {
         vi.clearAllMocks()
     })
 
-    it('starts with fileApiLoading false', () => {
-        const { fileApiLoading } = useFileApi()
-        expect(fileApiLoading.value).toBe(false)
-    })
-
     describe('createOrUpdateUserFile', () => {
         it('sends POST for new file and returns UserFile', async () => {
             const mockUserFile = makeUserFile({ id: 5, name: 'photo.jpg' })

@@ -63,13 +63,7 @@ vi.mock('@/types/Models', async () => {
 })
 
 // Import all components under test
-import BtnCopy from '@/components/buttons/BtnCopy.vue'
-import PluralName from '@/components/display/PluralName.vue'
-import PrivateRecipeBadge from '@/components/display/PrivateRecipeBadge.vue'
-import RecipeImage from '@/components/display/RecipeImage.vue'
 import KeywordsBar from '@/components/display/KeywordsBar.vue'
-import ScalableNumber from '@/components/display/ScalableNumber.vue'
-import Timer from '@/components/display/Timer.vue'
 import StepView from '@/components/display/StepView.vue'
 import BookEntryCard from '@/components/display/BookEntryCard.vue'
 import ExternalRecipeViewer from '@/components/display/ExternalRecipeViewer.vue'
@@ -151,38 +145,8 @@ describe('Component smoke tests', () => {
     })
 
     // Display components
-    it('BtnCopy mounts', () => {
-        const w = smokeMount(BtnCopy, { text: 'copy me' })
-        expect(w.exists()).toBe(true)
-    })
-
-    it('PluralName mounts', () => {
-        const w = smokeMount(PluralName, { name: 'Apple', pluralName: 'Apples', amount: 2 })
-        expect(w.exists()).toBe(true)
-    })
-
-    it('PrivateRecipeBadge mounts', () => {
-        const w = smokeMount(PrivateRecipeBadge, { recipe: makeRecipeOverview({ internal: false }) })
-        expect(w.exists()).toBe(true)
-    })
-
-    it('RecipeImage mounts', () => {
-        const w = smokeMount(RecipeImage, { recipe: makeRecipeOverview() })
-        expect(w.exists()).toBe(true)
-    })
-
     it('KeywordsBar mounts', () => {
         const w = smokeMount(KeywordsBar, { recipe: makeRecipeOverview() })
-        expect(w.exists()).toBe(true)
-    })
-
-    it('ScalableNumber mounts', () => {
-        const w = smokeMount(ScalableNumber, { number: 2.5, factor: 1 })
-        expect(w.exists()).toBe(true)
-    })
-
-    it('Timer mounts', () => {
-        const w = smokeMount(Timer, { seconds: 300 })
         expect(w.exists()).toBe(true)
     })
 

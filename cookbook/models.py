@@ -556,6 +556,8 @@ class UserPreference(models.Model, PermissionModelMixin):
     csv_prefix = models.CharField(max_length=10, blank=True, )
     default_meal_type = models.ForeignKey("MealType", on_delete=models.SET_NULL, null=True, blank=True)
     start_page_sections = models.JSONField(default=list, blank=True)
+    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
+    shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
@@ -818,6 +820,18 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     def __str__(self):
         return self.name
+
+    def get_substitutes(self):
+        """Return a queryset of all substitute foods: direct M2M, tree siblings, and tree children."""
+        filters = Q()
+        if self.substitute.exists():
+            filters |= Q(id__in=self.substitute.values('id'))
+        if self.substitute_children:
+            filters |= Q(path__startswith=self.path, depth__gt=self.depth)
+        if self.substitute_siblings:
+            sibling_path = self.path[:Food.steplen * (self.depth - 1)]
+            filters |= Q(path__startswith=sibling_path, depth=self.depth)
+        return Food.objects.filter(filters).exclude(id=self.id)
 
     def merge_into(self, target):
         """
