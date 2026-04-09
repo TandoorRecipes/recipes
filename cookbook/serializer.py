@@ -566,35 +566,33 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
 
-    def check_start_page_sections(self, validated_data):
-        if 'start_page_sections' not in validated_data:
-            return
-        value = validated_data['start_page_sections']
-        allowed_keys = {"mode", "enabled", "min_recipes", "filter_id"}
+    def validate_start_page_sections(self, value):
+        ALLOWED_KEYS = {"mode", "enabled", "min_recipes", "filter_id"}
+
         if not isinstance(value, list):
-            raise ValidationError("start_page_sections must be a list")
+            raise ValidationError("Must be a list")
         if len(value) > 20:
-            raise ValidationError("Max 20 start_page_sections")
+            raise ValidationError("Max 20 sections")
         for entry in value:
             if not isinstance(entry, dict):
-                raise ValidationError("Each start_page_sections entry must be an object")
-            if set(entry.keys()) - allowed_keys:
-                raise ValidationError(f"Unknown start_page_sections keys: {set(entry.keys()) - allowed_keys}")
+                raise ValidationError("Each entry must be an object")
+            if set(entry.keys()) - ALLOWED_KEYS:
+                raise ValidationError(f"Unknown keys: {set(entry.keys()) - ALLOWED_KEYS}")
             if "mode" not in entry or "enabled" not in entry:
-                raise ValidationError("start_page_sections mode and enabled are required")
+                raise ValidationError("mode and enabled are required")
             if entry["mode"] not in UserPreference.SECTION_MODES:
-                raise ValidationError(f"Invalid start_page_sections mode: {entry['mode']}")
+                raise ValidationError(f"Invalid mode: {entry['mode']}")
             if not isinstance(entry["enabled"], bool):
-                raise ValidationError("start_page_sections enabled must be boolean")
+                raise ValidationError("enabled must be boolean")
             if "min_recipes" in entry:
                 if not isinstance(entry["min_recipes"], int) or entry["min_recipes"] < 0:
-                    raise ValidationError("start_page_sections min_recipes must be a non-negative integer")
+                    raise ValidationError("min_recipes must be a non-negative integer")
             if "filter_id" in entry:
                 if not isinstance(entry["filter_id"], int) or entry["filter_id"] < 1:
-                    raise ValidationError("start_page_sections filter_id must be a positive integer")
+                    raise ValidationError("filter_id must be a positive integer")
+        return value
 
     def update(self, instance, validated_data):
-        self.check_start_page_sections(validated_data)
         with scopes_disabled():
             return super().update(instance, validated_data)
 
