@@ -27,7 +27,7 @@ function mountWidget(initialState: Partial<Record<string, string>> = {}) {
             delete state.value[key]
         } else if (Array.isArray(value)) {
             if (value.length === 0) delete state.value[key]
-            else state.value[key] = value.map(String).join('|')
+            else state.value[key] = value.map(String).join(',')
         } else {
             state.value[key] = String(value)
         }
@@ -38,9 +38,9 @@ function mountWidget(initialState: Partial<Record<string, string>> = {}) {
     const i18n = createI18n({
         legacy: false, locale: 'en',
         messages: {en: {
-            Keywords: 'Keywords', any: 'any', all: 'all', exclude_any: 'exclude any', exclude_all: 'exclude all',
-            tag_filter_has_any: 'Has any', tag_filter_has_all: 'Has all',
-            tag_filter_has_none: 'Has none', tag_filter_missing_some: 'Missing some',
+            Keywords: 'Keywords',
+            With: 'With', Without: 'Without',
+            any: 'any', all: 'all',
         }},
         missingWarn: false, fallbackWarn: false,
     })
@@ -64,67 +64,93 @@ function mountWidget(initialState: Partial<Record<string, string>> = {}) {
 }
 
 describe('RecipeTagFilterGroup', () => {
-    it('renders 4 tabs with the new semantic labels', () => {
+    it('renders two ModelSelect instances (With and Without)', () => {
         const {wrapper} = mountWidget()
-        const tabs = wrapper.findAll('.v-tab')
-        expect(tabs.length).toBe(4)
-        const labels = tabs.map(t => t.text().toLowerCase())
-        expect(labels).toEqual(['has any', 'has all', 'has none', 'missing some'])
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        expect(selects.length).toBe(2)
     })
 
-    it('renders a single ModelSelect for the active variant', () => {
+    it('renders With and Without labels', () => {
         const {wrapper} = mountWidget()
-        expect(wrapper.findAllComponents(ModelSelectStub).length).toBe(1)
+        const text = wrapper.text().toLowerCase()
+        expect(text).toContain('with')
+        expect(text).toContain('without')
     })
 
-    it('binds the active variant to the ModelSelect modelValue', async () => {
-        const {wrapper} = mountWidget({keywords: '1|2|3'})
-        // First tab is `keywords` (OR), and the value is populated.
-        const stub = wrapper.findComponent(ModelSelectStub)
-        expect(stub.props('modelValue')).toEqual([1, 2, 3])
+    it('renders any/all toggles for both groups', () => {
+        const {wrapper} = mountWidget()
+        const toggles = wrapper.findAll('.v-btn-toggle')
+        expect(toggles.length).toBe(2)
     })
 
-    it('switches active tab to whichever variant is non-empty on mount', async () => {
-        const {wrapper} = mountWidget({keywordsAnd: '5|6'})
-        const stub = wrapper.findComponent(ModelSelectStub)
-        expect(stub.props('modelValue')).toEqual([5, 6])
-        // The keywordsAnd tab should be visually selected → "Has all".
-        const activeTab = wrapper.find('.v-tab--selected')
-        expect(activeTab.text().toLowerCase()).toContain('has all')
+    it('binds "With" values to first ModelSelect', () => {
+        const {wrapper} = mountWidget({keywords: '1,2,3'})
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        expect(selects[0].props('modelValue')).toEqual([1, 2, 3])
     })
 
-    it('writing a new value via ModelSelect calls setFilter on the active variant key', async () => {
-        const {wrapper, state, setFilter} = mountWidget()
-        const stub = wrapper.findComponent(ModelSelectStub)
-        await stub.vm.$emit('update:modelValue', [7, 8])
+    it('binds "Without" values to second ModelSelect', () => {
+        const {wrapper} = mountWidget({keywordsOrNot: '4,5'})
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        expect(selects[1].props('modelValue')).toEqual([4, 5])
+    })
+
+    it('supports both With and Without simultaneously', () => {
+        const {wrapper} = mountWidget({keywords: '1,2', keywordsOrNot: '3,4'})
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        expect(selects[0].props('modelValue')).toEqual([1, 2])
+        expect(selects[1].props('modelValue')).toEqual([3, 4])
+    })
+
+    it('writing to "With" calls setFilter on the include key', async () => {
+        const {wrapper, setFilter} = mountWidget()
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        await selects[0].vm.$emit('update:modelValue', [7, 8])
         expect(setFilter).toHaveBeenCalledWith('keywords', [7, 8])
-        expect(state.value.keywords).toBe('7|8')
     })
 
-    it('switching tabs MOVES the existing value to the new variant key', async () => {
-        const {wrapper, state} = mountWidget({keywords: '1|2'})
-        const tabs = wrapper.findAll('.v-tab')
-        // Tab 1 = "all" (keywordsAnd)
-        await tabs[1].trigger('click')
-        // The OR slot should be cleared, AND should now hold the value
+    it('writing to "Without" calls setFilter on the exclude key', async () => {
+        const {wrapper, setFilter} = mountWidget()
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        await selects[1].vm.$emit('update:modelValue', [9, 10])
+        expect(setFilter).toHaveBeenCalledWith('keywordsOrNot', [9, 10])
+    })
+
+    it('toggling include mode to "all" switches from keys[0] to keys[1]', async () => {
+        const {wrapper, state} = mountWidget({keywords: '1,2'})
+        const toggles = wrapper.findAll('.v-btn-toggle')
+        const allBtn = toggles[0].findAll('.v-btn')[1]
+        await allBtn.trigger('click')
         expect(state.value.keywords).toBeUndefined()
-        expect(state.value.keywordsAnd).toBe('1|2')
+        expect(state.value.keywordsAnd).toBe('1,2')
     })
 
-    it('switching tabs to empty target with no current value is a no-op', async () => {
-        const {wrapper, state, setFilter} = mountWidget()
-        setFilter.mockClear()
-        const tabs = wrapper.findAll('.v-tab')
-        await tabs[2].trigger('click')
-        // No value to move, so no setFilter should fire
-        expect(setFilter).not.toHaveBeenCalled()
-        expect(Object.keys(state.value).length).toBe(0)
+    it('toggling exclude mode to "all" switches from keys[2] to keys[3]', async () => {
+        const {wrapper, state} = mountWidget({keywordsOrNot: '3,4'})
+        const toggles = wrapper.findAll('.v-btn-toggle')
+        const allBtn = toggles[1].findAll('.v-btn')[1]
+        await allBtn.trigger('click')
+        expect(state.value.keywordsOrNot).toBeUndefined()
+        expect(state.value.keywordsAndNot).toBe('3,4')
     })
 
-    it('clearing the ModelSelect to empty array removes the active variant', async () => {
-        const {wrapper, state} = mountWidget({keywords: '1|2'})
-        const stub = wrapper.findComponent(ModelSelectStub)
-        await stub.vm.$emit('update:modelValue', [])
+    it('clearing include select removes the active include key', async () => {
+        const {wrapper, state} = mountWidget({keywords: '1,2'})
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        await selects[0].vm.$emit('update:modelValue', [])
         expect(state.value.keywords).toBeUndefined()
+    })
+
+    it('clearing exclude select removes the active exclude key', async () => {
+        const {wrapper, state} = mountWidget({keywordsOrNot: '3,4'})
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        await selects[1].vm.$emit('update:modelValue', [])
+        expect(state.value.keywordsOrNot).toBeUndefined()
+    })
+
+    it('loads with correct toggle state when "all" variant has values', () => {
+        const {wrapper} = mountWidget({keywordsAnd: '5,6'})
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        expect(selects[0].props('modelValue')).toEqual([5, 6])
     })
 })
