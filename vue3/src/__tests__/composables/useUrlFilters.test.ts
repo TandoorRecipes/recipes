@@ -250,4 +250,108 @@ describe('useUrlFilters (multi-param)', () => {
             expect(groupedFilterDefs.value.get('')).toHaveLength(1)
         })
     })
+
+    describe('tag-select (multi-value array filters)', () => {
+        it('parses comma-joined values into a number array', () => {
+            mockQuery.value = { keywords: '7,14,21' }
+            const defs = computed(() => makeDefs([{ key: 'keywords', type: 'tag-select' }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({ keywords: [7, 14, 21] })
+        })
+
+        it('handles a single-element array (no delimiter)', () => {
+            mockQuery.value = { keywords: '42' }
+            const defs = computed(() => makeDefs([{ key: 'keywords', type: 'tag-select' }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({ keywords: [42] })
+        })
+
+        it('setFilter accepts an array of numbers and round-trips', () => {
+            const defs = computed(() => makeDefs([{ key: 'foods', type: 'tag-select' }]))
+            const { setFilter, filterParams } = useUrlFilters(defs)
+            setFilter('foods', [3, 5, 9])
+            expect(filterParams.value).toEqual({ foods: [3, 5, 9] })
+        })
+
+        it('setFilter with empty array removes the filter', () => {
+            mockQuery.value = { foods: '1,2' }
+            const defs = computed(() => makeDefs([{ key: 'foods', type: 'tag-select' }]))
+            const { setFilter, activeFilterCount } = useUrlFilters(defs)
+            setFilter('foods', [])
+            expect(activeFilterCount.value).toBe(0)
+        })
+
+    })
+
+    describe('number-range filters', () => {
+        it('parses gte~lte into two API params', () => {
+            mockQuery.value = { rating: '3~5' }
+            const defs = computed(() => makeDefs([{ key: 'rating', type: 'number-range' }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({ ratingGte: 3, ratingLte: 5 })
+        })
+
+        it('parses gte-only (no lte) into one param', () => {
+            mockQuery.value = { rating: '3~' }
+            const defs = computed(() => makeDefs([{ key: 'rating', type: 'number-range' }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({ ratingGte: 3 })
+        })
+
+        it('parses lte-only (no gte) into one param', () => {
+            mockQuery.value = { rating: '~5' }
+            const defs = computed(() => makeDefs([{ key: 'rating', type: 'number-range' }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({ ratingLte: 5 })
+        })
+
+        it('setFilter accepts {gte, lte} object and round-trips', () => {
+            const defs = computed(() => makeDefs([{ key: 'rating', type: 'number-range' }]))
+            const { setFilter, filterParams } = useUrlFilters(defs)
+            setFilter('rating', { gte: 3, lte: 5 })
+            expect(filterParams.value).toEqual({ ratingGte: 3, ratingLte: 5 })
+        })
+
+        it('setFilter with both null/undefined removes the filter', () => {
+            mockQuery.value = { rating: '3~5' }
+            const defs = computed(() => makeDefs([{ key: 'rating', type: 'number-range' }]))
+            const { setFilter, activeFilterCount } = useUrlFilters(defs)
+            setFilter('rating', { gte: null, lte: null })
+            expect(activeFilterCount.value).toBe(0)
+        })
+    })
+
+    describe('date-range filters (string values, not number coercion)', () => {
+        it('parses ISO gte~lte into two string API params', () => {
+            mockQuery.value = { cookedon: '2025-01-01~2025-12-31' }
+            const defs = computed(() => makeDefs([{ key: 'cookedon', type: 'date-range' }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({
+                cookedonGte: '2025-01-01',
+                cookedonLte: '2025-12-31',
+            })
+            expect(typeof filterParams.value.cookedonGte).toBe('string')
+        })
+    })
+
+    describe('unknown def type', () => {
+        it('passes through string value when def type has no special handler', () => {
+            mockQuery.value = { custom: 'somevalue' }
+            const defs = computed(() => makeDefs([{ key: 'custom', type: 'string' as any }]))
+            const { filterParams } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({ custom: 'somevalue' })
+        })
+    })
+
+    describe('clearFilter', () => {
+        it('removes a filter by key', () => {
+            mockQuery.value = { a: '1', b: '2' }
+            const defs = computed(() => makeDefs([{ key: 'a' }, { key: 'b' }]))
+            const { clearFilter, activeFilterCount, getFilter } = useUrlFilters(defs)
+            clearFilter('a')
+            expect(getFilter('a')).toBeUndefined()
+            expect(getFilter('b')).toBe('2')
+            expect(activeFilterCount.value).toBe(1)
+        })
+    })
 })

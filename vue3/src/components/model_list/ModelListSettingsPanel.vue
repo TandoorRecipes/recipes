@@ -93,8 +93,8 @@
                 </CollapsibleSection>
                 <v-divider class="my-2" />
 
-                <!-- Desktop: Table -->
-                <CollapsibleSection :label="$t('Table')">
+                <!-- Desktop: Table — hidden when no columns are configured (grid view) -->
+                <CollapsibleSection v-if="allColumns.length > 0" :label="$t('Table')">
                     <div class="px-4 py-1">
                         <v-switch
                             v-model="showColumnHeaders"
@@ -294,7 +294,7 @@ import {computed, inject, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {Model, ModelTableHeaders} from '@/types/Models'
-import type {ActionDef, FilterDef} from '@/composables/modellist/types'
+import type {ActionDef, FilterDef, FilterValue} from '@/composables/modellist/types'
 import {MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
 import {useTouchDetect} from '@/composables/useTouchDetect'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
@@ -309,19 +309,27 @@ const props = withDefaults(defineProps<{
     modelValue: boolean
     activeTab?: string
     model: Model
-    allColumns: ModelTableHeaders[]
-    isColumnVisible: (key: string) => boolean
-    toggleColumn: (key: string) => void
-    getDisplayMode: (key: string) => 'icon' | 'text'
-    setDisplayMode: (key: string, mode: 'icon' | 'text') => void
+    /** Column-related props are optional so pages that don't surface column
+     *  visibility (e.g. SearchPage, which is a one-off page rather than a
+     *  generic model list) can mount the panel without passing identity stubs. */
+    allColumns?: ModelTableHeaders[]
+    isColumnVisible?: (key: string) => boolean
+    toggleColumn?: (key: string) => void
+    getDisplayMode?: (key: string) => 'icon' | 'text'
+    setDisplayMode?: (key: string, mode: 'icon' | 'text') => void
     groupedFilterDefs?: Map<string, FilterDef[]>
     getFilter?: (key: string) => string | undefined
-    setFilter?: (key: string, value: string | undefined) => void
+    setFilter?: (key: string, value: FilterValue) => void
     clearAllFilters?: () => void
     activeFilterCount?: number
     actionDefs?: ActionDef[]
 }>(), {
     activeTab: 'settings',
+    allColumns: () => [],
+    isColumnVisible: () => () => true,
+    toggleColumn: () => () => {},
+    getDisplayMode: () => () => 'text',
+    setDisplayMode: () => () => {},
     groupedFilterDefs: () => new Map(),
     getFilter: () => () => undefined,
     setFilter: () => () => {},

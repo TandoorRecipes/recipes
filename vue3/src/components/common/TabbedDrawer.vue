@@ -15,7 +15,9 @@
                 size="small"
                 :aria-label="isPinned ? $t('Unpin') : $t('Pin')"
                 @click="isPinned = !isPinned"
-            />
+            >
+                <v-tooltip activator="parent" :text="isPinned ? $t('UnpinPanel') : $t('PinPanel')" location="bottom" :open-delay="400" />
+            </v-btn>
             <v-btn
                 icon="fa-solid fa-times"
                 variant="plain"

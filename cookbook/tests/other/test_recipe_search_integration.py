@@ -196,3 +196,32 @@ class TestFuzzyLookupUnit:
             _set_fuzzy_prefs(user, trigram=True, unaccent=True)
         ids = _get_list_ids(u1_s1, 'api:unit-list', f'query={UNACCENTED}')
         assert unit.id in ids
+
+
+class TestHTTPDuplicateQueryParams:
+    """Duplicate query params must not crash scalar fields or drop list values."""
+
+    def test_duplicate_scalar_does_not_crash(self, setup_recipes, u1_s1):
+        r = u1_s1.get(reverse(LIST_URL) + '?query=a&query=b')
+        assert r.status_code == 200
+
+    def test_duplicate_scalar_last_wins(self, setup_recipes, u1_s1, space_1):
+        with scopes_disabled():
+            RecipeFactory.create(space=space_1, name='DupScalarFirst', description='',
+                                 steps__count=0, keywords__count=0)
+            r_b = RecipeFactory.create(space=space_1, name='DupScalarSecond', description='',
+                                       steps__count=0, keywords__count=0)
+        ids, _ = _get_ids(u1_s1, 'query=DupScalarFirst&query=DupScalarSecond')
+        assert r_b.id in ids
+
+    def test_duplicate_list_filter_preserves_all_values(self, setup_recipes, u1_s1, space_1):
+        r1, r2, r3, bg = setup_recipes
+        with scopes_disabled():
+            kw_a = KeywordFactory.create(space=space_1)
+            kw_b = KeywordFactory.create(space=space_1)
+            r1.keywords.add(kw_a)
+            r2.keywords.add(kw_b)
+        ids, _ = _get_ids(u1_s1, f'keywords={kw_a.id}&keywords={kw_b.id}')
+        assert r1.id in ids
+        assert r2.id in ids
+
