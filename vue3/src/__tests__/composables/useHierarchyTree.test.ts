@@ -12,7 +12,8 @@ vi.mock('vue-i18n', async () => {
 })
 
 // Mock the OpenAPI layer
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class {},
     ResponseError: class extends Error {
         response: any

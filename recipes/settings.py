@@ -193,7 +193,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_vite',
     'hcaptcha',
-    'django.db.migrations',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -606,7 +606,7 @@ def _discover_languages():
     # Weblate directory names that map to different Django LANG_INFO keys.
     # The value becomes both the LANG_INFO lookup key AND the language code.
     DIR_CODE_MAP = {
-        'hu-hu': 'hu',  # Weblate uses hu_HU, Django uses hu
+        'hu-hu': 'hu',       # Weblate uses hu_HU, Django uses hu
         'zh-cn': 'zh-hans',  # Weblate uses zh_CN, Django uses zh-hans
     }
 

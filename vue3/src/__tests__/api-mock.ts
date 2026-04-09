@@ -2,7 +2,8 @@
  * Shared API mock setup for tests that need the OpenAPI client.
  *
  * Usage: import this file's vi.mock at the TOP of your test file:
- *   vi.mock('@/openapi', () => ({ ApiApi: class { constructor() { return apiMock } }, ... }))
+ *   vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()), ApiApi: class { constructor() { return apiMock } }, ... }))
  *   import { apiMock, resetApiMock } from '@/__tests__/api-mock'
  */
 
