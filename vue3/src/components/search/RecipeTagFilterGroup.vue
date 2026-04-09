@@ -1,131 +1,137 @@
 <template>
     <v-card class="pa-2">
-        <div class="d-flex align-center ga-1 mb-1">
-            <v-badge :model-value="currentValue.length > 0" :content="currentValue.length" color="primary" inline>
-                <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
-            </v-badge>
-            <v-tabs
-                v-model="activeKey"
+        <v-badge :model-value="totalCount > 0" :content="totalCount" color="primary" inline>
+            <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
+        </v-badge>
+
+        <div class="d-flex align-center ga-2 mt-1">
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('With') }}</span>
+            <ModelSelect
+                :model="modelName"
+                :model-value="includeValue"
+                @update:model-value="onIncludeUpdate"
+                :object="false"
+                mode="tags"
                 density="compact"
-                grow
-                color="primary"
-                :hide-slider="false"
+                :can-clear="true"
+                :search-on-load="true"
+                :append-to-body="true"
+                :hide-details="true"
                 class="flex-grow-1"
+            />
+            <v-btn-toggle
+                :model-value="includeMode"
+                @update:model-value="onIncludeModeChange"
+                mandatory
+                density="compact"
             >
-                <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.key">{{ tab.label }}</v-tab>
-            </v-tabs>
+                <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
+                <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
+            </v-btn-toggle>
         </div>
-        <ModelSelect
-            :model="modelName"
-            :model-value="currentValue"
-            @update:model-value="onUpdate"
-            :object="false"
-            mode="tags"
-            density="compact"
-            :can-clear="true"
-            :search-on-load="true"
-            :append-to-body="true"
-            :hide-details="true"
-        />
+
+        <div class="d-flex align-center ga-2 mt-1">
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('Without') }}</span>
+            <ModelSelect
+                :model="modelName"
+                :model-value="excludeValue"
+                @update:model-value="onExcludeUpdate"
+                :object="false"
+                mode="tags"
+                density="compact"
+                :can-clear="true"
+                :search-on-load="false"
+                :append-to-body="true"
+                :hide-details="true"
+                class="flex-grow-1"
+            />
+            <v-btn-toggle
+                :model-value="excludeMode"
+                @update:model-value="onExcludeModeChange"
+                mandatory
+                density="compact"
+            >
+                <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
+                <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
+            </v-btn-toggle>
+        </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
-import {useI18n} from 'vue-i18n'
+import {computed, ref} from 'vue'
 import type {EditorSupportedModels} from '@/types/Models'
 import type {FilterValue} from '@/composables/modellist/types'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 
-/**
- * Tabbed mode-switcher widget that exposes the four AND/OR/NOT variants of a
- * tag-select filter (keywords / foods / books) as a single logical filter
- * with a mode tab strip on top of one ModelSelect.
- *
- * Switching tabs MOVES any current value from the old variant key to the new
- * one — preserves user effort. Setting the underlying ModelSelect writes to
- * whichever key is currently active. The widget assumes only one variant is
- * "active" at a time; if a saved CustomFilter loads with multiple variants
- * populated, the widget surfaces whichever non-empty key comes first in `keys`,
- * and the others remain in URL state and render as separate filter chips.
- */
 const props = defineProps<{
     label: string
     modelName: EditorSupportedModels
-    /** The 4 backend variant keys, in tab order: [or, and, or_not, and_not]. */
+    /** [includeAny, includeAll, excludeAny, excludeAll] */
     keys: [string, string, string, string]
     getFilter: (key: string) => string | undefined
     setFilter: (key: string, value: FilterValue) => void
     clearFilter: (key: string) => void
 }>()
 
-const {t} = useI18n()
-
-const tabs = computed(() => [
-    {key: props.keys[0], label: t('tag_filter_has_any')},
-    {key: props.keys[1], label: t('tag_filter_has_all')},
-    {key: props.keys[2], label: t('tag_filter_has_none')},
-    {key: props.keys[3], label: t('tag_filter_missing_some')},
-])
-
-/** First variant key with a non-empty value, or the first key as the default. */
-function firstNonEmpty(): string {
-    for (const k of props.keys) {
-        if (props.getFilter(k)) return k
-    }
-    return props.keys[0]
+function parseIds(raw: string | undefined): number[] {
+    if (!raw) return []
+    return raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
 }
 
-const activeKey = ref(firstNonEmpty())
+function activeIncludeKey(): string {
+    return props.getFilter(props.keys[1]) ? props.keys[1] : props.keys[0]
+}
 
-// Re-sync the active tab when external state changes (e.g. CustomFilter load).
-watch(
-    () => props.keys.map(k => props.getFilter(k)),
-    () => {
-        const current = props.getFilter(activeKey.value)
-        if (current === undefined || current === '') {
-            const next = firstNonEmpty()
-            if (next !== activeKey.value && props.getFilter(next)) {
-                activeKey.value = next
-            }
-        }
-    },
-    {deep: true},
-)
+function activeExcludeKey(): string {
+    return props.getFilter(props.keys[3]) ? props.keys[3] : props.keys[2]
+}
 
-/** Parse the active key's stored `1|2|3` string to a number array for ModelSelect. */
-const currentValue = computed<number[]>(() => {
-    const raw = props.getFilter(activeKey.value)
-    if (!raw) return []
-    return raw.split('|').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
-})
+const includeMode = computed(() => props.getFilter(props.keys[1]) ? 'all' : 'any')
+const excludeMode = computed(() => props.getFilter(props.keys[3]) ? 'all' : 'any')
 
-function onUpdate(value: unknown) {
-    if (value == null) {
-        props.clearFilter(activeKey.value)
+const includeValue = computed(() => parseIds(props.getFilter(activeIncludeKey())))
+const excludeValue = computed(() => parseIds(props.getFilter(activeExcludeKey())))
+
+const totalCount = computed(() => includeValue.value.length + excludeValue.value.length)
+
+function onIncludeUpdate(value: unknown) {
+    const key = activeIncludeKey()
+    if (value == null || (Array.isArray(value) && value.length === 0)) {
+        props.clearFilter(key)
         return
     }
     if (Array.isArray(value)) {
-        if (value.length === 0) {
-            props.clearFilter(activeKey.value)
-            return
-        }
-        const nums = value.map(v => Number(v)).filter(n => !isNaN(n))
-        props.setFilter(activeKey.value, nums)
-        return
+        props.setFilter(key, value.map(v => Number(v)).filter(n => !isNaN(n)))
     }
-    const n = Number(value)
-    if (!isNaN(n)) props.setFilter(activeKey.value, [n])
 }
 
-// When the user clicks a different tab, MOVE the existing value to the new key.
-watch(activeKey, (next, prev) => {
-    if (next === prev) return
-    const oldVal = props.getFilter(prev)
-    if (oldVal === undefined || oldVal === '') return
-    const ids = oldVal.split('|').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
-    if (ids.length === 0) return
-    props.clearFilter(prev)
-    props.setFilter(next, ids)
-})
+function onExcludeUpdate(value: unknown) {
+    const key = activeExcludeKey()
+    if (value == null || (Array.isArray(value) && value.length === 0)) {
+        props.clearFilter(key)
+        return
+    }
+    if (Array.isArray(value)) {
+        props.setFilter(key, value.map(v => Number(v)).filter(n => !isNaN(n)))
+    }
+}
+
+function onIncludeModeChange(newMode: string) {
+    const oldKey = activeIncludeKey()
+    const newKey = newMode === 'all' ? props.keys[1] : props.keys[0]
+    if (oldKey === newKey) return
+    const ids = parseIds(props.getFilter(oldKey))
+    props.clearFilter(oldKey)
+    if (ids.length > 0) props.setFilter(newKey, ids)
+}
+
+function onExcludeModeChange(newMode: string) {
+    const oldKey = activeExcludeKey()
+    const newKey = newMode === 'all' ? props.keys[3] : props.keys[2]
+    if (oldKey === newKey) return
+    const ids = parseIds(props.getFilter(oldKey))
+    props.clearFilter(oldKey)
+    if (ids.length > 0) props.setFilter(newKey, ids)
+}
 </script>
