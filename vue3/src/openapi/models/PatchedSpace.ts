@@ -27,6 +27,12 @@ import {
     UserFileViewToJSON,
     UserFileViewToJSONTyped,
 } from './UserFileView';
+import type { NavTextColorEnum } from './NavTextColorEnum';
+import {
+    NavTextColorEnumFromJSON,
+    NavTextColorEnumFromJSONTyped,
+    NavTextColorEnumToJSON,
+} from './NavTextColorEnum';
 import type { AiProvider } from './AiProvider';
 import {
     AiProviderFromJSON,
@@ -171,6 +177,12 @@ export interface PatchedSpace {
     navBgColor?: string;
     /**
      * 
+     * @type {NavTextColorEnum}
+     * @memberof PatchedSpace
+     */
+    navTextColor?: NavTextColorEnum;
+    /**
+     * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
@@ -293,6 +305,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'spaceTheme': json['space_theme'] == null ? undefined : SpaceThemeEnumFromJSON(json['space_theme']),
         'customSpaceTheme': json['custom_space_theme'] == null ? undefined : UserFileViewFromJSON(json['custom_space_theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
+        'navTextColor': json['nav_text_color'] == null ? undefined : NavTextColorEnumFromJSON(json['nav_text_color']),
         'logoColor32': json['logo_color_32'] == null ? undefined : UserFileViewFromJSON(json['logo_color_32']),
         'logoColor128': json['logo_color_128'] == null ? undefined : UserFileViewFromJSON(json['logo_color_128']),
         'logoColor144': json['logo_color_144'] == null ? undefined : UserFileViewFromJSON(json['logo_color_144']),
@@ -330,6 +343,7 @@ export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|
         'space_theme': SpaceThemeEnumToJSON(value['spaceTheme']),
         'custom_space_theme': UserFileViewToJSON(value['customSpaceTheme']),
         'nav_bg_color': value['navBgColor'],
+        'nav_text_color': NavTextColorEnumToJSON(value['navTextColor']),
         'logo_color_32': UserFileViewToJSON(value['logoColor32']),
         'logo_color_128': UserFileViewToJSON(value['logoColor128']),
         'logo_color_144': UserFileViewToJSON(value['logoColor144']),

@@ -175,9 +175,10 @@ def _resolve_params(request, params):
             search_data = custom_filter.search if isinstance(custom_filter.search, dict) else {}
             base = {**search_data}
 
-    # Layer HTTP params on top of filter base — HTTP params always win
-    # (empty/None values explicitly clear the saved-filter value).
-    base.update(http_params)
+    # Layer HTTP params on top of filter base — non-empty HTTP params win
+    for key, value in http_params.items():
+        if value is not None and value != '' and value != []:
+            base[key] = value
 
     return base
 

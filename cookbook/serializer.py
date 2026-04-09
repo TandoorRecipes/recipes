@@ -475,7 +475,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
-            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color',
+            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
             'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed', 'household_setup_completed')
         read_only_fields = (
@@ -566,7 +566,10 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
 
-    def validate_start_page_sections(self, value):
+    def check_start_page_sections(self, validated_data):
+        if 'start_page_sections' not in validated_data:
+            return
+        value = validated_data['start_page_sections']
         allowed_keys = {"mode", "enabled", "min_recipes", "filter_id"}
         if not isinstance(value, list):
             raise ValidationError("start_page_sections must be a list")
@@ -589,9 +592,9 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             if "filter_id" in entry:
                 if not isinstance(entry["filter_id"], int) or entry["filter_id"] < 1:
                     raise ValidationError("start_page_sections filter_id must be a positive integer")
-        return value
 
     def update(self, instance, validated_data):
+        self.check_start_page_sections(validated_data)
         with scopes_disabled():
             return super().update(instance, validated_data)
 
