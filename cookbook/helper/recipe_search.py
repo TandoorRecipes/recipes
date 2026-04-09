@@ -82,6 +82,7 @@ class SearchParams:
     cookedon_lte: str | None = None
     createdby: str | int | None = None
     makenow: int | None = None
+    unrated: bool = False
 
     @staticmethod
     def _parse_makenow(value):
@@ -94,52 +95,62 @@ class SearchParams:
         except (ValueError, TypeError):
             return None
 
+    @staticmethod
+    def _scalar(params, key, default=None):
+        """Last-wins scalar extraction. Handles lists from duplicate query params."""
+        v = params.get(key, default)
+        if isinstance(v, list):
+            return v[-1] if v else default
+        return v
+
     @classmethod
     def from_params(cls, params):
-        sort_order = params.get('sort_order', None)
+        _s = cls._scalar
+
+        sort_order = _s(params, 'sort_order')
         if sort_order == 'random':
             random = True
             sort_order = None
         else:
-            random = str2bool(params.get('random', False))
+            random = str2bool(_s(params, 'random', False))
 
-        query_raw = params.get('query', None)
+        query_raw = _s(params, 'query')
 
-        # Normalize rating fields — may arrive as int from JSONField or str from HTTP
         def _str_or_none(val):
             return str(val) if val is not None else None
 
         return cls(
             query=query_raw.strip() if query_raw else None,
-            rating=_str_or_none(params.get('rating', None)),
-            rating_gte=_str_or_none(params.get('rating_gte', None)),
-            rating_lte=_str_or_none(params.get('rating_lte', None)),
+            rating=_str_or_none(_s(params, 'rating')),
+            rating_gte=_str_or_none(_s(params, 'rating_gte')),
+            rating_lte=_str_or_none(_s(params, 'rating_lte')),
             keywords=_parse_filter_params(params, 'keywords'),
             foods=_parse_filter_params(params, 'foods'),
             books=_parse_filter_params(params, 'books'),
             steps=params.get('steps', None),
             units=params.get('units', None),
-            internal=str2bool(params.get('internal', None)),
+            internal=str2bool(_s(params, 'internal')),
             sort_order=sort_order,
             random=random,
-            new=str2bool(params.get('new', False)),
-            num_recent=int(params.get('num_recent', 0)),
-            include_children=str2bool(params.get('include_children', True)),
-            timescooked=params.get('timescooked', None),
-            timescooked_gte=params.get('timescooked_gte', None),
-            timescooked_lte=params.get('timescooked_lte', None),
-            createdon=params.get('createdon', None),
-            createdon_gte=params.get('createdon_gte', None),
-            createdon_lte=params.get('createdon_lte', None),
-            updatedon=params.get('updatedon', None),
-            updatedon_gte=params.get('updatedon_gte', None),
-            updatedon_lte=params.get('updatedon_lte', None),
-            viewedon_gte=params.get('viewedon_gte', None),
-            viewedon_lte=params.get('viewedon_lte', None),
-            cookedon_gte=params.get('cookedon_gte', None),
-            cookedon_lte=params.get('cookedon_lte', None),
-            createdby=params.get('createdby', None),
-            makenow=cls._parse_makenow(params.get('makenow', None)),
+            new=str2bool(_s(params, 'new', False)),
+            num_recent=int(_s(params, 'num_recent', 0)),
+            include_children=str2bool(_s(params, 'include_children', True)),
+            timescooked=_s(params, 'timescooked'),
+            timescooked_gte=_s(params, 'timescooked_gte'),
+            timescooked_lte=_s(params, 'timescooked_lte'),
+            createdon=_s(params, 'createdon'),
+            createdon_gte=_s(params, 'createdon_gte'),
+            createdon_lte=_s(params, 'createdon_lte'),
+            updatedon=_s(params, 'updatedon'),
+            updatedon_gte=_s(params, 'updatedon_gte'),
+            updatedon_lte=_s(params, 'updatedon_lte'),
+            viewedon_gte=_s(params, 'viewedon_gte'),
+            viewedon_lte=_s(params, 'viewedon_lte'),
+            cookedon_gte=_s(params, 'cookedon_gte'),
+            cookedon_lte=_s(params, 'cookedon_lte'),
+            createdby=_s(params, 'createdby'),
+            makenow=cls._parse_makenow(_s(params, 'makenow')),
+            unrated=str2bool(_s(params, 'unrated', False)),
         )
 
 
@@ -148,14 +159,15 @@ def _is_postgres():
 
 
 def _resolve_params(request, params):
-    """Resolve search parameters, merging CustomFilter as a base with HTTP params layered on top.
-
-    When a filter ID is provided, the saved filter's params are loaded as the base.
-    Any additional HTTP params (e.g., text query, sort order) are merged on top,
-    so the user can refine a saved filter without losing their additions.
-    """
+    """Merge CustomFilter base (if any) with HTTP params. HTTP wins on conflict."""
     base = {}
-    http_params = {**(params or {})}
+
+    if hasattr(params, 'lists'):
+        http_params = {}
+        for k, vs in params.lists():
+            http_params[k] = vs if len(vs) > 1 else vs[0]
+    else:
+        http_params = {**(params or {})}
 
     if filter_id := http_params.pop('filter', None):
         custom_filter = (
@@ -231,9 +243,9 @@ def _build_text_search_config(string, prefs):
 # TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
 class RecipeSearch:
 
-    def __init__(self, request, **params):
+    def __init__(self, request, params=None, **kwargs):
         self._request = request
-        resolved = _resolve_params(request, params)
+        resolved = _resolve_params(request, params if params is not None else kwargs)
         self._prefs = _load_search_prefs(request.user)
         self._params = SearchParams.from_params(resolved)
         self._text_config = _build_text_search_config(self._params.query, self._prefs)
@@ -260,6 +272,8 @@ class RecipeSearch:
             qs = qs.with_new_flag()
 
         # Annotation + filter methods
+        if params.unrated:
+            qs = qs.with_rating(user).filter(rating__isnull=True)
         qs = qs.by_rating(user, exact=params.rating, gte=params.rating_gte, lte=params.rating_lte)
         qs = qs.by_times_cooked(user, space, exact=params.timescooked, gte=params.timescooked_gte, lte=params.timescooked_lte)
         qs = qs.by_cooked_on(user, space, gte=params.cookedon_gte, lte=params.cookedon_lte)

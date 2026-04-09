@@ -101,7 +101,7 @@
             <v-btn
                 v-if="showReset"
                 variant="text"
-                density="compact"
+                size="large"
                 prepend-icon="fa-solid fa-arrow-rotate-left"
                 class="text-none flex-shrink-0"
                 @click="emit('reset')"
@@ -112,7 +112,7 @@
             <v-btn
                 v-if="hasFilters"
                 variant="text"
-                density="compact"
+                size="large"
                 prepend-icon="fa-solid fa-filter"
                 class="text-none flex-shrink-0"
                 @click="emit('open-filters')"
@@ -130,7 +130,7 @@
             <v-btn
                 v-if="hasMultiSelect"
                 variant="text"
-                density="compact"
+                size="large"
                 class="text-none flex-shrink-0"
                 :color="selectMode ? 'primary' : undefined"
                 :prepend-icon="selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check'"
@@ -142,11 +142,11 @@
             <v-btn
                 v-if="sortOptions.length > 0"
                 variant="text"
-                density="compact"
+                size="large"
                 class="text-none flex-shrink-0"
                 :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
             >
-                {{ $t('sort_by') }} {{ currentLabel }}
+                {{ currentLabel }}
                 <v-menu activator="parent" close-on-content-click>
                     <v-list density="compact">
                         <v-list-item
@@ -164,7 +164,7 @@
             <v-btn
                 v-if="hasFilters"
                 variant="text"
-                density="compact"
+                size="large"
                 prepend-icon="fa-solid fa-sliders"
                 class="text-none flex-shrink-0"
                 @click="emit('open-settings')"

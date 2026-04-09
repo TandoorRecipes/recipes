@@ -1,85 +1,105 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col cols="12" md="6" offset-md="3">
-                <v-text-field :label="$t('Search')"
-                              v-model="query"
-                              :loading="loading"
-                              @keydown.enter="flushQuery()"
-                              @click:clear="resetQuery()"
-                              clearable hide-details>
-                    <template v-slot:append>
-                        <v-badge bordered :offset-x="5" :offset-y="5" color="secondary" v-model="hasFiltersApplied">
-                            <v-btn @click="panel ='search' " v-if="panel == ''" color="primary" icon>
-                                <i class="fa-solid fa-caret-down"></i></v-btn>
-                            <v-btn @click="panel ='' " v-if="panel == 'search'" color="primary" icon><i class="fa-solid fa-caret-up"></i></v-btn>
-                        </v-badge>
-                    </template>
-                </v-text-field>
-            </v-col>
-        </v-row>
-        <v-row dense>
+        <v-row v-if="selectedItems.length > 0">
             <v-col>
-                <v-expansion-panels v-model="panel">
-                    <v-expansion-panel value="search">
-                        <v-expansion-panel-text>
-                            <v-form :disabled="loading" class="mt-4">
-
-                                <div v-for="filter in Object.values(filters)" :key="filter.id">
-                                    <template v-if="filter.enabled">
-                                        <component :is="filter.is" :id="filter.id" :label="filter.label" :hint="filter.hint"
-                                                     :items="filter.items" :model="filter.model" :mode="filter.mode"
-                                                     :object="filter.object" :search-on-load="filter.searchOnLoad"
-                                                     density="compact" v-model="filter.modelValue">
-                                            <template #append>
-                                                <v-btn icon="fa-solid fa-times" size="small" variant="plain"
-                                                       @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>
-                                            </template>
-                                        </component>
-                                    </template>
-                                </div>
-
-                                <v-divider class="mt-2 mb-2"></v-divider>
-
-                                <v-autocomplete :items="availableFilters"
-                                                @update:model-value="(item:string) =>{ filters[item].enabled = true; nextTick(() => {addFilterSelect = null})}" density="compact"
-                                                :label="$t('AddFilter')" v-model="addFilterSelect"></v-autocomplete>
-
-                                <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
-                                    <template #append>
-                                        <v-btn icon="fa-solid fa-upload" color="warning" :disabled="selectedCustomFilter == null"
-                                               @click="loadSelectedCustomFilter()"></v-btn>
-                                        <v-btn icon="$save" class="ms-1" color="save" @click="saveCustomFilter()"></v-btn>
-                                    </template>
-                                </model-select>
-
-                                <closable-help-alert
-                                    v-if="savedFilterModified"
-                                    :text="$t('saved_filter_override_hint')"
-                                />
-                            </v-form>
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-select :label="$t('View')" v-model="useUserPreferenceStore().deviceSettings.search_viewMode"
-                                              :items="[{title: $t('Table'), value: 'table'}, {title: $t('Cards'), value: 'grid'},]" density="compact"></v-select>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-select class="float-right" :label="$t('PerPage')" v-model="pageSize" :items="[10,25,50,100]" density="compact"
-                                              width="100%"></v-select>
-                                </v-col>
-                            </v-row>
-
-                        </v-expansion-panel-text>
-
-                        <v-card-actions v-if="panel == 'search'">
-                            <v-btn @click="reset()" prepend-icon="$reset">{{ $t('Reset') }}</v-btn>
-                            <v-btn @click="searchRecipes({page: 1})" prepend-icon="$search">{{ $t('Search') }}</v-btn>
-                        </v-card-actions>
-                    </v-expansion-panel>
-                </v-expansion-panels>
-
+                <v-card>
+                    <v-card-text class="d-flex align-center pt-2 pb-2 ga-2">
+                        <span class="text-subtitle-2">{{ selectedItems.length }} {{ $t('Selected') }}</span>
+                        <v-spacer />
+                        <v-btn variant="text" prepend-icon="$edit" @click="batchEditDialog = true">{{ $t('BatchEdit') }}</v-btn>
+                        <v-btn variant="text" prepend-icon="$delete" @click="batchDeleteDialog = true">{{ $t('Delete_All') }}</v-btn>
+                        <v-btn icon="$close" variant="text" @click="selectedItems = []" />
+                    </v-card-text>
+                </v-card>
             </v-col>
         </v-row>
+
+        <v-row>
+            <v-col>
+                <ModelListToolbar
+                    v-model:query="query"
+                    v-model:ordering="ordering"
+                    :sort-options="RECIPE_SORT_DEFS"
+                    :has-filters="true"
+                    :active-filter-count="activeFilterCount"
+                    :has-multi-select="true"
+                    :select-mode="selectMode"
+                    :show-reset="hasActiveSearchState"
+                    @open-filters="openSettingsPanel('filters')"
+                    @open-settings="openSettingsPanel('settings')"
+                    @toggle-select="selectMode = !selectMode"
+                    @reset="resetAll"
+                />
+
+                <ModelListFilterChips
+                    v-if="activeFilterCount > 0"
+                    :filter-defs="filterDefs"
+                    :get-filter="getFilter"
+                    :set-filter="setFilter"
+                    :clear-filter="clearFilter"
+                    :clear-all-filters="clearAllFilters"
+                    :active-filter-count="activeFilterCount"
+                    @open-filters="openSettingsPanel('filters')"
+                />
+
+                <v-row dense class="mt-2">
+                    <v-col cols="12" md="4">
+                        <RecipeTagFilterGroup
+                            :label="$t('Keywords')"
+                            model-name="Keyword"
+                            :keys="['keywords', 'keywordsAnd', 'keywordsOrNot', 'keywordsAndNot']"
+                            :get-filter="getFilter"
+                            :set-filter="setFilter"
+                            :clear-filter="clearFilter"
+                        />
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <RecipeTagFilterGroup
+                            :label="$t('Foods')"
+                            model-name="Food"
+                            :keys="['foods', 'foodsAnd', 'foodsOrNot', 'foodsAndNot']"
+                            :get-filter="getFilter"
+                            :set-filter="setFilter"
+                            :clear-filter="clearFilter"
+                        />
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <RecipeTagFilterGroup
+                            :label="$t('Books')"
+                            model-name="RecipeBook"
+                            :keys="['books', 'booksAnd', 'booksOrNot', 'booksAndNot']"
+                            :get-filter="getFilter"
+                            :set-filter="setFilter"
+                            :clear-filter="clearFilter"
+                        />
+                    </v-col>
+                </v-row>
+
+                <v-row dense class="mt-2">
+                    <v-col cols="12" md="6">
+                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
+                            <template #append>
+                                <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
+                                       :disabled="selectedCustomFilter == null"
+                                       @click="loadSelectedCustomFilter()" class="text-none ms-1">
+                                    {{ $t('Load') }}
+                                </v-btn>
+                                <v-btn variant="text" size="small" prepend-icon="$save"
+                                       @click="saveCustomFilter()" class="text-none ms-1">
+                                    {{ $t('Save') }}
+                                </v-btn>
+                            </template>
+                        </model-select>
+                    </v-col>
+                </v-row>
+                <closable-help-alert
+                    v-if="savedFilterModified"
+                    :text="$t('saved_filter_override_hint')"
+                />
+            </v-col>
+        </v-row>
+
+        <v-progress-linear v-if="loading" indeterminate color="primary" class="mt-2" />
 
         <v-row v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'table'">
             <v-col>
@@ -87,47 +107,29 @@
                     <v-data-table-server
                         v-model="selectedItems"
                         return-object
-                        @update:options="searchRecipes"
+                        @update:options="onTableUpdate"
                         :loading="loading"
                         :items="recipes"
                         :headers="tableHeaders"
                         :page="page"
                         :items-per-page="pageSize"
                         :items-length="tableItemCount"
+                        :items-per-page-options="[10, 25, 50, 100]"
                         @click:row="handleRowClick"
                         disable-sort
-                        show-select
-                        hide-default-footer
+                        :show-select="selectMode"
                     >
-                        <template v-slot:header.action v-if="selectedItems.length > 0">
-                            <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" color="info">
-                                <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
-                                <v-menu activator="parent" close-on-content-click>
-                                    <v-list density="compact" class="pt-1 pb-1" activatable>
-                                        <v-list-item prepend-icon="$edit" @click="batchEditDialog = true">
-                                            {{ $t('BatchEdit') }}
-                                        </v-list-item>
-                                        <v-list-item prepend-icon="$delete" @click="batchDeleteDialog = true">
-                                            {{ $t('Delete_All') }}
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
-                            </v-btn>
-                        </template>
-
                         <template #item.image="{item}">
-                            <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1" v-if="item.image"></v-avatar>
+                            <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1" v-if="item.image" />
                             <v-avatar color="primary" variant="tonal" size="x-large" class="mt-1 mb-1" v-else>
-                                <random-icon></random-icon>
+                                <random-icon />
                             </v-avatar>
                         </template>
-
                         <template #item.keywords="{item}">
-                            <keywords-bar :keywords="item.keywords"></keywords-bar>
+                            <keywords-bar :keywords="item.keywords" />
                         </template>
-
                         <template #item.action="{item}">
-                            <recipe-context-menu :recipe="item"></recipe-context-menu>
+                            <recipe-context-menu :recipe="item" />
                         </template>
                     </v-data-table-server>
                 </v-card>
@@ -137,30 +139,69 @@
         <template v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'grid'">
             <v-row>
                 <v-col cols="6" md="4" v-for="r in recipes" :key="r.id" class="pa-0">
-                    <recipe-card :recipe="r"></recipe-card>
+                    <recipe-card :recipe="r" />
                 </v-col>
-
             </v-row>
-
         </template>
+
+        <v-row v-if="recipes.length === 0 && !loading">
+            <v-col cols="12" md="6" offset-md="3">
+                <v-card class="pa-6 text-center" variant="outlined">
+                    <v-icon size="64" color="grey" icon="fa-solid fa-utensils" class="mb-3" />
+                    <div class="text-h6 mb-2">{{ $t('NoRecipesMatch') }}</div>
+                    <div class="text-body-2 text-medium-emphasis mb-4">{{ $t('NoRecipesMatchHint') }}</div>
+                    <v-btn
+                        data-test="empty-state-reset"
+                        color="primary"
+                        variant="tonal"
+                        prepend-icon="$reset"
+                        @click="resetAll"
+                    >
+                        {{ $t('Reset') }}
+                    </v-btn>
+                </v-card>
+            </v-col>
+        </v-row>
+
         <v-row>
             <v-col cols="12" md="6" offset-md="3" class="text-center">
-                <v-pagination v-model="page" :length="Math.ceil(tableItemCount/pageSize)"
-                              @update:modelValue="searchRecipes({page: page})" class="ms-2 me-2" size="small"
-                              v-if="filters['sortOrder'].modelValue != 'random'"
-                ></v-pagination>
-                <v-btn size="x-large" rounded="xl" prepend-icon="fa-solid fa-dice" variant="tonal" v-if="filters['sortOrder'].modelValue == 'random'" @click="searchRecipes({page: 1})">
-                    {{ $t('Random Recipes') }}
+                <v-pagination
+                    v-if="ordering !== 'random' && tableItemCount > 0"
+                    v-model="page"
+                    :length="Math.ceil(tableItemCount / pageSize)"
+                    @update:model-value="searchRecipes({page})"
+                    class="ms-2 me-2"
+                    size="small"
+                />
+                <v-btn
+                    v-if="ordering === 'random'"
+                    size="x-large"
+                    rounded="xl"
+                    prepend-icon="fa-solid fa-dice"
+                    variant="tonal"
+                    @click="searchRecipes({page: 1})"
+                >
+                    {{ $t('Shuffle') }}
                 </v-btn>
             </v-col>
         </v-row>
 
+        <ModelListSettingsPanel
+            v-model="settingsPanelOpen"
+            v-model:active-tab="settingsActiveTab"
+            :model="recipeSettingsModel"
+            :grouped-filter-defs="groupedFilterDefs"
+            :get-filter="getFilter"
+            :set-filter="setFilter"
+            :clear-all-filters="clearAllFilters"
+            :active-filter-count="activeFilterCount"
+        />
 
         <v-dialog v-model="dialog">
             <v-card>
-                <v-closable-card-title :title="$t('SavedSearch')" v-model="dialog"></v-closable-card-title>
+                <v-closable-card-title :title="$t('SavedSearch')" v-model="dialog" />
                 <v-card-text>
-                    <v-text-field :label="$t('Name')" v-model="newFilterName"></v-text-field>
+                    <v-text-field :label="$t('Name')" v-model="newFilterName" />
                 </v-card-text>
                 <v-card-actions>
                     <v-btn prepend-icon="$create" color="create" @click="createCustomFilter()">{{ $t('Create') }}</v-btn>
@@ -168,836 +209,301 @@
             </v-card>
         </v-dialog>
 
-        <batch-delete-dialog :items="selectedItems" model="Recipe" v-model="batchDeleteDialog" activator="model" @change="searchRecipes({page: 1})"></batch-delete-dialog>
-        <batch-edit-recipe-dialog :items="selectedItems" v-model="batchEditDialog" activator="model" @change="searchRecipes({page: page})"></batch-edit-recipe-dialog>
-
+        <batch-delete-dialog :items="selectedItems" model="Recipe" v-model="batchDeleteDialog" activator="model" @change="searchRecipes({page: 1})" />
+        <batch-edit-recipe-dialog :items="selectedItems" v-model="batchEditDialog" activator="model" @change="searchRecipes({page})" />
     </v-container>
 </template>
 
 <script setup lang="ts">
+import {computed, onMounted, provide, ref, watch} from 'vue'
+import {useRouter, useRoute} from 'vue-router'
+import {useRouteQuery} from '@vueuse/router'
+import {useI18n} from 'vue-i18n'
+import {useDisplay} from 'vuetify'
 
-import {computed, nextTick, onMounted, ref, toRaw, watch} from "vue";
-import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/openapi";
-import {useI18n} from "vue-i18n";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
-import {VDateInput} from 'vuetify/labs/VDateInput'
-import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
-import {useRouter} from "vue-router";
-import KeywordsBar from "@/components/display/KeywordsBar.vue";
-import {VDataTableUpdateOptions} from "@/vuetify";
-import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import RecipeCard from "@/components/display/RecipeCard.vue";
-import {useDisplay} from "vuetify";
-import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import {useRouteQuery} from "@vueuse/router";
-import {boolOrUndefinedTransformer, numberOrUndefinedTransformer, routeQueryDateTransformer, stringToBool, toNumberArray} from "@/utils/utils";
-import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
-import {useUnratedOnlyFilter} from "@/composables/useUnratedOnlyFilter";
-import RandomIcon from "@/components/display/RandomIcon.vue";
-import {VSelect, VTextField, VNumberInput} from "vuetify/components";
-import RatingField from "@/components/inputs/RatingField.vue";
-import BatchDeleteDialog from "@/components/dialogs/BatchDeleteDialog.vue";
-import {EditorSupportedTypes} from "@/types/Models.ts";
-import BatchEditRecipeDialog from "@/components/dialogs/BatchEditRecipeDialog.vue";
+import {ApiApi, type ApiRecipeListRequest, type CustomFilter, type RecipeOverview} from '@/openapi'
+import {ErrorMessageType, useMessageStore} from '@/stores/MessageStore'
+import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
+
+import {useUrlFilters} from '@/composables/useUrlFilters'
+import {RECIPE_FILTER_DEFS, RECIPE_SORT_DEFS} from '@/composables/modellist/RecipeList'
+import {useModelListSettings, MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
+import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
+
+import ModelListToolbar from '@/components/model_list/ModelListToolbar.vue'
+import ModelListFilterChips from '@/components/model_list/ModelListFilterChips.vue'
+import ModelListSettingsPanel from '@/components/model_list/ModelListSettingsPanel.vue'
+import ModelSelect from '@/components/inputs/ModelSelect.vue'
+import ClosableHelpAlert from '@/components/display/ClosableHelpAlert.vue'
+import RecipeContextMenu from '@/components/inputs/RecipeContextMenu.vue'
+import KeywordsBar from '@/components/display/KeywordsBar.vue'
+import VClosableCardTitle from '@/components/dialogs/VClosableCardTitle.vue'
+import RecipeCard from '@/components/display/RecipeCard.vue'
+import RandomIcon from '@/components/display/RandomIcon.vue'
+import BatchDeleteDialog from '@/components/dialogs/BatchDeleteDialog.vue'
+import BatchEditRecipeDialog from '@/components/dialogs/BatchEditRecipeDialog.vue'
+import type {EditorSupportedTypes} from '@/types/Models'
+import type {VDataTableUpdateOptions} from '@/vuetify'
 
 const {t} = useI18n()
 const router = useRouter()
-const {mdAndUp} = useDisplay()
+const route = useRoute()
+const {mobile} = useDisplay()
 
-const {inputValue: query, debouncedValue: debouncedQuery, signal, flush: flushQuery, reset: resetQuery} = useDebouncedSearch({routeQueryKey: 'query'})
+// ─── Filter / sort / paging state (5 useRouteQuery slots total) ─────────
+const urlFilters = useUrlFilters(computed(() => RECIPE_FILTER_DEFS))
+const {filterDefs, groupedFilterDefs, filterParams, activeFilterCount, getFilter, setFilter, clearFilter, clearAllFilters} = urlFilters
+const query = useRouteQuery('query', '')
+const ordering = useRouteQuery('ordering', '')
 const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.search_itemsPerPage, {transform: Number})
 
-/**
- * filters that are not yet enabled
- */
-const availableFilters = computed(() => {
-    let f: Array<{ value: string, title: string }> = []
-    useUserPreferenceStore().deviceSettings.search_visibleFilters = []
-    Object.entries(filters.value).forEach((entry) => {
-        let [key, filter] = entry
-        if (!filter.enabled) {
-            f.push({value: filter.id, title: filter.label})
-        } else {
-            useUserPreferenceStore().deviceSettings.search_visibleFilters.push(filter.id)
-        }
-    })
-    return f
-})
+// ─── ModelListSettingsPanel injection contract ──────────────────────────
+// ModelListSettingsPanel reads device settings (column visibility, swipe,
+// stats, etc.) via inject(MODEL_LIST_SETTINGS_KEY). ModelListPage provides
+// this from useModelListSettings; SearchPage must do the same or the panel
+// crashes when opened.
+const settings = useModelListSettings(computed(() => 'search'))
+provide(MODEL_LIST_SETTINGS_KEY, settings)
 
+// ─── Local UI state ─────────────────────────────────────────────────────
 const loading = ref(false)
-const dialog = ref(false)
-const panel = ref('')
-const addFilterSelect = ref<string | null>(null)
-const hasFiltersApplied = ref(false)
-
-const tableHeaders = computed(() => {
-    let headers = [
-        {title: t('Image'), width: '1%', noBreak: true, key: 'image',},
-        {title: t('Name'), key: 'name',},
-    ]
-    if (mdAndUp.value) {
-        headers.push({title: t('Keywords'), key: 'keywords',},)
-    }
-    headers.push({title: t('Actions'), key: 'action', width: '1%', noBreak: true, align: 'end'},)
-
-    return headers
-})
-
+const recipes = ref<RecipeOverview[]>([])
 const tableItemCount = ref(0)
+const selectedItems = ref<EditorSupportedTypes[]>([])
+const selectMode = ref(false)
 
-const recipes = ref([] as RecipeOverview[])
-const selectedCustomFilter = ref<null | CustomFilter>(null)
-const loadedFilterSnapshot = ref<Record<string, any>>({})
+const settingsPanelOpen = ref(false)
+const settingsActiveTab = ref<'settings' | 'filters'>('filters')
+
+// Unrated-only toggle — writable computed over the shared `rating` slot.
+// Setting it true writes rating=0 (the backend sentinel) and clears any
+// rating_gte / rating_lte siblings.
+
+const selectedCustomFilter = ref<CustomFilter | null>(null)
+const filterSnapshot = ref('')
+const dialog = ref(false)
 const newFilterName = ref('')
 
-const selectedItems = ref([] as EditorSupportedTypes[])
+// Batch action dialogs
 const batchDeleteDialog = ref(false)
 const batchEditDialog = ref(false)
 
-/**
- * handle query updates when using the GlobalSearchDialog on the search page directly
- */
-watch(debouncedQuery, () => {
-    searchRecipes({page: 1})
+// AbortController for in-flight searches
+let abortController = new AbortController()
+
+const tableHeaders = computed(() => {
+    const headers: Array<Record<string, any>> = [
+        {title: t('Image'), width: '1%', noBreak: true, key: 'image'},
+        {title: t('Name'), key: 'name'},
+    ]
+    if (!mobile.value) {
+        headers.push({title: t('Keywords'), key: 'keywords'})
+    }
+    headers.push({title: t('Actions'), key: 'action', width: '1%', noBreak: true, align: 'end'})
+    return headers
 })
 
-/**
- * perform initial search on mounted
- */
-onMounted(() => {
-    // load filters that were previously enabled
-    useUserPreferenceStore().deviceSettings.search_visibleFilters.forEach(f => {
-        if (f in filters.value) {
-            // Carve-out matching enableFiltersWithValues: the `rating` filter
-            // shares its route-query key with `unratedOnly`. When rating===0 the
-            // semantic is "unrated" — skip restoring the numeric rating UI.
-            if (f === 'rating' && filters.value[f].modelValue === 0) {
-                return
-            }
-            filters.value[f].enabled = true
-        } else {
-            useUserPreferenceStore().deviceSettings.search_visibleFilters.splice(useUserPreferenceStore().deviceSettings.search_visibleFilters.indexOf(f), 1)
-        }
-    })
+const hasActiveSearchState = computed(() =>
+    !!query.value || activeFilterCount.value > 0 || (!!ordering.value && ordering.value !== ''),
+)
 
-    enableFiltersWithValues()
-    searchRecipes({page: page.value})
-})
+const recipeSettingsModel = computed(() => ({
+    name: 'Recipe' as const,
+    localizationKey: 'Recipe',
+    icon: 'fa-solid fa-utensils',
+    listSettings: {settingsKey: 'search', settingsPanel: true},
+}))
 
-/**
- * perform the recipe search with the given options
- * @param options
- */
-function searchRecipes(options: VDataTableUpdateOptions) {
-    let api = new ApiApi()
-    loading.value = true
-    hasFiltersApplied.value = false
-    selectedItems.value = []
-
-    page.value = options.page
-    let searchParameters = {
-        query: debouncedQuery.value,
-        page: options.page,
-        pageSize: pageSize.value,
-    } as ApiRecipeListRequest
-
-     useUserPreferenceStore().deviceSettings.search_itemsPerPage = pageSize.value
-
-    Object.values(filters.value).forEach((filter) => {
-        if (!isFilterDefaultValue(filter)) {
-            searchParameters[filter.id] = filter.modelValue
-            hasFiltersApplied.value = true
-        }
-    })
-
-    api.apiRecipeList(searchParameters, {signal: signal.value}).then((r) => {
-        recipes.value = r.results
-        tableItemCount.value = r.count
-    }).catch(err => {
-        if (err.name !== 'AbortError' && err.cause.name !== 'AbortError') {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-        }
-    }).finally(() => {
-        loading.value = false
-        window.scrollTo({top: 0, behavior: 'smooth'})
-    })
+function openSettingsPanel(tab: 'settings' | 'filters') {
+    const viewMode = useUserPreferenceStore().deviceSettings.search_viewMode
+    if (tab === 'settings' && viewMode === 'grid') {
+        tab = 'filters'
+    }
+    settingsActiveTab.value = tab
+    settingsPanelOpen.value = true
 }
 
-/**
- * reset all search parameters and perform emtpy search
- */
-const savedFilterModified = computed(() => {
-    if (!selectedCustomFilter.value || Object.keys(loadedFilterSnapshot.value).length === 0) return false
-    return Object.values(filters.value).some((filter) => {
-        const filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
-        if (!(filterName in loadedFilterSnapshot.value)) return false
-        return JSON.stringify(filter.modelValue) !== JSON.stringify(loadedFilterSnapshot.value[filterName])
-    })
-})
+// Exposed for component tests — script setup doesn't auto-expose bindings.
+defineExpose({openSettingsPanel, settingsActiveTab, settingsPanelOpen})
 
-function reset() {
-    page.value = 1
-    resetQuery()
-    Object.values(filters.value).forEach((filter) => {
-        //filter.enabled = false
-        filter.modelValue = filter.default
-    })
+function resetAll() {
+    query.value = ''
+    ordering.value = ''
+    clearAllFilters()
     selectedCustomFilter.value = null
-    loadedFilterSnapshot.value = {}
-    recipes.value = []
-    searchRecipes({page: 1})
+    filterSnapshot.value = ''
 }
 
-/**
- * handle clicking a table row by opening the selected recipe
- * @param event
- * @param data
- */
-function handleRowClick(event: PointerEvent, data: any) {
-    router.push({name: 'RecipeViewPage', params: {id: recipes.value[data.index].id}})
-}
+/* ─── Search ────────────────────────────────────────────────────────── */
 
-/**
- * enable UI of filters that have a value that is not the default for the given filter
- */
-function enableFiltersWithValues() {
-    Object.values(filters.value).forEach((filter) => {
-        // The `rating` filter shares its route-query key with the `unratedOnly`
-        // filter (via the useUnratedOnlyFilter computed). When rating === 0 the
-        // semantic is "unrated", which belongs to unratedOnly — don't double-enable
-        // the numeric rating filter for that sentinel value.
-        if (filter.id === 'rating' && filter.modelValue === 0) {
-            return
-        }
-        if (!isFilterDefaultValue(filter)) {
-            filter.enabled = true
-        }
-    })
-}
-
-/**
- * determines if the current value of a filter is its default value
- * @param filter
- */
-function isFilterDefaultValue(filter: any) {
-    if (Array.isArray(filter.default) && Array.isArray(filter.modelValue)) {
-        return filter.default.length === filter.modelValue.length &&
-            filter.default.every((v: any, i: number) => v === filter.modelValue[i])
-    } else if (isNaN(filter.default) && isNaN(filter.modelValue)) {
-        return true
-    } else {
-        return toRaw(filter.default) === filter.modelValue
+function buildSearchParams(): ApiRecipeListRequest {
+    return {
+        // filterParams is Record<string, string | number | (string|number)[]>
+        // FilterDef keys are camelCase OpenAPI client prop names.
+        ...(filterParams.value as Partial<ApiRecipeListRequest>),
+        page: page.value,
+        pageSize: pageSize.value,
+        ...(query.value ? {query: query.value} : {}),
+        ...(ordering.value ? {sortOrder: ordering.value} : {}),
     }
 }
 
-// -------------------------------------------
-// --------- Logic for saved filters ---------
-// -------------------------------------------
+function searchRecipes(opts?: {page?: number}) {
+    if (opts?.page !== undefined) page.value = opts.page
 
-/**
- * triggered by save button, if filter exists update it, if not open dialog to create a new filter
- */
+    abortController.abort()
+    abortController = new AbortController()
+
+    loading.value = true
+    selectedItems.value = []
+    useUserPreferenceStore().deviceSettings.search_itemsPerPage = pageSize.value
+
+    const api = new ApiApi()
+    api.apiRecipeList(buildSearchParams(), {signal: abortController.signal})
+        .then((r) => {
+            recipes.value = r.results
+            tableItemCount.value = r.count
+        })
+        .catch((err) => {
+            if (err.name !== 'AbortError') {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
+        })
+        .finally(() => {
+            loading.value = false
+            window.scrollTo({top: 0, behavior: 'smooth'})
+        })
+}
+
+function onTableUpdate(opts: VDataTableUpdateOptions) {
+    if (opts.itemsPerPage != null && opts.itemsPerPage !== pageSize.value) {
+        pageSize.value = opts.itemsPerPage
+    }
+    if (opts.page !== page.value) {
+        page.value = opts.page
+    }
+    searchRecipes()
+}
+
+function handleRowClick(_event: PointerEvent, data: any) {
+    router.push({name: 'RecipeViewPage', params: {id: recipes.value[data.index].id}})
+}
+
+// Watcher attached in onMounted after first fetch to avoid double-fire on legacy URL migration.
+let stopReQueryWatcher: (() => void) | null = null
+function startReQueryWatcher() {
+    if (stopReQueryWatcher) return
+    stopReQueryWatcher = watch([filterParams, ordering, query, pageSize], () => {
+        searchRecipes({page: 1})
+    })
+}
+
+/* ─── Saved CustomFilter ─────────────────────────────────────────────── */
+
+type FilterBlob = { query?: string, version?: '2', [k: string]: unknown }
+
+function filtersToJson(): FilterBlob {
+    const out: FilterBlob = {}
+    if (query.value) out.query = query.value
+    for (const def of RECIPE_FILTER_DEFS) {
+        const raw = getFilter(def.key)
+        if (raw === undefined || raw === '') continue
+        if (def.type === 'tag-select') {
+            const items = raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
+            if (items.length > 0) out[def.key] = items
+        } else if (def.type === 'date-range' || def.type === 'number-range') {
+            const sep = raw.indexOf('~')
+            if (sep < 0) continue
+            const prefix = def.key
+            const gte = raw.slice(0, sep), lte = raw.slice(sep + 1)
+            if (gte) out[`${prefix}_gte`] = def.type === 'number-range' ? Number(gte) : gte
+            if (lte) out[`${prefix}_lte`] = def.type === 'number-range' ? Number(lte) : lte
+        } else if (def.type === 'tristate') {
+            out[def.key] = raw === '1'
+        } else if (def.type === 'number') {
+            const n = Number(raw); if (!isNaN(n)) out[def.key] = n
+        } else {
+            out[def.key] = raw
+        }
+    }
+    out.version = '2'
+    return out
+}
+
+function applyFilterBlob(params: FilterBlob) {
+    if (params.unrated_only === true) {
+        setFilter('unrated', '1')
+    }
+    for (const def of RECIPE_FILTER_DEFS) {
+        if (def.type === 'date-range' || def.type === 'number-range') {
+            const prefix = def.key
+            const gte = params[`${prefix}_gte`] ?? params[`${def.key}_gte`]
+            const lte = params[`${prefix}_lte`] ?? params[`${def.key}_lte`]
+            if (gte != null || lte != null) setFilter(def.key, {gte: gte ?? null, lte: lte ?? null})
+        } else if (def.type === 'tag-select') {
+            const v = params[def.key]
+            if (Array.isArray(v) && v.length > 0) setFilter(def.key, v.map(Number).filter(n => !isNaN(n)))
+        } else if (def.type === 'tristate') {
+            const v = params[def.key]
+            if (v === true || v === 'true' || v === 1 || v === '1') setFilter(def.key, '1')
+            else if (v === false || v === 'false' || v === 0 || v === '0') setFilter(def.key, '0')
+        } else {
+            const v = params[def.key]
+            if (v != null && v !== '') setFilter(def.key, String(v))
+        }
+    }
+}
+
+function snapshotFilters() { filterSnapshot.value = JSON.stringify(filtersToJson()) }
+const savedFilterModified = computed(() =>
+    !!selectedCustomFilter.value && filterSnapshot.value && JSON.stringify(filtersToJson()) !== filterSnapshot.value,
+)
+
+function loadSelectedCustomFilter() {
+    if (!selectedCustomFilter.value) return
+    const raw = (selectedCustomFilter.value as any).search
+    const blob: FilterBlob = typeof raw === 'string'
+        ? (() => { try { const p = JSON.parse(raw); return p && typeof p === 'object' ? p : {} } catch { return {} } })()
+        : (raw && typeof raw === 'object' ? raw : {})
+    clearAllFilters()
+    if (typeof blob.query === 'string') query.value = blob.query
+    applyFilterBlob(blob)
+    snapshotFilters()
+    searchRecipes({page: 1})
+}
+
 function saveCustomFilter() {
-    let api = new ApiApi()
-
+    const api = new ApiApi()
     if (selectedCustomFilter.value != null) {
         loading.value = true
-        selectedCustomFilter.value.search = filtersToCustomFilterFormat()
-        api.apiCustomFilterUpdate({id: selectedCustomFilter.value.id!, customFilter: selectedCustomFilter.value}).then((r) => {
-            selectedCustomFilter.value = r
-        }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-        }).finally(() => {
-            loading.value = false
-        })
+        selectedCustomFilter.value.search = filtersToJson() as any
+        api.apiCustomFilterUpdate({id: selectedCustomFilter.value.id!, customFilter: selectedCustomFilter.value})
+            .then((r) => { selectedCustomFilter.value = r; snapshotFilters() })
+            .catch(err => useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err))
+            .finally(() => { loading.value = false })
     } else {
         newFilterName.value = ''
         dialog.value = true
     }
 }
 
-/**
- * create a new saved search filter in the database via api
- */
 function createCustomFilter() {
-    let api = new ApiApi()
-
+    const api = new ApiApi()
     dialog.value = false
     loading.value = true
-    api.apiCustomFilterCreate({customFilter: {name: newFilterName.value, type: 'RECIPE', search: filtersToCustomFilterFormat()} as CustomFilter}).then((r) => {
-        selectedCustomFilter.value = r
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-    }).finally(() => {
-        loading.value = false
+    api.apiCustomFilterCreate({
+        customFilter: {name: newFilterName.value, type: 'RECIPE', search: filtersToJson()} as any,
     })
+        .then((r) => { selectedCustomFilter.value = r; snapshotFilters() })
+        .catch(err => useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err))
+        .finally(() => { loading.value = false })
 }
 
-/**
- * load selected custom filter into the filters system
- */
-function loadSelectedCustomFilter() {
-    let customFilterParams = selectedCustomFilter.value.search
-    if (typeof customFilterParams === 'string') {
-        try { customFilterParams = JSON.parse(customFilterParams) } catch { customFilterParams = {} }
-    }
-    if (customFilterParams['version'] == null) {
-        customFilterParams = transformTandoor1Filter(customFilterParams)
-    }
+/* ─── Lifecycle ─────────────────────────────────────────────────────── */
 
-    if (customFilterParams['query'] != null) {
-        query.value = customFilterParams['query']
-    }
-
-    // Snapshot the saved filter values before applying
-    loadedFilterSnapshot.value = {}
-    Object.values(filters.value).forEach((filter) => {
-        let filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
-        if (customFilterParams[filterName] != null) {
-            filter.modelValue = customFilterParams[filterName]
-            filter.enabled = true
-            loadedFilterSnapshot.value[filterName] = JSON.parse(JSON.stringify(customFilterParams[filterName]))
-        }
-    })
-
-    // Trigger search after loading filter
-    searchRecipes({page: 1, itemsPerPage: pageSize.value, sortBy: []} as VDataTableUpdateOptions)
-}
-
-/**
- * convert filters to custom filter format
- */
-function filtersToCustomFilterFormat() {
-    let customFilterParams: any = {};
-
-    if (query.value != '') {
-        customFilterParams['query'] = query.value;
-    }
-
-    Object.values(filters.value).forEach((filter) => {
-        if (!isFilterDefaultValue(filter)) {
-            let filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
-            customFilterParams[filterName] = filter.modelValue
-        }
-    })
-
-    customFilterParams['version'] = '2'
-
-    return customFilterParams
-}
-
-/**
- * transform a filter that is in the tandoor 1 format into the tandoor 2 format
- * @param customFilterParams
- */
-function transformTandoor1Filter(customFilterParams: any) {
-
-    // _or was basically an alias to the standard filter which behaves like an or filter
-    // pair[0] = old key (e.g. 'books_or'), pair[1] = new key (e.g. 'books')
-    [['books_or', 'books'], ['foods_or', 'foods'], ['keywords_or', 'keywords']].forEach(pair => {
-        if (customFilterParams[pair[0]] != null) {
-            if (customFilterParams[pair[1]] != null) {
-                customFilterParams[pair[1]] = customFilterParams[pair[1]].concat(customFilterParams[pair[0]])
-            } else {
-                customFilterParams[pair[1]] = customFilterParams[pair[0]]
-            }
-            delete customFilterParams[pair[0]]
-        }
-    })
-
-    if (customFilterParams['cookedon'] != null) {
-        if (customFilterParams['cookedon'].startsWith('-')) {
-            customFilterParams['cookedon_lte'] = customFilterParams['cookedon'].substring(1)
-        } else {
-            customFilterParams['cookedon_gte'] = customFilterParams['cookedon']
-        }
-    }
-
-    if (customFilterParams['viewedon'] != null) {
-        if (customFilterParams['viewedon'].startsWith('-')) {
-            customFilterParams['viewedon_lte'] = customFilterParams['viewedon'].substring(1)
-        } else {
-            customFilterParams['viewedon_gte'] = customFilterParams['viewedon']
-        }
-    }
-
-    if (customFilterParams['updatedon'] != null) {
-        if (customFilterParams['updatedon'].startsWith('-')) {
-            customFilterParams['updatedon_lte'] = customFilterParams['updatedon'].substring(1)
-        } else {
-            customFilterParams['updatedon_gte'] = customFilterParams['updatedon']
-        }
-    }
-
-    if (customFilterParams['createdon'] != null) {
-        if (customFilterParams['createdon'].startsWith('-')) {
-            customFilterParams['createdon_lte'] = customFilterParams['createdon'].substring(1)
-        } else {
-            customFilterParams['createdon_gte'] = customFilterParams['createdon']
-        }
-    }
-
-    if (customFilterParams['rating'] != null) {
-        if (customFilterParams['rating'].startsWith('-')) {
-            customFilterParams['rating_lte'] = customFilterParams['rating'].substring(1)
-        } else {
-            customFilterParams['rating_gte'] = customFilterParams['rating']
-        }
-    }
-
-    if (customFilterParams['timescooked'] != null) {
-        if (customFilterParams['timescooked'].startsWith('-')) {
-            customFilterParams['timescooked_lte'] = customFilterParams['timescooked'].substring(1)
-        } else {
-            customFilterParams['timescooked_gte'] = customFilterParams['timescooked']
-        }
-    }
-
-    customFilterParams['version'] = '2'
-
-    return customFilterParams
-}
-
-/*
-[this.$t("search_rank"), "score", "1-9", "9-1"],
-[this.$t("Name"), "name", "A-z", "Z-a"],
-[this.$t("last_cooked"), "lastcooked", "↑", "↓"],
-[this.$t("Rating"), "rating", "1-5", "5-1"],
-[this.$t("times_cooked"), "favorite", "x-X", "X-x"],
-[this.$t("date_created"), "created_at", "↑", "↓"],
-[this.$t("date_viewed"), "lastviewed", "↑", "↓"],
-*/
-/**
- * Rating filter refs are constructed up-front so the `unratedOnly` computed
- * can derive from them. Once wrapped inside `filters`, reactive auto-unwrapping
- * makes direct `.value` access awkward from a composable — so we keep the raw
- * refs here and reference them from both `filters.rating.modelValue` and
- * `useUnratedOnlyFilter`.
- */
-const ratingRouteQuery = useRouteQuery<number | undefined>('rating', undefined, {transform: numberOrUndefinedTransformer})
-const ratingGteRouteQuery = useRouteQuery<number | undefined>('ratingGte', undefined, {transform: numberOrUndefinedTransformer})
-const ratingLteRouteQuery = useRouteQuery<number | undefined>('ratingLte', undefined, {transform: numberOrUndefinedTransformer})
-const unratedOnlyModel = useUnratedOnlyFilter(ratingRouteQuery, ratingGteRouteQuery, ratingLteRouteQuery)
-
-/**
- * all filters available to enable
- */
-const filters = ref({
-    sortOrder: {
-        id: 'sortOrder',
-        label: `${t('sort_by')}`,
-        hint: '',
-        enabled: false,
-        default: "",
-        is: VSelect,
-        items: [
-            {value: "random", title: `${t('RandomOrder')}`},
-            {value: "score", title: `${t('search_rank')} (1-9)`},
-            {value: "-score", title: `${t('search_rank')} (9-1)`},
-            {value: "name", title: `${t('Name')} (A-z)`},
-            {value: "-name", title: `${t('Name')} (Z-a)`},
-            {value: "lastcooked", title: `${t('last_cooked')} (↑)`},
-            {value: "-lastcooked", title: `${t('last_cooked')} (↓)`},
-            {value: "rating", title: `${t('Rating')} (1-5)`},
-            {value: "-rating", title: `${t('Rating')} (5-1)`},
-            {value: "times_cooked", title: `${t('favorite')} (↑)`},
-            {value: "-times_cooked", title: `${t('favorite')} (↓)`},
-            {value: "created_at", title: `${t('date_created')} (↑)`},
-            {value: "-created_at", title: `${t('date_created')} (↓)`},
-            {value: "lastviewed", title: `${t('date_viewed')} (↑)`},
-            {value: "-lastviewed", title: `${t('date_viewed')} (↓)`},
-        ],
-        modelValue: useRouteQuery('sortOrder', "")
-    },
-    keywords: {
-        id: 'keywords',
-        label: `${t('Keywords')} (${t('any')})`,
-        hint: t('searchFilterObjectsHelp', {type: t('Keywords')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Keyword',
-        modelValue: useRouteQuery('keywords', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    keywordsAnd: {
-        id: 'keywordsAnd',
-        label: `${t('Keywords')} (${t('all')})`,
-        hint: t('searchFilterObjectsAndHelp', {type: t('Keywords')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Keyword',
-        modelValue: useRouteQuery('keywordsAnd', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    keywordsOrNot: {
-        id: 'keywordsOrNot',
-        label: `${t('Keywords')} ${'exclude'} (${t('any')})`,
-        hint: t('searchFilterObjectsOrNotHelp', {type: t('Keywords')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Keyword',
-        modelValue: useRouteQuery('keywordsOrNot', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    keywordsAndNot: {
-        id: 'keywordsAndNot',
-        label: `${t('Keywords')} ${'exclude'} (${t('all')})`,
-        hint: t('searchFilterObjectsAndNotHelp', {type: t('Keywords')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Keyword',
-        modelValue: useRouteQuery('keywordsAndNot', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    foods: {
-        id: 'foods',
-        label: `${t('Foods')} (${t('any')})`,
-        hint: t('searchFilterObjectsHelp', {type: t('Foods')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Food',
-        modelValue: useRouteQuery('foods', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    foodsAnd: {
-        id: 'foodsAnd',
-        label: `${t('Foods')} (${t('all')})`,
-        hint: t('searchFilterObjectsAndHelp', {type: t('Foods')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Food',
-        modelValue: useRouteQuery('foodsAnd', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    foodsOrNot: {
-        id: 'foodsOrNot',
-        label: `${t('Foods')} ${'exclude'} (${t('any')})`,
-        hint: t('searchFilterObjectsOrNotHelp', {type: t('Foods')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Food',
-        modelValue: useRouteQuery('foodsOrNot', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    foodsAndNot: {
-        id: 'foodsAndNot',
-        label: `${t('Foods')} ${'exclude'} (${t('all')})`,
-        hint: t('searchFilterObjectsAndNotHelp', {type: t('Foods')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Food',
-        modelValue: useRouteQuery('foodsAndNot', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    books: {
-        id: 'books',
-        label: `${t('Books')} (${t('any')})`,
-        hint: t('searchFilterObjectsHelp', {type: t('Books')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'RecipeBook',
-        modelValue: useRouteQuery('books', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    booksAnd: {
-        id: 'booksAnd',
-        label: `${t('Books')} (${t('all')})`,
-        hint: t('searchFilterObjectsAndHelp', {type: t('Books')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'RecipeBook',
-        modelValue: useRouteQuery('booksAnd', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    booksOrNot: {
-        id: 'booksOrNot',
-        label: `${t('Books')} ${'exclude'} (${t('any')})`,
-        hint: t('searchFilterObjectsOrNotHelp', {type: t('Books')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'RecipeBook',
-        modelValue: useRouteQuery('booksOrNot', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    booksAndNot: {
-        id: 'booksAndNot',
-        label: `${t('Books')} ${'exclude'} (${t('all')})`,
-        hint: t('searchFilterObjectsAndNotHelp', {type: t('Books')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'RecipeBook',
-        modelValue: useRouteQuery('booksAndNot', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    createdby: {
-        id: 'createdby',
-        label: t('CreatedBy'),
-        hint: t('searchFilterCreatedByHelp'),
-        enabled: false,
-        default: undefined,
-        is: ModelSelect,
-        model: 'User',
-        modelValue: useRouteQuery('createdby', undefined, {transform: Number}),
-        mode: 'single',
-        object: false,
-        searchOnLoad: true
-    },
-    units: {
-        id: 'units',
-        label: `${t('Units')} (${t('any')})`,
-        hint: t('searchFilterObjectsHelp', {type: t('Units')}),
-        enabled: false,
-        default: [],
-        is: ModelSelect,
-        model: 'Unit',
-        modelValue: useRouteQuery('units', [], {transform: toNumberArray}),
-        mode: 'tags',
-        object: false,
-        searchOnLoad: true
-    },
-    internal: {
-        id: 'internal',
-        label: t('Hide_External'),
-        hint: t('searchFilterHideExternalHelp'),
-        enabled: false,
-        default: undefined,
-        is: VSelect,
-        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
-        modelValue: useRouteQuery('internal', undefined, {transform: boolOrUndefinedTransformer})
-    },
-    // random: {
-    //     id: 'random',
-    //     label: t('RandomOrder'),
-    //     hint: t('searchFilterRandomHelp'),
-    //     enabled: false,
-    //     default: "false",
-    //     is: VSelect,
-    //     items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-    //     modelValue: useRouteQuery('random', "false")
-    // },
-    rating: {
-        id: 'rating',
-        label: `${t('Rating')} (=)`,
-        hint: '',
-        enabled: false,
-        clearable: true,
-        default: undefined,
-        is: RatingField,
-        modelValue: ratingRouteQuery,
-    },
-    ratingGte: {
-        id: 'ratingGte',
-        label: `${t('Rating')} (≥)`,
-        hint: '',
-        enabled: false,
-        clearable: true,
-        default: undefined,
-        is: RatingField,
-        modelValue: ratingGteRouteQuery,
-    },
-    ratingLte: {
-        id: 'ratingLte',
-        label: `${t('Rating')} (≤)`,
-        hint: '',
-        enabled: false,
-        clearable: true,
-        default: undefined,
-        is: RatingField,
-        modelValue: ratingLteRouteQuery,
-    },
-    unratedOnly: {
-        id: 'unratedOnly',
-        label: t('UnratedOnly'),
-        hint: '',
-        enabled: false,
-        default: undefined,
-        is: VSelect,
-        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
-        modelValue: unratedOnlyModel,
-    },
-    timescooked: {
-        id: 'timescooked',
-        label: `${t('times_cooked')} (${t('exact')})`,
-        hint: 'Recipes that were cooked at least X times',
-        enabled: false,
-        default: undefined,
-        clearable: true,
-        is: VNumberInput,
-        modelValue: useRouteQuery('timescooked', undefined, {transform: numberOrUndefinedTransformer}),
-    },
-    timescookedGte: {
-        id: 'timescookedGte',
-        label: `${t('times_cooked')} (>=)`,
-        hint: '',
-        enabled: false,
-        clearable: true,
-        default: undefined,
-        is: VNumberInput,
-        modelValue: useRouteQuery('timescookedGte', undefined, {transform: numberOrUndefinedTransformer}),
-    },
-    timescookedLte: {
-        id: 'timescookedLte',
-        label: `${t('times_cooked')} (<=)`,
-        hint: '',
-        enabled: false,
-        clearable: true,
-        default: undefined,
-        is: VNumberInput,
-        modelValue: useRouteQuery('timescookedLte', undefined, {transform: numberOrUndefinedTransformer}),
-    },
-    makenow: {
-        id: 'makenow',
-        label: t('OnHand'),
-        hint: t('searchFilterOnHandHelp'),
-        enabled: false,
-        default: "false",
-        is: VSelect,
-        items: [{value: "true", title: 'Yes'}, {value: "false", title: 'No'}],
-        modelValue: useRouteQuery('makenow', "false"),
-    },
-    cookedonGte: {
-        id: 'cookedonGte',
-        label: `${t('Cooked')} ${t('after')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('cookedonGte', null, {transform: routeQueryDateTransformer}),
-    },
-    cookedonLte: {
-        id: 'cookedonLte',
-        label: `${t('Cooked')} ${t('before')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('cookedonLte', null, {transform: routeQueryDateTransformer}),
-    },
-    viewedonGte: {
-        id: 'viewedonGte',
-        label: `${t('Viewed')} ${t('after')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('viewedonGte', null, {transform: routeQueryDateTransformer}),
-    },
-    viewedonLte: {
-        id: 'viewedonLte',
-        label: `${t('Viewed')} ${t('before')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('viewedonLte', null, {transform: routeQueryDateTransformer}),
-    },
-    createdon: {
-        id: 'createdon',
-        label: `${t('Created')} ${t('on')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('createdon', null, {transform: routeQueryDateTransformer}),
-    },
-    createdonGte: {
-        id: 'createdonGte',
-        label: `${t('Created')} ${t('on')}/${t('after')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('createdonGte', null, {transform: routeQueryDateTransformer}),
-    },
-    createdonLte: {
-        id: 'createdonLte',
-        label: `${t('Created')} ${t('on')}/${t('before')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('createdonLte', null, {transform: routeQueryDateTransformer}),
-    },
-    updatedon: {
-        id: 'updatedon',
-        label: `${t('Updated')} ${t('on')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('updatedon', null, {transform: routeQueryDateTransformer}),
-    },
-    updatedonGte: {
-        id: 'updatedonGte',
-        label: `${t('Updated')} ${t('on')}/${t('after')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('updatedonGte', null, {transform: routeQueryDateTransformer}),
-    },
-    updatedonLte: {
-        id: 'updatedonLte',
-        label: `${t('Updated')} ${t('on')}/${t('before')}`,
-        hint: '',
-        enabled: false,
-        default: null,
-        is: VDateInput,
-        modelValue: useRouteQuery('updatedonLte', null, {transform: routeQueryDateTransformer}),
-    },
-    includeChildren: {
-        id: 'includeChildren',
-        label: t('Include Children'),
-        hint: t('Include child keywords and foods in search results'),
-        enabled: false,
-        default: true,  // Default enabled like v1
-        is: VSelect,
-        items: [{value: true, title: 'Yes'}, {value: false, title: 'No'}],
-        modelValue: useRouteQuery('includeChildren', 'true', {transform: stringToBool})
-    },
+onMounted(() => {
+    searchRecipes({page: page.value})
+    startReQueryWatcher()
 })
-
 </script>
-
-<style scoped>
-
-</style>

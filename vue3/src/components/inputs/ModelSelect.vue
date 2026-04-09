@@ -10,15 +10,16 @@
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <Multiselect
             :ref="`ref_${props.id}`"
+            :key="`${props.id}-hydration-${hydrationVersion}`"
             class="material-multiselect "
             :class="{'model-select--density-compact': props.density == 'compact', 'model-select--density-comfortable': props.density == 'comfortable', 'model-select--density-default': props.density == ''}"
             :resolve-on-load="props.searchOnLoad"
-            v-model="model"
+            v-model="multiselectModel"
             :options="search"
             :on-create="createObject"
             :createOption="props.allowCreate"
             :delay="300"
-            :object="props.object"
+            :object="effectiveObject"
             :valueProp="itemValue"
             :label="itemLabel"
             :searchable="true"
@@ -76,6 +77,7 @@ import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/
 import Multiselect from '@vueform/multiselect'
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
+import {useMultiselectHydration} from "@/composables/useMultiselectHydration";
 
 const {t} = useI18n()
 
@@ -145,27 +147,21 @@ const hasMoreItems = ref(false)
 
 const multiselect = useTemplateRef(`ref_${props.id}`)
 
-/**
- * create instance of model class when mounted
- */
+const {multiselectModel, effectiveObject, version: hydrationVersion, hydrate, mergeIntoResults} =
+    useMultiselectHydration(model, modelClass, () => props.mode, () => props.object, itemValue, itemLabel, multiselect)
+
 onBeforeMount(() => {
     modelClass.value = getGenericModelFromString(props.model, t)
+    void hydrate()
 })
 
-/**
- * performs the API request to search for the selected input
- * @param query input to search for on the API
- */
 function search(query: string) {
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: props.limit}).then((r: any) => {
-        if (modelClass.value.model.isPaginated) {
-            hasMoreItems.value = !!r.next
-            return r.results
-        } else {
-            hasMoreItems.value = false
-            return r
-        }
+        const results = modelClass.value.model.isPaginated
+            ? (hasMoreItems.value = !!r.next, r.results)
+            : (hasMoreItems.value = false, r)
+        return mergeIntoResults(results)
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {

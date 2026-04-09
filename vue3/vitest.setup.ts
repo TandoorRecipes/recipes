@@ -15,12 +15,16 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 })
 
-// Mock ResizeObserver (used by Vuetify)
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-}))
+// Mock ResizeObserver (used by Vuetify and @vueuse/core useResizeObserver).
+// Must be a class — @vueuse/core invokes it via `new ResizeObserver(...)`,
+// and arrow-function-backed vi.fn().mockImplementation(...) is not constructable.
+class MockResizeObserver {
+    observe = vi.fn()
+    unobserve = vi.fn()
+    disconnect = vi.fn()
+    constructor(_callback?: any) {}
+}
+global.ResizeObserver = MockResizeObserver as any
 
 // Mock window.print (used by RecipeViewPage)
 window.print = vi.fn()

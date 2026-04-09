@@ -473,6 +473,17 @@ class TestRatingFilter:
         assert s.r3.id in ids
         assert len(ids) == 11
 
+    def test_unrated_param_returns_unrated(self, with_ratings, u1_s1, space_1, make_search_request):
+        """?unrated=true returns recipes with no rating annotation."""
+        s = with_ratings
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, unrated='true')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id not in ids
+        assert s.r2.id not in ids
+        assert s.r3.id in ids
+        assert len(ids) == 11
+
     def test_rating_user_scoped(self, with_ratings, u2_s1, space_1, make_search_request):
         """Ratings are user-scoped."""
         s = with_ratings
