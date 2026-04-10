@@ -44,6 +44,7 @@
                         :clear-filter="clearFilter"
                         :compact="false"
                         :show-toggles="def.showToggles !== false"
+                        :expandable="def.expandable !== false"
                         class="mx-2 my-1"
                     />
                     <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1">
@@ -101,10 +102,9 @@
                     </div>
                     <div v-else-if="def.type === 'rating'" class="px-4 py-1">
                         <div class="d-flex align-center ga-2">
-                            <span class="text-subtitle-2 font-weight-bold" style="min-width: 20px">
-                                ≥
+                            <v-icon size="small" icon="fa-solid fa-greater-than-equal" class="text-medium-emphasis">
                                 <v-tooltip activator="parent" location="start" :open-delay="400">{{ $t('Minimum') }}</v-tooltip>
-                            </span>
+                            </v-icon>
                             <v-rating
                                 :model-value="parseRangePart(def.key, 'gte') ? Number(parseRangePart(def.key, 'gte')) : 0"
                                 @update:model-value="setRangePart(def.key, 'gte', $event > 0 ? String($event) : null)"
@@ -115,10 +115,9 @@
                             />
                         </div>
                         <div class="d-flex align-center ga-2 mt-1">
-                            <span class="text-subtitle-2 font-weight-bold" style="min-width: 20px">
-                                ≤
+                            <v-icon size="small" icon="fa-solid fa-less-than-equal" class="text-medium-emphasis">
                                 <v-tooltip activator="parent" location="start" :open-delay="400">{{ $t('Maximum') }}</v-tooltip>
-                            </span>
+                            </v-icon>
                             <v-rating
                                 :model-value="parseRangePart(def.key, 'lte') ? Number(parseRangePart(def.key, 'lte')) : 0"
                                 @update:model-value="setRangePart(def.key, 'lte', $event > 0 ? String($event) : null)"

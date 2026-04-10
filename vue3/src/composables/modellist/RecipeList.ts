@@ -12,7 +12,7 @@ const FOOD_GROUP: FilterDef = {
 const BOOK_GROUP: FilterDef = {
     key: '_booksGroup', labelKey: 'Books', type: 'tag-group', modelName: 'RecipeBook', group: 'Content',
     variantKeys: ['books', 'booksAnd', 'booksOrNot', 'booksAndNot'],
-    showToggles: false,
+    showToggles: false, expandable: false,
 }
 
 // Individual tag-select defs for URL state, filter chips, and saved search serialization
@@ -70,7 +70,7 @@ const DATE_FILTERS: FilterDef[] = [
 const UNIT_GROUP: FilterDef = {
     key: '_unitsGroup', labelKey: 'Units', type: 'tag-group', modelName: 'Unit', group: 'Content',
     variantKeys: ['units', 'unitsAnd', 'unitsOrNot', 'unitsAndNot'],
-    showToggles: false,
+    showToggles: false, expandable: false,
 }
 
 const UNIT_FILTERS: FilterDef[] = [
