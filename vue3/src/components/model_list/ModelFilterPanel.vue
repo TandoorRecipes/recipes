@@ -34,6 +34,21 @@
                             />
                         </div>
                     </div>
+                    <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1">
+                        <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
+                        <ModelSelect
+                            :model="def.modelName"
+                            :model-value="parseTagSelect(def.key)"
+                            @update:model-value="onTagSelectUpdate(def.key, $event)"
+                            :object="false"
+                            mode="tags"
+                            density="compact"
+                            :can-clear="true"
+                            :search-on-load="false"
+                            :append-to-body="true"
+                            :hide-details="true"
+                        />
+                    </div>
                     <div v-else-if="def.type === 'select'" class="d-flex align-center px-4 py-1">
                         <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
                         <v-select
@@ -102,42 +117,37 @@
                             />
                         </div>
                     </div>
-                    <div v-else-if="def.type === 'number-range'" class="px-4 py-1">
-                        <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
-                        <div class="d-flex align-center ga-2 mt-1">
-                            <v-text-field
-                                type="number"
-                                label="≥"
-                                :aria-label="$t(def.labelKey) + ', ' + $t('Minimum')"
-                                :model-value="parseRangePart(def.key, 'gte')"
-                                @update:model-value="setRangePart(def.key, 'gte', $event)"
-                                density="compact"
-                                hide-details
-                                clearable
-                                class="flex-grow-1"
-                            />
-                            <v-text-field
-                                type="number"
-                                label="≤"
-                                :aria-label="$t(def.labelKey) + ', ' + $t('Maximum')"
-                                :model-value="parseRangePart(def.key, 'lte')"
-                                @update:model-value="setRangePart(def.key, 'lte', $event)"
-                                density="compact"
-                                hide-details
-                                clearable
-                                class="flex-grow-1"
-                            />
-                        </div>
-                    </div>
-                    <div v-else-if="def.type === 'date-range'" class="px-4 py-1">
-                        <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
-                        <div class="d-flex align-center ga-2 mt-1">
+                    <div v-else-if="def.type === 'number-range'" class="d-flex align-center px-4 py-1 ga-2">
                         <v-text-field
-                            type="date"
-                            label="≥"
-                            :aria-label="$t(def.labelKey) + ', ' + $t('FromDate')"
+                            type="number"
+                            :label="$t(def.labelKey) + ' ≥'"
                             :model-value="parseRangePart(def.key, 'gte')"
                             @update:model-value="setRangePart(def.key, 'gte', $event)"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            clearable
+                            class="flex-grow-1"
+                        />
+                        <v-text-field
+                            type="number"
+                            :label="$t(def.labelKey) + ' ≤'"
+                            :model-value="parseRangePart(def.key, 'lte')"
+                            @update:model-value="setRangePart(def.key, 'lte', $event)"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            clearable
+                            class="flex-grow-1"
+                        />
+                    </div>
+                    <div v-else-if="def.type === 'date-range'" class="d-flex align-center px-4 py-1 ga-2">
+                        <v-text-field
+                            type="date"
+                            :label="$t(def.labelKey) + ' ≥'"
+                            :model-value="parseRangePart(def.key, 'gte')"
+                            @update:model-value="setRangePart(def.key, 'gte', $event)"
+                            variant="outlined"
                             density="compact"
                             hide-details
                             clearable
@@ -145,16 +155,15 @@
                         />
                         <v-text-field
                             type="date"
-                            label="≤"
-                            :aria-label="$t(def.labelKey) + ', ' + $t('ToDate')"
+                            :label="$t(def.labelKey) + ' ≤'"
                             :model-value="parseRangePart(def.key, 'lte')"
                             @update:model-value="setRangePart(def.key, 'lte', $event)"
+                            variant="outlined"
                             density="compact"
                             hide-details
                             clearable
                             class="flex-grow-1"
                         />
-                        </div>
                     </div>
                 </template>
             </component>
@@ -175,6 +184,22 @@ const props = defineProps<{
     clearAllFilters: () => void
     activeFilterCount: number
 }>()
+
+function parseTagSelect(key: string): number[] {
+    const raw = props.getFilter(key)
+    if (!raw) return []
+    return raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
+}
+
+function onTagSelectUpdate(key: string, value: unknown): void {
+    if (value == null || (Array.isArray(value) && value.length === 0)) {
+        props.setFilter(key, undefined)
+        return
+    }
+    if (Array.isArray(value)) {
+        props.setFilter(key, value.map(v => Number(v)).filter(n => !isNaN(n)))
+    }
+}
 
 /** Read one side of a range filter as a string for input binding. */
 function parseRangePart(key: string, side: 'gte' | 'lte'): string {
