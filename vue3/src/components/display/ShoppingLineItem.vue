@@ -30,7 +30,7 @@
                     </span>
                 </div>
                 <div class="d-flex  flex-column flex-grow-1 align-self-center">
-                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 || (amounts.length == 1 && amounts[0].amount > 1) ? 2 : 1))  }} <br/>
+                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0]?.amount ?? 1)) }} 
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
             </div>
