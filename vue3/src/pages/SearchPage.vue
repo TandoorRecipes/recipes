@@ -265,13 +265,11 @@ const settings = useModelListSettings(computed(() => 'search'))
 provide(MODEL_LIST_SETTINGS_KEY, settings)
 
 // ─── Inline / drawer filter visibility (per-filter granularity) ─────────
-const MAX_INLINE = 6
 const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
-const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', '_unitsGroup', 'rating', 'unrated', 'timescooked', 'cookedon', 'servings', 'hasPhoto', 'hasKeywords', 'makenow']
 
 const inlineFilterKeys = computed(() => {
     const raw = useUserPreferenceStore().deviceSettings.search_inlineFilters
-    return (raw && raw.length > 0 ? raw : DEFAULT_INLINE).slice(0, MAX_INLINE)
+    return raw && raw.length > 0 ? raw : DEFAULT_INLINE
 })
 const inlineGroups = computed(() => {
     const keys = new Set(inlineFilterKeys.value)

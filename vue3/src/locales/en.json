@@ -866,6 +866,8 @@
   "Cooking": "Cooking",
   "Panel": "Panel",
   "ShowIn": "Show in",
+  "PinToPage": "Pin to page",
+  "PinToPageDescription": "Pinned filters appear on the search page. All filters are always available in the filter panel.",
   "PageLayout": "Page layout",
   "InlineFiltersDescription": "Show on page (max 6)",
   "DrawerFiltersDescription": "Show in filter panel",
