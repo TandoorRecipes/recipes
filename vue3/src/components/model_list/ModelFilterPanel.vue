@@ -128,7 +128,7 @@
                             />
                         </div>
                     </div>
-                    <div v-else-if="def.type === 'number-range'" class="px-4 py-1">
+                    <div v-else-if="def.type === 'number-range'" class="d-flex align-center px-4 py-1 ga-2">
                         <v-text-field
                             type="number"
                             :label="$t(def.labelKey) + ' ≥'"
@@ -139,6 +139,7 @@
                             hide-details
                             clearable
                             placeholder=" "
+                            class="flex-grow-1"
                         />
                         <v-text-field
                             type="number"
@@ -150,10 +151,10 @@
                             hide-details
                             clearable
                             placeholder=" "
-                            class="mt-2"
+                            class="flex-grow-1"
                         />
                     </div>
-                    <div v-else-if="def.type === 'date-range'" class="px-4 py-1">
+                    <div v-else-if="def.type === 'date-range'" class="d-flex align-center px-4 py-1 ga-2">
                         <v-text-field
                             type="date"
                             :label="$t(def.labelKey) + ' ≥'"
@@ -163,6 +164,7 @@
                             density="compact"
                             hide-details
                             clearable
+                            class="flex-grow-1"
                         />
                         <v-text-field
                             type="date"
@@ -173,7 +175,7 @@
                             density="compact"
                             hide-details
                             clearable
-                            class="mt-2"
+                            class="flex-grow-1"
                         />
                     </div>
                 </template>
