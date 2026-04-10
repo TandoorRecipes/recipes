@@ -206,7 +206,7 @@ GUNICORN_THREADS=2
 
 Set the timeout in seconds of gunicorn when starting using `boot.sh` (all container installations).
 The default is likely appropriate for most installations. However, if you are using a LLM which high response times gunicornmight time out during the wait until the LLM finished, in such cases you might want to increase the timeout.
-See [Gunicorn docs]([https://docs.gunicorn.org/en/stable/design.html#how-many-workers](https://docs.gunicorn.org/en/stable/settings.html#timeout)) for default settings.
+See [Gunicorn docs](https://docs.gunicorn.org/en/stable/settings.html#timeout) for default settings.
 
 ```
 GUNICORN_TIMEOUT=30
@@ -626,7 +626,7 @@ Please set to `DEBUG` when making a bug report.
 
 #### Gunicorn Log Level
 
-> default `info` - options: [see Gunicorn Docs](https://docs.gunicorn.org/en/stable/settings.html#loglevel)
+> default `info` - options: [see Gunicorn Docs](https://gunicorn.org/reference/settings/#loglevel)
 
 Increase or decrease the logging done by gunicorn (the python wsgi application).
 
