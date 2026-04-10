@@ -30,10 +30,10 @@
                     @toggle-select="selectMode = !selectMode"
                     @reset="resetAll"
                 >
-                    <template #below-search>
+                    <template v-if="inlineFilterKeys.includes('savedSearch')" #below-search>
                         <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
                     </template>
-                    <template #below-search-actions>
+                    <template v-if="inlineFilterKeys.includes('savedSearch')" #below-search-actions>
                         <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
                                :disabled="selectedCustomFilter == null"
                                @click="loadSelectedCustomFilter()" class="text-none">
