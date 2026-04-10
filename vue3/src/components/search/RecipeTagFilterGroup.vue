@@ -59,7 +59,7 @@
 
         <!-- With all (expanded) -->
         <div v-if="showAllRows" class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }} {{ $t('all') }}</span>
             <ModelSelect
                 :model="modelName"
                 :model-value="includeAllValue"
@@ -73,15 +73,11 @@
                 :hide-details="true"
                 class="flex-grow-1"
             />
-            <v-btn-toggle :model-value="'all'" disabled density="compact">
-                <v-btn value="any" size="x-small" disabled>{{ $t('any') }}</v-btn>
-                <v-btn value="all" size="x-small" disabled>{{ $t('all') }}</v-btn>
-            </v-btn-toggle>
         </div>
 
         <!-- Without all (expanded) -->
         <div v-if="showAllRows" class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }} {{ $t('all') }}</span>
             <ModelSelect
                 :model="modelName"
                 :model-value="excludeAllValue"
@@ -95,10 +91,6 @@
                 :hide-details="true"
                 class="flex-grow-1"
             />
-            <v-btn-toggle :model-value="'all'" disabled density="compact">
-                <v-btn value="any" size="x-small" disabled>{{ $t('any') }}</v-btn>
-                <v-btn value="all" size="x-small" disabled>{{ $t('all') }}</v-btn>
-            </v-btn-toggle>
         </div>
     </v-card>
 </template>
