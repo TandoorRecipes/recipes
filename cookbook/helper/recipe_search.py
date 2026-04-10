@@ -83,6 +83,14 @@ class SearchParams:
     createdby: str | int | None = None
     makenow: int | None = None
     unrated: bool = False
+    working_time_gte: int | None = None
+    working_time_lte: int | None = None
+    waiting_time_gte: int | None = None
+    waiting_time_lte: int | None = None
+    servings_gte: int | None = None
+    servings_lte: int | None = None
+    has_photo: bool | None = None
+    has_keywords: bool | None = None
 
     @staticmethod
     def _parse_makenow(value):
@@ -151,6 +159,14 @@ class SearchParams:
             createdby=_s(params, 'createdby'),
             makenow=cls._parse_makenow(_s(params, 'makenow')),
             unrated=str2bool(_s(params, 'unrated', False)),
+            working_time_gte=int(_s(params, 'working_time_gte')) if _s(params, 'working_time_gte') else None,
+            working_time_lte=int(_s(params, 'working_time_lte')) if _s(params, 'working_time_lte') else None,
+            waiting_time_gte=int(_s(params, 'waiting_time_gte')) if _s(params, 'waiting_time_gte') else None,
+            waiting_time_lte=int(_s(params, 'waiting_time_lte')) if _s(params, 'waiting_time_lte') else None,
+            servings_gte=int(_s(params, 'servings_gte')) if _s(params, 'servings_gte') else None,
+            servings_lte=int(_s(params, 'servings_lte')) if _s(params, 'servings_lte') else None,
+            has_photo=str2bool(_s(params, 'has_photo')),
+            has_keywords=str2bool(_s(params, 'has_keywords')),
         )
 
 
@@ -286,6 +302,27 @@ class RecipeSearch:
         qs = qs.by_internal(params.internal)
         qs = qs.by_steps(params.steps)
         qs = qs.by_units(params.units)
+
+        if params.working_time_gte is not None:
+            qs = qs.filter(working_time__gte=params.working_time_gte)
+        if params.working_time_lte is not None:
+            qs = qs.filter(working_time__lte=params.working_time_lte)
+        if params.waiting_time_gte is not None:
+            qs = qs.filter(waiting_time__gte=params.waiting_time_gte)
+        if params.waiting_time_lte is not None:
+            qs = qs.filter(waiting_time__lte=params.waiting_time_lte)
+        if params.servings_gte is not None:
+            qs = qs.filter(servings__gte=params.servings_gte)
+        if params.servings_lte is not None:
+            qs = qs.filter(servings__lte=params.servings_lte)
+        if params.has_photo is True:
+            qs = qs.exclude(image__isnull=True).exclude(image='')
+        elif params.has_photo is False:
+            qs = qs.filter(Q(image__isnull=True) | Q(image=''))
+        if params.has_keywords is True:
+            qs = qs.filter(keywords__isnull=False).distinct()
+        elif params.has_keywords is False:
+            qs = qs.filter(keywords__isnull=True)
 
         # Entity filters
         qs = qs.by_keywords(

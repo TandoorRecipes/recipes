@@ -338,13 +338,12 @@ function resetAll() {
 
 function buildSearchParams(): ApiRecipeListRequest {
     return {
-        // filterParams is Record<string, string | number | (string|number)[]>
-        // FilterDef keys are camelCase OpenAPI client prop names.
         ...(filterParams.value as Partial<ApiRecipeListRequest>),
         page: page.value,
         pageSize: pageSize.value,
         ...(query.value ? {query: query.value} : {}),
         ...(ordering.value ? {sortOrder: ordering.value} : {}),
+        includeChildren: useUserPreferenceStore().deviceSettings.search_includeChildren ?? true,
     }
 }
 

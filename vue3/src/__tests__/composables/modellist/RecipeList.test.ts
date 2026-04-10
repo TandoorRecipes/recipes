@@ -27,6 +27,8 @@ const RANGE_EMITTED_IDS = new Set<string>([
 const REMOVED_IDS = new Set<string>([
     'createdon', 'updatedon',
     'rating', 'timescooked',
+    'units',
+    'includeChildren',
 ])
 
 const LEGACY_SORT_FIELDS = [
@@ -35,7 +37,7 @@ const LEGACY_SORT_FIELDS = [
 ] as const
 
 function emittedKeysFor(def: FilterDef): string[] {
-    if (def.type === 'date-range' || def.type === 'number-range') {
+    if (def.type === 'date-range' || def.type === 'number-range' || def.type === 'rating') {
         return [`${def.key}Gte`, `${def.key}Lte`]
     }
     return [def.key]
@@ -84,15 +86,16 @@ describe('RECIPE_FILTER_DEFS', () => {
         }
     })
 
-    it('groups filters into Content / Rating / Activity / Dates / Flags', () => {
+    it('groups filters into Rating / Cooking / Time / Recipe / Dates / Options', () => {
         const groups = new Set(
             RECIPE_FILTER_DEFS.map(d => d.group).filter((g): g is string => Boolean(g)),
         )
-        expect(groups).toContain('Content')
         expect(groups).toContain('Rating')
-        expect(groups).toContain('Activity')
+        expect(groups).toContain('Cooking')
+        expect(groups).toContain('Time')
+        expect(groups).toContain('Recipe')
         expect(groups).toContain('Dates')
-        expect(groups).toContain('Flags')
+        expect(groups).toContain('Options')
     })
 })
 
