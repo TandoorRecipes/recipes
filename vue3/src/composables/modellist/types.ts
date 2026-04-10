@@ -85,6 +85,8 @@ export type FilterDef = {
     variantKeys?: [string, string, string, string],
     /** For tag-group: hide any/all toggles for simpler filters */
     showToggles?: boolean,
+    /** For tag-group: allow expanding to 4 rows */
+    expandable?: boolean,
 }
 
 /**

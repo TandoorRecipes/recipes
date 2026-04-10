@@ -5,12 +5,14 @@
                 <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
             </v-badge>
             <v-spacer />
-            <v-btn v-if="!expanded" icon size="x-small" variant="text" @click="expanded = true">
-                <v-icon size="small">fa-solid fa-plus</v-icon>
-            </v-btn>
-            <v-btn v-else icon size="x-small" variant="text" @click="onCollapse">
-                <v-icon size="small">fa-solid fa-minus</v-icon>
-            </v-btn>
+            <template v-if="expandable">
+                <v-btn v-if="!expanded" icon size="x-small" variant="text" @click="expanded = true">
+                    <v-icon size="small">fa-solid fa-plus</v-icon>
+                </v-btn>
+                <v-btn v-else icon size="x-small" variant="text" @click="onCollapse">
+                    <v-icon size="small">fa-solid fa-minus</v-icon>
+                </v-btn>
+            </template>
         </div>
 
         <!-- Row 1: With (toggleable any/all) -->
@@ -111,9 +113,12 @@ const props = withDefaults(defineProps<{
     compact?: boolean
     /** Show any/all toggles (false for simpler filters like books) */
     showToggles?: boolean
+    /** Allow expanding to 4 rows (false hides + button) */
+    expandable?: boolean
 }>(), {
     compact: false,
     showToggles: true,
+    expandable: true,
 })
 
 function parseIds(raw: string | undefined): number[] {

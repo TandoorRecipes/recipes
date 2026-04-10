@@ -93,6 +93,7 @@
                             :set-filter="setFilter"
                             :clear-filter="clearFilter"
                             :show-toggles="false"
+                            :expandable="false"
                         />
                     </v-col>
                 </v-row>

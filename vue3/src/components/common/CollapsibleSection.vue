@@ -1,8 +1,7 @@
 <template>
     <div>
         <button
-            class="text-subtitle-2 font-weight-bold text-uppercase px-4 pt-3 pb-1 d-flex align-center w-100 text-start"
-            style="cursor: pointer; user-select: none; appearance: none; border: none; background: none; letter-spacing: 0.05em;"
+            class="collapsible-header text-subtitle-2 font-weight-bold text-uppercase px-4 py-2 d-flex align-center w-100 text-start"
             :aria-expanded="isOpen"
             @click="isOpen = !isOpen"
         >
@@ -30,3 +29,18 @@ const props = withDefaults(defineProps<{
 
 const isOpen = ref(props.defaultOpen)
 </script>
+
+<style scoped>
+.collapsible-header {
+    cursor: pointer;
+    user-select: none;
+    appearance: none;
+    border: none;
+    background: rgba(var(--v-theme-on-surface), 0.04);
+    letter-spacing: 0.05em;
+    transition: background 0.15s;
+}
+.collapsible-header:hover {
+    background: rgba(var(--v-theme-on-surface), 0.08);
+}
+</style>
