@@ -62,6 +62,34 @@
                             class="flex-grow-1"
                         />
                     </div>
+                    <div v-else-if="def.type === 'toggle'" class="d-flex align-center px-4 py-1">
+                        <v-switch
+                            :label="$t(def.labelKey)"
+                            :model-value="getFilter(def.key) === '1'"
+                            @update:model-value="setFilter(def.key, $event ? '1' : undefined)"
+                            color="primary"
+                            density="compact"
+                            hide-details
+                        />
+                    </div>
+                    <div v-else-if="def.type === 'rating'" class="px-4 py-1">
+                        <div class="d-flex align-center ga-2">
+                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }} ≥</span>
+                            <v-rating
+                                :model-value="parseRangePart(def.key, 'gte') ? Number(parseRangePart(def.key, 'gte')) : 0"
+                                @update:model-value="setRangePart(def.key, 'gte', $event > 0 ? String($event) : null)"
+                                half-increments
+                                hover
+                                density="compact"
+                                size="small"
+                                color="amber"
+                                active-color="amber"
+                            />
+                            <v-btn v-if="parseRangePart(def.key, 'gte')" icon size="x-small" variant="text" @click="setRangePart(def.key, 'gte', null)">
+                                <v-icon size="small">fa-solid fa-xmark</v-icon>
+                            </v-btn>
+                        </div>
+                    </div>
                     <div v-else-if="def.type === 'number-range'" class="d-flex align-center px-4 py-1 ga-2">
                         <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
                         <v-text-field

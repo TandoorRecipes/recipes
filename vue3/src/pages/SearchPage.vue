@@ -411,14 +411,15 @@ function filtersToJson(): FilterBlob {
         if (def.type === 'tag-select') {
             const items = raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
             if (items.length > 0) out[def.key] = items
-        } else if (def.type === 'date-range' || def.type === 'number-range') {
+        } else if (def.type === 'date-range' || def.type === 'number-range' || def.type === 'rating') {
             const sep = raw.indexOf('~')
             if (sep < 0) continue
             const prefix = def.key
             const gte = raw.slice(0, sep), lte = raw.slice(sep + 1)
-            if (gte) out[`${prefix}_gte`] = def.type === 'number-range' ? Number(gte) : gte
-            if (lte) out[`${prefix}_lte`] = def.type === 'number-range' ? Number(lte) : lte
-        } else if (def.type === 'tristate') {
+            const isNum = def.type === 'number-range' || def.type === 'rating'
+            if (gte) out[`${prefix}_gte`] = isNum ? Number(gte) : gte
+            if (lte) out[`${prefix}_lte`] = isNum ? Number(lte) : lte
+        } else if (def.type === 'tristate' || def.type === 'toggle') {
             out[def.key] = raw === '1'
         } else if (def.type === 'number') {
             const n = Number(raw); if (!isNaN(n)) out[def.key] = n
@@ -435,7 +436,7 @@ function applyFilterBlob(params: FilterBlob) {
         setFilter('unrated', '1')
     }
     for (const def of RECIPE_FILTER_DEFS) {
-        if (def.type === 'date-range' || def.type === 'number-range') {
+        if (def.type === 'date-range' || def.type === 'number-range' || def.type === 'rating') {
             const prefix = def.key
             const gte = params[`${prefix}_gte`] ?? params[`${def.key}_gte`]
             const lte = params[`${prefix}_lte`] ?? params[`${def.key}_lte`]
@@ -443,7 +444,7 @@ function applyFilterBlob(params: FilterBlob) {
         } else if (def.type === 'tag-select') {
             const v = params[def.key]
             if (Array.isArray(v) && v.length > 0) setFilter(def.key, v.map(Number).filter(n => !isNaN(n)))
-        } else if (def.type === 'tristate') {
+        } else if (def.type === 'tristate' || def.type === 'toggle') {
             const v = params[def.key]
             if (v === true || v === 'true' || v === 1 || v === '1') setFilter(def.key, '1')
             else if (v === false || v === 'false' || v === 0 || v === '0') setFilter(def.key, '0')

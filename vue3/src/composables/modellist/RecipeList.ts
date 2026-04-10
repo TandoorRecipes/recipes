@@ -27,8 +27,8 @@ const SINGLE_CONTENT_FILTERS: FilterDef[] = [
 ]
 
 const RATING_FILTERS: FilterDef[] = [
-    {key: 'rating',            labelKey: 'Rating',             type: 'number-range', group: 'Rating'},
-    {key: 'unrated',           labelKey: 'UnratedOnly',        type: 'tristate', group: 'Rating'},
+    {key: 'rating',            labelKey: 'Rating',             type: 'rating', group: 'Rating'},
+    {key: 'unrated',           labelKey: 'UnratedOnly',        type: 'toggle', group: 'Rating'},
 ]
 
 const TIMESCOOKED_FILTERS: FilterDef[] = [
