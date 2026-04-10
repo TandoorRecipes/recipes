@@ -87,6 +87,8 @@ export type FilterDef = {
     showToggles?: boolean,
     /** For tag-group: allow expanding to 4 rows */
     expandable?: boolean,
+    /** Override multiselect placeholder text */
+    selectPlaceholder?: string,
 }
 
 /**

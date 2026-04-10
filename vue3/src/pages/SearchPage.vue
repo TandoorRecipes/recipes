@@ -88,6 +88,7 @@
                         <RecipeTagFilterGroup
                             :label="$t('RecipeBooks')"
                             model-name="RecipeBook"
+                            :select-placeholder="$t('Books')"
                             :keys="['books', 'booksAnd', 'booksOrNot', 'booksAndNot']"
                             :get-filter="getFilter"
                             :set-filter="setFilter"
