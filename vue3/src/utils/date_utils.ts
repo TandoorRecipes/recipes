@@ -23,7 +23,7 @@ export function shiftDateRange(dateRange: Date[], dayModifier: number) {
  */
 export function adjustDateRangeLength(dateRange: Date[], dayModifier: number) {
     dateRange = dateRange.sort((a: Date, b: Date) => a.getTime() - b.getTime());
-    if (dayModifier < 0) {
+    if (dayModifier < 0 && dateRange.length > 1) {
         dateRange.splice(dateRange.length - Math.abs(dayModifier), Math.abs(dayModifier))
     } else {
         if (dateRange.length == 0) {
