@@ -58,37 +58,33 @@
         <!-- Standard (wide) layout -->
         <template v-else>
             <div class="d-flex align-center ga-2 mt-1">
-                <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
                 <ModelSelect :model="modelName" :model-value="row1Values" @update:model-value="v => onUpdate(row1Key, v)"
-                    :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="true" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
-                <v-btn-toggle :model-value="includeMode" @update:model-value="toggleIncludeMode" mandatory density="compact">
+                    :placeholder="$t('with')" :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="true" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
+                <v-btn-toggle v-if="showToggles" :model-value="includeMode" @update:model-value="toggleIncludeMode" mandatory density="compact">
                     <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                     <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
                 </v-btn-toggle>
             </div>
             <div class="d-flex align-center ga-2 mt-1">
-                <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
                 <ModelSelect :model="modelName" :model-value="row2Values" @update:model-value="v => onUpdate(row2Key, v)"
-                    :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
-                <v-btn-toggle :model-value="excludeMode" @update:model-value="toggleExcludeMode" mandatory density="compact">
+                    :placeholder="$t('without')" :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
+                <v-btn-toggle v-if="showToggles" :model-value="excludeMode" @update:model-value="toggleExcludeMode" mandatory density="compact">
                     <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                     <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
                 </v-btn-toggle>
             </div>
             <div v-if="expanded" class="d-flex align-center ga-2 mt-1">
-                <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
                 <ModelSelect :model="modelName" :model-value="row3Values" @update:model-value="v => onUpdate(row3Key, v)"
-                    :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
-                <v-btn-toggle :model-value="row3ModeLabel" @update:model-value="toggleIncludeMode" mandatory density="compact">
+                    :placeholder="$t('with')" :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
+                <v-btn-toggle v-if="showToggles" :model-value="row3ModeLabel" @update:model-value="toggleIncludeMode" mandatory density="compact">
                     <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                     <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
                 </v-btn-toggle>
             </div>
             <div v-if="expanded" class="d-flex align-center ga-2 mt-1">
-                <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
                 <ModelSelect :model="modelName" :model-value="row4Values" @update:model-value="v => onUpdate(row4Key, v)"
-                    :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
-                <v-btn-toggle :model-value="row4ModeLabel" @update:model-value="toggleExcludeMode" mandatory density="compact">
+                    :placeholder="$t('without')" :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" class="flex-grow-1" />
+                <v-btn-toggle v-if="showToggles" :model-value="row4ModeLabel" @update:model-value="toggleExcludeMode" mandatory density="compact">
                     <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                     <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
                 </v-btn-toggle>
@@ -113,8 +109,11 @@ const props = withDefaults(defineProps<{
     clearFilter: (key: string) => void
     /** Stacked layout for narrow containers (drawer) */
     compact?: boolean
+    /** Show any/all toggles (false for simpler filters like books) */
+    showToggles?: boolean
 }>(), {
     compact: false,
+    showToggles: true,
 })
 
 function parseIds(raw: string | undefined): number[] {

@@ -83,6 +83,8 @@ export type FilterDef = {
     hidden?: boolean,
     /** For tag-group: the 4 variant keys [any, all, orNot, andNot] */
     variantKeys?: [string, string, string, string],
+    /** For tag-group: hide any/all toggles for simpler filters */
+    showToggles?: boolean,
 }
 
 /**

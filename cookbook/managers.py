@@ -155,12 +155,15 @@ class RecipeQuerySet(models.QuerySet):
             step_ids = [step_ids]
         return self.filter(steps__id__in=step_ids)
 
-    def by_units(self, unit_ids):
-        if not unit_ids:
-            return self
-        if not isinstance(unit_ids, list):
-            unit_ids = [unit_ids]
-        return self.filter(steps__ingredients__unit__in=unit_ids)
+    def by_units(self, or_=None, and_=None, or_not=None, and_not=None):
+
+        def q_or(pks):
+            return Q(steps__ingredients__unit__id__in=pks)
+
+        def q_and(pk):
+            return Q(steps__ingredients__unit__id=pk)
+
+        return self._entity_filter(or_, and_, or_not, and_not, q_or, q_and)
 
     # ------------------------------------------------------------------ #
     #  Annotation + filter methods

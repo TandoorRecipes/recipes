@@ -92,6 +92,7 @@
                             :get-filter="getFilter"
                             :set-filter="setFilter"
                             :clear-filter="clearFilter"
+                            :show-toggles="false"
                         />
                     </v-col>
                 </v-row>
