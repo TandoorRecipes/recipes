@@ -13,106 +13,54 @@
             </v-btn>
         </div>
 
-        <!-- With -->
-        <div class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
-            <ModelSelect
-                :model="modelName"
-                :model-value="includeValue"
-                @update:model-value="v => onUpdate(includeKey, v)"
-                :object="false"
-                mode="tags"
-                density="compact"
-                :can-clear="true"
-                :search-on-load="true"
-                :append-to-body="true"
-                :hide-details="true"
-                class="flex-grow-1"
-            />
-            <v-btn-toggle v-model="includeMode" mandatory density="compact">
-                <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
-                <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
-            </v-btn-toggle>
-        </div>
-
-        <!-- Without -->
-        <div class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
-            <ModelSelect
-                :model="modelName"
-                :model-value="excludeValue"
-                @update:model-value="v => onUpdate(excludeKey, v)"
-                :object="false"
-                mode="tags"
-                density="compact"
-                :can-clear="true"
-                :search-on-load="false"
-                :append-to-body="true"
-                :hide-details="true"
-                class="flex-grow-1"
-            />
-            <v-btn-toggle v-model="excludeMode" mandatory density="compact">
-                <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
-                <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
-            </v-btn-toggle>
-        </div>
-
-        <!-- With all (expanded) -->
-        <div v-if="showAllRows" class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
-            <ModelSelect
-                :model="modelName"
-                :model-value="includeAllValue"
-                @update:model-value="v => onUpdate(keys[1], v)"
-                :object="false"
-                mode="tags"
-                density="compact"
-                :can-clear="true"
-                :search-on-load="false"
-                :append-to-body="true"
-                :hide-details="true"
-                class="flex-grow-1"
-            />
-            <v-btn-toggle model-value="all" mandatory density="compact">
-                <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
-                <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
-            </v-btn-toggle>
-        </div>
-
-        <!-- Without all (expanded) -->
-        <div v-if="showAllRows" class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
-            <ModelSelect
-                :model="modelName"
-                :model-value="excludeAllValue"
-                @update:model-value="v => onUpdate(keys[3], v)"
-                :object="false"
-                mode="tags"
-                density="compact"
-                :can-clear="true"
-                :search-on-load="false"
-                :append-to-body="true"
-                :hide-details="true"
-                class="flex-grow-1"
-            />
-            <v-btn-toggle model-value="all" mandatory density="compact">
-                <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
-                <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
-            </v-btn-toggle>
-        </div>
+        <FilterRow :label="$t('with') + ' ' + $t('any')" :model-name="modelName"
+            :value="values[0]" @update="v => onUpdate(keys[0], v)" :search-on-load="true" />
+        <FilterRow :label="$t('without') + ' ' + $t('any')" :model-name="modelName"
+            :value="values[2]" @update="v => onUpdate(keys[2], v)" />
+        <FilterRow v-if="showAllRows" :label="$t('with') + ' ' + $t('all')" :model-name="modelName"
+            :value="values[1]" @update="v => onUpdate(keys[1], v)" />
+        <FilterRow v-if="showAllRows" :label="$t('without') + ' ' + $t('all')" :model-name="modelName"
+            :value="values[3]" @update="v => onUpdate(keys[3], v)" />
     </v-card>
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
+import {computed, ref, defineComponent, h} from 'vue'
 import type {EditorSupportedModels} from '@/types/Models'
 import type {FilterValue} from '@/composables/modellist/types'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 
+const FilterRow = defineComponent({
+    props: {
+        label: {type: String, required: true},
+        modelName: {type: String, required: true},
+        value: {type: Array, default: () => []},
+        searchOnLoad: {type: Boolean, default: false},
+    },
+    emits: ['update'],
+    setup(props, {emit}) {
+        return () => h('div', {class: 'd-flex align-center ga-2 mt-1'}, [
+            h('span', {class: 'text-body-2 text-medium-emphasis', style: 'min-width: 80px'}, props.label),
+            h(ModelSelect, {
+                model: props.modelName,
+                modelValue: props.value,
+                'onUpdate:modelValue': (v: any) => emit('update', v),
+                object: false,
+                mode: 'tags',
+                density: 'compact',
+                canClear: true,
+                searchOnLoad: props.searchOnLoad,
+                appendToBody: true,
+                hideDetails: true,
+                class: 'flex-grow-1',
+            }),
+        ])
+    },
+})
+
 const props = defineProps<{
     label: string
     modelName: EditorSupportedModels
-    /** [includeAny, includeAll, excludeAny, excludeAll] */
     keys: [string, string, string, string]
     getFilter: (key: string) => string | undefined
     setFilter: (key: string, value: FilterValue) => void
@@ -124,29 +72,12 @@ function parseIds(raw: string | undefined): number[] {
     return raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
 }
 
-const includeMode = ref<string>(props.getFilter(props.keys[1]) ? 'all' : 'any')
-const excludeMode = ref<string>(props.getFilter(props.keys[3]) ? 'all' : 'any')
+const values = computed(() => props.keys.map(k => parseIds(props.getFilter(k))))
 
-watch(() => props.getFilter(props.keys[1]), (v) => { includeMode.value = v ? 'all' : 'any' })
-watch(() => props.getFilter(props.keys[3]), (v) => { excludeMode.value = v ? 'all' : 'any' })
-
-const includeKey = computed(() => includeMode.value === 'all' ? props.keys[1] : props.keys[0])
-const excludeKey = computed(() => excludeMode.value === 'all' ? props.keys[3] : props.keys[2])
-
-const includeValue = computed(() => parseIds(props.getFilter(includeKey.value)))
-const excludeValue = computed(() => parseIds(props.getFilter(excludeKey.value)))
-const includeAllValue = computed(() => parseIds(props.getFilter(props.keys[1])))
-const excludeAllValue = computed(() => parseIds(props.getFilter(props.keys[3])))
-
-const hasAllData = computed(() =>
-    includeAllValue.value.length > 0 || excludeAllValue.value.length > 0
-)
+const hasAllData = computed(() => values.value[1].length > 0 || values.value[3].length > 0)
 const showAllRows = ref(hasAllData.value)
 
-const totalCount = computed(() =>
-    includeValue.value.length + excludeValue.value.length +
-    (showAllRows.value ? includeAllValue.value.length + excludeAllValue.value.length : 0)
-)
+const totalCount = computed(() => values.value.reduce((sum, arr) => sum + arr.length, 0))
 
 function onUpdate(key: string, value: unknown) {
     if (value == null || (Array.isArray(value) && value.length === 0)) {
@@ -163,22 +94,4 @@ function collapseAllRows() {
     props.clearFilter(props.keys[3])
     showAllRows.value = false
 }
-
-watch(includeMode, (newMode, oldMode) => {
-    if (newMode === oldMode) return
-    const oldKey = oldMode === 'all' ? props.keys[1] : props.keys[0]
-    const newKey = newMode === 'all' ? props.keys[1] : props.keys[0]
-    const ids = parseIds(props.getFilter(oldKey))
-    props.clearFilter(oldKey)
-    if (ids.length > 0) props.setFilter(newKey, ids)
-})
-
-watch(excludeMode, (newMode, oldMode) => {
-    if (newMode === oldMode) return
-    const oldKey = oldMode === 'all' ? props.keys[3] : props.keys[2]
-    const newKey = newMode === 'all' ? props.keys[3] : props.keys[2]
-    const ids = parseIds(props.getFilter(oldKey))
-    props.clearFilter(oldKey)
-    if (ids.length > 0) props.setFilter(newKey, ids)
-})
 </script>
