@@ -465,10 +465,15 @@ function loadSelectedCustomFilter() {
     const blob: FilterBlob = typeof raw === 'string'
         ? (() => { try { const p = JSON.parse(raw); return p && typeof p === 'object' ? p : {} } catch { return {} } })()
         : (raw && typeof raw === 'object' ? raw : {})
+    // Suppress the re-query watcher during bulk state changes to avoid
+    // intermediate searches with partial/empty filters.
+    if (stopReQueryWatcher) { stopReQueryWatcher(); stopReQueryWatcher = null }
     clearAllFilters()
     if (typeof blob.query === 'string') query.value = blob.query
+    else query.value = ''
     applyFilterBlob(blob)
     snapshotFilters()
+    startReQueryWatcher()
     searchRecipes({page: 1})
 }
 

@@ -37,7 +37,7 @@ function mountWidget(initialState: Partial<Record<string, string>> = {}) {
     const vuetify = createVuetify({components, directives})
     const i18n = createI18n({
         legacy: false, locale: 'en',
-        messages: {en: { Keywords: 'Keywords', With: 'With', Without: 'Without', any: 'any', all: 'all' }},
+        messages: {en: { Keywords: 'Keywords', with: 'With', without: 'Without', any: 'any', all: 'all' }},
         missingWarn: false, fallbackWarn: false,
     })
 
@@ -60,75 +60,56 @@ function mountWidget(initialState: Partial<Record<string, string>> = {}) {
 }
 
 describe('RecipeTagFilterGroup', () => {
-    it('renders two ModelSelect instances by default (with-any + without-any)', () => {
+    it('renders two selects by default (include-any + exclude-any)', () => {
         const {wrapper} = mountWidget()
         expect(wrapper.findAllComponents(ModelSelectStub).length).toBe(2)
     })
 
-    it('shows + button to expand all-mode rows', () => {
-        const {wrapper} = mountWidget()
-        expect(wrapper.find('.fa-plus').exists()).toBe(true)
-    })
-
-    it('binds with-any values to first select', () => {
-        const {wrapper} = mountWidget({keywords: '1,2,3'})
-        const selects = wrapper.findAllComponents(ModelSelectStub)
-        expect(selects[0].props('modelValue')).toEqual([1, 2, 3])
-    })
-
-    it('binds without-any values to second select', () => {
-        const {wrapper} = mountWidget({keywordsOrNot: '4,5'})
-        const selects = wrapper.findAllComponents(ModelSelectStub)
-        expect(selects[1].props('modelValue')).toEqual([4, 5])
-    })
-
-    it('supports with and without simultaneously', () => {
+    it('binds each row to its own key independently', () => {
         const {wrapper} = mountWidget({keywords: '1,2', keywordsOrNot: '3,4'})
         const selects = wrapper.findAllComponents(ModelSelectStub)
         expect(selects[0].props('modelValue')).toEqual([1, 2])
         expect(selects[1].props('modelValue')).toEqual([3, 4])
     })
 
-    it('auto-expands all-mode rows when all-variant data exists on mount', () => {
-        const {wrapper} = mountWidget({keywords: '1', keywordsAnd: '5,6'})
+    it('auto-expands when all-variant data exists', () => {
+        const {wrapper} = mountWidget({keywordsAnd: '5,6'})
         expect(wrapper.findAllComponents(ModelSelectStub).length).toBe(4)
     })
 
-    it('shows all four rows when expanded', () => {
-        const {wrapper} = mountWidget({keywordsAnd: '1', keywordsAndNot: '2'})
-        expect(wrapper.findAllComponents(ModelSelectStub).length).toBe(4)
+    it('all four rows are independent when expanded', () => {
+        const {wrapper} = mountWidget({
+            keywords: '1', keywordsAnd: '2', keywordsOrNot: '3', keywordsAndNot: '4',
+        })
+        const selects = wrapper.findAllComponents(ModelSelectStub)
+        expect(selects).toHaveLength(4)
+        expect(selects[0].props('modelValue')).toEqual([1])
+        expect(selects[1].props('modelValue')).toEqual([3])
+        expect(selects[2].props('modelValue')).toEqual([2])
+        expect(selects[3].props('modelValue')).toEqual([4])
     })
 
-    it('writing to with-any calls setFilter on keys[0]', async () => {
-        const {wrapper, setFilter} = mountWidget()
+    it('writing to row 1 does not affect row 3', async () => {
+        const {wrapper, setFilter, state} = mountWidget({keywordsAnd: '10'})
         const selects = wrapper.findAllComponents(ModelSelectStub)
         await selects[0].vm.$emit('update:modelValue', [7, 8])
         expect(setFilter).toHaveBeenCalledWith('keywords', [7, 8])
+        expect(state.value.keywordsAnd).toBe('10')
     })
 
-    it('writing to without-any calls setFilter on keys[2]', async () => {
-        const {wrapper, setFilter} = mountWidget()
-        const selects = wrapper.findAllComponents(ModelSelectStub)
-        await selects[1].vm.$emit('update:modelValue', [9, 10])
-        expect(setFilter).toHaveBeenCalledWith('keywordsOrNot', [9, 10])
-    })
-
-    it('collapsing clears all-mode keys', async () => {
-        const {wrapper, clearFilter} = mountWidget({keywordsAnd: '1', keywordsAndNot: '2'})
+    it('collapsing clears all-mode keys only', async () => {
+        const {wrapper, clearFilter, state} = mountWidget({
+            keywords: '1', keywordsAnd: '2', keywordsOrNot: '3', keywordsAndNot: '4',
+        })
         const minusBtn = wrapper.find('.fa-minus')
         await minusBtn.trigger('click')
         expect(clearFilter).toHaveBeenCalledWith('keywordsAnd')
         expect(clearFilter).toHaveBeenCalledWith('keywordsAndNot')
+        expect(state.value.keywords).toBe('1')
+        expect(state.value.keywordsOrNot).toBe('3')
     })
 
-    it('clearing a select removes the key', async () => {
-        const {wrapper, state} = mountWidget({keywords: '1,2'})
-        const selects = wrapper.findAllComponents(ModelSelectStub)
-        await selects[0].vm.$emit('update:modelValue', [])
-        expect(state.value.keywords).toBeUndefined()
-    })
-
-    it('badge shows total count across all groups', () => {
+    it('badge shows total count across all rows', () => {
         const {wrapper} = mountWidget({keywords: '1,2', keywordsOrNot: '3'})
         const badge = wrapper.find('.v-badge')
         expect(badge.text()).toContain('3')
