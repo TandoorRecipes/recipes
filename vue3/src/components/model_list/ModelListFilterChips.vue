@@ -16,7 +16,7 @@
             {{ chipLabel(filter.def, filter.value) }}
         </v-chip>
         <v-chip
-            v-if="activeFilterCount >= 2"
+            v-if="activeFilterCount >= 1"
             variant="text"
             size="small"
             @click="clearAllFilters()"
