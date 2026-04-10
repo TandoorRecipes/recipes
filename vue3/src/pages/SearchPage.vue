@@ -86,13 +86,12 @@
                     </v-col>
                     <v-col cols="12" md="4">
                         <RecipeTagFilterGroup
-                            :label="$t('Books')"
+                            :label="$t('RecipeBooks')"
                             model-name="RecipeBook"
                             :keys="['books', 'booksAnd', 'booksOrNot', 'booksAndNot']"
                             :get-filter="getFilter"
                             :set-filter="setFilter"
                             :clear-filter="clearFilter"
-                            :show-toggles="false"
                             :expandable="false"
                         />
                     </v-col>
