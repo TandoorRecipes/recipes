@@ -254,6 +254,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             search_viewMode: 'grid',
             search_visibleFilters: [],
             search_includeChildren: true,
+            search_inlineFilters: ['Content', 'Rating'],
+            search_drawerFilters: ['Content', 'Rating', 'Cooking', 'Recipe'],
 
             start_showMealPlan: true,
 

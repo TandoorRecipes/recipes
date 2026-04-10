@@ -108,6 +108,44 @@
                 </CollapsibleSection>
             </template>
 
+            <!-- Page Layout (inline + drawer filter visibility) -->
+            <template v-if="availableFilterGroups.length > 0">
+                <CollapsibleSection :label="$t('PageLayout')">
+                    <div class="text-caption px-4 text-medium-emphasis">{{ $t('InlineFiltersDescription') }}</div>
+                    <div class="d-flex flex-wrap ga-2 px-4 py-2">
+                        <v-chip
+                            v-for="group in inlineEligibleGroups"
+                            :key="'inline-' + group"
+                            :prepend-icon="isInlineSelected(group) ? 'fa-solid fa-check' : undefined"
+                            :variant="isInlineSelected(group) ? 'flat' : 'outlined'"
+                            :color="isInlineSelected(group) ? 'primary' : undefined"
+                            :disabled="!isInlineSelected(group) && inlineSelectedCount >= 6"
+                            size="small"
+                            label
+                            @click="toggleInline(group)"
+                        >
+                            {{ $t(group) }}
+                        </v-chip>
+                    </div>
+                    <div class="text-caption px-4 text-medium-emphasis mt-2">{{ $t('DrawerFiltersDescription') }}</div>
+                    <div class="d-flex flex-wrap ga-2 px-4 py-2">
+                        <v-chip
+                            v-for="group in availableFilterGroups"
+                            :key="'drawer-' + group"
+                            :prepend-icon="isDrawerSelected(group) ? 'fa-solid fa-check' : undefined"
+                            :variant="isDrawerSelected(group) ? 'flat' : 'outlined'"
+                            :color="isDrawerSelected(group) ? 'primary' : undefined"
+                            size="small"
+                            label
+                            @click="toggleDrawer(group)"
+                        >
+                            {{ $t(group) }}
+                        </v-chip>
+                    </div>
+                </CollapsibleSection>
+                <v-divider class="my-2" />
+            </template>
+
             <!-- Tree View (not collapsible) -->
             <div class="px-4 py-1" v-if="treeAvailable">
                 <v-switch
@@ -297,6 +335,7 @@ import {useI18n} from 'vue-i18n'
 import type {Model, ModelTableHeaders} from '@/types/Models'
 import type {ActionDef, FilterDef, FilterValue} from '@/composables/modellist/types'
 import {MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
+import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import {useTouchDetect} from '@/composables/useTouchDetect'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
@@ -423,6 +462,47 @@ function toggleMobileSubtitle(key: string) {
         keys.push(key)
     }
     mobileSubtitleKeys.value = keys
+}
+
+// Page Layout — inline/drawer filter visibility
+const ALL_FILTER_GROUPS = ['Content', 'Rating', 'Cooking', 'Recipe', 'Time', 'Date', 'Other'] as const
+const INLINE_ELIGIBLE = ['Content', 'Rating', 'Cooking', 'Recipe'] as const
+
+const availableFilterGroups = computed(() => ALL_FILTER_GROUPS.filter(g => {
+    // Only show groups that exist in the current filter defs
+    for (const [group] of props.groupedFilterDefs) {
+        if (group === g) return true
+    }
+    return false
+}))
+
+const inlineEligibleGroups = computed(() => INLINE_ELIGIBLE.filter(g => availableFilterGroups.value.includes(g)))
+
+const deviceSettings = useUserPreferenceStore().deviceSettings
+
+function isInlineSelected(group: string) {
+    return (deviceSettings.search_inlineFilters ?? []).includes(group)
+}
+const inlineSelectedCount = computed(() => (deviceSettings.search_inlineFilters ?? []).length)
+
+function toggleInline(group: string) {
+    const current = [...(deviceSettings.search_inlineFilters ?? [])]
+    const idx = current.indexOf(group)
+    if (idx >= 0) current.splice(idx, 1)
+    else if (current.length < 6) current.push(group)
+    deviceSettings.search_inlineFilters = current
+}
+
+function isDrawerSelected(group: string) {
+    return (deviceSettings.search_drawerFilters ?? []).includes(group)
+}
+
+function toggleDrawer(group: string) {
+    const current = [...(deviceSettings.search_drawerFilters ?? [])]
+    const idx = current.indexOf(group)
+    if (idx >= 0) current.splice(idx, 1)
+    else current.push(group)
+    deviceSettings.search_drawerFilters = current
 }
 
 // Swipe action management
