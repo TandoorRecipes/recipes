@@ -110,24 +110,58 @@
             <!-- Filter visibility (grouped by filter section) -->
             <template v-if="configurableFiltersByGroup.size > 0">
                 <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
-                    <CollapsibleSection :label="$t(group)">
-                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
-                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
-                            <v-btn-toggle density="compact" multiple>
-                                <v-btn
-                                    size="x-small"
-                                    :active="isInlineSelected(def.key)"
-                                    :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
-                                    @click="toggleInline(def.key)"
-                                >{{ $t('Page') }}</v-btn>
-                                <v-btn
-                                    size="x-small"
-                                    :active="isDrawerSelected(def.key)"
-                                    @click="toggleDrawer(def.key)"
-                                >{{ $t('Panel') }}</v-btn>
-                            </v-btn-toggle>
-                        </div>
-                    </CollapsibleSection>
+                    <!-- Content: per-filter Page/Panel toggles -->
+                    <template v-if="group === 'Content'">
+                        <CollapsibleSection :label="$t(group)">
+                            <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
+                                <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
+                                <v-btn-toggle density="compact" multiple>
+                                    <v-btn
+                                        size="x-small"
+                                        :active="isInlineSelected(def.key)"
+                                        :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
+                                        @click="toggleInline(def.key)"
+                                    >{{ $t('Page') }}</v-btn>
+                                    <v-btn
+                                        size="x-small"
+                                        :active="isDrawerSelected(def.key)"
+                                        @click="toggleDrawer(def.key)"
+                                    >{{ $t('Panel') }}</v-btn>
+                                </v-btn-toggle>
+                            </div>
+                        </CollapsibleSection>
+                    </template>
+
+                    <!-- Other groups: card-level Page/Panel + per-filter on/off -->
+                    <template v-else>
+                        <CollapsibleSection :label="$t(group)">
+                            <div class="d-flex align-center px-4 py-1 ga-1">
+                                <span class="text-body-2 font-weight-bold flex-grow-1">{{ $t('ShowIn') }}</span>
+                                <v-btn-toggle density="compact" multiple>
+                                    <v-btn
+                                        size="x-small"
+                                        :active="isGroupInline(group, defs)"
+                                        :disabled="!isGroupInline(group, defs) && inlineSelectedCount >= 6"
+                                        @click="toggleGroupInline(group, defs)"
+                                    >{{ $t('Page') }}</v-btn>
+                                    <v-btn
+                                        size="x-small"
+                                        :active="isGroupInDrawer(group, defs)"
+                                        @click="toggleGroupDrawer(group, defs)"
+                                    >{{ $t('Panel') }}</v-btn>
+                                </v-btn-toggle>
+                            </div>
+                            <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-0">
+                                <v-checkbox
+                                    :model-value="isDrawerSelected(def.key) || isInlineSelected(def.key)"
+                                    @update:model-value="toggleFilterEnabled(def.key, group, defs, $event)"
+                                    :label="$t(def.labelKey)"
+                                    hide-details
+                                    density="compact"
+                                />
+                            </div>
+                        </CollapsibleSection>
+                    </template>
                 </template>
                 <v-divider class="my-2" />
             </template>
@@ -486,6 +520,47 @@ function toggleDrawer(key: string) {
     if (idx >= 0) current.splice(idx, 1)
     else current.push(key)
     deviceSettings.search_drawerFilters = current
+}
+
+function isGroupInline(group: string, defs: FilterDef[]) {
+    return defs.some(d => isInlineSelected(d.key))
+}
+
+function isGroupInDrawer(group: string, defs: FilterDef[]) {
+    return defs.some(d => isDrawerSelected(d.key))
+}
+
+function toggleGroupInline(group: string, defs: FilterDef[]) {
+    const allInline = defs.every(d => isInlineSelected(d.key))
+    const current = [...(deviceSettings.search_inlineFilters ?? [])]
+    if (allInline) {
+        deviceSettings.search_inlineFilters = current.filter(k => !defs.some(d => d.key === k))
+    } else {
+        const toAdd = defs.filter(d => !current.includes(d.key)).map(d => d.key)
+        deviceSettings.search_inlineFilters = [...current, ...toAdd].slice(0, 6)
+    }
+}
+
+function toggleGroupDrawer(group: string, defs: FilterDef[]) {
+    const allInDrawer = defs.every(d => isDrawerSelected(d.key))
+    const current = [...(deviceSettings.search_drawerFilters ?? [])]
+    if (allInDrawer) {
+        deviceSettings.search_drawerFilters = current.filter(k => !defs.some(d => d.key === k))
+    } else {
+        const toAdd = defs.filter(d => !current.includes(d.key)).map(d => d.key)
+        deviceSettings.search_drawerFilters = [...current, ...toAdd]
+    }
+}
+
+function toggleFilterEnabled(key: string, group: string, defs: FilterDef[], enabled: boolean | null) {
+    if (enabled) {
+        if (isGroupInline(group, defs)) toggleInline(key)
+        if (isGroupInDrawer(group, defs)) toggleDrawer(key)
+        if (!isGroupInline(group, defs) && !isGroupInDrawer(group, defs)) toggleDrawer(key)
+    } else {
+        if (isInlineSelected(key)) toggleInline(key)
+        if (isDrawerSelected(key)) toggleDrawer(key)
+    }
 }
 
 // Swipe action management
