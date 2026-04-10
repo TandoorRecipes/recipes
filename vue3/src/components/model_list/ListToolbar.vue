@@ -110,7 +110,12 @@
             hide-details
             density="compact"
         />
-        <slot name="below-search" />
+        <div v-if="$slots['below-search']" class="d-flex align-center ga-2 mt-1">
+            <div style="flex: 1 1 0; min-width: 0">
+                <slot name="below-search" />
+            </div>
+            <slot name="below-search-actions" />
+        </div>
 
         <div class="model-list-toolbar-carousel-wrapper mt-2">
         <div ref="carouselRef" class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')" @scroll.passive="onCarouselScroll">
