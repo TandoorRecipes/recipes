@@ -1,5 +1,5 @@
-Django==5.2.12
-cryptography===46.0.6
+Django==5.2.13
+cryptography===46.0.7
 django-annoying==0.10.6
 django-cleanup==9.0.0
 django-crispy-forms==2.4
@@ -50,7 +50,7 @@ pyjwt==2.12.1
 python3-openid==3.2.0
 python3-saml==1.16.0
 django-vite==3.1.0
-litellm==1.82.1
+litellm==1.83.0
 thefuzz==0.22.1
 stripe==14.0.0
 frappe-client==0.1.0.dev0

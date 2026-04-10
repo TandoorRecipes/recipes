@@ -58,6 +58,12 @@ export interface SourceImportIngredient {
     note?: string;
     /**
      * 
+     * @type {number}
+     * @memberof SourceImportIngredient
+     */
+    order?: number;
+    /**
+     * 
      * @type {string}
      * @memberof SourceImportIngredient
      */
@@ -89,6 +95,7 @@ export function SourceImportIngredientFromJSONTyped(json: any, ignoreDiscriminat
         'food': SourceImportFoodFromJSON(json['food']),
         'unit': SourceImportUnitFromJSON(json['unit']),
         'note': json['note'] == null ? undefined : json['note'],
+        'order': json['order'] == null ? undefined : json['order'],
         'originalText': json['original_text'],
     };
 }
@@ -103,6 +110,7 @@ export function SourceImportIngredientToJSON(value?: SourceImportIngredient | nu
         'food': SourceImportFoodToJSON(value['food']),
         'unit': SourceImportUnitToJSON(value['unit']),
         'note': value['note'],
+        'order': value['order'],
         'original_text': value['originalText'],
     };
 }

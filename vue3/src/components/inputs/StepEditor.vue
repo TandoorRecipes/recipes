@@ -185,7 +185,7 @@
         </v-card>
     </v-dialog>
 
-    <step-ingredient-sorter-dialog :step-index="props.stepIndex" :step="step" :recipe="recipe" v-model="dialogIngredientSorter"
+    <step-ingredient-sorter-dialog :step-index="props.stepIndex" v-model:step="step" v-model:recipe="recipe" v-model="dialogIngredientSorter"
                                    :ingredient-index="editingIngredientIndex"></step-ingredient-sorter-dialog>
 
     <v-bottom-sheet v-model="dialogIngredientEditor">

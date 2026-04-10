@@ -118,8 +118,8 @@ class RecetteTek(Integration):
                 image_file_name = file['pictures'][0].split('/')[-1]
                 for f in self.files:
                     if '.rtk' in f['name']:
-                        import_zip = ZipFile(f['file'])
-                        self.import_recipe_image(recipe, BytesIO(import_zip.read(image_file_name)), filetype=get_filetype(image_file_name))
+                        import_zip = self.get_zip_file(f['file'])
+                        self.import_recipe_image(recipe, BytesIO(self.safe_read(import_zip, image_file_name)), filetype=get_filetype(image_file_name))
             else:
                 if file['originalPicture'] != '':
                     url = file['originalPicture']

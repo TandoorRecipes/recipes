@@ -206,7 +206,7 @@ GUNICORN_THREADS=2
 
 Set the timeout in seconds of gunicorn when starting using `boot.sh` (all container installations).
 The default is likely appropriate for most installations. However, if you are using a LLM which high response times gunicornmight time out during the wait until the LLM finished, in such cases you might want to increase the timeout.
-See [Gunicorn docs]([https://docs.gunicorn.org/en/stable/design.html#how-many-workers](https://docs.gunicorn.org/en/stable/settings.html#timeout)) for default settings.
+See [Gunicorn docs](https://docs.gunicorn.org/en/stable/settings.html#timeout) for default settings.
 
 ```
 GUNICORN_TIMEOUT=30
@@ -626,7 +626,7 @@ Please set to `DEBUG` when making a bug report.
 
 #### Gunicorn Log Level
 
-> default `info` - options: [see Gunicorn Docs](https://docs.gunicorn.org/en/stable/settings.html#loglevel)
+> default `info` - options: [see Gunicorn Docs](https://gunicorn.org/reference/settings/#loglevel)
 
 Increase or decrease the logging done by gunicorn (the python wsgi application).
 
@@ -762,4 +762,48 @@ SPACE_DEFAULT_ALLOW_SHARING=1 # Allow users to share recipes with public links
 Recipe exports are cached for a certain time (in seconds) by default, adjust time if needed
 ```
 EXPORT_FILE_CACHE_DURATION=600
+```
+
+### Zip Import Settings
+
+Configuration options for importing recipes from zip files.
+
+#### Max zip file size
+
+> default `10` (10MB) - options: size in MB
+
+Maximum size of a single file within a zip archive.
+
+```
+MAX_ZIP_FILE_SIZE=10
+```
+
+#### Max zip total size
+
+> default `500` (500MB) - options: size in MB
+
+Maximum total decompressed size of all files in a zip archive.
+
+```
+MAX_ZIP_TOTAL_SIZE=500
+```
+
+#### Max zip file count
+
+> default `2000` - options: number of files
+
+Maximum number of files allowed in a zip archive.
+
+```
+MAX_ZIP_FILE_COUNT=2000
+```
+
+#### Max zip nesting depth
+
+> default `2` - options: depth level
+
+Maximum allowed nesting depth of zip files (archives within archives).
+
+```
+MAX_ZIP_NESTING_DEPTH=2
 ```

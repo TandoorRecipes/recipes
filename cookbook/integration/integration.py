@@ -17,7 +17,7 @@ from lxml import etree
 
 from cookbook.helper.image_processing import handle_image
 from cookbook.models import Keyword, Recipe
-from recipes.settings import DEBUG, EXPORT_FILE_CACHE_DURATION
+from recipes.settings import DEBUG, EXPORT_FILE_CACHE_DURATION, MAX_ZIP_FILE_COUNT, MAX_ZIP_FILE_SIZE, MAX_ZIP_NESTING_DEPTH, MAX_ZIP_TOTAL_SIZE
 
 
 class Integration:
@@ -55,6 +55,43 @@ class Integration:
             self.keyword = parent.add_child(name=name, description=description, space=request.space)
         except (IntegrityError, ValueError):  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
             self.keyword = parent.add_child(name=f'{name} {str(uuid.uuid4())[0:8]}', description=description, space=request.space)
+
+    def get_zip_file(self, file):
+        """
+        Safely open a zip file and check the total decompressed size and file count
+        :param file: in memory file
+        :return: ZipFile object
+        """
+        zip_file = ZipFile(file)
+        if len(zip_file.infolist()) > MAX_ZIP_FILE_COUNT:
+            raise Exception(_('Too many files in zip'))
+
+        total_size = sum([z.file_size for z in zip_file.infolist()])
+        if total_size > MAX_ZIP_TOTAL_SIZE:
+            raise Exception(_('Zip file too large'))
+        return zip_file
+
+    def safe_read(self, zip_file, filename, depth=0):
+        """
+        Safely read a file from a zip file and check the decompressed size.
+        If the file is a zip file, it also checks for nesting depth.
+        :param zip_file: ZipFile object
+        :param filename: filename or ZipInfo object
+        :param depth: current nesting depth
+        :return: bytes
+        """
+        if depth > MAX_ZIP_NESTING_DEPTH:
+            raise Exception(_('Nested zip files too deep'))
+
+        if isinstance(filename, str):
+            info = zip_file.getinfo(filename)
+        else:
+            info = filename
+
+        if info.file_size > MAX_ZIP_FILE_SIZE:
+            raise Exception(_('File in zip too large'))
+
+        return zip_file.read(info)
 
     def do_export(self, recipes, el):
 
@@ -120,7 +157,7 @@ class Integration:
                 self.files = files
                 for f in files:
                     if 'RecipeKeeper' in f['name']:
-                        import_zip = ZipFile(f['file'])
+                        import_zip = self.get_zip_file(f['file'])
                         file_list = []
                         for z in import_zip.filelist:
                             if self.import_file_name_filter(z):
@@ -128,7 +165,7 @@ class Integration:
                         il.total_recipes += len(file_list)
 
                         for z in file_list:
-                            data_list = self.split_recipe_file(import_zip.read(z.filename).decode('utf-8'))
+                            data_list = self.split_recipe_file(self.safe_read(import_zip, z.filename).decode('utf-8'))
                             for d in data_list:
                                 recipe = self.get_recipe_from_file(d)
                                 recipe.keywords.add(self.keyword)
@@ -138,7 +175,7 @@ class Integration:
                                 il.save()
                         import_zip.close()
                     elif '.zip' in f['name'] or '.paprikarecipes' in f['name'] or '.mcb' in f['name']:
-                        import_zip = ZipFile(f['file'])
+                        import_zip = self.get_zip_file(f['file'])
                         file_list = []
                         for z in import_zip.filelist:
                             if self.import_file_name_filter(z):
@@ -147,13 +184,13 @@ class Integration:
 
                         import cookbook
                         if isinstance(self, cookbook.integration.copymethat.CopyMeThat):
-                            file_list = self.split_recipe_file(BytesIO(import_zip.read('recipes.html')))
+                            file_list = self.split_recipe_file(BytesIO(self.safe_read(import_zip, 'recipes.html')))
                             il.total_recipes += len(file_list)
 
                         if isinstance(self, cookbook.integration.cookmate.Cookmate):
                             new_file_list = []
                             for file in file_list:
-                                new_file_list += etree.parse(BytesIO(import_zip.read(file.filename))).getroot().getchildren()
+                                new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename))).getroot().getchildren()
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 
@@ -166,7 +203,7 @@ class Integration:
                                 if file.filename.startswith("index.htm"):
                                     next
                                 if file.filename.endswith(".htm"):
-                                    new_file_list += self.split_recipe_file(BytesIO(import_zip.read(file.filename)))
+                                    new_file_list += self.split_recipe_file(BytesIO(self.safe_read(import_zip, file.filename)))
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 
@@ -179,7 +216,7 @@ class Integration:
                                     if not hasattr(z, 'filename') or isinstance(z, Tag):
                                         recipe = self.get_recipe_from_file(z)
                                     else:
-                                        recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
+                                        recipe = self.get_recipe_from_file(BytesIO(self.safe_read(import_zip, z.filename)))
                                     recipe.keywords.add(self.keyword)
                                     il.msg += self.get_recipe_processed_msg(recipe)
                                     self.handle_duplicates(recipe, import_duplicates)
@@ -204,10 +241,10 @@ class Integration:
                             except Exception as e:
                                 self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                     elif '.rtk' in f['name']:
-                        import_zip = ZipFile(f['file'])
+                        import_zip = self.get_zip_file(f['file'])
                         for z in import_zip.filelist:
                             if self.import_file_name_filter(z):
-                                data_list = self.split_recipe_file(import_zip.read(z.filename).decode('utf-8'))
+                                data_list = self.split_recipe_file(self.safe_read(import_zip, z.filename).decode('utf-8'))
                                 il.total_recipes += len(data_list)
 
                                 for d in data_list:

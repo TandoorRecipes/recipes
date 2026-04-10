@@ -117,8 +117,8 @@ class CopyMeThat(Integration):
         try:
             for f in self.files:
                 if '.zip' in f['name']:
-                    import_zip = ZipFile(f['file'])
-                    self.import_recipe_image(recipe, BytesIO(import_zip.read(file.find("img", class_="recipeImage").get("src"))), filetype='.jpeg')
+                    import_zip = self.get_zip_file(f['file'])
+                    self.import_recipe_image(recipe, BytesIO(self.safe_read(import_zip, file.find("img", class_="recipeImage").get("src"))), filetype='.jpeg')
         except Exception as e:
             print(recipe.name, ': failed to import image ', str(e))
 

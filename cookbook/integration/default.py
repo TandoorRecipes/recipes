@@ -14,14 +14,14 @@ from cookbook.serializer import RecipeExportSerializer
 class Default(Integration):
 
     def get_recipe_from_file(self, file):
-        recipe_zip = ZipFile(file)
+        recipe_zip = self.get_zip_file(file)
 
-        recipe_string = recipe_zip.read('recipe.json').decode("utf-8")
+        recipe_string = self.safe_read(recipe_zip, 'recipe.json').decode("utf-8")
         recipe = self.decode_recipe(recipe_string)
         images = list(filter(lambda v: match('image.*', v), recipe_zip.namelist()))
         if images:
             try:
-                self.import_recipe_image(recipe, BytesIO(recipe_zip.read(images[0])), filetype=get_filetype(images[0]))
+                self.import_recipe_image(recipe, BytesIO(self.safe_read(recipe_zip, images[0])), filetype=get_filetype(images[0]))
             except AttributeError:
                 traceback.print_exc()
         return recipe

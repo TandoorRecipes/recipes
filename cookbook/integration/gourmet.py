@@ -193,7 +193,7 @@ class Gourmet(Integration):
             for f in self.import_zip.filelist:
                 zip_file_name = Path(f.filename).name
                 if image_filename == zip_file_name:
-                    image_file = self.import_zip.read(f)
+                    image_file = self.safe_read(self.import_zip, f)
                     image_bytes = BytesIO(image_file)
                     self.import_recipe_image(recipe, image_bytes, filetype='.jpeg')
                     break

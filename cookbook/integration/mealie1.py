@@ -23,7 +23,7 @@ class Mealie1(Integration):
     """
 
     def get_recipe_from_file(self, file):
-        mealie_database = json.loads(BytesIO(file.read('database.json')).getvalue().decode("utf-8"))
+        mealie_database = json.loads(BytesIO(self.safe_read(file, 'database.json')).getvalue().decode("utf-8"))
         self.import_log.total_recipes = len(mealie_database['recipes'])
         self.import_log.msg += f"Importing {len(mealie_database["categories"]) + len(mealie_database["tags"])} tags and categories as keywords...\n"
         self.import_log.save()
@@ -363,8 +363,9 @@ class Mealie1(Integration):
         self.import_log.save()
         for r in mealie_database['recipes']:
             try:
-                if recipe := Recipe.objects.filter(pk=recipes_dict[r['id']]).first():
-                    self.import_recipe_image(recipe, BytesIO(file.read(f'data/recipes/{str(uuid.UUID(str(r["id"])))}/images/original.webp')), filetype='.webp')
+                if r['id'] in recipes_dict:
+                    if recipe := Recipe.objects.filter(pk=recipes_dict[r['id']]).first():
+                        self.import_recipe_image(recipe, BytesIO(self.safe_read(file, f'data/recipes/{str(uuid.UUID(str(r["id"])))}/images/original.webp')), filetype='.webp')
             except Exception:
                 pass
 
