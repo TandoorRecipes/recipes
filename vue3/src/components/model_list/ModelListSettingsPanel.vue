@@ -109,21 +109,25 @@
 
             <!-- Filter visibility (grouped by filter section) -->
             <template v-if="configurableFiltersByGroup.size > 0">
-                <CollapsibleSection :label="$t('PinToPage')">
-                    <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ $t('PinToPageDescription') }}</div>
-                    <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
-                        <div class="text-caption text-uppercase font-weight-bold px-4 pt-2 text-medium-emphasis">{{ $t(group) }}</div>
-                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-0">
-                            <v-checkbox
-                                :model-value="isInlineSelected(def.key)"
-                                @update:model-value="toggleInline(def.key)"
-                                :label="$t(def.labelKey)"
-                                hide-details
-                                density="compact"
-                            />
+                <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
+                    <CollapsibleSection :label="$t(group)">
+                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
+                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
+                            <v-btn-toggle density="compact" multiple>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isInlineSelected(def.key)"
+                                    @click="toggleInline(def.key)"
+                                >{{ $t('Page') }}</v-btn>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isDrawerSelected(def.key)"
+                                    @click="toggleDrawer(def.key)"
+                                >{{ $t('Panel') }}</v-btn>
+                            </v-btn-toggle>
                         </div>
-                    </template>
-                </CollapsibleSection>
+                    </CollapsibleSection>
+                </template>
                 <v-divider class="my-2" />
             </template>
 
@@ -467,10 +471,21 @@ function toggleInline(key: string) {
     const current = [...(deviceSettings.search_inlineFilters ?? [])]
     const idx = current.indexOf(key)
     if (idx >= 0) current.splice(idx, 1)
-    else if (current.length < 6) current.push(key)
+    else current.push(key)
     deviceSettings.search_inlineFilters = current
 }
 
+function isDrawerSelected(key: string) {
+    return (deviceSettings.search_drawerFilters ?? []).includes(key)
+}
+
+function toggleDrawer(key: string) {
+    const current = [...(deviceSettings.search_drawerFilters ?? [])]
+    const idx = current.indexOf(key)
+    if (idx >= 0) current.splice(idx, 1)
+    else current.push(key)
+    deviceSettings.search_drawerFilters = current
+}
 
 // Swipe action management
 const swipePickerOpen = ref(false)

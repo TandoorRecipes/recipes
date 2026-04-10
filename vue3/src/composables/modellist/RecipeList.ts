@@ -40,7 +40,7 @@ const BOOK_FILTERS: FilterDef[] = [
 
 const RATING_FILTERS: FilterDef[] = [
     {key: 'rating',            labelKey: 'Rating',             type: 'rating', group: 'Rating'},
-    {key: 'unrated',           labelKey: 'UnratedOnly',        type: 'toggle', group: 'Rating'},
+    {key: 'unrated',           labelKey: 'Unrated',            type: 'toggle', group: 'Rating'},
 ]
 
 const COOKING_FILTERS: FilterDef[] = [
