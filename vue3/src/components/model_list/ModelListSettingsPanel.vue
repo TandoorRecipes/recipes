@@ -10,6 +10,7 @@
                 :grouped-filter-defs="groupedFilterDefs"
                 :get-filter="getFilter"
                 :set-filter="setFilter"
+                :clear-filter="clearFilter"
                 :clear-all-filters="clearAllFilters"
                 :active-filter-count="activeFilterCount"
             />
@@ -320,6 +321,7 @@ const props = withDefaults(defineProps<{
     groupedFilterDefs?: Map<string, FilterDef[]>
     getFilter?: (key: string) => string | undefined
     setFilter?: (key: string, value: FilterValue) => void
+    clearFilter?: (key: string) => void
     clearAllFilters?: () => void
     activeFilterCount?: number
     actionDefs?: ActionDef[]
@@ -333,6 +335,7 @@ const props = withDefaults(defineProps<{
     groupedFilterDefs: () => new Map(),
     getFilter: () => () => undefined,
     setFilter: () => () => {},
+    clearFilter: () => () => {},
     clearAllFilters: () => () => {},
     activeFilterCount: 0,
     actionDefs: () => [],

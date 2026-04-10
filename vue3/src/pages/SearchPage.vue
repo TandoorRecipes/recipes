@@ -192,6 +192,7 @@
             :grouped-filter-defs="groupedFilterDefs"
             :get-filter="getFilter"
             :set-filter="setFilter"
+            :clear-filter="clearFilter"
             :clear-all-filters="clearAllFilters"
             :active-filter-count="activeFilterCount"
         />
