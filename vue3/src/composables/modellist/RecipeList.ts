@@ -12,7 +12,7 @@ const FOOD_GROUP: FilterDef = {
 const BOOK_GROUP: FilterDef = {
     key: '_booksGroup', labelKey: 'RecipeBooks', type: 'tag-group', modelName: 'RecipeBook', group: 'Content',
     variantKeys: ['books', 'booksAnd', 'booksOrNot', 'booksAndNot'],
-    expandable: false,
+    expandable: false, selectPlaceholder: 'Books',
 }
 
 // Individual tag-select defs for URL state, filter chips, and saved search serialization
