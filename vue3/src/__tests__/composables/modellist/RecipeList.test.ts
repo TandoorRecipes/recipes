@@ -85,15 +85,16 @@ describe('RECIPE_FILTER_DEFS', () => {
         }
     })
 
-    it('groups filters into Rating / Cooking / Time / Recipe / Dates / Other', () => {
+    it('groups filters into Content / Rating / Cooking / Recipe / Time / Date / Other', () => {
         const groups = new Set(
             RECIPE_FILTER_DEFS.map(d => d.group).filter((g): g is string => Boolean(g)),
         )
+        expect(groups).toContain('Content')
         expect(groups).toContain('Rating')
         expect(groups).toContain('Cooking')
-        expect(groups).toContain('Time')
         expect(groups).toContain('Recipe')
-        expect(groups).toContain('Dates')
+        expect(groups).toContain('Time')
+        expect(groups).toContain('Date')
         expect(groups).toContain('Other')
     })
 })
