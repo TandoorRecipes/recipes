@@ -27,7 +27,6 @@ const RANGE_EMITTED_IDS = new Set<string>([
 const REMOVED_IDS = new Set<string>([
     'createdon', 'updatedon',
     'rating', 'timescooked',
-    'units',
     'includeChildren',
 ])
 
@@ -86,7 +85,7 @@ describe('RECIPE_FILTER_DEFS', () => {
         }
     })
 
-    it('groups filters into Rating / Cooking / Time / Recipe / Dates / Options', () => {
+    it('groups filters into Rating / Cooking / Time / Recipe / Dates / Other', () => {
         const groups = new Set(
             RECIPE_FILTER_DEFS.map(d => d.group).filter((g): g is string => Boolean(g)),
         )
@@ -95,7 +94,7 @@ describe('RECIPE_FILTER_DEFS', () => {
         expect(groups).toContain('Time')
         expect(groups).toContain('Recipe')
         expect(groups).toContain('Dates')
-        expect(groups).toContain('Options')
+        expect(groups).toContain('Other')
     })
 })
 

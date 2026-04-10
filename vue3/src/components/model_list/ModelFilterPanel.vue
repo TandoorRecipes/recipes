@@ -102,30 +102,32 @@
                             />
                         </div>
                     </div>
-                    <div v-else-if="def.type === 'number-range'" class="d-flex align-center px-4 py-1 ga-2">
-                        <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
-                        <v-text-field
-                            type="number"
-                            :label="$t(def.labelKey) + ' ≥'"
-                            :aria-label="$t(def.labelKey) + ', ' + $t('Minimum')"
-                            :model-value="parseRangePart(def.key, 'gte')"
-                            @update:model-value="setRangePart(def.key, 'gte', $event)"
-                            density="compact"
-                            hide-details
-                            clearable
-                            class="flex-grow-1"
-                        />
-                        <v-text-field
-                            type="number"
-                            :label="$t(def.labelKey) + ' ≤'"
-                            :aria-label="$t(def.labelKey) + ', ' + $t('Maximum')"
-                            :model-value="parseRangePart(def.key, 'lte')"
-                            @update:model-value="setRangePart(def.key, 'lte', $event)"
-                            density="compact"
-                            hide-details
-                            clearable
-                            class="flex-grow-1"
-                        />
+                    <div v-else-if="def.type === 'number-range'" class="px-4 py-1">
+                        <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
+                        <div class="d-flex align-center ga-2 mt-1">
+                            <v-text-field
+                                type="number"
+                                label="≥"
+                                :aria-label="$t(def.labelKey) + ', ' + $t('Minimum')"
+                                :model-value="parseRangePart(def.key, 'gte')"
+                                @update:model-value="setRangePart(def.key, 'gte', $event)"
+                                density="compact"
+                                hide-details
+                                clearable
+                                class="flex-grow-1"
+                            />
+                            <v-text-field
+                                type="number"
+                                label="≤"
+                                :aria-label="$t(def.labelKey) + ', ' + $t('Maximum')"
+                                :model-value="parseRangePart(def.key, 'lte')"
+                                @update:model-value="setRangePart(def.key, 'lte', $event)"
+                                density="compact"
+                                hide-details
+                                clearable
+                                class="flex-grow-1"
+                            />
+                        </div>
                     </div>
                     <div v-else-if="def.type === 'date-range'" class="d-flex align-center px-4 py-1 ga-2">
                         <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />

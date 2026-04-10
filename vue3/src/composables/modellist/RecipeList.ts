@@ -35,10 +35,12 @@ const COOKING_FILTERS: FilterDef[] = [
 const TIME_FILTERS: FilterDef[] = [
     {key: 'workingTime',       labelKey: 'WorkingTime',        type: 'number-range', group: 'Time'},
     {key: 'waitingTime',       labelKey: 'WaitingTime',        type: 'number-range', group: 'Time'},
+    {key: 'totalTime',         labelKey: 'TotalTime',          type: 'number-range', group: 'Time'},
 ]
 
 const RECIPE_PROPERTY_FILTERS: FilterDef[] = [
     {key: 'servings',          labelKey: 'Servings',           type: 'number-range', group: 'Recipe'},
+    {key: 'units',             labelKey: 'Units',              type: 'tag-select', modelName: 'Unit', group: 'Recipe'},
     {key: 'hasPhoto',          labelKey: 'HasPhoto',           type: 'tristate', group: 'Recipe'},
     {key: 'hasKeywords',       labelKey: 'HasKeywords',        type: 'tristate', group: 'Recipe'},
 ]
@@ -49,10 +51,10 @@ const DATE_FILTERS: FilterDef[] = [
     {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Dates'},
 ]
 
-const OPTION_FILTERS: FilterDef[] = [
-    {key: 'internal',          labelKey: 'Internal',           type: 'tristate', group: 'Options'},
-    {key: 'makenow',           labelKey: 'MakeNow',            type: 'tristate', group: 'Options'},
-    {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Options'},
+const OTHER_FILTERS: FilterDef[] = [
+    {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Other'},
+    {key: 'internal',          labelKey: 'Internal',           type: 'tristate', group: 'Other'},
+    {key: 'makenow',           labelKey: 'MakeNow',            type: 'tristate', group: 'Other'},
 ]
 
 export const RECIPE_FILTER_DEFS: FilterDef[] = [
@@ -64,7 +66,7 @@ export const RECIPE_FILTER_DEFS: FilterDef[] = [
     ...TIME_FILTERS,
     ...RECIPE_PROPERTY_FILTERS,
     ...DATE_FILTERS,
-    ...OPTION_FILTERS,
+    ...OTHER_FILTERS,
 ]
 
 export const RECIPE_SORT_DEFS: SortDef[] = [
