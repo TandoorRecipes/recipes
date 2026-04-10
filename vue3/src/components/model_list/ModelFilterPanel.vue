@@ -17,9 +17,9 @@
                         :model-value="getFilter(def.key)"
                         @update:model-value="setFilter(def.key, $event)"
                     />
-                    <div v-else-if="def.type === 'model-select'" class="d-flex align-center px-4 py-1">
-                        <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
-                        <div v-if="def.modelName" class="flex-grow-1">
+                    <div v-else-if="def.type === 'model-select'" class="px-4 py-1">
+                        <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
+                        <div v-if="def.modelName">
                             <ModelSelect
                                 :model="def.modelName"
                                 :model-value="getFilter(def.key) ? Number(getFilter(def.key)) : null"
@@ -100,7 +100,7 @@
                     </div>
                     <div v-else-if="def.type === 'rating'" class="px-4 py-1">
                         <div class="d-flex align-center ga-2">
-                            <span class="text-body-2" style="min-width: 16px">
+                            <span class="text-subtitle-2 font-weight-bold" style="min-width: 20px">
                                 ≥
                                 <v-tooltip activator="parent" location="start" :open-delay="400">{{ $t('Minimum') }}</v-tooltip>
                             </span>
@@ -114,7 +114,7 @@
                             />
                         </div>
                         <div class="d-flex align-center ga-2 mt-1">
-                            <span class="text-body-2" style="min-width: 16px">
+                            <span class="text-subtitle-2 font-weight-bold" style="min-width: 20px">
                                 ≤
                                 <v-tooltip activator="parent" location="start" :open-delay="400">{{ $t('Maximum') }}</v-tooltip>
                             </span>
@@ -138,6 +138,7 @@
                             density="compact"
                             hide-details
                             clearable
+                            persistent-placeholder
                             placeholder=" "
                             class="flex-grow-1"
                         />
@@ -150,6 +151,7 @@
                             density="compact"
                             hide-details
                             clearable
+                            persistent-placeholder
                             placeholder=" "
                             class="flex-grow-1"
                         />
