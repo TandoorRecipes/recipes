@@ -108,38 +108,38 @@
                 </CollapsibleSection>
             </template>
 
-            <!-- Page Layout (inline + drawer filter visibility) -->
-            <template v-if="availableFilterGroups.length > 0">
+            <!-- Page Layout (per-filter inline + drawer visibility) -->
+            <template v-if="configurableFilters.length > 0">
                 <CollapsibleSection :label="$t('PageLayout')">
                     <div class="text-caption px-4 text-medium-emphasis">{{ $t('InlineFiltersDescription') }}</div>
                     <div class="d-flex flex-wrap ga-2 px-4 py-2">
                         <v-chip
-                            v-for="group in inlineEligibleGroups"
-                            :key="'inline-' + group"
-                            :prepend-icon="isInlineSelected(group) ? 'fa-solid fa-check' : undefined"
-                            :variant="isInlineSelected(group) ? 'flat' : 'outlined'"
-                            :color="isInlineSelected(group) ? 'primary' : undefined"
-                            :disabled="!isInlineSelected(group) && inlineSelectedCount >= 6"
+                            v-for="def in configurableFilters"
+                            :key="'inline-' + def.key"
+                            :prepend-icon="isInlineSelected(def.key) ? 'fa-solid fa-check' : undefined"
+                            :variant="isInlineSelected(def.key) ? 'flat' : 'outlined'"
+                            :color="isInlineSelected(def.key) ? 'primary' : undefined"
+                            :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
                             size="small"
                             label
-                            @click="toggleInline(group)"
+                            @click="toggleInline(def.key)"
                         >
-                            {{ $t(group) }}
+                            {{ $t(def.labelKey) }}
                         </v-chip>
                     </div>
                     <div class="text-caption px-4 text-medium-emphasis mt-2">{{ $t('DrawerFiltersDescription') }}</div>
                     <div class="d-flex flex-wrap ga-2 px-4 py-2">
                         <v-chip
-                            v-for="group in availableFilterGroups"
-                            :key="'drawer-' + group"
-                            :prepend-icon="isDrawerSelected(group) ? 'fa-solid fa-check' : undefined"
-                            :variant="isDrawerSelected(group) ? 'flat' : 'outlined'"
-                            :color="isDrawerSelected(group) ? 'primary' : undefined"
+                            v-for="def in configurableFilters"
+                            :key="'drawer-' + def.key"
+                            :prepend-icon="isDrawerSelected(def.key) ? 'fa-solid fa-check' : undefined"
+                            :variant="isDrawerSelected(def.key) ? 'flat' : 'outlined'"
+                            :color="isDrawerSelected(def.key) ? 'primary' : undefined"
                             size="small"
                             label
-                            @click="toggleDrawer(group)"
+                            @click="toggleDrawer(def.key)"
                         >
-                            {{ $t(group) }}
+                            {{ $t(def.labelKey) }}
                         </v-chip>
                     </div>
                 </CollapsibleSection>
@@ -464,44 +464,41 @@ function toggleMobileSubtitle(key: string) {
     mobileSubtitleKeys.value = keys
 }
 
-// Page Layout — inline/drawer filter visibility
-const ALL_FILTER_GROUPS = ['Content', 'Rating', 'Cooking', 'Recipe', 'Time', 'Date', 'Other'] as const
-const INLINE_ELIGIBLE = ['Content', 'Rating', 'Cooking', 'Recipe'] as const
-
-const availableFilterGroups = computed(() => ALL_FILTER_GROUPS.filter(g => {
-    // Only show groups that exist in the current filter defs
-    for (const [group] of props.groupedFilterDefs) {
-        if (group === g) return true
-    }
-    return false
-}))
-
-const inlineEligibleGroups = computed(() => INLINE_ELIGIBLE.filter(g => availableFilterGroups.value.includes(g)))
-
+// Page Layout — per-filter inline/drawer visibility
 const deviceSettings = useUserPreferenceStore().deviceSettings
 
-function isInlineSelected(group: string) {
-    return (deviceSettings.search_inlineFilters ?? []).includes(group)
+const configurableFilters = computed(() => {
+    const result: FilterDef[] = []
+    for (const [, defs] of props.groupedFilterDefs) {
+        for (const def of defs) {
+            if (!def.hidden) result.push(def)
+        }
+    }
+    return result
+})
+
+function isInlineSelected(key: string) {
+    return (deviceSettings.search_inlineFilters ?? []).includes(key)
 }
 const inlineSelectedCount = computed(() => (deviceSettings.search_inlineFilters ?? []).length)
 
-function toggleInline(group: string) {
+function toggleInline(key: string) {
     const current = [...(deviceSettings.search_inlineFilters ?? [])]
-    const idx = current.indexOf(group)
+    const idx = current.indexOf(key)
     if (idx >= 0) current.splice(idx, 1)
-    else if (current.length < 6) current.push(group)
+    else if (current.length < 6) current.push(key)
     deviceSettings.search_inlineFilters = current
 }
 
-function isDrawerSelected(group: string) {
-    return (deviceSettings.search_drawerFilters ?? []).includes(group)
+function isDrawerSelected(key: string) {
+    return (deviceSettings.search_drawerFilters ?? []).includes(key)
 }
 
-function toggleDrawer(group: string) {
+function toggleDrawer(key: string) {
     const current = [...(deviceSettings.search_drawerFilters ?? [])]
-    const idx = current.indexOf(group)
+    const idx = current.indexOf(key)
     if (idx >= 0) current.splice(idx, 1)
-    else current.push(group)
+    else current.push(key)
     deviceSettings.search_drawerFilters = current
 }
 

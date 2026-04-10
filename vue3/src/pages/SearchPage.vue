@@ -185,7 +185,7 @@
             v-model="settingsPanelOpen"
             v-model:active-tab="settingsActiveTab"
             :model="recipeSettingsModel"
-            :grouped-filter-defs="drawerFilterDefs"
+            :grouped-filter-defs="groupedFilterDefs"
             :get-filter="getFilter"
             :set-filter="setFilter"
             :clear-filter="clearFilter"
@@ -264,22 +264,29 @@ const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettin
 const settings = useModelListSettings(computed(() => 'search'))
 provide(MODEL_LIST_SETTINGS_KEY, settings)
 
-// ─── Inline / drawer filter group visibility ────────────────────────────
+// ─── Inline / drawer filter visibility (per-filter granularity) ─────────
 const MAX_INLINE = 6
+const inlineFilterKeys = computed(() =>
+    (useUserPreferenceStore().deviceSettings.search_inlineFilters ?? []).slice(0, MAX_INLINE)
+)
 const inlineGroups = computed(() => {
-    const keys = (useUserPreferenceStore().deviceSettings.search_inlineFilters ?? ['Content', 'Rating']).slice(0, MAX_INLINE)
+    const keys = new Set(inlineFilterKeys.value)
     const result: [string, FilterDef[]][] = []
     for (const [group, defs] of groupedFilterDefs.value) {
-        if (group && keys.includes(group)) result.push([group, defs])
+        if (!group) continue
+        const visible = defs.filter(d => keys.has(d.key))
+        if (visible.length > 0) result.push([group, visible])
     }
     return result
 })
 
 const drawerFilterDefs = computed(() => {
-    const keys = useUserPreferenceStore().deviceSettings.search_drawerFilters ?? ['Content', 'Rating', 'Cooking', 'Recipe']
+    const keys = new Set(drawerFilterKeys.value)
     const filtered = new Map<string, FilterDef[]>()
     for (const [group, defs] of groupedFilterDefs.value) {
-        if (!group || keys.includes(group)) filtered.set(group, defs)
+        if (!group) { filtered.set(group, defs); continue }
+        const visible = defs.filter(d => keys.has(d.key))
+        if (visible.length > 0) filtered.set(group, visible)
     }
     return filtered
 })
