@@ -194,7 +194,6 @@ import TriStateToggle from '@/components/common/TriStateToggle.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
-import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 
 const props = defineProps<{
     groupedFilterDefs: Map<string, FilterDef[]>
@@ -205,19 +204,7 @@ const props = defineProps<{
     activeFilterCount: number
 }>()
 
-const visibleGroupedDefs = computed(() => {
-    let raw: string[] | undefined
-    try { raw = useUserPreferenceStore().deviceSettings.search_drawerFilters } catch { /* no store */ }
-    if (!raw || raw.length === 0) return props.groupedFilterDefs
-    const drawerKeys = new Set(raw)
-    const filtered = new Map<string, FilterDef[]>()
-    for (const [group, defs] of props.groupedFilterDefs) {
-        if (!group) { filtered.set(group, defs); continue }
-        const visible = defs.filter(d => drawerKeys.has(d.key))
-        if (visible.length > 0) filtered.set(group, visible)
-    }
-    return filtered
-})
+const visibleGroupedDefs = computed(() => props.groupedFilterDefs)
 
 function parseTagSelect(key: string): number[] {
     const raw = props.getFilter(key)
