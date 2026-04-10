@@ -21,42 +21,50 @@ const BOOK_FILTERS: FilterDef[] = [
     {key: 'booksAndNot',       labelKey: 'BooksAndNot',        type: 'tag-select', modelName: 'RecipeBook', group: 'Content', hidden: true},
 ]
 
-const SINGLE_CONTENT_FILTERS: FilterDef[] = [
-    {key: 'units',             labelKey: 'Units',              type: 'tag-select', modelName: 'Unit', group: 'Content'},
-    {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Activity'},
-]
 
 const RATING_FILTERS: FilterDef[] = [
     {key: 'rating',            labelKey: 'Rating',             type: 'rating', group: 'Rating'},
     {key: 'unrated',           labelKey: 'UnratedOnly',        type: 'toggle', group: 'Rating'},
 ]
 
-const TIMESCOOKED_FILTERS: FilterDef[] = [
-    {key: 'timescooked',       labelKey: 'TimesCooked',        type: 'number-range', group: 'Activity'},
+const COOKING_FILTERS: FilterDef[] = [
+    {key: 'timescooked',       labelKey: 'TimesCooked',        type: 'number-range', group: 'Cooking'},
+    {key: 'cookedon',          labelKey: 'CookedOn',           type: 'date-range', group: 'Cooking'},
 ]
 
-const DATE_RANGE_FILTERS: FilterDef[] = [
-    {key: 'cookedon',          labelKey: 'CookedOn',           type: 'date-range', group: 'Dates'},
-    {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Dates'},
+const TIME_FILTERS: FilterDef[] = [
+    {key: 'workingTime',       labelKey: 'WorkingTime',        type: 'number-range', group: 'Time'},
+    {key: 'waitingTime',       labelKey: 'WaitingTime',        type: 'number-range', group: 'Time'},
+]
+
+const RECIPE_PROPERTY_FILTERS: FilterDef[] = [
+    {key: 'servings',          labelKey: 'Servings',           type: 'number-range', group: 'Recipe'},
+    {key: 'hasPhoto',          labelKey: 'HasPhoto',           type: 'tristate', group: 'Recipe'},
+    {key: 'hasKeywords',       labelKey: 'HasKeywords',        type: 'tristate', group: 'Recipe'},
+]
+
+const DATE_FILTERS: FilterDef[] = [
     {key: 'createdon',         labelKey: 'CreatedOn',          type: 'date-range', group: 'Dates'},
     {key: 'updatedon',         labelKey: 'UpdatedOn',          type: 'date-range', group: 'Dates'},
+    {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Dates'},
 ]
 
-const FLAG_FILTERS: FilterDef[] = [
-    {key: 'internal',          labelKey: 'Internal',           type: 'tristate', group: 'Flags'},
-    {key: 'makenow',           labelKey: 'MakeNow',            type: 'tristate', group: 'Flags'},
-    {key: 'includeChildren',   labelKey: 'IncludeChildren',    type: 'tristate', group: 'Flags'},
+const OPTION_FILTERS: FilterDef[] = [
+    {key: 'internal',          labelKey: 'Internal',           type: 'tristate', group: 'Options'},
+    {key: 'makenow',           labelKey: 'MakeNow',            type: 'tristate', group: 'Options'},
+    {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Options'},
 ]
 
 export const RECIPE_FILTER_DEFS: FilterDef[] = [
     ...KEYWORD_FILTERS,
     ...FOOD_FILTERS,
     ...BOOK_FILTERS,
-    ...SINGLE_CONTENT_FILTERS,
     ...RATING_FILTERS,
-    ...TIMESCOOKED_FILTERS,
-    ...DATE_RANGE_FILTERS,
-    ...FLAG_FILTERS,
+    ...COOKING_FILTERS,
+    ...TIME_FILTERS,
+    ...RECIPE_PROPERTY_FILTERS,
+    ...DATE_FILTERS,
+    ...OPTION_FILTERS,
 ]
 
 export const RECIPE_SORT_DEFS: SortDef[] = [
