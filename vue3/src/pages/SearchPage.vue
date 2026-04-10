@@ -30,10 +30,10 @@
                     @toggle-select="selectMode = !selectMode"
                     @reset="resetAll"
                 >
-                    <template v-if="inlineFilterKeys.includes('savedSearch')" #below-search>
+                    <template #below-search>
                         <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
                     </template>
-                    <template v-if="inlineFilterKeys.includes('savedSearch')" #below-search-actions>
+                    <template #below-search-actions>
                         <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
                                :disabled="selectedCustomFilter == null"
                                @click="loadSelectedCustomFilter()" class="text-none">
@@ -266,7 +266,7 @@ provide(MODEL_LIST_SETTINGS_KEY, settings)
 
 // ─── Inline / drawer filter visibility (per-filter granularity) ─────────
 const MAX_INLINE = 6
-const DEFAULT_INLINE = ['savedSearch', '_keywordsGroup', '_foodsGroup', '_booksGroup', '_unitsGroup']
+const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
 const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', '_unitsGroup', 'rating', 'unrated', 'timescooked', 'cookedon', 'servings', 'hasPhoto', 'hasKeywords', 'makenow']
 
 const inlineFilterKeys = computed(() => {

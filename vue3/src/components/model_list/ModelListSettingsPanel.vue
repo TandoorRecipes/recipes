@@ -108,27 +108,6 @@
             </template>
 
             <!-- Filter visibility (grouped by filter section) -->
-            <!-- Saved Search visibility -->
-            <template v-if="configurableFiltersByGroup.size > 0">
-                <CollapsibleSection :label="$t('SavedSearch')">
-                    <div class="d-flex align-center px-4 py-1 ga-1">
-                        <span class="text-body-2 flex-grow-1">{{ $t('SavedSearch') }}</span>
-                        <v-btn-toggle density="compact" multiple>
-                            <v-btn
-                                size="x-small"
-                                :active="isInlineSelected('savedSearch')"
-                                @click="toggleInline('savedSearch')"
-                            >{{ $t('Page') }}</v-btn>
-                            <v-btn
-                                size="x-small"
-                                disabled
-                            >{{ $t('Panel') }}</v-btn>
-                        </v-btn-toggle>
-                    </div>
-                </CollapsibleSection>
-                <v-divider class="my-2" />
-            </template>
-
             <template v-if="configurableFiltersByGroup.size > 0">
                 <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
                     <CollapsibleSection :label="$t(group)">
