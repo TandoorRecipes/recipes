@@ -42,7 +42,7 @@
                         :get-filter="getFilter"
                         :set-filter="setFilter"
                         :clear-filter="clearFilter"
-                        :compact="def.key === '_keywordsGroup'"
+                        :compact="false"
                         class="mx-2 my-1"
                     />
                     <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1">
