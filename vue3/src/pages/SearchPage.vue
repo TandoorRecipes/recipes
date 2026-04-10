@@ -31,7 +31,7 @@
                     @reset="resetAll"
                 >
                     <template #below-search>
-                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1">
+                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" style="width: 100%">
                             <template #append>
                                 <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
                                        :disabled="selectedCustomFilter == null"

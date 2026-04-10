@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!mobile" class="d-flex align-center ga-2">
+    <div v-if="!mobile" class="d-flex align-start ga-2">
         <v-btn
             v-if="hasFilters"
             icon
