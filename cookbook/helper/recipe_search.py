@@ -89,6 +89,8 @@ class SearchParams:
     waiting_time_lte: int | None = None
     servings_gte: int | None = None
     servings_lte: int | None = None
+    total_time_gte: int | None = None
+    total_time_lte: int | None = None
     has_photo: bool | None = None
     has_keywords: bool | None = None
 
@@ -165,6 +167,8 @@ class SearchParams:
             waiting_time_lte=int(_s(params, 'waiting_time_lte')) if _s(params, 'waiting_time_lte') else None,
             servings_gte=int(_s(params, 'servings_gte')) if _s(params, 'servings_gte') else None,
             servings_lte=int(_s(params, 'servings_lte')) if _s(params, 'servings_lte') else None,
+            total_time_gte=int(_s(params, 'total_time_gte')) if _s(params, 'total_time_gte') else None,
+            total_time_lte=int(_s(params, 'total_time_lte')) if _s(params, 'total_time_lte') else None,
             has_photo=str2bool(_s(params, 'has_photo')),
             has_keywords=str2bool(_s(params, 'has_keywords')),
         )
@@ -311,6 +315,12 @@ class RecipeSearch:
             qs = qs.filter(waiting_time__gte=params.waiting_time_gte)
         if params.waiting_time_lte is not None:
             qs = qs.filter(waiting_time__lte=params.waiting_time_lte)
+        if params.total_time_gte is not None or params.total_time_lte is not None:
+            qs = qs.annotate(total_time=F('working_time') + F('waiting_time'))
+            if params.total_time_gte is not None:
+                qs = qs.filter(total_time__gte=params.total_time_gte)
+            if params.total_time_lte is not None:
+                qs = qs.filter(total_time__lte=params.total_time_lte)
         if params.servings_gte is not None:
             qs = qs.filter(servings__gte=params.servings_gte)
         if params.servings_lte is not None:
