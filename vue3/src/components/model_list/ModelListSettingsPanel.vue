@@ -111,19 +111,19 @@
             <!-- Saved Search visibility -->
             <template v-if="configurableFiltersByGroup.size > 0">
                 <CollapsibleSection :label="$t('SavedSearch')">
-                    <div class="d-flex align-center px-4 py-1 ga-2">
+                    <div class="d-flex align-center px-4 py-1 ga-1">
                         <span class="text-body-2 flex-grow-1">{{ $t('SavedSearch') }}</span>
-                        <v-btn
-                            size="x-small"
-                            :variant="isInlineSelected('savedSearch') ? 'flat' : 'outlined'"
-                            :color="isInlineSelected('savedSearch') ? 'primary' : undefined"
-                            @click="toggleInline('savedSearch')"
-                        >{{ $t('Page') }}</v-btn>
-                        <v-btn
-                            size="x-small"
-                            variant="outlined"
-                            disabled
-                        >{{ $t('Panel') }}</v-btn>
+                        <v-btn-toggle density="compact" multiple>
+                            <v-btn
+                                size="x-small"
+                                :active="isInlineSelected('savedSearch')"
+                                @click="toggleInline('savedSearch')"
+                            >{{ $t('Page') }}</v-btn>
+                            <v-btn
+                                size="x-small"
+                                disabled
+                            >{{ $t('Panel') }}</v-btn>
+                        </v-btn-toggle>
                     </div>
                 </CollapsibleSection>
                 <v-divider class="my-2" />
@@ -132,21 +132,21 @@
             <template v-if="configurableFiltersByGroup.size > 0">
                 <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
                     <CollapsibleSection :label="$t(group)">
-                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-2">
+                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
                             <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
-                            <v-btn
-                                size="x-small"
-                                :variant="isInlineSelected(def.key) ? 'flat' : 'outlined'"
-                                :color="isInlineSelected(def.key) ? 'primary' : undefined"
-                                :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
-                                @click="toggleInline(def.key)"
-                            >{{ $t('Page') }}</v-btn>
-                            <v-btn
-                                size="x-small"
-                                :variant="isDrawerSelected(def.key) ? 'flat' : 'outlined'"
-                                :color="isDrawerSelected(def.key) ? 'primary' : undefined"
-                                @click="toggleDrawer(def.key)"
-                            >{{ $t('Panel') }}</v-btn>
+                            <v-btn-toggle density="compact" multiple>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isInlineSelected(def.key)"
+                                    :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
+                                    @click="toggleInline(def.key)"
+                                >{{ $t('Page') }}</v-btn>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isDrawerSelected(def.key)"
+                                    @click="toggleDrawer(def.key)"
+                                >{{ $t('Panel') }}</v-btn>
+                            </v-btn-toggle>
                         </div>
                     </CollapsibleSection>
                 </template>
