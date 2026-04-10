@@ -84,7 +84,8 @@
                                 half-increments
                                 clearable
                                 hover
-                                density="compact"
+                                density="comfortable"
+                                size="x-small"
                             />
                         </div>
                         <div class="d-flex align-center ga-2 mt-1">
@@ -98,7 +99,8 @@
                                 half-increments
                                 clearable
                                 hover
-                                density="compact"
+                                density="comfortable"
+                                size="x-small"
                             />
                         </div>
                     </div>
