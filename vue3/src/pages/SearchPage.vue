@@ -29,11 +29,9 @@
                     @open-settings="openSettingsPanel('settings')"
                     @toggle-select="selectMode = !selectMode"
                     @reset="resetAll"
-                />
-
-                <v-row dense class="mt-1">
-                    <v-col cols="12" md="6">
-                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact">
+                >
+                    <template #below-search>
+                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1">
                             <template #append>
                                 <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
                                        :disabled="selectedCustomFilter == null"
@@ -46,11 +44,13 @@
                                 </v-btn>
                             </template>
                         </model-select>
-                    </v-col>
-                    <v-col v-if="savedFilterModified" cols="12" md="6">
-                        <closable-help-alert :text="$t('saved_filter_override_hint')" />
-                    </v-col>
-                </v-row>
+                        <closable-help-alert
+                            v-if="savedFilterModified"
+                            :text="$t('saved_filter_override_hint')"
+                            class="mt-1"
+                        />
+                    </template>
+                </ModelListToolbar>
 
                 <ModelListFilterChips
                     v-if="activeFilterCount > 0"
