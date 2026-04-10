@@ -41,8 +41,8 @@
                 <v-divider class="my-2" />
             </template>
 
-            <!-- Desktop: Columns -->
-            <template v-if="!mobile">
+            <!-- Desktop: Columns/Subtitle/Table (only for pages with columns) -->
+            <template v-if="!mobile && toggleableColumns.length > 0">
                 <CollapsibleSection :label="$t('Columns')">
                     <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
                         <v-checkbox
@@ -72,7 +72,6 @@
                 </CollapsibleSection>
                 <v-divider class="my-2" />
 
-                <!-- Desktop: Subtitle -->
                 <CollapsibleSection :label="$t('Subtitle')">
                     <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
                     <div class="d-flex flex-wrap ga-2 px-4 py-2">
@@ -94,7 +93,6 @@
                 </CollapsibleSection>
                 <v-divider class="my-2" />
 
-                <!-- Desktop: Table — hidden when no columns are configured (grid view) -->
                 <CollapsibleSection v-if="allColumns.length > 0" :label="$t('Table')">
                     <div class="px-4 py-1">
                         <v-switch
@@ -106,43 +104,37 @@
                         />
                     </div>
                 </CollapsibleSection>
+                <v-divider class="my-2" />
             </template>
 
-            <!-- Page Layout (per-filter inline + drawer visibility) -->
-            <template v-if="configurableFilters.length > 0">
-                <CollapsibleSection :label="$t('PageLayout')">
-                    <div class="text-caption px-4 text-medium-emphasis">{{ $t('InlineFiltersDescription') }}</div>
-                    <div class="d-flex flex-wrap ga-2 px-4 py-2">
-                        <v-chip
-                            v-for="def in configurableFilters"
-                            :key="'inline-' + def.key"
-                            :prepend-icon="isInlineSelected(def.key) ? 'fa-solid fa-check' : undefined"
-                            :variant="isInlineSelected(def.key) ? 'flat' : 'outlined'"
-                            :color="isInlineSelected(def.key) ? 'primary' : undefined"
-                            :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
-                            size="small"
-                            label
-                            @click="toggleInline(def.key)"
-                        >
-                            {{ $t(def.labelKey) }}
-                        </v-chip>
-                    </div>
-                    <div class="text-caption px-4 text-medium-emphasis mt-2">{{ $t('DrawerFiltersDescription') }}</div>
-                    <div class="d-flex flex-wrap ga-2 px-4 py-2">
-                        <v-chip
-                            v-for="def in configurableFilters"
-                            :key="'drawer-' + def.key"
-                            :prepend-icon="isDrawerSelected(def.key) ? 'fa-solid fa-check' : undefined"
-                            :variant="isDrawerSelected(def.key) ? 'flat' : 'outlined'"
-                            :color="isDrawerSelected(def.key) ? 'primary' : undefined"
-                            size="small"
-                            label
-                            @click="toggleDrawer(def.key)"
-                        >
-                            {{ $t(def.labelKey) }}
-                        </v-chip>
-                    </div>
-                </CollapsibleSection>
+            <!-- Filter visibility (grouped by filter section) -->
+            <template v-if="configurableFiltersByGroup.size > 0">
+                <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
+                    <CollapsibleSection :label="$t(group)">
+                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-0">
+                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
+                            <v-checkbox
+                                :model-value="isInlineSelected(def.key)"
+                                @update:model-value="toggleInline(def.key)"
+                                :disabled="!isInlineSelected(def.key) && inlineSelectedCount >= 6"
+                                :label="$t('Inline')"
+                                hide-details
+                                density="compact"
+                                class="flex-shrink-0"
+                                style="max-width: 90px"
+                            />
+                            <v-checkbox
+                                :model-value="isDrawerSelected(def.key)"
+                                @update:model-value="toggleDrawer(def.key)"
+                                :label="$t('Panel')"
+                                hide-details
+                                density="compact"
+                                class="flex-shrink-0"
+                                style="max-width: 80px"
+                            />
+                        </div>
+                    </CollapsibleSection>
+                </template>
                 <v-divider class="my-2" />
             </template>
 
@@ -467,12 +459,12 @@ function toggleMobileSubtitle(key: string) {
 // Page Layout — per-filter inline/drawer visibility
 const deviceSettings = useUserPreferenceStore().deviceSettings
 
-const configurableFilters = computed(() => {
-    const result: FilterDef[] = []
-    for (const [, defs] of props.groupedFilterDefs) {
-        for (const def of defs) {
-            if (!def.hidden) result.push(def)
-        }
+const configurableFiltersByGroup = computed(() => {
+    const result = new Map<string, FilterDef[]>()
+    for (const [group, defs] of props.groupedFilterDefs) {
+        if (!group) continue
+        const visible = defs.filter(d => !d.hidden)
+        if (visible.length > 0) result.set(group, visible)
     }
     return result
 })
