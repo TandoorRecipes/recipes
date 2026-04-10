@@ -763,3 +763,47 @@ Recipe exports are cached for a certain time (in seconds) by default, adjust tim
 ```
 EXPORT_FILE_CACHE_DURATION=600
 ```
+
+### Zip Import Settings
+
+Configuration options for importing recipes from zip files.
+
+#### Max zip file size
+
+> default `10` (10MB) - options: size in MB
+
+Maximum size of a single file within a zip archive.
+
+```
+MAX_ZIP_FILE_SIZE=10
+```
+
+#### Max zip total size
+
+> default `500` (500MB) - options: size in MB
+
+Maximum total decompressed size of all files in a zip archive.
+
+```
+MAX_ZIP_TOTAL_SIZE=500
+```
+
+#### Max zip file count
+
+> default `2000` - options: number of files
+
+Maximum number of files allowed in a zip archive.
+
+```
+MAX_ZIP_FILE_COUNT=2000
+```
+
+#### Max zip nesting depth
+
+> default `2` - options: depth level
+
+Maximum allowed nesting depth of zip files (archives within archives).
+
+```
+MAX_ZIP_NESTING_DEPTH=2
+```
