@@ -60,7 +60,7 @@ class SearchParams:
     foods: dict = field(default_factory=dict)
     books: dict = field(default_factory=dict)
     steps: list | str | None = None
-    units: list | str | None = None
+    units: dict = field(default_factory=dict)
     internal: bool | None = None
     sort_order: list | str | None = None
     random: bool = False
@@ -138,7 +138,7 @@ class SearchParams:
             foods=_parse_filter_params(params, 'foods'),
             books=_parse_filter_params(params, 'books'),
             steps=params.get('steps', None),
-            units=params.get('units', None),
+            units=_parse_filter_params(params, 'units'),
             internal=str2bool(_s(params, 'internal')),
             sort_order=sort_order,
             random=random,
@@ -305,7 +305,10 @@ class RecipeSearch:
         qs = qs.by_created_by(params.createdby)
         qs = qs.by_internal(params.internal)
         qs = qs.by_steps(params.steps)
-        qs = qs.by_units(params.units)
+        qs = qs.by_units(
+            or_=params.units['or'], and_=params.units['and'],
+            or_not=params.units['or_not'], and_not=params.units['and_not'],
+        )
 
         if params.working_time_gte is not None:
             qs = qs.filter(working_time__gte=params.working_time_gte)

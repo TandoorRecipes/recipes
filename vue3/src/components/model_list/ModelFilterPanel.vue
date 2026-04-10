@@ -43,6 +43,7 @@
                         :set-filter="setFilter"
                         :clear-filter="clearFilter"
                         :compact="false"
+                        :show-toggles="def.showToggles !== false"
                         class="mx-2 my-1"
                     />
                     <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1">

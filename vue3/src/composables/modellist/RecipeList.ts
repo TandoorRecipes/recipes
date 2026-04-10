@@ -12,6 +12,7 @@ const FOOD_GROUP: FilterDef = {
 const BOOK_GROUP: FilterDef = {
     key: '_booksGroup', labelKey: 'Books', type: 'tag-group', modelName: 'RecipeBook', group: 'Content',
     variantKeys: ['books', 'booksAnd', 'booksOrNot', 'booksAndNot'],
+    showToggles: false,
 }
 
 // Individual tag-select defs for URL state, filter chips, and saved search serialization
@@ -66,9 +67,18 @@ const DATE_FILTERS: FilterDef[] = [
     {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Date'},
 ]
 
-const UNIT_FILTER: FilterDef = {
-    key: 'units', labelKey: 'Units', type: 'tag-select', modelName: 'Unit', group: 'Content',
+const UNIT_GROUP: FilterDef = {
+    key: '_unitsGroup', labelKey: 'Units', type: 'tag-group', modelName: 'Unit', group: 'Content',
+    variantKeys: ['units', 'unitsAnd', 'unitsOrNot', 'unitsAndNot'],
+    showToggles: false,
 }
+
+const UNIT_FILTERS: FilterDef[] = [
+    {key: 'units',             labelKey: 'Units',              type: 'tag-select', modelName: 'Unit', hidden: true},
+    {key: 'unitsAnd',          labelKey: 'UnitsAnd',           type: 'tag-select', modelName: 'Unit', hidden: true},
+    {key: 'unitsOrNot',        labelKey: 'UnitsOrNot',         type: 'tag-select', modelName: 'Unit', hidden: true},
+    {key: 'unitsAndNot',       labelKey: 'UnitsAndNot',        type: 'tag-select', modelName: 'Unit', hidden: true},
+]
 
 const OTHER_FILTERS: FilterDef[] = [
     {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Other'},
@@ -79,7 +89,8 @@ export const RECIPE_FILTER_DEFS: FilterDef[] = [
     KEYWORD_GROUP,
     FOOD_GROUP,
     BOOK_GROUP,
-    UNIT_FILTER,
+    UNIT_GROUP,
+    ...UNIT_FILTERS,
     ...KEYWORD_FILTERS,
     ...FOOD_FILTERS,
     ...BOOK_FILTERS,
