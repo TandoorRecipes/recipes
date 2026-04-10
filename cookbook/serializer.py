@@ -2099,6 +2099,7 @@ class SourceImportIngredientSerializer(serializers.Serializer):
     food = SourceImportFoodSerializer()
     unit = SourceImportUnitSerializer()
     note = serializers.CharField(required=False)
+    order = serializers.IntegerField(required=False, allow_null=True)
     original_text = serializers.CharField()
 
 
