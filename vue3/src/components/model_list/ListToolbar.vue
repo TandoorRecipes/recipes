@@ -1,94 +1,103 @@
 <template>
-    <div v-if="!mobile" class="d-flex align-start ga-2">
-        <v-btn
-            v-if="hasFilters"
-            icon
-            variant="text"
-            size="small"
-            :aria-label="$t('Filters')"
-            @click="emit('open-filters')"
-        >
-            <v-badge
-                :model-value="activeFilterCount > 0"
-                :content="activeFilterCount"
-                color="primary"
+    <div v-if="!mobile" class="model-list-toolbar-desktop">
+        <div class="model-list-toolbar-left">
+            <v-btn
+                v-if="hasFilters"
+                icon
+                variant="text"
+                size="small"
+                :aria-label="$t('Filters')"
+                @click="emit('open-filters')"
             >
-                <v-icon>fa-solid fa-filter</v-icon>
-            </v-badge>
-        </v-btn>
+                <v-badge
+                    :model-value="activeFilterCount > 0"
+                    :content="activeFilterCount"
+                    color="primary"
+                >
+                    <v-icon>fa-solid fa-filter</v-icon>
+                </v-badge>
+            </v-btn>
 
-        <v-btn
-            v-if="hasMultiSelect"
-            icon
-            variant="text"
-            size="small"
-            :color="selectMode ? 'primary' : undefined"
-            :aria-label="$t('Select')"
-            @click="emit('toggle-select')"
-        >
-            <v-icon>{{ selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check' }}</v-icon>
-        </v-btn>
-
-        <div class="flex-grow-1">
-            <v-text-field
-                prepend-inner-icon="$search"
-                :label="$t('Search')"
-                :model-value="query"
-                @update:model-value="onSearchInput"
-                clearable
-                hide-details
-                density="compact"
-            />
-            <slot name="below-search" />
+            <v-btn
+                v-if="hasMultiSelect"
+                icon
+                variant="text"
+                size="small"
+                :color="selectMode ? 'primary' : undefined"
+                :aria-label="$t('Select')"
+                @click="emit('toggle-select')"
+            >
+                <v-icon>{{ selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check' }}</v-icon>
+            </v-btn>
         </div>
 
-        <v-btn
-            v-if="showReset"
-            icon
-            variant="text"
-            size="small"
-            :aria-label="$t('Reset')"
-            @click="emit('reset')"
-        >
-            <v-icon>fa-solid fa-arrow-rotate-left</v-icon>
-            <v-tooltip activator="parent" :text="$t('Reset')" location="top" :open-delay="400" />
-        </v-btn>
+        <v-text-field
+            prepend-inner-icon="$search"
+            :label="$t('Search')"
+            :model-value="query"
+            @update:model-value="onSearchInput"
+            clearable
+            hide-details
+            density="compact"
+            class="model-list-toolbar-search"
+        />
 
-        <v-btn
-            v-if="sortOptions.length > 0"
-            variant="text"
-            class="text-none flex-shrink-0"
-            :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
-        >
-            {{ $t('sort_by') }} {{ currentLabel }}
-            <v-menu activator="parent" close-on-content-click>
-                <v-list density="compact">
-                    <v-list-item
-                        v-for="opt in sortOptions"
-                        :key="opt.key"
-                        :active="currentField === opt.key"
-                        color="primary"
-                        @click="onSortSelect(opt.key)"
-                    >
-                        <template #append v-if="currentField === opt.key">
-                            <v-icon size="small" :icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'" />
-                        </template>
-                        {{ $t(opt.labelKey) }}
-                    </v-list-item>
-                </v-list>
-            </v-menu>
-        </v-btn>
+        <div class="model-list-toolbar-right">
+            <v-btn
+                v-if="showReset"
+                icon
+                variant="text"
+                size="small"
+                :aria-label="$t('Reset')"
+                @click="emit('reset')"
+            >
+                <v-icon>fa-solid fa-arrow-rotate-left</v-icon>
+                <v-tooltip activator="parent" :text="$t('Reset')" location="top" :open-delay="400" />
+            </v-btn>
 
-        <v-btn
-            v-if="hasFilters"
-            icon
-            variant="text"
-            size="small"
-            :aria-label="$t('Settings')"
-            @click="emit('open-settings')"
-        >
-            <v-icon>fa-solid fa-sliders</v-icon>
-        </v-btn>
+            <v-btn
+                v-if="sortOptions.length > 0"
+                variant="text"
+                class="text-none flex-shrink-0"
+                :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
+            >
+                {{ $t('sort_by') }} {{ currentLabel }}
+                <v-menu activator="parent" close-on-content-click>
+                    <v-list density="compact">
+                        <v-list-item
+                            v-for="opt in sortOptions"
+                            :key="opt.key"
+                            :active="currentField === opt.key"
+                            color="primary"
+                            @click="onSortSelect(opt.key)"
+                        >
+                            <template #append v-if="currentField === opt.key">
+                                <v-icon size="small" :icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'" />
+                            </template>
+                            {{ $t(opt.labelKey) }}
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-btn>
+
+            <v-btn
+                v-if="hasFilters"
+                icon
+                variant="text"
+                size="small"
+                :aria-label="$t('Settings')"
+                @click="emit('open-settings')"
+            >
+                <v-icon>fa-solid fa-sliders</v-icon>
+            </v-btn>
+        </div>
+
+        <div v-if="$slots['below-search']" style="grid-column: 2">
+            <slot name="below-search" />
+        </div>
+        <div v-if="$slots['below-search-actions']" class="model-list-toolbar-right">
+            <slot name="below-search-actions" />
+        </div>
     </div>
 
     <div v-else>
@@ -283,6 +292,28 @@ function onSortSelect(key: string) {
 </script>
 
 <style scoped>
+.model-list-toolbar-desktop {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.model-list-toolbar-left,
+.model-list-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.model-list-toolbar-search {
+    min-width: 0;
+}
+
+.model-list-toolbar-desktop :deep(.below-search-slot) {
+    grid-column: 2;
+}
+
 .model-list-toolbar-carousel-wrapper {
     position: relative;
     display: flex;
