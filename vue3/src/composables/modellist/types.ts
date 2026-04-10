@@ -45,7 +45,7 @@ export type ColumnType = 'text' | 'number' | 'boolean-indicator' | 'status-chip'
 /**
  * Filter control types for the filter panel.
  */
-export type FilterType = 'tristate' | 'model-select' | 'number' | 'select' | 'tag-select' | 'date-range' | 'number-range'
+export type FilterType = 'tristate' | 'toggle' | 'model-select' | 'number' | 'select' | 'tag-select' | 'date-range' | 'number-range' | 'rating'
 
 /** Range filter value: an open- or closed-ended interval. */
 export type RangeValue = {

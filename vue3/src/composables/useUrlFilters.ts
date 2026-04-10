@@ -95,12 +95,12 @@ export function useUrlFilters(
                 if (items.length === 0) continue
                 const nums = items.map(s => Number(s))
                 params[key] = nums.every(n => !isNaN(n)) ? nums : items
-            } else if (def?.type === 'number-range' || def?.type === 'date-range') {
+            } else if (def?.type === 'number-range' || def?.type === 'date-range' || def?.type === 'rating') {
                 const sepIdx = val.indexOf('~')
                 if (sepIdx < 0) continue
                 const gteRaw = val.slice(0, sepIdx)
                 const lteRaw = val.slice(sepIdx + 1)
-                const isNumber = def.type === 'number-range'
+                const isNumber = def.type === 'number-range' || def.type === 'rating'
                 if (gteRaw.length > 0) {
                     const v = isNumber ? Number(gteRaw) : gteRaw
                     if (!isNumber || !isNaN(v as number)) params[`${key}Gte`] = v
@@ -109,7 +109,7 @@ export function useUrlFilters(
                     const v = isNumber ? Number(lteRaw) : lteRaw
                     if (!isNumber || !isNaN(v as number)) params[`${key}Lte`] = v
                 }
-            } else if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
+            } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number') {
                 const num = Number(val)
                 if (!isNaN(num)) params[key] = num
             } else {
