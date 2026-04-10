@@ -31,24 +31,23 @@
                     @reset="resetAll"
                 >
                     <template #below-search>
-                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" style="width: 100%">
-                            <template #append>
-                                <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
-                                       :disabled="selectedCustomFilter == null"
-                                       @click="loadSelectedCustomFilter()" class="text-none ms-1">
-                                    {{ $t('Load') }}
-                                </v-btn>
-                                <v-btn variant="text" size="small" prepend-icon="$save"
-                                       @click="saveCustomFilter()" class="text-none ms-1">
-                                    {{ $t('Save') }}
-                                </v-btn>
-                            </template>
-                        </model-select>
+                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
                         <closable-help-alert
                             v-if="savedFilterModified"
                             :text="$t('saved_filter_override_hint')"
                             class="mt-1"
                         />
+                    </template>
+                    <template #below-search-actions>
+                        <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
+                               :disabled="selectedCustomFilter == null"
+                               @click="loadSelectedCustomFilter()" class="text-none">
+                            {{ $t('Load') }}
+                        </v-btn>
+                        <v-btn variant="text" size="small" prepend-icon="$save"
+                               @click="saveCustomFilter()" class="text-none">
+                            {{ $t('Save') }}
+                        </v-btn>
                     </template>
                 </ModelListToolbar>
 
