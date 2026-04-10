@@ -74,18 +74,26 @@
                     </div>
                     <div v-else-if="def.type === 'rating'" class="px-4 py-1">
                         <div class="d-flex align-center ga-2">
-                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }} ≥</span>
+                            <span class="text-body-2" style="min-width: 16px">≥</span>
                             <v-rating
                                 :model-value="parseRangePart(def.key, 'gte') ? Number(parseRangePart(def.key, 'gte')) : 0"
                                 @update:model-value="setRangePart(def.key, 'gte', $event > 0 ? String($event) : null)"
-                                half-increments
                                 hover
                                 density="compact"
-                                size="small"
-                                color="amber"
-                                active-color="amber"
                             />
                             <v-btn v-if="parseRangePart(def.key, 'gte')" icon size="x-small" variant="text" @click="setRangePart(def.key, 'gte', null)">
+                                <v-icon size="small">fa-solid fa-xmark</v-icon>
+                            </v-btn>
+                        </div>
+                        <div class="d-flex align-center ga-2 mt-1">
+                            <span class="text-body-2" style="min-width: 16px">≤</span>
+                            <v-rating
+                                :model-value="parseRangePart(def.key, 'lte') ? Number(parseRangePart(def.key, 'lte')) : 0"
+                                @update:model-value="setRangePart(def.key, 'lte', $event > 0 ? String($event) : null)"
+                                hover
+                                density="compact"
+                            />
+                            <v-btn v-if="parseRangePart(def.key, 'lte')" icon size="x-small" variant="text" @click="setRangePart(def.key, 'lte', null)">
                                 <v-icon size="small">fa-solid fa-xmark</v-icon>
                             </v-btn>
                         </div>
