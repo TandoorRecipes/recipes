@@ -1,12 +1,21 @@
 <template>
     <v-card class="pa-2">
-        <v-badge :model-value="totalCount > 0" :content="totalCount" color="primary" inline>
-            <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
-        </v-badge>
+        <div class="d-flex align-center">
+            <v-badge :model-value="totalCount > 0" :content="totalCount" color="primary" inline>
+                <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
+            </v-badge>
+            <v-spacer />
+            <v-btn v-if="!showAllRows" icon size="x-small" variant="text" @click="showAllRows = true">
+                <v-icon size="small">fa-solid fa-plus</v-icon>
+            </v-btn>
+            <v-btn v-else icon size="x-small" variant="text" @click="collapseAllRows">
+                <v-icon size="small">fa-solid fa-minus</v-icon>
+            </v-btn>
+        </div>
 
-        <!-- Include row -->
+        <!-- With -->
         <div class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 48px">{{ $t('With') }}</span>
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
             <ModelSelect
                 :model="modelName"
                 :model-value="includeValue"
@@ -20,28 +29,15 @@
                 :hide-details="true"
                 class="flex-grow-1"
             />
-            <v-btn-toggle
-                v-model="includeMode"
-                mandatory
-                density="compact"
-            >
+            <v-btn-toggle v-model="includeMode" mandatory density="compact">
                 <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                 <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
             </v-btn-toggle>
-            <v-btn
-                v-if="!showExclude"
-                icon
-                size="x-small"
-                variant="text"
-                @click="showExclude = true"
-            >
-                <v-icon size="small">fa-solid fa-plus</v-icon>
-            </v-btn>
         </div>
 
-        <!-- Exclude row (expanded via +) -->
-        <div v-if="showExclude" class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 48px">{{ $t('Without') }}</span>
+        <!-- Without -->
+        <div class="d-flex align-center ga-2 mt-1">
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
             <ModelSelect
                 :model="modelName"
                 :model-value="excludeValue"
@@ -55,22 +51,54 @@
                 :hide-details="true"
                 class="flex-grow-1"
             />
-            <v-btn-toggle
-                v-model="excludeMode"
-                mandatory
-                density="compact"
-            >
+            <v-btn-toggle v-model="excludeMode" mandatory density="compact">
                 <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                 <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
             </v-btn-toggle>
-            <v-btn
-                icon
-                size="x-small"
-                variant="text"
-                @click="collapseExclude"
-            >
-                <v-icon size="small">fa-solid fa-minus</v-icon>
-            </v-btn>
+        </div>
+
+        <!-- With all (expanded) -->
+        <div v-if="showAllRows" class="d-flex align-center ga-2 mt-1">
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('with') }}</span>
+            <ModelSelect
+                :model="modelName"
+                :model-value="includeAllValue"
+                @update:model-value="v => onUpdate(keys[1], v)"
+                :object="false"
+                mode="tags"
+                density="compact"
+                :can-clear="true"
+                :search-on-load="false"
+                :append-to-body="true"
+                :hide-details="true"
+                class="flex-grow-1"
+            />
+            <v-btn-toggle :model-value="'all'" disabled density="compact">
+                <v-btn value="any" size="x-small" disabled>{{ $t('any') }}</v-btn>
+                <v-btn value="all" size="x-small" disabled>{{ $t('all') }}</v-btn>
+            </v-btn-toggle>
+        </div>
+
+        <!-- Without all (expanded) -->
+        <div v-if="showAllRows" class="d-flex align-center ga-2 mt-1">
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('without') }}</span>
+            <ModelSelect
+                :model="modelName"
+                :model-value="excludeAllValue"
+                @update:model-value="v => onUpdate(keys[3], v)"
+                :object="false"
+                mode="tags"
+                density="compact"
+                :can-clear="true"
+                :search-on-load="false"
+                :append-to-body="true"
+                :hide-details="true"
+                class="flex-grow-1"
+            />
+            <v-btn-toggle :model-value="'all'" disabled density="compact">
+                <v-btn value="any" size="x-small" disabled>{{ $t('any') }}</v-btn>
+                <v-btn value="all" size="x-small" disabled>{{ $t('all') }}</v-btn>
+            </v-btn-toggle>
         </div>
     </v-card>
 </template>
@@ -107,14 +135,18 @@ const excludeKey = computed(() => excludeMode.value === 'all' ? props.keys[3] : 
 
 const includeValue = computed(() => parseIds(props.getFilter(includeKey.value)))
 const excludeValue = computed(() => parseIds(props.getFilter(excludeKey.value)))
+const includeAllValue = computed(() => parseIds(props.getFilter(props.keys[1])))
+const excludeAllValue = computed(() => parseIds(props.getFilter(props.keys[3])))
 
-const hasExcludeData = computed(() =>
-    parseIds(props.getFilter(props.keys[2])).length > 0 ||
-    parseIds(props.getFilter(props.keys[3])).length > 0
+const hasAllData = computed(() =>
+    includeAllValue.value.length > 0 || excludeAllValue.value.length > 0
 )
-const showExclude = ref(hasExcludeData.value)
+const showAllRows = ref(hasAllData.value)
 
-const totalCount = computed(() => includeValue.value.length + excludeValue.value.length)
+const totalCount = computed(() =>
+    includeValue.value.length + excludeValue.value.length +
+    (showAllRows.value ? includeAllValue.value.length + excludeAllValue.value.length : 0)
+)
 
 function onUpdate(key: string, value: unknown) {
     if (value == null || (Array.isArray(value) && value.length === 0)) {
@@ -126,10 +158,10 @@ function onUpdate(key: string, value: unknown) {
     }
 }
 
-function collapseExclude() {
-    props.clearFilter(props.keys[2])
+function collapseAllRows() {
+    props.clearFilter(props.keys[1])
     props.clearFilter(props.keys[3])
-    showExclude.value = false
+    showAllRows.value = false
 }
 
 watch(includeMode, (newMode, oldMode) => {
