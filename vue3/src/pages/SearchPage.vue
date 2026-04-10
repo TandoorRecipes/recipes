@@ -63,39 +63,33 @@
                     @open-filters="openSettingsPanel('filters')"
                 />
 
-                <v-row dense class="mt-2">
-                    <v-col cols="12" md="4">
-                        <RecipeTagFilterGroup
-                            :label="$t('Keywords')"
-                            model-name="Keyword"
-                            :keys="['keywords', 'keywordsAnd', 'keywordsOrNot', 'keywordsAndNot']"
-                            :get-filter="getFilter"
-                            :set-filter="setFilter"
-                            :clear-filter="clearFilter"
-                        />
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <RecipeTagFilterGroup
-                            :label="$t('Foods')"
-                            model-name="Food"
-                            :keys="['foods', 'foodsAnd', 'foodsOrNot', 'foodsAndNot']"
-                            :get-filter="getFilter"
-                            :set-filter="setFilter"
-                            :clear-filter="clearFilter"
-                        />
-                    </v-col>
-                    <v-col cols="12" md="4">
-                        <RecipeTagFilterGroup
-                            :label="$t('RecipeBooks')"
-                            model-name="RecipeBook"
-                            :select-placeholder="$t('Books')"
-                            :keys="['books', 'booksAnd', 'booksOrNot', 'booksAndNot']"
-                            :get-filter="getFilter"
-                            :set-filter="setFilter"
-                            :clear-filter="clearFilter"
-                            :expandable="false"
-                        />
-                    </v-col>
+                <v-row v-if="inlineGroups.length > 0" dense class="mt-2">
+                    <template v-for="[group, defs] in inlineGroups" :key="group">
+                        <template v-for="def in defs" :key="def.key">
+                            <v-col v-if="def.type === 'tag-group' && def.variantKeys && def.modelName" cols="12" md="4">
+                                <RecipeTagFilterGroup
+                                    :label="$t(def.labelKey)"
+                                    :model-name="def.modelName"
+                                    :keys="def.variantKeys"
+                                    :get-filter="getFilter"
+                                    :set-filter="setFilter"
+                                    :clear-filter="clearFilter"
+                                    :show-toggles="def.showToggles !== false"
+                                    :expandable="def.expandable !== false"
+                                    :select-placeholder="def.selectPlaceholder ? $t(def.selectPlaceholder) : undefined"
+                                />
+                            </v-col>
+                        </template>
+                        <v-col v-if="!defs.some(d => d.type === 'tag-group')" cols="12" md="4">
+                            <InlineFilterCard
+                                :group="group"
+                                :defs="defs"
+                                :get-filter="getFilter"
+                                :set-filter="setFilter"
+                                :clear-filter="clearFilter"
+                            />
+                        </v-col>
+                    </template>
                 </v-row>
             </v-col>
         </v-row>
@@ -191,7 +185,7 @@
             v-model="settingsPanelOpen"
             v-model:active-tab="settingsActiveTab"
             :model="recipeSettingsModel"
-            :grouped-filter-defs="groupedFilterDefs"
+            :grouped-filter-defs="drawerFilterDefs"
             :get-filter="getFilter"
             :set-filter="setFilter"
             :clear-filter="clearFilter"
@@ -229,8 +223,10 @@ import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 
 import {useUrlFilters} from '@/composables/useUrlFilters'
 import {RECIPE_FILTER_DEFS, RECIPE_SORT_DEFS} from '@/composables/modellist/RecipeList'
+import type {FilterDef} from '@/composables/modellist/types'
 import {useModelListSettings, MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
+import InlineFilterCard from '@/components/search/InlineFilterCard.vue'
 
 import ModelListToolbar from '@/components/model_list/ModelListToolbar.vue'
 import ModelListFilterChips from '@/components/model_list/ModelListFilterChips.vue'
@@ -267,6 +263,26 @@ const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettin
 // crashes when opened.
 const settings = useModelListSettings(computed(() => 'search'))
 provide(MODEL_LIST_SETTINGS_KEY, settings)
+
+// ─── Inline / drawer filter group visibility ────────────────────────────
+const MAX_INLINE = 6
+const inlineGroups = computed(() => {
+    const keys = (useUserPreferenceStore().deviceSettings.search_inlineFilters ?? ['Content', 'Rating']).slice(0, MAX_INLINE)
+    const result: [string, FilterDef[]][] = []
+    for (const [group, defs] of groupedFilterDefs.value) {
+        if (group && keys.includes(group)) result.push([group, defs])
+    }
+    return result
+})
+
+const drawerFilterDefs = computed(() => {
+    const keys = useUserPreferenceStore().deviceSettings.search_drawerFilters ?? ['Content', 'Rating', 'Cooking', 'Recipe']
+    const filtered = new Map<string, FilterDef[]>()
+    for (const [group, defs] of groupedFilterDefs.value) {
+        if (!group || keys.includes(group)) filtered.set(group, defs)
+    }
+    return filtered
+})
 
 // ─── Local UI state ─────────────────────────────────────────────────────
 const loading = ref(false)
