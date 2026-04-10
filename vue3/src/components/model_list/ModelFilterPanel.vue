@@ -129,11 +129,12 @@
                             />
                         </div>
                     </div>
-                    <div v-else-if="def.type === 'date-range'" class="d-flex align-center px-4 py-1 ga-2">
-                        <v-icon v-if="def.icon" :icon="def.icon" size="small" class="me-3 text-medium-emphasis" />
+                    <div v-else-if="def.type === 'date-range'" class="px-4 py-1">
+                        <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
+                        <div class="d-flex align-center ga-2 mt-1">
                         <v-text-field
                             type="date"
-                            :label="$t(def.labelKey) + ' ≥'"
+                            label="≥"
                             :aria-label="$t(def.labelKey) + ', ' + $t('FromDate')"
                             :model-value="parseRangePart(def.key, 'gte')"
                             @update:model-value="setRangePart(def.key, 'gte', $event)"
@@ -144,7 +145,7 @@
                         />
                         <v-text-field
                             type="date"
-                            :label="$t(def.labelKey) + ' ≤'"
+                            label="≤"
                             :aria-label="$t(def.labelKey) + ', ' + $t('ToDate')"
                             :model-value="parseRangePart(def.key, 'lte')"
                             @update:model-value="setRangePart(def.key, 'lte', $event)"
@@ -153,6 +154,7 @@
                             clearable
                             class="flex-grow-1"
                         />
+                        </div>
                     </div>
                 </template>
             </component>
