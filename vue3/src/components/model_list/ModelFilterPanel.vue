@@ -85,7 +85,6 @@
                                 clearable
                                 hover
                                 density="comfortable"
-                                size="x-small"
                             />
                         </div>
                         <div class="d-flex align-center ga-2 mt-1">
@@ -100,7 +99,6 @@
                                 clearable
                                 hover
                                 density="comfortable"
-                                size="x-small"
                             />
                         </div>
                     </div>
