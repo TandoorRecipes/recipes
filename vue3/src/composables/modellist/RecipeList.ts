@@ -49,9 +49,9 @@ const COOKING_FILTERS: FilterDef[] = [
 
 const RECIPE_FILTERS: FilterDef[] = [
     {key: 'servings',          labelKey: 'Servings',           type: 'number-range', group: 'Recipe'},
-    {key: 'units',             labelKey: 'Units',              type: 'tag-select', modelName: 'Unit', group: 'Recipe'},
     {key: 'hasPhoto',          labelKey: 'HasPhoto',           type: 'tristate', group: 'Recipe'},
     {key: 'hasKeywords',       labelKey: 'HasKeywords',        type: 'tristate', group: 'Recipe'},
+    {key: 'makenow',           labelKey: 'AvailableToCook',    type: 'tristate', group: 'Recipe'},
 ]
 
 const TIME_FILTERS: FilterDef[] = [
@@ -66,16 +66,20 @@ const DATE_FILTERS: FilterDef[] = [
     {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Date'},
 ]
 
+const UNIT_FILTER: FilterDef = {
+    key: 'units', labelKey: 'Units', type: 'tag-select', modelName: 'Unit', group: 'Content',
+}
+
 const OTHER_FILTERS: FilterDef[] = [
     {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Other'},
     {key: 'internal',          labelKey: 'Internal',           type: 'tristate', group: 'Other'},
-    {key: 'makenow',           labelKey: 'AvailableToCook',    type: 'tristate', group: 'Other'},
 ]
 
 export const RECIPE_FILTER_DEFS: FilterDef[] = [
     KEYWORD_GROUP,
     FOOD_GROUP,
     BOOK_GROUP,
+    UNIT_FILTER,
     ...KEYWORD_FILTERS,
     ...FOOD_FILTERS,
     ...BOOK_FILTERS,
