@@ -34,6 +34,16 @@
                             />
                         </div>
                     </div>
+                    <RecipeTagFilterGroup
+                        v-else-if="def.type === 'tag-group' && def.variantKeys && def.modelName"
+                        :label="$t(def.labelKey)"
+                        :model-name="def.modelName"
+                        :keys="def.variantKeys"
+                        :get-filter="getFilter"
+                        :set-filter="setFilter"
+                        :clear-filter="clearFilter"
+                        class="mx-2 my-1"
+                    />
                     <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1">
                         <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
                         <ModelSelect
@@ -176,11 +186,13 @@ import type {FilterDef, FilterValue, RangeValue} from '@/composables/modellist/t
 import TriStateToggle from '@/components/common/TriStateToggle.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
+import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
 
 const props = defineProps<{
     groupedFilterDefs: Map<string, FilterDef[]>
     getFilter: (key: string) => string | undefined
     setFilter: (key: string, value: FilterValue) => void
+    clearFilter: (key: string) => void
     clearAllFilters: () => void
     activeFilterCount: number
 }>()

@@ -1,24 +1,39 @@
 import type {FilterDef, SortDef, ListSettings} from './types'
 
+// Tag-group defs render as RecipeTagFilterGroup in the panel (With/Without + any/all)
+const KEYWORD_GROUP: FilterDef = {
+    key: '_keywordsGroup', labelKey: 'Keywords', type: 'tag-group', modelName: 'Keyword', group: 'Content',
+    variantKeys: ['keywords', 'keywordsAnd', 'keywordsOrNot', 'keywordsAndNot'],
+}
+const FOOD_GROUP: FilterDef = {
+    key: '_foodsGroup', labelKey: 'Foods', type: 'tag-group', modelName: 'Food', group: 'Content',
+    variantKeys: ['foods', 'foodsAnd', 'foodsOrNot', 'foodsAndNot'],
+}
+const BOOK_GROUP: FilterDef = {
+    key: '_booksGroup', labelKey: 'Books', type: 'tag-group', modelName: 'RecipeBook', group: 'Content',
+    variantKeys: ['books', 'booksAnd', 'booksOrNot', 'booksAndNot'],
+}
+
+// Individual tag-select defs for URL state, filter chips, and saved search serialization
 const KEYWORD_FILTERS: FilterDef[] = [
-    {key: 'keywords',          labelKey: 'Keywords',           type: 'tag-select', modelName: 'Keyword', group: 'Content'},
-    {key: 'keywordsAnd',       labelKey: 'KeywordsAnd',        type: 'tag-select', modelName: 'Keyword', group: 'Content'},
-    {key: 'keywordsOrNot',     labelKey: 'KeywordsOrNot',      type: 'tag-select', modelName: 'Keyword', group: 'Content'},
-    {key: 'keywordsAndNot',    labelKey: 'KeywordsAndNot',     type: 'tag-select', modelName: 'Keyword', group: 'Content'},
+    {key: 'keywords',          labelKey: 'Keywords',           type: 'tag-select', modelName: 'Keyword', hidden: true},
+    {key: 'keywordsAnd',       labelKey: 'KeywordsAnd',        type: 'tag-select', modelName: 'Keyword', hidden: true},
+    {key: 'keywordsOrNot',     labelKey: 'KeywordsOrNot',      type: 'tag-select', modelName: 'Keyword', hidden: true},
+    {key: 'keywordsAndNot',    labelKey: 'KeywordsAndNot',     type: 'tag-select', modelName: 'Keyword', hidden: true},
 ]
 
 const FOOD_FILTERS: FilterDef[] = [
-    {key: 'foods',             labelKey: 'Foods',              type: 'tag-select', modelName: 'Food', group: 'Content'},
-    {key: 'foodsAnd',          labelKey: 'FoodsAnd',           type: 'tag-select', modelName: 'Food', group: 'Content'},
-    {key: 'foodsOrNot',        labelKey: 'FoodsOrNot',         type: 'tag-select', modelName: 'Food', group: 'Content'},
-    {key: 'foodsAndNot',       labelKey: 'FoodsAndNot',        type: 'tag-select', modelName: 'Food', group: 'Content'},
+    {key: 'foods',             labelKey: 'Foods',              type: 'tag-select', modelName: 'Food', hidden: true},
+    {key: 'foodsAnd',          labelKey: 'FoodsAnd',           type: 'tag-select', modelName: 'Food', hidden: true},
+    {key: 'foodsOrNot',        labelKey: 'FoodsOrNot',         type: 'tag-select', modelName: 'Food', hidden: true},
+    {key: 'foodsAndNot',       labelKey: 'FoodsAndNot',        type: 'tag-select', modelName: 'Food', hidden: true},
 ]
 
 const BOOK_FILTERS: FilterDef[] = [
-    {key: 'books',             labelKey: 'Books',              type: 'tag-select', modelName: 'RecipeBook', group: 'Content'},
-    {key: 'booksAnd',          labelKey: 'BooksAnd',           type: 'tag-select', modelName: 'RecipeBook', group: 'Content'},
-    {key: 'booksOrNot',        labelKey: 'BooksOrNot',         type: 'tag-select', modelName: 'RecipeBook', group: 'Content'},
-    {key: 'booksAndNot',       labelKey: 'BooksAndNot',        type: 'tag-select', modelName: 'RecipeBook', group: 'Content'},
+    {key: 'books',             labelKey: 'Books',              type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+    {key: 'booksAnd',          labelKey: 'BooksAnd',           type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+    {key: 'booksOrNot',        labelKey: 'BooksOrNot',         type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+    {key: 'booksAndNot',       labelKey: 'BooksAndNot',        type: 'tag-select', modelName: 'RecipeBook', hidden: true},
 ]
 
 
@@ -58,6 +73,9 @@ const OTHER_FILTERS: FilterDef[] = [
 ]
 
 export const RECIPE_FILTER_DEFS: FilterDef[] = [
+    KEYWORD_GROUP,
+    FOOD_GROUP,
+    BOOK_GROUP,
     ...KEYWORD_FILTERS,
     ...FOOD_FILTERS,
     ...BOOK_FILTERS,
