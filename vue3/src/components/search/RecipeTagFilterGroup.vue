@@ -4,12 +4,13 @@
             <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
         </v-badge>
 
+        <!-- Include row -->
         <div class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('With') }}</span>
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 48px">{{ $t('With') }}</span>
             <ModelSelect
                 :model="modelName"
                 :model-value="includeValue"
-                @update:model-value="onIncludeUpdate"
+                @update:model-value="v => onUpdate(includeKey, v)"
                 :object="false"
                 mode="tags"
                 density="compact"
@@ -20,22 +21,31 @@
                 class="flex-grow-1"
             />
             <v-btn-toggle
-                :model-value="includeMode"
-                @update:model-value="onIncludeModeChange"
+                v-model="includeMode"
                 mandatory
                 density="compact"
             >
                 <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                 <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
             </v-btn-toggle>
+            <v-btn
+                v-if="!showExclude"
+                icon
+                size="x-small"
+                variant="text"
+                @click="showExclude = true"
+            >
+                <v-icon size="small">fa-solid fa-plus</v-icon>
+            </v-btn>
         </div>
 
-        <div class="d-flex align-center ga-2 mt-1">
-            <span class="text-body-2 text-medium-emphasis" style="min-width: 56px">{{ $t('Without') }}</span>
+        <!-- Exclude row (expanded via +) -->
+        <div v-if="showExclude" class="d-flex align-center ga-2 mt-1">
+            <span class="text-body-2 text-medium-emphasis" style="min-width: 48px">{{ $t('Without') }}</span>
             <ModelSelect
                 :model="modelName"
                 :model-value="excludeValue"
-                @update:model-value="onExcludeUpdate"
+                @update:model-value="v => onUpdate(excludeKey, v)"
                 :object="false"
                 mode="tags"
                 density="compact"
@@ -46,20 +56,27 @@
                 class="flex-grow-1"
             />
             <v-btn-toggle
-                :model-value="excludeMode"
-                @update:model-value="onExcludeModeChange"
+                v-model="excludeMode"
                 mandatory
                 density="compact"
             >
                 <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
                 <v-btn value="all" size="x-small">{{ $t('all') }}</v-btn>
             </v-btn-toggle>
+            <v-btn
+                icon
+                size="x-small"
+                variant="text"
+                @click="collapseExclude"
+            >
+                <v-icon size="small">fa-solid fa-minus</v-icon>
+            </v-btn>
         </div>
     </v-card>
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import type {EditorSupportedModels} from '@/types/Models'
 import type {FilterValue} from '@/composables/modellist/types'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
@@ -79,24 +96,27 @@ function parseIds(raw: string | undefined): number[] {
     return raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
 }
 
-function activeIncludeKey(): string {
-    return props.getFilter(props.keys[1]) ? props.keys[1] : props.keys[0]
-}
+const includeMode = ref<string>(props.getFilter(props.keys[1]) ? 'all' : 'any')
+const excludeMode = ref<string>(props.getFilter(props.keys[3]) ? 'all' : 'any')
 
-function activeExcludeKey(): string {
-    return props.getFilter(props.keys[3]) ? props.keys[3] : props.keys[2]
-}
+watch(() => props.getFilter(props.keys[1]), (v) => { includeMode.value = v ? 'all' : 'any' })
+watch(() => props.getFilter(props.keys[3]), (v) => { excludeMode.value = v ? 'all' : 'any' })
 
-const includeMode = computed(() => props.getFilter(props.keys[1]) ? 'all' : 'any')
-const excludeMode = computed(() => props.getFilter(props.keys[3]) ? 'all' : 'any')
+const includeKey = computed(() => includeMode.value === 'all' ? props.keys[1] : props.keys[0])
+const excludeKey = computed(() => excludeMode.value === 'all' ? props.keys[3] : props.keys[2])
 
-const includeValue = computed(() => parseIds(props.getFilter(activeIncludeKey())))
-const excludeValue = computed(() => parseIds(props.getFilter(activeExcludeKey())))
+const includeValue = computed(() => parseIds(props.getFilter(includeKey.value)))
+const excludeValue = computed(() => parseIds(props.getFilter(excludeKey.value)))
+
+const hasExcludeData = computed(() =>
+    parseIds(props.getFilter(props.keys[2])).length > 0 ||
+    parseIds(props.getFilter(props.keys[3])).length > 0
+)
+const showExclude = ref(hasExcludeData.value)
 
 const totalCount = computed(() => includeValue.value.length + excludeValue.value.length)
 
-function onIncludeUpdate(value: unknown) {
-    const key = activeIncludeKey()
+function onUpdate(key: string, value: unknown) {
     if (value == null || (Array.isArray(value) && value.length === 0)) {
         props.clearFilter(key)
         return
@@ -106,32 +126,27 @@ function onIncludeUpdate(value: unknown) {
     }
 }
 
-function onExcludeUpdate(value: unknown) {
-    const key = activeExcludeKey()
-    if (value == null || (Array.isArray(value) && value.length === 0)) {
-        props.clearFilter(key)
-        return
-    }
-    if (Array.isArray(value)) {
-        props.setFilter(key, value.map(v => Number(v)).filter(n => !isNaN(n)))
-    }
+function collapseExclude() {
+    props.clearFilter(props.keys[2])
+    props.clearFilter(props.keys[3])
+    showExclude.value = false
 }
 
-function onIncludeModeChange(newMode: string) {
-    const oldKey = activeIncludeKey()
+watch(includeMode, (newMode, oldMode) => {
+    if (newMode === oldMode) return
+    const oldKey = oldMode === 'all' ? props.keys[1] : props.keys[0]
     const newKey = newMode === 'all' ? props.keys[1] : props.keys[0]
-    if (oldKey === newKey) return
     const ids = parseIds(props.getFilter(oldKey))
     props.clearFilter(oldKey)
     if (ids.length > 0) props.setFilter(newKey, ids)
-}
+})
 
-function onExcludeModeChange(newMode: string) {
-    const oldKey = activeExcludeKey()
+watch(excludeMode, (newMode, oldMode) => {
+    if (newMode === oldMode) return
+    const oldKey = oldMode === 'all' ? props.keys[3] : props.keys[2]
     const newKey = newMode === 'all' ? props.keys[3] : props.keys[2]
-    if (oldKey === newKey) return
     const ids = parseIds(props.getFilter(oldKey))
     props.clearFilter(oldKey)
     if (ids.length > 0) props.setFilter(newKey, ids)
-}
+})
 </script>

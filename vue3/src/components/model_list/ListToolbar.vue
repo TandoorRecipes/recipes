@@ -29,16 +29,18 @@
             <v-icon>{{ selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check' }}</v-icon>
         </v-btn>
 
-        <v-text-field
-            prepend-inner-icon="$search"
-            :label="$t('Search')"
-            :model-value="query"
-            @update:model-value="onSearchInput"
-            clearable
-            hide-details
-            density="compact"
-            class="flex-grow-1"
-        />
+        <div class="flex-grow-1">
+            <v-text-field
+                prepend-inner-icon="$search"
+                :label="$t('Search')"
+                :model-value="query"
+                @update:model-value="onSearchInput"
+                clearable
+                hide-details
+                density="compact"
+            />
+            <slot name="below-search" />
+        </div>
 
         <v-btn
             v-if="showReset"
@@ -65,8 +67,12 @@
                         v-for="opt in sortOptions"
                         :key="opt.key"
                         :active="currentField === opt.key"
+                        color="primary"
                         @click="onSortSelect(opt.key)"
                     >
+                        <template #append v-if="currentField === opt.key">
+                            <v-icon size="small" :icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'" />
+                        </template>
                         {{ $t(opt.labelKey) }}
                     </v-list-item>
                 </v-list>
@@ -95,6 +101,7 @@
             hide-details
             density="compact"
         />
+        <slot name="below-search" />
 
         <div class="model-list-toolbar-carousel-wrapper mt-2">
         <div ref="carouselRef" class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')" @scroll.passive="onCarouselScroll">
@@ -153,8 +160,12 @@
                             v-for="opt in sortOptions"
                             :key="opt.key"
                             :active="currentField === opt.key"
+                            color="primary"
                             @click="onSortSelect(opt.key)"
                         >
+                            <template #append v-if="currentField === opt.key">
+                                <v-icon size="small" :icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'" />
+                            </template>
                             {{ $t(opt.labelKey) }}
                         </v-list-item>
                     </v-list>
