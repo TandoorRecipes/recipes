@@ -31,66 +31,82 @@
                     @reset="resetAll"
                 >
                     <template #below-search>
-                        <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
+                        <model-select v-show="!filtersCollapsed" model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
                     </template>
                     <template #below-search-actions>
-                        <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
-                               :disabled="selectedCustomFilter == null"
-                               @click="loadSelectedCustomFilter()" class="text-none">
-                            {{ $t('Load') }}
-                        </v-btn>
-                        <v-btn variant="text" size="small" prepend-icon="$save"
-                               @click="saveCustomFilter()" class="text-none">
-                            {{ $t('Save') }}
-                        </v-btn>
+                        <template v-if="!filtersCollapsed">
+                            <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
+                                   :disabled="selectedCustomFilter == null"
+                                   @click="loadSelectedCustomFilter()" class="text-none">
+                                {{ $t('Load') }}
+                            </v-btn>
+                            <v-btn variant="text" size="small" prepend-icon="$save"
+                                   @click="saveCustomFilter()" class="text-none">
+                                {{ $t('Save') }}
+                            </v-btn>
+                        </template>
+                    </template>
+                    <template #search-append-inner>
+                        <v-btn
+                            :icon="filtersCollapsed ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-up'"
+                            color="primary"
+                            variant="flat"
+                            rounded="0"
+                            style="height: 40px; min-width: 36px; padding: 0;"
+                            @click.stop="filtersCollapsed = !filtersCollapsed"
+                        />
                     </template>
                 </ModelListToolbar>
 
-                <closable-help-alert
-                    v-if="savedFilterModified"
-                    :text="$t('saved_filter_override_hint')"
-                    class="mt-1"
-                />
+                <v-expand-transition>
+                <div v-show="!filtersCollapsed">
+                    <closable-help-alert
+                        v-if="savedFilterModified"
+                        :text="$t('saved_filter_override_hint')"
+                        class="mt-1"
+                    />
 
-                <ModelListFilterChips
-                    v-if="activeFilterCount > 0"
-                    :filter-defs="filterDefs"
-                    :get-filter="getFilter"
-                    :set-filter="setFilter"
-                    :clear-filter="clearFilter"
-                    :clear-all-filters="clearAllFilters"
-                    :active-filter-count="activeFilterCount"
-                    @open-filters="openSettingsPanel('filters')"
-                />
+                    <ModelListFilterChips
+                        v-if="activeFilterCount > 0"
+                        :filter-defs="filterDefs"
+                        :get-filter="getFilter"
+                        :set-filter="setFilter"
+                        :clear-filter="clearFilter"
+                        :clear-all-filters="clearAllFilters"
+                        :active-filter-count="activeFilterCount"
+                        @open-filters="openSettingsPanel('filters')"
+                    />
 
-                <v-row v-if="inlineGroups.length > 0" dense class="mt-2">
-                    <template v-for="[group, defs] in inlineGroups" :key="group">
-                        <template v-for="def in defs" :key="def.key">
-                            <v-col v-if="def.type === 'tag-group' && def.variantKeys && def.modelName" cols="12" md="4">
-                                <RecipeTagFilterGroup
-                                    :label="$t(def.labelKey)"
-                                    :model-name="def.modelName"
-                                    :keys="def.variantKeys"
+                    <v-row v-if="inlineGroups.length > 0" dense class="mt-2">
+                        <template v-for="[group, defs] in inlineGroups" :key="group">
+                            <template v-for="def in defs" :key="def.key">
+                                <v-col v-if="def.type === 'tag-group' && def.variantKeys && def.modelName" cols="12" md="4">
+                                    <RecipeTagFilterGroup
+                                        :label="$t(def.labelKey)"
+                                        :model-name="def.modelName"
+                                        :keys="def.variantKeys"
+                                        :get-filter="getFilter"
+                                        :set-filter="setFilter"
+                                        :clear-filter="clearFilter"
+                                        :show-toggles="def.showToggles !== false"
+                                        :expandable="def.expandable !== false"
+                                        :select-placeholder="def.selectPlaceholder ? $t(def.selectPlaceholder) : undefined"
+                                    />
+                                </v-col>
+                            </template>
+                            <v-col v-if="!defs.some(d => d.type === 'tag-group')" cols="12" md="4">
+                                <InlineFilterCard
+                                    :group="group"
+                                    :defs="defs"
                                     :get-filter="getFilter"
                                     :set-filter="setFilter"
                                     :clear-filter="clearFilter"
-                                    :show-toggles="def.showToggles !== false"
-                                    :expandable="def.expandable !== false"
-                                    :select-placeholder="def.selectPlaceholder ? $t(def.selectPlaceholder) : undefined"
                                 />
                             </v-col>
                         </template>
-                        <v-col v-if="!defs.some(d => d.type === 'tag-group')" cols="12" md="4">
-                            <InlineFilterCard
-                                :group="group"
-                                :defs="defs"
-                                :get-filter="getFilter"
-                                :set-filter="setFilter"
-                                :clear-filter="clearFilter"
-                            />
-                        </v-col>
-                    </template>
-                </v-row>
+                    </v-row>
+                </div>
+                </v-expand-transition>
             </v-col>
         </v-row>
 
@@ -214,6 +230,7 @@
 import {computed, onMounted, provide, ref, watch} from 'vue'
 import {useRouter, useRoute} from 'vue-router'
 import {useRouteQuery} from '@vueuse/router'
+import {useDebounceFn} from '@vueuse/core'
 import {useI18n} from 'vue-i18n'
 import {useDisplay} from 'vuetify'
 
@@ -282,17 +299,6 @@ const inlineGroups = computed(() => {
     return result
 })
 
-const drawerFilterDefs = computed(() => {
-    const keys = new Set(drawerFilterKeys.value)
-    const filtered = new Map<string, FilterDef[]>()
-    for (const [group, defs] of groupedFilterDefs.value) {
-        if (!group) { filtered.set(group, defs); continue }
-        const visible = defs.filter(d => keys.has(d.key))
-        if (visible.length > 0) filtered.set(group, visible)
-    }
-    return filtered
-})
-
 // ─── Local UI state ─────────────────────────────────────────────────────
 const loading = ref(false)
 const recipes = ref<RecipeOverview[]>([])
@@ -300,6 +306,7 @@ const tableItemCount = ref(0)
 const selectedItems = ref<EditorSupportedTypes[]>([])
 const selectMode = ref(false)
 
+const filtersCollapsed = ref(false)
 const settingsPanelOpen = ref(false)
 const settingsActiveTab = ref<'settings' | 'filters'>('filters')
 
@@ -392,7 +399,7 @@ function searchRecipes(opts?: {page?: number}) {
             tableItemCount.value = r.count
         })
         .catch((err) => {
-            if (err.name !== 'AbortError') {
+            if (err.name !== 'AbortError' && err?.cause?.name !== 'AbortError') {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })
@@ -417,11 +424,12 @@ function handleRowClick(_event: PointerEvent, data: any) {
 }
 
 // Watcher attached in onMounted after first fetch to avoid double-fire on legacy URL migration.
+const debouncedSearch = useDebounceFn(() => searchRecipes({page: 1}), 300)
 let stopReQueryWatcher: (() => void) | null = null
 function startReQueryWatcher() {
     if (stopReQueryWatcher) return
     stopReQueryWatcher = watch([filterParams, ordering, query, pageSize], () => {
-        searchRecipes({page: 1})
+        debouncedSearch()
     })
 }
 

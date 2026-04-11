@@ -114,6 +114,11 @@
                                 hover
                                 density="comfortable"
                             />
+                            <v-btn
+                                v-if="parseRangePart(def.key, 'gte')"
+                                icon="$close" variant="plain" size="x-small" density="compact"
+                                @click="setRangePart(def.key, 'gte', null)"
+                            />
                         </div>
                         <div class="d-flex align-center ga-2 mt-1">
                             <v-icon size="small" icon="fa-solid fa-less-than-equal" class="text-medium-emphasis">
@@ -126,6 +131,11 @@
                                 clearable
                                 hover
                                 density="comfortable"
+                            />
+                            <v-btn
+                                v-if="parseRangePart(def.key, 'lte')"
+                                icon="$close" variant="plain" size="x-small" density="compact"
+                                @click="setRangePart(def.key, 'lte', null)"
                             />
                         </div>
                     </div>
