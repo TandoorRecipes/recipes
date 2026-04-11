@@ -1,6 +1,6 @@
 <template>
     <v-card class="pa-2" style="overflow: visible">
-        <div class="d-flex align-center" style="min-height: 28px">
+        <div class="d-flex align-center" style="min-height: 32px">
             <v-badge :model-value="totalCount > 0" :content="totalCount" color="primary" inline>
                 <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
             </v-badge>
