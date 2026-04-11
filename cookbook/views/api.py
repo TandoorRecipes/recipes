@@ -258,6 +258,18 @@ class RecipeCountMixin():
 ]))
 class FuzzyFilterMixin(viewsets.ModelViewSet, RecipeCountMixin):
 
+    def _apply_tristate(self, qs, param, true_q, false_q, distinct=False):
+        value = self.request.query_params.get(param, None)
+        if value is None:
+            return qs
+        if str2bool(value):
+            qs = qs.filter(true_q)
+            if distinct:
+                qs = qs.distinct()
+        else:
+            qs = qs.filter(false_q)
+        return qs
+
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         query = self.request.query_params.get('query', None)
@@ -1005,6 +1017,14 @@ class SupermarketCategoryRelationViewSet(LoggingMixin, StandardFilterModelViewSe
         return super().get_queryset()
 
 
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='has_recipe', type=bool, description='Filter by whether keyword is used by at least one recipe'),
+            OpenApiParameter(name='has_children', type=bool, description='Filter by whether keyword has child keywords'),
+        ],
+    ),
+)
 class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Keyword.objects
     model = Keyword
@@ -1012,13 +1032,31 @@ class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = self._apply_tristate(qs, 'has_children', Q(numchild__gt=0), Q(numchild=0))
+        qs = self._apply_tristate(qs, 'has_recipe', Q(recipe_count__gt=0), Q(recipe_count=0))
+        return qs
 
+
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='has_recipe', type=bool, description='Filter by whether unit is used by at least one recipe ingredient'),
+        ],
+    ),
+)
 class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = self._apply_tristate(qs, 'has_recipe', Q(recipe_count__gt=0), Q(recipe_count=0))
+        return qs
 
 
 class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
@@ -1074,18 +1112,6 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             return get_household_user_ids(self.request.user_space)
         except AttributeError:  # Anonymous users (using share links) don't have shared users
             return []
-
-    def _apply_tristate(self, qs, param, true_q, false_q, distinct=False):
-        value = self.request.query_params.get(param, None)
-        if value is None:
-            return qs
-        if str2bool(value):
-            qs = qs.filter(true_q)
-            if distinct:
-                qs = qs.distinct()
-        else:
-            qs = qs.filter(false_q)
-        return qs
 
     def _inventory_subquery(self, space):
         return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=space)
