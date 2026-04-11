@@ -39,17 +39,14 @@ const BOOK_FILTERS: FilterDef[] = [
 
 
 const RATING_FILTERS: FilterDef[] = [
-    {key: 'rating',            labelKey: 'Rating',             type: 'rating', group: 'Rating'},
+    {key: 'ratingGte',         labelKey: 'RatingMin',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-greater-than-equal'},
+    {key: 'ratingLte',         labelKey: 'RatingMax',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-less-than-equal'},
     {key: 'unrated',           labelKey: 'Unrated',            type: 'toggle', group: 'Rating'},
-]
-
-const COOKING_FILTERS: FilterDef[] = [
-    {key: 'timescooked',       labelKey: 'TimesCooked',        type: 'number-range', group: 'Cooking'},
-    {key: 'cookedon',          labelKey: 'CookedOn',           type: 'date-range', group: 'Cooking'},
 ]
 
 const RECIPE_FILTERS: FilterDef[] = [
     {key: 'servings',          labelKey: 'Servings',           type: 'number-range', group: 'Recipe'},
+    {key: 'timescooked',       labelKey: 'TimesCooked',        type: 'number-range', group: 'Recipe'},
     {key: 'hasPhoto',          labelKey: 'HasPhoto',           type: 'tristate', group: 'Recipe'},
     {key: 'hasKeywords',       labelKey: 'HasKeywords',        type: 'tristate', group: 'Recipe'},
     {key: 'makenow',           labelKey: 'AvailableToCook',    type: 'tristate', group: 'Recipe'},
@@ -62,6 +59,7 @@ const TIME_FILTERS: FilterDef[] = [
 ]
 
 const DATE_FILTERS: FilterDef[] = [
+    {key: 'cookedon',          labelKey: 'CookedOn',           type: 'date-range', group: 'Date'},
     {key: 'createdon',         labelKey: 'CreatedOn',          type: 'date-range', group: 'Date'},
     {key: 'updatedon',         labelKey: 'UpdatedOn',          type: 'date-range', group: 'Date'},
     {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Date'},
@@ -95,7 +93,6 @@ export const RECIPE_FILTER_DEFS: FilterDef[] = [
     ...FOOD_FILTERS,
     ...BOOK_FILTERS,
     ...RATING_FILTERS,
-    ...COOKING_FILTERS,
     ...RECIPE_FILTERS,
     ...TIME_FILTERS,
     ...DATE_FILTERS,
@@ -116,4 +113,6 @@ export const RECIPE_SORT_DEFS: SortDef[] = [
 export const RECIPE_LIST_SETTINGS: ListSettings = {
     settingsKey: 'search',
     settingsPanel: true,
+    includeChildren: true,
+    filterVisibility: true,
 }

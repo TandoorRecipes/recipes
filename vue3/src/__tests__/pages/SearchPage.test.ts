@@ -82,6 +82,7 @@ async function mountSearchPage(initialQuery: Record<string, any> = {}, viewMode:
 
 describe('SearchPage (Phase 3 rewrite)', () => {
     beforeEach(() => {
+        vi.useRealTimers()
         resetApiMock()
         apiMock.apiRecipeList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
         apiMock.apiCustomFilterList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
@@ -102,8 +103,8 @@ describe('SearchPage (Phase 3 rewrite)', () => {
             expect(arg.keywords).toEqual([1, 2])
         })
 
-        it('translates ?rating=3~ into ratingGte on the API call', async () => {
-            await mountSearchPage({rating: '3~'})
+        it('translates ?ratingGte=3 into ratingGte on the API call', async () => {
+            await mountSearchPage({ratingGte: '3'})
             const arg = (apiMock.apiRecipeList as any).mock.calls[0][0]
             expect(arg.ratingGte).toBe(3)
         })
@@ -130,27 +131,33 @@ describe('SearchPage (Phase 3 rewrite)', () => {
 
     describe('live re-query', () => {
         it('re-fetches when ordering changes', async () => {
+            vi.useFakeTimers({shouldAdvanceTime: true})
             const {wrapper, router} = await mountSearchPage()
             const callsBefore = (apiMock.apiRecipeList as any).mock.calls.length
             await router.push({path: '/advanced-search', query: {ordering: '-rating'}})
+            await flushPromises()
+            vi.advanceTimersByTime(350)
             await flushPromises()
             const callsAfter = (apiMock.apiRecipeList as any).mock.calls.length
             expect(callsAfter).toBeGreaterThan(callsBefore)
             const arg = (apiMock.apiRecipeList as any).mock.calls[callsAfter - 1][0]
             expect(arg.sortOrder).toBe('-rating')
             wrapper.unmount()
+            vi.useRealTimers()
         })
 
         it('re-fetches when filters change', async () => {
+            vi.useFakeTimers({shouldAdvanceTime: true})
             const {wrapper, router} = await mountSearchPage()
             const callsBefore = (apiMock.apiRecipeList as any).mock.calls.length
             await router.push({path: '/advanced-search', query: {internal: '1'}})
             await flushPromises()
-            await new Promise(r => setTimeout(r, 0))
+            vi.advanceTimersByTime(350)
             await flushPromises()
             const callsAfter = (apiMock.apiRecipeList as any).mock.calls.length
             expect(callsAfter).toBeGreaterThan(callsBefore)
             wrapper.unmount()
+            vi.useRealTimers()
         })
     })
 
@@ -165,20 +172,20 @@ describe('SearchPage (Phase 3 rewrite)', () => {
         })
 
         it('empty-state exposes a reset-filters button that triggers a re-fetch', async () => {
+            vi.useFakeTimers({shouldAdvanceTime: true})
             apiMock.apiRecipeList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
             const {wrapper} = await mountSearchPage({query: 'zzznoresults'})
-            await new Promise(r => setTimeout(r, 0))
+            vi.advanceTimersByTime(350)
             await flushPromises()
             const resetBtn = wrapper.find('[data-test="empty-state-reset"]')
             expect(resetBtn.exists()).toBe(true)
             const callsBefore = (apiMock.apiRecipeList as any).mock.calls.length
             await resetBtn.trigger('click')
             await flushPromises()
-            await new Promise(r => setTimeout(r, 0))
-            await flushPromises()
-            await new Promise(r => setTimeout(r, 0))
+            vi.advanceTimersByTime(350)
             await flushPromises()
             expect((apiMock.apiRecipeList as any).mock.calls.length).toBeGreaterThan(callsBefore)
+            vi.useRealTimers()
         })
 
         it('does NOT render the empty state when recipes are present', async () => {
@@ -193,15 +200,14 @@ describe('SearchPage (Phase 3 rewrite)', () => {
     })
 
     describe('settings panel default tab (UX Critical #1)', () => {
-        it('forces Filters tab when Settings is requested in grid view', async () => {
-            // The Settings tab only contains column / subtitle / table controls,
-            // none of which apply to grid mode. Opening the panel in grid view
-            // must land on Filters, not an empty Settings pane.
+        it('opens Settings tab in grid view (includes children + filter visibility)', async () => {
+            // Settings tab now has include-children and filter visibility controls
+            // that apply in both grid and table modes.
             const {wrapper} = await mountSearchPage({}, 'grid')
             const vm = wrapper.vm as any
             vm.openSettingsPanel('settings')
             await flushPromises()
-            expect(vm.settingsActiveTab).toBe('filters')
+            expect(vm.settingsActiveTab).toBe('settings')
             expect(vm.settingsPanelOpen).toBe(true)
         })
 

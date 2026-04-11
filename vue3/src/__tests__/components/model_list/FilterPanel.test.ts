@@ -5,7 +5,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {createI18n} from 'vue-i18n'
 import {h} from 'vue'
-import ModelFilterPanel from '@/components/model_list/ModelFilterPanel.vue'
+import FilterPanel from '@/components/model_list/FilterPanel.vue'
 import type {FilterDef} from '@/composables/modellist/types'
 
 const ModelSelectStub = {
@@ -29,7 +29,7 @@ function mountPanel(defs: FilterDef[], filterValues: Record<string, string> = {}
     const grouped = new Map<string, FilterDef[]>()
     grouped.set('', defs)
 
-    return mount(ModelFilterPanel, {
+    return mount(FilterPanel, {
         props: {
             groupedFilterDefs: grouped,
             getFilter: (key: string) => filterValues[key],
@@ -48,7 +48,7 @@ function mountPanel(defs: FilterDef[], filterValues: Record<string, string> = {}
     })
 }
 
-describe('ModelFilterPanel', () => {
+describe('FilterPanel', () => {
     describe('existing types still render', () => {
         it('renders tristate via TriStateToggle', () => {
             const wrapper = mountPanel([{key: 'on_hand', labelKey: 'OnHand', type: 'tristate'}])

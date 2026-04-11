@@ -53,5 +53,6 @@ export function useModelListSettings(settingsKey: ComputedRef<string>, modelDefa
         swipeLeftKeys: setting<string[]>('swipeLeft', []),
         swipeRightKeys: setting<string[]>('swipeRight', []),
         showMobileHeaders: modelSetting('showMobileHeaders', 'showMobileHeaders', false),
+        includeChildren: setting('includeChildren', true),
     }
 }

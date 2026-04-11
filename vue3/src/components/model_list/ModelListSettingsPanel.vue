@@ -6,7 +6,7 @@
         :tabs="drawerTabs"
     >
         <template #filters>
-            <ModelFilterPanel
+            <FilterPanel
                 :grouped-filter-defs="groupedFilterDefs"
                 :get-filter="getFilter"
                 :set-filter="setFilter"
@@ -17,6 +17,20 @@
         </template>
 
         <template #settings>
+            <!-- Include Children (for hierarchical keyword/food search) -->
+            <template v-if="includeChildrenAvailable">
+                <div class="px-4 py-1">
+                    <v-switch
+                        v-model="includeChildren"
+                        :label="$t('IncludeChildren')"
+                        color="primary"
+                        hide-details
+                        density="compact"
+                    />
+                </div>
+                <v-divider class="my-2" />
+            </template>
+
             <!-- Quick Actions -->
             <template v-if="actionDefs.length > 0">
                 <CollapsibleSection :label="$t('QuickActions')">
@@ -108,7 +122,7 @@
             </template>
 
             <!-- Filter visibility (grouped by filter section) -->
-            <template v-if="configurableFiltersByGroup.size > 0">
+            <template v-if="filterVisibilityAvailable && configurableFiltersByGroup.size > 0">
                 <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
                     <CollapsibleSection :label="$t(group)">
                         <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
@@ -152,6 +166,7 @@
                     density="compact"
                 />
             </div>
+
 
             <!-- Mobile-specific settings -->
             <template v-if="hasMobileList && mobile">
@@ -321,10 +336,11 @@ import type {Model, ModelTableHeaders} from '@/types/Models'
 import type {ActionDef, FilterDef, FilterValue} from '@/composables/modellist/types'
 import {MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
+import {useFilterPlacement} from '@/composables/useFilterPlacement'
 import {useTouchDetect} from '@/composables/useTouchDetect'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
-import ModelFilterPanel from '@/components/model_list/ModelFilterPanel.vue'
+import FilterPanel from '@/components/model_list/FilterPanel.vue'
 
 const {t} = useI18n()
 const {mobile} = useDisplay()
@@ -389,11 +405,13 @@ const drawerTabs = computed(() => [
 // Settings from parent via provide/inject (single instance shared across page, mobile view, settings panel)
 const {isPinned, showStats, showColumnHeaders, treeEnabled, quickActionKeys,
     desktopSubtitleKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys,
-    swipeRightKeys, showMobileHeaders} = inject(MODEL_LIST_SETTINGS_KEY)!
+    swipeRightKeys, showMobileHeaders, includeChildren} = inject(MODEL_LIST_SETTINGS_KEY)!
 
 // Computed model flags
 const treeAvailable = computed(() => !!props.model.isTree && !!props.model.listSettings?.treeEnabled)
 const statsAvailable = computed(() => !!props.model.listSettings?.statsFooter)
+const includeChildrenAvailable = computed(() => !!props.model.listSettings?.includeChildren)
+const filterVisibilityAvailable = computed(() => !!props.model.listSettings?.filterVisibility)
 const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
 const toggleableColumns = computed(() => props.allColumns.filter(c => c.key !== 'name'))
 
@@ -450,42 +468,8 @@ function toggleMobileSubtitle(key: string) {
 }
 
 // Page Layout — per-filter inline/drawer visibility
-const deviceSettings = useUserPreferenceStore().deviceSettings
-
-const configurableFiltersByGroup = computed(() => {
-    const result = new Map<string, FilterDef[]>()
-    for (const [group, defs] of props.groupedFilterDefs) {
-        if (!group) continue
-        const visible = defs.filter(d => !d.hidden)
-        if (visible.length > 0) result.set(group, visible)
-    }
-    return result
-})
-
-function isInlineSelected(key: string) {
-    return (deviceSettings.search_inlineFilters ?? []).includes(key)
-}
-const inlineSelectedCount = computed(() => (deviceSettings.search_inlineFilters ?? []).length)
-
-function toggleInline(key: string) {
-    const current = [...(deviceSettings.search_inlineFilters ?? [])]
-    const idx = current.indexOf(key)
-    if (idx >= 0) current.splice(idx, 1)
-    else current.push(key)
-    deviceSettings.search_inlineFilters = current
-}
-
-function isDrawerSelected(key: string) {
-    return (deviceSettings.search_drawerFilters ?? []).includes(key)
-}
-
-function toggleDrawer(key: string) {
-    const current = [...(deviceSettings.search_drawerFilters ?? [])]
-    const idx = current.indexOf(key)
-    if (idx >= 0) current.splice(idx, 1)
-    else current.push(key)
-    deviceSettings.search_drawerFilters = current
-}
+const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer, configurableFiltersByGroup: makeConfigurable} = useFilterPlacement()
+const configurableFiltersByGroup = makeConfigurable(computed(() => props.groupedFilterDefs))
 
 // Swipe action management
 const swipePickerOpen = ref(false)

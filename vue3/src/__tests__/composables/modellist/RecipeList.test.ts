@@ -36,7 +36,7 @@ const LEGACY_SORT_FIELDS = [
 ] as const
 
 function emittedKeysFor(def: FilterDef): string[] {
-    if (def.type === 'date-range' || def.type === 'number-range' || def.type === 'rating') {
+    if (def.type === 'date-range' || def.type === 'number-range') {
         return [`${def.key}Gte`, `${def.key}Lte`]
     }
     return [def.key]
@@ -85,13 +85,12 @@ describe('RECIPE_FILTER_DEFS', () => {
         }
     })
 
-    it('groups filters into Content / Rating / Cooking / Recipe / Time / Date / Other', () => {
+    it('groups filters into Content / Rating / Recipe / Time / Date / Other', () => {
         const groups = new Set(
             RECIPE_FILTER_DEFS.map(d => d.group).filter((g): g is string => Boolean(g)),
         )
         expect(groups).toContain('Content')
         expect(groups).toContain('Rating')
-        expect(groups).toContain('Cooking')
         expect(groups).toContain('Recipe')
         expect(groups).toContain('Time')
         expect(groups).toContain('Date')
