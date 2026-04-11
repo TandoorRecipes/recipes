@@ -49,7 +49,7 @@ const RECIPE_FILTERS: FilterDef[] = [
     {key: 'timescooked',       labelKey: 'TimesCooked',        type: 'number-range', group: 'Recipe'},
     {key: 'hasPhoto',          labelKey: 'HasPhoto',           type: 'tristate', group: 'Recipe'},
     {key: 'hasKeywords',       labelKey: 'HasKeywords',        type: 'tristate', group: 'Recipe'},
-    {key: 'makenow',           labelKey: 'AvailableToCook',    type: 'tristate', group: 'Recipe'},
+    {key: 'makenow',           labelKey: 'MakeNow',            type: 'tristate', group: 'Recipe'},
 ]
 
 const TIME_FILTERS: FilterDef[] = [
