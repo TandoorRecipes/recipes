@@ -70,6 +70,15 @@ export function useUrlFilters(
         if (!flushScheduled) initFromRoute()
     })
 
+    // Re-init when filter defs become available. ModelListPage passes a
+    // computed that depends on `genericModel` set in onBeforeMount, so at
+    // the time `useUrlFilters` runs, `filterDefs.value` is still `[]` and
+    // `initFromRoute` sees no known keys. Re-run once defs arrive so URL
+    // params like ?expiringSoon=3 actually populate state.
+    watch(() => filterDefs.value.length, (len, prev) => {
+        if (prev === 0 && len > 0) initFromRoute()
+    })
+
     const defsByKey = computed(() => {
         const map = new Map<string, FilterDef>()
         for (const def of filterDefs.value) map.set(def.key, def)
