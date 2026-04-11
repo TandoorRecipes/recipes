@@ -1,6 +1,6 @@
 <template>
     <v-card class="pa-2" style="overflow: visible">
-        <div class="d-flex align-center">
+        <div class="d-flex align-center" style="min-height: 28px">
             <v-badge :model-value="totalCount > 0" :content="totalCount" color="primary" inline>
                 <span class="text-subtitle-2 flex-shrink-0">{{ label }}</span>
             </v-badge>
@@ -21,7 +21,7 @@
                 <div class="floating-label-wrap flex-grow-1">
                     <span class="floating-label text-medium-emphasis">{{ $t('with') }}</span>
                     <ModelSelect :model="modelName" :placeholder="selectPlaceholder" :model-value="row1Values" @update:model-value="v => onUpdate(row1Key, v)"
-                        :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="true" :append-to-body="true" :hide-details="true" />
+                        :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" />
                 </div>
                 <v-btn-toggle :model-value="includeMode" @update:model-value="toggleIncludeMode" mandatory density="compact" class="flex-shrink-0" @click.stop>
                     <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
@@ -71,7 +71,7 @@
                 <div class="floating-label-wrap flex-grow-1">
                     <span class="floating-label text-medium-emphasis">{{ $t('with') }}</span>
                     <ModelSelect :model="modelName" :placeholder="selectPlaceholder" :model-value="row1Values" @update:model-value="v => onUpdate(row1Key, v)"
-                        :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="true" :append-to-body="true" :hide-details="true" />
+                        :object="false" mode="tags" density="compact" :can-clear="true" :search-on-load="false" :append-to-body="true" :hide-details="true" />
                 </div>
                 <v-btn-toggle v-if="showToggles" :model-value="includeMode" @update:model-value="toggleIncludeMode" mandatory density="compact" class="flex-shrink-0" @click.stop>
                     <v-btn value="any" size="x-small">{{ $t('any') }}</v-btn>
@@ -175,27 +175,17 @@ const totalCount = computed(() =>
     row3Values.value.length + row4Values.value.length
 )
 
-// Auto-correct mode and expansion from external state (saved search load)
+// Auto-correct mode and expansion from external state (saved search load).
+// Reads raw keys directly (not row*Values which depend on mode) to detect
+// which mode the external data implies.
 watch(
-    () => [props.getFilter(props.keys[0]), props.getFilter(props.keys[1])],
-    () => {
-        const hasKey0 = parseIds(props.getFilter(props.keys[0])).length > 0
-        const hasKey1 = parseIds(props.getFilter(props.keys[1])).length > 0
-        if (includeMode.value === 'any' && !hasKey0 && hasKey1) includeMode.value = 'all'
-        else if (includeMode.value === 'all' && !hasKey1 && hasKey0) includeMode.value = 'any'
-        if (row3Values.value.length > 0) expanded.value = true
-    },
-    {immediate: true},
-)
-
-watch(
-    () => [props.getFilter(props.keys[2]), props.getFilter(props.keys[3])],
-    () => {
-        const hasKey2 = parseIds(props.getFilter(props.keys[2])).length > 0
-        const hasKey3 = parseIds(props.getFilter(props.keys[3])).length > 0
-        if (excludeMode.value === 'any' && !hasKey2 && hasKey3) excludeMode.value = 'all'
-        else if (excludeMode.value === 'all' && !hasKey3 && hasKey2) excludeMode.value = 'any'
-        if (row4Values.value.length > 0) expanded.value = true
+    () => props.keys.map(k => parseIds(props.getFilter(k)).length > 0),
+    ([hasK0, hasK1, hasK2, hasK3]) => {
+        if (includeMode.value === 'any' && !hasK0 && hasK1) includeMode.value = 'all'
+        else if (includeMode.value === 'all' && !hasK1 && hasK0) includeMode.value = 'any'
+        if (excludeMode.value === 'any' && !hasK2 && hasK3) excludeMode.value = 'all'
+        else if (excludeMode.value === 'all' && !hasK3 && hasK2) excludeMode.value = 'any'
+        if (row3Values.value.length > 0 || row4Values.value.length > 0) expanded.value = true
     },
     {immediate: true},
 )

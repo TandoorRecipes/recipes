@@ -70,6 +70,12 @@ export function useUrlFilters(
         if (!flushScheduled) initFromRoute()
     })
 
+    const defsByKey = computed(() => {
+        const map = new Map<string, FilterDef>()
+        for (const def of filterDefs.value) map.set(def.key, def)
+        return map
+    })
+
     const groupedFilterDefs = computed<Map<string, FilterDef[]>>(() => {
         const map = new Map<string, FilterDef[]>()
         for (const def of filterDefs.value) {
@@ -87,7 +93,7 @@ export function useUrlFilters(
         if (state.size === 0) return {}
         const params: Record<string, string | number | (string | number)[]> = {}
         for (const [key, val] of state) {
-            const def = filterDefs.value.find(d => d.key === key)
+            const def = defsByKey.value.get(key)
             if (def?.type === 'select') {
                 params[key] = [val]
             } else if (def?.type === 'tag-select') {
@@ -95,12 +101,12 @@ export function useUrlFilters(
                 if (items.length === 0) continue
                 const nums = items.map(s => Number(s))
                 params[key] = nums.every(n => !isNaN(n)) ? nums : items
-            } else if (def?.type === 'number-range' || def?.type === 'date-range' || def?.type === 'rating') {
+            } else if (def?.type === 'number-range' || def?.type === 'date-range') {
                 const sepIdx = val.indexOf('~')
                 if (sepIdx < 0) continue
                 const gteRaw = val.slice(0, sepIdx)
                 const lteRaw = val.slice(sepIdx + 1)
-                const isNumber = def.type === 'number-range' || def.type === 'rating'
+                const isNumber = def.type === 'number-range'
                 if (gteRaw.length > 0) {
                     const v = isNumber ? Number(gteRaw) : gteRaw
                     if (!isNumber || !isNaN(v as number)) params[`${key}Gte`] = v
@@ -109,7 +115,7 @@ export function useUrlFilters(
                     const v = isNumber ? Number(lteRaw) : lteRaw
                     if (!isNumber || !isNaN(v as number)) params[`${key}Lte`] = v
                 }
-            } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number') {
+            } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number' || def?.type === 'rating-half') {
                 const num = Number(val)
                 if (!isNaN(num)) params[key] = num
             } else {

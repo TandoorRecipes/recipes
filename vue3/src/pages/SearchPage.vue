@@ -197,17 +197,71 @@
             </v-col>
         </v-row>
 
-        <ModelListSettingsPanel
+        <TabbedDrawer
             v-model="settingsPanelOpen"
             v-model:active-tab="settingsActiveTab"
-            :model="recipeSettingsModel"
-            :grouped-filter-defs="groupedFilterDefs"
-            :get-filter="getFilter"
-            :set-filter="setFilter"
-            :clear-filter="clearFilter"
-            :clear-all-filters="clearAllFilters"
-            :active-filter-count="activeFilterCount"
-        />
+            v-model:pinned="settings.isPinned.value"
+            :tabs="drawerTabs"
+        >
+            <template #filters>
+                <FilterPanel
+                    :grouped-filter-defs="groupedFilterDefs"
+                    :get-filter="getFilter"
+                    :set-filter="setFilter"
+                    :clear-filter="clearFilter"
+                    :clear-all-filters="clearAllFilters"
+                    :active-filter-count="activeFilterCount"
+                />
+            </template>
+
+            <template #settings>
+                <div class="px-4 py-1">
+                    <v-switch
+                        v-model="settings.includeChildren.value"
+                        :label="$t('IncludeChildren')"
+                        color="primary"
+                        hide-details
+                        density="compact"
+                    />
+                </div>
+                <v-divider class="my-2" />
+
+                <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
+                    <CollapsibleSection :label="$t(group)">
+                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
+                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
+                            <v-btn-toggle density="compact" multiple>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isInlineSelected(def.key)"
+                                    @click="toggleInline(def.key)"
+                                >{{ $t('Page') }}</v-btn>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isDrawerSelected(def.key)"
+                                    @click="toggleDrawer(def.key)"
+                                >{{ $t('Panel') }}</v-btn>
+                            </v-btn-toggle>
+                        </div>
+                    </CollapsibleSection>
+                </template>
+            </template>
+
+            <template #footer="{ activeTab }">
+                <v-btn
+                    v-show="activeTab === 'filters'"
+                    variant="text"
+                    color="primary"
+                    @click="clearAllFilters"
+                >
+                    {{ $t('Clear_All') }}
+                </v-btn>
+                <v-spacer />
+                <v-btn variant="flat" color="primary" @click="settingsPanelOpen = false">
+                    {{ $t('Done') }}
+                </v-btn>
+            </template>
+        </TabbedDrawer>
 
         <v-dialog v-model="dialog">
             <v-card>
@@ -227,7 +281,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, provide, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useRouter, useRoute} from 'vue-router'
 import {useRouteQuery} from '@vueuse/router'
 import {useDebounceFn} from '@vueuse/core'
@@ -241,13 +295,16 @@ import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import {useUrlFilters} from '@/composables/useUrlFilters'
 import {RECIPE_FILTER_DEFS, RECIPE_SORT_DEFS} from '@/composables/modellist/RecipeList'
 import type {FilterDef} from '@/composables/modellist/types'
-import {useModelListSettings, MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
+import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
+import {useFilterPlacement} from '@/composables/useFilterPlacement'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
 import InlineFilterCard from '@/components/search/InlineFilterCard.vue'
 
 import ModelListToolbar from '@/components/model_list/ModelListToolbar.vue'
 import ModelListFilterChips from '@/components/model_list/ModelListFilterChips.vue'
-import ModelListSettingsPanel from '@/components/model_list/ModelListSettingsPanel.vue'
+import FilterPanel from '@/components/model_list/FilterPanel.vue'
+import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
+import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 import ClosableHelpAlert from '@/components/display/ClosableHelpAlert.vue'
 import RecipeContextMenu from '@/components/inputs/RecipeContextMenu.vue'
@@ -273,13 +330,15 @@ const ordering = useRouteQuery('ordering', '')
 const page = useRouteQuery('page', 1, {transform: Number})
 const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.search_itemsPerPage, {transform: Number})
 
-// ─── ModelListSettingsPanel injection contract ──────────────────────────
-// ModelListSettingsPanel reads device settings (column visibility, swipe,
-// stats, etc.) via inject(MODEL_LIST_SETTINGS_KEY). ModelListPage provides
-// this from useModelListSettings; SearchPage must do the same or the panel
-// crashes when opened.
+// ─── Settings (device-persisted) ──────────────────────────────────────
 const settings = useModelListSettings(computed(() => 'search'))
-provide(MODEL_LIST_SETTINGS_KEY, settings)
+const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer, configurableFiltersByGroup: makeConfigurable} = useFilterPlacement()
+const configurableFiltersByGroup = makeConfigurable(groupedFilterDefs)
+
+const drawerTabs = computed(() => [
+    {key: 'filters', label: t('Filters'), icon: 'fa-solid fa-filter'},
+    {key: 'settings', label: t('Settings'), icon: 'fa-solid fa-sliders'},
+])
 
 // ─── Inline / drawer filter visibility (per-filter granularity) ─────────
 const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
@@ -306,7 +365,7 @@ const tableItemCount = ref(0)
 const selectedItems = ref<EditorSupportedTypes[]>([])
 const selectMode = ref(false)
 
-const filtersCollapsed = ref(false)
+const filtersCollapsed = ref(true)
 const settingsPanelOpen = ref(false)
 const settingsActiveTab = ref<'settings' | 'filters'>('filters')
 
@@ -342,18 +401,8 @@ const hasActiveSearchState = computed(() =>
     !!query.value || activeFilterCount.value > 0 || (!!ordering.value && ordering.value !== ''),
 )
 
-const recipeSettingsModel = computed(() => ({
-    name: 'Recipe' as const,
-    localizationKey: 'Recipe',
-    icon: 'fa-solid fa-utensils',
-    listSettings: {settingsKey: 'search', settingsPanel: true},
-}))
 
 function openSettingsPanel(tab: 'settings' | 'filters') {
-    const viewMode = useUserPreferenceStore().deviceSettings.search_viewMode
-    if (tab === 'settings' && viewMode === 'grid') {
-        tab = 'filters'
-    }
     settingsActiveTab.value = tab
     settingsPanelOpen.value = true
 }
@@ -446,14 +495,16 @@ function filtersToJson(): FilterBlob {
         if (def.type === 'tag-select') {
             const items = raw.split(',').filter(s => s.length > 0).map(Number).filter(n => !isNaN(n))
             if (items.length > 0) out[def.key] = items
-        } else if (def.type === 'date-range' || def.type === 'number-range' || def.type === 'rating') {
+        } else if (def.type === 'date-range' || def.type === 'number-range') {
             const sep = raw.indexOf('~')
             if (sep < 0) continue
             const prefix = def.key
             const gte = raw.slice(0, sep), lte = raw.slice(sep + 1)
-            const isNum = def.type === 'number-range' || def.type === 'rating'
+            const isNum = def.type === 'number-range'
             if (gte) out[`${prefix}_gte`] = isNum ? Number(gte) : gte
             if (lte) out[`${prefix}_lte`] = isNum ? Number(lte) : lte
+        } else if (def.type === 'rating-half') {
+            const n = Number(raw); if (!isNaN(n)) out[def.key] = n
         } else if (def.type === 'tristate' || def.type === 'toggle') {
             out[def.key] = raw === '1'
         } else if (def.type === 'number') {
@@ -470,12 +521,18 @@ function applyFilterBlob(params: FilterBlob) {
     if (params.unrated_only === true) {
         setFilter('unrated', '1')
     }
+    // Backward compat: old saved searches stored rating as rating_gte/rating_lte
+    if (params.rating_gte != null) setFilter('ratingGte', String(params.rating_gte))
+    if (params.rating_lte != null) setFilter('ratingLte', String(params.rating_lte))
     for (const def of RECIPE_FILTER_DEFS) {
-        if (def.type === 'date-range' || def.type === 'number-range' || def.type === 'rating') {
+        if (def.type === 'date-range' || def.type === 'number-range') {
             const prefix = def.key
             const gte = params[`${prefix}_gte`] ?? params[`${def.key}_gte`]
             const lte = params[`${prefix}_lte`] ?? params[`${def.key}_lte`]
             if (gte != null || lte != null) setFilter(def.key, {gte: gte ?? null, lte: lte ?? null})
+        } else if (def.type === 'rating-half') {
+            const v = params[def.key]
+            if (v != null && v !== '') setFilter(def.key, String(v))
         } else if (def.type === 'tag-select') {
             const v = params[def.key]
             if (Array.isArray(v) && v.length > 0) setFilter(def.key, v.map(Number).filter(n => !isNaN(n)))
@@ -491,9 +548,10 @@ function applyFilterBlob(params: FilterBlob) {
 }
 
 function snapshotFilters() { filterSnapshot.value = JSON.stringify(filtersToJson()) }
-const savedFilterModified = computed(() =>
-    !!selectedCustomFilter.value && filterSnapshot.value && JSON.stringify(filtersToJson()) !== filterSnapshot.value,
-)
+const savedFilterModified = computed(() => {
+    if (!selectedCustomFilter.value || !filterSnapshot.value) return false
+    return JSON.stringify(filtersToJson()) !== filterSnapshot.value
+})
 
 function loadSelectedCustomFilter() {
     if (!selectedCustomFilter.value) return

@@ -45,7 +45,7 @@ export type ColumnType = 'text' | 'number' | 'boolean-indicator' | 'status-chip'
 /**
  * Filter control types for the filter panel.
  */
-export type FilterType = 'tristate' | 'toggle' | 'model-select' | 'number' | 'select' | 'tag-select' | 'tag-group' | 'date-range' | 'number-range' | 'rating'
+export type FilterType = 'tristate' | 'toggle' | 'model-select' | 'number' | 'select' | 'tag-select' | 'tag-group' | 'date-range' | 'number-range' | 'rating-half'
 
 /** Range filter value: an open- or closed-ended interval. */
 export type RangeValue = {
@@ -79,7 +79,7 @@ export type FilterDef = {
     suffixKey?: string,
     /** For select type: available options with value and localization key */
     options?: {value: string, labelKey: string}[],
-    /** Participates in state/chips/bridge but skipped by ModelFilterPanel rendering. */
+    /** Participates in state/chips/bridge but skipped by FilterPanel rendering. */
     hidden?: boolean,
     /** For tag-group: the 4 variant keys [any, all, orNot, andNot] */
     variantKeys?: [string, string, string, string],
@@ -186,6 +186,10 @@ export type ListSettings = {
     statsFooter?: boolean,
     /** Whether a mobile-specific list layout is available */
     mobileList?: boolean,
+    /** Whether "include children" toggle is available (for hierarchical keyword/food search) */
+    includeChildren?: boolean,
+    /** Whether per-filter Page/Panel visibility settings are available */
+    filterVisibility?: boolean,
     /** Per-model default values for device settings */
     defaults?: SettingsDefaults,
 }
