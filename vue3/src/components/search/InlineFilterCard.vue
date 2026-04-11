@@ -10,6 +10,11 @@
                         @update:model-value="setRangePart(def.key, 'gte', $event > 0 ? String($event) : null)"
                         half-increments clearable hover density="comfortable"
                     />
+                    <v-btn
+                        v-if="parseRangePart(def.key, 'gte')"
+                        icon="$close" variant="plain" size="x-small" density="compact"
+                        @click="setRangePart(def.key, 'gte', null)"
+                    />
                 </div>
                 <div class="d-flex align-center ga-2 mt-1">
                     <v-icon size="small" icon="fa-solid fa-less-than-equal" class="text-medium-emphasis" />
@@ -17,6 +22,11 @@
                         :model-value="parseRangePart(def.key, 'lte') ? Number(parseRangePart(def.key, 'lte')) : 0"
                         @update:model-value="setRangePart(def.key, 'lte', $event > 0 ? String($event) : null)"
                         half-increments clearable hover density="comfortable"
+                    />
+                    <v-btn
+                        v-if="parseRangePart(def.key, 'lte')"
+                        icon="$close" variant="plain" size="x-small" density="compact"
+                        @click="setRangePart(def.key, 'lte', null)"
                     />
                 </div>
             </div>
@@ -26,6 +36,21 @@
                     :model-value="getFilter(def.key) === '1'"
                     @update:model-value="setFilter(def.key, $event ? '1' : undefined)"
                     color="primary" density="compact" hide-details
+                />
+            </div>
+            <div v-else-if="def.type === 'model-select' && def.modelName" class="mt-1">
+                <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
+                <ModelSelect
+                    :model="def.modelName"
+                    :model-value="getFilter(def.key) ? Number(getFilter(def.key)) : null"
+                    @update:model-value="setFilter(def.key, $event != null ? String($event) : undefined)"
+                    :object="false"
+                    density="compact"
+                    mode="single"
+                    :can-clear="true"
+                    :search-on-load="true"
+                    :append-to-body="true"
+                    :hide-details="true"
                 />
             </div>
             <div v-else-if="def.type === 'tristate'" class="d-flex align-center mt-1">
@@ -79,6 +104,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
 import type {FilterDef, FilterValue, RangeValue} from '@/composables/modellist/types'
+import ModelSelect from '@/components/inputs/ModelSelect.vue'
 
 const props = defineProps<{
     group: string

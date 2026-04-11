@@ -1562,6 +1562,20 @@ export interface ApiRecipeListRequest {
     timescookedGte?: number;
     timescookedLte?: number;
     units?: number;
+    unitsAnd?: Array<number>; // MANUAL
+    unitsOrNot?: Array<number>; // MANUAL
+    unitsAndNot?: Array<number>; // MANUAL
+    unrated?: number; // MANUAL
+    hasPhoto?: number; // MANUAL
+    hasKeywords?: number; // MANUAL
+    servingsGte?: number; // MANUAL
+    servingsLte?: number; // MANUAL
+    workingTimeGte?: number; // MANUAL
+    workingTimeLte?: number; // MANUAL
+    waitingTimeGte?: number; // MANUAL
+    waitingTimeLte?: number; // MANUAL
+    totalTimeGte?: number; // MANUAL
+    totalTimeLte?: number; // MANUAL
     updatedon?: Date;
     updatedonGte?: Date;
     updatedonLte?: Date;
@@ -11246,6 +11260,64 @@ export class ApiApi extends runtime.BaseAPI {
         if (requestParameters['units'] != null) {
             queryParameters['units'] = requestParameters['units'];
         }
+
+        // MANUAL — params not yet in upstream OpenAPI schema
+        if (requestParameters['unitsAnd'] != null) {
+            queryParameters['units_and'] = requestParameters['unitsAnd'];
+        }
+
+        if (requestParameters['unitsOrNot'] != null) {
+            queryParameters['units_or_not'] = requestParameters['unitsOrNot'];
+        }
+
+        if (requestParameters['unitsAndNot'] != null) {
+            queryParameters['units_and_not'] = requestParameters['unitsAndNot'];
+        }
+
+        if (requestParameters['unrated'] != null) {
+            queryParameters['unrated'] = requestParameters['unrated'];
+        }
+
+        if (requestParameters['hasPhoto'] != null) {
+            queryParameters['has_photo'] = requestParameters['hasPhoto'];
+        }
+
+        if (requestParameters['hasKeywords'] != null) {
+            queryParameters['has_keywords'] = requestParameters['hasKeywords'];
+        }
+
+        if (requestParameters['servingsGte'] != null) {
+            queryParameters['servings_gte'] = requestParameters['servingsGte'];
+        }
+
+        if (requestParameters['servingsLte'] != null) {
+            queryParameters['servings_lte'] = requestParameters['servingsLte'];
+        }
+
+        if (requestParameters['workingTimeGte'] != null) {
+            queryParameters['working_time_gte'] = requestParameters['workingTimeGte'];
+        }
+
+        if (requestParameters['workingTimeLte'] != null) {
+            queryParameters['working_time_lte'] = requestParameters['workingTimeLte'];
+        }
+
+        if (requestParameters['waitingTimeGte'] != null) {
+            queryParameters['waiting_time_gte'] = requestParameters['waitingTimeGte'];
+        }
+
+        if (requestParameters['waitingTimeLte'] != null) {
+            queryParameters['waiting_time_lte'] = requestParameters['waitingTimeLte'];
+        }
+
+        if (requestParameters['totalTimeGte'] != null) {
+            queryParameters['total_time_gte'] = requestParameters['totalTimeGte'];
+        }
+
+        if (requestParameters['totalTimeLte'] != null) {
+            queryParameters['total_time_lte'] = requestParameters['totalTimeLte'];
+        }
+        // END MANUAL
 
         if (requestParameters['updatedon'] != null) {
             queryParameters['updatedon'] = (requestParameters['updatedon'] as any).toISOString().substring(0,10);

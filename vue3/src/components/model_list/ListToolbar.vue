@@ -40,7 +40,12 @@
             hide-details
             density="compact"
             class="model-list-toolbar-search"
-        />
+            :class="{'toolbar-search--flush-end': !!$slots['search-append-inner']}"
+        >
+            <template v-if="$slots['search-append-inner']" #append-inner>
+                <slot name="search-append-inner" />
+            </template>
+        </v-text-field>
 
         <div class="model-list-toolbar-right">
             <v-btn
@@ -313,6 +318,10 @@ function onSortSelect(key: string) {
 
 .model-list-toolbar-search {
     min-width: 0;
+}
+
+.toolbar-search--flush-end :deep(.v-field) {
+    padding-inline-end: 0;
 }
 
 .model-list-toolbar-desktop :deep(.below-search-slot) {
