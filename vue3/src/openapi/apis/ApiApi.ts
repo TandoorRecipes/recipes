@@ -784,7 +784,7 @@ export interface ApiFdcSearchRetrieveRequest {
 
 export interface ApiFoodAipropertiesCreateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
     provider?: number;
 }
 
@@ -800,7 +800,7 @@ export interface ApiFoodCascadingListRequest {
 }
 
 export interface ApiFoodCreateRequest {
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodDestroyRequest {
@@ -809,7 +809,7 @@ export interface ApiFoodDestroyRequest {
 
 export interface ApiFoodFdcCreateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodInheritFieldRetrieveRequest {
@@ -841,13 +841,13 @@ export interface ApiFoodListRequest {
 export interface ApiFoodMergeUpdateRequest {
     id: number;
     target: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodMoveUpdateRequest {
     id: number;
     parent: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodNullingListRequest {
@@ -859,7 +859,7 @@ export interface ApiFoodNullingListRequest {
 
 export interface ApiFoodPartialUpdateRequest {
     id: number;
-    patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodProtectingListRequest {
@@ -879,7 +879,7 @@ export interface ApiFoodSubstitutesRetrieveRequest {
 
 export interface ApiFoodUpdateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiGetExternalFileLinkRetrieveRequest {
@@ -1152,6 +1152,8 @@ export interface ApiKeywordDestroyRequest {
 }
 
 export interface ApiKeywordListRequest {
+    hasChildren?: boolean;
+    hasRecipe?: boolean;
     limit?: string;
     page?: number;
     pageSize?: number;
@@ -1562,20 +1564,6 @@ export interface ApiRecipeListRequest {
     timescookedGte?: number;
     timescookedLte?: number;
     units?: number;
-    unitsAnd?: Array<number>; // MANUAL
-    unitsOrNot?: Array<number>; // MANUAL
-    unitsAndNot?: Array<number>; // MANUAL
-    unrated?: number; // MANUAL
-    hasPhoto?: number; // MANUAL
-    hasKeywords?: number; // MANUAL
-    servingsGte?: number; // MANUAL
-    servingsLte?: number; // MANUAL
-    workingTimeGte?: number; // MANUAL
-    workingTimeLte?: number; // MANUAL
-    waitingTimeGte?: number; // MANUAL
-    waitingTimeLte?: number; // MANUAL
-    totalTimeGte?: number; // MANUAL
-    totalTimeLte?: number; // MANUAL
     updatedon?: Date;
     updatedonGte?: Date;
     updatedonLte?: Date;
@@ -2105,6 +2093,7 @@ export interface ApiUnitDestroyRequest {
 }
 
 export interface ApiUnitListRequest {
+    hasRecipe?: boolean;
     limit?: string;
     page?: number;
     pageSize?: number;
@@ -8014,6 +8003,14 @@ export class ApiApi extends runtime.BaseAPI {
     async apiKeywordListRaw(requestParameters: ApiKeywordListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedKeywordList>> {
         const queryParameters: any = {};
 
+        if (requestParameters['hasChildren'] != null) {
+            queryParameters['has_children'] = requestParameters['hasChildren'];
+        }
+
+        if (requestParameters['hasRecipe'] != null) {
+            queryParameters['has_recipe'] = requestParameters['hasRecipe'];
+        }
+
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
         }
@@ -11260,64 +11257,6 @@ export class ApiApi extends runtime.BaseAPI {
         if (requestParameters['units'] != null) {
             queryParameters['units'] = requestParameters['units'];
         }
-
-        // MANUAL — params not yet in upstream OpenAPI schema
-        if (requestParameters['unitsAnd'] != null) {
-            queryParameters['units_and'] = requestParameters['unitsAnd'];
-        }
-
-        if (requestParameters['unitsOrNot'] != null) {
-            queryParameters['units_or_not'] = requestParameters['unitsOrNot'];
-        }
-
-        if (requestParameters['unitsAndNot'] != null) {
-            queryParameters['units_and_not'] = requestParameters['unitsAndNot'];
-        }
-
-        if (requestParameters['unrated'] != null) {
-            queryParameters['unrated'] = requestParameters['unrated'];
-        }
-
-        if (requestParameters['hasPhoto'] != null) {
-            queryParameters['has_photo'] = requestParameters['hasPhoto'];
-        }
-
-        if (requestParameters['hasKeywords'] != null) {
-            queryParameters['has_keywords'] = requestParameters['hasKeywords'];
-        }
-
-        if (requestParameters['servingsGte'] != null) {
-            queryParameters['servings_gte'] = requestParameters['servingsGte'];
-        }
-
-        if (requestParameters['servingsLte'] != null) {
-            queryParameters['servings_lte'] = requestParameters['servingsLte'];
-        }
-
-        if (requestParameters['workingTimeGte'] != null) {
-            queryParameters['working_time_gte'] = requestParameters['workingTimeGte'];
-        }
-
-        if (requestParameters['workingTimeLte'] != null) {
-            queryParameters['working_time_lte'] = requestParameters['workingTimeLte'];
-        }
-
-        if (requestParameters['waitingTimeGte'] != null) {
-            queryParameters['waiting_time_gte'] = requestParameters['waitingTimeGte'];
-        }
-
-        if (requestParameters['waitingTimeLte'] != null) {
-            queryParameters['waiting_time_lte'] = requestParameters['waitingTimeLte'];
-        }
-
-        if (requestParameters['totalTimeGte'] != null) {
-            queryParameters['total_time_gte'] = requestParameters['totalTimeGte'];
-        }
-
-        if (requestParameters['totalTimeLte'] != null) {
-            queryParameters['total_time_lte'] = requestParameters['totalTimeLte'];
-        }
-        // END MANUAL
 
         if (requestParameters['updatedon'] != null) {
             queryParameters['updatedon'] = (requestParameters['updatedon'] as any).toISOString().substring(0,10);
@@ -15767,6 +15706,10 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUnitListRaw(requestParameters: ApiUnitListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUnitList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['hasRecipe'] != null) {
+            queryParameters['has_recipe'] = requestParameters['hasRecipe'];
+        }
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
