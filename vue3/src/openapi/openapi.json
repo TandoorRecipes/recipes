@@ -3911,6 +3911,16 @@ paths:
       description: logs request counts to redis cache total/per user/
       parameters:
       - in: query
+        name: has_children
+        schema:
+          type: boolean
+        description: Filter by whether keyword has child keywords
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether keyword is used by at least one recipe
+      - in: query
         name: limit
         schema:
           type: string
@@ -9462,6 +9472,11 @@ paths:
       operationId: apiUnitList
       description: logs request counts to redis cache total/per user/
       parameters:
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether unit is used by at least one recipe ingredient
       - in: query
         name: limit
         schema:
