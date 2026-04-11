@@ -6,6 +6,7 @@
         :width="width"
         :permanent="isPinned && isOpen"
         :temporary="!isPinned"
+        disable-resize-watcher
     >
         <v-toolbar density="compact" flat>
             <v-spacer />
@@ -14,7 +15,7 @@
                 variant="plain"
                 size="small"
                 :aria-label="isPinned ? $t('Unpin') : $t('Pin')"
-                @click="togglePin"
+                @click="isPinned = !isPinned"
             >
                 <v-icon :class="{'fa-rotate-90': !isPinned}">fa-solid fa-thumbtack</v-icon>
                 <v-tooltip activator="parent" :text="isPinned ? $t('UnpinPanel') : $t('PinPanel')" location="bottom" :open-delay="400" />
@@ -89,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, ref, watch} from 'vue'
+import {computed, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 
 const props = withDefaults(defineProps<{
@@ -128,26 +129,6 @@ const currentTab = computed({
 const isPinned = computed({
     get: () => props.pinned,
     set: (val: boolean) => emit('update:pinned', val),
-})
-
-// Guard: when unpinning, Vuetify closes the drawer during the permanent→temporary
-// transition. Watch for the close and immediately re-open while the guard is active.
-let unpinGuard = false
-let unpinTimer: ReturnType<typeof setTimeout> | null = null
-function togglePin() {
-    if (isPinned.value) {
-        if (unpinTimer) clearTimeout(unpinTimer)
-        unpinGuard = true
-        isPinned.value = false
-        unpinTimer = setTimeout(() => { unpinGuard = false }, 300)
-    } else {
-        isPinned.value = true
-    }
-}
-watch(isOpen, (val) => {
-    if (!val && unpinGuard) {
-        nextTick(() => { isOpen.value = true })
-    }
 })
 
 // Bottom sheet drag-to-dismiss
