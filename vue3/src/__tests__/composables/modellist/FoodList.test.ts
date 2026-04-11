@@ -51,6 +51,29 @@ describe('FoodList config', () => {
                 expect(def.modelName).toBeTruthy()
             }
         })
+
+        // The generated OpenAPI typescript-fetch client exposes request
+        // parameters as camelCase properties (e.g. `expiringSoon`) and only
+        // maps them to snake_case query strings internally. Passing snake_case
+        // keys into `apiFoodList({expiring_soon: 3})` gets silently dropped
+        // because the client checks `requestParameters['expiringSoon']`.
+        // Every FilterDef.key must match a property on ApiFoodListRequest.
+        it('every filter key is a valid ApiFoodListRequest property', () => {
+            const validKeys: ReadonlyArray<keyof import('@/openapi').ApiFoodListRequest> = [
+                'expired', 'expiringSoon', 'hasChildren', 'hasInventory',
+                'hasRecipe', 'hasSubstitute', 'ignoreShopping', 'inShoppingList',
+                'inventoryLocation', 'onhand', 'supermarketCategory', 'usedInRecipes',
+            ]
+            for (const def of FOOD_FILTER_DEFS) {
+                expect(validKeys).toContain(def.key as any)
+            }
+        })
+
+        it('keys use camelCase (no underscores)', () => {
+            for (const def of FOOD_FILTER_DEFS) {
+                expect(def.key, `${def.key} must be camelCase`).not.toMatch(/_/)
+            }
+        })
     })
 
     describe('FOOD_ACTION_DEFS', () => {
