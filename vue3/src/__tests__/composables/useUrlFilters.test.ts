@@ -97,6 +97,23 @@ describe('useUrlFilters (multi-param)', () => {
             const { filterParams } = useUrlFilters(defs)
             expect(filterParams.value).toEqual({ internal: ['true'] })
         })
+
+        // ModelListPage loads filterDefs from a computed that depends on
+        // `genericModel`, which isn't set until onBeforeMount — so at
+        // `useUrlFilters` setup time `filterDefs.value` is still `[]`. Without
+        // a re-init trigger, URL params like ?expiringSoon=3 would be dropped.
+        it('re-reads route params when filterDefs arrive asynchronously', async () => {
+            mockQuery.value = { expiringSoon: '3' }
+            const pendingDefs = ref<FilterDef[]>([])
+            const defs = computed(() => pendingDefs.value)
+            const { filterParams, activeFilterCount } = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({})
+            expect(activeFilterCount.value).toBe(0)
+            pendingDefs.value = makeDefs([{ key: 'expiringSoon', type: 'number' }])
+            await nextTick()
+            expect(filterParams.value).toEqual({ expiringSoon: 3 })
+            expect(activeFilterCount.value).toBe(1)
+        })
     })
 
     describe('setFilter / getFilter', () => {
