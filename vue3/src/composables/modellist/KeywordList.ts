@@ -5,8 +5,8 @@
 import type {FilterDef, ActionDef, StatDef, ListSettings, SortDef, ModelItem} from './types'
 
 export const KEYWORD_FILTER_DEFS: FilterDef[] = [
-    {key: 'has_recipe', labelKey: 'UsedInRecipes', type: 'tristate', icon: 'fa-solid fa-utensils', group: 'Attributes'},
-    {key: 'has_children', labelKey: 'Children', type: 'tristate', icon: 'fa-solid fa-sitemap', group: 'Attributes'},
+    {key: 'hasRecipe', labelKey: 'UsedInRecipes', type: 'tristate', icon: 'fa-solid fa-utensils', group: 'Attributes'},
+    {key: 'hasChildren', labelKey: 'Children', type: 'tristate', icon: 'fa-solid fa-sitemap', group: 'Attributes'},
 ]
 
 export const KEYWORD_ACTION_DEFS: ActionDef[] = [
