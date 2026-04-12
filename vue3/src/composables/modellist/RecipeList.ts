@@ -39,8 +39,8 @@ const BOOK_FILTERS: FilterDef[] = [
 
 
 const RATING_FILTERS: FilterDef[] = [
-    {key: 'ratingGte',         labelKey: 'RatingMin',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-greater-than-equal'},
-    {key: 'ratingLte',         labelKey: 'RatingMax',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-less-than-equal'},
+    {key: 'ratingGte',         labelKey: 'RatingGte',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-greater-than-equal'},
+    {key: 'ratingLte',         labelKey: 'RatingLte',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-less-than-equal'},
     {key: 'unrated',           labelKey: 'Unrated',            type: 'toggle', group: 'Rating'},
 ]
 
