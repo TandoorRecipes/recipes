@@ -37,3 +37,21 @@ class MockIntersectionObserver {
     constructor(_callback: any, _options?: any) {}
 }
 global.IntersectionObserver = MockIntersectionObserver as any
+
+// Mock visualViewport (used by Vuetify VOverlay locationStrategies).
+// jsdom doesn't implement visualViewport, causing unhandled ReferenceError
+// that CI treats as a test failure even when all tests pass.
+Object.defineProperty(window, 'visualViewport', {
+    writable: true,
+    value: {
+        width: 1340,
+        height: 800,
+        offsetLeft: 0,
+        offsetTop: 0,
+        pageLeft: 0,
+        pageTop: 0,
+        scale: 1,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+    },
+})
