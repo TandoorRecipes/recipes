@@ -384,13 +384,19 @@ const savedSearchInline = computed({
 })
 
 // ─── Drawer filter visibility (search-specific) ────────────────────────
+const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', 'ratingGte', 'unrated', 'servings', 'makenow', 'cookedon', 'createdon', 'totalTime', 'createdby', 'internal']
+
 const drawerFilterDefs = computed(() => {
     const raw = useUserPreferenceStore().deviceSettings.search_drawerFilters
     if (!raw || raw.length === 0) return groupedFilterDefs.value
-    const drawerKeys = new Set(raw)
+    const storedKeys = new Set(raw)
+    // Merge any new default keys so newly-added filters appear for existing users
+    for (const key of DEFAULT_DRAWER) {
+        storedKeys.add(key)
+    }
     const filtered = new Map<string, FilterDef[]>()
     for (const [group, defs] of groupedFilterDefs.value) {
-        const visible = defs.filter(d => !d.hidden && (!group || drawerKeys.has(d.key)))
+        const visible = defs.filter(d => !d.hidden && (!group || storedKeys.has(d.key)))
         if (visible.length > 0) filtered.set(group, visible)
     }
     return filtered
