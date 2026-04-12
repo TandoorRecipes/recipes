@@ -30,10 +30,10 @@
                     @toggle-select="selectMode = !selectMode"
                     @reset="resetAll"
                 >
-                    <template #below-search>
+                    <template #below-search v-if="savedSearchInline">
                         <model-select v-show="!filtersCollapsed" model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
                     </template>
-                    <template #below-search-actions>
+                    <template #below-search-actions v-if="savedSearchInline">
                         <template v-if="!filtersCollapsed">
                             <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
                                    :disabled="selectedCustomFilter == null"
@@ -204,6 +204,21 @@
             :tabs="drawerTabs"
         >
             <template #filters>
+                <div v-if="!savedSearchInline" class="px-4 py-2">
+                    <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" />
+                    <div class="d-flex ga-1 mt-1">
+                        <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
+                               :disabled="selectedCustomFilter == null"
+                               @click="loadSelectedCustomFilter()" class="text-none">
+                            {{ $t('Load') }}
+                        </v-btn>
+                        <v-btn variant="text" size="small" prepend-icon="$save"
+                               @click="saveCustomFilter()" class="text-none">
+                            {{ $t('Save') }}
+                        </v-btn>
+                    </div>
+                    <v-divider class="mt-2" />
+                </div>
                 <FilterPanel
                     :grouped-filter-defs="groupedFilterDefs"
                     :get-filter="getFilter"
@@ -223,6 +238,14 @@
                         hide-details
                         density="compact"
                     />
+                </div>
+
+                <div class="d-flex align-center px-4 py-1 ga-1">
+                    <span class="text-body-2 flex-grow-1">{{ $t('SavedSearch') }}</span>
+                    <v-btn-toggle density="compact" mandatory :model-value="savedSearchInline ? 'page' : 'panel'" @update:model-value="savedSearchInline = $event === 'page'">
+                        <v-btn value="page" size="x-small">{{ $t('Page') }}</v-btn>
+                        <v-btn value="panel" size="x-small">{{ $t('Panel') }}</v-btn>
+                    </v-btn-toggle>
                 </div>
                 <v-divider class="my-2" />
 
@@ -339,6 +362,12 @@ const drawerTabs = computed(() => [
     {key: 'filters', label: t('Filters'), icon: 'fa-solid fa-filter'},
     {key: 'settings', label: t('Settings'), icon: 'fa-solid fa-sliders'},
 ])
+
+// ─── Saved search placement ─────────────────────────────────────────────
+const savedSearchInline = computed({
+    get: () => useUserPreferenceStore().deviceSettings.search_savedSearchInline ?? true,
+    set: (val: boolean) => { useUserPreferenceStore().deviceSettings.search_savedSearchInline = val },
+})
 
 // ─── Inline / drawer filter visibility (per-filter granularity) ─────────
 const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
