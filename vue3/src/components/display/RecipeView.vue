@@ -195,7 +195,7 @@
         <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
     </template>
 
-    <recipe-view-settings-drawer v-if="useUserPreferenceStore().isAuthenticated" />
+
 </template>
 
 <script setup lang="ts">
@@ -206,7 +206,6 @@ import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import StepsOverview from "@/components/display/StepsOverview.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
-import RecipeViewSettingsDrawer from "@/components/inputs/RecipeViewSettingsDrawer.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";

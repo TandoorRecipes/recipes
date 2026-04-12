@@ -114,12 +114,15 @@
             location="top center"
         ></v-snackbar-queued>
 
+        <recipe-view-settings-drawer v-if="useUserPreferenceStore().isAuthenticated" />
+
     </v-app>
 
 </template>
 
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
+import RecipeViewSettingsDrawer from "@/components/inputs/RecipeViewSettingsDrawer.vue"
 
 import {useDisplay, useLocale} from "vuetify"
 import {toVuetifyLocale} from "@/vuetify"
