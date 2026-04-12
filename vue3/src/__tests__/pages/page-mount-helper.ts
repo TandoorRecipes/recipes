@@ -55,7 +55,7 @@ const DEFAULT_STUBS: Record<string, Component> = {
     SyncDialog: { template: '<div class="stub-sync-dialog"/>' },
     BatchEditUserSpaceDialog: { template: '<div class="stub-batch-edit-user-space-dialog"/>' },
     // Model list components (food-filters)
-    ModelListToolbar: { template: '<div class="stub-model-list-toolbar"/>' },
+    ListToolbar: { template: '<div class="stub-list-toolbar"/>' },
     ModelListDataTable: { template: '<div class="stub-model-list-data-table"/>' },
     ModelListSettingsPanel: { template: '<div class="stub-model-list-settings-panel"/>' },
     ModelListCreateButton: { template: '<div class="stub-model-list-create-button"/>' },
