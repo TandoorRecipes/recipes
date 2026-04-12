@@ -10,7 +10,7 @@ import * as vuetifyLocales from "vuetify/locale";
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
     display: {
-        mobileBreakpoint: 768,
+        mobileBreakpoint: 'md',
     },
     defaults: {
         // disabled as this leads to cards overflowing if not careful, manually set on cards containing a multiselect until proper solution is found
