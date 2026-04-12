@@ -339,7 +339,7 @@ import {useFilterPlacement} from '@/composables/useFilterPlacement'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
 import InlineFilterCard from '@/components/search/InlineFilterCard.vue'
 
-import ModelListToolbar from '@/components/model_list/ModelListToolbar.vue'
+import ModelListToolbar from '@/components/model_list/ListToolbar.vue'
 import ModelListFilterChips from '@/components/model_list/ModelListFilterChips.vue'
 import FilterPanel from '@/components/model_list/FilterPanel.vue'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
