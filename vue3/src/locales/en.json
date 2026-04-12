@@ -68,6 +68,7 @@
   "BatchDeleteConfirm": "Do you want to delete all shown items? This cannot be undone! WARNING: It is possible that this deletes objects that are used elsewhere. ",
   "BatchDeleteHelp": "If an item cannot be deleted it is used somewhere. ",
   "BatchEdit": "Batch Edit",
+  "ComingSoon": "Coming soon",
   "BatchEditUpdatingItemsCount": "Editing {count} {type}",
   "Blocking": "Blocking",
   "BlockingHelp": "The following objects are preventing you from deleting the selected {type}.",

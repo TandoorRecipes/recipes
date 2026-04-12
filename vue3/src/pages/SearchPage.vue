@@ -6,9 +6,15 @@
                     <v-card-text class="d-flex align-center pt-2 pb-2 ga-2">
                         <span class="text-subtitle-2">{{ selectedItems.length }} {{ $t('Selected') }}</span>
                         <v-spacer />
-                        <v-btn variant="text" prepend-icon="$edit" @click="batchEditDialog = true">{{ $t('BatchEdit') }}</v-btn>
-                        <v-btn variant="text" prepend-icon="$delete" @click="batchDeleteDialog = true">{{ $t('Delete_All') }}</v-btn>
-                        <v-btn icon="$close" variant="text" @click="selectedItems = []" />
+                        <v-btn variant="text" prepend-icon="$edit" disabled>
+                            {{ $t('BatchEdit') }}
+                            <v-tooltip activator="parent" location="bottom">{{ $t('ComingSoon') }}</v-tooltip>
+                        </v-btn>
+                        <v-btn variant="text" prepend-icon="$delete" disabled>
+                            {{ $t('Delete_All') }}
+                            <v-tooltip activator="parent" location="bottom">{{ $t('ComingSoon') }}</v-tooltip>
+                        </v-btn>
+                        <v-btn icon="$close" variant="text" @click="selectedItems = []; selectMode = false" />
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -150,7 +156,17 @@
         <template v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'grid'">
             <v-row>
                 <v-col cols="6" md="4" v-for="r in recipes" :key="r.id" class="pa-0">
-                    <recipe-card :recipe="r" />
+                    <div class="position-relative">
+                        <v-checkbox-btn
+                            v-if="selectMode"
+                            :model-value="selectedItems.some(s => s.id === r.id)"
+                            @update:model-value="toggleGridSelect(r, $event)"
+                            class="position-absolute"
+                            style="top: 4px; left: 4px; z-index: 1;"
+                            color="primary"
+                        />
+                        <recipe-card :recipe="r" />
+                    </div>
                 </v-col>
             </v-row>
         </template>
@@ -298,8 +314,8 @@
             </v-card>
         </v-dialog>
 
-        <batch-delete-dialog :items="selectedItems" model="Recipe" v-model="batchDeleteDialog" activator="model" @change="searchRecipes({page: 1})" />
-        <batch-edit-recipe-dialog :items="selectedItems" v-model="batchEditDialog" activator="model" @change="searchRecipes({page})" />
+        <!-- Batch action dialogs — coming soon. The selection bar UI is active
+             but actions are disabled until the batch-actions feature branch lands. -->
     </v-container>
 </template>
 
@@ -335,8 +351,6 @@ import KeywordsBar from '@/components/display/KeywordsBar.vue'
 import VClosableCardTitle from '@/components/dialogs/VClosableCardTitle.vue'
 import RecipeCard from '@/components/display/RecipeCard.vue'
 import RandomIcon from '@/components/display/RandomIcon.vue'
-import BatchDeleteDialog from '@/components/dialogs/BatchDeleteDialog.vue'
-import BatchEditRecipeDialog from '@/components/dialogs/BatchEditRecipeDialog.vue'
 import type {EditorSupportedTypes} from '@/types/Models'
 import type {VDataTableUpdateOptions} from '@/vuetify'
 
@@ -394,6 +408,16 @@ const tableItemCount = ref(0)
 const selectedItems = ref<EditorSupportedTypes[]>([])
 const selectMode = ref(false)
 
+function toggleGridSelect(recipe: RecipeOverview, selected: boolean) {
+    if (selected) {
+        if (!selectedItems.value.some(s => s.id === recipe.id)) {
+            selectedItems.value = [...selectedItems.value, recipe as unknown as EditorSupportedTypes]
+        }
+    } else {
+        selectedItems.value = selectedItems.value.filter(s => s.id !== recipe.id)
+    }
+}
+
 const filtersCollapsed = ref(true)
 const settingsPanelOpen = ref(false)
 const settingsActiveTab = ref<'settings' | 'filters'>('filters')
@@ -408,8 +432,6 @@ const dialog = ref(false)
 const newFilterName = ref('')
 
 // Batch action dialogs
-const batchDeleteDialog = ref(false)
-const batchEditDialog = ref(false)
 
 // AbortController for in-flight searches
 let abortController = new AbortController()
