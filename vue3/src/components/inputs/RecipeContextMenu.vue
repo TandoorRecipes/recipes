@@ -29,8 +29,8 @@
                 <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true', servings: props.servings} }" :active="false" target="_blank" prepend-icon="fa-solid fa-print">
                     {{ $t('Print') }}
                 </v-list-item>
-                <v-divider />
-                <v-list-item prepend-icon="fa-solid fa-gear" @click="recipeSettingsOpen = true">
+                <v-divider v-if="isOnRecipeView" />
+                <v-list-item v-if="isOnRecipeView" prepend-icon="fa-solid fa-gear" @click="recipeSettingsOpen = true">
                     {{ $t('DisplaySettings') }}
                 </v-list-item>
             </v-list>
@@ -43,19 +43,22 @@
 </template>
 
 <script setup lang="ts">
-import {nextTick, PropType, ref} from 'vue'
+import {computed, nextTick, PropType, ref} from 'vue'
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute} from "vue-router";
 import {useI18n} from "vue-i18n";
 import {useRecipeViewSettings} from '@/composables/useRecipeViewSettings'
 
 const router = useRouter()
+const route = useRoute()
 const {t} = useI18n()
 const {isOpen: recipeSettingsOpen} = useRecipeViewSettings()
+
+const isOnRecipeView = computed(() => route.name === 'RecipeViewPage')
 
 const props = defineProps({
     recipe: {type: Object as PropType<Recipe | RecipeOverview>, required: true},
