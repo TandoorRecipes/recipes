@@ -236,7 +236,7 @@
                     <v-divider class="mt-2" />
                 </div>
                 <FilterPanel
-                    :grouped-filter-defs="groupedFilterDefs"
+                    :grouped-filter-defs="drawerFilterDefs"
                     :get-filter="getFilter"
                     :set-filter="setFilter"
                     :clear-filter="clearFilter"
@@ -383,7 +383,20 @@ const savedSearchInline = computed({
     set: (val: boolean) => { useUserPreferenceStore().deviceSettings.search_savedSearchInline = val },
 })
 
-// ─── Inline / drawer filter visibility (per-filter granularity) ─────────
+// ─── Drawer filter visibility (search-specific) ────────────────────────
+const drawerFilterDefs = computed(() => {
+    const raw = useUserPreferenceStore().deviceSettings.search_drawerFilters
+    if (!raw || raw.length === 0) return groupedFilterDefs.value
+    const drawerKeys = new Set(raw)
+    const filtered = new Map<string, FilterDef[]>()
+    for (const [group, defs] of groupedFilterDefs.value) {
+        const visible = defs.filter(d => !d.hidden && (!group || drawerKeys.has(d.key)))
+        if (visible.length > 0) filtered.set(group, visible)
+    }
+    return filtered
+})
+
+// ─── Inline filter visibility (per-filter granularity) ──────────────────
 const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
 
 const inlineFilterKeys = computed(() => {

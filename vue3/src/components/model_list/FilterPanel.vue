@@ -58,7 +58,6 @@ import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
 import FilterField from '@/components/filters/FilterField.vue'
-import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 
 const props = defineProps<{
     groupedFilterDefs: Map<string, FilterDef[]>
@@ -70,13 +69,9 @@ const props = defineProps<{
 }>()
 
 const visibleGroupedDefs = computed(() => {
-    let raw: string[] | undefined
-    try { raw = useUserPreferenceStore().deviceSettings.search_drawerFilters } catch { /* no store */ }
-    if (!raw || raw.length === 0) return props.groupedFilterDefs
-    const drawerKeys = new Set(raw)
     const filtered = new Map<string, FilterDef[]>()
     for (const [group, defs] of props.groupedFilterDefs) {
-        const visible = defs.filter(d => !d.hidden && (!group || drawerKeys.has(d.key)))
+        const visible = defs.filter(d => !d.hidden)
         if (visible.length > 0) filtered.set(group, visible)
     }
     return filtered
