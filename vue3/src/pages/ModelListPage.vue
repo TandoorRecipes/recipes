@@ -107,7 +107,7 @@
         </template>
         <v-row>
             <v-col>
-                <ModelListToolbar
+                <ListToolbar
                     v-if="!genericModel.model.disableSearch"
                     v-model:query="query"
                     v-model:ordering="ordering"
@@ -307,7 +307,7 @@ import {useUrlFilters} from "@/composables/useUrlFilters";
 import ModelListCellRenderer from "@/components/model_list/ModelListCellRenderer.vue";
 import ModelListDataTable from "@/components/model_list/ModelListDataTable.vue";
 import ModelListSettingsPanel from "@/components/model_list/ModelListSettingsPanel.vue"
-import ModelListToolbar from "@/components/model_list/ModelListToolbar.vue";
+import ListToolbar from "@/components/model_list/ListToolbar.vue";
 import ModelListCreateButton from "@/components/model_list/ModelListCreateButton.vue";
 import ModelListFilterChips from "@/components/model_list/ModelListFilterChips.vue";
 import SelectionBar from "@/components/common/SelectionBar.vue";
