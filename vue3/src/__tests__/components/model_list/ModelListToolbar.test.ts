@@ -26,7 +26,7 @@ vi.mock('vuetify', async (importOriginal) => {
     }
 })
 
-import ModelListToolbar from '@/components/model_list/ModelListToolbar.vue'
+import ModelListToolbar from '@/components/model_list/ListToolbar.vue'
 
 function mountToolbar(props: Record<string, any> = {}) {
     const vuetify = createVuetify({components, directives})
