@@ -76,8 +76,7 @@ const visibleGroupedDefs = computed(() => {
     const drawerKeys = new Set(raw)
     const filtered = new Map<string, FilterDef[]>()
     for (const [group, defs] of props.groupedFilterDefs) {
-        if (!group) { filtered.set(group, defs); continue }
-        const visible = defs.filter(d => drawerKeys.has(d.key))
+        const visible = defs.filter(d => !d.hidden && (!group || drawerKeys.has(d.key)))
         if (visible.length > 0) filtered.set(group, visible)
     }
     return filtered
