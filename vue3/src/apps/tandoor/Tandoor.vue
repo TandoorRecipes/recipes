@@ -129,13 +129,14 @@ import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {useTitle} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute} from "vue-router";
 import {useI18n} from "vue-i18n";
+import {useRecipeViewSettings} from '@/composables/useRecipeViewSettings'
 import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
 
 const {mobile} = useDisplay()
@@ -143,6 +144,12 @@ const {t} = useI18n()
 
 const title = useTitle()
 const router = useRouter()
+const route = useRoute()
+const {isOpen: recipeSettingsOpen} = useRecipeViewSettings()
+
+watch(() => route.name, (name) => {
+    if (name !== 'RecipeViewPage') recipeSettingsOpen.value = false
+})
 
 onMounted(() => {
     useUserPreferenceStore().init().then(() => {
