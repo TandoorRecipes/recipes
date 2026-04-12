@@ -828,7 +828,7 @@ class InventoryLocationViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelati
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space).order_by('name')
 
 
 @extend_schema_view(list=extend_schema(parameters=[
