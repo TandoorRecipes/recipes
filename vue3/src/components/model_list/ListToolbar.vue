@@ -273,9 +273,13 @@ function onSearchInput(val: string | null) {
     debouncedEmitQuery(val ?? '')
 }
 
-const effectiveOrdering = computed(() =>
-    props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0]!.key : '')
-)
+const effectiveOrdering = computed(() => {
+    if (props.ordering) return props.ordering
+    // No explicit sort: match backend default — score when searching, name otherwise
+    if (props.query && props.sortOptions.some(o => o.key === 'score')) return 'score'
+    if (props.sortOptions.some(o => o.key === 'name')) return 'name'
+    return props.sortOptions.length > 0 ? props.sortOptions[0]!.key : ''
+})
 
 const currentField = computed(() => {
     const ord = effectiveOrdering.value
