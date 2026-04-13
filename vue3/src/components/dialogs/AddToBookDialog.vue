@@ -3,7 +3,7 @@
         <v-card :loading="loading">
             <v-closable-card-title :title="$t('Add_to_Book')" v-model="dialog"></v-closable-card-title>
             <v-card-text>
-                <model-select model="RecipeBook" v-model="selectedBook"></model-select>
+                <model-select model="RecipeBook" v-model="selectedBook" append-to-body></model-select>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
