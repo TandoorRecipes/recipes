@@ -24,8 +24,8 @@
                              prepend-icon="fa-solid fa-utensils" @click="logCookingDialog = true">
                     {{ $t('Log_Cooking') }}
                 </v-list-item>
-                <v-list-item v-if="isVisible('photo') && props.context === 'card'"
-                             prepend-icon="fa-solid fa-image" :to="{ name: 'ModelEditPage', params: {model: 'recipe', id: recipe.id}, query: {tab: 'image'} }">
+                <v-list-item v-if="isVisible('photo')"
+                             prepend-icon="fa-solid fa-image" @click="openPhotoEditor">
                     {{ $t('Edit_Photo') }}
                 </v-list-item>
                 <v-list-item v-if="isVisible('properties')"
@@ -76,6 +76,15 @@
     <delete-confirm-dialog v-if="deleteDialog" :object-name="props.recipe.name" model-name="Recipe"
                            @delete="confirmDelete" v-model="deleteDialog"></delete-confirm-dialog>
 
+    <v-dialog v-model="photoEditorDialog" max-width="800">
+        <v-card>
+            <v-closable-card-title :title="$t('Edit_Photo')" v-model="photoEditorDialog" />
+            <v-card-text>
+                <recipe-image-editor v-if="photoEditorDialog" :recipe-id="props.recipe.id!" v-model:images="photoEditorImages" />
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+
 </template>
 
 <script setup lang="ts">
@@ -87,6 +96,8 @@ import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import AddToBookDialog from "@/components/dialogs/AddToBookDialog.vue";
 import LogCookingDialog from "@/components/dialogs/LogCookingDialog.vue";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
+import RecipeImageEditor from "@/components/inputs/RecipeImageEditor.vue";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
 import {useRouter, useRoute} from "vue-router";
 import {useFileApi} from "@/composables/useFileApi.ts";
@@ -114,11 +125,24 @@ const mealPlanDialog = ref(false)
 const addToBookDialog = ref(false)
 const logCookingDialog = ref(false)
 const deleteDialog = ref(false)
+const photoEditorDialog = ref(false)
+const photoEditorImages = ref<any[]>([])
 const duplicateLoading = ref(false)
 const exportLoading = ref(false)
 
 function isVisible(key: string): boolean {
     return deviceSettings.card_visibleMenuItems.includes(key)
+}
+
+function openPhotoEditor() {
+    const api = new ApiApi()
+    api.apiRecipeRetrieve({id: props.recipe.id!}).then(r => {
+        photoEditorImages.value = r.images ?? []
+        photoEditorDialog.value = true
+    }).catch(() => {
+        photoEditorImages.value = []
+        photoEditorDialog.value = true
+    })
 }
 
 /**
