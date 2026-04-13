@@ -270,8 +270,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             search_viewMode: 'grid',
             search_visibleFilters: [],
             search_includeChildren: true,
-            search_inlineFilters: ['_keywordsGroup', '_foodsGroup', '_booksGroup'],
-            search_drawerFilters: ['_keywordsGroup', '_foodsGroup', '_booksGroup', 'ratingGte', 'unrated', 'servings', 'makenow', 'cookedon', 'createdon', 'totalTime', 'createdby', 'internal'],
+            // search_inlineFilters / search_drawerFilters: managed by useFilterPlacement
+            // Omitted here so the composable can distinguish "never customized" from "user set"
             search_savedSearchInline: true,
             search_savedSearchInPanel: true,
             search_showStats: true,

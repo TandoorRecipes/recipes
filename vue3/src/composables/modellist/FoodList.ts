@@ -142,6 +142,7 @@ export const FOOD_LIST_SETTINGS: ListSettings = {
     treeEnabled: true,
     statsFooter: true,
     mobileList: true,
+    filterVisibility: true,
     defaults: {
         quickActions: ['shopping', 'recipe', 'pantry'],
         showStats: true,
