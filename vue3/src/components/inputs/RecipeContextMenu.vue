@@ -74,7 +74,7 @@
     <add-to-book-dialog v-if="addToBookDialog" :recipe="props.recipe" v-model="addToBookDialog"></add-to-book-dialog>
     <log-cooking-dialog v-if="logCookingDialog" :recipe="props.recipe" v-model="logCookingDialog"></log-cooking-dialog>
     <delete-confirm-dialog v-if="deleteDialog" :object-name="props.recipe.name" model-name="Recipe"
-                           @confirm="confirmDelete" v-model="deleteDialog"></delete-confirm-dialog>
+                           @delete="confirmDelete" v-model="deleteDialog"></delete-confirm-dialog>
 
 </template>
 
@@ -170,7 +170,7 @@ function exportRecipe() {
     exportLoading.value = true
     api.apiExportCreate({
         exportRequest: {
-            type: 'default',
+            type: 'DEFAULT',
             recipes: [{id: props.recipe.id!, name: props.recipe.name}],
         }
     }).then(() => {
