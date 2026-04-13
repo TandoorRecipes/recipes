@@ -55,6 +55,33 @@
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
+            <!-- Recipe Cards -->
+            <v-expansion-panel value="recipe-cards">
+                <v-expansion-panel-title>
+                    <v-icon start icon="fa-solid fa-image" />
+                    {{ $t('Card_Settings') }}
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <v-switch v-model="deviceSettings.card_showRating"
+                              :label="$t('Rating')" density="compact" hide-details color="primary" />
+                    <v-switch v-model="deviceSettings.card_showAuthor"
+                              :label="$t('CreatedBy')" density="compact" hide-details color="primary" />
+                    <v-switch v-model="deviceSettings.card_showLastCooked"
+                              :label="$t('last_cooked')" density="compact" hide-details color="primary" />
+                    <v-switch v-model="deviceSettings.card_showNewBadge"
+                              :label="$t('New')" density="compact" hide-details color="primary" />
+                    <v-select v-model="deviceSettings.card_maxKeywords"
+                              :label="$t('Keywords')" density="compact" hide-details class="mt-2"
+                              :items="[{title: '3', value: 3}, {title: '5', value: 5}, {title: '10', value: 10}, {title: $t('All'), value: 0}]" />
+
+                    <v-divider class="my-3" />
+                    <span class="text-subtitle-2">{{ $t('Menu') }}</span>
+                    <v-checkbox v-for="item in menuItemOptions" :key="item.key"
+                                v-model="deviceSettings.card_visibleMenuItems"
+                                :label="$t(item.label)" :value="item.key" density="compact" hide-details />
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+
         </v-expansion-panels>
     </v-form>
 </template>
@@ -67,7 +94,23 @@ import LanguageSelect from "@/components/inputs/LanguageSelect.vue"
 
 const {t} = useI18n()
 const userPrefs = useUserPreferenceStore()
+const deviceSettings = userPrefs.deviceSettings
 const openPanels = ref(['appearance', 'recipe-display'])
+
+const menuItemOptions = [
+    {key: 'edit', label: 'Edit'},
+    {key: 'plan', label: 'Add_to_Plan'},
+    {key: 'shopping', label: 'Add_to_Shopping'},
+    {key: 'book', label: 'Add_to_Book'},
+    {key: 'cooklog', label: 'Log_Cooking'},
+    {key: 'photo', label: 'Edit_Photo'},
+    {key: 'properties', label: 'Property_Editor'},
+    {key: 'share', label: 'Share'},
+    {key: 'export', label: 'Export'},
+    {key: 'duplicate', label: 'Duplicate'},
+    {key: 'print', label: 'Print'},
+    {key: 'delete', label: 'Delete'},
+]
 
 </script>
 
