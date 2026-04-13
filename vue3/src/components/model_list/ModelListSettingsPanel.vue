@@ -7,7 +7,7 @@
     >
         <template #filters>
             <FilterPanel
-                :grouped-filter-defs="groupedFilterDefs"
+                :grouped-filter-defs="drawerFilterDefs"
                 :get-filter="getFilter"
                 :set-filter="setFilter"
                 :clear-filter="clearFilter"
@@ -468,8 +468,20 @@ function toggleMobileSubtitle(key: string) {
 }
 
 // Page Layout — per-filter inline/drawer visibility
-const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer, configurableFiltersByGroup: makeConfigurable} = useFilterPlacement()
-const configurableFiltersByGroup = makeConfigurable(computed(() => props.groupedFilterDefs))
+const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer: rawToggleDrawer,
+    filteredDrawerDefs, configurableFiltersByGroup: makeConfigurable} =
+    useFilterPlacement(props.model.listSettings?.settingsKey ?? 'search')
+const groupedDefs = computed(() => props.groupedFilterDefs)
+const configurableFiltersByGroup = makeConfigurable(groupedDefs)
+const drawerFilterDefs = filteredDrawerDefs(groupedDefs)
+const allFilterKeys = computed(() => {
+    const keys: string[] = []
+    for (const [, defs] of configurableFiltersByGroup.value) {
+        for (const d of defs) keys.push(d.key)
+    }
+    return keys
+})
+function toggleDrawer(key: string) { rawToggleDrawer(key, allFilterKeys.value) }
 
 // Swipe action management
 const swipePickerOpen = ref(false)

@@ -228,7 +228,7 @@
             :tabs="drawerTabs"
         >
             <template #filters>
-                <div v-if="!savedSearchInline" class="px-4 py-2">
+                <div v-if="savedSearchInPanel" class="px-4 py-2">
                     <model-select model="CustomFilter" v-model="selectedCustomFilter" density="compact" />
                     <div class="d-flex ga-1 mt-1">
                         <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
@@ -267,9 +267,17 @@
 
                 <div class="d-flex align-center px-4 py-1 ga-1">
                     <span class="text-body-2 flex-grow-1">{{ $t('SavedSearch') }}</span>
-                    <v-btn-toggle density="compact" mandatory :model-value="savedSearchInline ? 'page' : 'panel'" @update:model-value="savedSearchInline = $event === 'page'">
-                        <v-btn value="page" size="x-small">{{ $t('Page') }}</v-btn>
-                        <v-btn value="panel" size="x-small">{{ $t('Panel') }}</v-btn>
+                    <v-btn-toggle density="compact" multiple>
+                        <v-btn
+                            size="x-small"
+                            :active="savedSearchInline"
+                            @click="savedSearchInline = !savedSearchInline"
+                        >{{ $t('Page') }}</v-btn>
+                        <v-btn
+                            size="x-small"
+                            :active="savedSearchInPanel"
+                            @click="savedSearchInPanel = !savedSearchInPanel"
+                        >{{ $t('Panel') }}</v-btn>
                     </v-btn-toggle>
                 </div>
                 <v-divider class="my-2" />
@@ -404,8 +412,20 @@ const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettin
 
 // ─── Settings (device-persisted) ──────────────────────────────────────
 const settings = useModelListSettings(computed(() => 'search'))
-const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer, configurableFiltersByGroup: makeConfigurable} = useFilterPlacement()
+
+const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
+const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', '_unitsGroup',
+    'ratingGte', 'ratingLte', 'unrated', 'servings', 'timescooked', 'hasPhoto', 'hasKeywords', 'makenow',
+    'workingTime', 'waitingTime', 'totalTime', 'cookedon', 'createdon', 'updatedon', 'viewedon',
+    'createdby', 'internal']
+
+const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer,
+    filteredDrawerDefs, filteredInlineDefs, configurableFiltersByGroup: makeConfigurable} =
+    useFilterPlacement('search', DEFAULT_INLINE, DEFAULT_DRAWER)
+
 const configurableFiltersByGroup = makeConfigurable(groupedFilterDefs)
+const drawerFilterDefs = filteredDrawerDefs(groupedFilterDefs)
+const inlineGroups = filteredInlineDefs(groupedFilterDefs)
 
 const drawerTabs = computed(() => [
     {key: 'filters', label: t('Filters'), icon: 'fa-solid fa-filter'},
@@ -416,6 +436,10 @@ const drawerTabs = computed(() => [
 const savedSearchInline = computed({
     get: () => useUserPreferenceStore().deviceSettings.search_savedSearchInline ?? true,
     set: (val: boolean) => { useUserPreferenceStore().deviceSettings.search_savedSearchInline = val },
+})
+const savedSearchInPanel = computed({
+    get: () => useUserPreferenceStore().deviceSettings.search_savedSearchInPanel ?? true,
+    set: (val: boolean) => { useUserPreferenceStore().deviceSettings.search_savedSearchInPanel = val },
 })
 
 const menuItemOptions = [
@@ -432,43 +456,6 @@ const menuItemOptions = [
     {key: 'print', label: 'Print'},
     {key: 'delete', label: 'Delete'},
 ]
-
-// ─── Drawer filter visibility (search-specific) ────────────────────────
-const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', 'ratingGte', 'unrated', 'servings', 'makenow', 'cookedon', 'createdon', 'totalTime', 'createdby', 'internal']
-
-const drawerFilterDefs = computed(() => {
-    const raw = useUserPreferenceStore().deviceSettings.search_drawerFilters
-    if (!raw || raw.length === 0) return groupedFilterDefs.value
-    const storedKeys = new Set(raw)
-    // Merge any new default keys so newly-added filters appear for existing users
-    for (const key of DEFAULT_DRAWER) {
-        storedKeys.add(key)
-    }
-    const filtered = new Map<string, FilterDef[]>()
-    for (const [group, defs] of groupedFilterDefs.value) {
-        const visible = defs.filter(d => !d.hidden && (!group || storedKeys.has(d.key)))
-        if (visible.length > 0) filtered.set(group, visible)
-    }
-    return filtered
-})
-
-// ─── Inline filter visibility (per-filter granularity) ──────────────────
-const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
-
-const inlineFilterKeys = computed(() => {
-    const raw = useUserPreferenceStore().deviceSettings.search_inlineFilters
-    return raw && raw.length > 0 ? raw : DEFAULT_INLINE
-})
-const inlineGroups = computed(() => {
-    const keys = new Set(inlineFilterKeys.value)
-    const result: [string, FilterDef[]][] = []
-    for (const [group, defs] of groupedFilterDefs.value) {
-        if (!group) continue
-        const visible = defs.filter(d => keys.has(d.key))
-        if (visible.length > 0) result.push([group, visible])
-    }
-    return result
-})
 
 // ─── Local UI state ─────────────────────────────────────────────────────
 const loading = ref(false)
