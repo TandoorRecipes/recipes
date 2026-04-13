@@ -2140,7 +2140,11 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                                              ).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
 
         search = RecipeSearch(self.request, self.request.GET)
-        self.queryset = search.get_queryset(self.queryset).prefetch_related('keywords', 'cooklog_set')
+        self.queryset = search.get_queryset(self.queryset).with_rating(
+            self.request.user
+        ).with_last_cooked(
+            self.request.user, self.request.space
+        ).prefetch_related('keywords', 'cooklog_set')
         return self.queryset
 
     def list(self, request, *args, **kwargs):
