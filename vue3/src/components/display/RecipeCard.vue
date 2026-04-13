@@ -205,8 +205,9 @@ function openRecipe() {
 .card-overlay-bottom-left {
     position: absolute;
     z-index: 1;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.45);
     color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
     font-size: 10px;
     line-height: 1;
     padding: 3px 6px;
