@@ -16,10 +16,20 @@
                     <recipe-context-menu :recipe="props.recipe" size="small" v-if="props.showMenu"></recipe-context-menu>
                 </div>
             </div>
-            <!--            <p class="text-disabled">{{ props.recipe.createdBy.displayName}}</p>-->
-            <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="3" v-if="props.showKeywords">
+            <v-rating v-if="deviceSettings.card_showRating && props.recipe.rating != null"
+                      :model-value="props.recipe.rating" readonly half-increments density="compact" size="x-small"
+                      class="recipe-card-rating"></v-rating>
+            <div class="text-caption text-disabled" v-if="deviceSettings.card_showAuthor || deviceSettings.card_showLastCooked">
+                <span class="recipe-card-author" v-if="deviceSettings.card_showAuthor">{{ t('by') }} {{ props.recipe.createdBy?.displayName }}</span>
+                <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && props.recipe.lastCooked"> · </span>
+                <span class="recipe-card-last-cooked" v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked">{{ lastCookedText }}</span>
+            </div>
+            <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="deviceSettings.card_maxKeywords" v-if="props.showKeywords">
                 <template #prepend>
-
+                    <v-chip class="mb-1 me-1 recipe-card-new-badge" size="x-small" label color="success"
+                            v-if="deviceSettings.card_showNewBadge && props.recipe._new">
+                        {{ t('New') }}
+                    </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" v-if="recipe._private">
                         <private-recipe-badge  :show-text="false"></private-recipe-badge>
                     </v-chip>
@@ -105,6 +115,8 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import {useRouter} from "vue-router";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {useI18n} from "vue-i18n";
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe | RecipeOverview>, required: true,},
@@ -118,6 +130,25 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const {t} = useI18n()
+const deviceSettings = useUserPreferenceStore().deviceSettings
+
+const lastCookedText = computed(() => {
+    if (!props.recipe.lastCooked) return ''
+    const date = new Date(props.recipe.lastCooked)
+    if (isNaN(date.getTime())) return ''
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+    if (diffDays < 0) return t('today')
+    if (diffDays === 0) return t('today')
+    if (diffDays === 1) return t('yesterday')
+    if (diffDays < 30) return t('days_ago', {count: diffDays})
+    const diffMonths = Math.floor(diffDays / 30)
+    if (diffMonths < 12) return t('months_ago', {count: diffMonths})
+    const diffYears = Math.floor(diffDays / 365)
+    return t('years_ago', {count: diffYears})
+})
 
 const dest = computed(() => {
     const route: any = { name: 'RecipeViewPage', params: { id: props.recipe.id } };

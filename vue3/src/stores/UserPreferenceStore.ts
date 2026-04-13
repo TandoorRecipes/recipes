@@ -278,6 +278,13 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             food_desktopSubtitle: [],
             food_showMobileHeaders: true,
             food_defaultInventoryLocation: null,
+
+            card_showRating: false,
+            card_showAuthor: false,
+            card_showLastCooked: false,
+            card_showNewBadge: false,
+            card_maxKeywords: 3,
+            card_visibleMenuItems: ['edit', 'plan', 'shopping', 'properties', 'share', 'duplicate', 'print'],
         }
     }
 
