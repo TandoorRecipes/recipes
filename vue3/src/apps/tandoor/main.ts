@@ -80,6 +80,24 @@ const router = createRouter({
     routes,
 })
 
+const DEFAULT_PAGE_ROUTES: Record<string, string> = {
+    SEARCH: 'SearchPage',
+    PLAN: 'MealPlanPage',
+    BOOKS: 'BooksPage',
+    SHOPPING: 'ShoppingListPage',
+}
+
+router.beforeEach((to) => {
+    if (to.name !== 'StartPage') return
+    try {
+        const stored = localStorage.getItem('TANDOOR_USER_PREFERENCE')
+        if (!stored) return
+        const prefs = JSON.parse(stored)
+        const target = DEFAULT_PAGE_ROUTES[prefs.default_page]
+        if (target) return {name: target, replace: true}
+    } catch { /* ignore parse errors */ }
+})
+
 let i18n = setupI18n()
 
 const app = createApp(App)
