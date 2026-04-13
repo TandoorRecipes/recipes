@@ -55,13 +55,20 @@
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
-            <!-- Recipe Cards -->
+            <!-- Recipe Card -->
             <v-expansion-panel value="recipe-cards">
                 <v-expansion-panel-title>
                     <v-icon start icon="fa-solid fa-image" />
-                    {{ $t('Card_Settings') }}
+                    {{ $t('Recipe_Card') }}
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
+                    <!-- Live preview -->
+                    <div class="d-flex justify-center mb-4">
+                        <v-card variant="outlined" style="width: 220px; overflow: hidden;">
+                            <recipe-card :recipe="previewRecipe" :show-menu="false" height="120px" />
+                        </v-card>
+                    </div>
+
                     <v-switch v-model="deviceSettings.card_showRating"
                               :label="$t('Rating')" density="compact" hide-details color="primary" />
                     <v-switch v-model="deviceSettings.card_showAuthor"
@@ -74,11 +81,22 @@
                               :label="$t('Keywords')" density="compact" hide-details class="mt-2"
                               :items="[{title: '3', value: 3}, {title: '5', value: 5}, {title: '10', value: 10}, {title: $t('All'), value: 0}]" />
 
-                    <v-divider class="my-3" />
-                    <span class="text-subtitle-2">{{ $t('Menu') }}</span>
+                    <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+
+            <!-- Recipe Context Menu -->
+            <v-expansion-panel value="context-menu">
+                <v-expansion-panel-title>
+                    <v-icon start icon="fa-solid fa-ellipsis-vertical" />
+                    {{ $t('context_menu') }}
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
                     <v-checkbox v-for="item in menuItemOptions" :key="item.key"
                                 v-model="deviceSettings.card_visibleMenuItems"
                                 :label="$t(item.label)" :value="item.key" density="compact" hide-details />
+
+                    <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -87,15 +105,36 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue"
+import {computed, ref} from "vue"
 import {useI18n} from "vue-i18n"
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore"
 import LanguageSelect from "@/components/inputs/LanguageSelect.vue"
+import RecipeCard from "@/components/display/RecipeCard.vue"
 
 const {t} = useI18n()
 const userPrefs = useUserPreferenceStore()
 const deviceSettings = userPrefs.deviceSettings
 const openPanels = ref(['appearance', 'recipe-display'])
+
+const previewRecipe = computed(() => ({
+    id: 0,
+    name: t('Example_Recipe'),
+    rating: 4.5,
+    createdBy: {displayName: 'Chef'},
+    lastCooked: new Date(Date.now() - 2 * 86400000).toISOString(),
+    keywords: [
+        {id: 1, name: t('dinner'), label: t('dinner')},
+        {id: 2, name: t('quick'), label: t('quick')},
+        {id: 3, name: t('healthy'), label: t('healthy')},
+        {id: 4, name: t('vegetarian'), label: t('vegetarian')},
+    ],
+    _new: true,
+    _private: false,
+    internal: true,
+    workingTime: 25,
+    waitingTime: 10,
+    servings: 4,
+}))
 
 const menuItemOptions = [
     {key: 'edit', label: 'Edit'},

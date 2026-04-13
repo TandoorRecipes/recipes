@@ -4,17 +4,21 @@
         <router-link :to="dest" :target="linkTarget">
             <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
                 <template #overlay>
-                    <v-chip v-if="deviceSettings.card_showRating && props.recipe.rating != null"
-                            class="card-overlay-top-right" size="x-small" label>
-                        <v-rating :model-value="props.recipe.rating" readonly half-increments
-                                  density="compact" size="x-small" color="amber" />
-                    </v-chip>
-                    <v-chip v-if="hasMetadataOverlay"
-                            class="card-overlay-bottom-right text-caption" size="x-small" label>
+                    <span v-if="deviceSettings.card_showRating && props.recipe.rating != null"
+                          class="card-overlay-top-right">
+                        <v-icon icon="fa-solid fa-star" size="8" color="amber" />
+                        <span class="card-overlay-rating-text">{{ props.recipe.rating.toFixed(1) }}</span>
+                    </span>
+                    <span v-if="deviceSettings.card_showNewBadge && props.recipe._new"
+                          class="card-overlay-bottom-left card-overlay-new">
+                        {{ t('New') }}
+                    </span>
+                    <span v-if="hasMetadataOverlay"
+                          class="card-overlay-bottom-right">
                         <span v-if="deviceSettings.card_showAuthor">{{ props.recipe.createdBy?.displayName }}</span>
                         <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && props.recipe.lastCooked"> · </span>
                         <span v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked">{{ lastCookedText }}</span>
-                    </v-chip>
+                    </span>
                 </template>
             </recipe-image>
         </router-link>
@@ -29,10 +33,6 @@
             </div>
             <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="deviceSettings.card_maxKeywords" v-if="props.showKeywords">
                 <template #prepend>
-                    <v-chip class="mb-1 me-1 recipe-card-new-badge" size="x-small" label color="success"
-                            v-if="deviceSettings.card_showNewBadge && props.recipe._new">
-                        {{ t('New') }}
-                    </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" v-if="recipe._private">
                         <private-recipe-badge  :show-text="false"></private-recipe-badge>
                     </v-chip>
@@ -200,21 +200,50 @@ function openRecipe() {
     -webkit-box-orient: vertical;
 }
 
-.card-overlay-top-right {
+.card-overlay-top-right,
+.card-overlay-bottom-right,
+.card-overlay-bottom-left {
     position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 10px;
+    line-height: 1;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+.card-overlay-top-right {
     top: 6px;
     right: 6px;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.55) !important;
-    color: white !important;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.card-overlay-rating-text {
+    font-weight: 600;
+    font-size: 11px;
 }
 
 .card-overlay-bottom-right {
-    position: absolute;
     bottom: 6px;
     right: 6px;
-    z-index: 1;
-    background: rgba(0, 0, 0, 0.55) !important;
-    color: white !important;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-overlay-bottom-left {
+    bottom: 6px;
+    left: 6px;
+}
+
+.card-overlay-new {
+    background: rgba(76, 175, 80, 0.85);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 </style>
