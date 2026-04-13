@@ -208,7 +208,9 @@ function exportRecipe() {
     api.apiExportCreate({
         exportRequest: {
             type: 'DEFAULT',
+            all: false,
             recipes: [{id: props.recipe.id!, name: props.recipe.name}],
+            customFilter: null,
         }
     }).then(() => {
         useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
