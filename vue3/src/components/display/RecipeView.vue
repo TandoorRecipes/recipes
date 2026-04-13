@@ -29,7 +29,7 @@
                     <span class="ps-2 text-h5  flex-grow-1 pa-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
                         {{ recipe.name }}
                     </span>
-                        <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
+                        <recipe-context-menu :recipe="recipe" :servings="servings" context="view" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </v-sheet>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
                     <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
@@ -85,7 +85,7 @@
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
                                 <div class="flex-column mb-auto mt-2 float-right" v-if="useUserPreferenceStore().isAuthenticated">
-                                    <recipe-context-menu :recipe="recipe" :servings="servings"></recipe-context-menu>
+                                    <recipe-context-menu :recipe="recipe" :servings="servings" context="view"></recipe-context-menu>
                                 </div>
                             </div>
                             <p>
