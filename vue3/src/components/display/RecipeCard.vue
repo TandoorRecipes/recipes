@@ -3,7 +3,19 @@
 
         <router-link :to="dest" :target="linkTarget">
             <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
-
+                <template #overlay>
+                    <v-chip v-if="deviceSettings.card_showRating && props.recipe.rating != null"
+                            class="card-overlay-top-right" size="x-small" label>
+                        <v-rating :model-value="props.recipe.rating" readonly half-increments
+                                  density="compact" size="x-small" color="amber" />
+                    </v-chip>
+                    <v-chip v-if="hasMetadataOverlay"
+                            class="card-overlay-bottom-right text-caption" size="x-small" label>
+                        <span v-if="deviceSettings.card_showAuthor">{{ props.recipe.createdBy?.displayName }}</span>
+                        <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && props.recipe.lastCooked"> · </span>
+                        <span v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked">{{ lastCookedText }}</span>
+                    </v-chip>
+                </template>
             </recipe-image>
         </router-link>
         <div class="ml-3">
@@ -12,17 +24,8 @@
                     <p class="font-weight-bold mt-2">{{ props.recipe.name }}</p>
                 </div>
                 <div class="mt-1">
-                    <!--                    <v-btn icon="fas fa-ellipsis-v" size="small" variant="plain"></v-btn>-->
                     <recipe-context-menu :recipe="props.recipe" size="small" v-if="props.showMenu"></recipe-context-menu>
                 </div>
-            </div>
-            <v-rating v-if="deviceSettings.card_showRating && props.recipe.rating != null"
-                      :model-value="props.recipe.rating" readonly half-increments density="compact" size="x-small"
-                      class="recipe-card-rating"></v-rating>
-            <div class="text-caption text-disabled" v-if="deviceSettings.card_showAuthor || deviceSettings.card_showLastCooked">
-                <span class="recipe-card-author" v-if="deviceSettings.card_showAuthor">{{ t('by') }} {{ props.recipe.createdBy?.displayName }}</span>
-                <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && props.recipe.lastCooked"> · </span>
-                <span class="recipe-card-last-cooked" v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked">{{ lastCookedText }}</span>
             </div>
             <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="deviceSettings.card_maxKeywords" v-if="props.showKeywords">
                 <template #prepend>
@@ -133,6 +136,11 @@ const router = useRouter()
 const {t} = useI18n()
 const deviceSettings = useUserPreferenceStore().deviceSettings
 
+const hasMetadataOverlay = computed(() =>
+    (deviceSettings.card_showAuthor && props.recipe.createdBy?.displayName) ||
+    (deviceSettings.card_showLastCooked && props.recipe.lastCooked)
+)
+
 const lastCookedText = computed(() => {
     if (!props.recipe.lastCooked) return ''
     const date = new Date(props.recipe.lastCooked)
@@ -190,5 +198,23 @@ function openRecipe() {
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+
+.card-overlay-top-right {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.55) !important;
+    color: white !important;
+}
+
+.card-overlay-bottom-right {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.55) !important;
+    color: white !important;
 }
 </style>

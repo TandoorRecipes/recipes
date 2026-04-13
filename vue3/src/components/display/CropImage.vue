@@ -60,6 +60,7 @@ const innerStyle = computed(() => {
 
 <style scoped>
 .crop-image {
+    position: relative;
     overflow: hidden;
     background-color: rgb(var(--v-theme-surface));
 }
