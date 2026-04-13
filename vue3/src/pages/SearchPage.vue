@@ -317,6 +317,30 @@
                         </div>
                     </CollapsibleSection>
                 </template>
+
+                <CollapsibleSection :label="$t('Card_Settings')">
+                    <div class="px-4 py-1">
+                        <v-switch v-model="useUserPreferenceStore().deviceSettings.card_showRating"
+                                  :label="$t('Rating')" density="compact" hide-details color="primary"></v-switch>
+                        <v-switch v-model="useUserPreferenceStore().deviceSettings.card_showAuthor"
+                                  :label="$t('CreatedBy')" density="compact" hide-details color="primary"></v-switch>
+                        <v-switch v-model="useUserPreferenceStore().deviceSettings.card_showLastCooked"
+                                  :label="$t('last_cooked')" density="compact" hide-details color="primary"></v-switch>
+                        <v-switch v-model="useUserPreferenceStore().deviceSettings.card_showNewBadge"
+                                  :label="$t('New')" density="compact" hide-details color="primary"></v-switch>
+                        <v-select v-model="useUserPreferenceStore().deviceSettings.card_maxKeywords"
+                                  :label="$t('Keywords')" density="compact" hide-details class="mt-2"
+                                  :items="[{title: '3', value: 3}, {title: '5', value: 5}, {title: '10', value: 10}, {title: $t('All'), value: 0}]"></v-select>
+                    </div>
+                </CollapsibleSection>
+
+                <CollapsibleSection :label="$t('Menu')">
+                    <div class="px-4 py-1">
+                        <v-checkbox v-for="item in menuItemOptions" :key="item.key"
+                                    v-model="useUserPreferenceStore().deviceSettings.card_visibleMenuItems"
+                                    :label="$t(item.label)" :value="item.key" density="compact" hide-details></v-checkbox>
+                    </div>
+                </CollapsibleSection>
             </template>
 
             <template #footer="{ activeTab }">
@@ -438,6 +462,21 @@ const savedSearchInline = computed({
     get: () => useUserPreferenceStore().deviceSettings.search_savedSearchInline ?? true,
     set: (val: boolean) => { useUserPreferenceStore().deviceSettings.search_savedSearchInline = val },
 })
+
+const menuItemOptions = [
+    {key: 'edit', label: 'Edit'},
+    {key: 'plan', label: 'Add_to_Plan'},
+    {key: 'shopping', label: 'Add_to_Shopping'},
+    {key: 'book', label: 'Add_to_Book'},
+    {key: 'cooklog', label: 'Log_Cooking'},
+    {key: 'photo', label: 'Edit_Photo'},
+    {key: 'properties', label: 'Property_Editor'},
+    {key: 'share', label: 'Share'},
+    {key: 'export', label: 'Export'},
+    {key: 'duplicate', label: 'Duplicate'},
+    {key: 'print', label: 'Print'},
+    {key: 'delete', label: 'Delete'},
+]
 
 // ─── Drawer filter visibility (search-specific) ────────────────────────
 const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', 'ratingGte', 'unrated', 'servings', 'makenow', 'cookedon', 'createdon', 'totalTime', 'createdby', 'internal']
