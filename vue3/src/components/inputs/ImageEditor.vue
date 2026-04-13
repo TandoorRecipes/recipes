@@ -40,7 +40,8 @@
             <v-switch v-model="fitToFrame" :label="$t('FitToFrame')" density="compact" hide-details class="mt-2" />
 
             <!-- Live preview strip -->
-            <div v-if="liveCropData" class="d-flex ga-3 mt-3 align-end">
+            <div v-if="liveCropData" class="text-caption text-disabled mt-3">{{ $t('Preview') }}</div>
+            <div v-if="liveCropData" class="d-flex ga-3 mt-1 align-end">
                 <div v-for="p in previewContexts" :key="p.label" class="text-center">
                     <crop-image class="preview-box"
                                 :src="cropperSrc ?? ''"
