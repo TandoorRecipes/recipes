@@ -77,22 +77,26 @@ function duplicateRecipe() {
     duplicateLoading.value = true
     api.apiRecipeRetrieve({id: props.recipe.id!}).then(originalRecipe => {
 
-        let recipe = {...originalRecipe, ...{id: undefined, name: originalRecipe.name + `(${t('Copy')})`}}
+        let recipe = {...originalRecipe, name: originalRecipe.name + `(${t('Copy')})`}
+        delete recipe.id
         recipe.steps = recipe.steps.map((step) => {
-            return {
+            const s = {
                 ...step,
-                ...{
-                    id: undefined,
-                    ingredients: step.ingredients.map((ingredient) => {
-                        return {...ingredient, ...{id: undefined}}
-                    }),
-                },
+                ingredients: step.ingredients.map((ingredient) => {
+                    const ing = {...ingredient}
+                    delete ing.id
+                    return ing
+                }),
             }
+            delete s.id
+            return s
         })
 
         if (recipe.properties != null) {
             recipe.properties = recipe.properties.map((p) => {
-                return {...p, ...{id: undefined}}
+                const prop = {...p}
+                delete prop.id
+                return prop
             })
         }
 
