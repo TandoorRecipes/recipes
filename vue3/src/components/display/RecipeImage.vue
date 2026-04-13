@@ -1,14 +1,14 @@
 <template>
-    <crop-image v-if="hasImage" class="cursor-pointer" role="button"
+    <crop-image v-if="hasImage" :class="{'cursor-pointer': !disableLightbox}" :role="disableLightbox ? undefined : 'button'"
                 :src="image"
                 :crop-data="cropData"
                 :width="width"
                 :height="height"
                 :rounded="rounded"
-                :aria-label="$t('ViewFullImage')"
-                @click="lightbox = true">
+                :aria-label="disableLightbox ? undefined : $t('ViewFullImage')"
+                @click="onImageClick">
         <slot name="overlay" />
-        <image-lightbox v-model="lightbox" :src="image" />
+        <image-lightbox v-if="!disableLightbox" v-model="lightbox" :src="image" />
     </crop-image>
     <v-img v-else :style="{'height': height, 'width': width}" color="recipeImagePlaceholderBg"
            :src="placeholderImage" :alt="$t('Recipe_Image')" :rounded="props.rounded">
@@ -32,13 +32,19 @@ const props = withDefaults(defineProps<{
     width?: string
     cover?: boolean
     rounded?: boolean | string
+    disableLightbox?: boolean
 }>(), {
     recipe: undefined,
     height: undefined,
     width: undefined,
     cover: true,
     rounded: false,
+    disableLightbox: false,
 })
+
+function onImageClick() {
+    if (!props.disableLightbox) lightbox.value = true
+}
 
 const hasImage = computed(() => props.recipe?.image != null)
 

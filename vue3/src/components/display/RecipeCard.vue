@@ -2,7 +2,7 @@
     <template v-if="!props.loading">
 
         <router-link :to="dest" :target="linkTarget">
-            <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3">
+            <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3" :disable-lightbox="true">
                 <template #overlay>
                     <span v-if="deviceSettings.card_showRating && props.recipe.rating != null"
                           class="card-overlay-top-right">
@@ -25,7 +25,7 @@
         <div class="ml-3">
             <div class="d-flex ">
                 <div class="flex-grow-1 cursor-pointer" @click="openRecipe()">
-                    <p class="font-weight-bold mt-2">{{ props.recipe.name }}</p>
+                    <p class="font-weight-bold mt-1">{{ props.recipe.name }}</p>
                 </div>
                 <div class="mt-1">
                     <recipe-context-menu :recipe="props.recipe" size="small" v-if="props.showMenu"></recipe-context-menu>
@@ -205,7 +205,7 @@ function openRecipe() {
 .card-overlay-bottom-left {
     position: absolute;
     z-index: 1;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.35);
     color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(4px);
     font-size: 10px;
