@@ -43,7 +43,6 @@
                 :key="section._key"
                 variant="outlined"
                 class="d-flex align-center ga-2 pa-3 mb-1"
-                style="overflow: visible"
             >
                 <v-icon
                     class="drag-handle flex-shrink-0"
@@ -64,6 +63,7 @@
                             hide-details
                             search-on-load
                             can-clear
+                            append-to-body
                             :placeholder="t('any_random', {target: modeLabel(section.mode)})"
                         />
                     </div>
