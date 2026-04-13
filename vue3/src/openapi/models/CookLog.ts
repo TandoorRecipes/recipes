@@ -107,7 +107,7 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     };
 }
 
-export function CookLogToJSON(value?: Omit<CookLog, 'created_by'|'updated_at'> | null): any {
+export function CookLogToJSON(value?: Omit<CookLog, 'createdBy'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

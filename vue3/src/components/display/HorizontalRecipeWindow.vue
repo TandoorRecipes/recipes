@@ -13,7 +13,7 @@
                 <v-window show-arrows>
                     <v-window-item v-for="(w, i) in recipeWindows" :key="i" class="pt-1 pb-1">
                         <v-row dense>
-                            <v-col class="pr-0 pl-0" v-for="r in w" :key="r.id">
+                            <v-col class="pr-0 pl-0" :cols="Math.floor(12 / numberOfCols)" v-for="r in w" :key="r.id">
                                 <recipe-card :recipe="r" :show_description="true" :show-keywords="true"></recipe-card>
                             </v-col>
                         </v-row>

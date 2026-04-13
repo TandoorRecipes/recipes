@@ -10,11 +10,11 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, Recipe, ShoppingListEntry, Step, Household, Unit, UserSpace
+from cookbook.models import Food, Ingredient, Recipe, ShoppingListEntry, Step, Household, Unit, UserFile, UserSpace
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, InventoryEntryFactory,
                                       InventoryLocationFactory, RecipeFactory,
                                       ShoppingListEntryFactory, StepFactory,
-                                      SupermarketCategoryFactory)
+                                      SupermarketCategoryFactory, UserFileFactory)
 
 #    ------------------ IMPORTANT -------------------
 #
@@ -1825,3 +1825,39 @@ def test_substitute_onhand(recipe_with_food, u1_s1, space_1, use_inventory):
 
     response = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
     assert json.loads(response.content)['substitute_onhand'] is True
+
+
+def test_food_image(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        user_file = UserFileFactory(space=space_1, created_by=user)
+
+    # assign image via nested object (WritableNestedModelSerializer pattern)
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args=[food.id]),
+        json.dumps({'food_image': {'id': user_file.id}}),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    # verify FK is set
+    with scopes_disabled():
+        food.refresh_from_db()
+    assert food.food_image_id == user_file.id
+
+    # detail returns food_image as nested object
+    r = u1_s1.get(reverse(DETAIL_URL, args=[food.id]))
+    data = json.loads(r.content)
+    assert data['food_image']['id'] == user_file.id
+
+    # clear image
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args=[food.id]),
+        json.dumps({'food_image': None}),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+    with scopes_disabled():
+        food.refresh_from_db()
+    assert food.food_image_id is None

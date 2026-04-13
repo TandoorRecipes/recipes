@@ -62,7 +62,7 @@ def get_filetype(name):
 
 def is_file_type_allowed(filename, image_only=False):
     is_file_allowed = False
-    allowed_file_types = ['.pdf', '.docx', '.xlsx', '.css', '.mp4', '.mov']
+    allowed_file_types = ['.pdf', '.docx', '.xlsx', '.css', '.mp4', '.mov', '.md', '.txt']
     allowed_image_types = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
     check_list = allowed_image_types
     if not image_only:

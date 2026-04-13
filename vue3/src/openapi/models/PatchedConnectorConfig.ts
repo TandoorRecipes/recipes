@@ -132,7 +132,7 @@ export function PatchedConnectorConfigFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedConnectorConfigToJSON(value?: Omit<PatchedConnectorConfig, 'created_by'> | null): any {
+export function PatchedConnectorConfigToJSON(value?: Omit<PatchedConnectorConfig, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }

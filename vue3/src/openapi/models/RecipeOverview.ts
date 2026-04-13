@@ -58,6 +58,12 @@ export interface RecipeOverview {
     readonly image: string | null;
     /**
      * 
+     * @type {any}
+     * @memberof RecipeOverview
+     */
+    readonly imageCropData: any | null;
+    /**
+     * 
      * @type {Array<KeywordLabel>}
      * @memberof RecipeOverview
      */
@@ -142,6 +148,7 @@ export interface RecipeOverview {
 export function instanceOfRecipeOverview(value: object): value is RecipeOverview {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('image' in value) || value['image'] === undefined) return false;
+    if (!('imageCropData' in value) || value['imageCropData'] === undefined) return false;
     if (!('keywords' in value) || value['keywords'] === undefined) return false;
     if (!('workingTime' in value) || value['workingTime'] === undefined) return false;
     if (!('waitingTime' in value) || value['waitingTime'] === undefined) return false;
@@ -171,6 +178,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'],
+        'imageCropData': json['image_crop_data'],
         'keywords': ((json['keywords'] as Array<any>).map(KeywordLabelFromJSON)),
         'workingTime': json['working_time'],
         'waitingTime': json['waiting_time'],
@@ -187,7 +195,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'keywords'|'working_time'|'waiting_time'|'created_by'|'created_at'|'updated_at'|'internal'|'servings'|'servings_text'|'rating'|'last_cooked'|'new'> | null): any {
+export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'imageCropData'|'keywords'|'workingTime'|'waitingTime'|'createdBy'|'createdAt'|'updatedAt'|'internal'|'servings'|'servingsText'|'rating'|'lastCooked'|'_new'> | null): any {
     if (value == null) {
         return value;
     }

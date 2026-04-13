@@ -31,7 +31,9 @@
                                 <v-divider v-if="mealPlanGridItem.plan_entries.length > 0"></v-divider>
                                 <v-list-item v-for="p in mealPlanGridItem.plan_entries" :key="p.id" @click="clickMealPlan(p)" link>
                                     <template #prepend>
-                                        <v-avatar :image="p.recipe.image" v-if="p.recipe?.image"></v-avatar>
+                                        <v-avatar v-if="p.recipe?.image">
+                                            <div class="crop-avatar" :style="cropPreviewStyle(p.recipe.image, (p.recipe as any).imageCropData, true)" />
+                                        </v-avatar>
                                         <v-avatar image="../../assets/recipe_no_image.svg" v-else></v-avatar>
                                     </template>
                                     <v-list-item-title>
@@ -81,6 +83,7 @@ import {DateTime} from "luxon";
 import {homePageCols} from "@/utils/breakpoint_utils";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRouter} from "vue-router";
+import {cropPreviewStyle} from "@/utils/image_crop";
 
 const router = useRouter()
 const {name} = useDisplay()
@@ -160,5 +163,10 @@ function clickMealPlan(plan: MealPlan) {
 
 
 <style scoped>
-
+.crop-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+}
 </style>

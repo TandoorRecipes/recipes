@@ -97,7 +97,7 @@ export function PatchedSyncFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'created_at'|'updated_at'> | null): any {
+export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

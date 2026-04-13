@@ -14,8 +14,8 @@
         </div>
 
         <div class="flex-grow-1 p-2">
-            <div class="d-flex">
-                <div class="d-flex flex-column pr-2 pl-4">
+            <div class="d-flex align-center">
+                <div class="shopping-qty-col d-flex flex-column pl-4 pr-2">
                     <span v-for="a in amounts" v-bind:key="a.key">
                         <span>
                             <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
@@ -29,7 +29,15 @@
                         <br/>
                     </span>
                 </div>
-                <div class="d-flex  flex-column flex-grow-1 align-self-center">
+                <template v-if="showFoodImages">
+                    <crop-image v-if="shoppingListFood.food.foodImage?.preview"
+                                class="shopping-food-image me-2"
+                                :src="shoppingListFood.food.foodImage.preview"
+                                :crop-data="shoppingListFood.food.foodImage?.cropData"
+                                force-crop />
+                    <div v-else class="shopping-food-image shopping-food-image-empty me-2"></div>
+                </template>
+                <div class="d-flex flex-column flex-grow-1 align-self-center">
                     {{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0]?.amount ?? 1)) }}
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
@@ -73,6 +81,7 @@ import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
 import {isDelayed, isEntryVisible, isShoppingListFoodDelayed, isShoppingListFoodVisible} from "@/utils/logic_utils";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
 import {pluralString, isSingularAmount} from "@/utils/model_utils.ts";
+import CropImage from "@/components/display/CropImage.vue";
 import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
 
 const emit = defineEmits(['clicked'])
@@ -86,6 +95,7 @@ const checkBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'pre
 const selectBtnSlot = ref(useUserPreferenceStore().userSettings.leftHanded ? 'append' : 'prepend')
 
 const dialog = ref(false)
+const showFoodImages = computed(() => useUserPreferenceStore().deviceSettings.shopping_showFoodImages ?? false)
 
 const entries = computed(() => {
     return Array.from(props.shoppingListFood.entries.values())
@@ -290,6 +300,26 @@ function handleSwipe() {
 .color-marker-container span {
     width: 100%;
     flex-grow: 1;
+}
+
+.shopping-qty-col {
+    min-width: 5.5rem;
+    max-width: 5.5rem;
+    flex-shrink: 0;
+}
+
+.shopping-food-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* Empty slot keeps food names aligned in mixed-image lists without
+   showing a visible placeholder. */
+.shopping-food-image-empty {
+    background: transparent;
 }
 
 </style>

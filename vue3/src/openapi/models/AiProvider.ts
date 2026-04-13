@@ -115,7 +115,7 @@ export function AiProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function AiProviderToJSON(value?: Omit<AiProvider, 'created_at'|'updated_at'> | null): any {
+export function AiProviderToJSON(value?: Omit<AiProvider, 'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

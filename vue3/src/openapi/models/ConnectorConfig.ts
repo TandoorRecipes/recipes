@@ -134,7 +134,7 @@ export function ConnectorConfigFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function ConnectorConfigToJSON(value?: Omit<ConnectorConfig, 'created_by'> | null): any {
+export function ConnectorConfigToJSON(value?: Omit<ConnectorConfig, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }

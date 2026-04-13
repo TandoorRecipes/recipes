@@ -111,7 +111,7 @@ export function PatchedAiProviderFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedAiProviderToJSON(value?: Omit<PatchedAiProvider, 'created_at'|'updated_at'> | null): any {
+export function PatchedAiProviderToJSON(value?: Omit<PatchedAiProvider, 'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

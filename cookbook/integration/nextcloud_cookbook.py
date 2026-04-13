@@ -154,10 +154,12 @@ class NextcloudCookbook(Integration):
                 recipe_stream.close()
 
                 try:
-                    imageByte = recipe.image.file.read()
-                    export_zip_obj.writestr(f'{recipe.name}/full.jpg', self.getJPEG(imageByte))
-                    export_zip_obj.writestr(f'{recipe.name}/thumb.jpg', self.getThumb(171, imageByte))
-                    export_zip_obj.writestr(f'{recipe.name}/thumb16.jpg', self.getThumb(16, imageByte))
+                    img = recipe.primary_image
+                    if img:
+                        imageByte = img.read()
+                        export_zip_obj.writestr(f'{recipe.name}/full.jpg', self.getJPEG(imageByte))
+                        export_zip_obj.writestr(f'{recipe.name}/thumb.jpg', self.getThumb(171, imageByte))
+                        export_zip_obj.writestr(f'{recipe.name}/thumb16.jpg', self.getThumb(16, imageByte))
                 except ValueError:
                     pass
 

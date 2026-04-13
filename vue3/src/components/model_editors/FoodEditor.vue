@@ -29,6 +29,7 @@
                         <v-text-field :label="$t('Plural')" v-model="editingObj.pluralName"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
                         <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
+                        <user-file-field v-model="editingObj.foodImage" :label="$t('Image')" />
                         <model-select :label="$t('Category')" v-model="editingObj.supermarketCategory" model="SupermarketCategory" allow-create append-to-body></model-select>
                         <model-select :label="$t('ShoppingList')" :hint="$t('DefaultShoppingListHelp')" v-model="editingObj.shoppingLists" model="ShoppingList" mode="tags" allow-create append-to-body></model-select>
                     </v-form>
@@ -162,6 +163,7 @@ import {computed, nextTick, onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Food, Unit, UnitConversion} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import UserFileField from "@/components/inputs/UserFileField.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";

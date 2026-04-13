@@ -13,6 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UserFileView } from './UserFileView';
+import {
+    UserFileViewFromJSON,
+    UserFileViewFromJSONTyped,
+    UserFileViewToJSON,
+} from './UserFileView';
 import type { ShoppingList } from './ShoppingList';
 import {
     ShoppingListFromJSON,
@@ -176,6 +182,12 @@ export interface Food {
     supermarketCategory?: SupermarketCategory;
     /**
      * 
+     * @type {UserFileView}
+     * @memberof Food
+     */
+    foodImage?: UserFileView;
+    /**
+     * 
      * @type {number}
      * @memberof Food
      */
@@ -237,12 +249,6 @@ export interface Food {
     readonly substituteOnhand: boolean;
     /**
      * 
-     * @type {Array<FoodSimple>}
-     * @memberof Food
-     */
-    readonly availableSubstitutes: Array<FoodSimple>;
-    /**
-     * 
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
@@ -271,12 +277,6 @@ export interface Food {
      * @memberof Food
      */
     readonly substituteInventory: boolean;
-    /**
-     * None for non-expanded responses, bool when tree_search=true (E-8).
-     * @type {boolean}
-     * @memberof Food
-     */
-    readonly matchedFilter: boolean;
 }
 
 /**
@@ -290,10 +290,8 @@ export function instanceOfFood(value: object): value is Food {
     if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     if (!('fullName' in value) || value['fullName'] === undefined) return false;
     if (!('substituteOnhand' in value) || value['substituteOnhand'] === undefined) return false;
-    if (!('availableSubstitutes' in value) || value['availableSubstitutes'] === undefined) return false;
     if (!('inInventory' in value) || value['inInventory'] === undefined) return false;
     if (!('substituteInventory' in value) || value['substituteInventory'] === undefined) return false;
-    if (!('matchedFilter' in value) || value['matchedFilter'] === undefined) return false;
     return true;
 }
 
@@ -320,6 +318,7 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
         'foodOnhand': json['food_onhand'] == null ? undefined : json['food_onhand'],
         'supermarketCategory': json['supermarket_category'] == null ? undefined : SupermarketCategoryFromJSON(json['supermarket_category']),
+        'foodImage': json['food_image'] == null ? undefined : UserFileViewFromJSON(json['food_image']),
         'parent': json['parent'],
         'numchild': json['numchild'],
         'numrecipe': json['numrecipe'],
@@ -330,17 +329,15 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'substituteSiblings': json['substitute_siblings'] == null ? undefined : json['substitute_siblings'],
         'substituteChildren': json['substitute_children'] == null ? undefined : json['substitute_children'],
         'substituteOnhand': json['substitute_onhand'],
-        'availableSubstitutes': ((json['available_substitutes'] as Array<any>).map(FoodSimpleFromJSON)),
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
         'inInventory': json['in_inventory'],
         'substituteInventory': json['substitute_inventory'],
-        'matchedFilter': json['matched_filter'],
     };
 }
 
-export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'> | null): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'> | null): any {
     if (value == null) {
         return value;
     }
@@ -358,6 +355,7 @@ export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'nu
         'fdc_id': value['fdcId'],
         'food_onhand': value['foodOnhand'],
         'supermarket_category': SupermarketCategoryToJSON(value['supermarketCategory']),
+        'food_image': UserFileViewToJSON(value['foodImage']),
         'inherit_fields': value['inheritFields'] == null ? undefined : ((value['inheritFields'] as Array<any>).map(FoodInheritFieldToJSON)),
         'ignore_shopping': value['ignoreShopping'],
         'substitute': value['substitute'] == null ? undefined : ((value['substitute'] as Array<any>).map(FoodSimpleToJSON)),

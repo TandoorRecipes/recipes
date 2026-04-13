@@ -13,6 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
+import type { UserFileView } from './UserFileView';
+import {
+    UserFileViewFromJSON,
+    UserFileViewFromJSONTyped,
+    UserFileViewToJSON,
+} from './UserFileView';
 import type { ShoppingList } from './ShoppingList';
 import {
     ShoppingListFromJSON,
@@ -62,6 +68,12 @@ export interface FoodShopping {
      * @memberof FoodShopping
      */
     readonly shoppingLists: Array<ShoppingList>;
+    /**
+     * 
+     * @type {UserFileView}
+     * @memberof FoodShopping
+     */
+    readonly foodImage: UserFileView | null;
 }
 
 /**
@@ -71,6 +83,7 @@ export function instanceOfFoodShopping(value: object): value is FoodShopping {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('supermarketCategory' in value) || value['supermarketCategory'] === undefined) return false;
     if (!('shoppingLists' in value) || value['shoppingLists'] === undefined) return false;
+    if (!('foodImage' in value) || value['foodImage'] === undefined) return false;
     return true;
 }
 
@@ -89,10 +102,11 @@ export function FoodShoppingFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'supermarketCategory': SupermarketCategoryFromJSON(json['supermarket_category']),
         'shoppingLists': ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
+        'foodImage': UserFileViewFromJSON(json['food_image']),
     };
 }
 
-export function FoodShoppingToJSON(value?: Omit<FoodShopping, 'supermarket_category'|'shopping_lists'> | null): any {
+export function FoodShoppingToJSON(value?: Omit<FoodShopping, 'supermarketCategory'|'shoppingLists'|'foodImage'> | null): any {
     if (value == null) {
         return value;
     }

@@ -98,11 +98,30 @@ function parseIngredient() {
 
 // ----------- FUNCTIONS FOR TESTING MULTISELECT INPUT -------------
 
-function createObject(object: any, select$: Multiselect) {
-    ingredientInput.value = object['name']
-    ingredientModelInput.value = {} as Food
+async function createObject(object: any, select$: Multiselect) {
+    const name = object['name']
     select$.close()
     select$.clearSearch()
+    ingredientModelInput.value = {} as Food
+
+    // Before falling through to the ingredient parser (which strips leading numbers
+    // as quantities), check if a food with this exact name already exists.
+    const api = new ApiApi()
+    try {
+        const r = await api.apiFoodList({query: name, page: 1, pageSize: 5})
+        const exactMatch = r.results?.find(f => f.name?.toLowerCase() === name.toLowerCase())
+        if (exactMatch) {
+            addIngredient(1, null, exactMatch)
+            return false
+        }
+    } catch (err) {
+        // Lookup failed (network/permission/etc). Surface to the user so they
+        // know the exact-match shortcut didn't run, then fall through to the
+        // parser as a best-effort fallback.
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }
+
+    ingredientInput.value = name
     parseIngredient()
     return false
 }

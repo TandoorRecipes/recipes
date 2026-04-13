@@ -30,8 +30,8 @@ import type {
     FoodBatchUpdate,
     FoodInheritField,
     FoodShopping,
-    FoodShoppingUpdate,
     FoodSimple,
+    FoodStats,
     GenericModelReference,
     Group,
     Household,
@@ -103,6 +103,7 @@ import type {
     UserFileView,
     UserPreference,
     UserSpace,
+    UserSpaceBatchUpdate,
     ViewLog
 } from '@/openapi'
 
@@ -520,9 +521,10 @@ export function makeCustomFilter(overrides: Partial<CustomFilter> = {}): CustomF
     return {
         id: 1,
         name: 'Test name',
-        search: '',
+        type: 'RECIPE' as any,
+        search: undefined as any,
         shared: [],
-        createdBy: 0,
+        createdBy: undefined as any,
         ...overrides,
     } as CustomFilter
 }
@@ -531,8 +533,7 @@ export function makeMinimalCustomFilter(overrides: Partial<CustomFilter> = {}): 
     return {
         id: 1,
         name: 'Test name',
-        search: '',
-        createdBy: 0,
+        createdBy: undefined as any,
         ...overrides,
     } as CustomFilter
 }
@@ -541,9 +542,10 @@ export function makeEdgeCaseCustomFilter(overrides: Partial<CustomFilter> = {}):
     return {
         id: 0,
         name: '',
-        search: '',
+        type: 'KEYWORD' as any,
+        search: undefined as any,
         shared: [],
-        createdBy: 0,
+        createdBy: undefined as any,
         ...overrides,
     } as CustomFilter
 }
@@ -691,6 +693,7 @@ export function makeFood(overrides: Partial<Food> = {}): Food {
         supermarketCategory: undefined as any,
         parent: 0,
         numchild: 0,
+        numrecipe: 0,
         inheritFields: [],
         fullName: 'Test full_name',
         ignoreShopping: false,
@@ -701,6 +704,8 @@ export function makeFood(overrides: Partial<Food> = {}): Food {
         childInheritFields: [],
         openDataSlug: '',
         shoppingLists: [],
+        inInventory: '',
+        substituteInventory: false,
         ...overrides,
     } as Food
 }
@@ -712,8 +717,11 @@ export function makeMinimalFood(overrides: Partial<Food> = {}): Food {
         shopping: '',
         parent: 0,
         numchild: 0,
+        numrecipe: 0,
         fullName: 'Test full_name',
         substituteOnhand: false,
+        inInventory: '',
+        substituteInventory: false,
         ...overrides,
     } as Food
 }
@@ -735,6 +743,7 @@ export function makeEdgeCaseFood(overrides: Partial<Food> = {}): Food {
         supermarketCategory: null,
         parent: 0,
         numchild: 0,
+        numrecipe: 0,
         inheritFields: null,
         fullName: '',
         ignoreShopping: false,
@@ -745,6 +754,8 @@ export function makeEdgeCaseFood(overrides: Partial<Food> = {}): Food {
         childInheritFields: null,
         openDataSlug: null,
         shoppingLists: [],
+        inInventory: '',
+        substituteInventory: false,
         ...overrides,
     } as Food
 }
@@ -882,34 +893,6 @@ export function makeEdgeCaseFoodShopping(overrides: Partial<FoodShopping> = {}):
     } as FoodShopping
 }
 
-export function makeFoodShoppingUpdate(overrides: Partial<FoodShoppingUpdate> = {}): FoodShoppingUpdate {
-    return {
-        id: 1,
-        amount: 1,
-        unit: 0,
-        delete: undefined as any,
-        ...overrides,
-    } as FoodShoppingUpdate
-}
-
-export function makeMinimalFoodShoppingUpdate(overrides: Partial<FoodShoppingUpdate> = {}): FoodShoppingUpdate {
-    return {
-        id: 1,
-        delete: undefined as any,
-        ...overrides,
-    } as FoodShoppingUpdate
-}
-
-export function makeEdgeCaseFoodShoppingUpdate(overrides: Partial<FoodShoppingUpdate> = {}): FoodShoppingUpdate {
-    return {
-        id: 0,
-        amount: null,
-        unit: null,
-        delete: null,
-        ...overrides,
-    } as FoodShoppingUpdate
-}
-
 export function makeFoodSimple(overrides: Partial<FoodSimple> = {}): FoodSimple {
     return {
         id: 1,
@@ -934,6 +917,42 @@ export function makeEdgeCaseFoodSimple(overrides: Partial<FoodSimple> = {}): Foo
         pluralName: null,
         ...overrides,
     } as FoodSimple
+}
+
+export function makeFoodStats(overrides: Partial<FoodStats> = {}): FoodStats {
+    return {
+        onhand: 0,
+        shopping: 0,
+        ignored: 0,
+        inventory: 0,
+        expired: 0,
+        total: 0,
+        ...overrides,
+    } as FoodStats
+}
+
+export function makeMinimalFoodStats(overrides: Partial<FoodStats> = {}): FoodStats {
+    return {
+        onhand: 0,
+        shopping: 0,
+        ignored: 0,
+        inventory: 0,
+        expired: 0,
+        total: 0,
+        ...overrides,
+    } as FoodStats
+}
+
+export function makeEdgeCaseFoodStats(overrides: Partial<FoodStats> = {}): FoodStats {
+    return {
+        onhand: 0,
+        shopping: 0,
+        ignored: 0,
+        inventory: 0,
+        expired: 0,
+        total: 0,
+        ...overrides,
+    } as FoodStats
 }
 
 export function makeGenericModelReference(overrides: Partial<GenericModelReference> = {}): GenericModelReference {
@@ -1401,7 +1420,7 @@ export function makeInventoryEntry(overrides: Partial<InventoryEntry> = {}): Inv
         subLocation: '',
         code: '',
         food: makeFood(),
-        unit: makeUnit(),
+        unit: undefined as any,
         amount: 1,
         expires: new Date('2026-01-01T00:00:00Z'),
         note: '',
@@ -1432,7 +1451,7 @@ export function makeEdgeCaseInventoryEntry(overrides: Partial<InventoryEntry> = 
         subLocation: null,
         code: null,
         food: makeMinimalFood(),
-        unit: makeMinimalUnit(),
+        unit: null,
         amount: 0,
         expires: null,
         note: null,
@@ -1519,6 +1538,7 @@ export function makeInviteLink(overrides: Partial<InviteLink> = {}): InviteLink 
         uuid: '',
         email: 'test@example.com',
         group: makeGroup(),
+        household: undefined as any,
         validUntil: new Date('2026-01-01T00:00:00Z'),
         usedBy: 0,
         reusable: false,
@@ -1549,6 +1569,7 @@ export function makeEdgeCaseInviteLink(overrides: Partial<InviteLink> = {}): Inv
         uuid: '',
         email: '',
         group: makeMinimalGroup(),
+        household: null,
         validUntil: new Date(0),
         usedBy: null,
         reusable: false,
@@ -1568,6 +1589,7 @@ export function makeKeyword(overrides: Partial<Keyword> = {}): Keyword {
         description: '',
         parent: 0,
         numchild: 0,
+        numrecipe: 0,
         createdAt: new Date('2026-01-01T00:00:00Z'),
         updatedAt: new Date('2026-01-01T00:00:00Z'),
         fullName: 'Test full_name',
@@ -1582,6 +1604,7 @@ export function makeMinimalKeyword(overrides: Partial<Keyword> = {}): Keyword {
         label: '',
         parent: 0,
         numchild: 0,
+        numrecipe: 0,
         createdAt: new Date('2026-01-01T00:00:00Z'),
         updatedAt: new Date('2026-01-01T00:00:00Z'),
         fullName: 'Test full_name',
@@ -1597,6 +1620,7 @@ export function makeEdgeCaseKeyword(overrides: Partial<Keyword> = {}): Keyword {
         description: '',
         parent: 0,
         numchild: 0,
+        numrecipe: 0,
         createdAt: new Date(0),
         updatedAt: new Date(0),
         fullName: '',
@@ -1664,7 +1688,6 @@ export function makeMealPlan(overrides: Partial<MealPlan> = {}): MealPlan {
         toDate: new Date('2026-01-01T00:00:00Z'),
         mealType: makeMealType(),
         createdBy: 0,
-        shared: [],
         recipeName: 'Test recipe_name',
         mealTypeName: 'Test meal_type_name',
         shopping: false,
@@ -1700,7 +1723,6 @@ export function makeEdgeCaseMealPlan(overrides: Partial<MealPlan> = {}): MealPla
         toDate: new Date(0),
         mealType: makeMinimalMealType(),
         createdBy: 0,
-        shared: null,
         recipeName: '',
         mealTypeName: '',
         shopping: false,
@@ -2200,7 +2222,6 @@ export function makeRecipeOverview(overrides: Partial<RecipeOverview> = {}): Rec
         rating: 0,
         lastCooked: new Date('2026-01-01T00:00:00Z'),
         new: false,
-        recent: '',
         ...overrides,
     } as RecipeOverview
 }
@@ -2222,7 +2243,6 @@ export function makeMinimalRecipeOverview(overrides: Partial<RecipeOverview> = {
         rating: 0,
         lastCooked: new Date('2026-01-01T00:00:00Z'),
         new: false,
-        recent: '',
         ...overrides,
     } as RecipeOverview
 }
@@ -2246,7 +2266,6 @@ export function makeEdgeCaseRecipeOverview(overrides: Partial<RecipeOverview> = 
         rating: null,
         lastCooked: null,
         new: false,
-        recent: '',
         ...overrides,
     } as RecipeOverview
 }
@@ -3028,7 +3047,6 @@ export function makeStep(overrides: Partial<Step> = {}): Step {
         file: undefined as any,
         stepRecipe: 0,
         stepRecipeData: undefined as any,
-        numrecipe: 0,
         showIngredientsTable: false,
         ...overrides,
     } as Step
@@ -3040,7 +3058,6 @@ export function makeMinimalStep(overrides: Partial<Step> = {}): Step {
         ingredients: [],
         instructionsMarkdown: '',
         stepRecipeData: undefined as any,
-        numrecipe: 0,
         ...overrides,
     } as Step
 }
@@ -3058,7 +3075,6 @@ export function makeEdgeCaseStep(overrides: Partial<Step> = {}): Step {
         file: null,
         stepRecipe: null,
         stepRecipeData: undefined as any,
-        numrecipe: 0,
         showIngredientsTable: false,
         ...overrides,
     } as Step
@@ -3268,6 +3284,7 @@ export function makeUnit(overrides: Partial<Unit> = {}): Unit {
         pluralName: 'Test plural_name',
         description: '',
         baseUnit: '',
+        numrecipe: 0,
         openDataSlug: '',
         ...overrides,
     } as Unit
@@ -3277,6 +3294,7 @@ export function makeMinimalUnit(overrides: Partial<Unit> = {}): Unit {
     return {
         id: 1,
         name: 'Test name',
+        numrecipe: 0,
         ...overrides,
     } as Unit
 }
@@ -3288,6 +3306,7 @@ export function makeEdgeCaseUnit(overrides: Partial<Unit> = {}): Unit {
         pluralName: null,
         description: null,
         baseUnit: null,
+        numrecipe: 0,
         openDataSlug: null,
         ...overrides,
     } as Unit
@@ -3459,13 +3478,10 @@ export function makeUserPreference(overrides: Partial<UserPreference> = {}): Use
         image: undefined as any,
         theme: 'TANDOOR' as any,
         navBgColor: '',
-        navTextColor: 'LIGHT' as any,
         navShowLogo: false,
         defaultUnit: '',
-        defaultPage: 'SEARCH' as any,
+        defaultPage: 'HOME' as any,
         useFractions: false,
-        useKj: false,
-        planShare: [],
         navSticky: false,
         ingredientDecimals: 0,
         comments: false,
@@ -3475,7 +3491,6 @@ export function makeUserPreference(overrides: Partial<UserPreference> = {}): Use
         defaultDelay: 0,
         mealplanAutoincludeRelated: false,
         mealplanAutoexcludeOnhand: false,
-        shoppingShare: [],
         shoppingRecentDays: 0,
         csvDelim: '',
         csvPrefix: '',
@@ -3486,6 +3501,7 @@ export function makeUserPreference(overrides: Partial<UserPreference> = {}): Use
         leftHanded: false,
         showStepIngredients: false,
         foodChildrenExist: false,
+        startPageSections: undefined as any,
         ...overrides,
     } as UserPreference
 }
@@ -3505,13 +3521,10 @@ export function makeEdgeCaseUserPreference(overrides: Partial<UserPreference> = 
         image: null,
         theme: 'TANDOOR_DARK' as any,
         navBgColor: '',
-        navTextColor: 'DARK' as any,
         navShowLogo: false,
         defaultUnit: '',
         defaultPage: 'SHOPPING' as any,
         useFractions: false,
-        useKj: false,
-        planShare: null,
         navSticky: false,
         ingredientDecimals: 0,
         comments: false,
@@ -3521,7 +3534,6 @@ export function makeEdgeCaseUserPreference(overrides: Partial<UserPreference> = 
         defaultDelay: 0,
         mealplanAutoincludeRelated: false,
         mealplanAutoexcludeOnhand: false,
-        shoppingShare: null,
         shoppingRecentDays: 0,
         csvDelim: '',
         csvPrefix: '',
@@ -3532,6 +3544,7 @@ export function makeEdgeCaseUserPreference(overrides: Partial<UserPreference> = 
         leftHanded: false,
         showStepIngredients: false,
         foodChildrenExist: false,
+        startPageSections: undefined as any,
         ...overrides,
     } as UserPreference
 }
@@ -3579,6 +3592,32 @@ export function makeEdgeCaseUserSpace(overrides: Partial<UserSpace> = {}): UserS
         updatedAt: new Date(0),
         ...overrides,
     } as UserSpace
+}
+
+export function makeUserSpaceBatchUpdate(overrides: Partial<UserSpaceBatchUpdate> = {}): UserSpaceBatchUpdate {
+    return {
+        userSpaces: [],
+        household: 0,
+        groupSet: [],
+        ...overrides,
+    } as UserSpaceBatchUpdate
+}
+
+export function makeMinimalUserSpaceBatchUpdate(overrides: Partial<UserSpaceBatchUpdate> = {}): UserSpaceBatchUpdate {
+    return {
+        userSpaces: [],
+        groupSet: [],
+        ...overrides,
+    } as UserSpaceBatchUpdate
+}
+
+export function makeEdgeCaseUserSpaceBatchUpdate(overrides: Partial<UserSpaceBatchUpdate> = {}): UserSpaceBatchUpdate {
+    return {
+        userSpaces: [],
+        household: null,
+        groupSet: [],
+        ...overrides,
+    } as UserSpaceBatchUpdate
 }
 
 export function makeViewLog(overrides: Partial<ViewLog> = {}): ViewLog {

@@ -132,7 +132,7 @@ export function SupermarketFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function SupermarketToJSON(value?: Omit<Supermarket, 'category_to_supermarket'> | null): any {
+export function SupermarketToJSON(value?: Omit<Supermarket, 'categoryToSupermarket'> | null): any {
     if (value == null) {
         return value;
     }

@@ -137,7 +137,7 @@ export function AiLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): AiL
     };
 }
 
-export function AiLogToJSON(value?: Omit<AiLog, 'ai_provider'|'created_at'|'updated_at'> | null): any {
+export function AiLogToJSON(value?: Omit<AiLog, 'aiProvider'|'createdAt'|'updatedAt'> | null): any {
     if (value == null) {
         return value;
     }

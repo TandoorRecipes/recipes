@@ -85,7 +85,7 @@ export function MealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealTypeToJSON(value?: Omit<MealType, 'created_by'> | null): any {
+export function MealTypeToJSON(value?: Omit<MealType, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }

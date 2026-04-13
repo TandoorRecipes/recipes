@@ -115,7 +115,7 @@ export function ImportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ImportLogToJSON(value?: Omit<ImportLog, 'keyword'|'created_by'|'created_at'> | null): any {
+export function ImportLogToJSON(value?: Omit<ImportLog, 'keyword'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
