@@ -43,6 +43,7 @@
                 :key="section._key"
                 variant="outlined"
                 class="d-flex align-center ga-2 pa-3 mb-1"
+                style="overflow: visible"
             >
                 <v-icon
                     class="drag-handle flex-shrink-0"
