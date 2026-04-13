@@ -2852,7 +2852,9 @@ class RecipeImageViewSet(LoggingMixin, viewsets.ModelViewSet):
             return Response({'error': 'recipe and image_url are required'}, status=400)
         try:
             response = safe_request('GET', image_url, headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
+                "User-Agent": request.META.get('HTTP_USER_AGENT', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0')})
+            if not response.ok:
+                return Response({'error': f'Image server returned {response.status_code}'}, status=400)
             filetype = mimetypes.guess_extension(response.headers.get('content-type', '')) or '.jpeg'
             image = File(io.BytesIO(response.content))
             img = handle_image(request, image, filetype)
