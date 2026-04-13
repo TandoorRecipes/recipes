@@ -62,26 +62,30 @@
                     {{ $t('Recipe_Card') }}
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
-                    <!-- Live preview -->
-                    <v-row v-if="previewRecipe" class="mb-4" justify="center">
-                        <v-col cols="6" md="4">
-                            <recipe-card :recipe="previewRecipe" :show-menu="false" />
+                    <v-row>
+                        <!-- Live preview (non-interactive) -->
+                        <v-col v-if="previewRecipe" cols="12" md="5" class="d-flex align-start justify-center">
+                            <div class="card-preview-wrapper" style="pointer-events: none; max-width: 240px; width: 100%;">
+                                <recipe-card :recipe="previewRecipe" :show-menu="false" :show-keywords="true" />
+                            </div>
+                        </v-col>
+                        <!-- Controls -->
+                        <v-col cols="12" md="7">
+                            <v-switch v-model="deviceSettings.card_showRating"
+                                      :label="$t('Rating')" density="compact" hide-details color="primary" />
+                            <v-switch v-model="deviceSettings.card_showAuthor"
+                                      :label="$t('CreatedBy')" density="compact" hide-details color="primary" />
+                            <v-switch v-model="deviceSettings.card_showLastCooked"
+                                      :label="$t('last_cooked')" density="compact" hide-details color="primary" />
+                            <v-switch v-model="deviceSettings.card_showNewBadge"
+                                      :label="$t('New')" density="compact" hide-details color="primary" />
+                            <v-select v-model="deviceSettings.card_maxKeywords"
+                                      :label="$t('Keywords')" density="compact" hide-details class="mt-2"
+                                      :items="[{title: '3', value: 3}, {title: '5', value: 5}, {title: '10', value: 10}, {title: $t('All'), value: 0}]" />
+
+                            <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
                         </v-col>
                     </v-row>
-
-                    <v-switch v-model="deviceSettings.card_showRating"
-                              :label="$t('Rating')" density="compact" hide-details color="primary" />
-                    <v-switch v-model="deviceSettings.card_showAuthor"
-                              :label="$t('CreatedBy')" density="compact" hide-details color="primary" />
-                    <v-switch v-model="deviceSettings.card_showLastCooked"
-                              :label="$t('last_cooked')" density="compact" hide-details color="primary" />
-                    <v-switch v-model="deviceSettings.card_showNewBadge"
-                              :label="$t('New')" density="compact" hide-details color="primary" />
-                    <v-select v-model="deviceSettings.card_maxKeywords"
-                              :label="$t('Keywords')" density="compact" hide-details class="mt-2"
-                              :items="[{title: '3', value: 3}, {title: '5', value: 5}, {title: '10', value: 10}, {title: $t('All'), value: 0}]" />
-
-                    <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
@@ -120,8 +124,18 @@ const openPanels = ref(['appearance', 'recipe-display'])
 const previewRecipe = ref<RecipeOverview | null>(null)
 
 onMounted(() => {
-    new ApiApi().apiRecipeList({pageSize: 1}).then(r => {
-        if (r.results?.length) previewRecipe.value = r.results[0]
+    new ApiApi().apiRecipeList({pageSize: 1, random: true}).then(r => {
+        if (r.results?.length) {
+            const recipe = {...r.results[0]}
+            recipe._new = true
+            if (!recipe.lastCooked) {
+                recipe.lastCooked = new Date(Date.now() - 3 * 86400000).toISOString()
+            }
+            if (!recipe.rating) {
+                recipe.rating = 4.5
+            }
+            previewRecipe.value = recipe as RecipeOverview
+        }
     }).catch(() => {})
 })
 
