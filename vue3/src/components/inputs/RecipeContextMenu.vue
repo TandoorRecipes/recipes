@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, PropType, ref} from 'vue'
+import {computed, nextTick, PropType, ref, watch} from 'vue'
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import RecipeShareDialog from "@/components/dialogs/RecipeShareDialog.vue";
@@ -144,6 +144,19 @@ function openPhotoEditor() {
         photoEditorDialog.value = true
     })
 }
+
+// Refresh recipe image when photo editor closes
+watch(photoEditorDialog, (open) => {
+    if (!open && props.recipe.id) {
+        new ApiApi().apiRecipeList({pageSize: 1, query: props.recipe.name}).then(r => {
+            const updated = r.results?.find(rec => rec.id === props.recipe.id)
+            if (updated) {
+                (props.recipe as any).image = updated.image;
+                (props.recipe as any).imageCropData = (updated as any).imageCropData
+            }
+        }).catch(() => {})
+    }
+})
 
 /**
  * create a duplicate of the recipe by pulling its current data and creating a new recipe with the same data

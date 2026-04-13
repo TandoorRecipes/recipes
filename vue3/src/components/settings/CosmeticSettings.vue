@@ -63,11 +63,11 @@
                 </v-expansion-panel-title>
                 <v-expansion-panel-text>
                     <!-- Live preview -->
-                    <div class="d-flex justify-center mb-4">
-                        <v-card variant="outlined" style="width: 220px; overflow: hidden;">
-                            <recipe-card :recipe="previewRecipe" :show-menu="false" height="120px" />
-                        </v-card>
-                    </div>
+                    <v-row v-if="previewRecipe" class="mb-4" justify="center">
+                        <v-col cols="6" md="4">
+                            <recipe-card :recipe="previewRecipe" :show-menu="false" />
+                        </v-col>
+                    </v-row>
 
                     <v-switch v-model="deviceSettings.card_showRating"
                               :label="$t('Rating')" density="compact" hide-details color="primary" />
@@ -105,9 +105,10 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue"
+import {onMounted, ref} from "vue"
 import {useI18n} from "vue-i18n"
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore"
+import {ApiApi, type RecipeOverview} from "@/openapi"
 import LanguageSelect from "@/components/inputs/LanguageSelect.vue"
 import RecipeCard from "@/components/display/RecipeCard.vue"
 
@@ -116,25 +117,13 @@ const userPrefs = useUserPreferenceStore()
 const deviceSettings = userPrefs.deviceSettings
 const openPanels = ref(['appearance', 'recipe-display'])
 
-const previewRecipe = computed(() => ({
-    id: 0,
-    name: t('Example_Recipe'),
-    rating: 4.5,
-    createdBy: {displayName: 'Chef'},
-    lastCooked: new Date(Date.now() - 2 * 86400000).toISOString(),
-    keywords: [
-        {id: 1, name: t('dinner'), label: t('dinner')},
-        {id: 2, name: t('quick'), label: t('quick')},
-        {id: 3, name: t('healthy'), label: t('healthy')},
-        {id: 4, name: t('vegetarian'), label: t('vegetarian')},
-    ],
-    _new: true,
-    _private: false,
-    internal: true,
-    workingTime: 25,
-    waitingTime: 10,
-    servings: 4,
-}))
+const previewRecipe = ref<RecipeOverview | null>(null)
+
+onMounted(() => {
+    new ApiApi().apiRecipeList({pageSize: 1}).then(r => {
+        if (r.results?.length) previewRecipe.value = r.results[0]
+    }).catch(() => {})
+})
 
 const menuItemOptions = [
     {key: 'edit', label: 'Edit'},
