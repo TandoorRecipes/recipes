@@ -80,6 +80,8 @@ function save() {
     let api = new ApiApi()
     api.apiUserPartialUpdate({id: user.value.id!, patchedUser: user.value}).then(r => {
         user.value = r
+        return userPrefs.updateUserSettings()
+    }).then(() => {
         useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
