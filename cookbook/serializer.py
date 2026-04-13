@@ -60,8 +60,8 @@ class WritableNestedModelSerializer(WNMS):
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
                 # if the field is a ListSerializer get dict values of PKs provided
                 if any(isinstance(x, int) for x in data[f]):
-                    # only retrieve serializer required fields (exclude id — these are copied, not referenced)
-                    required_fields = [field_name for field_name, field in self.fields[f].child.__class__().fields.items() if field.required]
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].child.__class__().fields.items() if field.required]
                     # filter values to integer values
                     pk_data = [x for x in data[f] if isinstance(x, int)]
                     # merge non-pk values with retrieved values
