@@ -18,6 +18,7 @@
     "@vueform/multiselect": "^2.6.11",
     "@vueuse/core": "^14.2.1",
     "@vueuse/router": "^14.2.1",
+    "cropperjs": "^2.1.1",
     "luxon": "^3.7.2",
     "mavon-editor": "^3.0.1",
     "pinia": "^3.0.4",
