@@ -52,7 +52,7 @@
                             </v-btn>
                         </template>
                     </template>
-                    <template #search-append-inner>
+                    <template #search-append-inner v-if="inlineGroups.length > 0 || savedSearchInline">
                         <v-btn
                             :icon="filtersCollapsed ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-up'"
                             color="primary"
