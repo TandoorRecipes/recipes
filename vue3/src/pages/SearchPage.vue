@@ -143,7 +143,9 @@
                         :show-select="selectMode"
                     >
                         <template #item.image="{item}">
-                            <v-avatar :image="item.image" size="x-large" class="mt-1 mb-1" v-if="item.image" />
+                            <v-avatar size="x-large" class="mt-1 mb-1" v-if="item.image">
+                                <div class="crop-avatar" :style="cropPreviewStyle(item.image, item.imageCropData, true)" />
+                            </v-avatar>
                             <v-avatar color="primary" variant="tonal" size="x-large" class="mt-1 mb-1" v-else>
                                 <random-icon />
                             </v-avatar>
@@ -404,6 +406,7 @@ import KeywordsBar from '@/components/display/KeywordsBar.vue'
 import VClosableCardTitle from '@/components/dialogs/VClosableCardTitle.vue'
 import RecipeCard from '@/components/display/RecipeCard.vue'
 import RandomIcon from '@/components/display/RandomIcon.vue'
+import {cropPreviewStyle} from '@/utils/image_crop'
 import type {EditorSupportedTypes} from '@/types/Models'
 import type {VDataTableUpdateOptions} from '@/vuetify'
 
@@ -757,3 +760,12 @@ onMounted(() => {
     loadStats()
 })
 </script>
+
+<style scoped>
+.crop-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+}
+</style>

@@ -86,7 +86,7 @@ export function SyncLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function SyncLogToJSON(value?: Omit<SyncLog, 'sync'|'created_at'> | null): any {
+export function SyncLogToJSON(value?: Omit<SyncLog, 'sync'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }

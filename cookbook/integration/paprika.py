@@ -97,7 +97,7 @@ class Paprika(Integration):
                 pass
 
             # If no image downloaded, try to extract from photo_data
-            if not recipe.image:
+            if not recipe.primary_image:
                 if recipe_json.get("photo_data", None):
                     self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])), filetype='.jpeg')
 

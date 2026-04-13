@@ -71,7 +71,7 @@ export function BookmarkletImportListFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function BookmarkletImportListToJSON(value?: Omit<BookmarkletImportList, 'created_by'|'created_at'> | null): any {
+export function BookmarkletImportListToJSON(value?: Omit<BookmarkletImportList, 'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }

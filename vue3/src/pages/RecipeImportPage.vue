@@ -602,9 +602,13 @@ function importFromUrlList() {
             if (sourceResponse.recipe) {
                 api.apiRecipeCreate({recipe: sourceResponse.recipe}).then(recipe => {
                     urlListImportedRecipes.value.push(recipe)
-                    updateRecipeImage(recipe.id!, null, sourceResponse.recipe?.imageUrl).then(imageResponse => {
+                    if (sourceResponse.recipe?.imageUrl) {
+                        createRecipeImageFromUrl(recipe.id!, sourceResponse.recipe.imageUrl).finally(() => {
+                            setTimeout(importFromUrlList, 500)
+                        })
+                    } else {
                         setTimeout(importFromUrlList, 500)
-                    })
+                    }
                 }).catch(err => {
                     setTimeout(importFromUrlList, 500)
                 }).finally(() => {
@@ -632,7 +636,7 @@ const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
 const {t} = useI18n()
-const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
+const {createRecipeImageFromUrl, doAiImport, doAppImport, fileApiLoading} = useFileApi()
 const {getFullUrl} = useDjangoUrls()
 
 const bookmarkletContent = computed(() => {
@@ -810,13 +814,19 @@ function createRecipeFromImport() {
         importResponse.value.recipe.keywords = importResponse.value.recipe.keywords.filter(k => k.importKeyword)
 
         api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
-            updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
+            const imageUrl = importResponse.value.recipe?.imageUrl
+            const navigate = () => {
                 if (editAfterImport.value) {
                     router.push({name: 'ModelEditPage', params: {id: recipe.id, model: 'recipe'}})
                 } else {
                     router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
                 }
-            })
+            }
+            if (imageUrl) {
+                createRecipeImageFromUrl(recipe.id!, imageUrl).finally(navigate)
+            } else {
+                navigate()
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         }).finally(() => {

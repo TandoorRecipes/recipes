@@ -30,7 +30,9 @@
 
                 <v-card :variant="cardVariant(index)" v-for="(item, index) in searchResults" hover class="mt-1" @click="selectedResult = index" :key="index">
                     <v-card-title @click="goToSelectedRecipe(index)">
-                        <v-avatar v-if="item.image" :image="item.image"></v-avatar>
+                        <v-avatar v-if="item.image">
+                            <div class="crop-avatar" :style="cropPreviewStyle(item.image, item.imageCropData, true)" />
+                        </v-avatar>
                         <v-avatar v-else-if="item.recipeId !== undefined" color="tandoor">{{ item.name.charAt(0) }}</v-avatar>
                         <v-icon :icon="item.icon" v-if="item.icon"></v-icon>
                         {{ item.name }}
@@ -67,6 +69,7 @@ import {SearchResult} from "@/types/SearchTypes";
 import {ApiApi, Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
 import {useRouter} from "vue-router";
 import {useDisplay} from "vuetify";
+import {cropPreviewStyle} from "@/utils/image_crop";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
@@ -95,13 +98,13 @@ const searchResults = computed(() => {
 
     if (searchQuery.value != '' && searchQuery.value != null) {
         flatRecipes.value.filter(fr => fr.name.toLowerCase().includes(searchQuery.value.toLowerCase())).slice(0, 10).forEach(r => {
-            searchResults.push({name: r.name, image: r.image, recipeId: r.id, type: "recipe"} as SearchResult)
+            searchResults.push({name: r.name, image: r.image, imageCropData: (r as any).imageCropData, recipeId: r.id, type: "recipe"} as SearchResult)
         })
 
         if (searchResults.length < 3) {
             asyncSearchResults.value.slice(0, 5).forEach(r => {
                 if (searchResults.findIndex(x => x.recipeId == r.id) == -1) {
-                    searchResults.push({name: r.name, image: r.image, recipeId: r.id, type: "recipe"})
+                    searchResults.push({name: r.name, image: r.image, imageCropData: (r as any).imageCropData, recipeId: r.id, type: "recipe"})
                 }
             })
         }
@@ -119,7 +122,7 @@ const searchResults = computed(() => {
         searchResults.push({name: t('AllRecipes'), icon: 'fas fa-search', type: "link_advanced_search"} as SearchResult)
 
         flatRecipes.value.slice(0, 5).forEach(r => {
-            searchResults.push({name: r.name, image: r.image, recipeId: r.id} as SearchResult)
+            searchResults.push({name: r.name, image: r.image, imageCropData: (r as any).imageCropData, recipeId: r.id} as SearchResult)
         })
     }
 
@@ -241,5 +244,10 @@ function goToSelectedRecipe(index: number) {
 
 
 <style scoped>
-
+.crop-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+}
 </style>

@@ -1,8 +1,7 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {AiProvider, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
-import {tr} from "vuetify/locale";
+import {RecipeFromSourceResponseFromJSON, RecipeImage, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
 
 
 /**
@@ -18,13 +17,18 @@ export function useFileApi() {
      * @param name name to set for user file
      * @param file file object to upload
      * @param id optional id to update existing user file
+     * @param cropData optional crop coordinates to save with the file
      */
-    function createOrUpdateUserFile(name: string, file: File | null, id?: number): Promise<UserFile> {
+    function createOrUpdateUserFile(name: string, file: File | null, id?: number, cropData?: Record<string, number> | null): Promise<UserFile> {
         let formData = new FormData()
         formData.append('name', name)
 
         if (file != null) {
             formData.append('file', file)
+        }
+
+        if (cropData) {
+            formData.append('crop_data', JSON.stringify(cropData))
         }
 
         fileApiLoading.value = true
@@ -54,31 +58,95 @@ export function useFileApi() {
     }
 
     /**
-     * update a recipes image either by a given file or given url
-     * @param recipeId ID of recipe to update
-     * @param file file object to upload or null to delete image (if no imageUrl is given)
-     * @param imageUrl url of an image to download by server
+     * updates crop_data on an existing UserFile via JSON PATCH
+     * @param id UserFile id
+     * @param cropData crop coordinates to save
      */
-    function updateRecipeImage(recipeId: number, file: File | null, imageUrl?: string) {
-        let formData = new FormData()
-        if (file != null) {
-            formData.append('image', file)
-        }
-        if (imageUrl) {
-            formData.append('image_url', imageUrl)
-        }
+    function updateUserFileCropData(id: number, cropData: Record<string, number>): Promise<UserFile> {
+        fileApiLoading.value = true
 
-        return fetch(getDjangoUrl(`api/recipe/${recipeId}/image/`), {
-            method: 'PUT',
-            headers: {'X-CSRFToken': getCookie('csrftoken')},
-            body: formData
+        return fetch(getDjangoUrl(`api/user-file/${id}/`), {
+            method: 'PATCH',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({crop_data: cropData}),
         }).then(r => {
-            return r.json().then(r => {
-                return RecipeImageFromJSON(r)
-            })
+            if (r.ok) {
+                return r.json().then(r => UserFileFromJSON(r))
+            } else {
+                throw new ResponseError(r)
+            }
         }).finally(() => {
             fileApiLoading.value = false
         })
+    }
+
+    /**
+     * creates a RecipeImage for a recipe
+     */
+    function createRecipeImage(recipeId: number, file: File, cropData?: Record<string, number> | null, isPrimary: boolean = false, order: number = 0): Promise<RecipeImage> {
+        let formData = new FormData()
+        formData.append('recipe', String(recipeId))
+        formData.append('file', file)
+        formData.append('is_primary', String(isPrimary))
+        formData.append('order', String(order))
+        if (cropData) {
+            formData.append('crop_data', JSON.stringify(cropData))
+        }
+        fileApiLoading.value = true
+        return fetch(getDjangoUrl('api/recipe-image/'), {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+            body: formData,
+        }).then(r => {
+            if (r.ok) return r.json().then(j => RecipeImageFromJSON(j))
+            throw new ResponseError(r)
+        }).finally(() => { fileApiLoading.value = false })
+    }
+
+    /**
+     * updates crop_data on an existing RecipeImage
+     */
+    function updateRecipeImageCropData(id: number, cropData: Record<string, number>): Promise<RecipeImage> {
+        fileApiLoading.value = true
+        return fetch(getDjangoUrl(`api/recipe-image/${id}/`), {
+            method: 'PATCH',
+            headers: {'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json'},
+            body: JSON.stringify({crop_data: cropData}),
+        }).then(r => {
+            if (r.ok) return r.json().then(j => RecipeImageFromJSON(j))
+            throw new ResponseError(r)
+        }).finally(() => { fileApiLoading.value = false })
+    }
+
+    /**
+     * deletes a RecipeImage
+     */
+    function deleteRecipeImage(id: number): Promise<void> {
+        fileApiLoading.value = true
+        return fetch(getDjangoUrl(`api/recipe-image/${id}/`), {
+            method: 'DELETE',
+            headers: {'X-CSRFToken': getCookie('csrftoken')},
+        }).then(r => {
+            if (!r.ok) throw new ResponseError(r)
+        }).finally(() => { fileApiLoading.value = false })
+    }
+
+    /**
+     * creates a RecipeImage from a URL (server-side download)
+     */
+    function createRecipeImageFromUrl(recipeId: number, imageUrl: string): Promise<RecipeImage> {
+        fileApiLoading.value = true
+        return fetch(getDjangoUrl('api/recipe-image/from_url/'), {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json'},
+            body: JSON.stringify({recipe: recipeId, image_url: imageUrl}),
+        }).then(r => {
+            if (r.ok) return r.json().then(j => RecipeImageFromJSON(j))
+            throw new ResponseError(r)
+        }).finally(() => { fileApiLoading.value = false })
     }
 
     /**
@@ -149,5 +217,5 @@ export function useFileApi() {
         })
     }
 
-    return {fileApiLoading, createOrUpdateUserFile, updateRecipeImage, doAiImport, doAppImport}
+    return {fileApiLoading, createOrUpdateUserFile, updateUserFileCropData, createRecipeImage, createRecipeImageFromUrl, updateRecipeImageCropData, deleteRecipeImage, doAiImport, doAppImport}
 }

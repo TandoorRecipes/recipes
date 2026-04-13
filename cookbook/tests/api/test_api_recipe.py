@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Recipe, ShareLink, Unit
+from cookbook.models import Food, Recipe, ShareLink, Step, Unit
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
-from cookbook.tests.factories import CookLogFactory, RecipeFactory
+from cookbook.tests.factories import CookLogFactory, RecipeFactory, UserFileFactory
 
 LIST_URL = 'api:recipe-list'
 DETAIL_URL = 'api:recipe-detail'
@@ -318,3 +318,127 @@ def test_recipe_stats_permission(arg, request):
     """Stats is a read action — anonymous blocked, authenticated allowed."""
     c = request.getfixturevalue(arg[0])
     assert c.get(reverse(STATS_URL)).status_code == arg[1]
+
+
+# ---- Step files M2M (drag-order, persistence, cross-space safety) ----
+
+@pytest.fixture
+def step_files_recipe(space_1, u1_s1):
+    """A recipe with one step and three UserFiles linked to it in order [1, 2, 3]."""
+    with scopes_disabled():
+        user = auth.get_user(u1_s1)
+        f1 = UserFileFactory(space=space_1, created_by=user, name='one')
+        f2 = UserFileFactory(space=space_1, created_by=user, name='two')
+        f3 = UserFileFactory(space=space_1, created_by=user, name='three')
+
+        recipe = Recipe.objects.create(name='step files', space=space_1, created_by=user)
+        step = Step.objects.create(space=space_1)
+        recipe.steps.add(step)
+        step.files.add(f1, f2, f3)
+    return recipe, step, [f1, f2, f3]
+
+
+def _get_step_files(client, recipe_id):
+    r = client.get(reverse(DETAIL_URL, args=[recipe_id]))
+    assert r.status_code == 200
+    return json.loads(r.content)['steps'][0]['files']
+
+
+def _put_recipe(client, recipe_id, recipe_data):
+    return client.put(
+        reverse(DETAIL_URL, args=[recipe_id]),
+        json.dumps(recipe_data),
+        content_type='application/json',
+    )
+
+
+@pytest.mark.parametrize("transform, expected_index_order", [
+    # round trip — no change
+    (lambda files: files,                                            [0, 1, 2]),
+    # full reverse
+    (lambda files: list(reversed(files)),                            [2, 1, 0]),
+    # partial subset (drop middle)
+    (lambda files: [f for i, f in enumerate(files) if i != 1],       [0, 2]),
+    # empty
+    (lambda files: [],                                               []),
+], ids=['round_trip', 'reversed', 'partial_subset', 'empty'])
+def test_step_files_put_persists_order(step_files_recipe, u1_s1, transform, expected_index_order):
+    """PUT with step.files in any subset/order persists exactly that order on re-fetch."""
+    recipe, step, files = step_files_recipe
+    expected_pks = [files[i].pk for i in expected_index_order]
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[recipe.pk]))
+    recipe_data = json.loads(r.content)
+    recipe_data['steps'][0]['files'] = transform(recipe_data['steps'][0]['files'])
+
+    r = _put_recipe(u1_s1, recipe.pk, recipe_data)
+    assert r.status_code == 200, r.content
+
+    # Response shape and DB persistence both reflect the new order
+    response_pks = [f['id'] for f in json.loads(r.content)['steps'][0]['files']]
+    assert response_pks == expected_pks
+    assert [f['id'] for f in _get_step_files(u1_s1, recipe.pk)] == expected_pks
+
+
+def test_step_files_cross_space_id_is_not_linked(step_files_recipe, u1_s1, space_2, u1_s2):
+    """A file ID that exists in another space must NOT be linkable to a step in space_1."""
+    recipe, step, files = step_files_recipe
+    [f1, f2, f3] = files
+
+    with scopes_disabled():
+        other_user = auth.get_user(u1_s2)
+        cross_space_file = UserFileFactory(space=space_2, created_by=other_user, name='leak')
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[recipe.pk]))
+    recipe_data = json.loads(r.content)
+    recipe_data['steps'][0]['files'] = [{'id': cross_space_file.pk}]
+
+    r = _put_recipe(u1_s1, recipe.pk, recipe_data)
+    assert r.status_code == 200  # cross-space ids are silently dropped, not errored
+
+    after = _get_step_files(u1_s1, recipe.pk)
+    assert cross_space_file.pk not in [f['id'] for f in after], \
+        "cross-space file leaked into another space's step.files"
+
+
+def test_step_files_partial_invalid_keeps_valid_subset(step_files_recipe, u1_s1):
+    """If the request mixes valid and invalid ids, the valid ones are saved
+    in order and the invalid ones are silently dropped — partial success is
+    preferable to rejecting the whole update (e.g. cross-space race conditions
+    or stale frontend state shouldn't cost the user their other edits)."""
+    from django.db.models import Max
+    from cookbook.models import UserFile
+
+    recipe, step, files = step_files_recipe
+    [f1, f2, f3] = files
+
+    with scopes_disabled():
+        max_id = UserFile.objects.aggregate(m=Max('id'))['m'] or 0
+    bad_id = max_id + 10000
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[recipe.pk]))
+    recipe_data = json.loads(r.content)
+    # Send f1, the bad id, then f3 — expect [f1, f3] saved (bad dropped, order preserved)
+    recipe_data['steps'][0]['files'] = [{'id': f1.pk}, {'id': bad_id}, {'id': f3.pk}]
+
+    r = _put_recipe(u1_s1, recipe.pk, recipe_data)
+    assert r.status_code == 200, r.content
+    assert [f['id'] for f in _get_step_files(u1_s1, recipe.pk)] == [f1.pk, f3.pk]
+
+
+def test_step_files_response_shape(step_files_recipe, u1_s1):
+    """Each step.files item must expose every UserFileView field the frontend reads,
+    and file_url must be the direct media URL (not the zip-wrapped download endpoint)
+    so the gallery non-image tiles can open files inline in a new tab."""
+    recipe, step, files = step_files_recipe
+    expected_keys = {'id', 'name', 'file_download', 'file_url', 'preview',
+                     'file_size_kb', 'crop_data', 'created_by', 'created_at'}
+
+    response_files = _get_step_files(u1_s1, recipe.pk)
+    assert response_files
+    for f in response_files:
+        assert expected_keys <= set(f.keys()), \
+            f"step.files item missing fields: {expected_keys - set(f.keys())}"
+        assert f['file_url']
+        assert '/api/download-file/' not in f['file_url'], \
+            "file_url should be direct media URL, not zip-wrapped download endpoint"

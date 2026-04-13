@@ -90,7 +90,7 @@ export function PatchedRecipeImportFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedRecipeImportToJSON(value?: Omit<PatchedRecipeImport, 'created_at'> | null): any {
+export function PatchedRecipeImportToJSON(value?: Omit<PatchedRecipeImport, 'createdAt'> | null): any {
     if (value == null) {
         return value;
     }

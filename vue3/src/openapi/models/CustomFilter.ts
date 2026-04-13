@@ -98,7 +98,7 @@ export function CustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function CustomFilterToJSON(value?: Omit<CustomFilter, 'created_by'> | null): any {
+export function CustomFilterToJSON(value?: Omit<CustomFilter, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }

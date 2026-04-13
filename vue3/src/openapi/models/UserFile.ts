@@ -64,6 +64,12 @@ export interface UserFile {
     readonly fileSizeKb: number;
     /**
      * 
+     * @type {any}
+     * @memberof UserFile
+     */
+    cropData?: any;
+    /**
+     * 
      * @type {User}
      * @memberof UserFile
      */
@@ -105,12 +111,13 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'fileDownload': json['file_download'],
         'preview': json['preview'],
         'fileSizeKb': json['file_size_kb'],
+        'cropData': json['crop_data'] == null ? undefined : json['crop_data'],
         'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
-export function UserFileToJSON(value?: Omit<UserFile, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null): any {
+export function UserFileToJSON(value?: Omit<UserFile, 'fileDownload'|'preview'|'fileSizeKb'|'createdBy'|'createdAt'> | null): any {
     if (value == null) {
         return value;
     }
@@ -119,6 +126,7 @@ export function UserFileToJSON(value?: Omit<UserFile, 'file_download'|'preview'|
         'id': value['id'],
         'name': value['name'],
         'file': value['file'],
+        'crop_data': value['cropData'],
     };
 }
 

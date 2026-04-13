@@ -19,6 +19,27 @@
             </v-row>
         </v-card-title>
         <template v-if="!stepChecked">
+            <template v-if="step.files?.length">
+                <div class="d-flex flex-wrap ga-2 ma-2">
+                    <template v-for="(f, idx) in step.files" :key="f.id ?? idx">
+                        <crop-image v-if="f.preview"
+                                    class="cursor-pointer rounded" role="button"
+                                    :src="f.preview"
+                                    :crop-data="f.cropData"
+                                    width="96px" height="96px"
+                                    force-crop
+                                    :aria-label="$t('ViewFullImage')"
+                                    @click="openStepImageLightbox(stepImageFiles.indexOf(f))" />
+                        <a v-else :href="f.fileUrl || f.fileDownload" target="_blank" rel="noopener"
+                           class="step-file-tile rounded text-decoration-none d-flex flex-column align-center justify-center text-center pa-2"
+                           :title="f.name">
+                            <v-icon :icon="fileIconFor(f.name)" size="x-large" />
+                            <span class="text-caption text-truncate mt-1 w-100">{{ f.name }}</span>
+                        </a>
+                    </template>
+                </div>
+                <image-lightbox v-model="stepImageLightbox" :images="stepImageUrls" :start-index="stepLightboxIndex" />
+            </template>
             <timer :seconds="step.time != undefined ? step.time*60 : 0" @stop="timerRunning = false" v-if="timerRunning"></timer>
             <v-card-text v-if="step.ingredients.length > 0 || step.instruction != ''">
                 <v-row>
@@ -49,23 +70,23 @@
                     </v-card-text>
                 </v-card>
             </template>
-            <template v-if="step.file">
-                <v-img :src="step.file.preview" v-if="step.file.preview"></v-img>
-                <a :href="step.file.fileDownload" v-else>{{ $t('Download') }}</a>
-            </template>
         </template>
 
     </v-card>
 </template>
 
 <script setup lang="ts">
-import {computed, defineComponent, PropType, ref} from 'vue'
-import IngredientsTable from "@/components/display/IngredientsTable.vue";
-import {Step} from "@/openapi";
+import {computed, PropType, ref} from 'vue'
+import {Step} from "@/openapi"
+import IngredientsTable from "@/components/display/IngredientsTable.vue"
+import Instructions from "@/components/display/Instructions.vue"
+import Timer from "@/components/display/Timer.vue"
+import ImageLightbox from "@/components/display/ImageLightbox.vue"
+import CropImage from "@/components/display/CropImage.vue"
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts"
 
-import Instructions from "@/components/display/Instructions.vue";
-import Timer from "@/components/display/Timer.vue";
-import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+const stepImageLightbox = ref(false)
+const stepLightboxIndex = ref(0)
 
 const emit = defineEmits(['scale'])
 
@@ -89,11 +110,42 @@ const timerRunning = ref(false)
 const stepChecked = ref(false)
 
 const hasDetails = computed(() => {
-    return step.value.ingredients.length > 0 || (step.value.instruction != undefined && step.value.instruction.length > 0) || step.value.stepRecipeData != undefined || step.value.file != undefined
+    return step.value.ingredients.length > 0 || (step.value.instruction != undefined && step.value.instruction.length > 0) || step.value.stepRecipeData != undefined || (step.value.files && step.value.files.length > 0)
 })
+
+const stepImageFiles = computed(() => (step.value.files ?? []).filter(f => !!f.preview))
+const stepImageUrls = computed(() => stepImageFiles.value.map(f => f.preview!))
+
+function openStepImageLightbox(idx: number) {
+    if (idx < 0) return
+    stepLightboxIndex.value = idx
+    stepImageLightbox.value = true
+}
+
+function fileIconFor(name: string | undefined): string {
+    const ext = (name ?? '').split('.').pop()?.toLowerCase() ?? ''
+    switch (ext) {
+        case 'pdf': return 'fa-solid fa-file-pdf'
+        case 'doc': case 'docx': return 'fa-solid fa-file-word'
+        case 'xls': case 'xlsx': case 'csv': return 'fa-solid fa-file-excel'
+        case 'md': case 'txt': return 'fa-solid fa-file-lines'
+        case 'mp4': case 'mov': case 'webm': case 'avi': return 'fa-solid fa-file-video'
+        default: return 'fa-solid fa-file'
+    }
+}
 
 </script>
 
 <style scoped>
-
+.step-file-tile {
+    width: 96px;
+    height: 96px;
+    background-color: rgb(var(--v-theme-surface));
+    color: rgb(var(--v-theme-on-surface));
+    border: 1px solid rgba(var(--v-theme-on-surface), 0.12);
+    overflow: hidden;
+}
+.step-file-tile:hover {
+    background-color: rgba(var(--v-theme-on-surface), 0.05);
+}
 </style>

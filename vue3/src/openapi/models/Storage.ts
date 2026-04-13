@@ -113,7 +113,7 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function StorageToJSON(value?: Omit<Storage, 'created_by'> | null): any {
+export function StorageToJSON(value?: Omit<Storage, 'createdBy'> | null): any {
     if (value == null) {
         return value;
     }

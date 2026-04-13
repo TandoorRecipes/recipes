@@ -5,5 +5,6 @@ export interface  SearchResult {
     description?: string,
     icon?: string,
     image?: string|null,
+    imageCropData?: Record<string, number>|null,
     type: 'recipe'|'link_advanced_search'
 }

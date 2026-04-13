@@ -89,7 +89,7 @@ export function PatchedRecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedRecipeBookEntryToJSON(value?: Omit<PatchedRecipeBookEntry, 'book_content'|'recipe_content'> | null): any {
+export function PatchedRecipeBookEntryToJSON(value?: Omit<PatchedRecipeBookEntry, 'bookContent'|'recipeContent'> | null): any {
     if (value == null) {
         return value;
     }

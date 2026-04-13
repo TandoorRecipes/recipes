@@ -175,8 +175,9 @@ class Chowdown(Integration):
         data = "---\n\n"
         data += "layout: recipe\n"
         data += "title: " + (recipe.name if recipe.name else "") + "\n"
-        if recipe.image:
-            data += f"image: {self.normalize_name(recipe.name)}{get_filetype(recipe.image.file.name)}\n"
+        img = recipe.primary_image
+        if img:
+            data += f"image: {self.normalize_name(recipe.name)}{get_filetype(img.name)}\n"
 
         if recipe.source_url:
             data += f"url: {recipe.source_url}\n"
@@ -258,7 +259,9 @@ class Chowdown(Integration):
                 recipe_stream.close()
 
                 try:
-                    export_zip_obj.writestr(f"{imgpath}/{self.normalize_name(r.name)}{get_filetype(r.image.file.name)}", r.image.file.read())
+                    img = r.primary_image
+                    if img:
+                        export_zip_obj.writestr(f"{imgpath}/{self.normalize_name(r.name)}{get_filetype(img.name)}", img.read())
                 except (ValueError, FileNotFoundError):
                     pass
 

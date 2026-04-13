@@ -792,6 +792,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+    food_image = models.ForeignKey('UserFile', null=True, blank=True, on_delete=models.SET_NULL, related_name='foods')
     url = models.CharField(max_length=1024, blank=True, null=True, default='')
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
     shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
@@ -985,7 +986,8 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     ingredients = models.ManyToManyField(Ingredient, blank=True)
     time = models.IntegerField(default=0, blank=True)
     order = models.IntegerField(default=0)
-    file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
+    file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)  # DEPRECATED: use files M2M. Remove in future release.
+    files = models.ManyToManyField('UserFile', blank=True, related_name='steps')
     show_as_header = models.BooleanField(default=True)
     show_ingredients_table = models.BooleanField(default=True)
     search_vector = SearchVectorField(null=True)
@@ -1111,7 +1113,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     servings_text = models.CharField(default='', blank=True, max_length=32)
     diameter = models.IntegerField(default=0)
     diameter_text = models.CharField(default='', blank=True, max_length=32)
-    image = models.ImageField(upload_to='recipes/', blank=True, null=True)
+    image = models.ImageField(upload_to='recipes/', blank=True, null=True)  # DEPRECATED: use RecipeImage model. Remove in future release.
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="", blank=True)
     file_path = models.CharField(max_length=512, default="", blank=True)
@@ -1157,6 +1159,15 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         sub_food_recipes = Q(id__in=Food.objects.filter(ingredient__step__recipe__in=related_recipes).exclude(recipe=None).values_list('recipe'))
         return Recipe.objects.filter(Q(id__in=related_recipes.values_list('id')) | sub_step_recipes | sub_food_recipes)
 
+    @property
+    def primary_image(self):
+        """Returns the primary RecipeImage file, or None."""
+        img = self.images.filter(is_primary=True).first()
+        if img:
+            return img.file
+        img = self.images.order_by('order', 'pk').first()
+        return img.file if img else None
+
     class Meta:
         indexes = (
             GinIndex(fields=["name_search_vector"]),
@@ -1165,6 +1176,25 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
             Index(fields=['name']),
         )
         ordering = ('name',)
+
+
+class RecipeImage(ExportModelOperationsMixin('recipe_image'), models.Model, PermissionModelMixin):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='images')
+    file = models.ImageField(upload_to='recipes/')
+    crop_data = models.JSONField(null=True, blank=True)
+    order = models.IntegerField(default=0)
+    is_primary = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'RecipeImage {self.pk} for {self.recipe.name}{"  [primary]" if self.is_primary else ""}'
+
+    class Meta:
+        ordering = ['order', 'pk']
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):
@@ -1223,6 +1253,7 @@ class RecipeImport(models.Model, PermissionModelMixin):
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
+    image = models.ForeignKey('UserFile', null=True, blank=True, on_delete=models.SET_NULL, related_name='recipe_books')
     shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
@@ -1661,6 +1692,7 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
     name = models.CharField(max_length=128)
     file = models.FileField(upload_to='files/')
     file_size_kb = models.IntegerField(default=0, blank=True)
+    crop_data = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 

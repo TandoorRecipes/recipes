@@ -44,6 +44,10 @@
                     <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')"
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
                 </v-list-item>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('ShowFoodImages')"
+                              v-model="useUserPreferenceStore().deviceSettings.shopping_showFoodImages"></v-switch>
+                </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item @click="exportDialog = true" link prepend-icon="fa-solid fa-download">
                     {{ $t('Export') }}

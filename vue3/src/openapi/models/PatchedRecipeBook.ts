@@ -25,6 +25,12 @@ import {
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { UserFileView } from './UserFileView';
+import {
+    UserFileViewFromJSON,
+    UserFileViewFromJSONTyped,
+    UserFileViewToJSON,
+} from './UserFileView';
 
 /**
  * Adds nested create feature
@@ -50,6 +56,18 @@ export interface PatchedRecipeBook {
      * @memberof PatchedRecipeBook
      */
     description?: string;
+    /**
+     * 
+     * @type {UserFileView}
+     * @memberof PatchedRecipeBook
+     */
+    image?: UserFileView;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeBook
+     */
+    readonly fallbackImage?: string;
     /**
      * 
      * @type {Array<User>}
@@ -96,6 +114,8 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
+        'fallbackImage': json['fallback_image'] == null ? undefined : json['fallback_image'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
         'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
         'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
@@ -103,7 +123,7 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'created_by'> | null): any {
+export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'fallbackImage'|'createdBy'> | null): any {
     if (value == null) {
         return value;
     }
@@ -112,6 +132,7 @@ export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'created
         'id': value['id'],
         'name': value['name'],
         'description': value['description'],
+        'image': UserFileViewToJSON(value['image']),
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
         'filter': CustomFilterToJSON(value['filter']),
         'order': value['order'],

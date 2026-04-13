@@ -1,6 +1,6 @@
 <template>
     <model-editor-base
-        :loading="loading || fileApiLoading"
+        :loading="loading"
         :dialog="dialog"
         @save="saveObject"
         @delete="deleteObject"
@@ -12,7 +12,7 @@
         :editing-object="editingObj">
 
         <v-card-text class="pa-0">
-            <v-tabs v-model="tab" :disabled="loading || fileApiLoading" grow>
+            <v-tabs v-model="tab" :disabled="loading" grow>
                 <v-tab value="recipe">{{ $t('Recipe') }}</v-tab>
                 <v-tab value="steps">{{ $t('Steps') }}</v-tab>
                 <v-tab value="properties" :disabled="!isUpdate()">{{ $t('Properties') }}</v-tab>
@@ -23,29 +23,11 @@
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="recipe">
 
-                    <v-form :disabled="loading || fileApiLoading">
+                    <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" maxlength="512" rows="2" auto-grow></v-textarea>
 
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-file-upload v-model="file"
-                                               :title="(mobile) ? $t('Select_File') : $t('DragToUpload')"
-                                               :browse-text="$t('Select_File')"
-                                               :divider-text="$t('or')"
-                                               :density="(mobile) ? 'compact' : 'comfortable'"
-                                >
-                                </v-file-upload>
-                            </v-col>
-                            <v-col cols="12" md="6" v-if="editingObj.image">
-                                <v-img style="max-height: 180px" cover class="mb-2" :src="editingObj.image">
-                                    <v-btn color="delete" class="float-right mt-2 mr-2" prepend-icon="$delete" v-if="editingObj.image" @click="deleteImage()">{{
-                                            $t('Delete')
-                                        }}
-                                    </v-btn>
-                                </v-img>
-                            </v-col>
-                        </v-row>
+                        <recipe-image-editor v-if="isUpdate()" :recipe-id="editingObj.id!" v-model:images="editingObj.images" />
 
                         <v-label>{{ $t('Keywords') }}</v-label>
                         <model-select mode="tags" v-model="editingObj.keywords" model="Keyword" allow-create></model-select>
@@ -102,7 +84,7 @@
                         </v-col>
                     </v-row>
 
-                    <v-form :disabled="loading || fileApiLoading">
+                    <v-form :disabled="loading">
                         <v-row v-if="editingObj.steps.length == 0">
                             <v-col class="text-center">
                                 <v-btn icon="$create" variant="outlined" size="x-small" @click="addStep(i+1)"></v-btn>
@@ -127,7 +109,7 @@
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="properties">
-                    <v-form :disabled="loading || fileApiLoading">
+                    <v-form :disabled="loading">
                         <closable-help-alert :text="$t('PropertiesFoodHelp')"></closable-help-alert>
                         <properties-editor v-model="editingObj" :amount-for="$t('Serving')"></properties-editor>
 
@@ -136,7 +118,7 @@
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
-                    <v-form :disabled="loading || fileApiLoading">
+                    <v-form :disabled="loading">
                         <v-checkbox :label="$t('show_ingredient_overview')"
                                     v-model="editingObj.showIngredientOverview"></v-checkbox>
 
@@ -189,16 +171,15 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref, shallowRef, watch} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Ingredient, Recipe, Step} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import StepEditor from "@/components/inputs/StepEditor.vue";
+import RecipeImageEditor from "@/components/inputs/RecipeImageEditor.vue";
 import {VueDraggable} from "vue-draggable-plus";
 import PropertiesEditor from "@/components/inputs/PropertiesEditor.vue";
-import {useFileApi} from "@/composables/useFileApi";
-import {VFileUpload} from 'vuetify/labs/VFileUpload'
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useDisplay} from "vuetify";
 import {isSpaceAtRecipeLimit} from "@/utils/logic_utils";
@@ -240,8 +221,6 @@ const {t} = useI18n()
 const tab = ref("recipe")
 const dialogStepManager = ref(false)
 
-const {fileApiLoading, updateRecipeImage} = useFileApi()
-const file = shallowRef<File | null>(null)
 
 const aiStepSortLoading = ref(false)
 
@@ -265,35 +244,7 @@ function initializeEditor() {
             editingObj.value.internal = true //TODO make database default after v2
         },
         itemDefaults: props.itemDefaults,
-        onAfterSave: () => {
-            saveRecipeImage()
-        }
-    })
-}
-
-/**
- * checks if a file has been selected and upload it
- */
-function saveRecipeImage(){
-    if (file.value != null && editingObj.value.id) {
-            loading.value = true
-            updateRecipeImage(editingObj.value.id, file.value).then(r => {
-                file.value = null
-                setupState(props.item, props.itemId)
-            }).catch(err => {
-                useMessageStore().addMessage(MessageType.ERROR, {title: t('UPDATE_ERROR'), text: t('ErrorUpdatingImage')} as StructuredMessage, 8000)
-            }).finally(() => {
-                loading.value = false
-            })
-        }
-}
-
-/**
- * remove image if delete was manually triggered
- */
-function deleteImage() {
-    updateRecipeImage(editingObj.value.id!, null).then(r => {
-        setupState(props.item, props.itemId)
+        onAfterSave: () => {}
     })
 }
 

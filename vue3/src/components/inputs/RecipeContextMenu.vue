@@ -101,8 +101,7 @@ function duplicateRecipe() {
         }
 
         api.apiRecipeCreate({recipe: recipe}).then(newRecipe => {
-            // By design: duplicated recipes start without an image. The user
-            // can add one fresh via the normal image editor.
+            // TODO: copy RecipeImage records server-side during recipe duplication
             router.push({name: 'RecipeViewPage', params: {id: newRecipe.id!}})
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
