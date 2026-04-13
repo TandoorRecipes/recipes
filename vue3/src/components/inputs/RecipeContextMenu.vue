@@ -214,6 +214,7 @@ function exportRecipe() {
         }
     }).then(() => {
         useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+        router.push({name: 'ExportDataSettings'})
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     }).finally(() => {
