@@ -1,22 +1,28 @@
 <template>
     <v-container>
-        <v-row v-if="selectedItems.length > 0">
+        <v-row v-if="selectMode">
             <v-col>
-                <v-card>
-                    <v-card-text class="d-flex align-center pt-2 pb-2 ga-2">
-                        <span class="text-subtitle-2">{{ selectedItems.length }} {{ $t('Selected') }}</span>
-                        <v-spacer />
-                        <v-btn variant="text" prepend-icon="$edit" disabled>
+                <SelectionBar
+                    :selected-count="selectedItems.length"
+                    @close="selectedItems = []; selectMode = false"
+                    @select-all="selectedItems = recipes.map(r => r as any)"
+                    @select-none="selectedItems = []"
+                >
+                    <template #actions>
+                        <v-btn variant="text" prepend-icon="$edit" disabled class="text-none">
                             {{ $t('BatchEdit') }}
                             <v-tooltip activator="parent" location="bottom">{{ $t('ComingSoon') }}</v-tooltip>
                         </v-btn>
-                        <v-btn variant="text" prepend-icon="$delete" disabled>
+                        <v-btn variant="text" prepend-icon="$delete" disabled class="text-none">
                             {{ $t('Delete_All') }}
                             <v-tooltip activator="parent" location="bottom">{{ $t('ComingSoon') }}</v-tooltip>
                         </v-btn>
-                        <v-btn icon="$close" variant="text" @click="selectedItems = []; selectMode = false" />
-                    </v-card-text>
-                </v-card>
+                    </template>
+                    <template #actions-menu>
+                        <v-list-item prepend-icon="$edit" disabled>{{ $t('BatchEdit') }}</v-list-item>
+                        <v-list-item prepend-icon="$delete" disabled>{{ $t('Delete_All') }}</v-list-item>
+                    </template>
+                </SelectionBar>
             </v-col>
         </v-row>
 
@@ -344,6 +350,7 @@ import ModelListFilterChips from '@/components/model_list/ModelListFilterChips.v
 import FilterPanel from '@/components/model_list/FilterPanel.vue'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
+import SelectionBar from '@/components/common/SelectionBar.vue'
 import ModelSelect from '@/components/inputs/ModelSelect.vue'
 import ClosableHelpAlert from '@/components/display/ClosableHelpAlert.vue'
 import RecipeContextMenu from '@/components/inputs/RecipeContextMenu.vue'
