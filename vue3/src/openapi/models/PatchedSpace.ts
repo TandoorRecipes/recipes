@@ -309,7 +309,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'> | null): any {
+export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null): any {
     if (value == null) {
         return value;
     }

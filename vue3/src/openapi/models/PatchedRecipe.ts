@@ -274,7 +274,7 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'imageCropData'|'images'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'> | null): any {
+export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'image_crop_data'|'images'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null): any {
     if (value == null) {
         return value;
     }

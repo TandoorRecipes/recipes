@@ -111,7 +111,7 @@ export function PatchedUserFileFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedUserFileToJSON(value?: Omit<PatchedUserFile, 'fileDownload'|'preview'|'fileSizeKb'|'createdBy'|'createdAt'> | null): any {
+export function PatchedUserFileToJSON(value?: Omit<PatchedUserFile, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

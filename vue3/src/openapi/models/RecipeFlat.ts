@@ -72,7 +72,7 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeFlatToJSON(value?: Omit<RecipeFlat, 'name'|'image'|'imageCropData'> | null): any {
+export function RecipeFlatToJSON(value?: Omit<RecipeFlat, 'name'|'image'|'image_crop_data'> | null): any {
     if (value == null) {
         return value;
     }

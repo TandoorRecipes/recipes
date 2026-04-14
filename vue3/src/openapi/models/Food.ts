@@ -337,7 +337,7 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
     };
 }
 
-export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'> | null): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'> | null): any {
     if (value == null) {
         return value;
     }

@@ -119,7 +119,7 @@ export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function UserFileViewToJSON(value?: Omit<UserFileView, 'fileDownload'|'fileUrl'|'preview'|'fileSizeKb'|'cropData'|'createdBy'|'createdAt'> | null): any {
+export function UserFileViewToJSON(value?: Omit<UserFileView, 'file_download'|'file_url'|'preview'|'file_size_kb'|'crop_data'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

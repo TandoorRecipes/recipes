@@ -5558,6 +5558,11 @@ paths:
           type: integer
         description: ID of unit a recipe should have.
       - in: query
+        name: unrated
+        schema:
+          type: boolean
+        description: Filter recipes that are unrated. ['true'/'<b>false</b>']
+      - in: query
         name: updatedon
         schema:
           type: string
@@ -6147,6 +6152,176 @@ paths:
               schema:
                 $ref: '#/components/schemas/RecipeFromSourceResponse'
           description: ''
+  /api/recipe-image/:
+    get:
+      operationId: apiRecipeImageList
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRecipeImageList'
+          description: ''
+    post:
+      operationId: apiRecipeImageCreate
+      description: logs request counts to redis cache total/per user/
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RecipeImage'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeImage'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeImage'
+          description: ''
+  /api/recipe-image/{id}/:
+    get:
+      operationId: apiRecipeImageRetrieve
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe image.
+        required: true
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeImage'
+          description: ''
+    put:
+      operationId: apiRecipeImageUpdate
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe image.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RecipeImage'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeImage'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeImage'
+          description: ''
+    patch:
+      operationId: apiRecipeImagePartialUpdate
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe image.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRecipeImage'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRecipeImage'
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeImage'
+          description: ''
+    delete:
+      operationId: apiRecipeImageDestroy
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe image.
+        required: true
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/recipe-image/from_url/:
+    post:
+      operationId: apiRecipeImageFromUrlCreate
+      description: logs request counts to redis cache total/per user/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeImage'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeImage'
+          description: ''
   /api/recipe-import/:
     get:
       operationId: apiRecipeImportList
@@ -6586,33 +6761,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Recipe'
-          description: ''
-  /api/recipe/{id}/image/:
-    put:
-      operationId: apiRecipeImageUpdate
-      description: logs request counts to redis cache total/per user/
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this recipe.
-        required: true
-      tags:
-      - api
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/RecipeImage'
-      security:
-      - ApiKeyAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RecipeImage'
           description: ''
   /api/recipe/{id}/nulling/:
     get:
@@ -10087,6 +10235,9 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/UserFile'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFile'
         required: true
       security:
       - ApiKeyAuth: []
@@ -10136,6 +10287,9 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/UserFile'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserFile'
         required: true
       security:
       - ApiKeyAuth: []
@@ -10161,6 +10315,9 @@ paths:
       requestBody:
         content:
           multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserFile'
+          application/json:
             schema:
               $ref: '#/components/schemas/PatchedUserFile'
       security:
@@ -11397,6 +11554,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/SupermarketCategory'
           nullable: true
+        food_image:
+          allOf:
+          - $ref: '#/components/schemas/UserFileView'
+          nullable: true
         parent:
           type: integer
           readOnly: true
@@ -11643,7 +11804,13 @@ components:
           items:
             $ref: '#/components/schemas/ShoppingList'
           readOnly: true
+        food_image:
+          allOf:
+          - $ref: '#/components/schemas/UserFileView'
+          readOnly: true
+          nullable: true
       required:
+      - food_image
       - name
       - shopping_lists
       - supermarket_category
@@ -13129,6 +13296,32 @@ components:
         timestamp:
           type: string
           format: date-time
+    PaginatedRecipeImageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeImage'
+        timestamp:
+          type: string
+          format: date-time
     PaginatedRecipeImportList:
       type: object
       required:
@@ -13919,6 +14112,10 @@ components:
           allOf:
           - $ref: '#/components/schemas/SupermarketCategory'
           nullable: true
+        food_image:
+          allOf:
+          - $ref: '#/components/schemas/UserFileView'
+          nullable: true
         parent:
           type: integer
           readOnly: true
@@ -14457,9 +14654,16 @@ components:
           maxLength: 512
         image:
           type: string
-          format: uri
-          readOnly: true
           nullable: true
+          readOnly: true
+        image_crop_data:
+          nullable: true
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeImage'
+          readOnly: true
         keywords:
           type: array
           items:
@@ -14551,6 +14755,13 @@ components:
           maxLength: 128
         description:
           type: string
+        image:
+          allOf:
+          - $ref: '#/components/schemas/UserFileView'
+          nullable: true
+        fallback_image:
+          type: string
+          readOnly: true
         shared:
           type: array
           items:
@@ -14584,6 +14795,33 @@ components:
         recipe_content:
           allOf:
           - $ref: '#/components/schemas/RecipeOverview'
+          readOnly: true
+    PatchedRecipeImage:
+      type: object
+      description: Serializer for the RecipeImage model (multi-image gallery).
+      properties:
+        id:
+          type: integer
+          readOnly: false
+        recipe:
+          type: integer
+        file:
+          type: string
+          format: uri
+        crop_data:
+          nullable: true
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_primary:
+          type: boolean
+        created_by:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
           readOnly: true
     PatchedRecipeImport:
       type: object
@@ -14913,7 +15151,12 @@ components:
         file:
           allOf:
           - $ref: '#/components/schemas/UserFileView'
+          readOnly: true
           nullable: true
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserFileView'
         step_recipe:
           type: integer
           nullable: true
@@ -15266,6 +15509,8 @@ components:
         file_size_kb:
           type: integer
           readOnly: true
+        crop_data:
+          nullable: true
         created_by:
           allOf:
           - $ref: '#/components/schemas/User'
@@ -15510,9 +15755,16 @@ components:
           maxLength: 512
         image:
           type: string
-          format: uri
-          readOnly: true
           nullable: true
+          readOnly: true
+        image_crop_data:
+          nullable: true
+          readOnly: true
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeImage'
+          readOnly: true
         keywords:
           type: array
           items:
@@ -15597,6 +15849,8 @@ components:
       - created_by
       - food_properties
       - image
+      - image_crop_data
+      - images
       - last_cooked
       - name
       - rating
@@ -15680,6 +15934,13 @@ components:
           maxLength: 128
         description:
           type: string
+        image:
+          allOf:
+          - $ref: '#/components/schemas/UserFileView'
+          nullable: true
+        fallback_image:
+          type: string
+          readOnly: true
         shared:
           type: array
           items:
@@ -15698,6 +15959,7 @@ components:
           minimum: -2147483648
       required:
       - created_by
+      - fallback_image
       - name
       - shared
     RecipeBookEntry:
@@ -15735,11 +15997,14 @@ components:
           readOnly: true
         image:
           type: string
-          format: uri
-          readOnly: true
           nullable: true
+          readOnly: true
+        image_crop_data:
+          nullable: true
+          readOnly: true
       required:
       - image
+      - image_crop_data
       - name
     RecipeFromSource:
       type: object
@@ -15780,16 +16045,36 @@ components:
           default: []
     RecipeImage:
       type: object
-      description: Adds nested create feature
+      description: Serializer for the RecipeImage model (multi-image gallery).
       properties:
-        image:
+        id:
+          type: integer
+          readOnly: false
+        recipe:
+          type: integer
+        file:
           type: string
           format: uri
+        crop_data:
           nullable: true
-        image_url:
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        is_primary:
+          type: boolean
+        created_by:
+          type: integer
+          readOnly: true
+        created_at:
           type: string
-          nullable: true
-          maxLength: 4096
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - created_by
+      - file
+      - recipe
     RecipeImport:
       type: object
       description: Adds nested create feature
@@ -15832,9 +16117,11 @@ components:
           maxLength: 512
         image:
           type: string
-          format: uri
-          readOnly: true
           nullable: true
+          readOnly: true
+        image_crop_data:
+          nullable: true
+          readOnly: true
         keywords:
           type: array
           items:
@@ -15886,6 +16173,7 @@ components:
       - created_at
       - created_by
       - image
+      - image_crop_data
       - internal
       - keywords
       - last_cooked
@@ -16658,7 +16946,12 @@ components:
         file:
           allOf:
           - $ref: '#/components/schemas/UserFileView'
+          readOnly: true
           nullable: true
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserFileView'
         step_recipe:
           type: integer
           nullable: true
@@ -16667,6 +16960,7 @@ components:
         show_ingredients_table:
           type: boolean
       required:
+      - file
       - ingredients
       - instructions_markdown
       - step_recipe_data
@@ -17084,6 +17378,8 @@ components:
         file_size_kb:
           type: integer
           readOnly: true
+        crop_data:
+          nullable: true
         created_by:
           allOf:
           - $ref: '#/components/schemas/User'
@@ -17111,12 +17407,18 @@ components:
         file_download:
           type: string
           readOnly: true
+        file_url:
+          type: string
+          readOnly: true
         preview:
           type: string
           readOnly: true
         file_size_kb:
           type: integer
           readOnly: true
+        crop_data:
+          readOnly: true
+          nullable: true
         created_by:
           allOf:
           - $ref: '#/components/schemas/User'
@@ -17128,8 +17430,10 @@ components:
       required:
       - created_at
       - created_by
+      - crop_data
       - file_download
       - file_size_kb
+      - file_url
       - name
       - preview
     UserPreference:

@@ -195,7 +195,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'imageCropData'|'keywords'|'workingTime'|'waitingTime'|'createdBy'|'createdAt'|'updatedAt'|'internal'|'servings'|'servingsText'|'rating'|'lastCooked'|'_new'> | null): any {
+export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'image_crop_data'|'keywords'|'working_time'|'waiting_time'|'created_by'|'created_at'|'updated_at'|'internal'|'servings'|'servings_text'|'rating'|'last_cooked'|'new'> | null): any {
     if (value == null) {
         return value;
     }

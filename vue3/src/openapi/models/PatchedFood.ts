@@ -328,7 +328,7 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'> | null): any {
+export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'> | null): any {
     if (value == null) {
         return value;
     }

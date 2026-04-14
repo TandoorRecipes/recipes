@@ -127,7 +127,7 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeBookToJSON(value?: Omit<RecipeBook, 'fallbackImage'|'createdBy'> | null): any {
+export function RecipeBookToJSON(value?: Omit<RecipeBook, 'fallback_image'|'created_by'> | null): any {
     if (value == null) {
         return value;
     }

@@ -118,7 +118,7 @@ export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'createdBy'> | null): any {
+export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }
