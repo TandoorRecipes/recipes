@@ -121,6 +121,10 @@ const props = defineProps({
     context: {type: String as PropType<'card' | 'view'>, default: 'card'},
 })
 
+const emit = defineEmits<{
+    deleted: [id: number]
+}>()
+
 const mealPlanDialog = ref(false)
 const addToBookDialog = ref(false)
 const logCookingDialog = ref(false)
@@ -226,7 +230,11 @@ function confirmDelete() {
     let api = new ApiApi()
     api.apiRecipeDestroy({id: props.recipe.id!}).then(() => {
         useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
-        router.push({name: 'SearchPage'})
+        if (isOnRecipeView.value) {
+            router.push({name: 'SearchPage'})
+        } else {
+            emit('deleted', props.recipe.id!)
+        }
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
     })
