@@ -114,7 +114,12 @@
             clearable
             hide-details
             density="compact"
-        />
+            :class="{'toolbar-search--flush-end': !!$slots['search-append-inner']}"
+        >
+            <template v-if="$slots['search-append-inner']" #append-inner>
+                <slot name="search-append-inner" />
+            </template>
+        </v-text-field>
         <div v-if="$slots['below-search']" class="d-flex align-center ga-2 mt-1">
             <div style="flex: 1 1 0; min-width: 0">
                 <slot name="below-search" />
