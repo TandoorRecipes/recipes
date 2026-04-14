@@ -97,7 +97,7 @@ export function PatchedRecipeImageFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedRecipeImageToJSON(value?: Omit<PatchedRecipeImage, 'createdBy'|'createdAt'> | null): any {
+export function PatchedRecipeImageToJSON(value?: Omit<PatchedRecipeImage, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

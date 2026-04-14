@@ -101,7 +101,7 @@ export function RecipeImageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function RecipeImageToJSON(value?: Omit<RecipeImage, 'createdBy'|'createdAt'> | null): any {
+export function RecipeImageToJSON(value?: Omit<RecipeImage, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -149,7 +149,7 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
     };
 }
 
-export function StepToJSON(value?: Omit<Step, 'instructionsMarkdown'|'file'|'stepRecipeData'> | null): any {
+export function StepToJSON(value?: Omit<Step, 'instructions_markdown'|'file'|'step_recipe_data'> | null): any {
     if (value == null) {
         return value;
     }

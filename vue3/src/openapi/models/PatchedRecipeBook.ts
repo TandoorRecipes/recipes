@@ -123,7 +123,7 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'fallbackImage'|'createdBy'> | null): any {
+export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'fallback_image'|'created_by'> | null): any {
     if (value == null) {
         return value;
     }

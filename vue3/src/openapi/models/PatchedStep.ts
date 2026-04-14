@@ -145,7 +145,7 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructionsMarkdown'|'file'|'stepRecipeData'> | null): any {
+export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdown'|'file'|'step_recipe_data'> | null): any {
     if (value == null) {
         return value;
     }

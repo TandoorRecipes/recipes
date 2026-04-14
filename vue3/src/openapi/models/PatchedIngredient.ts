@@ -138,7 +138,7 @@ export function PatchedIngredientFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'> | null): any {
+export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'used_in_recipes'|'checked'> | null): any {
     if (value == null) {
         return value;
     }

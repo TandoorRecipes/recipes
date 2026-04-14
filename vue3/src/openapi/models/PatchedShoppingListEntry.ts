@@ -184,7 +184,7 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'> | null): any {
+export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }
