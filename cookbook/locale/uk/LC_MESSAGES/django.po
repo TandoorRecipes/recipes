@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-02-17 00:44+0000\n"
+"PO-Revision-Date: 2026-04-14 14:48+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.13.3\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -90,12 +90,12 @@ msgid "You cannot interact with this object as it is not owned by you!"
 msgstr "Ви не можете взаємодіяти з цим об'єктом, оскільки він вам не належить!"
 
 #: .\cookbook\helper\permission_helper.py:323
-#, fuzzy
-#| msgid "You cannot interact with this object as it is not owned by you!"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
-msgstr "Ви не можете взаємодіяти з цим об'єктом, оскільки він вам не належить!"
+msgstr ""
+"Ви не можете взаємодіяти з цим об’єктом, тому що ви не належите до того "
+"самого домогосподарства, що й користувач, який його створив!"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -131,51 +131,51 @@ msgstr "ферментувати"
 
 #: .\cookbook\helper\recipe_url_import.py:318
 msgid "slow cook"
-msgstr ""
+msgstr "Повільне готування"
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
-msgstr ""
+msgstr "яйцеварка"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
-msgstr ""
+msgstr "чайник"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
-msgstr ""
+msgstr "суміш"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "pre-clean"
-msgstr ""
+msgstr "попередньо очищені"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
-msgstr ""
+msgstr "висока температура"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
-msgstr ""
+msgstr "рисоварка"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
-msgstr ""
+msgstr "карамелізувати"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
-msgstr ""
+msgstr "овочечистка"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "slicer"
-msgstr ""
+msgstr "різак"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
-msgstr ""
+msgstr "терка"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
-msgstr ""
+msgstr "овочерізка-спіралайзер"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
@@ -239,7 +239,7 @@ msgstr "Вуглеводи"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "Холестерин"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -248,33 +248,31 @@ msgstr "Жир"
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "Клітковина"
 
 #: .\cookbook\integration\mealie1.py:247
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
-msgstr "Білки"
+msgstr "Білок"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Насичений жир"
 
 #: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
-msgstr ""
+msgstr "Натрій"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "Цукор"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
-msgstr ""
+msgstr "Трансжири"
 
 #: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Ненасичені жири"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -294,13 +292,15 @@ msgstr "Джерело"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Метод не реалізовано в інтеграції зі сховищем"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"Експорт PDF наразі недоступний. Використовуйте функцію друку свого браузера "
+"(Ctrl+P), щоб зберегти рецепти у форматі PDF."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -423,7 +423,7 @@ msgstr "Мета"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "Додати"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -432,7 +432,7 @@ msgstr "Прибрати"
 
 #: .\cookbook\models.py:1409
 msgid "Move"
-msgstr ""
+msgstr "Перемістити"
 
 #: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -512,7 +512,7 @@ msgstr "Ви досягли ліміту завантаження файлів."
 
 #: .\cookbook\serializer.py:304
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Даний тип файлу не дозволений."
 
 #: .\cookbook\serializer.py:444 .\cookbook\views\views.py:97
 msgid ""
@@ -522,13 +522,11 @@ msgstr ""
 
 #: .\cookbook\serializer.py:457
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Назва простору має бути унікальною."
 
 #: .\cookbook\serializer.py:505
-#, fuzzy
-#| msgid "You must select at least one field to search!"
 msgid "You must select at least one group."
-msgstr "Ви мусите обрати хоча б одне поле для пошуку!"
+msgstr "Ви повинні вибрати принаймні одну групу."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -875,10 +873,8 @@ msgid "We are sorry, but the sign up is currently closed."
 msgstr "На жаль, реєстрація наразі закрита."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
-#, fuzzy
-#| msgid "Tandoor Recipes Invite"
 msgid "Tandoor Recipe Manager"
-msgstr "Tandoor Рецепти запрошення"
+msgstr "Tandoor: Менеджер рецептів"
 
 #: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
@@ -1401,10 +1397,8 @@ msgstr ""
 "помилка."
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:30
-#, fuzzy
-#| msgid "Please contact your administrator."
 msgid "If this problem persists, please contact your administrator."
-msgstr "Зверніться до вашого адміністратора."
+msgstr "Якщо проблема не зникає, зверніться до адміністратора."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
@@ -1471,8 +1465,6 @@ msgstr ""
 "наступну форму:"
 
 #: .\cookbook\templates\socialaccount\signup.html:32
-#, fuzzy
-#| msgid "I accept the follwoing"
 msgid "I accept the following"
 msgstr "Я приймаю наступне"
 
@@ -1559,15 +1551,6 @@ msgid "System"
 msgstr "Система"
 
 #: .\cookbook\templates\system.html:24
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "        Django Recipes is an open source free software application. It "
-#| "can be found on\n"
-#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-#| "recipes/releases\">here</a>.\n"
-#| "    "
 msgid ""
 "\n"
 "        Tandoor Recipes is an open source free software application. It can "
@@ -1578,11 +1561,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Django Recipes - це безкоштовна програма з відкритим кодом. Її можна "
-"знайти на\n"
-"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"        Список змін знаходиться <a href=\"https://github.com/vabene1111/"
-"recipes/releases\">тут</a>.\n"
+"        Tandoor рецепти - це безкоштовна програма з відкритим кодом. Її "
+"можна знайти на\n"
+"        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>.\n"
+"        Changelogs can be found <a href=\"https://github.com/TandoorRecipes/"
+"recipes/releases\">тут\n"
+"</a>.\n"
 "    "
 
 #: .\cookbook\templates\system.html:30
