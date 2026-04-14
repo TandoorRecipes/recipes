@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-04-14 14:48+0000\n"
+"PO-Revision-Date: 2026-04-14 17:10+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -1588,7 +1588,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:56
 msgid "Plugins"
-msgstr ""
+msgstr "Плагіни"
 
 #: .\cookbook\templates\system.html:67
 msgid "Media Serving"
@@ -1728,10 +1728,8 @@ msgstr ""
 "        "
 
 #: .\cookbook\templates\system.html:230
-#, fuzzy
-#| msgid "Connect %(provider)s"
 msgid "Configured Providers"
-msgstr "Підключити %(provider)s"
+msgstr "Підключені Провайдери"
 
 #: .\cookbook\templates\system.html:239
 msgid "Name"
@@ -1739,39 +1737,39 @@ msgstr "Назва"
 
 #: .\cookbook\templates\system.html:240 .\cookbook\templates\system.html:270
 msgid "Provider"
-msgstr ""
+msgstr "Провайдер"
 
 #: .\cookbook\templates\system.html:241
 msgid "Client ID"
-msgstr ""
+msgstr "ID Клієнта"
 
 #: .\cookbook\templates\system.html:243
 msgid "Linked Accounts"
-msgstr ""
+msgstr "Пов’язані акаунти"
 
 #: .\cookbook\templates\system.html:259
 msgid "Recent Login Errors"
-msgstr ""
+msgstr "Останні помилки входу"
 
 #: .\cookbook\templates\system.html:269
 msgid "Time"
-msgstr ""
+msgstr "Час"
 
 #: .\cookbook\templates\system.html:271
 msgid "Error Code"
-msgstr ""
+msgstr "Код помилки"
 
 #: .\cookbook\templates\system.html:272
 msgid "Details"
-msgstr ""
+msgstr "Деталі"
 
 #: .\cookbook\templates\system.html:286
 msgid "Errors are cached for 24 hours. Maximum 50 entries stored."
-msgstr ""
+msgstr "Помилки кешуються протягом 24 годин. Зберігається максимум 50 записів."
 
 #: .\cookbook\templates\system.html:288
 msgid "No recent social login errors."
-msgstr ""
+msgstr "Немає нещодавніх помилок входу через соцмережі."
 
 #: .\cookbook\templates\system.html:303
 msgid "False"
@@ -1799,48 +1797,36 @@ msgstr "Експорт"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:5
 #: .\cookbook\templates\usersessions\usersession_list.html:8
-#, fuzzy
-#| msgid "No Permissions"
 msgid "Sessions"
-msgstr "Не має дозволів"
+msgstr "Сесії"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:9
-#, fuzzy
-#| msgid "The following e-mail addresses are associated with your account:"
 msgid "The following sessions are currently active on your account."
-msgstr "Наступні адреси email пов'язані з вашим обліковим записом:"
+msgstr "Наступні сеанси наразі активні у вашому обліковому записі."
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
-#, fuzzy
-#| msgid "Starts With"
 msgid "Started At"
-msgstr "Починається З"
+msgstr "Розпочато в"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:17
-#, fuzzy
-#| msgid "E-mail Addresses"
 msgid "IP Address"
-msgstr "Адреси e-mail"
+msgstr "IP адреси"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:18
-#, fuzzy
-#| msgid "API Browser"
 msgid "Browser"
-msgstr "Браузер API"
+msgstr "Браузер"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
-#, fuzzy
-#| msgid "Last viewed"
 msgid "Last Seen"
-msgstr "Останній переглянутий"
+msgstr "Востаннє у мережі"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:36
 msgid "Current"
-msgstr ""
+msgstr "Поточний"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:45
 msgid "Sign Out Other Sessions"
-msgstr ""
+msgstr "Вийти з інших сеансів"
 
 #: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
@@ -1902,18 +1888,20 @@ msgid ""
 "If true also return empty entries, if false (default) only return entries "
 "with amount > 0."
 msgstr ""
+"Якщо true, також повертаються порожні записи, якщо false (за замовчуванням) "
+"повертаються лише записи з сумою > 0."
 
 #: .\cookbook\views\api.py:868
 msgid ""
 "Returns all entries with the same food as the given code. If code is given "
 "food parameter is ignored"
 msgstr ""
+"Повертає всі записи з тими ж Інгредієнтами, що й заданий код. Якщо задано "
+"код, параметр Інгредієнтів ігнорується"
 
 #: .\cookbook\views\api.py:869 .\cookbook\views\api.py:902
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Returns all entries with the given food id"
-msgstr "Фільтр для записів із заданим рецептом"
+msgstr "Повертає всі записи з указаним id продукта"
 
 #: .\cookbook\views\api.py:870
 #, fuzzy
