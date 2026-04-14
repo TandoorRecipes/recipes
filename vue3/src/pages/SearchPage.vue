@@ -42,10 +42,10 @@
                     @toggle-select="selectMode = !selectMode"
                     @reset="resetAll"
                 >
-                    <template #below-search v-if="savedSearchInline">
+                    <template #below-search v-if="savedSearchInline && !selectMode">
                         <model-select v-show="!filtersCollapsed" model="CustomFilter" v-model="selectedCustomFilter" density="compact" class="mt-1" />
                     </template>
-                    <template #below-search-actions v-if="savedSearchInline">
+                    <template #below-search-actions v-if="savedSearchInline && !selectMode">
                         <template v-if="!filtersCollapsed">
                             <v-btn variant="text" size="small" prepend-icon="fa-solid fa-upload"
                                    :disabled="selectedCustomFilter == null"
@@ -58,7 +58,7 @@
                             </v-btn>
                         </template>
                     </template>
-                    <template #search-append-inner v-if="inlineGroups.length > 0 || savedSearchInline">
+                    <template #search-append-inner v-if="!selectMode && (inlineGroups.length > 0 || savedSearchInline)">
                         <v-btn
                             :icon="filtersCollapsed ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-up'"
                             color="primary"
@@ -71,7 +71,7 @@
                 </ModelListToolbar>
 
                 <v-expand-transition>
-                <div v-show="!filtersCollapsed">
+                <div v-show="!filtersCollapsed && !selectMode">
                     <closable-help-alert
                         v-if="savedFilterModified"
                         :text="$t('saved_filter_override_hint')"
