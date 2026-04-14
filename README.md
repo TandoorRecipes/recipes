@@ -1,3 +1,6 @@
+> **⚠️ This fork (tandoor-1) will no longer be updated.**
+> Please migrate to the official Tandoor at https://github.com/TandoorRecipes/recipes.
+
 <h1 align="center">
   <br>
   <a href="https://tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
