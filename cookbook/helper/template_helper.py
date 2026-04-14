@@ -1,4 +1,5 @@
 import html
+import re
 from gettext import gettext as _
 
 import bleach
@@ -103,7 +104,8 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         "img",
         "a",
         "sub", "sup",
-        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'thead'
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'thead',
+        'scalable-number',
     }
     parsed_md = md.markdown(
         instructions,
@@ -116,9 +118,8 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         "*": ["id", "class", 'width', 'height'],
         "img": ["src", "alt", "title"],
         "a": ["href", "alt", "title"],
+        "scalable-number": ["v-bind:number", "v-bind:factor"]
     }
-
-    instructions = bleach.clean(parsed_md, tags, markdown_attrs)
 
     ingredients = []
 
@@ -141,5 +142,10 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         return _('Could not parse template code.') + ' Error: Security Error'
     except Exception as e:
         return _('Could not parse template code.') + f' Error generating template.'
+
+    instructions = bleach.clean(instructions, tags, markdown_attrs)
+
+    instructions = instructions.replace('{','')
+    instructions = instructions.replace('}','')
 
     return instructions

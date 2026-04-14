@@ -300,7 +300,7 @@ function searchRecipes(options: VDataTableUpdateOptions) {
         recipes.value = r.results
         tableItemCount.value = r.count
     }).catch(err => {
-        if (err.name !== 'AbortError') {
+        if (err.name !== 'AbortError' && err.cause.name !== 'AbortError') {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         }
     }).finally(() => {

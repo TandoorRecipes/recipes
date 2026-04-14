@@ -64,11 +64,11 @@ class Integration:
         """
         zip_file = ZipFile(file)
         if len(zip_file.infolist()) > MAX_ZIP_FILE_COUNT:
-            raise Exception(_('Too many files in zip'))
+            raise Exception(_('Too many files in zip') + ' ' + str(len(zip_file.infolist())) + '/' + str(MAX_ZIP_FILE_COUNT))
 
         total_size = sum([z.file_size for z in zip_file.infolist()])
         if total_size > MAX_ZIP_TOTAL_SIZE:
-            raise Exception(_('Zip file too large'))
+            raise Exception(_('Zip file too large') + ' ' + str(total_size) + '/' + str(MAX_ZIP_TOTAL_SIZE))
         return zip_file
 
     def safe_read(self, zip_file, filename, depth=0):
@@ -81,7 +81,7 @@ class Integration:
         :return: bytes
         """
         if depth > MAX_ZIP_NESTING_DEPTH:
-            raise Exception(_('Nested zip files too deep'))
+            raise Exception(_('Nested zip files too deep') + ' ' + str(depth) + '/' + str(MAX_ZIP_NESTING_DEPTH))
 
         if isinstance(filename, str):
             info = zip_file.getinfo(filename)
@@ -89,7 +89,7 @@ class Integration:
             info = filename
 
         if info.file_size > MAX_ZIP_FILE_SIZE:
-            raise Exception(_('File in zip too large'))
+            raise Exception(_('File in zip too large') + ' ' + str(info.file_size) + '/' + str(MAX_ZIP_FILE_SIZE) )
 
         return zip_file.read(info)
 
@@ -269,7 +269,7 @@ class Integration:
             except BadZipFile:
                 il.msg += 'ERROR ' + _('Importer expected a .zip file. Did you choose the correct importer type for your data ?') + '\n'
             except Exception as e:
-                msg = 'ERROR ' + _('An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n'
+                msg = 'ERROR ' + _('An unexpected error occurred during the import. Please make sure you have uploaded a valid file.') + '\n' + str(e) + '\n'
                 self.handle_exception(e, log=il, message=msg)
 
             if len(self.ignored_recipes) > 0:
