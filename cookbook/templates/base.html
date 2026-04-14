@@ -394,6 +394,31 @@
 </nav>
 
 
+<div id="sunset-notice" class="bg-danger" style="display:none; width:100%; text-align:center; color:#fff; padding:8px;">
+    This fork (tandoor-1) will no longer be updated. Please migrate to the official Tandoor at
+    <a href="https://github.com/TandoorRecipes/recipes" style="color:#fff; text-decoration:underline;">github.com/TandoorRecipes/recipes</a>.
+    <button type="button" id="sunset-notice-dismiss"
+            style="background:transparent; border:0; color:#fff; font-size:1.2em; margin-left:10px; cursor:pointer;"
+            aria-label="Dismiss">&times;</button>
+</div>
+<script>
+(function () {
+    var key = 'tandoor_sunset_notice_dismissed_v1';
+    var el = document.getElementById('sunset-notice');
+    var btn = document.getElementById('sunset-notice-dismiss');
+    if (!el) return;
+    try {
+        if (localStorage.getItem(key) !== '1') el.style.display = 'block';
+    } catch (e) {
+        el.style.display = 'block';
+    }
+    if (btn) btn.addEventListener('click', function () {
+        el.style.display = 'none';
+        try { localStorage.setItem(key, '1'); } catch (e) {}
+    });
+})();
+</script>
+
 {% message_of_the_day request as message_of_the_day %}
 {% if message_of_the_day %}
     <div class="bg-info" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
