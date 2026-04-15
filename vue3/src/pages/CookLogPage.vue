@@ -9,13 +9,14 @@
                         </div>
                     </template>
                     <template #append>
-                        <v-switch
-                            v-model="groupByDay"
-                            label="Group by Day"
+                        <v-select
+                            v-model="groupBy"
+                            :items="groupOptions"
+                            label="Group by"
                             hide-details
                             density="compact"
                             style="max-width: 200px;"
-                        ></v-switch>
+                        ></v-select>
                     </template>
                 </v-card>
             </v-col>
@@ -29,12 +30,21 @@
                             :headers="headers"
                             :items="displayItems"
                             :loading="loading"
-                            :item-key="groupByDay ? 'dateString' : 'id'"
+                            :item-key="groupBy.value !== 'none' ? 'title' : 'id'"
                         >
                             <!-- Date column -->
                             <template #item.date="{ item }">
-                                <template v-if="groupByDay">
-                                    <strong>{{ DateTime.fromISO(item.dateString).toLocaleString(DateTime.DATE_MED) }}</strong>
+                                <template v-if="groupBy.value !== 'none' && item.title">
+                                    <div>
+                                        <strong>{{ item.title }}</strong>
+                                    </div>
+                                    <div class="text-caption text-disabled">
+                                        {{ DateTime.fromJSDate(item.startDate).toLocaleString(DateTime.DATE_MED) }}
+                                        -
+                                        {{ DateTime.fromJSDate(item.endDate).toLocaleString(DateTime.DATE_MED) }}
+                                        <br>
+                                        ({{ item.daysInPeriod }} day(s))
+                                    </div>
                                 </template>
                                 <template v-else>
                                     {{ DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATE_MED) }}
@@ -43,7 +53,7 @@
 
                             <!-- Recipe column -->
                             <template #item.recipe="{ item }">
-                                <template v-if="groupByDay">
+                                <template v-if="groupBy.value !== 'none' && item.entries">
                                     <div class="text-body-2">
                                         <strong>{{ item.entries.length }} recipe(s)</strong>
                                     </div>
@@ -65,8 +75,18 @@
 
                             <!-- Rating column -->
                             <template #item.rating="{ item }">
-                                <template v-if="groupByDay">
-                                    <span class="text-caption">Avg: {{ averageRating(item.entries).toFixed(1) }}</span>
+                                <template v-if="groupBy.value !== 'none' && item.averageRating !== undefined">
+                                    <div>
+                                        <v-rating
+                                            v-model="item.averageRating"
+                                            density="compact"
+                                            readonly
+                                            length="5"
+                                        ></v-rating>
+                                    </div>
+                                    <div class="text-caption text-disabled">
+                                        {{ item.averageRating.toFixed(1) }} avg
+                                    </div>
                                 </template>
                                 <template v-else>
                                     <v-rating
@@ -80,8 +100,13 @@
 
                             <!-- Servings column -->
                             <template #item.servings="{ item }">
-                                <template v-if="groupByDay">
-                                    <strong>{{ item.totalServings }}</strong>
+                                <template v-if="groupBy.value !== 'none' && item.totalServings !== undefined">
+                                    <div>
+                                        <strong>{{ item.totalServings }}</strong>
+                                    </div>
+                                    <div class="text-caption text-disabled">
+                                        {{ (item.totalServings / item.daysInPeriod).toFixed(1) }} / day
+                                    </div>
                                 </template>
                                 <template v-else>
                                     {{ item.servings }}
@@ -90,7 +115,7 @@
 
                             <!-- Comment column -->
                             <template #item.comment="{ item }">
-                                <template v-if="groupByDay">
+                                <template v-if="groupBy.value !== 'none' && item.entries">
                                     <span class="text-caption">{{ item.entries.filter(e => e.comment).length }} with comment(s)</span>
                                 </template>
                                 <template v-else>
@@ -100,11 +125,16 @@
 
                             <!-- Dynamic property columns -->
                             <template v-for="prop in Array.from(discoveredProperties.values())" :key="`property_${prop.id}`" #[`item.property_${prop.id}`]="{ item }">
-                                <template v-if="groupByDay">
-                                    <strong v-if="item.propertyTotals.get(prop.id) !== undefined">
-                                        {{ item.propertyTotals.get(prop.id) }}<span v-if="prop.unit">{{ prop.unit }}</span>
-                                    </strong>
-                                    <span v-else class="text-disabled">-</span>
+                                <template v-if="groupBy.value !== 'none' && item.propertyAveragesPerDay">
+                                    <div>
+                                        <span v-if="item.propertyAveragesPerDay.get(prop.id) !== undefined">
+                                            {{ item.propertyAveragesPerDay.get(prop.id) }}<span v-if="prop.unit">{{ prop.unit }}</span>
+                                        </span>
+                                        <span v-else class="text-disabled">-</span>
+                                    </div>
+                                    <div class="text-caption text-disabled">
+                                        {{ Math.round(item.propertyTotals.get(prop.id) * 100) / 100 }}<span v-if="prop.unit">{{ prop.unit }}</span> total
+                                    </div>
                                 </template>
                                 <template v-else>
                                     <span v-if="getPropertyValue(item.recipe, prop.id) !== null">
@@ -116,7 +146,7 @@
 
                             <!-- Action column -->
                             <template #item.action="{ item }">
-                                <template v-if="groupByDay">
+                                <template v-if="groupBy.value !== 'none' && item.entries">
                                     <v-btn
                                         icon="$menu"
                                         variant="plain"
@@ -127,7 +157,7 @@
                                             <v-list density="compact">
                                                 <v-list-item
                                                     prepend-icon="fa-solid fa-list"
-                                                    @click="expandDay(item)"
+                                                    @click="expandGroup()"
                                                 >
                                                     {{ $t('View Entries') }}
                                                 </v-list-item>
@@ -189,7 +219,15 @@ const loading = ref(false)
 const cookLogs = ref<CookLog[]>([])
 const editDialog = ref(false)
 const editingItem = ref<CookLog | null>(null)
-const groupByDay = ref(false)
+const groupBy = ref<'none' | 'day' | 'week' | 'month' | 'year'>('none')
+
+const groupOptions = [
+    { title: 'Individual', value: 'none' },
+    { title: 'Day', value: 'day' },
+    { title: 'Week', value: 'week' },
+    { title: 'Month', value: 'month' },
+    { title: 'Year', value: 'year' },
+]
 
 // Cache for recipe data
 interface RecipeData {
@@ -230,15 +268,37 @@ const headers = computed(() => {
 
 // Grouped data by date
 interface GroupedCookLog {
-    date: Date
-    dateString: string
+    title: string
+    startDate: Date
+    endDate: Date
     entries: CookLog[]
     totalServings: number
     propertyTotals: Map<number, number>
+    propertyAveragesPerDay: Map<number, number>
+    daysInPeriod: number
+    averageRating: number
+}
+
+function getWeekStart(date: Date): Date {
+    const d = new Date(date)
+    const day = d.getDay()
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1) // Adjust when day is sunday
+    d.setDate(diff)
+    d.setHours(0, 0, 0, 0)
+    return d
+}
+
+function getMonthYear(date: Date): string {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+}
+
+function getWeekKey(date: Date): string {
+    const weekStart = getWeekStart(date)
+    return weekStart.toISOString().split('T')[0]
 }
 
 const groupedCookLogs = computed<GroupedCookLog[]>(() => {
-    if (!groupByDay.value) {
+    if (groupBy.value === 'none') {
         return []
     }
 
@@ -246,19 +306,55 @@ const groupedCookLogs = computed<GroupedCookLog[]>(() => {
 
     for (const log of cookLogs.value) {
         const date = new Date(log.createdAt)
-        const dateStr = date.toISOString().split('T')[0]
+        let periodKey: string
+        let title: string
+        let startDate: Date
+        let endDate: Date
 
-        if (!groups.has(dateStr)) {
-            groups.set(dateStr, {
-                date,
-                dateString: dateStr,
+        if (groupBy.value === 'day') {
+            periodKey = date.toISOString().split('T')[0]
+            title = DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_FULL)
+            startDate = new Date(date)
+            startDate.setHours(0, 0, 0, 0)
+            endDate = new Date(date)
+            endDate.setHours(23, 59, 59, 999)
+        } else if (groupBy.value === 'week') {
+            const weekStart = getWeekStart(date)
+            periodKey = getWeekKey(date)
+            title = `Week of ${DateTime.fromJSDate(weekStart).toLocaleString(DateTime.DATE_MED)}`
+            startDate = weekStart
+            endDate = new Date(weekStart)
+            endDate.setDate(endDate.getDate() + 6)
+            endDate.setHours(23, 59, 59, 999)
+        } else if (groupBy.value === 'month') {
+            periodKey = getMonthYear(date)
+            title = DateTime.fromJSDate(date).toLocaleString({ month: 'long', year: 'numeric' })
+            startDate = new Date(date.getFullYear(), date.getMonth(), 1)
+            endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999)
+        } else if (groupBy.value === 'year') {
+            periodKey = String(date.getFullYear())
+            title = String(date.getFullYear())
+            startDate = new Date(date.getFullYear(), 0, 1)
+            endDate = new Date(date.getFullYear(), 11, 31, 23, 59, 59, 999)
+        } else {
+            continue
+        }
+
+        if (!groups.has(periodKey)) {
+            groups.set(periodKey, {
+                title,
+                startDate,
+                endDate,
                 entries: [],
                 totalServings: 0,
                 propertyTotals: new Map(),
+                propertyAveragesPerDay: new Map(),
+                daysInPeriod: 1,
+                averageRating: 0,
             })
         }
 
-        const group = groups.get(dateStr)!
+        const group = groups.get(periodKey)!
         group.entries.push(log)
         group.totalServings += log.servings || 0
 
@@ -272,14 +368,31 @@ const groupedCookLogs = computed<GroupedCookLog[]>(() => {
         }
     }
 
-    // Sort by date descending
+    // Calculate days in period and averages
+    for (const group of groups.values()) {
+        const msInDay = 24 * 60 * 60 * 1000
+        // Calculate days: for day/week/month/year, endDate is set to end of last day
+        // so we round the difference to get whole days
+        group.daysInPeriod = Math.round((group.endDate.getTime() - group.startDate.getTime()) / msInDay)
+
+        // Calculate averages per day
+        for (const [propId, total] of group.propertyTotals) {
+            group.propertyAveragesPerDay.set(propId, Math.round((total / group.daysInPeriod) * 100) / 100)
+        }
+
+        // Calculate average rating
+        const ratings = group.entries.filter(e => e.rating).map(e => e.rating!)
+        group.averageRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0
+    }
+
+    // Sort by start date descending
     return Array.from(groups.values()).sort((a, b) =>
-        new Date(b.dateString).getTime() - new Date(a.dateString).getTime()
+        b.startDate.getTime() - a.startDate.getTime()
     )
 })
 
 const displayItems = computed(() => {
-    return groupByDay.value ? groupedCookLogs.value : cookLogs.value
+    return groupBy.value !== 'none' ? groupedCookLogs.value : cookLogs.value
 })
 
 onMounted(() => {
@@ -417,15 +530,9 @@ function onCookLogDeleted() {
     useMessageStore().addPreparedMessage({ key: 'DELETE_SUCCESS' })
 }
 
-function averageRating(entries: CookLog[]): number {
-    const ratings = entries.filter(e => e.rating).map(e => e.rating!)
-    if (ratings.length === 0) return 0
-    return ratings.reduce((a, b) => a + b, 0) / ratings.length
-}
-
-function expandDay(group: GroupedCookLog) {
+function expandGroup() {
     // Disable grouping to show individual entries
-    groupByDay.value = false
+    groupBy.value = 'none'
     // Scroll to top to see the entries
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
