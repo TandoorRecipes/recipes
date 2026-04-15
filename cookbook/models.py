@@ -1517,6 +1517,34 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
         ordering = ('pk',)
 
 
+class RecipeUserWeight(ExportModelOperationsMixin('recipe_user_weight'), models.Model, PermissionModelMixin):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipe_weights')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    weight = models.FloatField(default=0.0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.recipe.name} ({self.weight})"
+
+    class Meta:
+        ordering = ('pk',)
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'recipe'], name='unique_user_recipe_weight'),
+        ]
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['user']),
+            Index(fields=['recipe']),
+            Index(fields=['user', 'recipe']),
+            Index(fields=['weight']),
+        )
+
+
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)

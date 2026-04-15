@@ -89,7 +89,7 @@ from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, FoodProperty, ImportLog, Ingredient,
                              InviteLink, Keyword, MealPlan, MealType, Property, PropertyType, Recipe, RecipeBook,
-                             RecipeBookEntry, ShareLink, ShoppingListEntry,
+                             RecipeBookEntry, RecipeUserWeight, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog, RecipeImport, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
@@ -100,7 +100,7 @@ from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, AutoMealPlanSerializer,
                                  BookmarkletImportListSerializer, BookmarkletImportSerializer,
-                                 CookLogSerializer, CustomFilterSerializer,
+                                 CookLogSerializer, CustomFilterSerializer, RecipeUserWeightSerializer,
                                  ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer,
                                  ImportLogSerializer, IngredientSerializer, IngredientSimpleSerializer,
@@ -2392,6 +2392,32 @@ class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
         if self.request.query_params.get('recipe', None):
             self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
         return self.queryset.filter(space=self.request.space)
+
+
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int),
+            OpenApiParameter(name='user', description='Filter for entries by the given user ID', type=int),
+        ]
+    )
+)
+class RecipeUserWeightViewSet(LoggingMixin, viewsets.ModelViewSet):
+    queryset = RecipeUserWeight.objects
+    serializer_class = RecipeUserWeightSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(space=self.request.space)
+
+        if self.request.query_params.get('recipe', None):
+            queryset = queryset.filter(recipe=self.request.query_params.get('recipe'))
+
+        if self.request.query_params.get('user', None):
+            queryset = queryset.filter(user=self.request.query_params.get('user'))
+
+        return queryset
 
 
 class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
