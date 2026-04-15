@@ -101,6 +101,7 @@ import type {
   PaginatedRecipeBookList,
   PaginatedRecipeImportList,
   PaginatedRecipeOverviewList,
+  PaginatedRecipeUserWeightList,
   PaginatedShoppingListEntryList,
   PaginatedShoppingListList,
   PaginatedShoppingListRecipeList,
@@ -154,6 +155,7 @@ import type {
   PatchedRecipeBook,
   PatchedRecipeBookEntry,
   PatchedRecipeImport,
+  PatchedRecipeUserWeight,
   PatchedSearchPreference,
   PatchedShoppingList,
   PatchedShoppingListEntry,
@@ -182,8 +184,10 @@ import type {
   RecipeFromSourceResponse,
   RecipeImage,
   RecipeImport,
+  RecipeOverview,
   RecipeShoppingUpdate,
   RecipeSimple,
+  RecipeUserWeight,
   SearchFields,
   SearchPreference,
   ServerSettings,
@@ -386,6 +390,8 @@ import {
     PaginatedRecipeImportListToJSON,
     PaginatedRecipeOverviewListFromJSON,
     PaginatedRecipeOverviewListToJSON,
+    PaginatedRecipeUserWeightListFromJSON,
+    PaginatedRecipeUserWeightListToJSON,
     PaginatedShoppingListEntryListFromJSON,
     PaginatedShoppingListEntryListToJSON,
     PaginatedShoppingListListFromJSON,
@@ -548,6 +554,12 @@ import {
     RecipeImageToJSON,
     RecipeImportFromJSON,
     RecipeImportToJSON,
+    RecipeOverviewFromJSON,
+    RecipeOverviewToJSON,
+    RecipeUserWeightFromJSON,
+    RecipeUserWeightToJSON,
+    PatchedRecipeUserWeightFromJSON,
+    PatchedRecipeUserWeightToJSON,
     RecipeShoppingUpdateFromJSON,
     RecipeShoppingUpdateToJSON,
     RecipeSimpleFromJSON,
@@ -834,6 +846,35 @@ export interface ApiCookLogRetrieveRequest {
 export interface ApiCookLogUpdateRequest {
     id: number;
     cookLog: Omit<CookLog, 'createdBy'|'updatedAt'>;
+}
+
+export interface ApiRecipeUserWeightCreateRequest {
+    recipeUserWeight: Omit<RecipeUserWeight, 'createdBy'|'updatedAt'>;
+}
+
+export interface ApiRecipeUserWeightDestroyRequest {
+    id: number;
+}
+
+export interface ApiRecipeUserWeightListRequest {
+    page?: number;
+    pageSize?: number;
+    recipe?: number;
+    user?: number;
+}
+
+export interface ApiRecipeUserWeightPartialUpdateRequest {
+    id: number;
+    patchedRecipeUserWeight?: Omit<PatchedRecipeUserWeight, 'createdBy'|'updatedAt'>;
+}
+
+export interface ApiRecipeUserWeightRetrieveRequest {
+    id: number;
+}
+
+export interface ApiRecipeUserWeightUpdateRequest {
+    id: number;
+    recipeUserWeight: Omit<RecipeUserWeight, 'createdBy'|'updatedAt'>;
 }
 
 export interface ApiCustomFilterCreateRequest {
@@ -4931,6 +4972,252 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiCookLogUpdate(requestParameters: ApiCookLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CookLog> {
         const response = await this.apiCookLogUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightCreateRaw(requestParameters: ApiRecipeUserWeightCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeUserWeight>> {
+        if (requestParameters['recipeUserWeight'] == null) {
+            throw new runtime.RequiredError(
+                'recipeUserWeight',
+                'Required parameter "recipeUserWeight" was null or undefined when calling apiRecipeUserWeightCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-user-weight/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeUserWeightToJSON(requestParameters['recipeUserWeight']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeUserWeightFromJSON(jsonValue));
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightCreate(requestParameters: ApiRecipeUserWeightCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeUserWeight> {
+        const response = await this.apiRecipeUserWeightCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightDestroyRaw(requestParameters: ApiRecipeUserWeightDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeUserWeightDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-user-weight/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightDestroy(requestParameters: ApiRecipeUserWeightDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiRecipeUserWeightDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightListRaw(requestParameters: ApiRecipeUserWeightListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeUserWeightList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['recipe'] != null) {
+            queryParameters['recipe'] = requestParameters['recipe'];
+        }
+
+        if (requestParameters['user'] != null) {
+            queryParameters['user'] = requestParameters['user'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-user-weight/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedRecipeUserWeightListFromJSON(jsonValue));
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightList(requestParameters: ApiRecipeUserWeightListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeUserWeightList> {
+        const response = await this.apiRecipeUserWeightListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightPartialUpdateRaw(requestParameters: ApiRecipeUserWeightPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeUserWeight>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeUserWeightPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-user-weight/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedRecipeUserWeightToJSON(requestParameters['patchedRecipeUserWeight']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeUserWeightFromJSON(jsonValue));
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightPartialUpdate(requestParameters: ApiRecipeUserWeightPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeUserWeight> {
+        const response = await this.apiRecipeUserWeightPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightRetrieveRaw(requestParameters: ApiRecipeUserWeightRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeUserWeight>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeUserWeightRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-user-weight/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeUserWeightFromJSON(jsonValue));
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightRetrieve(requestParameters: ApiRecipeUserWeightRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeUserWeight> {
+        const response = await this.apiRecipeUserWeightRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightUpdateRaw(requestParameters: ApiRecipeUserWeightUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeUserWeight>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiRecipeUserWeightUpdate().'
+            );
+        }
+
+        if (requestParameters['recipeUserWeight'] == null) {
+            throw new runtime.RequiredError(
+                'recipeUserWeight',
+                'Required parameter "recipeUserWeight" was null or undefined when calling apiRecipeUserWeightUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization");
+        }
+
+        const response = await this.request({
+            path: `/api/recipe-user-weight/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RecipeUserWeightToJSON(requestParameters['recipeUserWeight']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeUserWeightFromJSON(jsonValue));
+    }
+
+    /**
+     * Manage recipe user weights for recommendations
+     */
+    async apiRecipeUserWeightUpdate(requestParameters: ApiRecipeUserWeightUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeUserWeight> {
+        const response = await this.apiRecipeUserWeightUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
