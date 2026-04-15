@@ -237,6 +237,8 @@ class RecipeSearch:
             qs = qs.with_last_viewed(user, space)
         if _sort_includes(orderby, 'favorite'):
             qs = qs.with_favorite(user, space)
+        if _sort_includes(orderby, 'weight_recency'):
+            qs = qs.with_weight_recency(user, space)
         if params.num_recent:
             qs = qs.with_recent(user, space, params.num_recent)
         if params.new:

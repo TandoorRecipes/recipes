@@ -552,6 +552,8 @@ const filters = ref({
             {value: "-created_at", title: `${t('date_created')} (↓)`},
             {value: "lastviewed", title: `${t('date_viewed')} (↑)`},
             {value: "-lastviewed", title: `${t('date_viewed')} (↓)`},
+            {value: "weight_recency", title: `${t('Recommendation')} (↑)`},
+            {value: "-weight_recency", title: `${t('Recommendation')} (↓)`},
         ],
         modelValue: useRouteQuery('sortOrder', "")
     },

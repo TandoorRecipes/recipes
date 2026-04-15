@@ -82,6 +82,53 @@ class RecipeQuerySet(models.QuerySet):
             filter=Q(viewlog__created_by=user, viewlog__space=space),
         ))
 
+    def with_weight_recency(self, user, space):
+        """
+        Annotate recipes with a weighted recency score for sorting.
+        Score = days_since_last_cooked * (10 ^ user_weight)
+
+        For recipes never cooked, uses 999 days as default.
+        For recipes without a weight, uses 0 (neutral multiplier of 1).
+        """
+        if self._has_annotation('weight_recency'):
+            return self
+
+        from django.db.models import ExpressionWrapper, FloatField, F, OuterRef, Subquery, Value
+        from django.db.models.functions import Coalesce, Power, Now
+        from cookbook.models import RecipeUserWeight
+
+        # First annotate with lastcooked
+        qs = self.with_last_cooked(user, space)
+
+        # Add user weight subquery
+        weight_subquery = Subquery(
+            RecipeUserWeight.objects.filter(
+                recipe=OuterRef('pk'),
+                user=user
+            ).values('weight')[:1]
+        )
+
+        qs = qs.annotate(
+            _user_weight=Coalesce(weight_subquery, Value(0.0), output_field=FloatField()),
+        ).annotate(
+            # Calculate days since cooked (999 if never cooked)
+            _days_since_cooked=Coalesce(
+                ExpressionWrapper(
+                    (Now() - F('lastcooked')) / timedelta(days=1),
+                    output_field=FloatField()
+                ),
+                Value(999.0),
+                output_field=FloatField()
+            ),
+            # Apply formula: days * 10^weight
+            weight_recency=ExpressionWrapper(
+                F('_days_since_cooked') * Power(Value(10.0), F('_user_weight')),
+                output_field=FloatField()
+            )
+        )
+
+        return qs
+
     def with_new_flag(self, days=7):
         if self._has_annotation('new_recipe'):
             return self

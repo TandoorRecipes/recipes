@@ -1753,7 +1753,7 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='sort_order', description=_(
-        'Determines the order of the results. Options are: score,-score,name,-name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,lastviewed,-lastviewed'),
+        'Determines the order of the results. Options are: score,-score,name,-name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,lastviewed,-lastviewed,weight_recency,-weight_recency'),
                      type=str),
     OpenApiParameter(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='num_recent', description=_('Returns the given number of recently viewed recipes before search results (if given)'), type=int),
