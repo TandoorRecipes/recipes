@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-card prepend-icon="fa-solid fa-clock-rotate-left" :title="$t('Cook Log')">
+                <v-card prepend-icon="fa-solid fa-chart-simple" :title="$t('Stats')">
                     <template #subtitle>
                         <div class="text-wrap">
                             {{ $t('View your cooking history with recipe properties') }}
