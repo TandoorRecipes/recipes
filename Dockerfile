@@ -1,7 +1,7 @@
 FROM python:3.13-alpine3.23
 
 #Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
+RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm yarn
 
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED=1 \
@@ -27,7 +27,17 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 
-#Copy project and execute it.
+#Copy Vue project first for better layer caching
+COPY vue3/package.json vue3/yarn.lock ./vue3/
+
+#Install Vue dependencies (cached unless package.json changes)
+RUN cd vue3 && yarn install
+
+#Copy Vue source and build (cached unless vue3/ files change)
+COPY vue3/ ./vue3/
+RUN cd vue3 && yarn build
+
+#Copy rest of project
 COPY . ./
 
 RUN <<EOF
