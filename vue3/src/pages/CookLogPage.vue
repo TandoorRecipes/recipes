@@ -8,6 +8,15 @@
                             {{ $t('View your cooking history with recipe properties') }}
                         </div>
                     </template>
+                    <template #append>
+                        <v-switch
+                            v-model="groupByDay"
+                            label="Group by Day"
+                            hide-details
+                            density="compact"
+                            style="max-width: 200px;"
+                        ></v-switch>
+                    </template>
                 </v-card>
             </v-col>
         </v-row>
@@ -18,69 +27,139 @@
                     <v-card-text>
                         <v-data-table
                             :headers="headers"
-                            :items="cookLogs"
+                            :items="displayItems"
                             :loading="loading"
-                            item-key="id"
+                            :item-key="groupByDay ? 'dateString' : 'id'"
                         >
+                            <!-- Date column -->
                             <template #item.date="{ item }">
-                                {{ DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATE_MED) }}
+                                <template v-if="groupByDay">
+                                    <strong>{{ DateTime.fromISO(item.dateString).toLocaleString(DateTime.DATE_MED) }}</strong>
+                                </template>
+                                <template v-else>
+                                    {{ DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATE_MED) }}
+                                </template>
                             </template>
 
+                            <!-- Recipe column -->
                             <template #item.recipe="{ item }">
-                                <router-link :to="{ name: 'RecipeViewPage', params: { id: item.recipe } }">
-                                    {{ getRecipeName(item.recipe) }}
-                                </router-link>
+                                <template v-if="groupByDay">
+                                    <div class="text-body-2">
+                                        <strong>{{ item.entries.length }} recipe(s)</strong>
+                                    </div>
+                                    <div v-for="entry in item.entries" :key="entry.id" class="text-caption">
+                                        <router-link :to="{ name: 'RecipeViewPage', params: { id: entry.recipe } }">
+                                            {{ getRecipeName(entry.recipe) }}
+                                        </router-link>
+                                        <span v-if="entry.rating" class="ml-2">
+                                            <v-rating v-model="entry.rating" density="compact" readonly inline length="5"></v-rating>
+                                        </span>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <router-link :to="{ name: 'RecipeViewPage', params: { id: item.recipe } }">
+                                        {{ getRecipeName(item.recipe) }}
+                                    </router-link>
+                                </template>
                             </template>
 
+                            <!-- Rating column -->
                             <template #item.rating="{ item }">
-                                <v-rating
-                                    v-model="item.rating"
-                                    density="compact"
-                                    readonly
-                                    v-if="item.rating"
-                                ></v-rating>
+                                <template v-if="groupByDay">
+                                    <span class="text-caption">Avg: {{ averageRating(item.entries).toFixed(1) }}</span>
+                                </template>
+                                <template v-else>
+                                    <v-rating
+                                        v-model="item.rating"
+                                        density="compact"
+                                        readonly
+                                        v-if="item.rating"
+                                    ></v-rating>
+                                </template>
                             </template>
 
+                            <!-- Servings column -->
                             <template #item.servings="{ item }">
-                                {{ item.servings }}
+                                <template v-if="groupByDay">
+                                    <strong>{{ item.totalServings }}</strong>
+                                </template>
+                                <template v-else>
+                                    {{ item.servings }}
+                                </template>
                             </template>
 
+                            <!-- Comment column -->
                             <template #item.comment="{ item }">
-                                {{ item.comment || '-' }}
+                                <template v-if="groupByDay">
+                                    <span class="text-caption">{{ item.entries.filter(e => e.comment).length }} with comment(s)</span>
+                                </template>
+                                <template v-else>
+                                    {{ item.comment || '-' }}
+                                </template>
                             </template>
 
                             <!-- Dynamic property columns -->
                             <template v-for="prop in Array.from(discoveredProperties.values())" :key="`property_${prop.id}`" #[`item.property_${prop.id}`]="{ item }">
-                                <span v-if="getPropertyValue(item.recipe, prop.id) !== null">
-                                    {{ getPropertyValue(item.recipe, prop.id) }}<span v-if="prop.unit">{{ prop.unit }}</span>
-                                </span>
-                                <span v-else class="text-disabled">-</span>
+                                <template v-if="groupByDay">
+                                    <strong v-if="item.propertyTotals.get(prop.id) !== undefined">
+                                        {{ item.propertyTotals.get(prop.id) }}<span v-if="prop.unit">{{ prop.unit }}</span>
+                                    </strong>
+                                    <span v-else class="text-disabled">-</span>
+                                </template>
+                                <template v-else>
+                                    <span v-if="getPropertyValue(item.recipe, prop.id) !== null">
+                                        {{ getPropertyValue(item.recipe, prop.id) }}<span v-if="prop.unit">{{ prop.unit }}</span>
+                                    </span>
+                                    <span v-else class="text-disabled">-</span>
+                                </template>
                             </template>
 
+                            <!-- Action column -->
                             <template #item.action="{ item }">
-                                <v-btn
-                                    icon="$menu"
-                                    variant="plain"
-                                    size="small"
-                                >
-                                    <v-icon icon="$menu"></v-icon>
-                                    <v-menu activator="parent" close-on-content-click>
-                                        <v-list density="compact">
-                                            <v-list-item
-                                                prepend-icon="$edit"
-                                                @click="editCookLog(item)"
-                                            >
-                                                {{ $t('Edit') }}
-                                            </v-list-item>
-                                            <v-list-item
-                                                prepend-icon="$delete"
-                                                @click="deleteCookLog(item)"
-                                            >
-                                                {{ $t('Delete') }}
-                                            </v-list-item>
-                                        </v-list>
-                                    </v-menu>
-                                </v-btn>
+                                <template v-if="groupByDay">
+                                    <v-btn
+                                        icon="$menu"
+                                        variant="plain"
+                                        size="small"
+                                    >
+                                        <v-icon icon="$menu"></v-icon>
+                                        <v-menu activator="parent" close-on-content-click>
+                                            <v-list density="compact">
+                                                <v-list-item
+                                                    prepend-icon="fa-solid fa-list"
+                                                    @click="expandDay(item)"
+                                                >
+                                                    {{ $t('View Entries') }}
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+                                    </v-btn>
+                                </template>
+                                <template v-else>
+                                    <v-btn
+                                        icon="$menu"
+                                        variant="plain"
+                                        size="small"
+                                    >
+                                        <v-icon icon="$menu"></v-icon>
+                                        <v-menu activator="parent" close-on-content-click>
+                                            <v-list density="compact">
+                                                <v-list-item
+                                                    prepend-icon="$edit"
+                                                    @click="editCookLog(item)"
+                                                >
+                                                    {{ $t('Edit') }}
+                                                </v-list-item>
+                                                <v-list-item
+                                                    prepend-icon="$delete"
+                                                    @click="deleteCookLog(item)"
+                                                >
+                                                    {{ $t('Delete') }}
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-menu>
+                                    </v-btn>
+                                </template>
                             </template>
                         </v-data-table>
                     </v-card-text>
@@ -110,6 +189,7 @@ const loading = ref(false)
 const cookLogs = ref<CookLog[]>([])
 const editDialog = ref(false)
 const editingItem = ref<CookLog | null>(null)
+const groupByDay = ref(false)
 
 // Cache for recipe data
 interface RecipeData {
@@ -146,6 +226,60 @@ const headers = computed(() => {
         }))
 
     return [...fixedHeaders, ...dynamicHeaders]
+})
+
+// Grouped data by date
+interface GroupedCookLog {
+    date: Date
+    dateString: string
+    entries: CookLog[]
+    totalServings: number
+    propertyTotals: Map<number, number>
+}
+
+const groupedCookLogs = computed<GroupedCookLog[]>(() => {
+    if (!groupByDay.value) {
+        return []
+    }
+
+    const groups = new Map<string, GroupedCookLog>()
+
+    for (const log of cookLogs.value) {
+        const date = new Date(log.createdAt)
+        const dateStr = date.toISOString().split('T')[0]
+
+        if (!groups.has(dateStr)) {
+            groups.set(dateStr, {
+                date,
+                dateString: dateStr,
+                entries: [],
+                totalServings: 0,
+                propertyTotals: new Map(),
+            })
+        }
+
+        const group = groups.get(dateStr)!
+        group.entries.push(log)
+        group.totalServings += log.servings || 0
+
+        // Sum property values for each property type
+        for (const prop of Array.from(discoveredProperties.value.values())) {
+            const value = getPropertyValue(log.recipe, prop.id)
+            if (value !== null) {
+                const current = group.propertyTotals.get(prop.id) || 0
+                group.propertyTotals.set(prop.id, current + value)
+            }
+        }
+    }
+
+    // Sort by date descending
+    return Array.from(groups.values()).sort((a, b) =>
+        new Date(b.dateString).getTime() - new Date(a.dateString).getTime()
+    )
+})
+
+const displayItems = computed(() => {
+    return groupByDay.value ? groupedCookLogs.value : cookLogs.value
 })
 
 onMounted(() => {
@@ -281,6 +415,19 @@ function onCookLogDeleted() {
     editDialog.value = false
     loadCookLogs()
     useMessageStore().addPreparedMessage({ key: 'DELETE_SUCCESS' })
+}
+
+function averageRating(entries: CookLog[]): number {
+    const ratings = entries.filter(e => e.rating).map(e => e.rating!)
+    if (ratings.length === 0) return 0
+    return ratings.reduce((a, b) => a + b, 0) / ratings.length
+}
+
+function expandDay(group: GroupedCookLog) {
+    // Disable grouping to show individual entries
+    groupByDay.value = false
+    // Scroll to top to see the entries
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 </script>
 
