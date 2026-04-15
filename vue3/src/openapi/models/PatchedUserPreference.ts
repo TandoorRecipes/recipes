@@ -81,7 +81,19 @@ export interface PatchedUserPreference {
      */
     theme?: ThemeEnum;
     /**
-     * 
+     *
+     * @type {ThemeEnum}
+     * @memberof PatchedUserPreference
+     */
+    lightTheme?: ThemeEnum;
+    /**
+     *
+     * @type {ThemeEnum}
+     * @memberof PatchedUserPreference
+     */
+    darkTheme?: ThemeEnum;
+    /**
+     *
      * @type {string}
      * @memberof PatchedUserPreference
      */
@@ -258,6 +270,8 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
         'user': json['user'] == null ? undefined : UserFromJSON(json['user']),
         'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
         'theme': json['theme'] == null ? undefined : ThemeEnumFromJSON(json['theme']),
+        'lightTheme': json['light_theme'] == null ? undefined : ThemeEnumFromJSON(json['light_theme']),
+        'darkTheme': json['dark_theme'] == null ? undefined : ThemeEnumFromJSON(json['dark_theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
         'navTextColor': json['nav_text_color'] == null ? undefined : UserPreferenceNavTextColorEnumFromJSON(json['nav_text_color']),
         'navShowLogo': json['nav_show_logo'] == null ? undefined : json['nav_show_logo'],
@@ -295,6 +309,8 @@ export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 
         
         'image': UserFileViewToJSON(value['image']),
         'theme': ThemeEnumToJSON(value['theme']),
+        'light_theme': value['lightTheme'],
+        'dark_theme': value['darkTheme'],
         'nav_bg_color': value['navBgColor'],
         'nav_text_color': UserPreferenceNavTextColorEnumToJSON(value['navTextColor']),
         'nav_show_logo': value['navShowLogo'],
