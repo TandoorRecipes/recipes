@@ -131,7 +131,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
 
     try:
         env = SandboxedEnvironment()
-        instructions = env.from_string(instructions).render(ingredients=ingredients, scale=scale)
+        instructions = env.from_string(parsed_md).render(ingredients=ingredients, scale=scale)
     except TemplateSyntaxError:
         return _('Could not parse template code.') + ' Error: Template Syntax broken'
     except TypeError:
