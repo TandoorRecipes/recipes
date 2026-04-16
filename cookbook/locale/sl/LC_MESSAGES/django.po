@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2025-12-01 06:08+0000\n"
+"PO-Revision-Date: 2026-04-16 08:42+0000\n"
 "Last-Translator: \"Matjaž T.\" <matjaz@moj-svet.si>\n"
 "Language-Team: Slovenian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sl/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.13.3\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -90,12 +90,12 @@ msgid "You cannot interact with this object as it is not owned by you!"
 msgstr "S tem predmetom ne morete komunicirati, ker ni v vaši lasti!"
 
 #: .\cookbook\helper\permission_helper.py:323
-#, fuzzy
-#| msgid "You cannot interact with this object as it is not owned by you!"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
-msgstr "S tem predmetom ne morete komunicirati, ker ni v vaši lasti!"
+msgstr ""
+"S tem predmetom ne morete komunicirati, ker niste v istem gospodinjstvu kot "
+"uporabnik, ki ga je ustvaril!"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -292,13 +292,15 @@ msgstr "Vir"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Metoda ni implementirana v integraciji shrambe"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"Izvoz v PDF trenutno ni na voljo. Za shranjevanje receptov v PDF uporabite "
+"funkcijo tiskanja v brskalniku (Ctrl+P)."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -421,7 +423,7 @@ msgstr "Cilj"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -430,7 +432,7 @@ msgstr "Odstrani"
 
 #: .\cookbook\models.py:1409
 msgid "Move"
-msgstr ""
+msgstr "Premakni"
 
 #: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -522,10 +524,8 @@ msgid "Space Name must be unique."
 msgstr "Ime prostora mora biti edinstveno."
 
 #: .\cookbook\serializer.py:505
-#, fuzzy
-#| msgid "You must select at least one field to search!"
 msgid "You must select at least one group."
-msgstr "Za iskanje morate izbrati vsaj eno polje!"
+msgstr "Izbrati morate vsaj eno skupino."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -1392,10 +1392,8 @@ msgstr ""
 "napake."
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:30
-#, fuzzy
-#| msgid "Please contact your administrator."
 msgid "If this problem persists, please contact your administrator."
-msgstr "Obrnite se na skrbnika."
+msgstr "Če se težava ponovi, se obrnite na skrbnika."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
@@ -1722,10 +1720,8 @@ msgstr ""
 "        "
 
 #: .\cookbook\templates\system.html:230
-#, fuzzy
-#| msgid "Connect %(provider)s"
 msgid "Configured Providers"
-msgstr "Poveži %(provider)s"
+msgstr "Konfigurirani ponudniki"
 
 #: .\cookbook\templates\system.html:239
 msgid "Name"
@@ -1733,39 +1729,40 @@ msgstr "Ime"
 
 #: .\cookbook\templates\system.html:240 .\cookbook\templates\system.html:270
 msgid "Provider"
-msgstr ""
+msgstr "Ponudnik"
 
 #: .\cookbook\templates\system.html:241
 msgid "Client ID"
-msgstr ""
+msgstr "ID klienta"
 
 #: .\cookbook\templates\system.html:243
 msgid "Linked Accounts"
-msgstr ""
+msgstr "Povezani računi"
 
 #: .\cookbook\templates\system.html:259
 msgid "Recent Login Errors"
-msgstr ""
+msgstr "Nedavne napake pri prijavi"
 
 #: .\cookbook\templates\system.html:269
 msgid "Time"
-msgstr ""
+msgstr "Čas"
 
 #: .\cookbook\templates\system.html:271
 msgid "Error Code"
-msgstr ""
+msgstr "Koda napake"
 
 #: .\cookbook\templates\system.html:272
 msgid "Details"
-msgstr ""
+msgstr "Podrobnosti"
 
 #: .\cookbook\templates\system.html:286
 msgid "Errors are cached for 24 hours. Maximum 50 entries stored."
 msgstr ""
+"Napake se shranjujejo v predpomnilnik 24 ur. Shranjenih je največ 50 vnosov."
 
 #: .\cookbook\templates\system.html:288
 msgid "No recent social login errors."
-msgstr ""
+msgstr "Ni nedavnih napak pri prijavi v družabna omrežja."
 
 #: .\cookbook\templates\system.html:303
 msgid "False"
@@ -1793,48 +1790,36 @@ msgstr "Izvozi"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:5
 #: .\cookbook\templates\usersessions\usersession_list.html:8
-#, fuzzy
-#| msgid "No Permissions"
 msgid "Sessions"
-msgstr "Brez dovoljenj"
+msgstr "Seje"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:9
-#, fuzzy
-#| msgid "The following e-mail addresses are associated with your account:"
 msgid "The following sessions are currently active on your account."
-msgstr "Z vašim računom so povezani naslednji e-poštni naslovi:"
+msgstr "Naslednje seje so trenutno aktivne v vašem računu."
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
-#, fuzzy
-#| msgid "Saturated Fat"
 msgid "Started At"
-msgstr "Nasičene maščobe"
+msgstr "Začelo se je ob"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:17
-#, fuzzy
-#| msgid "E-mail Addresses"
 msgid "IP Address"
-msgstr "E-mail Naslovi"
+msgstr "IP-naslov"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:18
-#, fuzzy
-#| msgid "API Browser"
 msgid "Browser"
-msgstr "Brskalnik API"
+msgstr "Brskalnik"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
-#, fuzzy
-#| msgid "Last viewed"
 msgid "Last Seen"
-msgstr "Nazadnje ogledano"
+msgstr "Nazadnje viden"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:36
 msgid "Current"
-msgstr ""
+msgstr "Trenutni"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:45
 msgid "Sign Out Other Sessions"
-msgstr ""
+msgstr "Odjava iz drugih sej"
 
 #: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
@@ -1897,30 +1882,28 @@ msgid ""
 "If true also return empty entries, if false (default) only return entries "
 "with amount > 0."
 msgstr ""
+"Če je vrednost true, vrne tudi prazne vnose, če je vrednost false (privzeto)"
+", vrne le vnose z zneskom > 0."
 
 #: .\cookbook\views\api.py:868
 msgid ""
 "Returns all entries with the same food as the given code. If code is given "
 "food parameter is ignored"
 msgstr ""
+"Vrne vse vnose z enako hrano kot podana koda. Če je podana koda, se "
+"parameter hrana prezre"
 
 #: .\cookbook\views\api.py:869 .\cookbook\views\api.py:902
-#, fuzzy
-#| msgid "Returns only entries associated with the given mealplan id"
 msgid "Returns all entries with the given food id"
-msgstr "Vrne samo vnose, povezane z danim ID-jem načrta obrokov"
+msgstr "Vrne vse vnose z danim ID-jem hrane"
 
 #: .\cookbook\views\api.py:870
-#, fuzzy
-#| msgid "Returns only entries associated with the given mealplan id"
 msgid "Returns all entries with the given inventory location id"
-msgstr "Vrne samo vnose, povezane z danim ID-jem načrta obrokov"
+msgstr "Vrne vse vnose z danim ID-jem lokacije zaloge"
 
 #: .\cookbook\views\api.py:903
-#, fuzzy
-#| msgid "Returns only entries associated with the given mealplan id"
 msgid "Returns all entries with the given entry id"
-msgstr "Vrne samo vnose, povezane z danim ID-jem načrta obrokov"
+msgstr "Vrne vse vnose z danim ID-jem vnosa"
 
 #: .\cookbook\views\api.py:1106
 #, python-brace-format
@@ -1947,20 +1930,20 @@ msgstr ""
 "inteligence niso omogočene za vaš prostor."
 
 #: .\cookbook\views\api.py:1479
-#, fuzzy
-#| msgid "Filter meal plans from date (inclusive)."
 msgid ""
 "Filter meal plans from date (inclusive). If nothing is given its today - 90 "
 "days."
-msgstr "Filtriraj načrte obrokov od datuma (vključno)."
+msgstr ""
+"Filtriraj načrte obrokov od datuma (vključno). Če ni podanega nič, je "
+"danes - 90 dni."
 
 #: .\cookbook\views\api.py:1481
-#, fuzzy
-#| msgid "Filter meal plans to date (inclusive)."
 msgid ""
 "Filter meal plans to date (inclusive). If nothing is given its today + 360 "
 "days."
-msgstr "Filtriraj načrte obrokov do danes (vključno)."
+msgstr ""
+"Filtriraj načrte obrokov do danes (vključno). Če ni podanih nobenih "
+"podatkov, je to danes + 360 dni."
 
 #: .\cookbook\views\api.py:1484
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -1970,7 +1953,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1573
 msgid "No recipes found."
-msgstr ""
+msgstr "Ni najdenih receptov."
 
 #: .\cookbook\views\api.py:1670
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2170,10 +2153,10 @@ msgstr ""
 "<b>zavrzi</b>]"
 
 #: .\cookbook\views\api.py:1762
-#, fuzzy
-#| msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgid "Include child keywords and foods in search results. [<b>true</b>/false]"
-msgstr "Vrne nove rezultate prve med rezultati iskanja. [potrdi/<b>zavrzi</b>]"
+msgstr ""
+"V rezultate iskanja vključi podrejene ključne besede in živila. [<b>true</b>/"
+"false]"
 
 #: .\cookbook\views\api.py:2147
 msgid ""
@@ -2227,6 +2210,7 @@ msgstr "Nič za narediti."
 msgid ""
 "The requested page could not be loaded. The server returned %(status_code)s."
 msgstr ""
+"Zahtevane strani ni bilo mogoče naložiti. Strežnik je vrnil %(status_code)s."
 
 #: .\cookbook\views\api.py:2652
 msgid "Connection Refused."
@@ -2253,6 +2237,8 @@ msgid ""
 "PDF export is no longer available. Use your browser's print function (Ctrl"
 "+P) to save recipes as PDF."
 msgstr ""
+"Izvoz v PDF ni več na voljo. Za shranjevanje receptov v PDF uporabite "
+"funkcijo tiskanja v brskalniku (Ctrl+P)."
 
 #: .\cookbook\views\api.py:3335
 msgid "This feature is not yet available in the hosted version of tandoor!"
