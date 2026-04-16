@@ -58,7 +58,7 @@ def _plural_name_tag(singular, plural_name, amount, no_amount):
         f' plural="{html.escape(plural_name)}"'
         f" v-bind:amount='{amount_val}'"
         f" v-bind:factor='ingredient_factor'"
-        f" :no-amount='{str(no_amount).lower()}'"
+        f" :no-amount='{'true' if no_amount else 'false'}'"
         f"></plural-name>"
     )
 
@@ -163,7 +163,7 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     except Exception as e:
         return _('Could not parse template code.') + f' Error generating template.'
 
-    # do second cleaning that allows scalable-number but only when v-bind:number is a float and v-bind:factor is 'ingredient_factor'
+    # do second cleaning that allows scalable-number
     def validate_scalable_number_attributes(tag, name, value):
         if name == 'v-bind:number':
             try:
@@ -175,9 +175,26 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
             return value == 'ingredient_factor'
         return False
 
+    def validate_plural_name_attributes(tag, name, value):
+        if name == 'v-bind:amount':
+            try:
+                float(value)
+                return True
+            except (ValueError, TypeError):
+                return False
+        if name == 'v-bind:factor':
+            return value == 'ingredient_factor'
+        if name == ':no-amount':
+            return value == 'true' or value == 'false'
+        if name in ["singular", "plural", ]:
+            return True
+        return False
+
     allowed_attributes["scalable-number"] = validate_scalable_number_attributes
+    allowed_attributes["plural-name"] = validate_plural_name_attributes
 
     allowed_tags.append('scalable-number')
+    allowed_tags.append('plural-name')
 
     instructions = bleach.clean(instructions, allowed_tags, allowed_attributes)
 
