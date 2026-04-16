@@ -948,7 +948,7 @@
     "Expired": "Poteklo",
     "ExpiringSoon": "Kmalu poteče",
     "Filters": "Filtri",
-    "HouseholdSettingsHelp": "Za skupno rabo nakupovalnih seznamov in načrtov obrokov ustvarite gospodinjstva in dodelite uporabnike, ki naj si jih delijo med seboj, istemu gospodinjstvu. ",
+    "HouseholdSettingsHelp": "Za skupno rabo nakupovalnih seznamov in načrtov obrokov ustvarite gospodinjstva in istemu gospodinjstvu dodelite uporabnike, ki naj si jih delijo med seboj. ",
     "IgnoreShopping": "Prezri nakupovanje",
     "InInventory": "Na zalogi",
     "Inventory": "Zaloga",
@@ -984,5 +984,12 @@
     "Upgrade": "Nadgradnja",
     "UsedInRecipes": "Uporablja se v receptih",
     "Yearly": "Letno",
-    "help_translate": "Pomoč pri prevajanju"
+    "help_translate": "Pomoč pri prevajanju",
+    "CreateAndJoin": "Ustvari in se pridruži",
+    "HouseholdSetup1": "Gospodinjstva so bila uvedena v različici 2.6.0, izdani 30. 3. 2026. Nadomeščajo individualno deljenje načrtov obrokov in nakupovalnih seznamov v prejšnjih različicah.",
+    "HouseholdSetup2": "Gospodinjstva olajšajo sodelovanje z avtomatskim deljenjem načrtov obrokov in nakupovalnih seznamov med člani. ",
+    "HouseholdSetup3": "Predhodno deljeni elementi trenutno niso vidni. Ustvarite svoje prvo gospodinjstvo in vanj dodajte člane svojega prostora, da obnovite dostop do deljenih elementov.",
+    "HouseholdSetup4": "Če ne potrebujete skupne rabe, lahko to nastavitev preskočite. Gospodinjstva lahko kadar koli ustvarite in upravljate z uporabo pogleda baze podatkov.",
+    "HouseholdWelcome": "Vnesite ime za svoje prvo gospodinjstvo, ki ga želite ustvariti in se mu pridružiti. To omogoča enostavno deljenje nakupovalnih seznamov, načrtov obrokov in še več. Če deljenja zaenkrat ne potrebujete, pustite polje prazno. ",
+    "Households": "Gospodinjstva"
 }
