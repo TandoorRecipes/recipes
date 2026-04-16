@@ -56,7 +56,7 @@ stripe==14.0.0
 frappe-client==0.1.0.dev0
 
 # Development
-pytest== 8.4.2
+pytest== 9.0.3
 pytest-django==4.11.1
 pytest-cov===6.2.1
 pytest-factoryboy==2.8.1
