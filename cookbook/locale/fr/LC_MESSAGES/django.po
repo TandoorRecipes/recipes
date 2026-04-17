@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-01-21 17:46+0000\n"
-"Last-Translator: Fymyte <pierguill+translate.tandoor.dev@gmail.com>\n"
+"PO-Revision-Date: 2026-04-18 05:29+0000\n"
+"Last-Translator: vinch100 <vinch100@hotmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/fr/>\n"
 "Language: fr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -98,14 +98,12 @@ msgstr ""
 "utilisateur !"
 
 #: .\cookbook\helper\permission_helper.py:323
-#, fuzzy
-#| msgid "You cannot interact with this object as it is not owned by you!"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
 msgstr ""
-"Vous ne pouvez pas interagir avec cet objet car il appartient à un autre "
-"utilisateur !"
+"Vous ne pouvez pas interagir avec cet objet car vous n'êtes pas dans le même "
+"foyer que l'utilisateur qui l'a créé !"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -158,9 +156,8 @@ msgid "blend"
 msgstr "mixe"
 
 #: .\cookbook\helper\recipe_url_import.py:322
-#, fuzzy
 msgid "pre-clean"
-msgstr "pré-nettoyé"
+msgstr "pré-nettoyage"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
@@ -184,11 +181,11 @@ msgstr "mandoline"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
-msgstr ""
+msgstr "râpe"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
-msgstr ""
+msgstr "râpe à spirales"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
@@ -252,7 +249,7 @@ msgstr "Glucides"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "Cholesterol"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -261,33 +258,31 @@ msgstr "Matières grasses"
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "Fibres"
 
 #: .\cookbook\integration\mealie1.py:247
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
 msgstr "Protéines"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Graisses Saturées"
 
 #: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
-msgstr ""
+msgstr "Sodium"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "Sucre"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
-msgstr ""
+msgstr "Acide Gras Trans (AGT)"
 
 #: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Graisses Insaturées"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -307,13 +302,16 @@ msgstr "Source"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Méthode non implémentée dans l'intégration du stockage"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"L'export au format PDF n'est pas disponible pour le moment. Utilisez la "
+"fonction d'impression de votre navigateur (Ctrl+P) pour enregistrer les "
+"recettes au format PDF."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -436,7 +434,7 @@ msgstr "Objectif"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "Ajouter"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -444,10 +442,8 @@ msgid "Remove"
 msgstr "Supprimer"
 
 #: .\cookbook\models.py:1409
-#, fuzzy
-#| msgid "Move Up"
 msgid "Move"
-msgstr "Remonter"
+msgstr "Déplacer"
 
 #: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -463,7 +459,7 @@ msgstr "Internet"
 
 #: .\cookbook\models.py:1624 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr "Brut"
+msgstr "Cru"
 
 #: .\cookbook\models.py:1682
 msgid "Food Alias"
@@ -527,7 +523,7 @@ msgstr "Vous avez atteint votre limite de téléversement de fichiers."
 
 #: .\cookbook\serializer.py:304
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Le type de fichier indiqué n'est pas autorisé."
 
 #: .\cookbook\serializer.py:444 .\cookbook\views\views.py:97
 #, fuzzy
@@ -538,14 +534,11 @@ msgstr "Vous avez atteint le nombre maximum de recettes pour votre groupe."
 
 #: .\cookbook\serializer.py:457
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Le Nom d'Espace doit être unique."
 
 #: .\cookbook\serializer.py:505
-#, fuzzy
-#| msgid "You must select at least one field to search!"
 msgid "You must select at least one group."
-msgstr ""
-"Vous devez sélectionner au moins un champ pour effectuer une recherche !"
+msgstr "Vous devez sélectionner au moins un groupe."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -856,13 +849,14 @@ msgid "Create an Account"
 msgstr "Créer un compte"
 
 #: .\cookbook\templates\account\signup.html:41
+#, fuzzy
 msgid "I accept the follwoing"
 msgstr "J’accepte les"
 
 #: .\cookbook\templates\account\signup.html:44
 #: .\cookbook\templates\socialaccount\signup.html:35
 msgid "Terms and Conditions"
-msgstr "conditions d’utilisation"
+msgstr "Conditions d’utilisation"
 
 #: .\cookbook\templates\account\signup.html:47
 #: .\cookbook\templates\socialaccount\signup.html:38
@@ -872,7 +866,7 @@ msgstr "et"
 #: .\cookbook\templates\account\signup.html:51
 #: .\cookbook\templates\socialaccount\signup.html:42
 msgid "Privacy Policy"
-msgstr "la politique de confidentialité"
+msgstr "Politique de Confidentialité"
 
 #: .\cookbook\templates\account\signup.html:64
 msgid "Create User"
@@ -892,10 +886,8 @@ msgid "We are sorry, but the sign up is currently closed."
 msgstr "Nous sommes désolés, mais les inscriptions sont closes pour le moment."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
-#, fuzzy
-#| msgid "Tandoor Recipes Invite"
 msgid "Tandoor Recipe Manager"
-msgstr "Invitation Tandoor Recipes"
+msgstr "Gestionnaire de Recettes Tandoor"
 
 #: .\cookbook\templates\index.html:28
 msgid "Search recipe ..."
@@ -1436,10 +1428,8 @@ msgstr ""
 "réseau social."
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:30
-#, fuzzy
-#| msgid "Please contact your administrator."
 msgid "If this problem persists, please contact your administrator."
-msgstr "Veuillez contacter l’administrateur."
+msgstr "Si le problème persiste, veuillez contacter votre administrateur."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
@@ -1511,10 +1501,8 @@ msgstr ""
 "formulaire suivant :"
 
 #: .\cookbook\templates\socialaccount\signup.html:32
-#, fuzzy
-#| msgid "I accept the follwoing"
 msgid "I accept the following"
-msgstr "J’accepte les"
+msgstr "J’accepte les éléments suivants"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -1599,15 +1587,6 @@ msgid "System"
 msgstr "Système"
 
 #: .\cookbook\templates\system.html:24
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "        Django Recipes is an open source free software application. It "
-#| "can be found on\n"
-#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-#| "recipes/releases\">here</a>.\n"
-#| "    "
 msgid ""
 "\n"
 "        Tandoor Recipes is an open source free software application. It can "
@@ -1618,11 +1597,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Django Recipes est un logiciel libre et open source. Retrouvez-le "
+"        Tandoor Recipes est un logiciel libre et open source. Retrouvez-le "
 "sur \n"
-"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>. \n"
-"        L'historique des mises à jour est accessible <a href=\"https://"
-"github.com/vabene1111/recipes/releases\">ici</a>.\n"
+"         <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>. \n"
+"        L'historique des mises à jour est accessible  <a href=\"https://"
+"github.com/TandoorRecipes/recipes/releases\">ici</a>.\n"
 "    "
 
 #: .\cookbook\templates\system.html:30
@@ -1644,7 +1623,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:56
 msgid "Plugins"
-msgstr ""
+msgstr "Plugins"
 
 #: .\cookbook\templates\system.html:67
 msgid "Media Serving"
@@ -1781,10 +1760,8 @@ msgstr ""
 "        "
 
 #: .\cookbook\templates\system.html:230
-#, fuzzy
-#| msgid "Connect %(provider)s"
 msgid "Configured Providers"
-msgstr "Connecter %(provider)s"
+msgstr "Fournisseurs Configurés"
 
 #: .\cookbook\templates\system.html:239
 msgid "Name"
@@ -1792,21 +1769,19 @@ msgstr "Nom"
 
 #: .\cookbook\templates\system.html:240 .\cookbook\templates\system.html:270
 msgid "Provider"
-msgstr ""
+msgstr "Fournisseur"
 
 #: .\cookbook\templates\system.html:241
 msgid "Client ID"
-msgstr ""
+msgstr "Identifiant Client"
 
 #: .\cookbook\templates\system.html:243
-#, fuzzy
-#| msgid "Account"
 msgid "Linked Accounts"
-msgstr "Compte"
+msgstr "Comptes Liés"
 
 #: .\cookbook\templates\system.html:259
 msgid "Recent Login Errors"
-msgstr ""
+msgstr "Récentes Erreurs de Connexion"
 
 #: .\cookbook\templates\system.html:269
 msgid "Time"
@@ -1814,21 +1789,21 @@ msgstr "Temps"
 
 #: .\cookbook\templates\system.html:271
 msgid "Error Code"
-msgstr ""
+msgstr "Code d'Erreur"
 
 #: .\cookbook\templates\system.html:272
-#, fuzzy
-#| msgid "Emails"
 msgid "Details"
-msgstr "Adresses mail"
+msgstr "Details"
 
 #: .\cookbook\templates\system.html:286
 msgid "Errors are cached for 24 hours. Maximum 50 entries stored."
 msgstr ""
+"Les erreurs sont conservées en mémoire pendant 24 heures. Le nombre maximal "
+"d'entrées stockées est de 50."
 
 #: .\cookbook\templates\system.html:288
 msgid "No recent social login errors."
-msgstr ""
+msgstr "Aucune erreur récente de connexion via les réseaux sociaux."
 
 #: .\cookbook\templates\system.html:303
 msgid "False"
@@ -1856,48 +1831,36 @@ msgstr "Exporter"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:5
 #: .\cookbook\templates\usersessions\usersession_list.html:8
-#, fuzzy
-#| msgid "No Permissions"
 msgid "Sessions"
-msgstr "Pas d’autorisations"
+msgstr "Sessions"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:9
-#, fuzzy
-#| msgid "The following e-mail addresses are associated with your account:"
 msgid "The following sessions are currently active on your account."
-msgstr "Les adresses mail suivantes sont associées à votre compte :"
+msgstr "Les sessions suivantes sont actuellement actives sur votre compte."
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
-#, fuzzy
-#| msgid "Starts With"
 msgid "Started At"
-msgstr "Commence par"
+msgstr "Démarré à"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:17
-#, fuzzy
-#| msgid "E-mail Addresses"
 msgid "IP Address"
-msgstr "Adresses mail"
+msgstr "Adresses IP"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:18
-#, fuzzy
-#| msgid "API Browser"
 msgid "Browser"
-msgstr "Navigateur API"
+msgstr "Navigateur"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
-#, fuzzy
-#| msgid "Last viewed"
 msgid "Last Seen"
-msgstr "Dernières recettes vues"
+msgstr "Dernières recettes consultées"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:36
 msgid "Current"
-msgstr ""
+msgstr "Actuel"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:45
 msgid "Sign Out Other Sessions"
-msgstr ""
+msgstr "Déconnecter les autres sessions"
 
 #: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
@@ -1961,6 +1924,9 @@ msgid ""
 "If true also return empty entries, if false (default) only return entries "
 "with amount > 0."
 msgstr ""
+"Si la valeur est vraie, renvoie également les entrées vides ; si elle est "
+"fausse (valeur par défaut), ne renvoie que les entrées dont le montant est "
+"supérieur à 0."
 
 #: .\cookbook\views\api.py:868
 msgid ""
@@ -2003,22 +1969,19 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\api.py:1479
-#, fuzzy
-#| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgid ""
 "Filter meal plans from date (inclusive). If nothing is given its today - 90 "
 "days."
-msgstr "Filtrer les repas depuis la date (incluse) avec le format YYYY-MM-DD."
+msgstr ""
+"Filtrer les repas depuis la date (incluse). Par défaut 90 derniers jours."
 
 #: .\cookbook\views\api.py:1481
-#, fuzzy
-#| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgid ""
 "Filter meal plans to date (inclusive). If nothing is given its today + 360 "
 "days."
 msgstr ""
-"Filtrer les plannings de repas depuis la date (incluse) avec le format YYYY-"
-"MM-DD."
+"Filtrer les plannings de repas jusqu'à la date (incluse). Par défaut une "
+"année dès aujourd'hui."
 
 #: .\cookbook\views\api.py:1484
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -2027,10 +1990,8 @@ msgstr ""
 "paramètres de répétition."
 
 #: .\cookbook\views\api.py:1573
-#, fuzzy
-#| msgid "No recipes selected"
 msgid "No recipes found."
-msgstr "Aucune recette sélectionnée"
+msgstr "Aucune recette trouvée."
 
 #: .\cookbook\views\api.py:1670
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2048,23 +2009,23 @@ msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
-"La chaîne d'interrogation correspond (de manière floue) au nom de la "
-"recette. À l'avenir, la recherche en texte intégral sera également possible."
+"La chaîne de requête correspond (de manière floue) au nom de la recette. À "
+"l'avenir, la recherche en texte intégral sera également possible."
 
 #: .\cookbook\views\api.py:1710
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
-"ID du mot-clé qu'une recette doit avoir. Pour les paramètres à répétition "
-"multiple. Equivalent à keywords_or"
+"Identifiant du mot-clé qu'une recette doit avoir. Pour les paramètres à "
+"répétition multiple. Equivalent à keywords_or"
 
 #: .\cookbook\views\api.py:1711
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
-"ID des mots-clés, répéter pour plusieurs. Retourner les recettes avec "
-"n'importe quel mot-clé"
+"Identifiants des mots-clés, répéter pour multiples. Retourne les recettes "
+"contenant au moins un mot-clé"
 
 #: .\cookbook\views\api.py:1712
 msgid ""
@@ -2152,19 +2113,15 @@ msgstr "ID de l'unité qu'une recette doit avoir."
 
 #: .\cookbook\views\api.py:1730
 msgid "Exact rating of recipe"
-msgstr ""
+msgstr "Note de la recette"
 
 #: .\cookbook\views\api.py:1731
-#, fuzzy
-#| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or greater."
-msgstr "ID de l'unité qu'une recette doit avoir."
+msgstr "Note minimale de la recette."
 
 #: .\cookbook\views\api.py:1732
-#, fuzzy
-#| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or smaller."
-msgstr "ID de l'unité qu'une recette doit avoir."
+msgstr "Note maximale de la recette."
 
 #: .\cookbook\views\api.py:1734
 msgid "Filter recipes cooked X times."
