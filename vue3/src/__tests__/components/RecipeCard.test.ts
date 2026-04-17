@@ -66,7 +66,7 @@ function mountRecipeCard(props: Record<string, any> = {}, deviceOverrides: Recor
             plugins: [pinia, i18n, vuetify, router],
             stubs: {
                 RecipeContextMenu: { template: '<div class="stub-context-menu"/>' },
-                RecipeImage: { template: '<div class="stub-recipe-image"/>' },
+                RecipeImage: { template: '<div class="stub-recipe-image"><slot name="overlay"/></div>' },
                 PrivateRecipeBadge: { template: '<div class="stub-private-badge"/>' },
                 KeywordsBar: { template: '<div class="stub-keywords-bar"/>' },
             },
