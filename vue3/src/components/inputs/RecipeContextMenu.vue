@@ -24,7 +24,7 @@
                              prepend-icon="fa-solid fa-utensils" @click="logCookingDialog = true">
                     {{ $t('Log_Cooking') }}
                 </v-list-item>
-                <v-list-item v-if="isVisible('photo')"
+                <v-list-item v-if="isVisible('photo') && props.context === 'card'"
                              prepend-icon="fa-solid fa-image" @click="openPhotoEditor">
                     {{ $t('Edit_Photo') }}
                 </v-list-item>
@@ -76,7 +76,7 @@
     <delete-confirm-dialog v-if="deleteDialog" :object-name="props.recipe.name" model-name="Recipe"
                            @delete="confirmDelete" v-model="deleteDialog"></delete-confirm-dialog>
 
-    <v-dialog v-model="photoEditorDialog" max-width="800">
+    <v-dialog v-if="isVisible('photo') && props.context === 'card'" v-model="photoEditorDialog" max-width="800">
         <v-card>
             <v-closable-card-title :title="$t('Edit_Photo')" v-model="photoEditorDialog" />
             <v-card-text>
