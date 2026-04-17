@@ -2867,6 +2867,12 @@ class RecipeImageViewSet(LoggingMixin, viewsets.ModelViewSet):
         image_url = request.data.get('image_url')
         if not recipe_id or not image_url:
             return Response({'error': 'recipe and image_url are required'}, status=400)
+        # Resolve through scoped queryset so cross-space recipe ids are rejected
+        # before we touch the network.
+        try:
+            recipe = Recipe.objects.get(pk=recipe_id)
+        except Recipe.DoesNotExist:
+            return Response({'error': 'Recipe not found'}, status=404)
         try:
             response = safe_request('GET', image_url, headers={
                 "User-Agent": request.META.get('HTTP_USER_AGENT', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0')})
@@ -2876,14 +2882,14 @@ class RecipeImageViewSet(LoggingMixin, viewsets.ModelViewSet):
             image = File(io.BytesIO(response.content))
             img = handle_image(request, image, filetype)
             recipe_image = RecipeImage.objects.create(
-                recipe_id=recipe_id,
+                recipe=recipe,
                 file=img,
-                is_primary=not RecipeImage.objects.filter(recipe_id=recipe_id, is_primary=True).exists(),
-                order=RecipeImage.objects.filter(recipe_id=recipe_id).count(),
+                is_primary=not RecipeImage.objects.filter(recipe=recipe, is_primary=True).exists(),
+                order=RecipeImage.objects.filter(recipe=recipe).count(),
                 created_by=request.user,
-                space=request.space,
+                space=recipe.space,
             )
-            recipe_image.file.save(f'{uuid.uuid4()}_{recipe_id}{filetype}', img)
+            recipe_image.file.save(f'{uuid.uuid4()}_{recipe.id}{filetype}', img)
             return Response(RecipeImageSerializer(recipe_image, context={'request': request}).data, status=201)
         except Exception as e:
             # Log full exception server-side; return a generic message to the
