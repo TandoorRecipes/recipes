@@ -5,19 +5,19 @@
             <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3" :disable-lightbox="true">
                 <template #overlay>
                     <span v-if="deviceSettings.card_showRating && props.recipe.rating != null"
-                          class="card-overlay-top-right">
+                          class="card-overlay-top-right recipe-card-rating">
                         <v-icon icon="fa-solid fa-star" size="8" color="amber" />
                         <span class="card-overlay-rating-text">{{ props.recipe.rating.toFixed(1) }}</span>
                     </span>
                     <span v-if="deviceSettings.card_showNewBadge && props.recipe._new"
-                          class="card-overlay-bottom-left card-overlay-new">
+                          class="card-overlay-bottom-left card-overlay-new recipe-card-new-badge">
                         {{ t('New') }}
                     </span>
                     <span v-if="hasMetadataOverlay"
                           class="card-overlay-bottom-right">
-                        <span v-if="deviceSettings.card_showAuthor">{{ props.recipe.createdBy?.displayName }}</span>
+                        <span v-if="deviceSettings.card_showAuthor" class="recipe-card-author">{{ props.recipe.createdBy?.displayName }}</span>
                         <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && props.recipe.lastCooked"> · </span>
-                        <span v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked">{{ lastCookedText }}</span>
+                        <span v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked" class="recipe-card-last-cooked">{{ lastCookedText }}</span>
                     </span>
                 </template>
             </recipe-image>
