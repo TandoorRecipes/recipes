@@ -556,8 +556,6 @@ class UserPreference(models.Model, PermissionModelMixin):
     csv_prefix = models.CharField(max_length=10, blank=True, )
     default_meal_type = models.ForeignKey("MealType", on_delete=models.SET_NULL, null=True, blank=True)
     start_page_sections = models.JSONField(default=list, blank=True)
-    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
-    shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
