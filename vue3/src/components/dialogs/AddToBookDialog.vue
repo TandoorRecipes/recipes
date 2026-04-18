@@ -7,6 +7,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn variant="text" @click="dialog = false">{{ $t('Cancel') }}</v-btn>
                 <v-btn color="create" prepend-icon="$create" @click="addToBook()" :disabled="!selectedBook || loading">
                     {{ $t('Add') }}
                 </v-btn>
