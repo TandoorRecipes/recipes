@@ -159,6 +159,26 @@ describe('SearchPage (Phase 3 rewrite)', () => {
             wrapper.unmount()
             vi.useRealTimers()
         })
+
+        // E-7: changing the items-per-page dropdown must not clear active filters.
+        // The v-data-table-server emits @update:options with itemsPerPage on the
+        // same tick as page reset to 1 — historically that pair could race the
+        // useUrlFilters initFromRoute watcher and strip filter query params.
+        it('preserves active filters when pageSize changes', async () => {
+            vi.useFakeTimers({shouldAdvanceTime: true})
+            const {wrapper, router} = await mountSearchPage({internal: '1', hasImage: '1', onHand: '1'})
+            const vm = wrapper.vm as any
+            vm.onTableUpdate({itemsPerPage: 50, page: 1})
+            await flushPromises()
+            vi.advanceTimersByTime(350)
+            await flushPromises()
+            expect(router.currentRoute.value.query.internal).toBe('1')
+            expect(router.currentRoute.value.query.hasImage).toBe('1')
+            expect(router.currentRoute.value.query.onHand).toBe('1')
+            expect(vm.filterParams.internal).toBe(1)
+            wrapper.unmount()
+            vi.useRealTimers()
+        })
     })
 
     describe('empty state', () => {

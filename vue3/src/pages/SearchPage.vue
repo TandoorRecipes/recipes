@@ -485,7 +485,7 @@ function openSettingsPanel(tab: 'settings' | 'filters') {
 }
 
 // Exposed for component tests — script setup doesn't auto-expose bindings.
-defineExpose({openSettingsPanel, settingsActiveTab, settingsPanelOpen})
+defineExpose({openSettingsPanel, settingsActiveTab, settingsPanelOpen, onTableUpdate, filterParams, pageSize})
 
 function resetAll() {
     query.value = ''
