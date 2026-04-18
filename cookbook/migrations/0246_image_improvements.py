@@ -25,15 +25,24 @@ def copy_step_files_to_file(apps, schema_editor):
 def copy_recipe_image_to_model(apps, schema_editor):
     Recipe = apps.get_model('cookbook', 'Recipe')
     RecipeImage = apps.get_model('cookbook', 'RecipeImage')
+    batch = []
     for recipe in Recipe.objects.exclude(image__isnull=True).exclude(image__exact='').iterator(chunk_size=1000):
-        RecipeImage.objects.create(
+        # Fall back to the recipe's space owner when a historical row has no
+        # created_by (created_by is PROTECT now but older data predates that).
+        creator_id = recipe.created_by_id or recipe.space.created_by_id
+        batch.append(RecipeImage(
             recipe=recipe,
             file=recipe.image,
             is_primary=True,
             order=0,
-            created_by=recipe.created_by,
+            created_by_id=creator_id,
             space=recipe.space,
-        )
+        ))
+        if len(batch) >= 1000:
+            RecipeImage.objects.bulk_create(batch)
+            batch.clear()
+    if batch:
+        RecipeImage.objects.bulk_create(batch)
 
 
 def copy_recipe_image_back(apps, schema_editor):
