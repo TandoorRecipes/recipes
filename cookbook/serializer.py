@@ -884,6 +884,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     child_inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     food_onhand = CustomOnHandField(required=False, allow_null=True)
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
+    available_substitutes = serializers.SerializerMethodField('get_available_substitutes')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
     parent = IntegerField(read_only=True)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
@@ -894,6 +895,19 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
 
+    def _substitute_candidates_filter(self, obj):
+        """Build the Q filter matching this food's substitute candidates:
+        direct substitutes plus (when flagged) siblings and descendants.
+        Shared by get_substitute_onhand and get_available_substitutes so the
+        two fields can't drift out of agreement on which foods are eligible.
+        """
+        filter = Q(id__in=obj.substitute.all())
+        if obj.substitute_siblings:
+            filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
+        if obj.substitute_children:
+            filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
+        return filter
+
     @extend_schema_field(bool)
     def get_substitute_onhand(self, obj):
         try:
@@ -903,12 +917,32 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
                 shared_users = get_household_user_ids(self.context["request"].user_space)
             except AttributeError:  # Anonymous users (using share links) don't have shared users
                 shared_users = []
-            filter = Q(id__in=obj.substitute.all())
-            if obj.substitute_siblings:
-                filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
-            if obj.substitute_children:
-                filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
-            return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
+            return Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).exists()
+        except AttributeError:
+            return []
+
+    @extend_schema_field(FoodSimpleSerializer(many=True))
+    def get_available_substitutes(self, obj):
+        """Return the subset of this food's substitutes (direct + siblings/
+        children when flagged) that are currently on-hand for the caller's
+        household. Used by the ingredient context menu and inline substitute
+        icons — the UI action is only meaningful if the substitute is
+        actually usable right now.
+
+        Returns a list of FoodSimpleSerializer-shaped dicts. Empty list for
+        anonymous callers, no shared users, or no on-hand substitutes.
+        """
+        try:
+            if not self.context["request"].user.is_authenticated:
+                return []
+            try:
+                shared_users = get_household_user_ids(self.context["request"].user_space)
+            except AttributeError:
+                return []
+            if not shared_users:
+                return []
+            available = Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).distinct()
+            return FoodSimpleSerializer(available, many=True, context=self.context).data
         except AttributeError:
             return []
 
@@ -989,7 +1023,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url', 'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
             'food_onhand', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'available_substitutes', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 

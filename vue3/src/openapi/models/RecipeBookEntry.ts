@@ -93,7 +93,7 @@ export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'bookContent'|'recipeContent'> | null): any {
+export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'book_content'|'recipe_content'> | null): any {
     if (value == null) {
         return value;
     }

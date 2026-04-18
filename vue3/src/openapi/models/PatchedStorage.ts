@@ -111,7 +111,7 @@ export function PatchedStorageFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedStorageToJSON(value?: Omit<PatchedStorage, 'createdBy'> | null): any {
+export function PatchedStorageToJSON(value?: Omit<PatchedStorage, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }
