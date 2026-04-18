@@ -397,13 +397,21 @@ const {treeActive, expandedIds, loadingIds, toggleExpand, loadMoreChildren,
     buildFlatList, updateCachedChild, clearTreeState, setOnCollapse, renderTreeCell} =
     useModelListTree(currentModel, fetchChildren, treeEnabled)
 
-/** Tree is suspended when search, filters, or non-default sorting are active.
- *  Name ascending is the default backend ordering, so it's compatible with tree mode. */
+/** Tree is suspended when search or non-default sorting are active.
+ *  Name ascending is the default backend ordering, so it's compatible with tree mode.
+ *  Filters no longer suspend the tree — when tree + filters are both on, the
+ *  backend's tree_search mode expands matches with ancestor context (E-8). */
 const effectiveTreeActive = computed(() =>
     treeActive.value
     && (!ordering.value || ordering.value === 'name')
     && !query.value
-    && activeFilterCount.value === 0
+)
+
+/** True when tree is active AND a filter is narrowing the result — the
+ *  frontend switches to the backend's ancestor-expanded response so the tree
+ *  structure around filter matches stays visible. */
+const treeSearchActive = computed(() =>
+    effectiveTreeActive.value && activeFilterCount.value > 0
 )
 
 const hasActiveSearchState = computed(() =>
@@ -581,8 +589,13 @@ function renderNameContent(item: ModelItem, col: ModelTableHeaders) {
         lines.push(h('span', {class: 'text-caption text-medium-emphasis text-truncate'}, subtitle))
     }
 
-    if (lines.length === 1) return renderer
-    return h('div', {class: 'd-flex flex-column'}, lines)
+    const content = lines.length === 1 ? renderer : h('div', {class: 'd-flex flex-column'}, lines)
+    // E-8: ancestors pulled in only as tree context render dimmer so the real
+    // filter matches stay visually emphasized.
+    if (treeSearchActive.value && item.matchedFilter === false) {
+        return h('div', {class: 'text-medium-emphasis', style: {opacity: '0.6'}}, [content])
+    }
+    return content
 }
 
 // Build dynamic cell slots for enhanced columns (programmatic — Vue 3 can't v-for on template slots)
@@ -674,9 +687,16 @@ function loadItems(options: VDataTableUpdateOptions) {
         ? (ordering.value || undefined)
         : undefined
 
+    // When filters are active in tree mode, drop `root=0` scoping and ask the
+    // backend to expand each match with its ancestors (E-8). Otherwise keep
+    // the existing root-paged tree response.
+    const treeBaseParams = treeSearchActive.value
+        ? {tree_search: true}
+        : (effectiveTreeActive.value ? {root: 0} : {})
+
     const listParams = {
         ...filterParams.value,
-        ...(effectiveTreeActive.value ? {root: 0} : {}),
+        ...treeBaseParams,
         query: query.value,
         page: options.page,
         pageSize: pageSize.value,
