@@ -26,6 +26,7 @@ from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
+from django.core.files.base import ContentFile
 from django.db import DEFAULT_DB_ALIAS
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, QuerySet
 from django.db.models import Prefetch
@@ -2876,15 +2877,22 @@ class RecipeImageViewSet(LoggingMixin, viewsets.ModelViewSet):
             filetype = mimetypes.guess_extension(response.headers.get('content-type', '')) or '.jpeg'
             image = File(io.BytesIO(response.content))
             img = handle_image(request, image, filetype)
+            if img is None:
+                return Response({'error': 'Unable to decode image from URL.'}, status=400)
+            # handle_image returns a BytesIO; wrap in ContentFile with a name so
+            # FileField can ingest it directly at create time. Previously the
+            # view tried to both .create(file=BytesIO) and then .file.save(),
+            # which failed validation because BytesIO has no .name attribute.
+            img_bytes = img.getvalue() if hasattr(img, 'getvalue') else img.read()
+            filename = f'{uuid.uuid4()}_{recipe.id}{filetype}'
             recipe_image = RecipeImage.objects.create(
                 recipe=recipe,
-                file=img,
+                file=ContentFile(img_bytes, name=filename),
                 is_primary=not RecipeImage.objects.filter(recipe=recipe, is_primary=True).exists(),
                 order=RecipeImage.objects.filter(recipe=recipe).count(),
                 created_by=request.user,
                 space=recipe.space,
             )
-            recipe_image.file.save(f'{uuid.uuid4()}_{recipe.id}{filetype}', img)
             return Response(RecipeImageSerializer(recipe_image, context={'request': request}).data, status=201)
         except Exception as e:
             # Log full exception server-side; return a generic message to the
