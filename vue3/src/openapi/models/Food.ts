@@ -271,6 +271,12 @@ export interface Food {
      * @memberof Food
      */
     readonly substituteInventory: boolean;
+    /**
+     * None for non-expanded responses, bool when tree_search=true (E-8).
+     * @type {boolean}
+     * @memberof Food
+     */
+    readonly matchedFilter: boolean;
 }
 
 /**
@@ -287,6 +293,7 @@ export function instanceOfFood(value: object): value is Food {
     if (!('availableSubstitutes' in value) || value['availableSubstitutes'] === undefined) return false;
     if (!('inInventory' in value) || value['inInventory'] === undefined) return false;
     if (!('substituteInventory' in value) || value['substituteInventory'] === undefined) return false;
+    if (!('matchedFilter' in value) || value['matchedFilter'] === undefined) return false;
     return true;
 }
 
@@ -329,10 +336,11 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
         'inInventory': json['in_inventory'],
         'substituteInventory': json['substitute_inventory'],
+        'matchedFilter': json['matched_filter'],
     };
 }
 
-export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'> | null): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'> | null): any {
     if (value == null) {
         return value;
     }
