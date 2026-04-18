@@ -11,12 +11,55 @@ export function useUrlFilters(
     const state = reactive(new Map<string, string>())
     let flushScheduled = false
 
+    function storageKey(): string | null {
+        const path = route.path
+        return path ? `url_filters:${path}` : null
+    }
+
+    function loadFromStorage(): Record<string, string> | null {
+        const key = storageKey()
+        if (!key || typeof window === 'undefined') return null
+        try {
+            const raw = window.sessionStorage.getItem(key)
+            return raw ? JSON.parse(raw) : null
+        } catch { return null }
+    }
+
+    function saveToStorage(): void {
+        const key = storageKey()
+        if (!key || typeof window === 'undefined') return
+        try {
+            if (state.size === 0) {
+                window.sessionStorage.removeItem(key)
+            } else {
+                const obj: Record<string, string> = {}
+                for (const [k, v] of state) obj[k] = v
+                window.sessionStorage.setItem(key, JSON.stringify(obj))
+            }
+        } catch { /* storage unavailable */ }
+    }
+
     function initFromRoute() {
         state.clear()
+        let matchedAny = false
         for (const def of filterDefs.value) {
             const val = route.query[def.key]
             if (val != null && val !== '') {
                 state.set(def.key, String(val))
+                matchedAny = true
+            }
+        }
+        // When the URL has no filter params but sessionStorage does,
+        // hydrate from storage so menu-nav back to the page restores the last
+        // filter set. URL always wins if it carries any filter key.
+        if (!matchedAny) {
+            const persisted = loadFromStorage()
+            if (persisted) {
+                for (const def of filterDefs.value) {
+                    const v = persisted[def.key]
+                    if (v != null && v !== '') state.set(def.key, String(v))
+                }
+                if (state.size > 0) scheduleFlush()
             }
         }
     }
@@ -76,6 +119,7 @@ export function useUrlFilters(
             router.replace({query}).finally(() => {
                 flushScheduled = false
             })
+            saveToStorage()
         })
     }
 

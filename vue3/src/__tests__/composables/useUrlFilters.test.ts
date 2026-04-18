@@ -186,6 +186,56 @@ describe('useUrlFilters (multi-param)', () => {
         })
     })
 
+    describe('session persistence (E-4)', () => {
+        beforeEach(() => {
+            window.sessionStorage.clear()
+        })
+
+        it('persists active filters to sessionStorage keyed by route path', async () => {
+            mockQuery.value = {}
+            ;(mockRoute as any).path = '/search'
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { setFilter } = useUrlFilters(defs)
+            setFilter('onHand', '1')
+            await nextTick()
+            const stored = window.sessionStorage.getItem('url_filters:/search')
+            expect(stored).toBeTruthy()
+            expect(JSON.parse(stored as string)).toEqual({ onHand: '1' })
+        })
+
+        it('hydrates from sessionStorage when URL has no filter keys', async () => {
+            ;(mockRoute as any).path = '/search'
+            window.sessionStorage.setItem('url_filters:/search', JSON.stringify({ onHand: '1' }))
+            mockQuery.value = {}
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { activeFilterCount, getFilter } = useUrlFilters(defs)
+            expect(activeFilterCount.value).toBe(1)
+            expect(getFilter('onHand')).toBe('1')
+            await nextTick()
+            const last = replacedQueries[replacedQueries.length - 1]
+            expect(last).toHaveProperty('onHand', '1')
+        })
+
+        it('URL query wins over sessionStorage when both have filters', () => {
+            ;(mockRoute as any).path = '/search'
+            window.sessionStorage.setItem('url_filters:/search', JSON.stringify({ onHand: '1' }))
+            mockQuery.value = { onHand: '0' }
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { getFilter } = useUrlFilters(defs)
+            expect(getFilter('onHand')).toBe('0')
+        })
+
+        it('clearAllFilters clears session-persisted filters', async () => {
+            ;(mockRoute as any).path = '/search'
+            mockQuery.value = { onHand: '1' }
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { clearAllFilters } = useUrlFilters(defs)
+            clearAllFilters()
+            await nextTick()
+            expect(window.sessionStorage.getItem('url_filters:/search')).toBeNull()
+        })
+    })
+
     describe('groupedFilterDefs', () => {
         it('partitions defs by group', () => {
             const defs = computed(() => makeDefs([
