@@ -546,7 +546,7 @@ function onTableUpdate(opts: VDataTableUpdateOptions) {
 }
 
 function handleRowClick(_event: PointerEvent, data: any) {
-    router.push({name: 'RecipeViewPage', params: {id: recipes.value[data.index].id}})
+    router.push({name: 'RecipeViewPage', params: {id: data.item.id}})
 }
 
 // Watcher attached in onMounted after first fetch to avoid double-fire on legacy URL migration.
