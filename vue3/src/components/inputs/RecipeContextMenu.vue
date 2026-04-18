@@ -123,6 +123,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
     deleted: [id: number]
+    'update:recipe': [recipe: Recipe | RecipeOverview]
 }>()
 
 const mealPlanDialog = ref(false)
@@ -149,15 +150,14 @@ function openPhotoEditor() {
     })
 }
 
-// Refresh recipe image when photo editor closes
+// Refresh recipe image when photo editor closes. Look the recipe up by
+// id rather than name — name is not unique and apiRecipeList could easily
+// return a different recipe. Emit update:recipe instead of mutating the
+// prop so the parent owns the state (one-way data flow).
 watch(photoEditorDialog, (open) => {
     if (!open && props.recipe.id) {
-        new ApiApi().apiRecipeList({pageSize: 1, query: props.recipe.name}).then(r => {
-            const updated = r.results?.find(rec => rec.id === props.recipe.id)
-            if (updated) {
-                (props.recipe as any).image = updated.image;
-                (props.recipe as any).imageCropData = (updated as any).imageCropData
-            }
+        new ApiApi().apiRecipeRetrieve({id: props.recipe.id}).then(updated => {
+            emit('update:recipe', updated)
         }).catch(() => {})
     }
 })
