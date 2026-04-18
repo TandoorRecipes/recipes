@@ -11401,10 +11401,16 @@ components:
         substitute_inventory:
           type: boolean
           readOnly: true
+        matched_filter:
+          type: boolean
+          description: None for non-expanded responses, bool when tree_search=true
+            (E-8).
+          readOnly: true
       required:
       - available_substitutes
       - full_name
       - in_inventory
+      - matched_filter
       - name
       - numchild
       - numrecipe
@@ -13916,6 +13922,11 @@ components:
           readOnly: true
         substitute_inventory:
           type: boolean
+          readOnly: true
+        matched_filter:
+          type: boolean
+          description: None for non-expanded responses, bool when tree_search=true
+            (E-8).
           readOnly: true
     PatchedHousehold:
       type: object

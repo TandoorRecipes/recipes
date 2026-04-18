@@ -271,6 +271,12 @@ export interface PatchedFood {
      * @memberof PatchedFood
      */
     readonly substituteInventory?: boolean;
+    /**
+     * None for non-expanded responses, bool when tree_search=true (E-8).
+     * @type {boolean}
+     * @memberof PatchedFood
+     */
+    readonly matchedFilter?: boolean;
 }
 
 /**
@@ -319,10 +325,11 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
         'inInventory': json['in_inventory'] == null ? undefined : json['in_inventory'],
         'substituteInventory': json['substitute_inventory'] == null ? undefined : json['substitute_inventory'],
+        'matchedFilter': json['matched_filter'] == null ? undefined : json['matched_filter'],
     };
 }
 
-export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'> | null): any {
+export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'> | null): any {
     if (value == null) {
         return value;
     }

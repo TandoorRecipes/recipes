@@ -1204,7 +1204,59 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         qs = self._annotate_and_prefetch(qs)
         qs = self._apply_list_filters(qs)
         qs = self._apply_ordering(qs)
+        qs = self._expand_with_ancestors(qs)
         return qs
+
+    def _expand_with_ancestors(self, qs):
+        """When `tree_search=true` is passed AND any filter is active, expand
+        the filtered queryset to include every ancestor of a match so the
+        client can render the original tree hierarchy with matches in
+        context. Each food is annotated with ``matched_filter`` (bool)
+        indicating whether it satisfied the filter itself (True) or is
+        present solely as ancestor context (False). Without this param or
+        without filters, the queryset passes through unchanged."""
+        if self.request.query_params.get('tree_search', '').lower() not in ('1', 'true', 'yes'):
+            return qs
+        if not self._has_list_filters():
+            return qs
+
+        matched = list(qs.values_list('id', 'path', 'depth'))
+        if not matched:
+            return qs
+
+        matched_ids = [row[0] for row in matched]
+        # True ancestors only — each matched node's path prefixes, not its
+        # sibling-under-same-root. Build (path_prefix, depth) pairs per level.
+        steplen = Food.steplen
+        ancestor_q = Q()
+        for _, path, depth in matched:
+            for k in range(1, depth):
+                ancestor_q |= Q(path=path[:steplen * k], depth=k)
+
+        ancestor_ids = list(Food.objects.filter(ancestor_q).values_list('id', flat=True)) if ancestor_q else []
+        all_ids = set(matched_ids) | set(ancestor_ids)
+
+        expanded = Food.objects.filter(id__in=all_ids, space=self.request.space)
+        expanded = self._annotate_and_prefetch(expanded)
+        expanded = expanded.annotate(
+            matched_filter=Case(
+                When(id__in=matched_ids, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            ),
+        )
+        return expanded.order_by(Lower('name').asc())
+
+    def _has_list_filters(self):
+        """True if any FoodViewSet list-filter query param is set."""
+        keys = (
+            'onhand', 'has_substitute', 'in_shopping_list', 'has_children',
+            'has_recipe', 'used_in_recipes', 'ignore_shopping',
+            'supermarket_category', 'has_inventory', 'inventory_location',
+            'expired', 'expiring_soon', 'query',
+        )
+        params = self.request.query_params
+        return any(params.get(k) not in (None, '') for k in keys)
 
     def _compute_substitute_flags(self, foods):
         """

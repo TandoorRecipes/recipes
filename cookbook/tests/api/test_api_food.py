@@ -1607,3 +1607,82 @@ def test_substitute_inventory_shows_false_when_substitute_has_no_inventory(u1_s1
     response = json.loads(u1_s1.get(reverse(DETAIL_URL, args=[food_a.id])).content)
     assert response['substitute_inventory'] is False
 
+
+# ==================== tree_search expansion (E-8) ====================
+
+def _tree_search(client, **params):
+    """Helper: GET food list with tree_search=true plus the given filter params."""
+    qs = '&'.join([f'{k}={v}' for k, v in params.items()])
+    r = client.get(f'{reverse(LIST_URL)}?tree_search=true&{qs}')
+    assert r.status_code == 200
+    return json.loads(r.content)
+
+
+def test_tree_search_without_filter_returns_unchanged(u1_s1, space_1):
+    """tree_search=true is a no-op when no filter is active — the flat list
+    is returned untouched, no matched_filter annotation."""
+    with scopes_disabled():
+        f1 = FoodFactory(space=space_1)
+        f2 = FoodFactory(space=space_1)
+
+    r = _tree_search(u1_s1)
+    ids = [f['id'] for f in r['results']]
+    assert f1.id in ids and f2.id in ids
+    # matched_filter is present but null when no expansion occurred
+    for food in r['results']:
+        assert food['matched_filter'] is None
+
+
+def test_tree_search_includes_ancestors_of_matched_descendant(u1_s1, space_1):
+    """With tree_search=true + a filter that matches only a descendant,
+    the response includes that descendant AND every ancestor on its path.
+    Ancestors are annotated matched_filter=False; the descendant is True."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        root = FoodFactory(space=space_1)
+        middle = FoodFactory(space=space_1)
+        leaf = FoodFactory(space=space_1)
+        middle.move(root, 'first-child')
+        leaf.move(Food.objects.get(id=middle.id), 'first-child')
+        # leaf is on-hand; ancestors are not
+        Food.objects.get(id=leaf.id).onhand_users.add(user)
+
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
+
+    r = _tree_search(u1_s1, onhand='true')
+    by_id = {f['id']: f for f in r['results']}
+    assert leaf.id in by_id
+    assert middle.id in by_id
+    assert root.id in by_id
+    assert by_id[leaf.id]['matched_filter'] is True
+    assert by_id[middle.id]['matched_filter'] is False
+    assert by_id[root.id]['matched_filter'] is False
+
+
+def test_tree_search_excludes_unrelated_siblings(u1_s1, space_1):
+    """Filter expansion adds ancestors only — siblings on unrelated
+    branches are NOT pulled in."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        root = FoodFactory(space=space_1)
+        branch_a = FoodFactory(space=space_1)
+        branch_b = FoodFactory(space=space_1)
+        leaf_a = FoodFactory(space=space_1)
+        leaf_b = FoodFactory(space=space_1)
+        branch_a.move(root, 'first-child')
+        branch_b.move(root, 'first-child')
+        leaf_a.move(Food.objects.get(id=branch_a.id), 'first-child')
+        leaf_b.move(Food.objects.get(id=branch_b.id), 'first-child')
+        # only leaf_a is on-hand
+        Food.objects.get(id=leaf_a.id).onhand_users.add(user)
+
+    caches['default'].delete(f'household_user_ids_{space_1.id}_{user.id}')
+
+    r = _tree_search(u1_s1, onhand='true')
+    ids = {f['id'] for f in r['results']}
+    assert leaf_a.id in ids
+    assert branch_a.id in ids
+    assert root.id in ids
+    assert leaf_b.id not in ids  # unrelated leaf
+    assert branch_b.id not in ids  # unrelated ancestor branch
+
