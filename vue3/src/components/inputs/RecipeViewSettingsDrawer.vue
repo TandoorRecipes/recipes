@@ -2,6 +2,7 @@
     <TabbedDrawer
         v-model="isOpen"
         v-model:pinned="isPinned"
+        :pinnable="false"
         :tabs="drawerTabs"
         :width="320"
         :use-sheet="mobile"
