@@ -27,6 +27,7 @@ from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
 # from cookbook.integration.pdfexport import PDFexport  # pyppeteer dependency removed
 from cookbook.integration.pepperplate import Pepperplate
+from cookbook.integration.pestle import Pestle
 from cookbook.integration.plantoeat import Plantoeat
 from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipekeeper import RecipeKeeper
@@ -90,6 +91,8 @@ def get_integration(request, export_type):
         return Rezeptsuitede(request, export_type)
     if export_type == ImportExportBase.GOURMET:
         return Gourmet(request, export_type)
+    if export_type == ImportExportBase.PESTLE:
+        return Pestle(request, export_type)
 
 
 @group_required('user')
