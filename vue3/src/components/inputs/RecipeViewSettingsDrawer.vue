@@ -81,21 +81,6 @@
                 :label="$t('IngredientStatusIcons')"
                 hide-details density="compact" class="px-4"
             />
-            <v-switch
-                v-model="deviceSettings.recipe_showIngredientActions"
-                :label="$t('IngredientActions')"
-                hide-details density="compact" class="px-4"
-            />
-            <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
-            <v-select
-                v-if="deviceSettings.recipe_showIngredientActions"
-                v-model="deviceSettings.recipe_contextMenuColor"
-                :label="$t('HighlightWhen')"
-                :items="contextMenuColorOptions"
-                item-title="label" item-value="value"
-                hide-details density="compact" variant="outlined"
-                class="px-4 py-2"
-            />
         </template>
     </TabbedDrawer>
 </template>
