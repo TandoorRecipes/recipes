@@ -248,6 +248,10 @@ import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_BATCH_ACTIONS, FOOD_STAT_DEFS, 
 import {KEYWORD_FILTER_DEFS, KEYWORD_ACTION_DEFS, KEYWORD_STAT_DEFS, KEYWORD_LIST_SETTINGS, KEYWORD_SORT_OPTIONS} from "@/composables/modellist/KeywordList";
 import {UNIT_FILTER_DEFS, UNIT_ACTION_DEFS, UNIT_STAT_DEFS, UNIT_LIST_SETTINGS, UNIT_SORT_OPTIONS} from "@/composables/modellist/UnitList";
 import {AUTOMATION_FILTER_DEFS, AUTOMATION_ACTION_DEFS, AUTOMATION_STAT_DEFS, AUTOMATION_LIST_SETTINGS, AUTOMATION_SORT_OPTIONS} from "@/composables/modellist/AutomationList";
+import {COOKLOG_FILTER_DEFS, COOKLOG_ACTION_DEFS, COOKLOG_LIST_SETTINGS, COOKLOG_SORT_OPTIONS} from "@/composables/modellist/CookLogList";
+import {VIEWLOG_LIST_SETTINGS, VIEWLOG_SORT_OPTIONS} from "@/composables/modellist/ViewLogList";
+import {USERFILE_ACTION_DEFS, USERFILE_LIST_SETTINGS, USERFILE_SORT_OPTIONS} from "@/composables/modellist/UserFileList";
+import {CUSTOMFILTER_FILTER_DEFS, CUSTOMFILTER_ACTION_DEFS, CUSTOMFILTER_LIST_SETTINGS, CUSTOMFILTER_SORT_OPTIONS} from "@/composables/modellist/CustomFilterList";
 
 export const TFood = {
     name: 'Food',
@@ -488,9 +492,14 @@ export const TCustomFilter = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Type', key: 'type', type: 'text', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: CUSTOMFILTER_FILTER_DEFS,
+    actionDefs: CUSTOMFILTER_ACTION_DEFS,
+    listSettings: CUSTOMFILTER_LIST_SETTINGS,
+    sortDefs: CUSTOMFILTER_SORT_OPTIONS,
 } as Model
 registerModel(TCustomFilter)
 
@@ -694,9 +703,13 @@ export const TUserFile = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Size', key: 'fileSizeKb', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: USERFILE_ACTION_DEFS,
+    listSettings: USERFILE_LIST_SETTINGS,
+    sortDefs: USERFILE_SORT_OPTIONS,
 } as Model
 registerModel(TUserFile)
 
@@ -740,10 +753,16 @@ export const TCookLog = {
     toStringKeys: ['recipe'],
 
     tableHeaders: [
-        {title: 'Recipe', key: 'recipe'},
-        {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Recipe', key: 'recipe', type: 'text'},
+        {title: 'Rating', key: 'rating', type: 'number', align: 'end', hidden: true},
+        {title: 'Servings', key: 'servings', type: 'number', align: 'end', hidden: true},
+        {title: 'Created', key: 'createdAt', type: 'text'},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: COOKLOG_FILTER_DEFS,
+    actionDefs: COOKLOG_ACTION_DEFS,
+    listSettings: COOKLOG_LIST_SETTINGS,
+    sortDefs: COOKLOG_SORT_OPTIONS,
 } as Model
 registerModel(TCookLog)
 
@@ -760,10 +779,12 @@ export const TViewLog = {
     toStringKeys: ['recipe'],
 
     tableHeaders: [
-        {title: 'Recipe', key: 'recipe'},
-        {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Recipe', key: 'recipe', type: 'text'},
+        {title: 'Created', key: 'createdAt', type: 'text'},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    listSettings: VIEWLOG_LIST_SETTINGS,
+    sortDefs: VIEWLOG_SORT_OPTIONS,
 } as Model
 registerModel(TViewLog)
 
