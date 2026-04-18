@@ -46,7 +46,7 @@
         <!-- Crop dialog -->
         <v-dialog v-model="cropDialog" max-width="1000">
             <v-card>
-                <v-card-title>{{ $t('AdjustFocalPoint') }}</v-card-title>
+                <v-card-title>{{ $t('Crop') }}</v-card-title>
                 <v-card-text>
                     <image-editor
                         ref="cropEditorRef"
