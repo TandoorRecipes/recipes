@@ -58,7 +58,11 @@
 
 <script setup lang="ts">
 import {computed, onBeforeUnmount, ref, watch} from "vue"
-import Cropper from "cropperjs"
+// Import the type synchronously (erased at build time) so the cropperjs
+// runtime chunk (~150KB) is only fetched when the editor actually mounts
+// and calls ensureCropper(), instead of loading with every page that ships
+// a RecipeImageEditor or UserFileField.
+import type CropperType from "cropperjs"
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore"
 import {useI18n} from "vue-i18n"
 import CropImage from "@/components/display/CropImage.vue"
@@ -87,7 +91,15 @@ const emit = defineEmits<{
 
 const {t} = useI18n()
 const imgRef = ref<HTMLImageElement | null>(null)
-const cropperInstance = ref<Cropper | null>(null)
+const cropperInstance = ref<CropperType | null>(null)
+let CropperCtor: typeof CropperType | null = null
+
+async function ensureCropper(): Promise<typeof CropperType> {
+    if (!CropperCtor) {
+        CropperCtor = (await import("cropperjs")).default
+    }
+    return CropperCtor
+}
 const cropperSrc = ref<string | null>(props.imageSrc ?? null)
 const selectedFile = ref<File | null>(null)
 const liveCropData = ref<Record<string, number> | null>(null)
@@ -119,11 +131,13 @@ function destroyCropper() {
     lastSelectionKey = ''
 }
 
-function onImageLoad() {
+async function onImageLoad() {
     if (!imgRef.value) return
     destroyCropper()
 
-    cropperInstance.value = new Cropper(imgRef.value, {})
+    const Ctor = await ensureCropper()
+    if (!imgRef.value) return  // unmounted while loading cropperjs
+    cropperInstance.value = new Ctor(imgRef.value, {})
 
     const cropperImage = cropperInstance.value.getCropperImage()
     if (!cropperImage) return
