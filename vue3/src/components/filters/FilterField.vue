@@ -7,7 +7,7 @@
         :model-value="getFilter(def.key)"
         @update:model-value="setFilter(def.key, $event)"
     />
-    <div v-else-if="def.type === 'model-select' && def.modelName" :class="wrapClass">
+    <div v-else-if="def.type === 'model-select' && def.modelName" :class="wrapClass" @click.stop>
         <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
         <ModelSelect
             :model="def.modelName"
@@ -18,7 +18,7 @@
             mode="single"
             :can-clear="true"
             :search-on-load="true"
-            :append-to-body="true"
+            :append-to-body="!inDrawer"
             :hide-details="true"
         />
     </div>
@@ -143,8 +143,13 @@ const props = withDefaults(defineProps<{
     setFilter: (key: string, value: FilterValue) => void
     clearFilter: (key: string) => void
     compact?: boolean
+    /** When the field renders inside a temporary drawer, avoid teleporting
+     *  the dropdown to document.body so clicks on options don't register as
+     *  outside-drawer and dismiss the panel (E-2). */
+    inDrawer?: boolean
 }>(), {
     compact: false,
+    inDrawer: false,
 })
 
 const wrapClass = computed(() => props.compact ? 'mt-1' : 'px-4 py-1')
