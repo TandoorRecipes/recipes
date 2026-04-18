@@ -1,4 +1,4 @@
-import {computed, type ComputedRef, type Ref, ref, shallowReactive, shallowRef, watch} from "vue"
+import {computed, type ComputedRef, getCurrentScope, onScopeDispose, type Ref, ref, shallowReactive, shallowRef, watch} from "vue"
 import type {EditorSupportedTypes, GenericModel} from "@/types/Models"
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore"
 import type {FlatTreeNode, BreadcrumbItem, HierarchyCacheEntry} from "./types"
@@ -261,6 +261,18 @@ export function useHierarchyTree(options: UseHierarchyTreeOptions) {
     // --- Search ---
 
     let searchTimeout: ReturnType<typeof setTimeout> | null = null
+
+    // Cancel any pending debounced search when the owning scope tears down
+    // (e.g. the hierarchy editor dialog closes mid-debounce). Guarded with
+    // getCurrentScope() so non-component callers don't error.
+    if (getCurrentScope()) {
+        onScopeDispose(() => {
+            if (searchTimeout) {
+                clearTimeout(searchTimeout)
+                searchTimeout = null
+            }
+        })
+    }
 
     async function doSearch(query: string): Promise<void> {
         searchQuery.value = query

@@ -1,4 +1,4 @@
-import {computed, type ComputedRef, type Ref} from 'vue'
+import {computed, type ComputedRef} from 'vue'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import type {FilterDef} from './modellist/types'
 

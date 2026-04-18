@@ -47,52 +47,6 @@
                 </template>
             </keywords-component>
         </div>
-
-
-        <v-card :to="dest" :style="{'height': props.height}" v-if="false">
-            <v-tooltip
-                class="align-center justify-center"
-                location="top center" origin="overlap"
-                no-click-animation
-                :open-on-hover="props.recipe.description != null && props.recipe.description != ''"
-                contained
-            >
-                <template v-slot:activator="{ props }">
-                    <recipe-image
-                        height="70%"
-                        width="100%"
-                        :recipe="props.recipe"
-                    >
-
-                    </recipe-image>
-
-                    <v-divider class="p-0" v-if="props.recipe.image == null"></v-divider>
-
-                </template>
-                <div v-if="props.recipe.description != null && props.recipe.description != ''">
-                    {{ props.recipe.description }}
-                </div>
-            </v-tooltip>
-            <v-card-item>
-                <div class="text-rows-2">
-                    <h3>{{ props.recipe.name }}</h3>
-                </div>
-                <!-- TODO decide if context menu should be re-added (maybe make it a setting) -->
-                <!-- <recipe-context-menu class="float-end" :recipe="recipe"></recipe-context-menu>-->
-            </v-card-item>
-            <!--            <v-card-text>-->
-            <!--                <div class="text-rows-2">-->
-            <!--                    <keywords-component variant="outlined" :keywords="componentProps.recipe.keywords">-->
-            <!--                        <template #prepend>-->
-            <!--                            <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined" v-if="componentProps.recipe.workingTime != undefined && componentProps.recipe.workingTime > 0">-->
-            <!--                                {{ recipe.workingTime! + recipe.waitingTime! }}-->
-            <!--                            </v-chip>-->
-            <!--                        </template>-->
-            <!--                    </keywords-component>-->
-            <!--                </div>-->
-            <!--            </v-card-text>-->
-
-        </v-card>
     </template>
     <template v-else>
         <v-card :style="{'height': props.height}">
