@@ -89,4 +89,21 @@ describe('IngredientContextMenu', () => {
         const w = mountMenu({...INGREDIENT, food: {...INGREDIENT.food, onhand: true}})
         expect(w.exists()).toBe(true)
     })
+
+    // E-12: changing recipe_contextMenuColor via the display-settings drawer
+    // must re-evaluate the computed triggerColor on open menus. Originally the
+    // computed read the setting via a fresh `useUserPreferenceStore()` call
+    // inside the computed body, which did not register as a dependency, so
+    // picking a new HighlightWhen option left the button uncolored.
+    it('activator color reacts to deviceSettings.recipe_contextMenuColor', async () => {
+        const onhandFood = {...INGREDIENT.food, foodOnhand: true}
+        const w = mountMenu({...INGREDIENT, food: onhandFood})
+        const store = (w.vm.$pinia as any)._s.get('user_preference_store')
+        store.deviceSettings.recipe_contextMenuColor = 'never'
+        await w.vm.$nextTick()
+        expect(w.find('.v-btn').classes().some(c => c.startsWith('text-success'))).toBe(false)
+        store.deviceSettings.recipe_contextMenuColor = 'onhand'
+        await w.vm.$nextTick()
+        expect(w.find('.v-btn').classes().some(c => c.startsWith('text-success'))).toBe(true)
+    })
 })

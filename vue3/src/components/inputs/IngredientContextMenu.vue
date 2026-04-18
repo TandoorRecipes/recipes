@@ -102,6 +102,7 @@ const emit = defineEmits<{
 const {t} = useI18n()
 const {addToShopping, removeFromShopping, checkShoppingStatus} = useShoppingActions()
 const {quickAddToInventory, removeFromInventory, checkInventoryStatus} = useInventoryActions()
+const userPrefStore = useUserPreferenceStore()
 
 const menuOpen = ref(false)
 const shoppingStatus = ref<boolean | null>(null)
@@ -117,7 +118,7 @@ const confirmDialogRef = ref<InstanceType<typeof ActionConfirmDialog> | null>(nu
 const inventoryDialogRef = ref<InstanceType<typeof InventoryQuickAddDialog> | null>(null)
 
 const triggerColor = computed(() => {
-    const mode = useUserPreferenceStore().deviceSettings.recipe_contextMenuColor
+    const mode = userPrefStore.deviceSettings.recipe_contextMenuColor
     if (mode === 'never') return undefined
     const food = props.ingredient.food
     if (!food) return undefined
