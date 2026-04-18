@@ -1851,11 +1851,6 @@ paths:
           type: integer
         description: Filter by inventory location ID (only entries with amount > 0)
       - in: query
-        name: limit
-        schema:
-          type: string
-        description: limit number of entries to return
-      - in: query
         name: onhand
         schema:
           type: boolean
@@ -1865,8 +1860,8 @@ paths:
         schema:
           type: string
         description: 'Order results by field. Allowed: name, -name, numrecipe, -numrecipe,
-          numchild, -numchild,supermarket_category__name, -supermarket_category__name.
-          Ignored when query is active.'
+          numchild, -numchild, supermarket_category__name, -supermarket_category__name,
+          created_at, -created_at. Ignored when query is active.'
       - name: page
         required: false
         in: query
@@ -1885,11 +1880,6 @@ paths:
           type: string
         description: Search foods by name (fuzzy or contains depending on user search
           preferences)
-      - in: query
-        name: random
-        schema:
-          type: string
-        description: randomly orders entries (only works together with limit)
       - in: query
         name: root
         schema:
@@ -1911,12 +1901,6 @@ paths:
         schema:
           type: integer
         description: Return all self and children of food with ID [int].
-      - in: query
-        name: updated_at
-        schema:
-          type: string
-        description: if model has an updated_at timestamp, filter only models updated
-          at or after datetime
       - in: query
         name: used_in_recipes
         schema:
@@ -11146,27 +11130,40 @@ components:
         name:
           type: string
           maxLength: 128
-        search:
-          type: string
+        type:
+          $ref: '#/components/schemas/CustomFilterTypeEnum'
+        search: {}
         shared:
           type: array
           items:
             $ref: '#/components/schemas/User'
         created_by:
-          type: integer
+          allOf:
+          - $ref: '#/components/schemas/User'
           readOnly: true
       required:
       - created_by
       - name
-      - search
+    CustomFilterTypeEnum:
+      enum:
+      - RECIPE
+      - FOOD
+      - KEYWORD
+      type: string
+      description: |-
+        * `RECIPE` - Recipe
+        * `FOOD` - Food
+        * `KEYWORD` - Keyword
     DefaultPageEnum:
       enum:
+      - HOME
       - SEARCH
       - PLAN
       - BOOKS
       - SHOPPING
       type: string
       description: |-
+        * `HOME` - Home
         * `SEARCH` - Search
         * `PLAN` - Meal-Plan
         * `BOOKS` - Books
@@ -12026,7 +12023,9 @@ components:
         food:
           $ref: '#/components/schemas/Food'
         unit:
-          $ref: '#/components/schemas/Unit'
+          allOf:
+          - $ref: '#/components/schemas/Unit'
+          nullable: true
         amount:
           type: number
           format: double
@@ -12409,6 +12408,16 @@ components:
         * `DB` - Dropbox
         * `NEXTCLOUD` - Nextcloud
         * `LOCAL` - Local
+    NavTextColorEnum:
+      enum:
+      - BLANK
+      - LIGHT
+      - DARK
+      type: string
+      description: |-
+        * `BLANK` - -------
+        * `LIGHT` - Light
+        * `DARK` - Dark
     NutritionInformation:
       type: object
       properties:
@@ -13718,14 +13727,16 @@ components:
         name:
           type: string
           maxLength: 128
-        search:
-          type: string
+        type:
+          $ref: '#/components/schemas/CustomFilterTypeEnum'
+        search: {}
         shared:
           type: array
           items:
             $ref: '#/components/schemas/User'
         created_by:
-          type: integer
+          allOf:
+          - $ref: '#/components/schemas/User'
           readOnly: true
     PatchedExportLog:
       type: object
@@ -14023,7 +14034,9 @@ components:
         food:
           $ref: '#/components/schemas/Food'
         unit:
-          $ref: '#/components/schemas/Unit'
+          allOf:
+          - $ref: '#/components/schemas/Unit'
+          nullable: true
         amount:
           type: number
           format: double
@@ -14752,7 +14765,7 @@ components:
           type: string
           maxLength: 8
         nav_text_color:
-          $ref: '#/components/schemas/SpaceNavTextColorEnum'
+          $ref: '#/components/schemas/NavTextColorEnum'
         logo_color_32:
           allOf:
           - $ref: '#/components/schemas/UserFileView'
@@ -14803,8 +14816,6 @@ components:
           nullable: true
         space_setup_completed:
           type: boolean
-        household_setup_completed:
-          type: boolean
     PatchedStep:
       type: object
       description: Adds nested create feature
@@ -14842,9 +14853,6 @@ components:
           type: integer
           nullable: true
         step_recipe_data:
-          readOnly: true
-        numrecipe:
-          type: integer
           readOnly: true
         show_ingredients_table:
           type: boolean
@@ -15218,8 +15226,6 @@ components:
         nav_bg_color:
           type: string
           maxLength: 8
-        nav_text_color:
-          $ref: '#/components/schemas/UserPreferenceNavTextColorEnum'
         nav_show_logo:
           type: boolean
         default_unit:
@@ -15228,8 +15234,6 @@ components:
         default_page:
           $ref: '#/components/schemas/DefaultPageEnum'
         use_fractions:
-          type: boolean
-        use_kj:
           type: boolean
         nav_sticky:
           type: boolean
@@ -15287,6 +15291,7 @@ components:
         food_children_exist:
           type: boolean
           readOnly: true
+        start_page_sections: {}
     PatchedUserSpace:
       type: object
       description: Adds nested create feature
@@ -15812,9 +15817,6 @@ components:
         new:
           type: boolean
           readOnly: true
-        recent:
-          type: string
-          readOnly: true
       required:
       - created_at
       - created_by
@@ -15825,7 +15827,6 @@ components:
       - name
       - new
       - rating
-      - recent
       - servings
       - servings_text
       - updated_at
@@ -16452,7 +16453,7 @@ components:
           type: string
           maxLength: 8
         nav_text_color:
-          $ref: '#/components/schemas/SpaceNavTextColorEnum'
+          $ref: '#/components/schemas/NavTextColorEnum'
         logo_color_32:
           allOf:
           - $ref: '#/components/schemas/UserFileView'
@@ -16503,8 +16504,6 @@ components:
           nullable: true
         space_setup_completed:
           type: boolean
-        household_setup_completed:
-          type: boolean
       required:
       - ai_monthly_credits_used
       - allow_sharing
@@ -16517,16 +16516,6 @@ components:
       - max_users
       - recipe_count
       - user_count
-    SpaceNavTextColorEnum:
-      enum:
-      - BLANK
-      - LIGHT
-      - DARK
-      type: string
-      description: |-
-        * `BLANK` - -------
-        * `LIGHT` - Light
-        * `DARK` - Dark
     SpaceThemeEnum:
       enum:
       - BLANK
@@ -16583,15 +16572,11 @@ components:
           nullable: true
         step_recipe_data:
           readOnly: true
-        numrecipe:
-          type: integer
-          readOnly: true
         show_ingredients_table:
           type: boolean
       required:
       - ingredients
       - instructions_markdown
-      - numrecipe
       - step_recipe_data
     Storage:
       type: object
@@ -17072,8 +17057,6 @@ components:
         nav_bg_color:
           type: string
           maxLength: 8
-        nav_text_color:
-          $ref: '#/components/schemas/UserPreferenceNavTextColorEnum'
         nav_show_logo:
           type: boolean
         default_unit:
@@ -17082,8 +17065,6 @@ components:
         default_page:
           $ref: '#/components/schemas/DefaultPageEnum'
         use_fractions:
-          type: boolean
-        use_kj:
           type: boolean
         nav_sticky:
           type: boolean
@@ -17141,18 +17122,11 @@ components:
         food_children_exist:
           type: boolean
           readOnly: true
+        start_page_sections: {}
       required:
       - food_children_exist
       - food_inherit_default
       - user
-    UserPreferenceNavTextColorEnum:
-      enum:
-      - LIGHT
-      - DARK
-      type: string
-      description: |-
-        * `LIGHT` - Light
-        * `DARK` - Dark
     UserSpace:
       type: object
       description: Adds nested create feature
