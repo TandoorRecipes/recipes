@@ -1579,14 +1579,21 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
     def get_fallback_image(self, obj):
         if obj.image:
             return None
-        # Prefer the queryset-level annotation set by RecipeBookViewSet to avoid
-        # a per-book query in list contexts. Falls back to a direct query for
-        # detail/non-viewset callers.
-        image_path = getattr(obj, '_fallback_image_path', None)
+        # Prefer the queryset-level annotations set by RecipeBookViewSet to
+        # avoid per-book queries in list contexts. Order: legacy Recipe.image
+        # column first (back-compat), then the primary RecipeImage. Detail /
+        # non-viewset callers fall through to a direct query with the same
+        # is_primary DESC, order ASC, id ASC contract.
+        image_path = getattr(obj, '_fallback_image_path', None) or getattr(obj, '_fallback_recipeimage_path', None)
         if not image_path:
             entry = RecipeBookEntry.objects.filter(book=obj).select_related('recipe').first()
-            if entry and entry.recipe and entry.recipe.image:
-                image_path = entry.recipe.image.name
+            if entry and entry.recipe:
+                if entry.recipe.image:
+                    image_path = entry.recipe.image.name
+                else:
+                    ri = entry.recipe.images.order_by('-is_primary', 'order', 'id').first()
+                    if ri and ri.file:
+                        image_path = ri.file.name
         if not image_path:
             return None
         request = self.context.get('request')

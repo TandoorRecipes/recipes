@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Household, RecipeBook, RecipeBookEntry, UserFile, UserSpace
+from cookbook.models import Household, RecipeBook, RecipeBookEntry, RecipeImage, UserFile, UserSpace
 from cookbook.tests.factories import UserFileFactory
 
 LIST_URL = 'api:recipebook-list'
@@ -219,3 +219,44 @@ def test_fallback_image(obj_1, u1_s1, space_1, recipe_1_s1,
         assert 'test-fallback.jpg' in data['fallback_image']
     else:
         assert data.get('fallback_image') is None
+
+
+def test_fallback_image_from_recipe_image(obj_1, u1_s1, space_1, recipe_1_s1):
+    """fallback_image falls through to RecipeImage (primary first) when legacy column is empty."""
+    with scopes_disabled():
+        # No legacy column, two RecipeImage rows with different is_primary/order.
+        recipe_1_s1.image = ''
+        recipe_1_s1.save()
+        RecipeImage.objects.create(
+            recipe=recipe_1_s1, file='recipes/non-primary.jpg',
+            is_primary=False, order=1, created_by=auth.get_user(u1_s1), space=space_1,
+        )
+        RecipeImage.objects.create(
+            recipe=recipe_1_s1, file='recipes/primary.jpg',
+            is_primary=True, order=0, created_by=auth.get_user(u1_s1), space=space_1,
+        )
+        RecipeBookEntry.objects.create(book=obj_1, recipe=recipe_1_s1)
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[obj_1.id]))
+    data = json.loads(r.content)
+    assert data.get('fallback_image')
+    assert 'primary.jpg' in data['fallback_image']
+    assert 'non-primary.jpg' not in data['fallback_image']
+
+
+def test_fallback_image_list_uses_annotation(obj_1, u1_s1, space_1, recipe_1_s1):
+    """List-view annotation path resolves RecipeImage primary (not legacy only)."""
+    with scopes_disabled():
+        recipe_1_s1.image = ''
+        recipe_1_s1.save()
+        RecipeImage.objects.create(
+            recipe=recipe_1_s1, file='recipes/list-primary.jpg',
+            is_primary=True, order=0, created_by=auth.get_user(u1_s1), space=space_1,
+        )
+        RecipeBookEntry.objects.create(book=obj_1, recipe=recipe_1_s1)
+
+    r = u1_s1.get(reverse(LIST_URL))
+    data = json.loads(r.content)
+    book = next(b for b in data['results'] if b['id'] == obj_1.id)
+    assert book.get('fallback_image')
+    assert 'list-primary.jpg' in book['fallback_image']

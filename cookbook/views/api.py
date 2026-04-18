@@ -1761,19 +1761,30 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
         if order_field != 'id':
             ordering.append('id')
 
-        # Annotate each book with its first entry's recipe image path so the
+        # Annotate each book with its first entry's image path so the
         # serializer's `fallback_image` field is O(1) per book in list contexts
-        # instead of issuing a per-book query.
+        # instead of issuing a per-book query. Two annotations cover both
+        # image stores: legacy Recipe.image column AND the new RecipeImage
+        # rows (migration 0246 copies legacy forward but not every deployment
+        # will have run it). Serializer prefers legacy first, then primary
+        # RecipeImage.
         from django.db.models import OuterRef, Subquery
-        first_entry_image = Subquery(
+        first_entry_legacy_image = Subquery(
             RecipeBookEntry.objects.filter(book=OuterRef('pk'))
+            .exclude(recipe__image='').exclude(recipe__image__isnull=True)
             .order_by('id')
             .values('recipe__image')[:1]
+        )
+        first_entry_recipeimage = Subquery(
+            RecipeImage.objects.filter(recipe__recipebookentry__book=OuterRef('pk'))
+            .order_by('recipe__recipebookentry__id', '-is_primary', 'order', 'id')
+            .values('file')[:1]
         )
 
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct().annotate(
-            _fallback_image_path=first_entry_image,
+            _fallback_image_path=first_entry_legacy_image,
+            _fallback_recipeimage_path=first_entry_recipeimage,
         ).order_by(*ordering)
         return super().get_queryset()
 
