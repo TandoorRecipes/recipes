@@ -9,7 +9,7 @@ from django.utils import translation
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY, TextSearchConfig
-from cookbook.models import CustomFilter, SearchPreference
+from cookbook.models import CustomFilter, Recipe, SearchPreference
 from recipes import settings
 
 _NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
@@ -291,24 +291,26 @@ class RecipeSearch:
         if params.new:
             qs = qs.with_new_flag()
 
-        # Annotation + filter methods
+        # Rating: unrated and rating_* are mutually exclusive — unrated forces
+        # rating IS NULL and by_rating would then layer rating >= N on top,
+        # silently returning an empty set. Short-circuit by_rating when the
+        # caller asked for unrated.
         if params.unrated:
             qs = qs.with_rating(user).filter(rating__isnull=True)
-        qs = qs.by_rating(user, exact=params.rating, gte=params.rating_gte, lte=params.rating_lte)
+        else:
+            qs = qs.by_rating(user, exact=params.rating, gte=params.rating_gte, lte=params.rating_lte)
         qs = qs.by_times_cooked(user, space, exact=params.timescooked, gte=params.timescooked_gte, lte=params.timescooked_lte)
         qs = qs.by_cooked_on(user, space, gte=params.cookedon_gte, lte=params.cookedon_lte)
         qs = qs.by_viewed_on(user, space, gte=params.viewedon_gte, lte=params.viewedon_lte)
 
-        # Pure filters
+        # Pure scalar filters first — these stay table-level and don't force
+        # M2M joins, so applying them before entity filters keeps the join
+        # fan-out small for later stages.
         qs = qs.by_created_on(exact=params.createdon, gte=params.createdon_gte, lte=params.createdon_lte)
         qs = qs.by_updated_on(exact=params.updatedon, gte=params.updatedon_gte, lte=params.updatedon_lte)
         qs = qs.by_created_by(params.createdby)
         qs = qs.by_internal(params.internal)
         qs = qs.by_steps(params.steps)
-        qs = qs.by_units(
-            or_=params.units['or'], and_=params.units['and'],
-            or_not=params.units['or_not'], and_not=params.units['and_not'],
-        )
 
         if params.working_time_gte is not None:
             qs = qs.filter(working_time__gte=params.working_time_gte)
@@ -332,12 +334,20 @@ class RecipeSearch:
             qs = qs.exclude(image__isnull=True).exclude(image='')
         elif params.has_photo is False:
             qs = qs.filter(Q(image__isnull=True) | Q(image=''))
+        # has_keywords via subquery avoids fanning rows through the keywords
+        # M2M join before the by_keywords / by_foods / by_books joins below.
         if params.has_keywords is True:
-            qs = qs.filter(keywords__isnull=False).distinct()
+            qs = qs.filter(id__in=Recipe.objects.filter(keywords__isnull=False).values('id'))
         elif params.has_keywords is False:
-            qs = qs.filter(keywords__isnull=True)
+            qs = qs.filter(id__in=Recipe.objects.filter(keywords__isnull=True).values('id'))
 
-        # Entity filters
+        # Entity / M2M filters — these join and fan rows out, so they must
+        # come AFTER the scalar filters above to keep the intermediate row
+        # count small.
+        qs = qs.by_units(
+            or_=params.units['or'], and_=params.units['and'],
+            or_not=params.units['or_not'], and_not=params.units['and_not'],
+        )
         qs = qs.by_keywords(
             or_=params.keywords['or'], and_=params.keywords['and'],
             or_not=params.keywords['or_not'], and_not=params.keywords['and_not'],
