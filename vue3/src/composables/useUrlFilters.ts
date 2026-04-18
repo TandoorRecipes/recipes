@@ -61,7 +61,6 @@ export function useUrlFilters(
         if (flushScheduled) return
         flushScheduled = true
         nextTick(() => {
-            flushScheduled = false
             const query: Record<string, string | string[]> = {}
             for (const [k, v] of Object.entries(route.query)) {
                 if (!filterDefs.value.some(d => d.key === k)) {
@@ -71,7 +70,12 @@ export function useUrlFilters(
             for (const [k, v] of state) {
                 query[k] = v
             }
-            router.replace({query})
+            // Keep the guard set across the router update so the route.query
+            // watcher skips the re-entry we just caused; clear it only once
+            // navigation settles (finally so a cancelled nav still clears it).
+            router.replace({query}).finally(() => {
+                flushScheduled = false
+            })
         })
     }
 
