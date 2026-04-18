@@ -66,7 +66,7 @@ function makeRouter(initialQuery: Record<string, any> = {}) {
     return {router, initialQuery}
 }
 
-async function mountSearchPage(initialQuery: Record<string, any> = {}, viewMode: 'table' | 'grid' = 'grid') {
+async function mountSearchPage(initialQuery: Record<string, any> = {}, viewMode: 'table' | 'grid' = 'grid', deviceOverrides: Record<string, any> = {}) {
     const prePopulatePlugin: PiniaPlugin = ({store}) => {
         if (store.$id === 'user_preference_store') {
             store.userSettings = makeUserPreference() as any
@@ -74,6 +74,8 @@ async function mountSearchPage(initialQuery: Record<string, any> = {}, viewMode:
                 search_itemsPerPage: 25,
                 search_viewMode: viewMode,
                 search_visibleFilters: [],
+                search_showStats: false,
+                ...deviceOverrides,
             } as any
         }
     }
@@ -103,6 +105,7 @@ describe('SearchPage (Phase 3 rewrite)', () => {
         resetApiMock()
         apiMock.apiRecipeList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
         apiMock.apiCustomFilterList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
+        apiMock.apiRecipeStatsRetrieve = vi.fn().mockResolvedValue({total: 0, makenow_ready: 0, new: 0, unrated: 0, never_cooked: 0, private: 0})
     })
 
     describe('initial fetch', () => {
@@ -214,6 +217,21 @@ describe('SearchPage (Phase 3 rewrite)', () => {
             expect(callsAfter).toBeGreaterThan(callsBefore)
             wrapper.unmount()
             vi.useRealTimers()
+        })
+
+        // E-1: when the stats footer is on, SearchPage hits the stats endpoint on
+        // mount and renders the result; the toggle gates both the request and the UI.
+        it('does not fetch stats when search_showStats is false', async () => {
+            await mountSearchPage()
+            await flushPromises()
+            expect(apiMock.apiRecipeStatsRetrieve).not.toHaveBeenCalled()
+        })
+
+        it('fetches stats on mount when search_showStats is on', async () => {
+            apiMock.apiRecipeStatsRetrieve = vi.fn().mockResolvedValue({total: 5, makenow_ready: 2, new: 1, unrated: 3, never_cooked: 2, private: 0})
+            await mountSearchPage({}, 'grid', {search_showStats: true})
+            await flushPromises()
+            expect(apiMock.apiRecipeStatsRetrieve).toHaveBeenCalled()
         })
 
         // E-7: changing the items-per-page dropdown must not clear active filters.

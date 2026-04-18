@@ -198,6 +198,18 @@
             </v-col>
         </v-row>
 
+        <v-row v-if="showStats" class="mt-1">
+            <v-col>
+                <ModelListStatsFooter
+                    :page-count="recipes.length"
+                    :item-count="tableItemCount"
+                    :stats="stats"
+                    :stat-defs="RECIPE_STAT_DEFS"
+                    :loading="statsLoading"
+                />
+            </v-col>
+        </v-row>
+
         <v-row>
             <v-col cols="12" md="6" offset-md="3" class="text-center">
                 <v-pagination
@@ -259,6 +271,17 @@
                     <v-switch
                         v-model="settings.includeChildren.value"
                         :label="$t('IncludeChildren')"
+                        color="primary"
+                        hide-details
+                        density="compact"
+                    />
+                </div>
+
+                <div class="px-4 py-1">
+                    <v-switch
+                        :model-value="showStats"
+                        @update:model-value="useUserPreferenceStore().deviceSettings.search_showStats = $event === true"
+                        :label="$t('ShowStatsFooter')"
                         color="primary"
                         hide-details
                         density="compact"
@@ -351,7 +374,15 @@ import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 
 import {useUrlFilters} from '@/composables/useUrlFilters'
 import {RECIPE_FILTER_DEFS, RECIPE_SORT_DEFS} from '@/composables/modellist/RecipeList'
-import type {FilterDef} from '@/composables/modellist/types'
+import type {FilterDef, StatDef} from '@/composables/modellist/types'
+
+const RECIPE_STAT_DEFS: StatDef[] = [
+    {key: 'makenow_ready', labelKey: 'MakenowReady', icon: 'fa-solid fa-utensils', color: 'success'},
+    {key: 'new', labelKey: 'New', icon: 'fa-solid fa-star', color: 'info'},
+    {key: 'unrated', labelKey: 'Unrated', icon: 'fa-solid fa-star-half-stroke', color: 'warning'},
+    {key: 'never_cooked', labelKey: 'NeverCooked', icon: 'fa-regular fa-clock', color: 'warning'},
+    {key: 'private', labelKey: 'Private', icon: 'fa-solid fa-user-lock', color: 'info'},
+]
 import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
 import {useFilterPlacement} from '@/composables/useFilterPlacement'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
@@ -359,6 +390,7 @@ import InlineFilterCard from '@/components/search/InlineFilterCard.vue'
 
 import ModelListToolbar from '@/components/model_list/ListToolbar.vue'
 import ModelListFilterChips from '@/components/model_list/ModelListFilterChips.vue'
+import ModelListStatsFooter from '@/components/model_list/ModelListStatsFooter.vue'
 import FilterPanel from '@/components/model_list/FilterPanel.vue'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
@@ -668,11 +700,29 @@ function createCustomFilter() {
         .finally(() => { loading.value = false })
 }
 
+/* ─── Stats footer ──────────────────────────────────────────────────── */
+
+const showStats = computed(() => !!useUserPreferenceStore().deviceSettings.search_showStats)
+const stats = ref<Record<string, number>>({})
+const statsLoading = ref(false)
+
+function loadStats() {
+    if (!showStats.value) return
+    statsLoading.value = true
+    new ApiApi().apiRecipeStatsRetrieve()
+        .then((r: any) => { stats.value = r as Record<string, number> })
+        .catch(() => { /* non-critical; leave prior stats in place */ })
+        .finally(() => { statsLoading.value = false })
+}
+
+watch(showStats, (on) => { if (on) loadStats() })
+
 /* ─── Lifecycle ─────────────────────────────────────────────────────── */
 
 onMounted(() => {
     searchRecipes({page: page.value})
     startReQueryWatcher()
+    loadStats()
 })
 </script>
 

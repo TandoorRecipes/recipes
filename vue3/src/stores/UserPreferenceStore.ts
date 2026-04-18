@@ -259,6 +259,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             // Omitted here so the composable can distinguish "never customized" from "user set"
             search_savedSearchInline: true,
             search_savedSearchInPanel: true,
+            search_showStats: true,
 
             start_showMealPlan: true,
 

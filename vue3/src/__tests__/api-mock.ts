@@ -55,6 +55,7 @@ const API_METHODS = [
     'apiMealTypeList',
     'apiCookLogCreate',
     'apiCookLogList',
+    'apiRecipeStatsRetrieve',
     // GenericModel dynamic methods (added per-test as needed)
     'apiFoodRetrieve',
     'apiFoodCreate',
