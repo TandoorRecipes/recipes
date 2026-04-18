@@ -2364,6 +2364,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedGenericModelReferenceList'
           description: ''
+  /api/food/{id}/substitutes/:
+    get:
+      operationId: apiFoodSubstitutesRetrieve
+      description: logs request counts to redis cache total/per user/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this food.
+        required: true
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodSimple'
+          description: ''
   /api/food/batch_update/:
     put:
       operationId: apiFoodBatchUpdateUpdate
