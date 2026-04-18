@@ -339,10 +339,16 @@ class RecipeSearch:
             qs = qs.filter(servings__gte=params.servings_gte)
         if params.servings_lte is not None:
             qs = qs.filter(servings__lte=params.servings_lte)
+        # has_photo covers BOTH the legacy Recipe.image column AND the new
+        # RecipeImage rows. Migration 0246 copies legacy into RecipeImage but
+        # not every deployment will have run it yet, so both stores remain
+        # authoritative until the legacy column is deprecated. `.distinct()`
+        # required on the True branch because `images__isnull=False` joins
+        # the reverse relation and can fan out multiple rows per recipe.
         if params.has_photo is True:
-            qs = qs.exclude(image__isnull=True).exclude(image='')
+            qs = qs.filter(Q(images__isnull=False) | (~Q(image='') & ~Q(image__isnull=True))).distinct()
         elif params.has_photo is False:
-            qs = qs.filter(Q(image__isnull=True) | Q(image=''))
+            qs = qs.filter(images__isnull=True).filter(Q(image='') | Q(image__isnull=True))
         # has_keywords via subquery avoids fanning rows through the keywords
         # M2M join before the by_keywords / by_foods / by_books joins below.
         if params.has_keywords is True:

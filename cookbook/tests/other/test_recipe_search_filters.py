@@ -9,7 +9,7 @@ from django.contrib import auth
 from django.utils import timezone
 from django_scopes import scope, scopes_disabled
 
-from cookbook.models import Food, Keyword, Recipe
+from cookbook.models import Food, Keyword, Recipe, RecipeImage
 from cookbook.tests.factories import (
     CookLogFactory,
     FoodFactory,
@@ -859,6 +859,31 @@ class TestRecipePropertyFilters:
         ids = set(results.values_list('id', flat=True))
         for r in results:
             assert r.image is None or r.image == ''
+
+    def test_has_photo_mixed_column_store(self, search_recipes, u1_s1, space_1, make_search_request):
+        """has_photo must cover BOTH legacy Recipe.image AND new RecipeImage rows."""
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        with scopes_disabled():
+            # r1: legacy column only (old-style, pre-migration 0246)
+            s.r1.image = 'recipes/legacy.jpg'
+            s.r1.save()
+            # r2: RecipeImage row only (post-migration, new uploads)
+            RecipeImage.objects.create(
+                recipe=s.r2, file='recipes/new.jpg', is_primary=True, order=0,
+                created_by=user, space=space_1,
+            )
+            # r3: neither — has no photo at all
+        req = make_search_request(u1_s1)
+        true_ids = set(do_search(req, space_1, has_photo='true').values_list('id', flat=True))
+        false_ids = set(do_search(req, space_1, has_photo='false').values_list('id', flat=True))
+
+        assert s.r1.id in true_ids, "legacy-column-only recipe should match has_photo=true"
+        assert s.r2.id in true_ids, "RecipeImage-only recipe should match has_photo=true"
+        assert s.r3.id in false_ids, "recipe with no photo should match has_photo=false"
+        assert s.r1.id not in false_ids
+        assert s.r2.id not in false_ids
+        assert s.r3.id not in true_ids
 
     def test_has_keywords_true(self, search_recipes, u1_s1, space_1, make_search_request):
         s = search_recipes
