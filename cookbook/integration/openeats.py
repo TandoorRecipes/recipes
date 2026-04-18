@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.utils.translation import gettext as _
 
@@ -50,12 +51,16 @@ class OpenEats(Integration):
             CookLog.objects.create(recipe=recipe, rating=comment['rating'], created_by=self.request.user, space=self.request.space)
 
         if file["photo"] != '':
-            RecipeImage.objects.create(
-                recipe=recipe,
-                file=f'recipes/openeats-import/{file["photo"]}',
-                is_primary=True, order=0,
-                created_by=self.request.user, space=self.request.space,
-            )
+            # Strip any path components supplied by the import JSON so a
+            # crafted photo name cannot traverse outside recipes/openeats-import/.
+            safe_photo = os.path.basename(file["photo"])
+            if safe_photo:
+                RecipeImage.objects.create(
+                    recipe=recipe,
+                    file=f'recipes/openeats-import/{safe_photo}',
+                    is_primary=True, order=0,
+                    created_by=self.request.user, space=self.request.space,
+                )
 
         step = Step.objects.create(instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,)
 
