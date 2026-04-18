@@ -124,7 +124,7 @@
 
         <v-progress-linear v-if="loading" indeterminate color="primary" class="mt-2" />
 
-        <v-row v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'table'">
+        <v-row v-if="recipes.length > 0 && viewMode === 'table'">
             <v-col>
                 <v-card>
                     <v-data-table-server
@@ -161,7 +161,7 @@
             </v-col>
         </v-row>
 
-        <template v-if="recipes.length > 0 && useUserPreferenceStore().deviceSettings.search_viewMode == 'grid'">
+        <template v-if="recipes.length > 0 && viewMode === 'grid'">
             <v-row>
                 <v-col cols="6" md="4" v-for="r in recipes" :key="r.id" class="pa-0">
                     <div class="position-relative">
@@ -389,6 +389,7 @@ const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettin
 
 // ─── Settings (device-persisted) ──────────────────────────────────────
 const settings = useModelListSettings(computed(() => 'search'))
+const viewMode = computed(() => useUserPreferenceStore().deviceSettings.search_viewMode)
 
 const DEFAULT_INLINE = ['_keywordsGroup', '_foodsGroup', '_booksGroup']
 const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', '_unitsGroup',
