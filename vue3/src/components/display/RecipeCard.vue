@@ -6,7 +6,7 @@
                 <template #overlay>
                     <span v-if="deviceSettings.card_showRating && props.recipe.rating != null"
                           class="card-overlay-top-right recipe-card-rating">
-                        <v-icon icon="fa-solid fa-star" size="8" color="amber" />
+                        <v-icon icon="fa-solid fa-star" size="x-small" color="amber" />
                         <span class="card-overlay-rating-text">{{ props.recipe.rating.toFixed(1) }}</span>
                     </span>
                     <span v-if="deviceSettings.card_showNewBadge && props.recipe._new"
@@ -205,7 +205,7 @@ function openRecipe() {
 .card-overlay-bottom-left {
     position: absolute;
     z-index: 1;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.55);
     color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(4px);
     font-size: 10px;
