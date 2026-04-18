@@ -10,7 +10,7 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none d-print-none">
+        <template v-if="mobile">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -61,7 +61,7 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block d-print-block">
+        <template v-else>
             <v-row dense>
                 <v-col cols="8">
                     <recipe-image
@@ -217,7 +217,9 @@ import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import {useDisplay} from "vuetify";
 
+const {mobile} = useDisplay()
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()
 
