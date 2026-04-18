@@ -3,6 +3,7 @@
         :loading="loading"
         :dialog="dialog"
         @save="saveObject"
+        @save-and-close="saveAndClose"
         @delete="deleteObject"
         @close="emit('close'); editingObjChanged = false"
         :is-update="isUpdate()"
@@ -199,8 +200,13 @@ const props = defineProps({
     dialog: {type: Boolean, default: false}
 })
 
-const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
+const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState', 'saveAndClose'])
 const modelEditorFunctions = useModelEditorFunctions<Recipe>('Recipe', emit)
+
+async function saveAndClose() {
+    const result = await saveObject()
+    if (result) emit('saveAndClose', result)
+}
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = modelEditorFunctions
 
 const model = defineModel<typeof modelEditorFunctions>()

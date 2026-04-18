@@ -24,6 +24,7 @@
 
             <v-btn color="save" prepend-icon="$create" @click="emit('save')" v-if="!isUpdate && !modelClass.model.disableCreate" :loading="loading">{{ $t('Create') }}</v-btn>
             <v-btn color="save" prepend-icon="$save" @click="emit('save')" v-if="isUpdate && !modelClass.model.disableUpdate" :loading="loading"> {{ $t('Save') }}</v-btn>
+            <v-btn color="info" prepend-icon="fa-solid fa-check" @click="emit('saveAndClose')" v-if="isUpdate && !modelClass.model.disableUpdate" :loading="loading"> {{ $t('SaveAndClose') }}</v-btn>
         </v-card-actions>
     </v-card>
 
@@ -54,7 +55,7 @@ import {useDisplay} from "vuetify";
 
 const {mobile} = useDisplay()
 
-const emit = defineEmits(['save', 'delete', 'close'])
+const emit = defineEmits(['save', 'delete', 'close', 'saveAndClose'])
 
 const props = defineProps({
     loading: {type: Boolean, default: false},

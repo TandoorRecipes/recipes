@@ -14,7 +14,7 @@
         </v-row>
         <v-row dense>
             <v-col>
-                <component :is="editorComponent" :item-id="id" @delete="objectDeleted" @create="(obj: any) => objectCreated(obj)"></component>
+                <component :is="editorComponent" :item-id="id" @delete="objectDeleted" @create="(obj: any) => objectCreated(obj)" @save-and-close="saveAndCloseHandler"></component>
             </v-col>
         </v-row>
 
@@ -95,6 +95,17 @@ function objectCreated(obj: any) {
 function objectDeleted() {
     if (props.model.toLowerCase() == 'recipe') {
         router.push({name: 'StartPage'})
+    } else {
+        router.go(-1)
+    }
+}
+
+/**
+ * after save, navigate to the recipe view page (for recipes) or back (for other models)
+ */
+function saveAndCloseHandler() {
+    if (props.model.toLowerCase() == 'recipe' && props.id) {
+        router.push({name: 'RecipeViewPage', params: {id: props.id}})
     } else {
         router.go(-1)
     }
