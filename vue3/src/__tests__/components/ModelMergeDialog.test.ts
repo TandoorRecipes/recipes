@@ -73,6 +73,7 @@ describe('ModelMergeDialog', () => {
                 model: 'Food',
                 source,
                 activator: 'parent',
+                modelValue: false,
             },
             global: {
                 plugins: [pinia, i18n, vuetify, router],
@@ -92,9 +93,12 @@ describe('ModelMergeDialog', () => {
 
     it('uses GenericModel for the specified model type', async () => {
         const wrapper = mountDialog()
+        await wrapper.setProps({modelValue: true})
         await flushPromises()
-        // The component called getGenericModelFromString('Food', t) during setup
-        expect(wrapper.vm).toBeDefined()
+        // GenericModel.getLabel(food) renders the food name in the sources list
+        // once the dialog opens. If GenericModel resolution failed this would
+        // render nothing.
+        expect(wrapper.text()).toContain('Butter')
     })
 
     it('accepts source items as props', async () => {
@@ -103,7 +107,10 @@ describe('ModelMergeDialog', () => {
             makeFood({ id: 2, name: 'Margarine' }),
         ]
         const wrapper = mountDialog(sources)
+        await wrapper.setProps({modelValue: true})
         await flushPromises()
-        expect(wrapper.vm).toBeDefined()
+        const text = wrapper.text()
+        expect(text).toContain('Butter')
+        expect(text).toContain('Margarine')
     })
 })
