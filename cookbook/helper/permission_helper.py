@@ -138,8 +138,12 @@ def get_household_user_ids(user_space):
     if user_space is None:
         return []
 
+    # Cache key includes user_id because the result mixes in the user's own
+    # shopping_share list below — two users in the same household can legitimately
+    # see different sets depending on their personal share configuration, and
+    # excluding user_id caused stale cross-user reads for up to the cache TTL.
     if user_space.household_id:
-        cache_key = f'household_user_ids_{user_space.space_id}_{user_space.household_id}'
+        cache_key = f'household_user_ids_{user_space.space_id}_{user_space.household_id}_user_{user_space.user_id}'
     else:
         cache_key = f'household_user_ids_{user_space.space_id}_user_{user_space.user_id}'
 
@@ -164,9 +168,17 @@ def get_household_user_ids(user_space):
 
 
 def invalidate_household_cache(user_space):
-    """Delete the cached household_user_ids for a UserSpace's household."""
+    """Delete the cached household_user_ids for every user in a UserSpace's household.
+
+    Cache keys are per-user (see get_household_user_ids), so we have to fan out
+    to every member of the household rather than deleting a single key.
+    """
     if user_space.household_id:
-        cache.delete(f'household_user_ids_{user_space.space_id}_{user_space.household_id}')
+        for member_user_id in UserSpace.objects.filter(
+            space=user_space.space, household=user_space.household
+        ).values_list('user_id', flat=True):
+            cache.delete(f'household_user_ids_{user_space.space_id}_{user_space.household_id}_user_{member_user_id}')
+    cache.delete(f'household_user_ids_{user_space.space_id}_user_{user_space.user_id}')
 
 
 def share_link_valid(recipe, share):
