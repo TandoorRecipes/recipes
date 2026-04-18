@@ -10,9 +10,9 @@ import type {FilterDef} from '@/composables/modellist/types'
 
 const ModelSelectStub = {
     name: 'ModelSelect',
-    props: ['model', 'modelValue', 'mode'],
+    props: ['model', 'modelValue', 'mode', 'appendToBody'],
     emits: ['update:modelValue'],
-    render() { return h('div', {class: 'model-select-stub'}) },
+    render(ctx: any) { return h('div', {class: 'model-select-stub', 'data-append-to-body': String(ctx.appendToBody)}) },
 }
 
 const TriStateToggleStub = {
@@ -22,7 +22,7 @@ const TriStateToggleStub = {
     render() { return h('div', {class: 'tristate-stub'}) },
 }
 
-function mountPanel(defs: FilterDef[], filterValues: Record<string, string> = {}) {
+function mountPanel(defs: FilterDef[], filterValues: Record<string, string> = {}, extraProps: Record<string, any> = {}) {
     const vuetify = createVuetify({components, directives})
     const i18n = createI18n({legacy: false, locale: 'en', messages: {en: {}}, missingWarn: false, fallbackWarn: false})
 
@@ -36,6 +36,7 @@ function mountPanel(defs: FilterDef[], filterValues: Record<string, string> = {}
             setFilter: vi.fn(),
             clearAllFilters: vi.fn(),
             activeFilterCount: Object.keys(filterValues).length,
+            ...extraProps,
         },
         global: {
             plugins: [vuetify, i18n],
@@ -80,6 +81,36 @@ describe('FilterPanel', () => {
             )
             const dateInputs = wrapper.findAll('input[type="date"]')
             expect(dateInputs.length).toBe(2)
+        })
+    })
+
+    // E-2: opening a filter dropdown rendered inside a temporary drawer must
+    // not cause the drawer to dismiss. The fix keeps the multiselect dropdown
+    // inside the drawer's DOM instead of teleporting to document.body.
+    describe('inDrawer prop (E-2)', () => {
+        it('model-select dropdowns are body-teleported when outside a drawer', () => {
+            const wrapper = mountPanel([
+                {key: 'created_by', labelKey: 'CreatedBy', type: 'model-select', modelName: 'User' as any},
+            ])
+            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('true')
+        })
+
+        it('model-select dropdowns stay inline when rendered inside a drawer', () => {
+            const wrapper = mountPanel(
+                [{key: 'created_by', labelKey: 'CreatedBy', type: 'model-select', modelName: 'User' as any}],
+                {},
+                {inDrawer: true},
+            )
+            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('false')
+        })
+
+        it('tag-select dropdowns stay inline when rendered inside a drawer', () => {
+            const wrapper = mountPanel(
+                [{key: 'keywords_or', labelKey: 'Keywords', type: 'tag-select' as any, modelName: 'Keyword' as any}],
+                {},
+                {inDrawer: true},
+            )
+            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('false')
         })
     })
 })

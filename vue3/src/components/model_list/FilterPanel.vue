@@ -23,7 +23,7 @@
                         :select-placeholder="def.selectPlaceholder"
                         class="mx-2 my-1"
                     />
-                    <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1">
+                    <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1" @click.stop>
                         <span class="text-body-2 text-medium-emphasis">{{ $t(def.labelKey) }}</span>
                         <ModelSelect
                             :model="def.modelName"
@@ -34,7 +34,7 @@
                             density="compact"
                             :can-clear="true"
                             :search-on-load="false"
-                            :append-to-body="true"
+                            :append-to-body="!inDrawer"
                             :hide-details="true"
                         />
                     </div>
@@ -44,6 +44,7 @@
                         :get-filter="getFilter"
                         :set-filter="setFilter"
                         :clear-filter="clearFilter"
+                        :in-drawer="inDrawer"
                     />
                 </template>
             </component>
@@ -59,14 +60,19 @@ import ModelSelect from '@/components/inputs/ModelSelect.vue'
 import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
 import FilterField from '@/components/filters/FilterField.vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     groupedFilterDefs: Map<string, FilterDef[]>
     getFilter: (key: string) => string | undefined
     setFilter: (key: string, value: FilterValue) => void
     clearFilter: (key: string) => void
     clearAllFilters: () => void
     activeFilterCount: number
-}>()
+    /** Pass true when the panel is inside a temporary drawer so dropdowns
+     *  stay inside the drawer's DOM and don't trigger outside-click close. */
+    inDrawer?: boolean
+}>(), {
+    inDrawer: false,
+})
 
 const visibleGroupedDefs = computed(() => {
     const filtered = new Map<string, FilterDef[]>()

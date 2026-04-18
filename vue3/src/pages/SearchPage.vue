@@ -248,6 +248,7 @@
                     :clear-filter="clearFilter"
                     :clear-all-filters="clearAllFilters"
                     :active-filter-count="activeFilterCount"
+                    :in-drawer="true"
                 />
             </template>
 
