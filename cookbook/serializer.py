@@ -876,6 +876,10 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
     in_inventory = serializers.CharField(source='has_inventory_status', read_only=True)
     substitute_inventory = serializers.SerializerMethodField('get_substitute_inventory')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
+    # Only set when tree_search=true + filters expand the queryset via
+    # include_ancestors (E-8). True = matched the filter; False = ancestor
+    # context; None = not in a filter-expanded response.
+    matched_filter = serializers.SerializerMethodField('get_matched_filter')
     parent = IntegerField(read_only=True)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
     properties = PropertySerializer(many=True, allow_null=True, required=False)
@@ -958,6 +962,11 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
         except AttributeError:
             return False
 
+    @extend_schema_field(bool)
+    def get_matched_filter(self, obj):
+        """None for non-expanded responses, bool when tree_search=true (E-8)."""
+        return getattr(obj, 'matched_filter', None)
+
     def create(self, validated_data):
         name = validated_data['name'].strip()
 
@@ -1036,7 +1045,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url', 'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
             'food_onhand', 'supermarket_category', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
             'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'available_substitutes', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
-            'in_inventory', 'substitute_inventory',
+            'in_inventory', 'substitute_inventory', 'matched_filter',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'numrecipe')
 
