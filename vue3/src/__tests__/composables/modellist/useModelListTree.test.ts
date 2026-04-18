@@ -184,6 +184,47 @@ describe('useModelListTree', () => {
             const tree = createTree()
             expect(tree.updateCachedChild(999, 'shopping', true)).toBe(false)
         })
+
+        // Characterization lock-in for the M-FE-1 fix: the composable
+        // previously relied on reassigning expandedIds to force a rerender
+        // after mutating nested properties on a shallowReactive(Map) entry.
+        // The fix replaced the entry via Map.set(...). buildFlatList reads
+        // items via childrenCache.get(...) so a working implementation
+        // reflects the update without any expandedIds mutation.
+        it('mutated field is reflected in buildFlatList output', async () => {
+            mockFetch.mockResolvedValueOnce({ results: [makeItem(10, 'Child')], hasMore: false })
+
+            const tree = createTree()
+            await tree.toggleExpand(1)
+
+            tree.updateCachedChild(10, 'shopping', true)
+
+            const flat = tree.buildFlatList([makeItem(1, 'Parent', 5)])
+            const child = flat.find((n: any) => n.id === 10)
+            expect(child).toBeDefined()
+            expect((child as any).shopping).toBe(true)
+        })
+    })
+
+    describe('loadMoreChildren characterization (M-FE-1)', () => {
+        // Characterization lock-in for the M-FE-1 fix: after loadMoreChildren,
+        // the concatenated items MUST be visible via buildFlatList without
+        // any expandedIds mutation. The composable now does
+        // childrenCache.set(id, {...cached, items: [...old, ...new]}) so
+        // shallowReactive(Map) picks up the change at the key level.
+        it('appended items appear via childrenCache.get after loadMoreChildren', async () => {
+            mockFetch
+                .mockResolvedValueOnce({ results: [makeItem(10, 'First')], hasMore: true })
+                .mockResolvedValueOnce({ results: [makeItem(11, 'Second')], hasMore: false })
+
+            const tree = createTree()
+            await tree.toggleExpand(1)
+            await tree.loadMoreChildren(1)
+
+            const flat = tree.buildFlatList([makeItem(1, 'Parent', 5)])
+            const childIds = flat.filter((n: any) => n.id !== 1 && !n._isLoadMore).map((n: any) => n.id)
+            expect(childIds).toEqual([10, 11])
+        })
     })
 
     describe('treeActive', () => {
