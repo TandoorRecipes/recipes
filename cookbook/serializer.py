@@ -1343,6 +1343,20 @@ class FoodStatsSerializer(serializers.Serializer):
     total = serializers.IntegerField()
 
 
+class RecipeStatsSerializer(serializers.Serializer):
+    """Actionable-state counts for the recipe search / list view.
+
+    Scope: space + user-visible (non-private OR owned/shared). All counts
+    reflect the full list the caller can see, not the active filter set.
+    """
+    makenow_ready = serializers.IntegerField()
+    new = serializers.IntegerField()
+    unrated = serializers.IntegerField()
+    never_cooked = serializers.IntegerField()
+    private = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
 class FoodBatchUpdateSerializer(serializers.Serializer):
     foods = serializers.ListField(child=serializers.IntegerField())
 

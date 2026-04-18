@@ -149,6 +149,7 @@ export * from './RecipeImport';
 export * from './RecipeOverview';
 export * from './RecipeShoppingUpdate';
 export * from './RecipeSimple';
+export * from './RecipeStats';
 export * from './SearchEnum';
 export * from './SearchFields';
 export * from './SearchPreference';
