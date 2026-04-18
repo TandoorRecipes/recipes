@@ -11,6 +11,7 @@
         <v-toolbar density="compact" flat>
             <v-spacer />
             <v-btn
+                v-if="pinnable"
                 icon
                 variant="plain"
                 size="small"
@@ -97,12 +98,14 @@ const props = withDefaults(defineProps<{
     modelValue: boolean
     activeTab?: string
     pinned?: boolean
+    pinnable?: boolean
     tabs: { key: string, label: string, icon: string }[]
     width?: number
     useSheet?: boolean
 }>(), {
     activeTab: undefined,
     pinned: false,
+    pinnable: true,
     width: 320,
     useSheet: false,
 })

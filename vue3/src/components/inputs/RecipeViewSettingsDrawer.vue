@@ -3,6 +3,7 @@
         v-model="isOpen"
         v-model:active-tab="activeTab"
         v-model:pinned="isPinned"
+        :pinnable="false"
         :tabs="drawerTabs"
         :width="300"
         :use-sheet="mobile"
