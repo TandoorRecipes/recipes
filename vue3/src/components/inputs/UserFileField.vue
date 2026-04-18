@@ -60,7 +60,7 @@
                             <v-img class="mr-4 ml-4" max-height="50vh" rounded :src="model.preview" />
                             <v-card-actions>
                                 <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
-                                <v-btn v-if="model.preview" color="info" prepend-icon="fa-solid fa-crop" @click="recropActive = true">{{ $t('AdjustFocalPoint') }}</v-btn>
+                                <v-btn v-if="model.preview" color="info" prepend-icon="fa-solid fa-crop" @click="recropActive = true">{{ $t('Crop') }}</v-btn>
                                 <v-btn color="warning" prepend-icon="fa-solid fa-link-slash" @click="model = null">{{ $t('Remove') }}</v-btn>
                                 <v-btn color="delete" prepend-icon="$delete" @click="model = null">{{ $t('Delete') }}</v-btn>
                                 <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
