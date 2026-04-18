@@ -201,7 +201,7 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
+        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments" @cook-log-saved="refreshRecipeRating"></recipe-activity>
 
         <image-lightbox v-model="galleryLightbox" :images="galleryImageUrls" :start-index="galleryLightboxIndex" />
     </template>
@@ -270,6 +270,19 @@ const heroImageSrc = computed(() => {
 function openGalleryLightbox(index: number) {
     galleryLightboxIndex.value = index
     galleryLightbox.value = true
+}
+
+/**
+ * After a CookLog is created or updated the backend recalculates the recipe's
+ * aggregate rating. Refetch so the header stars update immediately.
+ */
+function refreshRecipeRating() {
+    if (!recipe.value.id) return
+    new ApiApi().apiRecipeRetrieve({id: recipe.value.id}).then(fresh => {
+        recipe.value.rating = fresh.rating
+    }).catch(() => {
+        // swallow — stale rating is acceptable vs. error toast
+    })
 }
 
 const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
