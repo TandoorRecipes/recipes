@@ -30,6 +30,7 @@ import type {
   Food,
   FoodBatchUpdate,
   FoodInheritField,
+  FoodSimple,
   FoodStats,
   Group,
   Household,
@@ -201,6 +202,8 @@ import {
     FoodBatchUpdateToJSON,
     FoodInheritFieldFromJSON,
     FoodInheritFieldToJSON,
+    FoodSimpleFromJSON,
+    FoodSimpleToJSON,
     FoodStatsFromJSON,
     FoodStatsToJSON,
     GroupFromJSON,
@@ -867,6 +870,10 @@ export interface ApiFoodProtectingListRequest {
 }
 
 export interface ApiFoodRetrieveRequest {
+    id: number;
+}
+
+export interface ApiFoodSubstitutesRetrieveRequest {
     id: number;
 }
 
@@ -5603,6 +5610,43 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiFoodStatsRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodStats> {
         const response = await this.apiFoodStatsRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodSubstitutesRetrieveRaw(requestParameters: ApiFoodSubstitutesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FoodSimple>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiFoodSubstitutesRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/food/{id}/substitutes/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => FoodSimpleFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiFoodSubstitutesRetrieve(requestParameters: ApiFoodSubstitutesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodSimple> {
+        const response = await this.apiFoodSubstitutesRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
