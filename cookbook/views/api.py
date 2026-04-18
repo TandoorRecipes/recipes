@@ -1091,7 +1091,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=space)
 
     def _expired_subquery(self, space):
-        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, expires__lt=datetime.date.today(), space=space)
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, expires__lt=timezone.localdate(), space=space)
 
     def _annotate_and_prefetch(self, qs):
         shared_users = self._shared_users
@@ -1158,7 +1158,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         if expiring_soon is not None:
             try:
                 days = int(expiring_soon)
-                today = datetime.date.today()
+                today = timezone.localdate()
                 qs = qs.filter(
                     inventoryentry__expires__gte=today,
                     inventoryentry__expires__lte=today + datetime.timedelta(days=days),
