@@ -784,7 +784,7 @@ export interface ApiFdcSearchRetrieveRequest {
 
 export interface ApiFoodAipropertiesCreateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
     provider?: number;
 }
 
@@ -800,7 +800,7 @@ export interface ApiFoodCascadingListRequest {
 }
 
 export interface ApiFoodCreateRequest {
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodDestroyRequest {
@@ -809,7 +809,7 @@ export interface ApiFoodDestroyRequest {
 
 export interface ApiFoodFdcCreateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodInheritFieldRetrieveRequest {
@@ -841,13 +841,13 @@ export interface ApiFoodListRequest {
 export interface ApiFoodMergeUpdateRequest {
     id: number;
     target: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodMoveUpdateRequest {
     id: number;
     parent: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodNullingListRequest {
@@ -859,7 +859,7 @@ export interface ApiFoodNullingListRequest {
 
 export interface ApiFoodPartialUpdateRequest {
     id: number;
-    patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodProtectingListRequest {
@@ -879,7 +879,7 @@ export interface ApiFoodSubstitutesRetrieveRequest {
 
 export interface ApiFoodUpdateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'in_inventory'|'substitute_inventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiGetExternalFileLinkRetrieveRequest {
