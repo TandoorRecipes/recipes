@@ -103,11 +103,13 @@ export function useModelListTree(
         try {
             const nextPage = cached.page + 1
             const result = await fetchChildren(parentId, nextPage)
-            cached.items = [...cached.items, ...result.results]
-            cached.hasMore = result.hasMore
-            cached.page = nextPage
-            // Trigger reactivity via expandedIds reassignment
-            expandedIds.value = new Set(expandedIds.value)
+            // Replace the whole entry so shallowReactive(Map) tracks the mutation
+            // instead of relying on an implicit rerender tick elsewhere.
+            childrenCache.set(parentId, {
+                items: [...cached.items, ...result.results],
+                hasMore: result.hasMore,
+                page: nextPage,
+            })
         } catch (e) {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, e)
         } finally {
@@ -162,9 +164,10 @@ export function useModelListTree(
         for (const [parentId, entry] of childrenCache) {
             const idx = entry.items.findIndex(i => i.id === itemId)
             if (idx >= 0) {
-                entry.items[idx] = {...entry.items[idx], [field]: value} as ModelItem
-                // Trigger reactivity so buildFlatList re-spreads
-                expandedIds.value = new Set(expandedIds.value)
+                const newItems = entry.items.slice()
+                newItems[idx] = {...newItems[idx], [field]: value} as ModelItem
+                // Replace the whole entry so shallowReactive(Map) picks up the mutation.
+                childrenCache.set(parentId, {...entry, items: newItems})
                 return true
             }
         }
