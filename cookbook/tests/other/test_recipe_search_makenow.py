@@ -51,6 +51,100 @@ def makenow_recipe(request, space_1, shared_household):
     return recipe
 
 
+def test_makenow_partial_inventory_missing_food_excluded(recipes, shared_household, space_1, make_search_request, u1_s1):
+    """Production-mode failure repro (E-5 from preview review, 2026-04-18).
+
+    The report: a multi-ingredient recipe showed up under makenow=true even
+    though it had an ingredient with NO inventory, NO substitute, and
+    ignore_shopping=False. Every existing test either starts with 'all foods
+    have inventory' or 'delete one entry from an all-available recipe';
+    neither mirrors the live production setup where a recipe has mixed
+    availability from the start (some foods ever had inventory, one never
+    did).
+
+    Setup: build a 10-ingredient recipe, give inventory to 9 of the 10
+    foods, leave the 10th without inventory / substitute / ignore_shopping.
+    The recipe MUST NOT match makenow=true (missing=0).
+    """
+    household, location = shared_household
+    user = auth.get_user(u1_s1)
+    with scope(space=space_1):
+        recipe = RecipeFactory.create(space=space_1)
+        recipe_foods = list(Food.objects.filter(ingredient__step__recipe=recipe.id))
+        assert len(recipe_foods) >= 2, "Test needs a multi-ingredient recipe"
+
+        # Give inventory to all foods EXCEPT the last one — it stays:
+        #   onhand_users = empty (implicitly)
+        #   no InventoryEntry
+        #   no substitute (M2M is empty by default on a fresh Food)
+        #   ignore_shopping = False (default)
+        missing_food = recipe_foods[-1]
+        for food in recipe_foods[:-1]:
+            InventoryEntryFactory(
+                food=food,
+                inventory_location=location,
+                amount=1,
+                space=space_1,
+                created_by=user,
+            )
+
+        # Verify fixture preconditions — these mirror the production data we
+        # think recipe 4025 had.
+        assert missing_food.onhand_users.count() == 0
+        assert not InventoryEntry.objects.filter(food=missing_food).exists()
+        assert missing_food.substitute.count() == 0
+        assert missing_food.ignore_shopping is False
+        assert missing_food.recipe is None  # not a sub-recipe food
+
+        request = make_search_request(u1_s1)
+        results = do_search(request, space_1, makenow='true')
+        ids = set(results.values_list('id', flat=True))
+        assert recipe.id not in ids, (
+            f"Recipe {recipe.id} appeared under makenow=true despite missing "
+            f"an ingredient (food {missing_food.id}) with no inventory, no "
+            f"substitute, and ignore_shopping=False. This is the exact "
+            f"failure mode reported for recipe 4025 on production."
+        )
+
+
+def test_makenow_partial_inventory_with_substitute_matches(recipes, shared_household, space_1, make_search_request, u1_s1):
+    """Companion to the partial-inventory negative test.
+
+    Same setup as above (9 of 10 foods have inventory, 1 doesn't), but the
+    missing food has a direct substitute that DOES have inventory. Recipe
+    SHOULD match makenow=true. Distinguishes 'substitute wasn't seen' from
+    'food really is missing' in the failure analysis.
+    """
+    household, location = shared_household
+    user = auth.get_user(u1_s1)
+    with scope(space=space_1):
+        recipe = RecipeFactory.create(space=space_1)
+        recipe_foods = list(Food.objects.filter(ingredient__step__recipe=recipe.id))
+        assert len(recipe_foods) >= 2
+
+        missing_food = recipe_foods[-1]
+        for food in recipe_foods[:-1]:
+            InventoryEntryFactory(
+                food=food,
+                inventory_location=location,
+                amount=1,
+                space=space_1,
+                created_by=user,
+            )
+
+        # Attach a substitute that DOES have inventory
+        sub_food = FoodFactory.create(space=space_1)
+        InventoryEntryFactory(
+            food=sub_food, inventory_location=location, amount=1,
+            space=space_1, created_by=user,
+        )
+        missing_food.substitute.add(sub_food)
+
+        request = make_search_request(u1_s1)
+        results = do_search(request, space_1, makenow='true')
+        assert recipe.id in set(results.values_list('id', flat=True))
+
+
 @pytest.mark.parametrize("makenow_recipe", [({'created_by': 'u1_s1'}), ({'created_by': 'u2_s1'})], indirect=['makenow_recipe'])
 def test_makenow_onhand(recipes, makenow_recipe, space_1, make_search_request, u1_s1):
     request = make_search_request(u1_s1)
