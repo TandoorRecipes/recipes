@@ -1,5 +1,5 @@
 <template>
-    <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" :size="props.size" class="d-print-none">
+    <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" :size="props.size" class="d-print-none" :aria-label="$t('Actions')">
         <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
         <v-menu activator="parent" close-on-content-click>
             <v-list density="compact" class="pt-1 pb-1">
