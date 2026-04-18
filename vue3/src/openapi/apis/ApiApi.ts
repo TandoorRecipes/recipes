@@ -527,7 +527,7 @@ export interface ApiAiProviderCascadingListRequest {
 }
 
 export interface ApiAiProviderCreateRequest {
-    aiProvider: Omit<AiProvider, 'createdAt'|'updatedAt'>;
+    aiProvider: Omit<AiProvider, 'created_at'|'updated_at'>;
 }
 
 export interface ApiAiProviderDestroyRequest {
@@ -548,7 +548,7 @@ export interface ApiAiProviderNullingListRequest {
 
 export interface ApiAiProviderPartialUpdateRequest {
     id: number;
-    patchedAiProvider?: Omit<PatchedAiProvider, 'createdAt'|'updatedAt'>;
+    patchedAiProvider?: Omit<PatchedAiProvider, 'created_at'|'updated_at'>;
 }
 
 export interface ApiAiProviderProtectingListRequest {
@@ -564,11 +564,11 @@ export interface ApiAiProviderRetrieveRequest {
 
 export interface ApiAiProviderUpdateRequest {
     id: number;
-    aiProvider: Omit<AiProvider, 'createdAt'|'updatedAt'>;
+    aiProvider: Omit<AiProvider, 'created_at'|'updated_at'>;
 }
 
 export interface ApiAiStepSortCreateRequest {
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
     provider?: number;
 }
 
@@ -577,7 +577,7 @@ export interface ApiAutoPlanCreateRequest {
 }
 
 export interface ApiAutomationCreateRequest {
-    automation: Omit<Automation, 'createdBy'>;
+    automation: Omit<Automation, 'created_by'>;
 }
 
 export interface ApiAutomationDestroyRequest {
@@ -592,7 +592,7 @@ export interface ApiAutomationListRequest {
 
 export interface ApiAutomationPartialUpdateRequest {
     id: number;
-    patchedAutomation?: Omit<PatchedAutomation, 'createdBy'>;
+    patchedAutomation?: Omit<PatchedAutomation, 'created_by'>;
 }
 
 export interface ApiAutomationRetrieveRequest {
@@ -601,11 +601,11 @@ export interface ApiAutomationRetrieveRequest {
 
 export interface ApiAutomationUpdateRequest {
     id: number;
-    automation: Omit<Automation, 'createdBy'>;
+    automation: Omit<Automation, 'created_by'>;
 }
 
 export interface ApiBookmarkletImportCreateRequest {
-    bookmarkletImport: Omit<BookmarkletImport, 'createdBy'|'createdAt'>;
+    bookmarkletImport: Omit<BookmarkletImport, 'created_by'|'created_at'>;
 }
 
 export interface ApiBookmarkletImportDestroyRequest {
@@ -619,7 +619,7 @@ export interface ApiBookmarkletImportListRequest {
 
 export interface ApiBookmarkletImportPartialUpdateRequest {
     id: number;
-    patchedBookmarkletImport?: Omit<PatchedBookmarkletImport, 'createdBy'|'createdAt'>;
+    patchedBookmarkletImport?: Omit<PatchedBookmarkletImport, 'created_by'|'created_at'>;
 }
 
 export interface ApiBookmarkletImportRetrieveRequest {
@@ -628,7 +628,7 @@ export interface ApiBookmarkletImportRetrieveRequest {
 
 export interface ApiBookmarkletImportUpdateRequest {
     id: number;
-    bookmarkletImport: Omit<BookmarkletImport, 'createdBy'|'createdAt'>;
+    bookmarkletImport: Omit<BookmarkletImport, 'created_by'|'created_at'>;
 }
 
 export interface ApiConnectorConfigCascadingListRequest {
@@ -639,7 +639,7 @@ export interface ApiConnectorConfigCascadingListRequest {
 }
 
 export interface ApiConnectorConfigCreateRequest {
-    connectorConfig: Omit<ConnectorConfig, 'createdBy'>;
+    connectorConfig: Omit<ConnectorConfig, 'created_by'>;
 }
 
 export interface ApiConnectorConfigDestroyRequest {
@@ -660,7 +660,7 @@ export interface ApiConnectorConfigNullingListRequest {
 
 export interface ApiConnectorConfigPartialUpdateRequest {
     id: number;
-    patchedConnectorConfig?: Omit<PatchedConnectorConfig, 'createdBy'>;
+    patchedConnectorConfig?: Omit<PatchedConnectorConfig, 'created_by'>;
 }
 
 export interface ApiConnectorConfigProtectingListRequest {
@@ -676,11 +676,11 @@ export interface ApiConnectorConfigRetrieveRequest {
 
 export interface ApiConnectorConfigUpdateRequest {
     id: number;
-    connectorConfig: Omit<ConnectorConfig, 'createdBy'>;
+    connectorConfig: Omit<ConnectorConfig, 'created_by'>;
 }
 
 export interface ApiCookLogCreateRequest {
-    cookLog: Omit<CookLog, 'createdBy'|'updatedAt'>;
+    cookLog: Omit<CookLog, 'created_by'|'updated_at'>;
 }
 
 export interface ApiCookLogDestroyRequest {
@@ -695,7 +695,7 @@ export interface ApiCookLogListRequest {
 
 export interface ApiCookLogPartialUpdateRequest {
     id: number;
-    patchedCookLog?: Omit<PatchedCookLog, 'createdBy'|'updatedAt'>;
+    patchedCookLog?: Omit<PatchedCookLog, 'created_by'|'updated_at'>;
 }
 
 export interface ApiCookLogRetrieveRequest {
@@ -704,11 +704,11 @@ export interface ApiCookLogRetrieveRequest {
 
 export interface ApiCookLogUpdateRequest {
     id: number;
-    cookLog: Omit<CookLog, 'createdBy'|'updatedAt'>;
+    cookLog: Omit<CookLog, 'created_by'|'updated_at'>;
 }
 
 export interface ApiCustomFilterCreateRequest {
-    customFilter: Omit<CustomFilter, 'createdBy'>;
+    customFilter: Omit<CustomFilter, 'created_by'>;
 }
 
 export interface ApiCustomFilterDestroyRequest {
@@ -727,7 +727,7 @@ export interface ApiCustomFilterListRequest {
 
 export interface ApiCustomFilterPartialUpdateRequest {
     id: number;
-    patchedCustomFilter?: Omit<PatchedCustomFilter, 'createdBy'>;
+    patchedCustomFilter?: Omit<PatchedCustomFilter, 'created_by'>;
 }
 
 export interface ApiCustomFilterRetrieveRequest {
@@ -736,7 +736,7 @@ export interface ApiCustomFilterRetrieveRequest {
 
 export interface ApiCustomFilterUpdateRequest {
     id: number;
-    customFilter: Omit<CustomFilter, 'createdBy'>;
+    customFilter: Omit<CustomFilter, 'created_by'>;
 }
 
 export interface ApiDownloadFileRetrieveRequest {
@@ -748,7 +748,7 @@ export interface ApiExportCreateRequest {
 }
 
 export interface ApiExportLogCreateRequest {
-    exportLog: Omit<ExportLog, 'createdBy'|'createdAt'>;
+    exportLog: Omit<ExportLog, 'created_by'|'created_at'>;
 }
 
 export interface ApiExportLogDestroyRequest {
@@ -762,7 +762,7 @@ export interface ApiExportLogListRequest {
 
 export interface ApiExportLogPartialUpdateRequest {
     id: number;
-    patchedExportLog?: Omit<PatchedExportLog, 'createdBy'|'createdAt'>;
+    patchedExportLog?: Omit<PatchedExportLog, 'created_by'|'created_at'>;
 }
 
 export interface ApiExportLogRetrieveRequest {
@@ -771,7 +771,7 @@ export interface ApiExportLogRetrieveRequest {
 
 export interface ApiExportLogUpdateRequest {
     id: number;
-    exportLog: Omit<ExportLog, 'createdBy'|'createdAt'>;
+    exportLog: Omit<ExportLog, 'created_by'|'created_at'>;
 }
 
 export interface ApiFdcSearchRetrieveRequest {
@@ -781,7 +781,7 @@ export interface ApiFdcSearchRetrieveRequest {
 
 export interface ApiFoodAipropertiesCreateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
     provider?: number;
 }
 
@@ -797,7 +797,7 @@ export interface ApiFoodCascadingListRequest {
 }
 
 export interface ApiFoodCreateRequest {
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodDestroyRequest {
@@ -806,7 +806,7 @@ export interface ApiFoodDestroyRequest {
 
 export interface ApiFoodFdcCreateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodInheritFieldRetrieveRequest {
@@ -838,13 +838,13 @@ export interface ApiFoodListRequest {
 export interface ApiFoodMergeUpdateRequest {
     id: number;
     target: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodMoveUpdateRequest {
     id: number;
     parent: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodNullingListRequest {
@@ -856,7 +856,7 @@ export interface ApiFoodNullingListRequest {
 
 export interface ApiFoodPartialUpdateRequest {
     id: number;
-    patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    patchedFood?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiFoodProtectingListRequest {
@@ -872,7 +872,7 @@ export interface ApiFoodRetrieveRequest {
 
 export interface ApiFoodUpdateRequest {
     id: number;
-    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'fullName'|'substituteOnhand'|'inInventory'|'substituteInventory'>;
+    food: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'>;
 }
 
 export interface ApiGetExternalFileLinkRetrieveRequest {
@@ -888,7 +888,7 @@ export interface ApiGroupRetrieveRequest {
 }
 
 export interface ApiHouseholdCreateRequest {
-    household: Omit<Household, 'createdAt'|'updatedAt'>;
+    household: Omit<Household, 'created_at'|'updated_at'>;
 }
 
 export interface ApiHouseholdDestroyRequest {
@@ -902,7 +902,7 @@ export interface ApiHouseholdListRequest {
 
 export interface ApiHouseholdPartialUpdateRequest {
     id: number;
-    patchedHousehold?: Omit<PatchedHousehold, 'createdAt'|'updatedAt'>;
+    patchedHousehold?: Omit<PatchedHousehold, 'created_at'|'updated_at'>;
 }
 
 export interface ApiHouseholdRetrieveRequest {
@@ -911,7 +911,7 @@ export interface ApiHouseholdRetrieveRequest {
 
 export interface ApiHouseholdUpdateRequest {
     id: number;
-    household: Omit<Household, 'createdAt'|'updatedAt'>;
+    household: Omit<Household, 'created_at'|'updated_at'>;
 }
 
 export interface ApiImportCreateRequest {
@@ -922,7 +922,7 @@ export interface ApiImportCreateRequest {
 }
 
 export interface ApiImportLogCreateRequest {
-    importLog: Omit<ImportLog, 'keyword'|'createdBy'|'createdAt'>;
+    importLog: Omit<ImportLog, 'keyword'|'created_by'|'created_at'>;
 }
 
 export interface ApiImportLogDestroyRequest {
@@ -936,7 +936,7 @@ export interface ApiImportLogListRequest {
 
 export interface ApiImportLogPartialUpdateRequest {
     id: number;
-    patchedImportLog?: Omit<PatchedImportLog, 'keyword'|'createdBy'|'createdAt'>;
+    patchedImportLog?: Omit<PatchedImportLog, 'keyword'|'created_by'|'created_at'>;
 }
 
 export interface ApiImportLogRetrieveRequest {
@@ -945,7 +945,7 @@ export interface ApiImportLogRetrieveRequest {
 
 export interface ApiImportLogUpdateRequest {
     id: number;
-    importLog: Omit<ImportLog, 'keyword'|'createdBy'|'createdAt'>;
+    importLog: Omit<ImportLog, 'keyword'|'created_by'|'created_at'>;
 }
 
 export interface ApiImportOpenDataCreateRequest {
@@ -953,7 +953,7 @@ export interface ApiImportOpenDataCreateRequest {
 }
 
 export interface ApiIngredientCreateRequest {
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
+    ingredient: Omit<Ingredient, 'conversions'|'used_in_recipes'|'checked'>;
 }
 
 export interface ApiIngredientDestroyRequest {
@@ -973,7 +973,7 @@ export interface ApiIngredientParserPostCreateRequest {
 
 export interface ApiIngredientPartialUpdateRequest {
     id: number;
-    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'>;
+    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'used_in_recipes'|'checked'>;
 }
 
 export interface ApiIngredientRetrieveRequest {
@@ -982,7 +982,7 @@ export interface ApiIngredientRetrieveRequest {
 
 export interface ApiIngredientUpdateRequest {
     id: number;
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
+    ingredient: Omit<Ingredient, 'conversions'|'used_in_recipes'|'checked'>;
 }
 
 export interface ApiInventoryEntryCascadingListRequest {
@@ -993,7 +993,7 @@ export interface ApiInventoryEntryCascadingListRequest {
 }
 
 export interface ApiInventoryEntryCreateRequest {
-    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
+    inventoryEntry: Omit<InventoryEntry, 'label'|'created_at'|'created_by'>;
 }
 
 export interface ApiInventoryEntryDestroyRequest {
@@ -1018,7 +1018,7 @@ export interface ApiInventoryEntryNullingListRequest {
 
 export interface ApiInventoryEntryPartialUpdateRequest {
     id: number;
-    patchedInventoryEntry?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'>;
+    patchedInventoryEntry?: Omit<PatchedInventoryEntry, 'label'|'created_at'|'created_by'>;
 }
 
 export interface ApiInventoryEntryProtectingListRequest {
@@ -1034,7 +1034,7 @@ export interface ApiInventoryEntryRetrieveRequest {
 
 export interface ApiInventoryEntryUpdateRequest {
     id: number;
-    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
+    inventoryEntry: Omit<InventoryEntry, 'label'|'created_at'|'created_by'>;
 }
 
 export interface ApiInventoryLocationCascadingListRequest {
@@ -1097,7 +1097,7 @@ export interface ApiInventoryLogRetrieveRequest {
 }
 
 export interface ApiInviteLinkCreateRequest {
-    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
+    inviteLink: Omit<InviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'>;
 }
 
 export interface ApiInviteLinkDestroyRequest {
@@ -1117,7 +1117,7 @@ export interface ApiInviteLinkListRequest {
 
 export interface ApiInviteLinkPartialUpdateRequest {
     id: number;
-    patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
+    patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'>;
 }
 
 export interface ApiInviteLinkRetrieveRequest {
@@ -1126,7 +1126,7 @@ export interface ApiInviteLinkRetrieveRequest {
 
 export interface ApiInviteLinkUpdateRequest {
     id: number;
-    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
+    inviteLink: Omit<InviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'>;
 }
 
 export interface ApiKeywordCascadingListRequest {
@@ -1137,7 +1137,7 @@ export interface ApiKeywordCascadingListRequest {
 }
 
 export interface ApiKeywordCreateRequest {
-    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'>;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'>;
 }
 
 export interface ApiKeywordDestroyRequest {
@@ -1159,13 +1159,13 @@ export interface ApiKeywordListRequest {
 export interface ApiKeywordMergeUpdateRequest {
     id: number;
     target: number;
-    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'>;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'>;
 }
 
 export interface ApiKeywordMoveUpdateRequest {
     id: number;
     parent: number;
-    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'>;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'>;
 }
 
 export interface ApiKeywordNullingListRequest {
@@ -1177,7 +1177,7 @@ export interface ApiKeywordNullingListRequest {
 
 export interface ApiKeywordPartialUpdateRequest {
     id: number;
-    patchedKeyword?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'>;
+    patchedKeyword?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'>;
 }
 
 export interface ApiKeywordProtectingListRequest {
@@ -1193,11 +1193,11 @@ export interface ApiKeywordRetrieveRequest {
 
 export interface ApiKeywordUpdateRequest {
     id: number;
-    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'createdAt'|'updatedAt'|'fullName'>;
+    keyword: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'>;
 }
 
 export interface ApiMealPlanCreateRequest {
-    mealPlan: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'>;
+    mealPlan: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'>;
 }
 
 export interface ApiMealPlanDestroyRequest {
@@ -1220,7 +1220,7 @@ export interface ApiMealPlanListRequest {
 
 export interface ApiMealPlanPartialUpdateRequest {
     id: number;
-    patchedMealPlan?: Omit<PatchedMealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'>;
+    patchedMealPlan?: Omit<PatchedMealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'>;
 }
 
 export interface ApiMealPlanRetrieveRequest {
@@ -1229,7 +1229,7 @@ export interface ApiMealPlanRetrieveRequest {
 
 export interface ApiMealPlanUpdateRequest {
     id: number;
-    mealPlan: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'>;
+    mealPlan: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'>;
 }
 
 export interface ApiMealTypeCascadingListRequest {
@@ -1240,7 +1240,7 @@ export interface ApiMealTypeCascadingListRequest {
 }
 
 export interface ApiMealTypeCreateRequest {
-    mealType: Omit<MealType, 'createdBy'>;
+    mealType: Omit<MealType, 'created_by'>;
 }
 
 export interface ApiMealTypeDestroyRequest {
@@ -1261,7 +1261,7 @@ export interface ApiMealTypeNullingListRequest {
 
 export interface ApiMealTypePartialUpdateRequest {
     id: number;
-    patchedMealType?: Omit<PatchedMealType, 'createdBy'>;
+    patchedMealType?: Omit<PatchedMealType, 'created_by'>;
 }
 
 export interface ApiMealTypeProtectingListRequest {
@@ -1277,7 +1277,7 @@ export interface ApiMealTypeRetrieveRequest {
 
 export interface ApiMealTypeUpdateRequest {
     id: number;
-    mealType: Omit<MealType, 'createdBy'>;
+    mealType: Omit<MealType, 'created_by'>;
 }
 
 export interface ApiPropertyCreateRequest {
@@ -1358,7 +1358,7 @@ export interface ApiPropertyUpdateRequest {
 
 export interface ApiRecipeAipropertiesCreateRequest {
     id: number;
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
     provider?: number;
 }
 
@@ -1374,7 +1374,7 @@ export interface ApiRecipeBookCascadingListRequest {
 }
 
 export interface ApiRecipeBookCreateRequest {
-    recipeBook: Omit<RecipeBook, 'createdBy'>;
+    recipeBook: Omit<RecipeBook, 'created_by'>;
 }
 
 export interface ApiRecipeBookDestroyRequest {
@@ -1382,7 +1382,7 @@ export interface ApiRecipeBookDestroyRequest {
 }
 
 export interface ApiRecipeBookEntryCreateRequest {
-    recipeBookEntry: Omit<RecipeBookEntry, 'bookContent'|'recipeContent'>;
+    recipeBookEntry: Omit<RecipeBookEntry, 'book_content'|'recipe_content'>;
 }
 
 export interface ApiRecipeBookEntryDestroyRequest {
@@ -1398,7 +1398,7 @@ export interface ApiRecipeBookEntryListRequest {
 
 export interface ApiRecipeBookEntryPartialUpdateRequest {
     id: number;
-    patchedRecipeBookEntry?: Omit<PatchedRecipeBookEntry, 'bookContent'|'recipeContent'>;
+    patchedRecipeBookEntry?: Omit<PatchedRecipeBookEntry, 'book_content'|'recipe_content'>;
 }
 
 export interface ApiRecipeBookEntryRetrieveRequest {
@@ -1407,7 +1407,7 @@ export interface ApiRecipeBookEntryRetrieveRequest {
 
 export interface ApiRecipeBookEntryUpdateRequest {
     id: number;
-    recipeBookEntry: Omit<RecipeBookEntry, 'bookContent'|'recipeContent'>;
+    recipeBookEntry: Omit<RecipeBookEntry, 'book_content'|'recipe_content'>;
 }
 
 export interface ApiRecipeBookListRequest {
@@ -1430,7 +1430,7 @@ export interface ApiRecipeBookNullingListRequest {
 
 export interface ApiRecipeBookPartialUpdateRequest {
     id: number;
-    patchedRecipeBook?: Omit<PatchedRecipeBook, 'createdBy'>;
+    patchedRecipeBook?: Omit<PatchedRecipeBook, 'created_by'>;
 }
 
 export interface ApiRecipeBookProtectingListRequest {
@@ -1446,7 +1446,7 @@ export interface ApiRecipeBookRetrieveRequest {
 
 export interface ApiRecipeBookUpdateRequest {
     id: number;
-    recipeBook: Omit<RecipeBook, 'createdBy'>;
+    recipeBook: Omit<RecipeBook, 'created_by'>;
 }
 
 export interface ApiRecipeCascadingListRequest {
@@ -1457,12 +1457,12 @@ export interface ApiRecipeCascadingListRequest {
 }
 
 export interface ApiRecipeCreateRequest {
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
 }
 
 export interface ApiRecipeDeleteExternalPartialUpdateRequest {
     id: number;
-    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
 }
 
 export interface ApiRecipeDestroyRequest {
@@ -1480,7 +1480,7 @@ export interface ApiRecipeImageUpdateRequest {
 }
 
 export interface ApiRecipeImportCreateRequest {
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'created_at'>;
 }
 
 export interface ApiRecipeImportDestroyRequest {
@@ -1488,12 +1488,12 @@ export interface ApiRecipeImportDestroyRequest {
 }
 
 export interface ApiRecipeImportImportAllCreateRequest {
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'created_at'>;
 }
 
 export interface ApiRecipeImportImportRecipeCreateRequest {
     id: number;
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'created_at'>;
 }
 
 export interface ApiRecipeImportListRequest {
@@ -1503,7 +1503,7 @@ export interface ApiRecipeImportListRequest {
 
 export interface ApiRecipeImportPartialUpdateRequest {
     id: number;
-    patchedRecipeImport?: Omit<PatchedRecipeImport, 'createdAt'>;
+    patchedRecipeImport?: Omit<PatchedRecipeImport, 'created_at'>;
 }
 
 export interface ApiRecipeImportRetrieveRequest {
@@ -1512,7 +1512,7 @@ export interface ApiRecipeImportRetrieveRequest {
 
 export interface ApiRecipeImportUpdateRequest {
     id: number;
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'created_at'>;
 }
 
 export interface ApiRecipeListRequest {
@@ -1571,7 +1571,7 @@ export interface ApiRecipeNullingListRequest {
 
 export interface ApiRecipePartialUpdateRequest {
     id: number;
-    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
 }
 
 export interface ApiRecipeProtectingListRequest {
@@ -1597,7 +1597,7 @@ export interface ApiRecipeShoppingUpdateRequest {
 
 export interface ApiRecipeUpdateRequest {
     id: number;
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'>;
 }
 
 export interface ApiSearchFieldsRetrieveRequest {
@@ -1637,7 +1637,7 @@ export interface ApiShoppingListEntryBulkCreateRequest {
 }
 
 export interface ApiShoppingListEntryCreateRequest {
-    shoppingListEntry: Omit<ShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'>;
+    shoppingListEntry: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'>;
 }
 
 export interface ApiShoppingListEntryDestroyRequest {
@@ -1654,7 +1654,7 @@ export interface ApiShoppingListEntryListRequest {
 
 export interface ApiShoppingListEntryPartialUpdateRequest {
     id: number;
-    patchedShoppingListEntry?: Omit<PatchedShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'>;
+    patchedShoppingListEntry?: Omit<PatchedShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'>;
 }
 
 export interface ApiShoppingListEntryRetrieveRequest {
@@ -1663,7 +1663,7 @@ export interface ApiShoppingListEntryRetrieveRequest {
 
 export interface ApiShoppingListEntryUpdateRequest {
     id: number;
-    shoppingListEntry: Omit<ShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'>;
+    shoppingListEntry: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'>;
 }
 
 export interface ApiShoppingListListRequest {
@@ -1696,7 +1696,7 @@ export interface ApiShoppingListRecipeBulkCreateEntriesCreateRequest {
 }
 
 export interface ApiShoppingListRecipeCreateRequest {
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'>;
 }
 
 export interface ApiShoppingListRecipeDestroyRequest {
@@ -1711,7 +1711,7 @@ export interface ApiShoppingListRecipeListRequest {
 
 export interface ApiShoppingListRecipePartialUpdateRequest {
     id: number;
-    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'>;
+    patchedShoppingListRecipe?: Omit<PatchedShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'>;
 }
 
 export interface ApiShoppingListRecipeRetrieveRequest {
@@ -1720,7 +1720,7 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
-    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipeData'|'mealPlanData'|'createdBy'>;
+    shoppingListRecipe: Omit<ShoppingListRecipe, 'recipe_data'|'meal_plan_data'|'created_by'>;
 }
 
 export interface ApiShoppingListRetrieveRequest {
@@ -1733,7 +1733,7 @@ export interface ApiShoppingListUpdateRequest {
 }
 
 export interface ApiSpaceCreateRequest {
-    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+    space?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'>;
 }
 
 export interface ApiSpaceListRequest {
@@ -1743,7 +1743,7 @@ export interface ApiSpaceListRequest {
 
 export interface ApiSpacePartialUpdateRequest {
     id: number;
-    patchedSpace?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+    patchedSpace?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'>;
 }
 
 export interface ApiSpaceRetrieveRequest {
@@ -1752,11 +1752,11 @@ export interface ApiSpaceRetrieveRequest {
 
 export interface ApiSpaceUpdateRequest {
     id: number;
-    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+    space?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'>;
 }
 
 export interface ApiStepCreateRequest {
-    step: Omit<Step, 'instructionsMarkdown'|'stepRecipeData'>;
+    step: Omit<Step, 'instructions_markdown'|'step_recipe_data'>;
 }
 
 export interface ApiStepDestroyRequest {
@@ -1772,7 +1772,7 @@ export interface ApiStepListRequest {
 
 export interface ApiStepPartialUpdateRequest {
     id: number;
-    patchedStep?: Omit<PatchedStep, 'instructionsMarkdown'|'stepRecipeData'>;
+    patchedStep?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'>;
 }
 
 export interface ApiStepRetrieveRequest {
@@ -1781,7 +1781,7 @@ export interface ApiStepRetrieveRequest {
 
 export interface ApiStepUpdateRequest {
     id: number;
-    step: Omit<Step, 'instructionsMarkdown'|'stepRecipeData'>;
+    step: Omit<Step, 'instructions_markdown'|'step_recipe_data'>;
 }
 
 export interface ApiStorageCascadingListRequest {
@@ -1792,7 +1792,7 @@ export interface ApiStorageCascadingListRequest {
 }
 
 export interface ApiStorageCreateRequest {
-    storage: Omit<Storage, 'createdBy'>;
+    storage: Omit<Storage, 'created_by'>;
 }
 
 export interface ApiStorageDestroyRequest {
@@ -1813,7 +1813,7 @@ export interface ApiStorageNullingListRequest {
 
 export interface ApiStoragePartialUpdateRequest {
     id: number;
-    patchedStorage?: Omit<PatchedStorage, 'createdBy'>;
+    patchedStorage?: Omit<PatchedStorage, 'created_by'>;
 }
 
 export interface ApiStorageProtectingListRequest {
@@ -1829,7 +1829,7 @@ export interface ApiStorageRetrieveRequest {
 
 export interface ApiStorageUpdateRequest {
     id: number;
-    storage: Omit<Storage, 'createdBy'>;
+    storage: Omit<Storage, 'created_by'>;
 }
 
 export interface ApiSupermarketCascadingListRequest {
@@ -1929,7 +1929,7 @@ export interface ApiSupermarketCategoryUpdateRequest {
 }
 
 export interface ApiSupermarketCreateRequest {
-    supermarket: Omit<Supermarket, 'categoryToSupermarket'>;
+    supermarket: Omit<Supermarket, 'category_to_supermarket'>;
 }
 
 export interface ApiSupermarketDestroyRequest {
@@ -1954,7 +1954,7 @@ export interface ApiSupermarketNullingListRequest {
 
 export interface ApiSupermarketPartialUpdateRequest {
     id: number;
-    patchedSupermarket?: Omit<PatchedSupermarket, 'categoryToSupermarket'>;
+    patchedSupermarket?: Omit<PatchedSupermarket, 'category_to_supermarket'>;
 }
 
 export interface ApiSupermarketProtectingListRequest {
@@ -1970,7 +1970,7 @@ export interface ApiSupermarketRetrieveRequest {
 
 export interface ApiSupermarketUpdateRequest {
     id: number;
-    supermarket: Omit<Supermarket, 'categoryToSupermarket'>;
+    supermarket: Omit<Supermarket, 'category_to_supermarket'>;
 }
 
 export interface ApiSwitchActiveSpaceRetrieveRequest {
@@ -1985,7 +1985,7 @@ export interface ApiSyncCascadingListRequest {
 }
 
 export interface ApiSyncCreateRequest {
-    sync: Omit<Sync, 'createdAt'|'updatedAt'>;
+    sync: Omit<Sync, 'created_at'|'updated_at'>;
 }
 
 export interface ApiSyncDestroyRequest {
@@ -2015,7 +2015,7 @@ export interface ApiSyncNullingListRequest {
 
 export interface ApiSyncPartialUpdateRequest {
     id: number;
-    patchedSync?: Omit<PatchedSync, 'createdAt'|'updatedAt'>;
+    patchedSync?: Omit<PatchedSync, 'created_at'|'updated_at'>;
 }
 
 export interface ApiSyncProtectingListRequest {
@@ -2027,7 +2027,7 @@ export interface ApiSyncProtectingListRequest {
 
 export interface ApiSyncQuerySyncedFolderCreateRequest {
     id: number;
-    sync: Omit<Sync, 'createdAt'|'updatedAt'>;
+    sync: Omit<Sync, 'created_at'|'updated_at'>;
 }
 
 export interface ApiSyncRetrieveRequest {
@@ -2036,7 +2036,7 @@ export interface ApiSyncRetrieveRequest {
 
 export interface ApiSyncUpdateRequest {
     id: number;
-    sync: Omit<Sync, 'createdAt'|'updatedAt'>;
+    sync: Omit<Sync, 'created_at'|'updated_at'>;
 }
 
 export interface ApiUnitCascadingListRequest {
@@ -2205,12 +2205,12 @@ export interface ApiUserListRequest {
 
 export interface ApiUserPartialUpdateRequest {
     id: number;
-    patchedUser?: Omit<PatchedUser, 'username'|'displayName'|'isStaff'|'isSuperuser'|'isActive'>;
+    patchedUser?: Omit<PatchedUser, 'username'|'display_name'|'is_staff'|'is_superuser'|'is_active'>;
 }
 
 export interface ApiUserPreferencePartialUpdateRequest {
     user: number;
-    patchedUserPreference?: Omit<PatchedUserPreference, 'user'|'foodInheritDefault'|'foodChildrenExist'>;
+    patchedUserPreference?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'food_children_exist'>;
 }
 
 export interface ApiUserPreferenceRetrieveRequest {
@@ -2237,7 +2237,7 @@ export interface ApiUserSpaceListRequest {
 
 export interface ApiUserSpacePartialUpdateRequest {
     id: number;
-    patchedUserSpace?: Omit<PatchedUserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'>;
+    patchedUserSpace?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'>;
 }
 
 export interface ApiUserSpaceRetrieveRequest {
@@ -2246,11 +2246,11 @@ export interface ApiUserSpaceRetrieveRequest {
 
 export interface ApiUserSpaceUpdateRequest {
     id: number;
-    userSpace: Omit<UserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'>;
+    userSpace: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'>;
 }
 
 export interface ApiViewLogCreateRequest {
-    viewLog: Omit<ViewLog, 'createdBy'|'createdAt'>;
+    viewLog: Omit<ViewLog, 'created_by'|'created_at'>;
 }
 
 export interface ApiViewLogDestroyRequest {
@@ -2264,7 +2264,7 @@ export interface ApiViewLogListRequest {
 
 export interface ApiViewLogPartialUpdateRequest {
     id: number;
-    patchedViewLog?: Omit<PatchedViewLog, 'createdBy'|'createdAt'>;
+    patchedViewLog?: Omit<PatchedViewLog, 'created_by'|'created_at'>;
 }
 
 export interface ApiViewLogRetrieveRequest {
@@ -2273,7 +2273,7 @@ export interface ApiViewLogRetrieveRequest {
 
 export interface ApiViewLogUpdateRequest {
     id: number;
-    viewLog: Omit<ViewLog, 'createdBy'|'createdAt'>;
+    viewLog: Omit<ViewLog, 'created_by'|'created_at'>;
 }
 
 /**

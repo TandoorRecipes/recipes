@@ -18,7 +18,6 @@ models/CookLog.ts
 models/CustomFilter.ts
 models/CustomFilterTypeEnum.ts
 models/DefaultPageEnum.ts
-models/DeleteEnum.ts
 models/ExportLog.ts
 models/ExportRequest.ts
 models/FdcQuery.ts
