@@ -105,7 +105,7 @@ from cookbook.serializer import (
     UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer, LocalizationSerializer, ServerSettingsSerializer, RecipeFromSourceResponseSerializer,
     ShoppingListEntryBulkCreateSerializer, FdcQuerySerializer, AiImportSerializer, ImportOpenDataSerializer, ImportOpenDataMetaDataSerializer, ImportOpenDataResponseSerializer,
     ExportRequestSerializer, RecipeImportSerializer, ConnectorConfigSerializer, SearchPreferenceSerializer, SearchFieldsSerializer, RecipeBatchUpdateSerializer,
-    AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, FoodStatsSerializer, GenericModelReferenceSerializer, ShoppingListSerializer,
+    AiProviderSerializer, AiLogSerializer, FoodBatchUpdateSerializer, FoodStatsSerializer, RecipeStatsSerializer, GenericModelReferenceSerializer, ShoppingListSerializer,
     IngredientParserRequestSerializer, IngredientParserResponseSerializer, HouseholdSerializer, UserSpaceBatchUpdateSerializer
 )
 from cookbook.version_info import TANDOOR_VERSION
@@ -2167,6 +2167,46 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         serializer = self.get_serializer(instance)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @extend_schema(responses=RecipeStatsSerializer(many=False))
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=RecipeStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        """Aggregate counts over the user-visible recipe set (space scoped,
+        private-visibility enforced). Used by the SearchPage stats footer."""
+        user = request.user
+        base_qs = Recipe.objects.filter(space=request.space).filter(
+            Q(private=False) | (Q(private=True) & (Q(created_by=user) | Q(shared=user)))
+        ).distinct()
+
+        new_cutoff = timezone.now() - datetime.timedelta(days=7)
+
+        unrated_sub = CookLog.objects.filter(
+            recipe=OuterRef('pk'), created_by=user, rating__isnull=False, rating__gt=0,
+        )
+        cooked_sub = CookLog.objects.filter(recipe=OuterRef('pk'), created_by=user)
+
+        annotated = base_qs.annotate(
+            _rated=Exists(unrated_sub),
+            _cooked=Exists(cooked_sub),
+        )
+
+        user_space = getattr(request, 'user_space', None)
+        if user_space is not None:
+            household = getattr(user_space, 'household', None)
+            shopping_users = get_household_user_ids(user_space)
+            makenow_ready = base_qs.cookable(household, shopping_users, missing=0).count()
+        else:
+            makenow_ready = 0
+
+        agg = annotated.aggregate(
+            total=Count('pk', distinct=True),
+            new=Count('pk', filter=Q(created_at__gte=new_cutoff), distinct=True),
+            unrated=Count('pk', filter=Q(_rated=False), distinct=True),
+            never_cooked=Count('pk', filter=Q(_cooked=False), distinct=True),
+            private=Count('pk', filter=Q(private=True), distinct=True),
+        )
+        agg['makenow_ready'] = makenow_ready
+        return Response({k: (v or 0) for k, v in agg.items()})
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=RecipeImageSerializer,
                        parser_classes=[MultiPartParser])

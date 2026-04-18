@@ -1,15 +1,19 @@
+import datetime
 import json
 
 import pytest
 from django.contrib import auth
 from django.urls import reverse
+from django.utils import timezone
 from django_scopes import scopes_disabled
 
 from cookbook.models import Food, Recipe, ShareLink, Unit
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
+from cookbook.tests.factories import CookLogFactory, RecipeFactory
 
 LIST_URL = 'api:recipe-list'
 DETAIL_URL = 'api:recipe-detail'
+STATS_URL = 'api:recipe-stats'
 
 
 # TODO need to add extensive tests against recipe search to go through all of the combinations of parameters
@@ -237,3 +241,80 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     assert r.status_code == 200
     get_response = json.loads(r.content)
     assert len(get_response['food_properties']) > 0
+
+
+# --- recipe stats (E-1) ---
+
+def _get_stats(client):
+    r = client.get(reverse(STATS_URL))
+    assert r.status_code == 200
+    return json.loads(r.content)
+
+
+def test_recipe_stats_empty_space(u1_s1, space_1):
+    """With no recipes visible, all counts are zero."""
+    stats = _get_stats(u1_s1)
+    assert stats == {'total': 0, 'makenow_ready': 0, 'new': 0, 'unrated': 0, 'never_cooked': 0, 'private': 0}
+
+
+def test_recipe_stats_total_and_never_cooked(u1_s1, space_1):
+    """Total counts all visible recipes; never_cooked counts recipes with no CookLog
+    for the caller."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        r1 = RecipeFactory.create(space=space_1)
+        r2 = RecipeFactory.create(space=space_1)
+        CookLogFactory.create(recipe=r1, space=space_1, created_by=user, rating=None)
+
+    stats = _get_stats(u1_s1)
+    assert stats['total'] == 2
+    assert stats['never_cooked'] == 1  # r2 only
+
+
+def test_recipe_stats_unrated(u1_s1, space_1):
+    """unrated counts recipes without a positive rating from the caller. A
+    CookLog with rating=None or 0 does NOT count as rated."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        rated = RecipeFactory.create(space=space_1)
+        unrated = RecipeFactory.create(space=space_1)
+        CookLogFactory.create(recipe=rated, space=space_1, created_by=user, rating=4)
+        CookLogFactory.create(recipe=unrated, space=space_1, created_by=user, rating=None)
+
+    stats = _get_stats(u1_s1)
+    assert stats['unrated'] == 1
+    assert stats['never_cooked'] == 0
+
+
+def test_recipe_stats_new_counts_last_7_days(u1_s1, space_1):
+    """new counts recipes created in the last 7 days."""
+    with scopes_disabled():
+        recent = RecipeFactory.create(space=space_1, created_at=timezone.now())
+        old = RecipeFactory.create(space=space_1, created_at=timezone.now() - datetime.timedelta(days=30))
+
+    stats = _get_stats(u1_s1)
+    assert stats['total'] == 2
+    assert stats['new'] == 1
+
+
+def test_recipe_stats_private_count(u1_s1, space_1):
+    """private counts caller-owned recipes flagged private."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        r1 = RecipeFactory.create(space=space_1)
+        r2 = RecipeFactory.create(space=space_1, created_by=user, private=True)
+
+    stats = _get_stats(u1_s1)
+    assert stats['total'] == 2
+    assert stats['private'] == 1
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+])
+def test_recipe_stats_permission(arg, request):
+    """Stats is a read action — anonymous blocked, authenticated allowed."""
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse(STATS_URL)).status_code == arg[1]
