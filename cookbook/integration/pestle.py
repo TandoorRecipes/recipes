@@ -106,7 +106,7 @@ class Pestle(Integration):
             if "@type" not in s or s["@type"] == 1 or s["@type"] == 2:
                 step = Step.objects.create(
                     instruction=s["text"],
-                    name=_("Step") + " " + {index + 1},
+                    name=_("Step") + " " + str(index + 1),
                     space=self.request.space,
                     show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
