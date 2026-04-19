@@ -70,7 +70,21 @@ class Pestle(Integration):
                 space=self.request.space,
                 show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
             )
+
             for ingredient in recipe_dict["recipeIngredient"]:
+                if ":" in ingredient["text"] and ingredient_step.ingredients.count() == 0:
+                    ingredient_step.name = _("Ingredients") + " " + ingredient["text"]
+                    ingredient_step.save()
+                    continue
+                elif ":" in ingredient["text"] and ingredient_step.ingredients.count() > 0:
+                    recipe.steps.add(ingredient_step)
+                    ingredient_step = Step.objects.create(
+                        name=_("Ingredients") + " " + ingredient["text"],
+                        space=self.request.space,
+                        show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                    )
+                    continue
+
                 ingredient_parser = IngredientParser(self.request, True)
                 if "quantity" in ingredient and "name" in ingredient:
                     ingredient_step.ingredients.add(
