@@ -14,13 +14,13 @@ DETAIL_URL = 'api:connectorconfig-detail'
 @pytest.fixture()
 def obj_1(space_1, u1_s1):
     return ConnectorConfig.objects.create(
-        name='HomeAssistant 1', token='token', url='url', todo_entity='todo.shopping_list', enabled=True, created_by=auth.get_user(u1_s1), space=space_1, )
+        name='HomeAssistant 1', token='token', url='url', list_id='todo.shopping_list', enabled=True, created_by=auth.get_user(u1_s1), space=space_1, )
 
 
 @pytest.fixture
 def obj_2(space_1, u1_s1):
     return ConnectorConfig.objects.create(
-        name='HomeAssistant 2', token='token', url='url', todo_entity='todo.shopping_list', enabled=True, created_by=auth.get_user(u1_s1), space=space_1, )
+        name='HomeAssistant 2', token='token', url='url', list_id='todo.shopping_list', enabled=True, created_by=auth.get_user(u1_s1), space=space_1, )
 
 
 @pytest.mark.parametrize(
@@ -116,6 +116,28 @@ def test_add_with_supports_description_field_false(a1_s2):
     assert r.status_code == 201
     assert response['name'] == 'test'
     assert response['supports_description_field'] == False
+
+def test_add_bring_connector(a1_s1):
+    r = a1_s1.post(
+        reverse(LIST_URL),
+        {
+            'name': 'Bring Shopping',
+            'type': 'Bring',
+            'email': 'user@example.com',
+            'password': 'secret123',
+            'list_id': 'abcd-1234-efgh-5678',
+            'enabled': 'true',
+            'on_shopping_list_entry_created_enabled': 'true',
+        },
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == 201
+    assert response['name'] == 'Bring Shopping'
+    assert response['type'] == 'Bring'
+    assert response['email'] == 'user@example.com'
+    assert response['list_id'] == 'abcd-1234-efgh-5678'
+    assert 'password' not in response
 
 def test_delete(a1_s1, a1_s2, obj_1):
     r = a1_s2.delete(
