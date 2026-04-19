@@ -23,6 +23,23 @@ vi.mock('@/openapi', async (importOriginal) => ({
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))
 
+// Track addError calls across the file without pulling useI18n into the test context.
+const addErrorSpy = vi.fn()
+vi.mock('@/stores/MessageStore', async (importOriginal) => {
+    const actual = await importOriginal<any>()
+    return {
+        ...actual,
+        useMessageStore: () => ({
+            addError: addErrorSpy,
+            addPreparedMessage: vi.fn(),
+            addMessage: vi.fn(),
+            deleteAllMessages: vi.fn(),
+            messages: [],
+            snackbarQueue: [],
+        }),
+    }
+})
+
 import SearchPage from '@/pages/SearchPage.vue'
 
 const HEAVY_STUBS: Record<string, any> = {
@@ -126,6 +143,45 @@ describe('SearchPage (Phase 3 rewrite)', () => {
         it('fires exactly one apiRecipeList call on mount', async () => {
             await mountSearchPage({keywords: '1,2'})
             expect((apiMock.apiRecipeList as any).mock.calls.length).toBe(1)
+        })
+    })
+
+    // Locked in pre-upstream-sync: our searchRecipes catch must silently drop
+    // AbortError (both `err.name === 'AbortError'` and wrapped via `err.cause`)
+    // rather than surfacing an error toast. Upstream's parallel fix (11fcc4667)
+    // used unsafe `err.cause.name` with no optional chaining; our rewritten
+    // version is strictly safer. This test prevents a literal port during
+    // rebase from regressing the optional-chained guard.
+    describe('AbortError swallowing', () => {
+        it('does not toast a plain AbortError on apiRecipeList rejection', async () => {
+            addErrorSpy.mockClear()
+            apiMock.apiRecipeList = vi.fn().mockRejectedValue(Object.assign(new Error('aborted'), {name: 'AbortError'}))
+            const {wrapper} = await mountSearchPage()
+            await flushPromises()
+            expect(addErrorSpy).not.toHaveBeenCalled()
+            wrapper.unmount()
+        })
+
+        it('does not toast when an AbortError is wrapped in err.cause', async () => {
+            addErrorSpy.mockClear()
+            const wrapped = Object.assign(new Error('wrapped'), {
+                name: 'TypeError',
+                cause: {name: 'AbortError'},
+            })
+            apiMock.apiRecipeList = vi.fn().mockRejectedValue(wrapped)
+            const {wrapper} = await mountSearchPage()
+            await flushPromises()
+            expect(addErrorSpy).not.toHaveBeenCalled()
+            wrapper.unmount()
+        })
+
+        it('still toasts a non-abort error', async () => {
+            addErrorSpy.mockClear()
+            apiMock.apiRecipeList = vi.fn().mockRejectedValue(new Error('boom'))
+            const {wrapper} = await mountSearchPage()
+            await flushPromises()
+            expect(addErrorSpy).toHaveBeenCalled()
+            wrapper.unmount()
         })
     })
 
