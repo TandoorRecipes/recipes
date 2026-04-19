@@ -37,14 +37,14 @@ class Pestle(Integration):
             description=description,
             created_by=self.request.user,
             internal=True,
-            servings=(parse_servings(recipe_dict.get("recipeYield", 1))),
+            servings=(parse_servings(recipe_dict["recipeYield"]) if "recipeYield" in recipe_dict else 1),
             space=self.request.space,
         )
 
-        total_time = (iso_duration_to_minutes(recipe_dict.get("totalTime", 0)))
-        prep_time = (iso_duration_to_minutes(recipe_dict.get("prepTime", 0)))
+        total_time = (iso_duration_to_minutes(recipe_dict["totalTime"]) if "totalTime" in recipe_dict and recipe_dict["totalTime"] != "" else 0)
+        prep_time = (iso_duration_to_minutes(recipe_dict["prepTime"]) if "prepTime" in recipe_dict and recipe_dict["prepTime"] != "" else 0)
 
-        recipe.waiting_time = (iso_duration_to_minutes(recipe_dict.get("cookTime", 0)))
+        recipe.waiting_time = (iso_duration_to_minutes(recipe_dict["cookTime"]) if "cookTime" in recipe_dict and recipe_dict["cookTime"] != "" else 0)
         recipe.working_time = (prep_time if prep_time > 0 else total_time - recipe.waiting_time)
         if "source" in recipe_dict:
             recipe.source_url = recipe_dict["source"].strip()
