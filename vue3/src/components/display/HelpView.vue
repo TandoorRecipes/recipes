@@ -17,6 +17,7 @@
                 <v-list-item link :title="$t('AI')" @click="window = 'ai'" prepend-icon="$ai"></v-list-item>
                 <v-list-item link :title="$t('Unit')" @click="window = 'unit'" prepend-icon="fa-solid fa-scale-balanced"></v-list-item>
                 <v-list-item link :title="$t('Food')" @click="window = 'food'" prepend-icon="fa-solid fa-carrot"></v-list-item>
+                <v-list-item link :title="$t('Hierarchy')" @click="window = 'hierarchy'" prepend-icon="fa-solid fa-sitemap"></v-list-item>
                 <v-list-item link :title="$t('Keyword')" @click="window = 'keyword'" prepend-icon="fa-solid fa-tags"></v-list-item>
                 <v-list-item link :title="$t('Recipe Structure')" @click="window = 'recipe_structure'" prepend-icon="fa-solid fa-diagram-project"></v-list-item>
                 <v-list-item link :title="$t('Properties')" @click="window = 'properties'" prepend-icon="fa-solid fa-database"></v-list-item>
@@ -186,6 +187,33 @@
                             {{ $t('Food') }}
                         </v-btn>
 
+                    </v-window-item>
+                    <v-window-item value="hierarchy">
+                        <p class="mt-3">Both Foods and Keywords can be organized into hierarchies — parent-child trees that affect how Tandoor searches and substitutes items.</p>
+
+                        <p class="mt-3"><strong>{{ $t('Parent') }} &amp; {{ $t('AddChild') }}</strong><br/>
+                            A parent groups related items. For example, "Citrus" can be the parent of "Lemon" and "Lime".
+                            When you search for a parent food, Tandoor also finds recipes that use any of its children.
+                        </p>
+
+                        <p class="mt-3"><strong>{{ $t('substitute_children') }}</strong><br/>
+                            When enabled on a food, its children can stand in for it in recipes.
+                            For example, if "Citrus" has substitute children enabled, a recipe calling for "Citrus" will accept "Lemon" or "Lime".
+                        </p>
+
+                        <p class="mt-3"><strong>{{ $t('substitute_siblings') }}</strong><br/>
+                            When enabled, items at the same level (sharing a parent) can replace each other.
+                            For example, if "Lemon" and "Lime" are siblings under "Citrus" with substitute siblings enabled, they can substitute for each other.
+                        </p>
+
+                        <p class="mt-3"><strong>{{ $t('Merge') }}</strong><br/>
+                            Merging combines two items into one. All recipes using the source item are updated to use the target instead.
+                            The source item is permanently deleted. This is useful for cleaning up duplicates.
+                        </p>
+
+                        <p class="mt-3"><strong>{{ $t('RemoveParent') }}</strong><br/>
+                            Moves an item to the top level of the hierarchy, removing its parent relationship.
+                        </p>
                     </v-window-item>
                     <v-window-item value="keyword">
                         <p class="mt-3">Keywords are a very flexible Tool to help you organize your recipe collection.
@@ -481,6 +509,7 @@ const mobileMenuItems = ref([
     {title: t('AI'), props: {prependIcon: '$ai'}, value: 'ai'},
     {title: t('Unit'), props: {prependIcon: 'fa-solid fa-scale-balanced'}, value: 'unit'},
     {title: t('Food'), props: {prependIcon: 'fa-solid fa-carrot'}, value: 'food'},
+    {title: t('Hierarchy'), props: {prependIcon: 'fa-solid fa-sitemap'}, value: 'hierarchy'},
     {title: t('Keyword'), props: {prependIcon: 'fa-solid fa-tags'}, value: 'keyword'},
     {title: t('RecipeStructure'), props: {prependIcon: 'fa-solid fa-diagram-project'}, value: 'recipe_structure'},
     {title: t('Properties'), props: {prependIcon: 'fa-solid fa-database'}, value: 'properties'},

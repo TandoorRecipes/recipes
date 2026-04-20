@@ -1805,10 +1805,63 @@ paths:
       description: logs request counts to redis cache total/per user/
       parameters:
       - in: query
-        name: limit
+        name: expired
+        schema:
+          type: boolean
+        description: Filter by whether food has expired inventory entries
+      - in: query
+        name: expiring_soon
+        schema:
+          type: integer
+        description: Filter by foods with inventory expiring within N days
+      - in: query
+        name: has_children
+        schema:
+          type: boolean
+        description: Filter by whether food has child foods
+      - in: query
+        name: has_inventory
+        schema:
+          type: boolean
+        description: Filter by whether food has inventory entries with amount > 0
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether food has a linked recipe
+      - in: query
+        name: has_substitute
+        schema:
+          type: boolean
+        description: Filter by whether food has substitutes configured
+      - in: query
+        name: ignore_shopping
+        schema:
+          type: boolean
+        description: Filter by ignore_shopping flag
+      - in: query
+        name: in_shopping_list
+        schema:
+          type: boolean
+        description: Filter by whether food is currently in an unchecked shopping
+          list entry
+      - in: query
+        name: inventory_location
+        schema:
+          type: integer
+        description: Filter by inventory location ID (only entries with amount > 0)
+      - in: query
+        name: onhand
+        schema:
+          type: boolean
+        description: Filter by on-hand status for current user and shared users
+      - in: query
+        name: ordering
         schema:
           type: string
-        description: limit number of entries to return
+        description: 'Order results by field. Allowed: name, -name, numrecipe, -numrecipe,
+          numchild, -numchild, supermarket_category__name, -supermarket_category__name,
+          created_at, -created_at. Ignored when query is active.'
       - name: page
         required: false
         in: query
@@ -1825,34 +1878,34 @@ paths:
         name: query
         schema:
           type: string
-        description: lookup if query string is contained within the name, case insensitive
-      - in: query
-        name: random
-        schema:
-          type: string
-        description: randomly orders entries (only works together with limit)
+        description: Search foods by name (fuzzy or contains depending on user search
+          preferences)
       - in: query
         name: root
         schema:
           type: integer
-        description: Return first level children of {obj} with ID [int].  Integer
-          0 will return root {obj}s.
+        description: Return first level children of food with ID [int]. Integer 0
+          will return root foods.
       - in: query
         name: root_tree
         schema:
           type: integer
-        description: Return all items belonging to the tree of the given {obj} id
+        description: Return all items belonging to the tree of the given food id
+      - in: query
+        name: supermarket_category
+        schema:
+          type: integer
+        description: Filter by supermarket category ID
       - in: query
         name: tree
         schema:
           type: integer
-        description: Return all self and children of {obj} with ID [int].
+        description: Return all self and children of food with ID [int].
       - in: query
-        name: updated_at
+        name: used_in_recipes
         schema:
-          type: string
-        description: if model has an updated_at timestamp, filter only models updated
-          at or after datetime
+          type: boolean
+        description: Filter by whether food is used as an ingredient in any recipe
       tags:
       - api
       security:
@@ -2311,9 +2364,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedGenericModelReferenceList'
           description: ''
-  /api/food/{id}/shopping/:
-    put:
-      operationId: apiFoodShoppingUpdate
+  /api/food/{id}/substitutes/:
+    get:
+      operationId: apiFoodSubstitutesRetrieve
       description: logs request counts to redis cache total/per user/
       parameters:
       - in: path
@@ -2324,18 +2377,6 @@ paths:
         required: true
       tags:
       - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/FoodShoppingUpdate'
-        required: true
       security:
       - ApiKeyAuth: []
       responses:
@@ -2343,7 +2384,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FoodShoppingUpdate'
+                $ref: '#/components/schemas/FoodSimple'
           description: ''
   /api/food/batch_update/:
     put:
@@ -2371,6 +2412,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FoodBatchUpdate'
+          description: ''
+  /api/food/stats/:
+    get:
+      operationId: apiFoodStatsRetrieve
+      description: logs request counts to redis cache total/per user/
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoodStats'
           description: ''
   /api/get_external_file_link/{id}/:
     get:
@@ -3854,6 +3910,16 @@ paths:
       operationId: apiKeywordList
       description: logs request counts to redis cache total/per user/
       parameters:
+      - in: query
+        name: has_children
+        schema:
+          type: boolean
+        description: Filter by whether keyword has child keywords
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether keyword is used by at least one recipe
       - in: query
         name: limit
         schema:
@@ -5468,7 +5534,9 @@ paths:
         name: sort_order
         schema:
           type: string
-        description: 'Determines the order of the results. Options are: score,-score,name,-name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,lastviewed,-lastviewed'
+        description: 'Determines the order of the results. Options are: score, -score,
+          name, -name, lastcooked, -lastcooked, rating, -rating, times_cooked, -times_cooked,
+          created_at, -created_at, lastviewed, -lastviewed'
       - in: query
         name: timescooked
         schema:
@@ -6730,6 +6798,23 @@ paths:
                 items:
                   $ref: '#/components/schemas/RecipeFlat'
           description: ''
+  /api/recipe/stats/:
+    get:
+      operationId: apiRecipeStatsRetrieve
+      description: |-
+        Aggregate counts over the user-visible recipe set (space scoped,
+        private-visibility enforced). Used by the SearchPage stats footer.
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeStats'
+          description: ''
   /api/reset-food-inheritance/:
     post:
       operationId: apiResetFoodInheritanceCreate
@@ -6945,6 +7030,11 @@ paths:
         individual entries of a shopping list
         automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
       parameters:
+      - in: query
+        name: food
+        schema:
+          type: integer
+        description: Returns only entries for the given food id
       - in: query
         name: mealplan
         schema:
@@ -9400,6 +9490,11 @@ paths:
       description: logs request counts to redis cache total/per user/
       parameters:
       - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether unit is used by at least one recipe ingredient
+      - in: query
         name: limit
         schema:
           type: string
@@ -10445,6 +10540,33 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserSpace'
           description: ''
+  /api/user-space/batch_update/:
+    put:
+      operationId: apiUserSpaceBatchUpdateUpdate
+      description: logs request counts to redis cache total/per user/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSpaceBatchUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSpaceBatchUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserSpaceBatchUpdate'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSpaceBatchUpdate'
+          description: ''
   /api/user/{id}/:
     get:
       operationId: apiUserRetrieve
@@ -11062,36 +11184,44 @@ components:
         name:
           type: string
           maxLength: 128
-        search:
-          type: string
+        type:
+          $ref: '#/components/schemas/CustomFilterTypeEnum'
+        search: {}
         shared:
           type: array
           items:
             $ref: '#/components/schemas/User'
         created_by:
-          type: integer
+          allOf:
+          - $ref: '#/components/schemas/User'
           readOnly: true
       required:
       - created_by
       - name
-      - search
+    CustomFilterTypeEnum:
+      enum:
+      - RECIPE
+      - FOOD
+      - KEYWORD
+      type: string
+      description: |-
+        * `RECIPE` - Recipe
+        * `FOOD` - Food
+        * `KEYWORD` - Keyword
     DefaultPageEnum:
       enum:
+      - HOME
       - SEARCH
       - PLAN
       - BOOKS
       - SHOPPING
       type: string
       description: |-
+        * `HOME` - Home
         * `SEARCH` - Search
         * `PLAN` - Meal-Plan
         * `BOOKS` - Books
         * `SHOPPING` - Shopping
-    DeleteEnum:
-      enum:
-      - 'true'
-      type: string
-      description: '* `true` - true'
     ExportLog:
       type: object
       properties:
@@ -11273,6 +11403,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         inherit_fields:
           type: array
           items:
@@ -11298,6 +11431,11 @@ components:
         substitute_onhand:
           type: boolean
           readOnly: true
+        available_substitutes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoodSimple'
+          readOnly: true
         child_inherit_fields:
           type: array
           items:
@@ -11311,12 +11449,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ShoppingList'
+        in_inventory:
+          type: string
+          readOnly: true
+        substitute_inventory:
+          type: boolean
+          readOnly: true
+        matched_filter:
+          type: boolean
+          description: None for non-expanded responses, bool when tree_search=true
+            (E-8).
+          readOnly: true
       required:
+      - available_substitutes
       - full_name
+      - in_inventory
+      - matched_filter
       - name
       - numchild
+      - numrecipe
       - parent
       - shopping
+      - substitute_inventory
       - substitute_onhand
     FoodBatchUpdate:
       type: object
@@ -11493,33 +11647,6 @@ components:
       - name
       - shopping_lists
       - supermarket_category
-    FoodShoppingUpdate:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: false
-        amount:
-          type: integer
-          writeOnly: true
-          nullable: true
-          description: Amount of food to add to the shopping list
-        unit:
-          type: integer
-          writeOnly: true
-          nullable: true
-          description: ID of unit to use for the shopping list
-        delete:
-          allOf:
-          - $ref: '#/components/schemas/DeleteEnum'
-          writeOnly: true
-          nullable: true
-          description: |-
-            When set to true will delete all food from active shopping lists.
-
-            * `true` - true
-      required:
-      - delete
     FoodSimple:
       type: object
       properties:
@@ -11536,6 +11663,28 @@ components:
           maxLength: 128
       required:
       - name
+    FoodStats:
+      type: object
+      properties:
+        onhand:
+          type: integer
+        shopping:
+          type: integer
+        ignored:
+          type: integer
+        inventory:
+          type: integer
+        expired:
+          type: integer
+        total:
+          type: integer
+      required:
+      - expired
+      - ignored
+      - inventory
+      - onhand
+      - shopping
+      - total
     GenericModelReference:
       type: object
       properties:
@@ -11934,7 +12083,9 @@ components:
         food:
           $ref: '#/components/schemas/Food'
         unit:
-          $ref: '#/components/schemas/Unit'
+          allOf:
+          - $ref: '#/components/schemas/Unit'
+          nullable: true
         amount:
           type: number
           format: double
@@ -12077,6 +12228,10 @@ components:
           maxLength: 254
         group:
           $ref: '#/components/schemas/Group'
+        household:
+          allOf:
+          - $ref: '#/components/schemas/Household'
+          nullable: true
         valid_until:
           type: string
           format: date
@@ -12163,6 +12318,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -12183,6 +12341,7 @@ components:
       - label
       - name
       - numchild
+      - numrecipe
       - parent
       - updated_at
     KeywordLabel:
@@ -12250,11 +12409,6 @@ components:
         created_by:
           type: integer
           readOnly: true
-        shared:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         recipe_name:
           type: string
           readOnly: true
@@ -12314,6 +12468,16 @@ components:
         * `DB` - Dropbox
         * `NEXTCLOUD` - Nextcloud
         * `LOCAL` - Local
+    NavTextColorEnum:
+      enum:
+      - BLANK
+      - LIGHT
+      - DARK
+      type: string
+      description: |-
+        * `BLANK` - -------
+        * `LIGHT` - Light
+        * `DARK` - Dark
     NutritionInformation:
       type: object
       properties:
@@ -13623,14 +13787,16 @@ components:
         name:
           type: string
           maxLength: 128
-        search:
-          type: string
+        type:
+          $ref: '#/components/schemas/CustomFilterTypeEnum'
+        search: {}
         shared:
           type: array
           items:
             $ref: '#/components/schemas/User'
         created_by:
-          type: integer
+          allOf:
+          - $ref: '#/components/schemas/User'
           readOnly: true
     PatchedExportLog:
       type: object
@@ -13759,6 +13925,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         inherit_fields:
           type: array
           items:
@@ -13784,6 +13953,11 @@ components:
         substitute_onhand:
           type: boolean
           readOnly: true
+        available_substitutes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoodSimple'
+          readOnly: true
         child_inherit_fields:
           type: array
           items:
@@ -13797,6 +13971,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ShoppingList'
+        in_inventory:
+          type: string
+          readOnly: true
+        substitute_inventory:
+          type: boolean
+          readOnly: true
+        matched_filter:
+          type: boolean
+          description: None for non-expanded responses, bool when tree_search=true
+            (E-8).
+          readOnly: true
     PatchedHousehold:
       type: object
       description: Adds nested create feature
@@ -13914,7 +14099,9 @@ components:
         food:
           $ref: '#/components/schemas/Food'
         unit:
-          $ref: '#/components/schemas/Unit'
+          allOf:
+          - $ref: '#/components/schemas/Unit'
+          nullable: true
         amount:
           type: number
           format: double
@@ -14006,6 +14193,10 @@ components:
           maxLength: 254
         group:
           $ref: '#/components/schemas/Group'
+        household:
+          allOf:
+          - $ref: '#/components/schemas/Household'
+          nullable: true
         valid_until:
           type: string
           format: date
@@ -14085,6 +14276,9 @@ components:
         numchild:
           type: integer
           readOnly: true
+        numrecipe:
+          type: integer
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -14132,11 +14326,6 @@ components:
         created_by:
           type: integer
           readOnly: true
-        shared:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         recipe_name:
           type: string
           readOnly: true
@@ -14641,7 +14830,7 @@ components:
           type: string
           maxLength: 8
         nav_text_color:
-          $ref: '#/components/schemas/SpaceNavTextColorEnum'
+          $ref: '#/components/schemas/NavTextColorEnum'
         logo_color_32:
           allOf:
           - $ref: '#/components/schemas/UserFileView'
@@ -14729,9 +14918,6 @@ components:
           type: integer
           nullable: true
         step_recipe_data:
-          readOnly: true
-        numrecipe:
-          type: integer
           readOnly: true
         show_ingredients_table:
           type: boolean
@@ -14985,6 +15171,9 @@ components:
           type: string
           nullable: true
           maxLength: 256
+        numrecipe:
+          type: integer
+          readOnly: true
         open_data_slug:
           type: string
           nullable: true
@@ -15102,8 +15291,6 @@ components:
         nav_bg_color:
           type: string
           maxLength: 8
-        nav_text_color:
-          $ref: '#/components/schemas/UserPreferenceNavTextColorEnum'
         nav_show_logo:
           type: boolean
         default_unit:
@@ -15113,13 +15300,6 @@ components:
           $ref: '#/components/schemas/DefaultPageEnum'
         use_fractions:
           type: boolean
-        use_kj:
-          type: boolean
-        plan_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         nav_sticky:
           type: boolean
         ingredient_decimals:
@@ -15149,11 +15329,6 @@ components:
           type: boolean
         mealplan_autoexclude_onhand:
           type: boolean
-        shopping_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         shopping_recent_days:
           type: integer
           maximum: 2147483647
@@ -15181,6 +15356,7 @@ components:
         food_children_exist:
           type: boolean
           readOnly: true
+        start_page_sections: {}
     PatchedUserSpace:
       type: object
       description: Adds nested create feature
@@ -15706,9 +15882,6 @@ components:
         new:
           type: boolean
           readOnly: true
-        recent:
-          type: string
-          readOnly: true
       required:
       - created_at
       - created_by
@@ -15719,7 +15892,6 @@ components:
       - name
       - new
       - rating
-      - recent
       - servings
       - servings_text
       - updated_at
@@ -15769,6 +15941,33 @@ components:
       required:
       - name
       - url
+    RecipeStats:
+      type: object
+      description: |-
+        Actionable-state counts for the recipe search / list view.
+
+        Scope: space + user-visible (non-private OR owned/shared). All counts
+        reflect the full list the caller can see, not the active filter set.
+      properties:
+        makenow_ready:
+          type: integer
+        new:
+          type: integer
+        unrated:
+          type: integer
+        never_cooked:
+          type: integer
+        private:
+          type: integer
+        total:
+          type: integer
+      required:
+      - makenow_ready
+      - never_cooked
+      - new
+      - private
+      - total
+      - unrated
     SearchEnum:
       enum:
       - plain
@@ -16160,6 +16359,9 @@ components:
           $ref: '#/components/schemas/SourceImportUnit'
         note:
           type: string
+        order:
+          type: integer
+          nullable: true
         original_text:
           type: string
       required:
@@ -16343,7 +16545,7 @@ components:
           type: string
           maxLength: 8
         nav_text_color:
-          $ref: '#/components/schemas/SpaceNavTextColorEnum'
+          $ref: '#/components/schemas/NavTextColorEnum'
         logo_color_32:
           allOf:
           - $ref: '#/components/schemas/UserFileView'
@@ -16406,16 +16608,6 @@ components:
       - max_users
       - recipe_count
       - user_count
-    SpaceNavTextColorEnum:
-      enum:
-      - BLANK
-      - LIGHT
-      - DARK
-      type: string
-      description: |-
-        * `BLANK` - -------
-        * `LIGHT` - Light
-        * `DARK` - Dark
     SpaceThemeEnum:
       enum:
       - BLANK
@@ -16472,15 +16664,11 @@ components:
           nullable: true
         step_recipe_data:
           readOnly: true
-        numrecipe:
-          type: integer
-          readOnly: true
         show_ingredients_table:
           type: boolean
       required:
       - ingredients
       - instructions_markdown
-      - numrecipe
       - step_recipe_data
     Storage:
       type: object
@@ -16786,12 +16974,16 @@ components:
           type: string
           nullable: true
           maxLength: 256
+        numrecipe:
+          type: integer
+          readOnly: true
         open_data_slug:
           type: string
           nullable: true
           maxLength: 128
       required:
       - name
+      - numrecipe
     UnitConversion:
       type: object
       description: Adds nested create feature
@@ -16957,8 +17149,6 @@ components:
         nav_bg_color:
           type: string
           maxLength: 8
-        nav_text_color:
-          $ref: '#/components/schemas/UserPreferenceNavTextColorEnum'
         nav_show_logo:
           type: boolean
         default_unit:
@@ -16968,13 +17158,6 @@ components:
           $ref: '#/components/schemas/DefaultPageEnum'
         use_fractions:
           type: boolean
-        use_kj:
-          type: boolean
-        plan_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         nav_sticky:
           type: boolean
         ingredient_decimals:
@@ -17004,11 +17187,6 @@ components:
           type: boolean
         mealplan_autoexclude_onhand:
           type: boolean
-        shopping_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         shopping_recent_days:
           type: integer
           maximum: 2147483647
@@ -17036,18 +17214,11 @@ components:
         food_children_exist:
           type: boolean
           readOnly: true
+        start_page_sections: {}
       required:
       - food_children_exist
       - food_inherit_default
       - user
-    UserPreferenceNavTextColorEnum:
-      enum:
-      - LIGHT
-      - DARK
-      type: string
-      description: |-
-        * `LIGHT` - Light
-        * `DARK` - Dark
     UserSpace:
       type: object
       description: Adds nested create feature
@@ -17094,6 +17265,23 @@ components:
       - space
       - updated_at
       - user
+    UserSpaceBatchUpdate:
+      type: object
+      properties:
+        user_spaces:
+          type: array
+          items:
+            type: integer
+        household:
+          type: integer
+          nullable: true
+        group_set:
+          type: array
+          items:
+            type: integer
+      required:
+      - group_set
+      - user_spaces
     ViewLog:
       type: object
       properties:

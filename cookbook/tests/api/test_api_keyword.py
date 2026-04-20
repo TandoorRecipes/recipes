@@ -370,3 +370,39 @@ def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert response['count'] == 4
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
+
+
+# ==================== has_recipe filter ====================
+
+def test_filter_has_recipe_true(obj_1, obj_2, recipe_1_s1, u1_s1):
+    """obj_1 is attached to recipe_1_s1; obj_2 has no recipes."""
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?has_recipe=true').content)
+    ids = [k['id'] for k in response['results']]
+    assert obj_1.id in ids
+    assert obj_2.id not in ids
+
+
+def test_filter_has_recipe_false(obj_1, obj_2, recipe_1_s1, u1_s1):
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?has_recipe=false').content)
+    ids = [k['id'] for k in response['results']]
+    assert obj_1.id not in ids
+    assert obj_2.id in ids
+
+
+# ==================== has_children filter ====================
+
+def test_filter_has_children_true(obj_1, obj_1_1, obj_2, u1_s1):
+    """obj_1 has obj_1_1 as a child; obj_2 is a leaf."""
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?has_children=true').content)
+    ids = [k['id'] for k in response['results']]
+    assert obj_1.id in ids
+    assert obj_1_1.id not in ids
+    assert obj_2.id not in ids
+
+
+def test_filter_has_children_false(obj_1, obj_1_1, obj_2, u1_s1):
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?has_children=false').content)
+    ids = [k['id'] for k in response['results']]
+    assert obj_1.id not in ids
+    assert obj_1_1.id in ids
+    assert obj_2.id in ids

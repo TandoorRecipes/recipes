@@ -473,6 +473,17 @@ class TestRatingFilter:
         assert s.r3.id in ids
         assert len(ids) == 11
 
+    def test_unrated_param_returns_unrated(self, with_ratings, u1_s1, space_1, make_search_request):
+        """?unrated=true returns recipes with no rating annotation."""
+        s = with_ratings
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, unrated='true')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id not in ids
+        assert s.r2.id not in ids
+        assert s.r3.id in ids
+        assert len(ids) == 11
+
     def test_rating_user_scoped(self, with_ratings, u2_s1, space_1, make_search_request):
         """Ratings are user-scoped."""
         s = with_ratings
@@ -499,6 +510,90 @@ class TestRatingFilter:
         ids = set(results.values_list('id', flat=True))
         assert s.r1.id in ids
         assert s.r2.id not in ids
+
+    def test_with_rating_annotation_returns_true_average(self, search_recipes, u1_s1, space_1):
+        """with_rating should annotate the true Decimal average, not a rounded integer.
+
+        Under the old Round(Avg(...)) annotation, [4, 5] would return 5 (or 4 under
+        banker's rounding). Under the new contract the annotation is a Decimal with
+        two decimal places and reflects the true mean — 4.50 — so sort can
+        distinguish 4.2 from 4.4 and exact-match filters can apply a tolerance band."""
+        from decimal import Decimal
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=4, space=space_1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=5, space=space_1)
+        with scope(space=space_1):
+            annotated = Recipe.objects.with_rating(user).get(id=s.r1.id)
+        assert annotated.rating == Decimal('4.50')
+
+    def test_rating_exact_fractional_tolerance_band(self, search_recipes, u1_s1, space_1, make_search_request):
+        """Exact rating search uses a half-open tolerance band [exact-0.5, exact+0.5).
+
+        3.5 → matches exact=4 (lower bound inclusive), not exact=3 (upper bound exclusive).
+        True average 3.5 must NOT be widened to match both.
+        Under the old rounded annotation, 3.5 became 4 via Round(3.5) → only matched exact=4.
+        Under the new annotation with the tolerance-band filter, the contract is explicit.
+        """
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        # r1 avg = 3.5 via [3, 4]
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=3, space=space_1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=4, space=space_1)
+        # r2 avg = 2.5 via [2, 3] — lower bound inclusive for exact=3
+        CookLogFactory.create(recipe=s.r2, created_by=user, rating=2, space=space_1)
+        CookLogFactory.create(recipe=s.r2, created_by=user, rating=3, space=space_1)
+        req = make_search_request(u1_s1)
+
+        # exact=4 matches r1 (3.5 in [3.5, 4.5)) but not r2 (2.5 not in [3.5, 4.5))
+        results = do_search(req, space_1, rating='4')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids
+        assert s.r2.id not in ids
+
+        # exact=3 matches r2 (2.5 in [2.5, 3.5)) but NOT r1 (3.5 not in [2.5, 3.5), upper bound exclusive)
+        results = do_search(req, space_1, rating='3')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r2.id in ids
+        assert s.r1.id not in ids
+
+    def test_rating_gte_uses_true_average(self, search_recipes, u1_s1, space_1, make_search_request):
+        """rating_gte should compare against the true average, not a rounded value.
+
+        A recipe with avg 11/3 ≈ 3.67 should match gte=3 but NOT gte=4.
+        Under the old Round() annotation, 3.67 rounded to 4 and WOULD match gte=4 —
+        silently widening the filter by half a star."""
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        # r1 avg = 11/3 ≈ 3.67 via [3, 4, 4]
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=3, space=space_1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=4, space=space_1)
+        CookLogFactory.create(recipe=s.r1, created_by=user, rating=4, space=space_1)
+        req = make_search_request(u1_s1)
+
+        results = do_search(req, space_1, rating_gte='3')
+        assert s.r1.id in set(results.values_list('id', flat=True))
+
+        results = do_search(req, space_1, rating_gte='4')
+        assert s.r1.id not in set(results.values_list('id', flat=True))
+
+    def test_zero_rating_legacy_row_excluded_from_average(self, search_recipes, u1_s1, space_1):
+        """A legacy CookLog row with rating=0 must NOT drag down the recipe's average.
+
+        Pre-normalization data may still contain rating=0 rows (clearable v-rating
+        emitted 0 before the serializer was updated). The with_rating annotation must
+        exclude these from the average via a `cooklog__rating__gt=0` filter so that a
+        5-star recipe with a legacy 0-row still annotates as 5.0, not 2.5."""
+        from cookbook.models import CookLog
+        from decimal import Decimal
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        # Direct creation bypasses CookLogFactory, simulating pre-migration data.
+        CookLog.objects.create(recipe=s.r1, created_by=user, rating=0, space=space_1)
+        CookLog.objects.create(recipe=s.r1, created_by=user, rating=5, space=space_1)
+        with scope(space=space_1):
+            annotated = Recipe.objects.with_rating(user).get(id=s.r1.id)
+        assert annotated.rating == Decimal('5.00')
 
     def test_rating_avg_ignores_other_users(self, search_recipes, u1_s1, u2_s1, space_1, make_search_request):
         """Rating annotation must only average the current user's ratings.
@@ -700,6 +795,88 @@ class TestIncludeChildren:
         results = do_search(req, space_1, foods_or=[parent_food.id], include_children='false')
         ids = set(results.values_list('id', flat=True))
         assert s.r1.id not in ids
+
+
+# ========================== RECIPE PROPERTY FILTERS ==========================
+
+
+class TestRecipePropertyFilters:
+
+    def test_working_time_gte(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        with scopes_disabled():
+            s.r1.working_time = 30
+            s.r1.save()
+            s.r2.working_time = 60
+            s.r2.save()
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, working_time_gte='45')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r2.id in ids
+        assert s.r1.id not in ids
+
+    def test_working_time_lte(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        with scopes_disabled():
+            s.r1.working_time = 30
+            s.r1.save()
+            s.r2.working_time = 60
+            s.r2.save()
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, working_time_lte='45')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r1.id in ids
+        assert s.r2.id not in ids
+
+    def test_servings_range(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        with scopes_disabled():
+            s.r1.servings = 2
+            s.r1.save()
+            s.r2.servings = 6
+            s.r2.save()
+            s.r3.servings = 4
+            s.r3.save()
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, servings_gte='3', servings_lte='5')
+        ids = set(results.values_list('id', flat=True))
+        assert s.r3.id in ids
+        assert s.r1.id not in ids
+        assert s.r2.id not in ids
+
+    def test_has_photo_true(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, has_photo='true')
+        ids = set(results.values_list('id', flat=True))
+        for r in results:
+            assert r.image is not None or r.image != ''
+
+    def test_has_photo_false(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, has_photo='false')
+        ids = set(results.values_list('id', flat=True))
+        for r in results:
+            assert r.image is None or r.image == ''
+
+    def test_has_keywords_true(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, has_keywords='true')
+        ids = set(results.values_list('id', flat=True))
+        for r_id in ids:
+            with scopes_disabled():
+                assert Recipe.objects.get(id=r_id).keywords.exists()
+
+    def test_has_keywords_false(self, search_recipes, u1_s1, space_1, make_search_request):
+        s = search_recipes
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, has_keywords='false')
+        ids = set(results.values_list('id', flat=True))
+        for r_id in ids:
+            with scopes_disabled():
+                assert not Recipe.objects.get(id=r_id).keywords.exists()
 
 
 # ========================== COMBINED FILTERS ==========================

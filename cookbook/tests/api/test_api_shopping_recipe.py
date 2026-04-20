@@ -7,6 +7,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
+from cookbook.helper.permission_helper import invalidate_household_cache
 from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace
 from cookbook.tests.factories import (MealPlanFactory, RecipeFactory,
                                       StepFactory, UserFactory)
@@ -87,6 +88,9 @@ def test_shopping_recipe_method(request, arg, recipe, sle_count, u1_s1, u2_s1, s
             household = Household.objects.create(name='test', space=space_1)
             UserSpace.objects.filter(user=user).update(household=household)
             UserSpace.objects.filter(user=auth.get_user(u2_s1)).update(household=household)
+            # .update() bypasses signals — manually invalidate household cache
+            for us in UserSpace.objects.filter(space=space_1, household=household):
+                invalidate_household_cache(us)
 
         # after share, user in space can see shopping list
         assert json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)['count'] == sle_count

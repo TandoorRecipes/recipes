@@ -34,7 +34,7 @@
                         <menu-user-info></menu-user-info>
                         <v-divider></v-divider>
 
-                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
+                        <component :is="item.component" v-bind="{prependIcon: item.prependIcon, title: item.title, to: item.to, href: item.href, onClick: item.onClick}" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -54,8 +54,7 @@
             </p>
         </v-app-bar>
 
-        <v-app-bar color="info" density="compact"
-                   v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.message != '' && !useUserPreferenceStore().isPrintMode">
             <p class="text-center w-100">
                 {{ useUserPreferenceStore().activeSpace.message }}
             </p>
@@ -66,11 +65,11 @@
         </v-main>
 
         <!-- completely hide in print mode because setting d-print-node keeps layout -->
-        <v-navigation-drawer v-if="lgAndUp && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
+        <v-navigation-drawer v-if="!mobile && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
             <v-list>
                 <menu-user-info></menu-user-info>
                 <v-divider></v-divider>
-                <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
+                <component :is="item.component" v-bind="{prependIcon: item.prependIcon, title: item.title, to: item.to}" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
 
                 <navigation-drawer-context-menu></navigation-drawer-context-menu>
             </v-list>
@@ -87,7 +86,7 @@
 
         </v-navigation-drawer>
 
-        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && !lgAndUp && !useUserPreferenceStore().isPrintMode">
+        <v-bottom-navigation grow v-if="useUserPreferenceStore().isAuthenticated && mobile && !useUserPreferenceStore().isPrintMode">
             <v-btn value="recent" :to="{ name: 'StartPage', params: {} }">
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
@@ -104,7 +103,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
+                        <component :is="item.component" v-bind="{prependIcon: item.prependIcon, title: item.title, to: item.to}" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>
@@ -115,33 +114,42 @@
             location="top center"
         ></v-snackbar-queued>
 
+        <recipe-view-settings-drawer v-if="useUserPreferenceStore().isAuthenticated" />
+
     </v-app>
 
 </template>
 
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
+import RecipeViewSettingsDrawer from "@/components/inputs/RecipeViewSettingsDrawer.vue"
 
 import {useDisplay, useLocale} from "vuetify"
 import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {useTitle} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
-import {useRouter} from "vue-router";
+import {useRouter, useRoute} from "vue-router";
 import {useI18n} from "vue-i18n";
-import {THousehold, TSpace} from "@/types/Models.ts";
+import {useRecipeViewSettings} from '@/composables/useRecipeViewSettings'
 import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
 
-const {lgAndUp} = useDisplay()
+const {mobile} = useDisplay()
 const {t} = useI18n()
 
 const title = useTitle()
 const router = useRouter()
+const route = useRoute()
+const {isOpen: recipeSettingsOpen} = useRecipeViewSettings()
+
+watch(() => route.name, (name) => {
+    if (name !== 'RecipeViewPage') recipeSettingsOpen.value = false
+})
 
 onMounted(() => {
     useUserPreferenceStore().init().then(() => {
@@ -164,14 +172,6 @@ onMounted(() => {
 router.afterEach((to, from) => {
     if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
-    } else if (to.name == 'StartPage' &&
-        useUserPreferenceStore().initCompleted &&
-        useUserPreferenceStore().activeSpace.spaceSetupCompleted &&
-        !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined &&
-        !useUserPreferenceStore().activeSpace.householdSetupCompleted &&
-        useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id! &&
-        useUserPreferenceStore().activeUserSpace?.household == undefined ) {
-        router.push({name: 'HouseholdPage'})
     }
     nextTick(() => {
         if (to.meta.title) {

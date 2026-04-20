@@ -188,6 +188,12 @@ export interface PatchedFood {
     readonly numchild?: number;
     /**
      * 
+     * @type {number}
+     * @memberof PatchedFood
+     */
+    readonly numrecipe?: number;
+    /**
+     * 
      * @type {Array<FoodInheritField>}
      * @memberof PatchedFood
      */
@@ -231,6 +237,12 @@ export interface PatchedFood {
     readonly substituteOnhand?: boolean;
     /**
      * 
+     * @type {Array<FoodSimple>}
+     * @memberof PatchedFood
+     */
+    readonly availableSubstitutes?: Array<FoodSimple>;
+    /**
+     * 
      * @type {Array<FoodInheritField>}
      * @memberof PatchedFood
      */
@@ -247,6 +259,24 @@ export interface PatchedFood {
      * @memberof PatchedFood
      */
     shoppingLists?: Array<ShoppingList>;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedFood
+     */
+    readonly inInventory?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedFood
+     */
+    readonly substituteInventory?: boolean;
+    /**
+     * None for non-expanded responses, bool when tree_search=true (E-8).
+     * @type {boolean}
+     * @memberof PatchedFood
+     */
+    readonly matchedFilter?: boolean;
 }
 
 /**
@@ -281,6 +311,7 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'supermarketCategory': json['supermarket_category'] == null ? undefined : SupermarketCategoryFromJSON(json['supermarket_category']),
         'parent': json['parent'] == null ? undefined : json['parent'],
         'numchild': json['numchild'] == null ? undefined : json['numchild'],
+        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'inheritFields': json['inherit_fields'] == null ? undefined : ((json['inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'fullName': json['full_name'] == null ? undefined : json['full_name'],
         'ignoreShopping': json['ignore_shopping'] == null ? undefined : json['ignore_shopping'],
@@ -288,13 +319,17 @@ export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'substituteSiblings': json['substitute_siblings'] == null ? undefined : json['substitute_siblings'],
         'substituteChildren': json['substitute_children'] == null ? undefined : json['substitute_children'],
         'substituteOnhand': json['substitute_onhand'] == null ? undefined : json['substitute_onhand'],
+        'availableSubstitutes': json['available_substitutes'] == null ? undefined : ((json['available_substitutes'] as Array<any>).map(FoodSimpleFromJSON)),
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
+        'inInventory': json['in_inventory'] == null ? undefined : json['in_inventory'],
+        'substituteInventory': json['substitute_inventory'] == null ? undefined : json['substitute_inventory'],
+        'matchedFilter': json['matched_filter'] == null ? undefined : json['matched_filter'],
     };
 }
 
-export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'> | null): any {
+export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'> | null): any {
     if (value == null) {
         return value;
     }

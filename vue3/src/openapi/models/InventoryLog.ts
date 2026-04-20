@@ -127,7 +127,7 @@ export function InventoryLogFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function InventoryLogToJSON(value?: Omit<InventoryLog, 'createdAt'> | null): any {
+export function InventoryLogToJSON(value?: Omit<InventoryLog, 'created_at'> | null): any {
     if (value == null) {
         return value;
     }
