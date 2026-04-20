@@ -44,6 +44,10 @@
                     <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')"
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
                 </v-list-item>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('ShowFoodImages')"
+                              v-model="useUserPreferenceStore().deviceSettings.shopping_showFoodImages"></v-switch>
+                </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item @click="exportDialog = true" link prepend-icon="fa-solid fa-download">
                     {{ $t('Export') }}
@@ -143,7 +147,7 @@
                                 <v-menu activator="parent">
                                     <v-list density="compact">
                                         <v-list-item
-                                            @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = null; useShoppingStore().updateEntriesStructure()">
+                                            @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists = []; useShoppingStore().updateEntriesStructure()">
                                             {{ $t('SelectNone') }}
                                         </v-list-item>
                                         <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">

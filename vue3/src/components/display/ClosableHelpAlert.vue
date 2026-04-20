@@ -5,7 +5,8 @@
         </template>
         <p>
         {{ props.text}}
-            <v-btn color="success" class="float-right" v-if="props.actionText" @click="emit('click')">{{ actionText}}</v-btn>
+            <v-btn color="success" class="float-right" v-if="props.actionText && !props.actionLink" @click="emit('click')">{{ actionText}}</v-btn>
+            <v-btn v-if="props.actionLink" icon="$help" variant="plain" size="small" class="float-right" @click="emit('click')" :aria-label="props.actionText" />
         </p>
     </v-alert>
 </template>
@@ -25,6 +26,9 @@ const props = defineProps({
 
     // show an action button if any text is given and emit click event if button is pressed
     actionText: {type: String, required: false,},
+
+    // when true, shows a subtle icon button instead of the success button
+    actionLink: {type: Boolean, default: false},
 })
 
 /**

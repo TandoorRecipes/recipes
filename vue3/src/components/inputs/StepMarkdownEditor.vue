@@ -2,7 +2,8 @@
     <mavon-editor v-model="step.instruction" :autofocus="false" :external-link="false"
                   style="z-index: auto; box-shadow: none;" class="border-sm" :id="'id_instruction_' + step.id"
                   :language="'en'"
-                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'" ref="markdownEditor">
+                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'" ref="markdownEditor"
+                  @imgAdd="onImageAdd">
         <template #left-toolbar-after>
             <span class="op-icon-divider"></span>
             <button
@@ -34,8 +35,11 @@
 import {Ingredient, Step} from "@/openapi";
 import IngredientString from "@/components/display/IngredientString.vue";
 import {computed, nextTick, onMounted, useTemplateRef} from "vue";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {useFileApi} from "@/composables/useFileApi";
 
 const step = defineModel<Step>({required: true})
+const {createOrUpdateUserFile} = useFileApi()
 
 function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Backspace' && (e.ctrlKey || e.metaKey)) {
@@ -70,6 +74,18 @@ const templates = computed(() => {
 
     return templateList
 })
+
+async function onImageAdd(pos: string, file: File) {
+    try {
+        const userFile = await createOrUpdateUserFile(
+            file.name?.replace(/\.[^/.]+$/, '') || 'pasted-image',
+            file,
+        )
+        markdownEditor.value.$img2Url(pos, userFile.preview)
+    } catch (err: any) {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    }
+}
 
 /**
  * insert the given text at the caret position into the text

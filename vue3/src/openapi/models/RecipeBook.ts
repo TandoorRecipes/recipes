@@ -25,6 +25,12 @@ import {
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { UserFileView } from './UserFileView';
+import {
+    UserFileViewFromJSON,
+    UserFileViewFromJSONTyped,
+    UserFileViewToJSON,
+} from './UserFileView';
 
 /**
  * Adds nested create feature
@@ -50,6 +56,18 @@ export interface RecipeBook {
      * @memberof RecipeBook
      */
     description?: string;
+    /**
+     * 
+     * @type {UserFileView}
+     * @memberof RecipeBook
+     */
+    image?: UserFileView;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBook
+     */
+    readonly fallbackImage: string;
     /**
      * 
      * @type {Array<User>}
@@ -81,6 +99,7 @@ export interface RecipeBook {
  */
 export function instanceOfRecipeBook(value: object): value is RecipeBook {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('fallbackImage' in value) || value['fallbackImage'] === undefined) return false;
     if (!('shared' in value) || value['shared'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
@@ -99,6 +118,8 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
+        'fallbackImage': json['fallback_image'],
         'shared': ((json['shared'] as Array<any>).map(UserFromJSON)),
         'createdBy': UserFromJSON(json['created_by']),
         'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
@@ -106,7 +127,7 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeBookToJSON(value?: Omit<RecipeBook, 'createdBy'> | null): any {
+export function RecipeBookToJSON(value?: Omit<RecipeBook, 'fallback_image'|'created_by'> | null): any {
     if (value == null) {
         return value;
     }
@@ -115,6 +136,7 @@ export function RecipeBookToJSON(value?: Omit<RecipeBook, 'createdBy'> | null): 
         'id': value['id'],
         'name': value['name'],
         'description': value['description'],
+        'image': UserFileViewToJSON(value['image']),
         'shared': ((value['shared'] as Array<any>).map(UserToJSON)),
         'filter': CustomFilterToJSON(value['filter']),
         'order': value['order'],

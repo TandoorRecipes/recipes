@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass, field
 
 from django.contrib.postgres.search import SearchQuery
@@ -10,7 +9,7 @@ from django.utils import translation
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import get_household_user_ids
 from cookbook.managers import DICTIONARY, TextSearchConfig
-from cookbook.models import CustomFilter, SearchPreference
+from cookbook.models import CustomFilter, Recipe, SearchPreference
 from recipes import settings
 
 _NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
@@ -61,7 +60,7 @@ class SearchParams:
     foods: dict = field(default_factory=dict)
     books: dict = field(default_factory=dict)
     steps: list | str | None = None
-    units: list | str | None = None
+    units: dict = field(default_factory=dict)
     internal: bool | None = None
     sort_order: list | str | None = None
     random: bool = False
@@ -83,6 +82,17 @@ class SearchParams:
     cookedon_lte: str | None = None
     createdby: str | int | None = None
     makenow: int | None = None
+    unrated: bool = False
+    working_time_gte: int | None = None
+    working_time_lte: int | None = None
+    waiting_time_gte: int | None = None
+    waiting_time_lte: int | None = None
+    servings_gte: int | None = None
+    servings_lte: int | None = None
+    total_time_gte: int | None = None
+    total_time_lte: int | None = None
+    has_photo: bool | None = None
+    has_keywords: bool | None = None
 
     @staticmethod
     def _parse_makenow(value):
@@ -95,48 +105,72 @@ class SearchParams:
         except (ValueError, TypeError):
             return None
 
+    @staticmethod
+    def _scalar(params, key, default=None):
+        """Last-wins scalar extraction. Handles lists from duplicate query params."""
+        v = params.get(key, default)
+        if isinstance(v, list):
+            return v[-1] if v else default
+        return v
+
     @classmethod
     def from_params(cls, params):
-        sort_order = params.get('sort_order', None)
+        _s = cls._scalar
+
+        sort_order = _s(params, 'sort_order')
         if sort_order == 'random':
             random = True
             sort_order = None
         else:
-            random = str2bool(params.get('random', False))
+            random = str2bool(_s(params, 'random', False))
 
-        query_raw = params.get('query', None)
+        query_raw = _s(params, 'query')
+
+        def _str_or_none(val):
+            return str(val) if val is not None else None
 
         return cls(
             query=query_raw.strip() if query_raw else None,
-            rating=params.get('rating', None),
-            rating_gte=params.get('rating_gte', None),
-            rating_lte=params.get('rating_lte', None),
+            rating=_str_or_none(_s(params, 'rating')),
+            rating_gte=_str_or_none(_s(params, 'rating_gte')),
+            rating_lte=_str_or_none(_s(params, 'rating_lte')),
             keywords=_parse_filter_params(params, 'keywords'),
             foods=_parse_filter_params(params, 'foods'),
             books=_parse_filter_params(params, 'books'),
             steps=params.get('steps', None),
-            units=params.get('units', None),
-            internal=str2bool(params.get('internal', None)),
+            units=_parse_filter_params(params, 'units'),
+            internal=str2bool(_s(params, 'internal')),
             sort_order=sort_order,
             random=random,
-            new=str2bool(params.get('new', False)),
-            num_recent=int(params.get('num_recent', 0)),
-            include_children=str2bool(params.get('include_children', True)),
-            timescooked=params.get('timescooked', None),
-            timescooked_gte=params.get('timescooked_gte', None),
-            timescooked_lte=params.get('timescooked_lte', None),
-            createdon=params.get('createdon', None),
-            createdon_gte=params.get('createdon_gte', None),
-            createdon_lte=params.get('createdon_lte', None),
-            updatedon=params.get('updatedon', None),
-            updatedon_gte=params.get('updatedon_gte', None),
-            updatedon_lte=params.get('updatedon_lte', None),
-            viewedon_gte=params.get('viewedon_gte', None),
-            viewedon_lte=params.get('viewedon_lte', None),
-            cookedon_gte=params.get('cookedon_gte', None),
-            cookedon_lte=params.get('cookedon_lte', None),
-            createdby=params.get('createdby', None),
-            makenow=cls._parse_makenow(params.get('makenow', None)),
+            new=str2bool(_s(params, 'new', False)),
+            num_recent=int(_s(params, 'num_recent', 0)),
+            include_children=str2bool(_s(params, 'include_children', True)),
+            timescooked=_s(params, 'timescooked'),
+            timescooked_gte=_s(params, 'timescooked_gte'),
+            timescooked_lte=_s(params, 'timescooked_lte'),
+            createdon=_s(params, 'createdon'),
+            createdon_gte=_s(params, 'createdon_gte'),
+            createdon_lte=_s(params, 'createdon_lte'),
+            updatedon=_s(params, 'updatedon'),
+            updatedon_gte=_s(params, 'updatedon_gte'),
+            updatedon_lte=_s(params, 'updatedon_lte'),
+            viewedon_gte=_s(params, 'viewedon_gte'),
+            viewedon_lte=_s(params, 'viewedon_lte'),
+            cookedon_gte=_s(params, 'cookedon_gte'),
+            cookedon_lte=_s(params, 'cookedon_lte'),
+            createdby=_s(params, 'createdby'),
+            makenow=cls._parse_makenow(_s(params, 'makenow')),
+            unrated=str2bool(_s(params, 'unrated', False)),
+            working_time_gte=int(_s(params, 'working_time_gte')) if _s(params, 'working_time_gte') else None,
+            working_time_lte=int(_s(params, 'working_time_lte')) if _s(params, 'working_time_lte') else None,
+            waiting_time_gte=int(_s(params, 'waiting_time_gte')) if _s(params, 'waiting_time_gte') else None,
+            waiting_time_lte=int(_s(params, 'waiting_time_lte')) if _s(params, 'waiting_time_lte') else None,
+            servings_gte=int(_s(params, 'servings_gte')) if _s(params, 'servings_gte') else None,
+            servings_lte=int(_s(params, 'servings_lte')) if _s(params, 'servings_lte') else None,
+            total_time_gte=int(_s(params, 'total_time_gte')) if _s(params, 'total_time_gte') else None,
+            total_time_lte=int(_s(params, 'total_time_lte')) if _s(params, 'total_time_lte') else None,
+            has_photo=str2bool(_s(params, 'has_photo')),
+            has_keywords=str2bool(_s(params, 'has_keywords')),
         )
 
 
@@ -145,18 +179,33 @@ def _is_postgres():
 
 
 def _resolve_params(request, params):
-    if filter_id := params.get('filter', None):
+    """Merge CustomFilter base (if any) with HTTP params. HTTP wins on conflict."""
+    base = {}
+
+    if hasattr(params, 'lists'):
+        http_params = {}
+        for k, vs in params.lists():
+            http_params[k] = vs if len(vs) > 1 else vs[0]
+    else:
+        http_params = {**(params or {})}
+
+    if filter_id := http_params.pop('filter', None):
         custom_filter = (
             CustomFilter.objects.filter(id=filter_id, space=request.space)
             .filter(Q(created_by=request.user) | Q(shared=request.user) | Q(recipebook__shared=request.user))
+            .distinct()
             .first()
         )
         if custom_filter:
-            resolved = {**json.loads(custom_filter.search)}
-            if isinstance(resolved.get('rating', None), int):
-                resolved['rating'] = str(resolved['rating'])
-            return resolved
-    return {**(params or {})}
+            search_data = custom_filter.search if isinstance(custom_filter.search, dict) else {}
+            base = {**search_data}
+
+    # Layer HTTP params on top of filter base — non-empty HTTP params win
+    for key, value in http_params.items():
+        if value is not None and value != '' and value != []:
+            base[key] = value
+
+    return base
 
 
 def _load_search_prefs(user):
@@ -214,9 +263,9 @@ def _build_text_search_config(string, prefs):
 # TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
 class RecipeSearch:
 
-    def __init__(self, request, **params):
+    def __init__(self, request, params=None, **kwargs):
         self._request = request
-        resolved = _resolve_params(request, params)
+        resolved = _resolve_params(request, params if params is not None else kwargs)
         self._prefs = _load_search_prefs(request.user)
         self._params = SearchParams.from_params(resolved)
         self._text_config = _build_text_search_config(self._params.query, self._prefs)
@@ -242,21 +291,69 @@ class RecipeSearch:
         if params.new:
             qs = qs.with_new_flag()
 
-        # Annotation + filter methods
-        qs = qs.by_rating(user, exact=params.rating, gte=params.rating_gte, lte=params.rating_lte)
+        # Rating: unrated and rating_* are mutually exclusive — unrated forces
+        # rating IS NULL and by_rating would then layer rating >= N on top,
+        # silently returning an empty set. Short-circuit by_rating when the
+        # caller asked for unrated.
+        if params.unrated:
+            qs = qs.with_rating(user).filter(rating__isnull=True)
+        else:
+            qs = qs.by_rating(user, exact=params.rating, gte=params.rating_gte, lte=params.rating_lte)
         qs = qs.by_times_cooked(user, space, exact=params.timescooked, gte=params.timescooked_gte, lte=params.timescooked_lte)
         qs = qs.by_cooked_on(user, space, gte=params.cookedon_gte, lte=params.cookedon_lte)
         qs = qs.by_viewed_on(user, space, gte=params.viewedon_gte, lte=params.viewedon_lte)
 
-        # Pure filters
+        # Pure scalar filters first — these stay table-level and don't force
+        # M2M joins, so applying them before entity filters keeps the join
+        # fan-out small for later stages.
         qs = qs.by_created_on(exact=params.createdon, gte=params.createdon_gte, lte=params.createdon_lte)
         qs = qs.by_updated_on(exact=params.updatedon, gte=params.updatedon_gte, lte=params.updatedon_lte)
         qs = qs.by_created_by(params.createdby)
         qs = qs.by_internal(params.internal)
         qs = qs.by_steps(params.steps)
-        qs = qs.by_units(params.units)
 
-        # Entity filters
+        if params.working_time_gte is not None:
+            qs = qs.filter(working_time__gte=params.working_time_gte)
+        if params.working_time_lte is not None:
+            qs = qs.filter(working_time__lte=params.working_time_lte)
+        if params.waiting_time_gte is not None:
+            qs = qs.filter(waiting_time__gte=params.waiting_time_gte)
+        if params.waiting_time_lte is not None:
+            qs = qs.filter(waiting_time__lte=params.waiting_time_lte)
+        if params.total_time_gte is not None or params.total_time_lte is not None:
+            qs = qs.annotate(total_time=F('working_time') + F('waiting_time'))
+            if params.total_time_gte is not None:
+                qs = qs.filter(total_time__gte=params.total_time_gte)
+            if params.total_time_lte is not None:
+                qs = qs.filter(total_time__lte=params.total_time_lte)
+        if params.servings_gte is not None:
+            qs = qs.filter(servings__gte=params.servings_gte)
+        if params.servings_lte is not None:
+            qs = qs.filter(servings__lte=params.servings_lte)
+        # has_photo covers BOTH the legacy Recipe.image column AND the new
+        # RecipeImage rows. Migration 0246 copies legacy into RecipeImage but
+        # not every deployment will have run it yet, so both stores remain
+        # authoritative until the legacy column is deprecated. `.distinct()`
+        # required on the True branch because `images__isnull=False` joins
+        # the reverse relation and can fan out multiple rows per recipe.
+        if params.has_photo is True:
+            qs = qs.filter(Q(images__isnull=False) | (~Q(image='') & ~Q(image__isnull=True))).distinct()
+        elif params.has_photo is False:
+            qs = qs.filter(images__isnull=True).filter(Q(image='') | Q(image__isnull=True))
+        # has_keywords via subquery avoids fanning rows through the keywords
+        # M2M join before the by_keywords / by_foods / by_books joins below.
+        if params.has_keywords is True:
+            qs = qs.filter(id__in=Recipe.objects.filter(keywords__isnull=False).values('id'))
+        elif params.has_keywords is False:
+            qs = qs.filter(id__in=Recipe.objects.filter(keywords__isnull=True).values('id'))
+
+        # Entity / M2M filters — these join and fan rows out, so they must
+        # come AFTER the scalar filters above to keep the intermediate row
+        # count small.
+        qs = qs.by_units(
+            or_=params.units['or'], and_=params.units['and'],
+            or_not=params.units['or_not'], and_not=params.units['and_not'],
+        )
         qs = qs.by_keywords(
             or_=params.keywords['or'], and_=params.keywords['and'],
             or_not=params.keywords['or_not'], and_not=params.keywords['and_not'],

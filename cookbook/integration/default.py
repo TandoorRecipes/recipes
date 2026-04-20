@@ -78,7 +78,9 @@ class Default(Integration):
                 recipe_stream.close()
 
                 try:
-                    recipe_zip_obj.writestr(f'image{get_filetype(r.image.file.name)}', r.image.file.read())
+                    img = r.primary_image
+                    if img:
+                        recipe_zip_obj.writestr(f'image{get_filetype(img.name)}', img.read())
                 except (ValueError, FileNotFoundError):
                     pass
 

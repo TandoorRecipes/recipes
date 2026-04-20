@@ -7,40 +7,40 @@
                 <v-stepper v-model="stepper">
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
-                            <v-stepper-item :title="$t('Type')" value="type" icon=" "></v-stepper-item>
+                            <v-stepper-item :title="$t('Type')" value="type"></v-stepper-item>
                             <v-divider></v-divider>
 
                             <template v-if="['url','ai', 'source'].includes(importType)">
-                                <v-stepper-item :title="$t('Import')" value="url" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="url"></v-stepper-item>
                                 <v-divider></v-divider>
                                 <template v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
-                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates" icon=" "></v-stepper-item>
+                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates"></v-stepper-item>
                                     <v-divider></v-divider>
                                 </template>
-                                <v-stepper-item :title="$t('Image')" value="image_chooser" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Image')" value="image_chooser"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Steps')" value="step_editor" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Steps')" value="step_editor"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Save')" value="confirm" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Save')" value="confirm"></v-stepper-item>
                             </template>
                             <template v-if="importType == 'app'">
-                                <v-stepper-item :title="$t('App')" value="app" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('App')" value="app"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('File')" value="file" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('File')" value="file"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Import')" value="import_log" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="import_log"></v-stepper-item>
                             </template>
 
                             <template v-if="importType == 'bookmarklet'">
-                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet"></v-stepper-item>
                             </template>
 
                             <template v-if="importType == 'url-list'">
-                                <v-stepper-item :title="$t('UrlList')" value="url_list_input" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('UrlList')" value="url_list_input"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Import')" value="url_list_import" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="url_list_import"></v-stepper-item>
                             </template>
 
                         </v-stepper-header>
@@ -602,9 +602,13 @@ function importFromUrlList() {
             if (sourceResponse.recipe) {
                 api.apiRecipeCreate({recipe: sourceResponse.recipe}).then(recipe => {
                     urlListImportedRecipes.value.push(recipe)
-                    updateRecipeImage(recipe.id!, null, sourceResponse.recipe?.imageUrl).then(imageResponse => {
+                    if (sourceResponse.recipe?.imageUrl) {
+                        createRecipeImageFromUrl(recipe.id!, sourceResponse.recipe.imageUrl).finally(() => {
+                            setTimeout(importFromUrlList, 500)
+                        })
+                    } else {
                         setTimeout(importFromUrlList, 500)
-                    })
+                    }
                 }).catch(err => {
                     setTimeout(importFromUrlList, 500)
                 }).finally(() => {
@@ -632,7 +636,7 @@ const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
 const {t} = useI18n()
-const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
+const {createRecipeImageFromUrl, doAiImport, doAppImport, fileApiLoading} = useFileApi()
 const {getFullUrl} = useDjangoUrls()
 
 const bookmarkletContent = computed(() => {
@@ -810,13 +814,19 @@ function createRecipeFromImport() {
         importResponse.value.recipe.keywords = importResponse.value.recipe.keywords.filter(k => k.importKeyword)
 
         api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
-            updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
+            const imageUrl = importResponse.value.recipe?.imageUrl
+            const navigate = () => {
                 if (editAfterImport.value) {
                     router.push({name: 'ModelEditPage', params: {id: recipe.id, model: 'recipe'}})
                 } else {
                     router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
                 }
-            })
+            }
+            if (imageUrl) {
+                createRecipeImageFromUrl(recipe.id!, imageUrl).finally(navigate)
+            } else {
+                navigate()
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         }).finally(() => {

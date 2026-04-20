@@ -69,7 +69,7 @@ export function PatchedViewLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedViewLogToJSON(value?: Omit<PatchedViewLog, 'createdBy'|'createdAt'> | null): any {
+export function PatchedViewLogToJSON(value?: Omit<PatchedViewLog, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -144,7 +144,7 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'> | null): any {
+export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'> | null): any {
     if (value == null) {
         return value;
     }

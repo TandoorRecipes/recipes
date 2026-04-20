@@ -10,22 +10,26 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none d-print-none">
+        <template v-if="mobile">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
-                <recipe-image
-                    max-height="25vh"
-                    :recipe="recipe"
-                    v-if="recipe.image != undefined">
-                </recipe-image>
+                <div v-if="heroImageSrc" class="position-relative">
+                    <crop-image class="cursor-pointer" role="button"
+                                :src="heroImageSrc"
+                                :crop-data="primaryImage?.cropData"
+                                width="100%" height="25vh"
+                                :aria-label="$t('Recipe_Image')"
+                                @click="openGalleryLightbox(0)" />
+                    <recipe-image-strip :images="recipe.images ?? []" @open-lightbox="openGalleryLightbox" class="hero-strip" />
+                </div>
 
                 <v-card>
                     <v-sheet class="d-flex align-center">
                     <span class="ps-2 text-h5  flex-grow-1 pa-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
                         {{ recipe.name }}
                     </span>
-                        <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
+                        <recipe-context-menu :recipe="recipe" :servings="servings" context="view" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </v-sheet>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
                     <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
@@ -61,22 +65,28 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block d-print-block">
+        <template v-else>
             <v-row dense>
                 <v-col cols="8">
-                    <recipe-image
-                        :rounded="true"
-                        max-height="40vh"
-                        :recipe="recipe">
-                    </recipe-image>
+                    <div v-if="heroImageSrc" class="position-relative">
+                        <crop-image class="rounded cursor-pointer" role="button"
+                                    :src="heroImageSrc"
+                                    :crop-data="primaryImage?.cropData"
+                                    width="100%" height="40vh"
+                                    :aria-label="$t('Recipe_Image')"
+                                    @click="openGalleryLightbox(0)" />
+                        <recipe-image-strip :images="recipe.images ?? []" @open-lightbox="openGalleryLightbox" class="hero-strip" />
+                    </div>
+                    <recipe-image :recipe="recipe" height="40vh" :rounded="true" v-else />
                 </v-col>
                 <v-col cols="4">
                     <v-card class="h-100 d-flex flex-column">
                         <v-card-text class="flex-grow-1">
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"
-                                                     class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
+                                <div class="flex-column mb-auto mt-2 float-right" v-if="useUserPreferenceStore().isAuthenticated">
+                                    <recipe-context-menu :recipe="recipe" :servings="servings" context="view"></recipe-context-menu>
+                                </div>
                             </div>
                             <p>
                                 {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
@@ -191,8 +201,12 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
+        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments" @cook-log-saved="refreshRecipeRating"></recipe-activity>
+
+        <image-lightbox v-model="galleryLightbox" :images="galleryImageUrls" :start-index="galleryLightboxIndex" />
     </template>
+
+
 </template>
 
 <script setup lang="ts">
@@ -205,6 +219,9 @@ import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
+import RecipeImageStrip from "@/components/display/RecipeImageStrip.vue";
+import CropImage from "@/components/display/CropImage.vue";
+import ImageLightbox from "@/components/display/ImageLightbox.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 import {useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
@@ -216,18 +233,57 @@ import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import {useDisplay} from "vuetify";
 
+const {mobile} = useDisplay()
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()
 
 const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
 const props = defineProps<{
-    servings: {type: Number, required: false},
+    servings?: number,
 }>()
 
 const servings = ref(props.servings ?? recipe.value.servings ?? 1)
 const showFullRecipeName = ref(false)
+
+const galleryLightbox = ref(false)
+const galleryLightboxIndex = ref(0)
+
+const galleryImageUrls = computed(() =>
+    (recipe.value.images ?? []).map(img => typeof img.file === 'string' ? img.file : '').filter(Boolean)
+)
+
+const primaryImage = computed(() => {
+    return (recipe.value.images ?? []).find(img => img.isPrimary) ?? (recipe.value.images ?? [])[0] ?? null
+})
+
+const heroImageSrc = computed(() => {
+    const primary = primaryImage.value
+    if (primary && typeof primary.file === 'string') return primary.file
+    if (galleryImageUrls.value.length > 0) return galleryImageUrls.value[0]
+    return undefined
+})
+
+
+function openGalleryLightbox(index: number) {
+    galleryLightboxIndex.value = index
+    galleryLightbox.value = true
+}
+
+/**
+ * After a CookLog is created or updated the backend recalculates the recipe's
+ * aggregate rating. Refetch so the header stars update immediately.
+ */
+function refreshRecipeRating() {
+    if (!recipe.value.id) return
+    new ApiApi().apiRecipeRetrieve({id: recipe.value.id}).then(fresh => {
+        recipe.value.rating = fresh.rating
+    }).catch(() => {
+        // swallow — stale rating is acceptable vs. error toast
+    })
+}
 
 const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
 
@@ -300,4 +356,11 @@ function aiConvertRecipe() {
 
 <style scoped>
 
+.hero-strip {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
 </style>

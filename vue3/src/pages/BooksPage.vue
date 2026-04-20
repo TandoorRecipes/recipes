@@ -15,6 +15,7 @@
         <v-row>
             <v-col cols="12" md="3" v-for="(b, i) in books">
                 <v-card>
+                    <v-img v-if="b.image?.preview || b.fallbackImage" :src="b.image?.preview ?? b.fallbackImage" height="150" cover :position="cropPosition(b.image?.cropData)" />
                     <v-card-title>
                         <v-icon icon="$books" size="small"></v-icon>
                         {{ b.name }}
@@ -46,6 +47,7 @@ import {onMounted, ref} from "vue";
 import {ApiApi, RecipeBook, RecipeBookEntry} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {cropPosition} from "@/utils/image_crop";
 
 const loading = ref(false)
 

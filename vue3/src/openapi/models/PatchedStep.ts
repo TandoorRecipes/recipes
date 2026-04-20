@@ -85,7 +85,13 @@ export interface PatchedStep {
      * @type {UserFileView}
      * @memberof PatchedStep
      */
-    file?: UserFileView;
+    readonly file?: UserFileView;
+    /**
+     * 
+     * @type {Array<UserFileView>}
+     * @memberof PatchedStep
+     */
+    files?: Array<UserFileView>;
     /**
      * 
      * @type {number}
@@ -98,12 +104,6 @@ export interface PatchedStep {
      * @memberof PatchedStep
      */
     readonly stepRecipeData?: any;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedStep
-     */
-    readonly numrecipe?: number;
     /**
      * 
      * @type {boolean}
@@ -138,14 +138,14 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'order': json['order'] == null ? undefined : json['order'],
         'showAsHeader': json['show_as_header'] == null ? undefined : json['show_as_header'],
         'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
+        'files': json['files'] == null ? undefined : ((json['files'] as Array<any>).map(UserFileViewFromJSON)),
         'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'stepRecipeData': json['step_recipe_data'] == null ? undefined : json['step_recipe_data'],
-        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
 
-export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructionsMarkdown'|'stepRecipeData'|'numrecipe'> | null): any {
+export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdown'|'file'|'step_recipe_data'> | null): any {
     if (value == null) {
         return value;
     }
@@ -158,7 +158,7 @@ export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructionsMarkdow
         'time': value['time'],
         'order': value['order'],
         'show_as_header': value['showAsHeader'],
-        'file': UserFileViewToJSON(value['file']),
+        'files': value['files'] == null ? undefined : ((value['files'] as Array<any>).map(UserFileViewToJSON)),
         'step_recipe': value['stepRecipe'],
         'show_ingredients_table': value['showIngredientsTable'],
     };

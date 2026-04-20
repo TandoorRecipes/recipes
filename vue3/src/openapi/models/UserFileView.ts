@@ -49,6 +49,12 @@ export interface UserFileView {
      * @type {string}
      * @memberof UserFileView
      */
+    readonly fileUrl: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFileView
+     */
     readonly preview: string;
     /**
      * 
@@ -56,6 +62,12 @@ export interface UserFileView {
      * @memberof UserFileView
      */
     readonly fileSizeKb: number;
+    /**
+     * 
+     * @type {any}
+     * @memberof UserFileView
+     */
+    readonly cropData: any | null;
     /**
      * 
      * @type {User}
@@ -76,8 +88,10 @@ export interface UserFileView {
 export function instanceOfUserFileView(value: object): value is UserFileView {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('fileDownload' in value) || value['fileDownload'] === undefined) return false;
+    if (!('fileUrl' in value) || value['fileUrl'] === undefined) return false;
     if (!('preview' in value) || value['preview'] === undefined) return false;
     if (!('fileSizeKb' in value) || value['fileSizeKb'] === undefined) return false;
+    if (!('cropData' in value) || value['cropData'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
@@ -96,14 +110,16 @@ export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'fileDownload': json['file_download'],
+        'fileUrl': json['file_url'],
         'preview': json['preview'],
         'fileSizeKb': json['file_size_kb'],
+        'cropData': json['crop_data'],
         'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
-export function UserFileViewToJSON(value?: Omit<UserFileView, 'fileDownload'|'preview'|'fileSizeKb'|'createdBy'|'createdAt'> | null): any {
+export function UserFileViewToJSON(value?: Omit<UserFileView, 'file_download'|'file_url'|'preview'|'file_size_kb'|'crop_data'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

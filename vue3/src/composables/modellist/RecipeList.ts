@@ -1,0 +1,118 @@
+import type {FilterDef, SortDef, ListSettings} from './types'
+
+// Tag-group defs render as RecipeTagFilterGroup in the panel (With/Without + any/all)
+const KEYWORD_GROUP: FilterDef = {
+    key: '_keywordsGroup', labelKey: 'Keywords', type: 'tag-group', modelName: 'Keyword', group: 'Content',
+    variantKeys: ['keywords', 'keywordsAnd', 'keywordsOrNot', 'keywordsAndNot'],
+}
+const FOOD_GROUP: FilterDef = {
+    key: '_foodsGroup', labelKey: 'Foods', type: 'tag-group', modelName: 'Food', group: 'Content',
+    variantKeys: ['foods', 'foodsAnd', 'foodsOrNot', 'foodsAndNot'],
+}
+const BOOK_GROUP: FilterDef = {
+    key: '_booksGroup', labelKey: 'RecipeBooks', type: 'tag-group', modelName: 'RecipeBook', group: 'Content',
+    variantKeys: ['books', 'booksAnd', 'booksOrNot', 'booksAndNot'],
+    expandable: false, selectPlaceholder: 'Books',
+}
+
+// Individual tag-select defs for URL state, filter chips, and saved search serialization
+const KEYWORD_FILTERS: FilterDef[] = [
+    {key: 'keywords',          labelKey: 'Keywords',           type: 'tag-select', modelName: 'Keyword', hidden: true},
+    {key: 'keywordsAnd',       labelKey: 'KeywordsAnd',        type: 'tag-select', modelName: 'Keyword', hidden: true},
+    {key: 'keywordsOrNot',     labelKey: 'KeywordsOrNot',      type: 'tag-select', modelName: 'Keyword', hidden: true},
+    {key: 'keywordsAndNot',    labelKey: 'KeywordsAndNot',     type: 'tag-select', modelName: 'Keyword', hidden: true},
+]
+
+const FOOD_FILTERS: FilterDef[] = [
+    {key: 'foods',             labelKey: 'Foods',              type: 'tag-select', modelName: 'Food', hidden: true},
+    {key: 'foodsAnd',          labelKey: 'FoodsAnd',           type: 'tag-select', modelName: 'Food', hidden: true},
+    {key: 'foodsOrNot',        labelKey: 'FoodsOrNot',         type: 'tag-select', modelName: 'Food', hidden: true},
+    {key: 'foodsAndNot',       labelKey: 'FoodsAndNot',        type: 'tag-select', modelName: 'Food', hidden: true},
+]
+
+const BOOK_FILTERS: FilterDef[] = [
+    {key: 'books',             labelKey: 'Books',              type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+    {key: 'booksAnd',          labelKey: 'BooksAnd',           type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+    {key: 'booksOrNot',        labelKey: 'BooksOrNot',         type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+    {key: 'booksAndNot',       labelKey: 'BooksAndNot',        type: 'tag-select', modelName: 'RecipeBook', hidden: true},
+]
+
+
+const RATING_FILTERS: FilterDef[] = [
+    {key: 'ratingGte',         labelKey: 'RatingGte',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-greater-than-equal'},
+    {key: 'ratingLte',         labelKey: 'RatingLte',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-less-than-equal'},
+    {key: 'unrated',           labelKey: 'Unrated',            type: 'toggle', group: 'Rating'},
+]
+
+const RECIPE_FILTERS: FilterDef[] = [
+    {key: 'servings',          labelKey: 'Servings',           type: 'number-range', group: 'Recipe'},
+    {key: 'timescooked',       labelKey: 'TimesCooked',        type: 'number-range', group: 'Recipe'},
+    {key: 'hasPhoto',          labelKey: 'HasPhoto',           type: 'tristate', group: 'Recipe'},
+    {key: 'hasKeywords',       labelKey: 'HasKeywords',        type: 'tristate', group: 'Recipe'},
+    {key: 'makenow',           labelKey: 'MakeNow',            type: 'tristate', group: 'Recipe'},
+]
+
+const TIME_FILTERS: FilterDef[] = [
+    {key: 'workingTime',       labelKey: 'WorkingTime',        type: 'number-range', group: 'Time'},
+    {key: 'waitingTime',       labelKey: 'WaitingTime',        type: 'number-range', group: 'Time'},
+    {key: 'totalTime',         labelKey: 'TotalTime',          type: 'number-range', group: 'Time'},
+]
+
+const DATE_FILTERS: FilterDef[] = [
+    {key: 'cookedon',          labelKey: 'CookedOn',           type: 'date-range', group: 'Date'},
+    {key: 'createdon',         labelKey: 'CreatedOn',          type: 'date-range', group: 'Date'},
+    {key: 'updatedon',         labelKey: 'UpdatedOn',          type: 'date-range', group: 'Date'},
+    {key: 'viewedon',          labelKey: 'ViewedOn',           type: 'date-range', group: 'Date'},
+]
+
+const UNIT_GROUP: FilterDef = {
+    key: '_unitsGroup', labelKey: 'Units', type: 'tag-group', modelName: 'Unit', group: 'Content',
+    variantKeys: ['units', 'unitsAnd', 'unitsOrNot', 'unitsAndNot'],
+    expandable: false,
+}
+
+const UNIT_FILTERS: FilterDef[] = [
+    {key: 'units',             labelKey: 'Units',              type: 'tag-select', modelName: 'Unit', hidden: true},
+    {key: 'unitsAnd',          labelKey: 'UnitsAnd',           type: 'tag-select', modelName: 'Unit', hidden: true},
+    {key: 'unitsOrNot',        labelKey: 'UnitsOrNot',         type: 'tag-select', modelName: 'Unit', hidden: true},
+    {key: 'unitsAndNot',       labelKey: 'UnitsAndNot',        type: 'tag-select', modelName: 'Unit', hidden: true},
+]
+
+const OTHER_FILTERS: FilterDef[] = [
+    {key: 'createdby',         labelKey: 'CreatedBy',          type: 'model-select', modelName: 'User', group: 'Other'},
+    {key: 'internal',          labelKey: 'Internal',           type: 'tristate', group: 'Other'},
+]
+
+export const RECIPE_FILTER_DEFS: FilterDef[] = [
+    KEYWORD_GROUP,
+    FOOD_GROUP,
+    BOOK_GROUP,
+    UNIT_GROUP,
+    ...UNIT_FILTERS,
+    ...KEYWORD_FILTERS,
+    ...FOOD_FILTERS,
+    ...BOOK_FILTERS,
+    ...RATING_FILTERS,
+    ...RECIPE_FILTERS,
+    ...TIME_FILTERS,
+    ...DATE_FILTERS,
+    ...OTHER_FILTERS,
+]
+
+export const RECIPE_SORT_DEFS: SortDef[] = [
+    {key: 'score',        labelKey: 'Score'},
+    {key: 'name',         labelKey: 'Name'},
+    {key: 'lastcooked',   labelKey: 'LastCooked',   defaultDescending: true},
+    {key: 'rating',       labelKey: 'Rating',        defaultDescending: true},
+    {key: 'times_cooked', labelKey: 'TimesCooked',   defaultDescending: true},
+    {key: 'created_at',   labelKey: 'CreatedAt',     defaultDescending: true},
+    {key: 'lastviewed',   labelKey: 'LastViewed',    defaultDescending: true},
+    {key: 'random',       labelKey: 'Random'},
+]
+
+export const RECIPE_LIST_SETTINGS: ListSettings = {
+    settingsKey: 'search',
+    settingsPanel: true,
+    includeChildren: true,
+    filterVisibility: true,
+}

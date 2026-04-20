@@ -14,29 +14,69 @@
 
 import { mapValues } from '../runtime';
 /**
- * Adds nested create feature
+ * Serializer for the RecipeImage model (multi-image gallery).
  * @export
  * @interface RecipeImage
  */
 export interface RecipeImage {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof RecipeImage
      */
-    image?: string;
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeImage
+     */
+    recipe: number;
     /**
      * 
      * @type {string}
      * @memberof RecipeImage
      */
-    imageUrl?: string;
+    file: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof RecipeImage
+     */
+    cropData?: any;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeImage
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeImage
+     */
+    isPrimary?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeImage
+     */
+    readonly createdBy: number;
+    /**
+     * 
+     * @type {Date}
+     * @memberof RecipeImage
+     */
+    readonly createdAt: Date;
 }
 
 /**
  * Check if a given object implements the RecipeImage interface.
  */
 export function instanceOfRecipeImage(value: object): value is RecipeImage {
+    if (!('recipe' in value) || value['recipe'] === undefined) return false;
+    if (!('file' in value) || value['file'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -50,19 +90,29 @@ export function RecipeImageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'image': json['image'] == null ? undefined : json['image'],
-        'imageUrl': json['image_url'] == null ? undefined : json['image_url'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'recipe': json['recipe'],
+        'file': json['file'],
+        'cropData': json['crop_data'] == null ? undefined : json['crop_data'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'isPrimary': json['is_primary'] == null ? undefined : json['is_primary'],
+        'createdBy': json['created_by'],
+        'createdAt': (new Date(json['created_at'])),
     };
 }
 
-export function RecipeImageToJSON(value?: RecipeImage | null): any {
+export function RecipeImageToJSON(value?: Omit<RecipeImage, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }
     return {
         
-        'image': value['image'],
-        'image_url': value['imageUrl'],
+        'id': value['id'],
+        'recipe': value['recipe'],
+        'file': value['file'],
+        'crop_data': value['cropData'],
+        'order': value['order'],
+        'is_primary': value['isPrimary'],
     };
 }
 

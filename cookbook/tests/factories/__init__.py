@@ -551,3 +551,15 @@ class InventoryEntryFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'cookbook.InventoryEntry'
+
+
+class UserFileFactory(factory.django.DjangoModelFactory):
+    """UserFile factory."""
+    name = factory.LazyAttribute(lambda x: faker.file_name(extension='png'))
+    file = factory.django.FileField(filename='test.png', data=b'\x89PNG\r\n\x1a\n' + b'\x00' * 100)
+    file_size_kb = 1
+    created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
+    space = factory.SubFactory(SpaceFactory)
+
+    class Meta:
+        model = 'cookbook.UserFile'

@@ -6,6 +6,11 @@
                 :to="useUserPreferenceStore().isAuthenticated ? {name: 'SearchPage', query: {keywords: k.id}} : undefined"> {{ k.label }}
         </v-chip>
 
+        <v-chip class="me-1 mb-1" :label="props.label" :size="props.size" variant="text"
+                v-if="props.maxKeywords > 0 && props.keywords && props.keywords.length > props.maxKeywords">
+            +{{ props.keywords.length - props.maxKeywords }}
+        </v-chip>
+
         <slot name="append"></slot>
     </div>
 

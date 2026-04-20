@@ -120,6 +120,9 @@ function doAutoPlan() {
     })
 }
 
+// Expose internals so tests can assert on initialization defaults.
+defineExpose({autoMealPlan, dateRangeValue, keywordIds, keywordMode})
+
 </script>
 
 <style scoped>

@@ -6,7 +6,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry, Unit
+from cookbook.models import Food, Ingredient, Recipe, ShoppingListEntry, Step, Unit
 
 LIST_URL = 'api:unit-list'
 DETAIL_URL = 'api:unit-detail'
@@ -247,3 +247,41 @@ def test_merge(
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
         assert Food.find_problems() == ([], [], [], [], [])
+
+
+# ==================== has_recipe filter ====================
+
+@pytest.fixture()
+def recipe_with_unit_obj_1(obj_1, space_1, u1_s1):
+    """Create a recipe whose step has an ingredient using obj_1."""
+    recipe = Recipe.objects.create(
+        name=str(uuid.uuid4()),
+        waiting_time=0,
+        working_time=0,
+        servings=1,
+        created_by=auth.get_user(u1_s1),
+        space=space_1,
+        internal=True,
+    )
+    step = Step.objects.create(name='', instruction='', space=space_1)
+    recipe.steps.add(step)
+    food = Food.objects.create(name=str(uuid.uuid4()), space=space_1)
+    step.ingredients.add(
+        Ingredient.objects.create(amount=1, food=food, unit=obj_1, space=space_1)
+    )
+    return recipe
+
+
+def test_filter_has_recipe_true(obj_1, obj_2, recipe_with_unit_obj_1, u1_s1):
+    """obj_1 is used by an ingredient in a recipe; obj_2 is unused."""
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?has_recipe=true').content)
+    ids = [u['id'] for u in response['results']]
+    assert obj_1.id in ids
+    assert obj_2.id not in ids
+
+
+def test_filter_has_recipe_false(obj_1, obj_2, recipe_with_unit_obj_1, u1_s1):
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?has_recipe=false').content)
+    ids = [u['id'] for u in response['results']]
+    assert obj_1.id not in ids
+    assert obj_2.id in ids

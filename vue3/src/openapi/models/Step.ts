@@ -85,7 +85,13 @@ export interface Step {
      * @type {UserFileView}
      * @memberof Step
      */
-    file?: UserFileView;
+    readonly file: UserFileView | null;
+    /**
+     * 
+     * @type {Array<UserFileView>}
+     * @memberof Step
+     */
+    files?: Array<UserFileView>;
     /**
      * 
      * @type {number}
@@ -100,12 +106,6 @@ export interface Step {
     readonly stepRecipeData: any | null;
     /**
      * 
-     * @type {number}
-     * @memberof Step
-     */
-    readonly numrecipe: number;
-    /**
-     * 
      * @type {boolean}
      * @memberof Step
      */
@@ -118,8 +118,8 @@ export interface Step {
 export function instanceOfStep(value: object): value is Step {
     if (!('ingredients' in value) || value['ingredients'] === undefined) return false;
     if (!('instructionsMarkdown' in value) || value['instructionsMarkdown'] === undefined) return false;
+    if (!('file' in value) || value['file'] === undefined) return false;
     if (!('stepRecipeData' in value) || value['stepRecipeData'] === undefined) return false;
-    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     return true;
 }
 
@@ -141,15 +141,15 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
         'time': json['time'] == null ? undefined : json['time'],
         'order': json['order'] == null ? undefined : json['order'],
         'showAsHeader': json['show_as_header'] == null ? undefined : json['show_as_header'],
-        'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
+        'file': UserFileViewFromJSON(json['file']),
+        'files': json['files'] == null ? undefined : ((json['files'] as Array<any>).map(UserFileViewFromJSON)),
         'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'stepRecipeData': json['step_recipe_data'],
-        'numrecipe': json['numrecipe'],
         'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
 
-export function StepToJSON(value?: Omit<Step, 'instructionsMarkdown'|'stepRecipeData'|'numrecipe'> | null): any {
+export function StepToJSON(value?: Omit<Step, 'instructions_markdown'|'file'|'step_recipe_data'> | null): any {
     if (value == null) {
         return value;
     }
@@ -162,7 +162,7 @@ export function StepToJSON(value?: Omit<Step, 'instructionsMarkdown'|'stepRecipe
         'time': value['time'],
         'order': value['order'],
         'show_as_header': value['showAsHeader'],
-        'file': UserFileViewToJSON(value['file']),
+        'files': value['files'] == null ? undefined : ((value['files'] as Array<any>).map(UserFileViewToJSON)),
         'step_recipe': value['stepRecipe'],
         'show_ingredients_table': value['showIngredientsTable'],
     };

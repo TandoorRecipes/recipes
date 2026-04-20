@@ -5,7 +5,8 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Household, RecipeBook, UserSpace
+from cookbook.models import Household, RecipeBook, RecipeBookEntry, RecipeImage, UserFile, UserSpace
+from cookbook.tests.factories import UserFileFactory
 
 LIST_URL = 'api:recipebook-list'
 DETAIL_URL = 'api:recipebook-detail'
@@ -154,3 +155,108 @@ def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
     # user2 still should NOT see user1's book (books are private)
     assert json.loads(u2_s1.get(reverse(LIST_URL)).content)['count'] == 0
     assert u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 404
+
+
+def test_book_image(obj_1, u1_s1, space_1):
+    with scopes_disabled():
+        user = auth.get_user(u1_s1)
+        user_file = UserFileFactory(space=space_1, created_by=user)
+
+    # assign image via nested object (WritableNestedModelSerializer pattern)
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args=[obj_1.id]),
+        json.dumps({'image': {'id': user_file.id}}),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+    data = json.loads(r.content)
+    assert data['image']['id'] == user_file.id
+
+    # detail also returns image
+    r = u1_s1.get(reverse(DETAIL_URL, args=[obj_1.id]))
+    assert json.loads(r.content)['image']['id'] == user_file.id
+
+    # clear image
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args=[obj_1.id]),
+        json.dumps({'image': None}),
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+    assert json.loads(r.content)['image'] is None
+
+
+# ---- fallback_image (random recipe image when book has no cover) ----
+
+@pytest.mark.parametrize("has_cover, has_entry, recipe_has_image, expected_fallback_set", [
+    (True,  False, False, False),  # book has its own cover → never compute fallback
+    (False, False, False, False),  # no cover, no entries → null
+    (False, True,  True,  True),   # no cover, entry with recipe image → fallback set
+    (False, True,  False, False),  # no cover, entry but recipe has no image → null
+])
+def test_fallback_image(obj_1, u1_s1, space_1, recipe_1_s1,
+                       has_cover, has_entry, recipe_has_image, expected_fallback_set):
+    if has_cover:
+        with scopes_disabled():
+            user_file = UserFileFactory(space=space_1, created_by=auth.get_user(u1_s1))
+        u1_s1.patch(
+            reverse(DETAIL_URL, args=[obj_1.id]),
+            json.dumps({'image': {'id': user_file.id}}),
+            content_type='application/json',
+        )
+
+    if has_entry:
+        with scopes_disabled():
+            recipe_1_s1.image = 'recipes/test-fallback.jpg' if recipe_has_image else ''
+            recipe_1_s1.save()
+            RecipeBookEntry.objects.create(book=obj_1, recipe=recipe_1_s1)
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[obj_1.id]))
+    data = json.loads(r.content)
+    assert (data['image'] is not None) == has_cover
+    if expected_fallback_set:
+        assert data.get('fallback_image')
+        assert 'test-fallback.jpg' in data['fallback_image']
+    else:
+        assert data.get('fallback_image') is None
+
+
+def test_fallback_image_from_recipe_image(obj_1, u1_s1, space_1, recipe_1_s1):
+    """fallback_image falls through to RecipeImage (primary first) when legacy column is empty."""
+    with scopes_disabled():
+        # No legacy column, two RecipeImage rows with different is_primary/order.
+        recipe_1_s1.image = ''
+        recipe_1_s1.save()
+        RecipeImage.objects.create(
+            recipe=recipe_1_s1, file='recipes/non-primary.jpg',
+            is_primary=False, order=1, created_by=auth.get_user(u1_s1), space=space_1,
+        )
+        RecipeImage.objects.create(
+            recipe=recipe_1_s1, file='recipes/primary.jpg',
+            is_primary=True, order=0, created_by=auth.get_user(u1_s1), space=space_1,
+        )
+        RecipeBookEntry.objects.create(book=obj_1, recipe=recipe_1_s1)
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[obj_1.id]))
+    data = json.loads(r.content)
+    assert data.get('fallback_image')
+    assert 'primary.jpg' in data['fallback_image']
+    assert 'non-primary.jpg' not in data['fallback_image']
+
+
+def test_fallback_image_list_uses_annotation(obj_1, u1_s1, space_1, recipe_1_s1):
+    """List-view annotation path resolves RecipeImage primary (not legacy only)."""
+    with scopes_disabled():
+        recipe_1_s1.image = ''
+        recipe_1_s1.save()
+        RecipeImage.objects.create(
+            recipe=recipe_1_s1, file='recipes/list-primary.jpg',
+            is_primary=True, order=0, created_by=auth.get_user(u1_s1), space=space_1,
+        )
+        RecipeBookEntry.objects.create(book=obj_1, recipe=recipe_1_s1)
+
+    r = u1_s1.get(reverse(LIST_URL))
+    data = json.loads(r.content)
+    book = next(b for b in data['results'] if b['id'] == obj_1.id)
+    assert book.get('fallback_image')
+    assert 'list-primary.jpg' in book['fallback_image']

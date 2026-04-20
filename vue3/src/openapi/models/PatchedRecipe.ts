@@ -25,6 +25,12 @@ import {
     KeywordFromJSONTyped,
     KeywordToJSON,
 } from './Keyword';
+import type { RecipeImage } from './RecipeImage';
+import {
+    RecipeImageFromJSON,
+    RecipeImageFromJSONTyped,
+    RecipeImageToJSON,
+} from './RecipeImage';
 import type { Step } from './Step';
 import {
     StepFromJSON,
@@ -74,6 +80,18 @@ export interface PatchedRecipe {
      * @memberof PatchedRecipe
      */
     readonly image?: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof PatchedRecipe
+     */
+    readonly imageCropData?: any;
+    /**
+     * 
+     * @type {Array<RecipeImage>}
+     * @memberof PatchedRecipe
+     */
+    readonly images?: Array<RecipeImage>;
     /**
      * 
      * @type {Array<Keyword>}
@@ -229,6 +247,8 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'] == null ? undefined : json['image'],
+        'imageCropData': json['image_crop_data'] == null ? undefined : json['image_crop_data'],
+        'images': json['images'] == null ? undefined : ((json['images'] as Array<any>).map(RecipeImageFromJSON)),
         'keywords': json['keywords'] == null ? undefined : ((json['keywords'] as Array<any>).map(KeywordFromJSON)),
         'steps': json['steps'] == null ? undefined : ((json['steps'] as Array<any>).map(StepFromJSON)),
         'workingTime': json['working_time'] == null ? undefined : json['working_time'],
@@ -254,7 +274,7 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'> | null): any {
+export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'image_crop_data'|'images'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null): any {
     if (value == null) {
         return value;
     }

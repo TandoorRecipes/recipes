@@ -25,6 +25,7 @@
 
                     <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
+                        <user-file-field v-model="editingObj.image" :label="$t('Cover')" />
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" rows="3"></v-textarea>
                         <model-select model="User" v-model="editingObj.shared" mode="tags"></model-select>
                         <model-select model="CustomFilter" v-model="editingObj.filter"></model-select>
@@ -66,6 +67,7 @@ import {VDataTableUpdateOptions} from "@/vuetify";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import UserFileField from "@/components/inputs/UserFileField.vue";
 import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useI18n} from "vue-i18n";

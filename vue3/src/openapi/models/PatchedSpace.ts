@@ -25,12 +25,12 @@ import {
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
 } from './UserFileView';
-import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
+import type { NavTextColorEnum } from './NavTextColorEnum';
 import {
-    SpaceNavTextColorEnumFromJSON,
-    SpaceNavTextColorEnumFromJSONTyped,
-    SpaceNavTextColorEnumToJSON,
-} from './SpaceNavTextColorEnum';
+    NavTextColorEnumFromJSON,
+    NavTextColorEnumFromJSONTyped,
+    NavTextColorEnumToJSON,
+} from './NavTextColorEnum';
 import type { AiProvider } from './AiProvider';
 import {
     AiProviderFromJSON,
@@ -172,10 +172,10 @@ export interface PatchedSpace {
     navBgColor?: string;
     /**
      * 
-     * @type {SpaceNavTextColorEnum}
+     * @type {NavTextColorEnum}
      * @memberof PatchedSpace
      */
-    navTextColor?: SpaceNavTextColorEnum;
+    navTextColor?: NavTextColorEnum;
     /**
      * 
      * @type {UserFileView}
@@ -254,12 +254,6 @@ export interface PatchedSpace {
      * @memberof PatchedSpace
      */
     spaceSetupCompleted?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedSpace
-     */
-    householdSetupCompleted?: boolean;
 }
 
 /**
@@ -298,7 +292,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'spaceTheme': json['space_theme'] == null ? undefined : SpaceThemeEnumFromJSON(json['space_theme']),
         'customSpaceTheme': json['custom_space_theme'] == null ? undefined : UserFileViewFromJSON(json['custom_space_theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
-        'navTextColor': json['nav_text_color'] == null ? undefined : SpaceNavTextColorEnumFromJSON(json['nav_text_color']),
+        'navTextColor': json['nav_text_color'] == null ? undefined : NavTextColorEnumFromJSON(json['nav_text_color']),
         'logoColor32': json['logo_color_32'] == null ? undefined : UserFileViewFromJSON(json['logo_color_32']),
         'logoColor128': json['logo_color_128'] == null ? undefined : UserFileViewFromJSON(json['logo_color_128']),
         'logoColor144': json['logo_color_144'] == null ? undefined : UserFileViewFromJSON(json['logo_color_144']),
@@ -312,11 +306,10 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
         'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
-        'householdSetupCompleted': json['household_setup_completed'] == null ? undefined : json['household_setup_completed'],
     };
 }
 
-export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'> | null): any {
+export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null): any {
     if (value == null) {
         return value;
     }
@@ -331,7 +324,7 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'creat
         'space_theme': SpaceThemeEnumToJSON(value['spaceTheme']),
         'custom_space_theme': UserFileViewToJSON(value['customSpaceTheme']),
         'nav_bg_color': value['navBgColor'],
-        'nav_text_color': SpaceNavTextColorEnumToJSON(value['navTextColor']),
+        'nav_text_color': NavTextColorEnumToJSON(value['navTextColor']),
         'logo_color_32': UserFileViewToJSON(value['logoColor32']),
         'logo_color_128': UserFileViewToJSON(value['logoColor128']),
         'logo_color_144': UserFileViewToJSON(value['logoColor144']),
@@ -344,7 +337,6 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'creat
         'ai_enabled': value['aiEnabled'],
         'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
         'space_setup_completed': value['spaceSetupCompleted'],
-        'household_setup_completed': value['householdSetupCompleted'],
     };
 }
 

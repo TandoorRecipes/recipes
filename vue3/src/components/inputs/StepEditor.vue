@@ -16,7 +16,7 @@
                             }}
                         </v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showTime = true" v-if="!showTime && step.time == 0">{{ $t('Time') }}</v-list-item>
-                        <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile &&  step.file == null">{{ $t('File') }}</v-list-item>
+                        <v-list-item prepend-icon="fas fa-plus-circle" @click="showFile = true" v-if="!showFile && (!step.files || step.files.length === 0)">{{ $t('File') }}</v-list-item>
                         <v-list-item prepend-icon="fas fa-plus-circle" @click="showRecipe = true" v-if="!showRecipe && step.stepRecipe == null">{{ $t('Recipe') }}</v-list-item>
 
                         <v-list-item>
@@ -50,8 +50,15 @@
                     <model-select model="Recipe" v-model="step.stepRecipeData"
                                   @update:modelValue="step.stepRecipe = (step.stepRecipeData != null) ? step.stepRecipeData.id! : null"></model-select>
                 </v-col>
-                <v-col cols="12" md="6" v-if="showFile || step.file != null">
-                    <model-select model="UserFile" v-model="step.file"></model-select>
+                <v-col cols="12" v-if="showFile || (step.files && step.files.length > 0)">
+                    <vue-draggable v-if="step.files" v-model="step.files" handle=".file-drag-handle" :empty-insert-threshold="25">
+                        <div v-for="(f, idx) in step.files" :key="f.id ?? idx" class="d-flex align-center ga-2 mb-1">
+                            <v-icon icon="$dragHandle" class="file-drag-handle cursor-grab"></v-icon>
+                            <user-file-field :model-value="f" @update:model-value="(val: any) => { if (step.files) step.files[idx] = val }" class="flex-grow-1" />
+                            <v-btn icon="$delete" size="small" color="delete" variant="plain" @click="step.files?.splice(idx, 1)" />
+                        </div>
+                    </vue-draggable>
+                    <v-btn size="small" prepend-icon="$create" variant="text" @click="if (!step.files) step.files = []; step.files.push({} as UserFileView)">{{ $t('add_file') }}</v-btn>
                 </v-col>
             </v-row>
 
@@ -234,9 +241,10 @@
 
 <script setup lang="ts">
 import {nextTick, ref} from 'vue'
-import {ApiApi, Ingredient, ParsedIngredient, Recipe, Step} from "@/openapi";
+import {ApiApi, Ingredient, ParsedIngredient, Recipe, Step, UserFileView} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import UserFileField from "@/components/inputs/UserFileField.vue";
 import {useDisplay} from "vuetify";
 import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";

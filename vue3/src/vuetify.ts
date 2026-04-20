@@ -9,6 +9,9 @@ import * as vuetifyLocales from "vuetify/locale";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+    display: {
+        mobileBreakpoint: 'md',
+    },
     defaults: {
         // disabled as this leads to cards overflowing if not careful, manually set on cards containing a multiselect until proper solution is found
         // VCard: {
@@ -121,8 +124,8 @@ export default createVuetify({
 
 export type VDataTableUpdateOptions = {
     page: number;
-    itemsPerPage: number;
-    search: string;
+    itemsPerPage?: number;
+    search?: string;
     sortBy?: string;
     groupBy?: string;
 }
