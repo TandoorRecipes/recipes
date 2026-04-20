@@ -44,6 +44,7 @@ nosetests.xml
 coverage.xml
 *,cover
 **/docs/reports/**
+**/vue3/coverage/**
 
 # Django stuff:
 *.log

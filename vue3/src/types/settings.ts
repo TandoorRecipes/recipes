@@ -28,4 +28,19 @@ export type DeviceSettings = {
 
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
+    general_showModelListDescription: boolean
+
+    // Model list settings are stored with dynamic keys: `${settingsKey}_${suffix}`
+    // e.g. food_hiddenColumns, keyword_treeView, unit_quickActions
+    // Index signature allows new models without adding explicit properties
+    [key: string]: any
+}
+
+export type StartPageSectionMode = 'meal_plan' | 'recent' | 'new' | 'keyword' | 'random' | 'created_by' | 'rating' | 'books' | 'food' | 'saved_search'
+
+export interface StartPageSection {
+    mode: StartPageSectionMode
+    enabled: boolean
+    min_recipes?: number
+    filter_id?: number
 }

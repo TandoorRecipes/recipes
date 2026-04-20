@@ -143,7 +143,7 @@
                                 <v-menu activator="parent">
                                     <v-list density="compact">
                                         <v-list-item
-                                            @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = null; useShoppingStore().updateEntriesStructure()">
+                                            @click="useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists = []; useShoppingStore().updateEntriesStructure()">
                                             {{ $t('SelectNone') }}
                                         </v-list-item>
                                         <v-list-item v-for="s in supermarkets" :key="s.id" @click="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket = s">

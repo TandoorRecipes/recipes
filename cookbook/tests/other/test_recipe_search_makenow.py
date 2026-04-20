@@ -267,3 +267,68 @@ def test_makenow_no_household_returns_empty(recipes, space_1, u1_s1, make_search
     request = make_search_request(u1_s1)
     results = do_search(request, space_1, makenow='true')
     assert results.count() == 0
+
+
+def test_makenow_recipe_3244_data_pattern(recipes, shared_household, space_1, make_search_request, u1_s1):
+    """E-5 reproduction using the exact field shape reported from recipes.savor.li
+    recipe 3244 (Paniolo Old-Fashioned).
+
+    The recipe has three ingredients:
+      1. A sub-recipe food (``food.recipe`` non-null) with NO inventory,
+         NO substitutes, ``ignore_shopping=False`` — must be MISSING.
+      2. A tree-substituted food (substitute_children=True AND a child has
+         inventory) — must be RESOLVED via children_substitute_filter.
+      3. A directly on-hand food — must be RESOLVED via _is_available.
+
+    Under makenow=true (missing=0), this recipe MUST NOT appear. User
+    reported that it DID appear, so this test locks the expected
+    exclusion.
+    """
+    household, location = shared_household
+    user = auth.get_user(u1_s1)
+    with scope(space=space_1):
+        recipe = RecipeFactory.create(space=space_1)
+        recipe_foods = list(Food.objects.filter(ingredient__step__recipe=recipe.id))
+        assert len(recipe_foods) >= 3
+
+        # Ingredient 1: sub-recipe food, missing
+        missing_food = recipe_foods[0]
+        sub_recipe = RecipeFactory.create(space=space_1)
+        missing_food.recipe = sub_recipe
+        missing_food.save()
+
+        # Ingredient 2: tree-substituted food with an in-inventory child
+        tree_food = recipe_foods[1]
+        tree_food.substitute_children = True
+        tree_food.save()
+        child = FoodFactory.create(space=space_1)
+        child.move(tree_food, _node_pos)
+        time.sleep(0.1)
+        child = Food.objects.get(id=child.id)
+        InventoryEntryFactory(
+            food=child, inventory_location=location, amount=1,
+            space=space_1, created_by=user,
+        )
+
+        # Ingredient 3: directly on-hand (via InventoryEntry)
+        onhand_food = recipe_foods[2]
+        InventoryEntryFactory(
+            food=onhand_food, inventory_location=location, amount=1,
+            space=space_1, created_by=user,
+        )
+
+        # Preconditions mirror the production data exactly
+        missing_food.refresh_from_db()
+        assert missing_food.recipe_id is not None
+        assert missing_food.ignore_shopping is False
+        assert missing_food.substitute.count() == 0
+        assert not InventoryEntry.objects.filter(food=missing_food).exists()
+
+        request = make_search_request(u1_s1)
+        results = do_search(request, space_1, makenow='true')
+        ids = set(results.values_list('id', flat=True))
+        assert recipe.id not in ids, (
+            f"Recipe {recipe.id} matched makenow=true despite a missing "
+            f"sub-recipe food (food {missing_food.id}, recipe={missing_food.recipe_id}). "
+            f"This is the recipe 3244 production failure mode."
+        )

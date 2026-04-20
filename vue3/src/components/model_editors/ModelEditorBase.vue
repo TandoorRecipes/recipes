@@ -13,7 +13,7 @@
 
         </slot>
         <v-divider></v-divider>
-        <v-card-actions v-if="!(modelClass.model.name.toLowerCase() == 'recipe' && mobile)">
+        <v-card-actions>
             <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate && !modelClass.model.disableDelete && !modelClass.model.isAdvancedDelete" :disabled="loading">
                 {{ $t('Delete') }}
                 <delete-confirm-dialog :object-name="objectName" :model-name="$t(modelClass.model.localizationKey)" @delete="emit('delete')"></delete-confirm-dialog>
