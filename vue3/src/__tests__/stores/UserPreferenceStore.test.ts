@@ -74,6 +74,27 @@ describe('UserPreferenceStore', () => {
         })
     })
 
+    describe('migrateStaleDeviceSettings', () => {
+        // HighlightWhen no longer offers 'substitute' — tri-state onhand
+        // covers that signal. Existing users with stale localStorage values
+        // must be coerced so the dropdown shows a valid option.
+        it("coerces recipe_contextMenuColor 'substitute' to 'onhand'", async () => {
+            const {migrateStaleDeviceSettings} = await import('@/stores/UserPreferenceStore')
+            const s: any = {recipe_contextMenuColor: 'substitute'}
+            migrateStaleDeviceSettings(s)
+            expect(s.recipe_contextMenuColor).toBe('onhand')
+        })
+
+        it('leaves other values untouched (idempotency)', async () => {
+            const {migrateStaleDeviceSettings} = await import('@/stores/UserPreferenceStore')
+            for (const v of ['onhand', 'shopping', 'never']) {
+                const s: any = {recipe_contextMenuColor: v}
+                migrateStaleDeviceSettings(s)
+                expect(s.recipe_contextMenuColor).toBe(v)
+            }
+        })
+    })
+
     describe('loadUserSettings', () => {
         it('sets userSettings and isAuthenticated on success', async () => {
             const store = useUserPreferenceStore()

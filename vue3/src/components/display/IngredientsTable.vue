@@ -34,7 +34,7 @@
                                 <v-icon v-else-if="i.food.substituteOnhand" icon="fa-solid fa-right-left" color="warning" size="x-small" class="ml-1" :aria-label="substituteLabel(i)"></v-icon>
                                 <v-icon v-if="isOnShoppingList(i)" icon="fa-solid fa-cart-shopping" color="success" size="x-small" class="ml-1" :aria-label="$t('Shopping')"></v-icon>
                                 <v-icon v-if="i.food.ignoreShopping" icon="fa-solid fa-ban" color="warning" size="x-small" class="ml-1" :aria-label="$t('IgnoreShopping')"></v-icon>
-                                <span v-if="i.food.substituteOnhand && i.food.substitute?.length && !mobile" class="text-caption text-medium-emphasis ml-1">
+                                <span v-if="!isOnHand(i) && i.food.availableSubstitutes?.length && !mobile" class="text-caption text-medium-emphasis ml-1">
                                     ({{ substituteText(i) }})
                                 </span>
                             </template>
@@ -161,13 +161,13 @@ function isOnShoppingList(i: Ingredient): boolean {
 }
 
 function substituteText(i: Ingredient): string {
-    const subs = i.food?.substitute ?? []
+    const subs = i.food?.availableSubstitutes ?? []
     if (subs.length <= 2) return subs.map(s => s.name).join(', ')
     return `${subs[0].name}, ${subs[1].name} +${subs.length - 2}`
 }
 
 function substituteLabel(i: Ingredient): string {
-    const subs = i.food?.substitute ?? []
+    const subs = i.food?.availableSubstitutes ?? []
     if (subs.length) return `Substitute available: ${subs.map(s => s.name).join(', ')}`
     return 'Substitute available'
 }

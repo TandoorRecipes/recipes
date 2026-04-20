@@ -16,11 +16,26 @@ const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 const USER_SPACES_KEY = 'TANDOOR_USER_SPACES'
 const SPACES_KEY = 'TANDOOR_SPACES'
 
+/**
+ * Rewrites any device-setting values whose domain has shrunk since the
+ * setting was first saved. Runs once on store init so stale localStorage
+ * entries do not leave the user pinned to a removed option.
+ */
+export function migrateStaleDeviceSettings(settings: DeviceSettings): DeviceSettings {
+    // Cast: 'substitute' is no longer in the recipe_contextMenuColor union,
+    // but older localStorage values may still carry it.
+    if ((settings.recipe_contextMenuColor as any) === 'substitute') {
+        settings.recipe_contextMenuColor = 'onhand'
+    }
+    return settings
+}
+
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {
     /**
      * settings only saved on device to allow per device customization
      */
     let deviceSettings = useStorage(DEVICE_SETTINGS_KEY, getDefaultDeviceSettings(), localStorage, {mergeDefaults: true})
+    migrateStaleDeviceSettings(deviceSettings.value)
     /**
      * database user settings, cache in local storage in case application is started offline
      */

@@ -1,17 +1,33 @@
 <template>
     <TabbedDrawer
         v-model="isOpen"
-        v-model:active-tab="activeTab"
         v-model:pinned="isPinned"
         :tabs="drawerTabs"
-        :width="300"
+        :width="320"
         :use-sheet="mobile"
     >
-        <template #overview>
+        <template #settings>
+            <div class="px-4 pt-3 pb-1 text-overline text-medium-emphasis">{{ $t('Overview') }}</div>
+
             <v-switch
                 v-model="deviceSettings.recipe_overviewExpanded"
                 :label="$t('StartExpanded')"
-                hide-details density="compact" class="px-4 pt-2"
+                hide-details density="compact" class="px-4"
+            />
+            <v-switch
+                v-model="deviceSettings.recipe_showIngredientActions"
+                :label="$t('IngredientActions')"
+                hide-details density="compact" class="px-4"
+            />
+            <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
+            <v-select
+                v-if="deviceSettings.recipe_showIngredientActions"
+                v-model="deviceSettings.recipe_contextMenuColor"
+                :label="$t('HighlightWhen')"
+                :items="contextMenuColorOptions"
+                item-title="label" item-value="value"
+                hide-details density="compact" variant="outlined"
+                class="px-4 py-2"
             />
             <v-select
                 v-model="deviceSettings.recipe_overviewNotesDisplay"
@@ -35,28 +51,15 @@
                 :label="$t('IngredientStatusIcons')"
                 hide-details density="compact" class="px-4"
             />
-            <v-switch
-                v-model="deviceSettings.recipe_showIngredientActions"
-                :label="$t('IngredientActions')"
-                hide-details density="compact" class="px-4"
-            />
-            <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
-            <v-select
-                v-if="deviceSettings.recipe_showIngredientActions"
-                v-model="deviceSettings.recipe_contextMenuColor"
-                :label="$t('HighlightWhen')"
-                :items="contextMenuColorOptions"
-                item-title="label" item-value="value"
-                hide-details density="compact" variant="outlined"
-                class="px-4 py-2"
-            />
-        </template>
 
-        <template #steps>
+            <v-divider class="my-2" />
+
+            <div class="px-4 pt-2 pb-1 text-overline text-medium-emphasis">{{ $t('StepDetails') }}</div>
+
             <v-switch
                 v-model="deviceSettings.recipe_showCheckboxes"
                 :label="$t('CheckOffIngredients')"
-                hide-details density="compact" class="px-4 pt-2"
+                hide-details density="compact" class="px-4"
             />
             <v-select
                 v-model="deviceSettings.recipe_stepNotesDisplay"
@@ -78,7 +81,7 @@
                 v-if="!mobile"
                 v-model="deviceSettings.recipe_stepInlineStatus"
                 :label="$t('IngredientStatusIcons')"
-                hide-details density="compact" class="px-4"
+                hide-details density="compact" class="px-4 pb-2"
             />
             <v-switch
                 v-model="deviceSettings.recipe_showIngredientActions"
@@ -100,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useDisplay} from 'vuetify'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
@@ -111,11 +114,9 @@ const {t} = useI18n()
 const {mobile} = useDisplay()
 const {isOpen, isPinned} = useRecipeViewSettings()
 const deviceSettings = useUserPreferenceStore().deviceSettings
-const activeTab = ref('overview')
 
 const drawerTabs = computed(() => [
-    {key: 'overview', label: t('Overview'), icon: 'far fa-list-alt'},
-    {key: 'steps', label: t('StepDetails'), icon: 'fa-solid fa-layer-group'},
+    {key: 'settings', label: t('DisplaySettings'), icon: 'fa-solid fa-gear'},
 ])
 
 const notesDisplayOptions = computed(() => [
@@ -128,6 +129,5 @@ const contextMenuColorOptions = computed(() => [
     {value: 'never', label: t('Never')},
     {value: 'onhand', label: t('OnHand')},
     {value: 'shopping', label: t('InShoppingList')},
-    {value: 'substitute', label: t('HasSubstitute')},
 ])
 </script>

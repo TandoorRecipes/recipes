@@ -31,7 +31,7 @@
 
                 <v-divider v-if="hasSubstitutes"></v-divider>
 
-                <!-- Substitutes -->
+                <!-- Substitutes (onhand-only via food.availableSubstitutes) -->
                 <v-list-item v-if="hasSubstitutes" @click="toggleSubstitutes">
                     <v-list-item-title>
                         {{ $t('Substitutes') }}
@@ -41,8 +41,7 @@
                         <v-icon :icon="substitutesExpanded ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right'" size="small"></v-icon>
                     </template>
                     <template #append>
-                        <v-progress-circular v-if="loadingSubstitutes" indeterminate size="16" width="2" class="ml-2"></v-progress-circular>
-                        <v-icon v-else-if="ingredient.food?.substituteOnhand" icon="fa-solid fa-check" color="success" size="small"></v-icon>
+                        <v-icon icon="fa-solid fa-check" color="success" size="small"></v-icon>
                     </template>
                 </v-list-item>
                 <template v-if="substitutesExpanded">
@@ -102,6 +101,7 @@ const emit = defineEmits<{
 const {t} = useI18n()
 const {addToShopping, removeFromShopping, checkShoppingStatus} = useShoppingActions()
 const {quickAddToInventory, removeFromInventory, checkInventoryStatus} = useInventoryActions()
+const userPrefStore = useUserPreferenceStore()
 
 const menuOpen = ref(false)
 const shoppingStatus = ref<boolean | null>(null)
@@ -109,7 +109,6 @@ const inventoryStatus = ref<boolean | null>(null)
 const localIgnoreShopping = ref(false)
 const substitutesExpanded = ref(false)
 const allSubstitutes = ref<Array<{id: number, name: string}>>([])
-const loadingSubstitutes = ref(false)
 const loadingShopping = ref(false)
 const loadingInventory = ref(false)
 const loadingIgnore = ref(false)
@@ -117,7 +116,7 @@ const confirmDialogRef = ref<InstanceType<typeof ActionConfirmDialog> | null>(nu
 const inventoryDialogRef = ref<InstanceType<typeof InventoryQuickAddDialog> | null>(null)
 
 const triggerColor = computed(() => {
-    const mode = useUserPreferenceStore().deviceSettings.recipe_contextMenuColor
+    const mode = userPrefStore.deviceSettings.recipe_contextMenuColor
     if (mode === 'never') return undefined
     const food = props.ingredient.food
     if (!food) return undefined
@@ -143,18 +142,12 @@ const triggerColor = computed(() => {
         return undefined
     }
 
-    if (mode === 'substitute') {
-        return food.substituteOnhand ? 'success' : undefined
-    }
-
     return undefined
 })
 
 const hasSubstitutes = computed(() => {
     const food = props.ingredient.food
-    return (food?.substitute?.length ?? 0) > 0
-        || food?.substituteSiblings
-        || food?.substituteChildren
+    return (food?.availableSubstitutes?.length ?? 0) > 0
 })
 
 watch(menuOpen, (open) => {
@@ -172,29 +165,12 @@ watch(menuOpen, (open) => {
     checkInventoryStatus(foodId).then(v => { inventoryStatus.value = v })
 })
 
-async function toggleSubstitutes() {
+function toggleSubstitutes() {
     substitutesExpanded.value = !substitutesExpanded.value
     if (!substitutesExpanded.value) return
-
-    const foodId = props.ingredient.food?.id
-    if (!foodId || allSubstitutes.value.length > 0) return
-
-    loadingSubstitutes.value = true
-    try {
-        const response = await fetch(`/api/food/${foodId}/substitutes/`, {
-            headers: {'Accept': 'application/json'},
-        })
-        if (response.ok) {
-            allSubstitutes.value = await response.json()
-        } else {
-            // Fallback to direct substitutes from the food object
-            allSubstitutes.value = (props.ingredient.food?.substitute ?? []).map(s => ({id: s.id!, name: s.name!}))
-        }
-    } catch {
-        allSubstitutes.value = (props.ingredient.food?.substitute ?? []).map(s => ({id: s.id!, name: s.name!}))
-    } finally {
-        loadingSubstitutes.value = false
-    }
+    // The onhand subset already rides on the serialized Food object
+    // (FoodSerializer.get_available_substitutes) — no network call needed.
+    allSubstitutes.value = (props.ingredient.food?.availableSubstitutes ?? []).map(s => ({id: s.id!, name: s.name!}))
 }
 
 async function toggleShopping() {
