@@ -162,8 +162,8 @@ function isOnShoppingList(i: Ingredient): boolean {
 
 function substituteText(i: Ingredient): string {
     const subs = i.food?.availableSubstitutes ?? []
-    if (subs.length <= 2) return subs.map(s => s.name).join(', ')
-    return `${subs[0].name}, ${subs[1].name} +${subs.length - 2}`
+    if (!subs.length) return ''
+    return subs[Math.floor(Math.random() * subs.length)]!.name ?? ''
 }
 
 function substituteLabel(i: Ingredient): string {

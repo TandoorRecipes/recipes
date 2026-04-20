@@ -125,4 +125,40 @@ describe('IngredientsTable inline onhand / substitute', () => {
         expect(html).toContain('OnhandName')
         expect(html).not.toContain('FullListName')
     })
+
+    // Inline text shows ONE random available substitute, not a list. Keeps
+    // the row short regardless of how many onhand substitutes exist. The
+    // aria-label on the yellow icon still lists all for screen readers.
+    it('inline substitute text renders exactly one name from availableSubstitutes', () => {
+        const ing = makeIngredient({food: {
+            foodOnhand: false,
+            availableSubstitutes: [
+                {id: 2, name: 'Alpha'},
+                {id: 3, name: 'Beta'},
+                {id: 4, name: 'Gamma'},
+            ],
+            substituteOnhand: true,
+        }})
+        const mathSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5) // → index floor(0.5*3) = 1 → Beta
+        try {
+            const w = mountTable([ing])
+            const visible = w.find('.text-caption.text-medium-emphasis').text()
+            expect(visible).toContain('Beta')
+            expect(visible).not.toContain('Alpha')
+            expect(visible).not.toContain('Gamma')
+            expect(visible).not.toContain(',')
+        } finally {
+            mathSpy.mockRestore()
+        }
+    })
+
+    it('inline substitute text with a single availableSubstitute renders that one name', () => {
+        const ing = makeIngredient({food: {
+            foodOnhand: false,
+            availableSubstitutes: [{id: 2, name: 'Solo'}],
+            substituteOnhand: true,
+        }})
+        const w = mountTable([ing])
+        expect(w.html()).toContain('Solo')
+    })
 })
