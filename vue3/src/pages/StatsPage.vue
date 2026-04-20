@@ -31,9 +31,10 @@
                             :items="displayItems"
                             :loading="loading"
                             :item-key="groupBy.value !== 'none' ? 'title' : 'id'"
+                            :sort-by="[{ key: 'createdAt', order: 'desc' }]"
                         >
                             <!-- Date column -->
-                            <template #item.date="{ item }">
+                            <template #item.createdAt="{ item }">
                                 <template v-if="groupBy.value !== 'none' && item.title">
                                     <div>
                                         <strong>{{ item.title }}</strong>
@@ -246,8 +247,8 @@ const discoveredProperties = ref<Map<number, PropertyType>>(new Map())
 
 // Fixed columns
 const fixedHeaders = [
-    { title: 'Date', key: 'date', sortable: true },
-    { title: 'Recipe', key: 'recipe', sortable: true },
+    { title: 'Date', key: 'createdAt', sortable: true },
+    { title: 'Recipe', key: 'recipe', sortable: false },
     { title: 'Rating', key: 'rating', sortable: true },
     { title: 'Servings', key: 'servings', sortable: true },
     { title: 'Comment', key: 'comment', sortable: false },
