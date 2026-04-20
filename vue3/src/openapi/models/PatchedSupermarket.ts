@@ -130,7 +130,7 @@ export function PatchedSupermarketFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedSupermarketToJSON(value?: Omit<PatchedSupermarket, 'categoryToSupermarket'> | null): any {
+export function PatchedSupermarketToJSON(value?: Omit<PatchedSupermarket, 'category_to_supermarket'> | null): any {
     if (value == null) {
         return value;
     }

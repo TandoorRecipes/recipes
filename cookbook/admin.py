@@ -264,10 +264,12 @@ admin.site.register(Unit, UnitAdmin)
 
 
 class FoodAdmin(TreeAdmin):
-    form = movenodeform_factory(Keyword)
     ordering = ('space', 'path',)
     search_fields = ('name',)
     actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
+
+    def get_form(self, request, obj=None, **kwargs):
+        return movenodeform_factory(Food, **kwargs)
 
 
 admin.site.register(Food, FoodAdmin)

@@ -160,7 +160,7 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'> | null): any {
+export function MealPlanToJSON(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null): any {
     if (value == null) {
         return value;
     }
