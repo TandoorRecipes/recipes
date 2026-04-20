@@ -102,14 +102,14 @@
     "ConnectorConfigHelp": "Med integrationer kan du automatiskt synka data från Tandoor till externa tjänster. ",
     "Continue": "Fortsätt",
     "Conversion": "Omvandling",
-    "ConversionsHelp": "Med omvandlingar kan du beräkna mängden av ett livsmedel i olika enheter. För närvarande används detta endast för egenskapsberäkning, senare kan det även användas i andra delar av Tandoor. ",
-    "ConvertUsingAI": "",
+    "ConversionsHelp": "Med omvandlingar kan du beräkna mängden av ett livsmedel i olika enheter. För närvarande används detta endast för beräkningar av egenskaper, senare kan det även komma att användas i andra delar av Tandoor. ",
+    "ConvertUsingAI": "Konvertera med AI",
     "CookLog": "Tillagningslogg",
     "CookLogHelp": "Poster i tillagningsloggen för recept. ",
     "Cooked": "Tillagad",
     "Copied": "Kopierad",
     "Copy": "Kopiera",
-    "Copy Link": "Kopiera Länk",
+    "Copy Link": "Kopiera länk",
     "Copy Token": "Kopiera token",
     "Copy_template_reference": "Kopiera mallreferens",
     "Cosmetic": "Kosmetisk",
@@ -733,5 +733,7 @@
     "Clear_All": "Rensa alla",
     "Code": "Kod",
     "CodeHelp": "När streckkoder används kand deras värden fyllas i här. Om inte en kod automatiskt genereras och kan läggas till artiklarna (exempelvis zip-påsar, etiketter, ...).",
-    "CollapseAll": "Minimera alla"
+    "CollapseAll": "Minimera alla",
+    "Columns": "Kolumner",
+    "ConfirmAction": "{action} {name}?"
 }
