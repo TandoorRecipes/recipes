@@ -703,3 +703,43 @@ def test_shopping_status_checked_excluded(u1_s1, space_1):
 
     r = json.loads(u1_s1.get(reverse(DETAIL_URL, args={food.id})).content)
     assert str(r['shopping']) == 'False'
+
+
+# ---------------------------- available_substitutes (E-9) ----------------------------
+
+def test_available_substitutes_empty_when_none_onhand(u1_s1, space_1):
+    """When a food has substitutes but none are on-hand, the field is empty."""
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        sub1 = FoodFactory(space=space_1)
+        sub2 = FoodFactory(space=space_1)
+        food.substitute.add(sub1, sub2)
+
+    r = json.loads(u1_s1.get(reverse(DETAIL_URL, args=[food.id])).content)
+    assert r['available_substitutes'] == []
+
+
+def test_available_substitutes_only_onhand_returned(u1_s1, space_1):
+    """Only substitutes with onhand_users matching the caller's shared users
+    are returned. Off-hand substitutes are filtered out."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        onhand_sub = FoodFactory(space=space_1)
+        onhand_sub.onhand_users.add(user)
+        offhand_sub = FoodFactory(space=space_1)
+        food.substitute.add(onhand_sub, offhand_sub)
+
+    r = json.loads(u1_s1.get(reverse(DETAIL_URL, args=[food.id])).content)
+    ids = [s['id'] for s in r['available_substitutes']]
+    assert onhand_sub.id in ids
+    assert offhand_sub.id not in ids
+
+
+def test_available_substitutes_empty_without_any_substitute(u1_s1, space_1):
+    """A food with no substitute set returns an empty list."""
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+
+    r = json.loads(u1_s1.get(reverse(DETAIL_URL, args=[food.id])).content)
+    assert r['available_substitutes'] == []

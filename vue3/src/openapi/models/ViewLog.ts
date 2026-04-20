@@ -72,7 +72,7 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
     };
 }
 
-export function ViewLogToJSON(value?: Omit<ViewLog, 'createdBy'|'createdAt'> | null): any {
+export function ViewLogToJSON(value?: Omit<ViewLog, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

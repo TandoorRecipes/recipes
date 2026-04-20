@@ -110,7 +110,7 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function UserFileToJSON(value?: Omit<UserFile, 'fileDownload'|'preview'|'fileSizeKb'|'createdBy'|'createdAt'> | null): any {
+export function UserFileToJSON(value?: Omit<UserFile, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }
