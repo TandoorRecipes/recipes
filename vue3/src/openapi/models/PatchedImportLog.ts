@@ -111,7 +111,7 @@ export function PatchedImportLogFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedImportLogToJSON(value?: Omit<PatchedImportLog, 'keyword'|'createdBy'|'createdAt'> | null): any {
+export function PatchedImportLogToJSON(value?: Omit<PatchedImportLog, 'keyword'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass, field
 
 from django.contrib.postgres.search import SearchQuery
@@ -106,11 +105,15 @@ class SearchParams:
 
         query_raw = params.get('query', None)
 
+        # Normalize rating fields — may arrive as int from JSONField or str from HTTP
+        def _str_or_none(val):
+            return str(val) if val is not None else None
+
         return cls(
             query=query_raw.strip() if query_raw else None,
-            rating=params.get('rating', None),
-            rating_gte=params.get('rating_gte', None),
-            rating_lte=params.get('rating_lte', None),
+            rating=_str_or_none(params.get('rating', None)),
+            rating_gte=_str_or_none(params.get('rating_gte', None)),
+            rating_lte=_str_or_none(params.get('rating_lte', None)),
             keywords=_parse_filter_params(params, 'keywords'),
             foods=_parse_filter_params(params, 'foods'),
             books=_parse_filter_params(params, 'books'),
@@ -145,18 +148,32 @@ def _is_postgres():
 
 
 def _resolve_params(request, params):
-    if filter_id := params.get('filter', None):
+    """Resolve search parameters, merging CustomFilter as a base with HTTP params layered on top.
+
+    When a filter ID is provided, the saved filter's params are loaded as the base.
+    Any additional HTTP params (e.g., text query, sort order) are merged on top,
+    so the user can refine a saved filter without losing their additions.
+    """
+    base = {}
+    http_params = {**(params or {})}
+
+    if filter_id := http_params.pop('filter', None):
         custom_filter = (
             CustomFilter.objects.filter(id=filter_id, space=request.space)
             .filter(Q(created_by=request.user) | Q(shared=request.user) | Q(recipebook__shared=request.user))
+            .distinct()
             .first()
         )
         if custom_filter:
-            resolved = {**json.loads(custom_filter.search)}
-            if isinstance(resolved.get('rating', None), int):
-                resolved['rating'] = str(resolved['rating'])
-            return resolved
-    return {**(params or {})}
+            search_data = custom_filter.search if isinstance(custom_filter.search, dict) else {}
+            base = {**search_data}
+
+    # Layer HTTP params on top of filter base — non-empty HTTP params win
+    for key, value in http_params.items():
+        if value is not None and value != '' and value != []:
+            base[key] = value
+
+    return base
 
 
 def _load_search_prefs(user):
