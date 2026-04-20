@@ -1,6 +1,6 @@
 <template>
-    <!-- TODO label is not showing for some reason, for now in placeholder -->
-
+    <!-- TODO label is not showing on v-input, using v-label above as workaround -->
+    <div>
     <v-label class="mt-2" v-if="props.label">{{ props.label }}</v-label>
     <v-input :hint="props.hint" persistent-hint :label="props.label" :hide-details="props.hideDetails" :disabled="props.disabled">
         <template #prepend v-if="$slots.prepend">
@@ -28,7 +28,7 @@
             :can-clear="props.canClear"
             :can-deselect="props.canClear"
             :limit="props.limit"
-            :placeholder="$t(modelClass.model.localizationKey)"
+            :placeholder="props.placeholder ?? $t(modelClass.model.localizationKey)"
             :noOptionsText="$t('No_Results')"
             :noResultsText="$t('No_Results')"
             :loading="loading"
@@ -67,45 +67,55 @@
             </slot>
         </template>
     </v-input>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeMount, onMounted, PropType, ref, useTemplateRef} from "vue"
+import {computed, onBeforeMount, ref, useTemplateRef} from "vue"
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
-import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
 
 const emit = defineEmits(['update:modelValue', 'create'])
 
-const props = defineProps({
-    model: {type: String as PropType<EditorSupportedModels>, required: true},
-
-    id: {type: String, required: false, default: Math.floor(Math.random() * 10000).toString()},
-
-    limit: {type: Number, default: 25},
-
-    disabled: {type: Boolean, default: false},
-    canClear: {type: Boolean, default: true},
-
-    mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
-    appendToBody: {type: Boolean, default: false},
-    object: {type: Boolean, default: true}, // TODO broken either fix or finally get other multiselect working
-
-    allowCreate: {type: Boolean, default: false},
-    placeholder: {type: String, default: undefined},
-
-    noOptionsText: {type: String, default: undefined},
-    noResultsText: {type: String, default: undefined},
-    label: {type: String, default: ''},
-
-    hint: {type: String, default: ''},
-    hideDetails: {type: Boolean, default: false},
-    density: {type: String as PropType<'' | 'compact' | 'comfortable'>, default: ''},
-
-    searchOnLoad: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+    model: EditorSupportedModels
+    id?: string
+    limit?: number
+    disabled?: boolean
+    canClear?: boolean
+    mode?: 'single' | 'multiple' | 'tags'
+    appendToBody?: boolean
+    object?: boolean
+    allowCreate?: boolean
+    placeholder?: string
+    noOptionsText?: string
+    noResultsText?: string
+    label?: string
+    hint?: string
+    hideDetails?: boolean
+    density?: '' | 'compact' | 'comfortable'
+    searchOnLoad?: boolean
+}>(), {
+    id: () => Math.floor(Math.random() * 10000).toString(),
+    limit: 25,
+    disabled: false,
+    canClear: true,
+    mode: 'single',
+    appendToBody: false,
+    object: true,
+    allowCreate: false,
+    placeholder: undefined,
+    noOptionsText: undefined,
+    noResultsText: undefined,
+    label: '',
+    hint: '',
+    hideDetails: false,
+    density: '',
+    searchOnLoad: false,
 })
 
 /**

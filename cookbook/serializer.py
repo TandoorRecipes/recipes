@@ -24,8 +24,6 @@ from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.fields import IntegerField
 
-from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
-from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
 from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids
@@ -42,7 +40,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
                              InventoryLocation, InventoryEntry, InventoryLog, Household)
 from cookbook.templatetags.custom_tags import markdown
-from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
+from recipes.settings import EMAIL_HOST
 
 
 class WritableNestedModelSerializer(WNMS):
@@ -72,43 +70,12 @@ class WritableNestedModelSerializer(WNMS):
         return super().to_internal_value(data)
 
 
-class ExtendedRecipeMixin(serializers.ModelSerializer):
-    # adds image and recipe count to serializer when query param extended=1
+class RecipeCountMixin(serializers.ModelSerializer):
+    # annotates queryset with recipe_count via RecipeCountAnnotator.annotate_recipe()
     # ORM path to this object from Recipe
     recipe_filter = None
-    # list of ORM paths to any image
-    images = None
 
-    image = serializers.SerializerMethodField('get_image')
     numrecipe = serializers.IntegerField(source='recipe_count', read_only=True)
-
-    def get_fields(self, *args, **kwargs):
-        fields = super().get_fields(*args, **kwargs)
-        try:
-            api_serializer = self.context['view'].serializer_class
-        except KeyError:
-            api_serializer = None
-        # extended values are computationally expensive and not needed in normal circumstances
-        try:
-            if str2bool(self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
-                return fields
-        except (AttributeError, KeyError):
-            pass
-        try:
-            del fields['image']
-            del fields['numrecipe']
-        except KeyError:
-            pass
-        return fields
-
-    def get_image(self, obj):
-        if obj.recipe_image:
-            if AWS_ENABLED:
-                storage = CachedS3Boto3Storage()
-                path = storage.url(obj.recipe_image)
-            else:
-                path = MEDIA_URL + obj.recipe_image
-            return path
 
 
 class OpenDataModelMixin(serializers.ModelSerializer):
@@ -156,14 +123,18 @@ class CustomOnHandField(serializers.Field):
     def to_representation(self, obj):
         try:
             if not self.context["request"].user.is_authenticated:
-                return []
+                return False
             try:
-                shared_users = get_household_user_ids(self.context["request"].user_space)
+                user_space = self.context["request"].user_space
+                shared_users = get_household_user_ids(user_space)
+                household = user_space.household if hasattr(user_space, 'household') else None
             except AttributeError:  # Anonymous users (using share links) don't have shared users
                 shared_users = []
-            return obj.onhand_users.filter(id__in=shared_users).exists()
+                household = None
+            from cookbook.helper.food_availability_helper import _is_available
+            return Food.objects.filter(pk=obj.pk).filter(_is_available(household, shared_users)).exists()
         except AttributeError:
-            return []
+            return False
 
     def to_internal_value(self, data):
         return data
@@ -477,7 +448,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed', 'household_setup_completed')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_monthly_credits_used')
@@ -499,11 +470,6 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     user = UserSerializer(read_only=True)
     groups = GroupSerializer(many=True)
     household = HouseholdSerializer(allow_null=True, required=False)
-
-    def validate(self, data):
-        if len(data['groups']) == 0:
-            raise ValidationError(_('You must select at least one group.'))
-        return super().validate(data)
 
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
@@ -566,6 +532,32 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
 
+    def validate_start_page_sections(self, value):
+        ALLOWED_KEYS = {"mode", "enabled", "min_recipes", "filter_id"}
+
+        if not isinstance(value, list):
+            raise ValidationError("Must be a list")
+        if len(value) > 20:
+            raise ValidationError("Max 20 sections")
+        for entry in value:
+            if not isinstance(entry, dict):
+                raise ValidationError("Each entry must be an object")
+            if set(entry.keys()) - ALLOWED_KEYS:
+                raise ValidationError(f"Unknown keys: {set(entry.keys()) - ALLOWED_KEYS}")
+            if "mode" not in entry or "enabled" not in entry:
+                raise ValidationError("mode and enabled are required")
+            if entry["mode"] not in UserPreference.SECTION_MODES:
+                raise ValidationError(f"Invalid mode: {entry['mode']}")
+            if not isinstance(entry["enabled"], bool):
+                raise ValidationError("enabled must be boolean")
+            if "min_recipes" in entry:
+                if not isinstance(entry["min_recipes"], int) or entry["min_recipes"] < 0:
+                    raise ValidationError("min_recipes must be a non-negative integer")
+            if "filter_id" in entry:
+                if not isinstance(entry["filter_id"], int) or entry["filter_id"] < 1:
+                    raise ValidationError("filter_id must be a positive integer")
+        return value
+
     def update(self, instance, validated_data):
         with scopes_disabled():
             return super().update(instance, validated_data)
@@ -576,15 +568,15 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = UserPreference
         fields = (
-            'user', 'image', 'theme', 'nav_bg_color', 'nav_text_color', 'nav_show_logo', 'default_unit', 'default_page',
-            'use_fractions', 'use_kj',
+            'user', 'image', 'theme', 'nav_bg_color', 'nav_show_logo', 'default_unit', 'default_page',
+            'use_fractions',
             'nav_sticky',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
-            'food_children_exist'
+            'food_children_exist', 'start_page_sections'
         )
         read_only_fields = ('user',)
 
@@ -706,7 +698,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'label')
 
 
-class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
+class KeywordSerializer(UniqueFieldsMixin, RecipeCountMixin):
     label = serializers.SerializerMethodField('get_label', allow_null=False)
     parent = IntegerField(read_only=True)
 
@@ -727,12 +719,12 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     class Meta:
         model = Keyword
         fields = (
-            'id', 'name', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
+            'id', 'name', 'label', 'description', 'parent', 'numchild', 'numrecipe', 'created_at',
             'updated_at', 'full_name')
-        read_only_fields = ('id', 'label', 'numchild', 'numrecipe', 'parent', 'image')
+        read_only_fields = ('id', 'label', 'numchild', 'numrecipe', 'parent')
 
 
-class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin):
+class UnitSerializer(UniqueFieldsMixin, RecipeCountMixin, OpenDataModelMixin):
     recipe_filter = 'steps__ingredients__unit'
 
     def create(self, validated_data):
@@ -760,8 +752,8 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin)
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'plural_name', 'description', 'base_unit', 'numrecipe', 'image', 'open_data_slug')
-        read_only_fields = ('id', 'numrecipe', 'image')
+        fields = ('id', 'name', 'plural_name', 'description', 'base_unit', 'numrecipe', 'open_data_slug')
+        read_only_fields = ('id', 'numrecipe')
 
 
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer, OpenDataModelMixin):
@@ -876,7 +868,7 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'plural_name')
 
 
-class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCountMixin, OpenDataModelMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.CharField(source='shopping_status', read_only=True)
@@ -884,7 +876,14 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     child_inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     food_onhand = CustomOnHandField(required=False, allow_null=True)
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
+    available_substitutes = serializers.SerializerMethodField('get_available_substitutes')
+    in_inventory = serializers.CharField(source='has_inventory_status', read_only=True)
+    substitute_inventory = serializers.SerializerMethodField('get_substitute_inventory')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
+    # Only set when tree_search=true + filters expand the queryset via
+    # include_ancestors (E-8). True = matched the filter; False = ancestor
+    # context; None = not in a filter-expanded response.
+    matched_filter = serializers.SerializerMethodField('get_matched_filter')
     parent = IntegerField(read_only=True)
     shopping_lists = ShoppingListSerializer(many=True, required=False)
     properties = PropertySerializer(many=True, allow_null=True, required=False)
@@ -892,25 +891,87 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     properties_food_amount = CustomDecimalField(required=False)
 
     recipe_filter = 'steps__ingredients__food'
-    images = ['recipe__image']
+
+    def _substitute_candidates_filter(self, obj):
+        """Build the Q filter matching this food's substitute candidates:
+        direct substitutes plus (when flagged) siblings and descendants.
+        Shared by get_substitute_onhand and get_available_substitutes so the
+        two fields can't drift out of agreement on which foods are eligible.
+        """
+        filter = Q(id__in=obj.substitute.all())
+        if obj.substitute_siblings:
+            filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
+        if obj.substitute_children:
+            filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
+        return filter
 
     @extend_schema_field(bool)
     def get_substitute_onhand(self, obj):
+        # Use batch-computed cache from FoodViewSet.list() when available
+        cached = self.context.get('_substitute_onhand')
+        if cached is not None:
+            return cached.get(obj.id, False)
+        # Fallback for single-object serialization (retrieve, create, etc.)
+        try:
+            if not self.context["request"].user.is_authenticated:
+                return False
+            try:
+                user_space = self.context["request"].user_space
+                shared_users = get_household_user_ids(user_space)
+                household = user_space.household if hasattr(user_space, 'household') else None
+            except AttributeError:
+                shared_users = []
+            return Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).exists()
+        except AttributeError:
+            return False
+
+    @extend_schema_field(FoodSimpleSerializer(many=True))
+    def get_available_substitutes(self, obj):
+        """Return the subset of this food's substitutes (direct + siblings/
+        children when flagged) that are currently on-hand for the caller's
+        household. Used by the ingredient context menu and inline substitute
+        icons — the UI action is only meaningful if the substitute is
+        actually usable right now.
+
+        Returns a list of FoodSimpleSerializer-shaped dicts. Empty list for
+        anonymous callers, no shared users, or no on-hand substitutes.
+        """
         try:
             if not self.context["request"].user.is_authenticated:
                 return []
             try:
                 shared_users = get_household_user_ids(self.context["request"].user_space)
-            except AttributeError:  # Anonymous users (using share links) don't have shared users
-                shared_users = []
-            filter = Q(id__in=obj.substitute.all())
+            except AttributeError:
+                return []
+            if not shared_users:
+                return []
+            available = Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).distinct()
+            return FoodSimpleSerializer(available, many=True, context=self.context).data
+        except AttributeError:
+            return []
+
+    @extend_schema_field(bool)
+    def get_substitute_inventory(self, obj):
+        # Use batch-computed cache from FoodViewSet.list() when available
+        cached = self.context.get('_substitute_inventory')
+        if cached is not None:
+            return cached.get(obj.id, False)
+        # Fallback for single-object serialization (retrieve, create, etc.)
+        try:
+            substitute_ids = [s.id for s in obj.substitute.all()]
+            filter = Q(id__in=substitute_ids)
             if obj.substitute_siblings:
                 filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
             if obj.substitute_children:
                 filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
-            return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
+            return Food.objects.filter(filter).filter(inventoryentry__amount__gt=0).exists()
         except AttributeError:
-            return []
+            return False
+
+    @extend_schema_field(bool)
+    def get_matched_filter(self, obj):
+        """None for non-expanded responses, bool when tree_search=true (E-8)."""
+        return getattr(obj, 'matched_filter', None)
 
     def create(self, validated_data):
         name = validated_data['name'].strip()
@@ -988,10 +1049,11 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url', 'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
-            'food_onhand', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
+            'food_onhand', 'supermarket_category', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'available_substitutes', 'child_inherit_fields', 'open_data_slug', 'shopping_lists',
+            'in_inventory', 'substitute_inventory', 'matched_filter',
         )
-        read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
+        read_only_fields = ('id', 'numchild', 'parent', 'numrecipe')
 
 
 class IngredientSimpleSerializer(WritableNestedModelSerializer):
@@ -1050,12 +1112,11 @@ class IngredientSerializer(IngredientSimpleSerializer):
         read_only_fields = ['conversions', ]
 
 
-class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
+class StepSerializer(WritableNestedModelSerializer):
     ingredients = IngredientSerializer(many=True)
     instructions_markdown = serializers.SerializerMethodField('get_instructions_markdown')
     file = UserFileViewSerializer(allow_null=True, required=False)
     step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
-    recipe_filter = 'steps'
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -1081,7 +1142,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'instructions_markdown', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
-            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
+            'step_recipe_data', 'show_ingredients_table'
         )
 
 
@@ -1161,7 +1222,6 @@ class CommentSerializer(serializers.ModelSerializer):
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True, read_only=True)
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
-    recent = serializers.CharField(read_only=True)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
@@ -1177,7 +1237,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
-            'internal', 'private', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
+            'internal', 'private', 'servings', 'servings_text', 'rating', 'last_cooked', 'new'
         )
         # TODO having these readonly fields makes "RecipeOverview.ts" (API Client) not generate the RecipeOverviewToJSON second else block which leads to errors when using the api
         # TODO find a solution (custom schema?) to have these fields readonly (to save performance) and generate a proper client (two serializers would probably do the trick)
@@ -1274,6 +1334,15 @@ class RecipeBatchUpdateSerializer(serializers.Serializer):
     clear_description = serializers.BooleanField(required=False, allow_null=True)
 
 
+class FoodStatsSerializer(serializers.Serializer):
+    onhand = serializers.IntegerField()
+    shopping = serializers.IntegerField()
+    ignored = serializers.IntegerField()
+    inventory = serializers.IntegerField()
+    expired = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
 class FoodBatchUpdateSerializer(serializers.Serializer):
     foods = serializers.ListField(child=serializers.IntegerField())
 
@@ -1318,6 +1387,7 @@ class UserSpaceBatchUpdateSerializer(serializers.Serializer):
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
+    created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1325,7 +1395,7 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
     class Meta:
         model = CustomFilter
-        fields = ('id', 'name', 'search', 'shared', 'created_by')
+        fields = ('id', 'name', 'type', 'search', 'shared', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -1646,6 +1716,16 @@ class ShareLinkSerializer(SpacedModelSerializer):
 class CookLogSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
 
+    def validate_rating(self, value):
+        # Vuetify's clearable v-rating emits 0 on clear; normalize to NULL so the DB
+        # invariant is "rating is NULL (unrated) or 1-5". The search layer already
+        # treats ?rating=0 as "unrated" for backwards compatibility.
+        if value == 0:
+            return None
+        if value is not None and not (1 <= value <= 5):
+            raise serializers.ValidationError('Rating must be between 1 and 5.')
+        return value
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
@@ -1662,8 +1742,12 @@ class ViewLogSerializer(serializers.ModelSerializer):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
 
-        view_log = ViewLog.objects.filter(recipe=validated_data['recipe'], created_by=self.context['request'].user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)),
-                                          space=self.context['request'].space).first()
+        view_log = ViewLog.objects.filter(
+            recipe=validated_data['recipe'],
+            created_by=self.context['request'].user,
+            created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)),
+            space=self.context['request'].space
+        ).first()
         if not view_log:
             view_log = ViewLog.objects.create(recipe=validated_data['recipe'], created_by=self.context['request'].user, space=self.context['request'].space)
 
@@ -1736,7 +1820,7 @@ class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, Writ
 class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     inventory_location = InventoryLocationSerializer()
     food = FoodSerializer()
-    unit = UnitSerializer()
+    unit = UnitSerializer(allow_null=True)
     label = serializers.SerializerMethodField('get_label')
 
     def get_label(self, obj):
@@ -2063,19 +2147,6 @@ class RecipeShoppingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'list_recipe', 'ingredients', 'servings', ]
-
-
-class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
-    amount = serializers.IntegerField(write_only=True, allow_null=True, required=False,
-                                      help_text=_("Amount of food to add to the shopping list"))
-    unit = serializers.IntegerField(write_only=True, allow_null=True, required=False,
-                                    help_text=_("ID of unit to use for the shopping list"))
-    delete = serializers.ChoiceField(choices=['true'], write_only=True, allow_null=True, allow_blank=True,
-                                     help_text=_("When set to true will delete all food from active shopping lists."))
-
-    class Meta:
-        model = Recipe
-        fields = ['id', 'amount', 'unit', 'delete', ]
 
 
 # non model serializers

@@ -7,8 +7,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
+from cookbook.helper.permission_helper import invalidate_household_cache
 from cookbook.models import ShoppingListEntry, Household, UserSpace
-from cookbook.tests.factories import ShoppingListEntryFactory
+from cookbook.tests.factories import FoodFactory, ShoppingListEntryFactory
 
 LIST_URL = 'api:shoppinglistentry-list'
 DETAIL_URL = 'api:shoppinglistentry-detail'
@@ -153,6 +154,9 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1, space_1):
         household = Household.objects.create(name='test', space=space_1)
         UserSpace.objects.filter(user=user).update(household=household)
         UserSpace.objects.filter(user=shared_user).update(household=household)
+        # .update() bypasses signals — manually invalidate household cache
+        for us in UserSpace.objects.filter(space=space_1, household=household):
+            invalidate_household_cache(us)
 
     # confirm sharing user only sees their shopping list
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == count
@@ -215,5 +219,34 @@ def test_recent(sle, u1_s1):
     r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?recent=1').content)
     assert r['count'] == 10
     assert [x['checked'] for x in r['results']].count(False) == 9
+
+def test_filter_by_food(sle, u1_s1, space_1):
+    """Filter shopping list entries by food id."""
+    with scopes_disabled():
+        target_food = sle[0].food
+        # count how many entries have this food
+        expected = ShoppingListEntry.objects.filter(food=target_food).count()
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?food={target_food.id}').content)
+    assert r['count'] == expected
+    assert all(e['food']['id'] == target_food.id for e in r['results'])
+
+
+def test_filter_by_checked(u1_s1, space_1):
+    """Filter shopping list entries by checked status."""
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        food = FoodFactory(space=space_1)
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user, checked=False)
+        ShoppingListEntryFactory(food=food, space=space_1, created_by=user, checked=True)
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?food={food.id}&checked=false').content)
+    assert r['count'] == 1
+    assert r['results'][0]['checked'] is False
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?food={food.id}&checked=true').content)
+    assert r['count'] == 1
+    assert r['results'][0]['checked'] is True
+
 
 # TODO test auto onhand

@@ -19,7 +19,6 @@ let routes = [
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
-    {path: '/household-setup', component: () => import("@/pages/HouseholdPage.vue"), name: 'HouseholdPage', meta: {title: 'Household'}},
     {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage', meta: {title: 'Help'}},
 
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
@@ -56,6 +55,7 @@ let settings = {
         {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings', meta: {title: 'Settings'}},
         {path: 'meal-plan', component: () => import("@/components/settings/MealPlanSettings.vue"), name: 'MealPlanSettings', meta: {title: 'Settings'}},
         {path: 'search', component: () => import("@/components/settings/SearchSettings.vue"), name: 'SearchSettings', meta: {title: 'Settings'}},
+        {path: 'start-page', component: () => import("@/components/settings/StartPageSettings.vue"), name: 'StartPageSettingsPage', meta: {title: 'Settings'}},
         {path: 'space', component: () => import("@/components/settings/SpaceSettings.vue"), name: 'SpaceSettings', meta: {title: 'Settings'}},
         {path: 'open-data-import', component: () => import("@/components/settings/OpenDataImportSettings.vue"), name: 'OpenDataImportSettings', meta: {title: 'Settings'}},
         {path: 'export', component: () => import("@/components/settings/ExportDataSettings.vue"), name: 'ExportDataSettings', meta: {title: 'Settings'}},
@@ -77,6 +77,24 @@ routes.push(settings)
 const router = createRouter({
     history: createWebHistory(),
     routes,
+})
+
+const DEFAULT_PAGE_ROUTES: Record<string, string> = {
+    SEARCH: 'SearchPage',
+    PLAN: 'MealPlanPage',
+    BOOKS: 'BooksPage',
+    SHOPPING: 'ShoppingListPage',
+}
+
+router.beforeEach((to) => {
+    if (to.name !== 'StartPage') return
+    try {
+        const stored = localStorage.getItem('TANDOOR_USER_PREFERENCE')
+        if (!stored) return
+        const prefs = JSON.parse(stored)
+        const target = DEFAULT_PAGE_ROUTES[prefs.default_page]
+        if (target) return {name: target, replace: true}
+    } catch { /* ignore parse errors */ }
 })
 
 let i18n = setupI18n()

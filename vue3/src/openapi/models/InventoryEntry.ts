@@ -73,7 +73,7 @@ export interface InventoryEntry {
      * @type {Unit}
      * @memberof InventoryEntry
      */
-    unit: Unit;
+    unit: Unit | null;
     /**
      * 
      * @type {number}
@@ -150,7 +150,7 @@ export function InventoryEntryFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function InventoryEntryToJSON(value?: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'> | null): any {
+export function InventoryEntryToJSON(value?: Omit<InventoryEntry, 'label'|'created_at'|'created_by'> | null): any {
     if (value == null) {
         return value;
     }

@@ -114,6 +114,12 @@
                 <v-tabs-window-item value="hierarchy">
                     <hierarchy-editor v-model="editingObj" :model="modelClass.model.name"></hierarchy-editor>
 
+                    <v-divider class="my-4" />
+                    <div class="text-caption text-medium-emphasis mb-2">
+                        <v-icon size="x-small" class="mr-1" icon="fa-solid fa-location-crosshairs" />
+                        {{ $t('Settings') }}: <strong>{{ editingObj.name }}</strong>
+                    </div>
+
                     <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
                     <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
 
@@ -152,7 +158,7 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, PropType, ref, watch} from "vue";
+import {computed, nextTick, onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Food, Unit, UnitConversion} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -165,6 +171,7 @@ import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 import {openFdcPage} from "@/utils/fdc.ts";
 import {DateTime} from "luxon";
 import HierarchyEditor from "@/components/inputs/HierarchyEditor.vue";
+import {useRoute} from 'vue-router'
 
 
 const props = defineProps({
@@ -202,7 +209,19 @@ const propertiesAmountFor = computed(() => {
     return amountFor
 })
 
-const tab = ref("food")
+const route = useRoute()
+const requestedTab = !props.dialog ? (route.query.tab as string) : null
+const tab = ref('food')
+
+// Apply route query tab after loading completes (tabs are disabled until isUpdate())
+if (requestedTab) {
+    const stopTabWatcher = watch(loading, (isLoading) => {
+        if (!isLoading && isUpdate()) {
+            nextTick(() => { tab.value = requestedTab })
+            stopTabWatcher()
+        }
+    })
+}
 
 const unitConversions = ref([] as UnitConversion[])
 
