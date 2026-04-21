@@ -11,18 +11,18 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-03-29 11:08+0000\n"
-"Last-Translator: Rudolf Starzewski <sirtah1995@gmail.com>\n"
+"PO-Revision-Date: 2026-04-21 18:37+0000\n"
+"Last-Translator: Borys G <borysgnacinski@gmail.com>\n"
 "Language-Team: Polish <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
-"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
-"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.13.3\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -96,14 +96,12 @@ msgstr ""
 "właścicielem!"
 
 #: .\cookbook\helper\permission_helper.py:323
-#, fuzzy
-#| msgid "You cannot interact with this object as it is not owned by you!"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
 msgstr ""
-"Nie możesz przeprowadzać interkacji z tym obiektem ponieważ nie jesteś jego "
-"właścicielem!"
+"Nie możesz przeprowadzać interkacji z tym obiektem ponieważ nie jesteś w tym "
+"samym domostwie co użytkownik który go stworzył!"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -300,13 +298,15 @@ msgstr "Źródło"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Metoda nie zaimplementowana w integracji przechowywania"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"Eksport do PDF nie jest dostępny. Użyj funkcji drukowania w przeglądarce "
+"(Ctrl+P) aby zachować przepis jako PDF."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -429,7 +429,7 @@ msgstr "Cel"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -437,8 +437,6 @@ msgid "Remove"
 msgstr "Usuń"
 
 #: .\cookbook\models.py:1409
-#, fuzzy
-#| msgid "Move Up"
 msgid "Move"
 msgstr "Przenieś w górę"
 
@@ -532,10 +530,8 @@ msgid "Space Name must be unique."
 msgstr "Nazwa Przestrzeni musi być unikalna."
 
 #: .\cookbook\serializer.py:505
-#, fuzzy
-#| msgid "You must select at least one field to search!"
 msgid "You must select at least one group."
-msgstr "Wybierz przynajmniej jedno pole aby przeszukiwać!"
+msgstr "Musisz wybrać co najmniej jedną grupę."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -1420,10 +1416,10 @@ msgstr ""
 "społecznościowym."
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:30
-#, fuzzy
-#| msgid "Please contact your administrator."
 msgid "If this problem persists, please contact your administrator."
-msgstr "Proszę skontaktuj się z administratorem."
+msgstr ""
+"Jeśli problem będzie dalej występował, proszę skontaktuj się z "
+"administratorem."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
@@ -1751,10 +1747,8 @@ msgstr ""
 "        "
 
 #: .\cookbook\templates\system.html:230
-#, fuzzy
-#| msgid "Connect %(provider)s"
 msgid "Configured Providers"
-msgstr "Połącz %(provider)s"
+msgstr "Skonfigurowani usługodawcy"
 
 #: .\cookbook\templates\system.html:239
 msgid "Name"
@@ -1762,21 +1756,19 @@ msgstr "Nazwa"
 
 #: .\cookbook\templates\system.html:240 .\cookbook\templates\system.html:270
 msgid "Provider"
-msgstr ""
+msgstr "Usługodawca"
 
 #: .\cookbook\templates\system.html:241
 msgid "Client ID"
-msgstr ""
+msgstr "ID klienta"
 
 #: .\cookbook\templates\system.html:243
-#, fuzzy
-#| msgid "Link social account"
 msgid "Linked Accounts"
-msgstr "Połącz konto społecznościowe"
+msgstr "Połączone konta"
 
 #: .\cookbook\templates\system.html:259
 msgid "Recent Login Errors"
-msgstr ""
+msgstr "Ostatnie błędy logowania"
 
 #: .\cookbook\templates\system.html:269
 msgid "Time"
@@ -1784,15 +1776,15 @@ msgstr "Czas"
 
 #: .\cookbook\templates\system.html:271
 msgid "Error Code"
-msgstr ""
+msgstr "Kod błędu"
 
 #: .\cookbook\templates\system.html:272
 msgid "Details"
-msgstr ""
+msgstr "Szczegóły"
 
 #: .\cookbook\templates\system.html:286
 msgid "Errors are cached for 24 hours. Maximum 50 entries stored."
-msgstr ""
+msgstr "Błędy są przechowywane przez 24 godziny (do 50 błędów)."
 
 #: .\cookbook\templates\system.html:288
 msgid "No recent social login errors."
@@ -1824,48 +1816,36 @@ msgstr "Eksportuj"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:5
 #: .\cookbook\templates\usersessions\usersession_list.html:8
-#, fuzzy
-#| msgid "No Permissions"
 msgid "Sessions"
-msgstr "Brak uprawnień"
+msgstr "Sesje"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:9
-#, fuzzy
-#| msgid "The following e-mail addresses are associated with your account:"
 msgid "The following sessions are currently active on your account."
-msgstr "Poniższe adresy email są połączone z twoim kontem:"
+msgstr "Poniższe sesje są aktywne na Twoim koncie"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
-#, fuzzy
-#| msgid "Saturated Fat"
 msgid "Started At"
-msgstr "Tłuszcze nasycone"
+msgstr "Rozpoczęto"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:17
-#, fuzzy
-#| msgid "E-mail Addresses"
 msgid "IP Address"
-msgstr "Adresy Email"
+msgstr "Adres IP"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:18
-#, fuzzy
-#| msgid "API Browser"
 msgid "Browser"
-msgstr "Przeglądarka API"
+msgstr "Przeglądarka"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
-#, fuzzy
-#| msgid "Last viewed"
 msgid "Last Seen"
 msgstr "Ostatnio przeglądane"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:36
 msgid "Current"
-msgstr ""
+msgstr "Bieżące"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:45
 msgid "Sign Out Other Sessions"
-msgstr ""
+msgstr "Wyloguj inne sesje"
 
 #: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
@@ -1940,10 +1920,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\api.py:869 .\cookbook\views\api.py:902
-#, fuzzy
-#| msgid "Returns only entries associated with the given mealplan id"
 msgid "Returns all entries with the given food id"
-msgstr "Zwraca tylko wpisy powiązane z podanym identyfikatorem planu posiłków"
+msgstr "Zwraca tylko wpisy powiązane z podanym identyfikatorem jedzenia"
 
 #: .\cookbook\views\api.py:870
 #, fuzzy
@@ -2293,6 +2271,8 @@ msgstr "Nie ma co robić."
 msgid ""
 "The requested page could not be loaded. The server returned %(status_code)s."
 msgstr ""
+"Żądana strona nie mogła zostać załadowana. Serwer zwrócił kod odpowiedzi: %"
+"(status_code)s."
 
 #: .\cookbook\views\api.py:2652
 msgid "Connection Refused."
@@ -2319,6 +2299,8 @@ msgid ""
 "PDF export is no longer available. Use your browser's print function (Ctrl"
 "+P) to save recipes as PDF."
 msgstr ""
+"Eksport do PDF nie jest już dostępny. Użyj funkcji drukowania w Twojej "
+"przeglądarce (Ctrl+P), aby zapisać przepis jako PDF."
 
 #: .\cookbook\views\api.py:3335
 msgid "This feature is not yet available in the hosted version of tandoor!"
