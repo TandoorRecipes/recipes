@@ -95,6 +95,7 @@ class RecipeQuerySet(models.QuerySet):
 
         from django.db.models import ExpressionWrapper, FloatField, F, OuterRef, Subquery, Value
         from django.db.models.functions import Coalesce, Power, Now
+        from cookbook.helper.HelperFunctions import EpochSeconds
         from cookbook.models import RecipeUserWeight
 
         # First annotate with lastcooked
@@ -112,9 +113,10 @@ class RecipeQuerySet(models.QuerySet):
             _user_weight=Coalesce(weight_subquery, Value(0.0), output_field=FloatField()),
         ).annotate(
             # Calculate days since cooked (999 if never cooked)
+            # EpochSeconds converts interval to seconds, then divide by 86400 to get days
             _days_since_cooked=Coalesce(
                 ExpressionWrapper(
-                    (Now() - F('lastcooked')) / timedelta(days=1),
+                    EpochSeconds(Now() - F('lastcooked')) / 86400.0,
                     output_field=FloatField()
                 ),
                 Value(999.0),

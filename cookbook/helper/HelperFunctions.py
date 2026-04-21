@@ -17,6 +17,24 @@ class Round(Func):
     template = '%(function)s(%(expressions)s, 0)'
 
 
+class EpochSeconds(Func):
+    """
+    Database-agnostic function to extract epoch seconds from a timestamp/interval.
+    Works with PostgreSQL, SQLite, and MySQL.
+    """
+    template = "strftime('%s', %(expressions)s)"
+    postgresql_template = "EXTRACT(EPOCH FROM %(expressions)s)"
+    mysql_template = "UNIX_TIMESTAMP(%(expressions)s)"
+
+    def as_sql(self, compiler, connection, **extra_context):
+        db_vendor = connection.vendor
+        if db_vendor == 'postgresql':
+            self.template = self.postgresql_template
+        elif db_vendor == 'mysql':
+            self.template = self.mysql_template
+        return super().as_sql(compiler, connection, **extra_context)
+
+
 def str2bool(v):
     if isinstance(v, bool) or v is None:
         return v
