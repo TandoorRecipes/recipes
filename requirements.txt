@@ -16,7 +16,7 @@ lxml==6.0.2
 Markdown==3.8.1
 Pillow==12.2.0
 psycopg2-binary==2.9.10
-python-dotenv==1.1.1
+python-dotenv==1.2.2
 requests==2.33.0
 requests_hardened==1.2.0
 six==1.17.0
