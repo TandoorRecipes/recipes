@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-04-15 08:28+0000\n"
+"PO-Revision-Date: 2026-04-21 18:37+0000\n"
 "Last-Translator: SerhiiOS <serhios@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
@@ -207,7 +207,7 @@ msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
-"Імпортер очікував ZIP-файл. Чи ви обрали правильний тип імпортера для своїх "
+"Імпортер очікував zip-файл. Чи ви обрали правильний тип імпортера для своїх "
 "даних?"
 
 #: .\cookbook\integration\integration.py:235
@@ -838,7 +838,7 @@ msgstr "Створити акаунт"
 
 #: .\cookbook\templates\account\signup.html:41
 msgid "I accept the follwoing"
-msgstr "Я приймаю наступне"
+msgstr "Я погоджуюся з наступним"
 
 #: .\cookbook\templates\account\signup.html:44
 #: .\cookbook\templates\socialaccount\signup.html:35
@@ -1043,9 +1043,9 @@ msgid ""
 "editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
-"Таблиці Markdown важко створювати вручну. Рекомендується використовувати "
-"редактор таблиць, такий як<a href=\"https://www.tablesgenerator.com/"
-"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">ось цей.</a>"
+"Створювати Markdown-таблиці вручну складно. Рекомендуємо використовувати "
+"спеціальний редактор, наприклад <a href=\"https://www.tablesgenerator.com/"
+"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">цей.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1561,12 +1561,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Tandoor рецепти - це безкоштовна програма з відкритим кодом. Її "
-"можна знайти на\n"
+"        Tandoor Recipes — це безкоштовний додаток із відкритим вихідним "
+"кодом. Його можна знайти на\n"
 "        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHub</a>.\n"
-"        Changelogs can be found <a href=\"https://github.com/TandoorRecipes/"
-"recipes/releases\">тут\n"
-"</a>.\n"
+"        Список змін (Changelogs) доступний <a href=\"https://github.com/"
+"TandoorRecipes/recipes/releases\">тут</a>.\n"
 "    "
 
 #: .\cookbook\templates\system.html:30
@@ -1581,8 +1580,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Вам потрібно виконати<code>version.py</code> iу вашому скрипті "
-"оновлення, щоб згенерувати інформацію про версію (у Docker це робиться "
+"            Вам потрібно запустити <code>version.py</code> у вашому скрипті "
+"оновлення, щоб згенерувати інформацію про версію (у Docker це відбувається "
 "автоматично).\n"
 "        "
 
@@ -1905,7 +1904,7 @@ msgstr "Повертає всі записи з указаним id продук
 
 #: .\cookbook\views\api.py:870
 msgid "Returns all entries with the given inventory location id"
-msgstr "Повертає всі записи за вказаним id локації запасів."
+msgstr "Повертає всі записи за вказаним id локації запасів"
 
 #: .\cookbook\views\api.py:903
 msgid "Returns all entries with the given entry id"
