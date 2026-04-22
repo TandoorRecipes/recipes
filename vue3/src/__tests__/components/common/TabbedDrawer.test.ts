@@ -97,4 +97,24 @@ describe('TabbedDrawer', () => {
             expect(closeEvents).toEqual([])
         })
     })
+
+    describe('close button', () => {
+        // When the user clicks the × button on a pinned drawer, they mean "dismiss".
+        // Without this behavior the pin state persists to localStorage, but on next
+        // page load the drawer starts closed, so the user sees a pinned=true state
+        // with a closed drawer and can no longer reach the pin toggle to unpin.
+        it('clicking close on a pinned drawer also unpins it', async () => {
+            const wrapper = mountDrawer({pinned: true, modelValue: true})
+            const closeBtn = wrapper.find('[aria-label="Close"]')
+            expect(closeBtn.exists()).toBe(true)
+            await closeBtn.trigger('click')
+            await nextTick()
+
+            const modelEvents = wrapper.emitted('update:modelValue') ?? []
+            expect(modelEvents.some(e => e[0] === false)).toBe(true)
+
+            const pinEvents = wrapper.emitted('update:pinned') ?? []
+            expect(pinEvents.some(e => e[0] === false)).toBe(true)
+        })
+    })
 })

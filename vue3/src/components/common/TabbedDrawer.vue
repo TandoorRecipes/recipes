@@ -25,7 +25,7 @@
                 variant="plain"
                 size="small"
                 :aria-label="$t('Close')"
-                @click="isOpen = false"
+                @click="closeAndUnpin"
             />
         </v-toolbar>
 
@@ -67,7 +67,7 @@
                     </v-tab>
                 </v-tabs>
                 <span v-else class="text-subtitle-2 px-4 flex-grow-1">{{ tabs[0]?.label }}</span>
-                <v-btn icon="fa-solid fa-times" variant="plain" size="small" :aria-label="$t('Close')" @click="isOpen = false" />
+                <v-btn icon="fa-solid fa-times" variant="plain" size="small" :aria-label="$t('Close')" @click="closeAndUnpin" />
             </v-card-title>
 
             <v-divider />
@@ -130,6 +130,17 @@ const isPinned = computed({
     get: () => props.pinned,
     set: (val: boolean) => emit('update:pinned', val),
 })
+
+// Closing the drawer also drops the pinned state. The pin preference is
+// persisted to localStorage, but the drawer itself starts closed on every
+// route change — if close left pinned=true, the user would land on a page
+// with a pinned drawer that's closed and no way to reach the unpin toggle,
+// effectively stranding them. Treating close as "dismiss and unpin" keeps
+// the pin meaningful: it expires the next time the user actively dismisses.
+function closeAndUnpin() {
+    isOpen.value = false
+    if (isPinned.value) isPinned.value = false
+}
 
 // Bottom sheet drag-to-dismiss
 const dragStartY = ref(0)
