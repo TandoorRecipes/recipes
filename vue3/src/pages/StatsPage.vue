@@ -217,14 +217,30 @@
         <v-dialog v-model="showColumnSettings" max-width="500">
             <v-card>
                 <template #title>
-                    <span class="text-h5">{{ $t('Property Columns') }}</span>
+                    <span class="text-h5">{{ $t('Table Columns') }}</span>
                 </template>
                 <v-card-text>
-                    <p class="text-subtitle-2 mb-2">{{ $t('Select which property columns to display') }}</p>
+                    <p class="text-subtitle-2 mb-2">{{ $t('Select which columns to display') }}</p>
                     <div class="mb-2">
-                        <v-btn size="small" variant="text" @click="selectAllProperties">{{ $t('Select All') }}</v-btn>
-                        <v-btn size="small" variant="text" @click="deselectAllProperties">{{ $t('Deselect All') }}</v-btn>
+                        <v-btn size="small" variant="text" @click="selectAllColumns">{{ $t('Select All') }}</v-btn>
+                        <v-btn size="small" variant="text" @click="deselectAllColumns">{{ $t('Deselect All') }}</v-btn>
                     </div>
+                    <p class="text-subtitle-2 mt-3 mb-2">{{ $t('Optional Columns') }}</p>
+                    <v-checkbox
+                        :label="$t('Rating')"
+                        v-model="selectedPropertyIds"
+                        :value="RATING_COLUMN_KEY"
+                        hide-details
+                        density="compact"
+                    ></v-checkbox>
+                    <v-checkbox
+                        :label="$t('Comment')"
+                        v-model="selectedPropertyIds"
+                        :value="COMMENT_COLUMN_KEY"
+                        hide-details
+                        density="compact"
+                    ></v-checkbox>
+                    <p class="text-subtitle-2 mt-3 mb-2">{{ $t('Property Columns') }}</p>
                     <v-checkbox
                         v-for="prop in Array.from(discoveredProperties.values())"
                         :key="`checkbox_${prop.id}`"
@@ -260,9 +276,10 @@ const editDialog = ref(false)
 const editingItem = ref<CookLog | null>(null)
 const groupBy = ref<'none' | 'day' | 'week' | 'month' | 'year'>('none')
 const showColumnSettings = ref(false)
-const selectedPropertyIds = ref<number[]>([])
+const selectedPropertyIds = ref<(number | string)[]>([])
 
 const STATS_COLUMN_SETTINGS_KEY = 'TANDOOR_STATS_PROPERTY_COLUMNS'
+const columnsInitialized = ref(false)
 
 const groupOptions = [
     { title: 'Individual', value: 'none' },
@@ -287,18 +304,32 @@ interface PropertyType {
 }
 const discoveredProperties = ref<Map<number, PropertyType>>(new Map())
 
-// Fixed columns
-const fixedHeaders = [
+// Always-visible fixed columns
+const alwaysVisibleHeaders = [
     { title: 'Date', key: 'createdAt', sortable: true },
     { title: 'Recipe', key: 'recipe', sortable: false },
-    { title: 'Rating', key: 'rating', sortable: true },
     { title: 'Servings', key: 'servings', sortable: true },
-    { title: 'Comment', key: 'comment', sortable: false },
     { title: '', key: 'action', sortable: false, align: 'end' },
 ]
 
+// Toggleable columns (Rating, Comment, and Properties)
+const toggleableHeaders = [
+    { title: 'Rating', key: 'rating', sortable: true },
+    { title: 'Comment', key: 'comment', sortable: false },
+]
+
+// Special keys for toggleable fixed columns
+const RATING_COLUMN_KEY = 'rating_column'
+const COMMENT_COLUMN_KEY = 'comment_column'
+
 // Dynamic headers based on discovered properties and user selection
 const headers = computed(() => {
+    // Add toggleable fixed columns based on selection
+    const selectedFixedHeaders = toggleableHeaders.filter(h =>
+        selectedPropertyIds.value.includes(h.key === 'rating' ? RATING_COLUMN_KEY : COMMENT_COLUMN_KEY)
+    )
+
+    // Add selected property columns
     const dynamicHeaders = Array.from(discoveredProperties.value.values())
         .filter(prop => selectedPropertyIds.value.includes(prop.id))
         .map(prop => ({
@@ -307,7 +338,21 @@ const headers = computed(() => {
             sortable: false,
         }))
 
-    return [...fixedHeaders, ...dynamicHeaders]
+    // Insert selected fixed columns after Servings, before property columns
+    const headersAfterServings = [...selectedFixedHeaders, ...dynamicHeaders]
+
+    // Build final headers: always-visible + selected toggleable + property columns + action
+    const result = []
+    for (const h of alwaysVisibleHeaders) {
+        result.push(h)
+        if (h.key === 'servings') {
+            // Insert selected columns after Servings
+            for (const fh of headersAfterServings) {
+                result.push(fh)
+            }
+        }
+    }
+    return result
 })
 
 // Grouped data by date
@@ -590,6 +635,7 @@ function loadColumnSettings() {
     if (saved) {
         try {
             selectedPropertyIds.value = JSON.parse(saved)
+            columnsInitialized.value = true
         } catch (e) {
             console.error('Failed to parse saved column settings:', e)
             selectedPropertyIds.value = []
@@ -607,22 +653,23 @@ function saveColumnSettings() {
 }
 
 /**
- * When discovered properties change, initialize selected properties if empty
+ * When discovered properties change, initialize selected columns if not yet initialized
  */
 watch(() => discoveredProperties.value.size, (newSize) => {
-    if (newSize > 0 && selectedPropertyIds.value.length === 0) {
-        // First time loading - select all properties by default
-        selectedPropertyIds.value = Array.from(discoveredProperties.value.keys())
+    if (newSize > 0 && !columnsInitialized.value) {
+        // First time loading - select all columns by default (Rating, Comment, and all properties)
+        selectedPropertyIds.value = [RATING_COLUMN_KEY, COMMENT_COLUMN_KEY, ...Array.from(discoveredProperties.value.keys())]
         // Save to localStorage
         localStorage.setItem(STATS_COLUMN_SETTINGS_KEY, JSON.stringify(selectedPropertyIds.value))
+        columnsInitialized.value = true
     }
 })
 
-function selectAllProperties() {
-    selectedPropertyIds.value = Array.from(discoveredProperties.value.keys())
+function selectAllColumns() {
+    selectedPropertyIds.value = [RATING_COLUMN_KEY, COMMENT_COLUMN_KEY, ...Array.from(discoveredProperties.value.keys())]
 }
 
-function deselectAllProperties() {
+function deselectAllColumns() {
     selectedPropertyIds.value = []
 }
 </script>
