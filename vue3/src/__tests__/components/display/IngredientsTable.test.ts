@@ -162,3 +162,77 @@ describe('IngredientsTable inline onhand / substitute', () => {
         expect(w.html()).toContain('Solo')
     })
 })
+
+describe('IngredientsTable note truncation', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+        resetApiMock()
+    })
+
+    function mountWithTruncate(ingredients: any[], truncateLen: number) {
+        const prePopulate: PiniaPlugin = ({store}) => {
+            if (store.$id === 'user_preference_store') {
+                store.userSettings = makeUserPreference() as any
+                store.deviceSettings.recipe_overviewInlineStatus = true
+                store.deviceSettings.recipe_stepInlineStatus = true
+                store.deviceSettings.recipe_overviewNotesDisplay = 'truncate'
+                store.deviceSettings.recipe_stepNotesDisplay = 'truncate'
+                store.deviceSettings.recipe_notesTruncateLength = truncateLen
+            }
+        }
+        const pinia = createPinia()
+        pinia.use(prePopulate)
+        const i18n = createI18n({legacy: false, locale: 'en', messages: {en: {}}, missingWarn: false, fallbackWarn: false})
+        const vuetify = createVuetify({
+            components: vuetifyComponents, directives: vuetifyDirectives,
+            display: {mobileBreakpoint: 0},
+        })
+        const router = createRouter({history: createMemoryHistory(), routes: [{path: '/', component: {template: '<div/>'}}]})
+        return mount(IngredientsTable, {
+            props: {modelValue: ingredients, ingredientFactor: 1, showCheckbox: false, showActions: false, context: 'overview'},
+            global: {
+                plugins: [pinia, i18n, vuetify, router],
+                stubs: {IngredientContextMenu: {template: '<div class="stub-ctxmenu"/>'}},
+            },
+        })
+    }
+
+    it('truncate length shrinks by inline substitute text length so the row stays within the user budget', () => {
+        const note = 'abcdefghijklmnopqrstuvwxyz0123456789' // 36 chars
+        const subName = 'XYZABC' // 6 chars
+        const ing = makeIngredient({
+            note,
+            food: {
+                foodOnhand: false,
+                availableSubstitutes: [{id: 2, name: subName}],
+                substituteOnhand: true,
+            },
+        })
+        // Budget 25. Without substitute: truncate to 25 → 'abcdefghijklmnopqrstuvwxy...'.
+        // With 6-char substitute + 3 framing chars (' (x)'), budget shrinks to
+        // 25 - 9 = 16 → 'abcdefghijklmnop...'.
+        const w = mountWithTruncate([ing], 25)
+        const html = w.html()
+        expect(html).toContain(subName) // substitute still rendered
+        // The long-truncation prefix ('abcdefghijklmnopqrstuvwxy') MUST NOT appear
+        expect(html).not.toContain('abcdefghijklmnopqrstuvwxy')
+        // The short-truncation prefix ('abcdefghijklmnop') MUST appear
+        expect(html).toContain('abcdefghijklmnop')
+    })
+
+    it('truncate length falls back to full user budget when no substitute is shown (food onhand)', () => {
+        const note = 'abcdefghijklmnopqrstuvwxyz0123456789'
+        const ing = makeIngredient({
+            note,
+            food: {
+                foodOnhand: true, // onhand → no substitute text even if availableSubstitutes present
+                availableSubstitutes: [{id: 2, name: 'XYZABC'}],
+                substituteOnhand: true,
+            },
+        })
+        const w = mountWithTruncate([ing], 25)
+        const html = w.html()
+        // Full 25-char budget used
+        expect(html).toContain('abcdefghijklmnopqrstuvwxy')
+    })
+})

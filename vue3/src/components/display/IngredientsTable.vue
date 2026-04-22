@@ -42,7 +42,7 @@
                         <span v-if="hasNote(i) && notesDisplay === 'inline'" class="text-disabled font-italic ml-1">— {{ i.note }}</span>
                         <span v-if="hasNote(i) && notesDisplay === 'truncate'" class="text-disabled font-italic ml-1" style="cursor: pointer;"
                               @click.stop="toggleNoteExpand(idx)">—
-                            {{ expandedNotes[idx] ? i.note : truncateNote(i.note) }}
+                            {{ expandedNotes[idx] ? i.note : truncateNote(i.note, inlineSubstituteLength(i)) }}
                         </span>
                     </td>
                     <td v-if="useUserPreferenceStore().isPrintMode">
@@ -142,10 +142,11 @@ function hasNote(i: Ingredient): boolean {
     return i.note != null && i.note !== ''
 }
 
-function truncateNote(note: string | undefined): string {
+function truncateNote(note: string | undefined, reserved: number = 0): string {
     if (!note) return ''
     const max = deviceSettings.recipe_notesTruncateLength || 30
-    return note.length > max ? note.substring(0, max) + '...' : note
+    const budget = Math.max(5, max - reserved)
+    return note.length > budget ? note.substring(0, budget) + '...' : note
 }
 
 /** Matches FoodList.ts isInInventory pattern — annotation comes as "True"/"False" string */
@@ -160,10 +161,28 @@ function isOnShoppingList(i: Ingredient): boolean {
     return s === true || s === 'True' || s === 'true'
 }
 
+const substitutePickCache = new Map<number, string>()
+
 function substituteText(i: Ingredient): string {
     const subs = i.food?.availableSubstitutes ?? []
     if (!subs.length) return ''
-    return subs[Math.floor(Math.random() * subs.length)]!.name ?? ''
+    const key = i.id as number | undefined
+    if (key != null && substitutePickCache.has(key)) {
+        return substitutePickCache.get(key)!
+    }
+    const pick = subs[Math.floor(Math.random() * subs.length)]?.name ?? ''
+    if (key != null) substitutePickCache.set(key, pick)
+    return pick
+}
+
+// Number of display characters the inline substitute block contributes when
+// shown next to the note (" (name)" — leading space + parens + name). Used
+// to shrink the truncate budget so the row stays within the user's limit.
+function inlineSubstituteLength(i: Ingredient): number {
+    if (isOnHand(i) || mobile.value) return 0
+    const txt = substituteText(i)
+    if (!txt) return 0
+    return txt.length + 3
 }
 
 function substituteLabel(i: Ingredient): string {
