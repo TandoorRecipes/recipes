@@ -9,6 +9,12 @@
                         </div>
                     </template>
                     <template #append>
+                        <v-btn
+                            icon="fa-solid fa-gear"
+                            variant="plain"
+                            @click="showColumnSettings = true"
+                            title="Column Settings"
+                        ></v-btn>
                         <v-select
                             v-model="groupBy"
                             :items="groupOptions"
@@ -206,11 +212,43 @@
             @save="onCookLogSaved"
             @delete="onCookLogDeleted"
         ></model-edit-dialog>
+
+        <!-- Column Settings Dialog -->
+        <v-dialog v-model="showColumnSettings" max-width="500">
+            <v-card>
+                <template #title>
+                    <span class="text-h5">{{ $t('Property Columns') }}</span>
+                </template>
+                <v-card-text>
+                    <p class="text-subtitle-2 mb-2">{{ $t('Select which property columns to display') }}</p>
+                    <div class="mb-2">
+                        <v-btn size="small" variant="text" @click="selectAllProperties">{{ $t('Select All') }}</v-btn>
+                        <v-btn size="small" variant="text" @click="deselectAllProperties">{{ $t('Deselect All') }}</v-btn>
+                    </div>
+                    <v-checkbox
+                        v-for="prop in Array.from(discoveredProperties.values())"
+                        :key="`checkbox_${prop.id}`"
+                        v-model="selectedPropertyIds"
+                        :label="prop.name"
+                        :value="prop.id"
+                        hide-details
+                        density="compact"
+                    ></v-checkbox>
+                    <div v-if="Array.from(discoveredProperties.values()).length === 0" class="text-caption text-disabled">
+                        {{ $t('No properties found in recipes') }}
+                    </div>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" @click="saveColumnSettings">{{ $t('Save') }}</v-btn>
+                    <v-btn variant="text" @click="showColumnSettings = false">{{ $t('Cancel') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue"
+import { onMounted, ref, computed, watch } from "vue"
 import { ApiApi, CookLog } from "@/openapi"
 import { DateTime } from "luxon"
 import { useMessageStore, ErrorMessageType } from "@/stores/MessageStore"
@@ -221,6 +259,10 @@ const cookLogs = ref<CookLog[]>([])
 const editDialog = ref(false)
 const editingItem = ref<CookLog | null>(null)
 const groupBy = ref<'none' | 'day' | 'week' | 'month' | 'year'>('none')
+const showColumnSettings = ref(false)
+const selectedPropertyIds = ref<number[]>([])
+
+const STATS_COLUMN_SETTINGS_KEY = 'TANDOOR_STATS_PROPERTY_COLUMNS'
 
 const groupOptions = [
     { title: 'Individual', value: 'none' },
@@ -255,9 +297,10 @@ const fixedHeaders = [
     { title: '', key: 'action', sortable: false, align: 'end' },
 ]
 
-// Dynamic headers based on discovered properties
+// Dynamic headers based on discovered properties and user selection
 const headers = computed(() => {
     const dynamicHeaders = Array.from(discoveredProperties.value.values())
+        .filter(prop => selectedPropertyIds.value.includes(prop.id))
         .map(prop => ({
             title: prop.name,
             key: `property_${prop.id}`,
@@ -397,6 +440,7 @@ const displayItems = computed(() => {
 })
 
 onMounted(() => {
+    loadColumnSettings()
     loadCookLogs()
 })
 
@@ -536,6 +580,50 @@ function expandGroup() {
     groupBy.value = 'none'
     // Scroll to top to see the entries
     window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+/**
+ * Load saved column settings from localStorage
+ */
+function loadColumnSettings() {
+    const saved = localStorage.getItem(STATS_COLUMN_SETTINGS_KEY)
+    if (saved) {
+        try {
+            selectedPropertyIds.value = JSON.parse(saved)
+        } catch (e) {
+            console.error('Failed to parse saved column settings:', e)
+            selectedPropertyIds.value = []
+        }
+    }
+}
+
+/**
+ * Save column settings to localStorage
+ */
+function saveColumnSettings() {
+    localStorage.setItem(STATS_COLUMN_SETTINGS_KEY, JSON.stringify(selectedPropertyIds.value))
+    showColumnSettings.value = false
+    useMessageStore().addPreparedMessage({ key: 'UPDATE_SUCCESS' })
+}
+
+/**
+ * When discovered properties change, initialize selected properties if empty
+ */
+watch(() => discoveredProperties.value.size, (newSize) => {
+    if (newSize > 0 && selectedPropertyIds.value.length === 0) {
+        // First time loading - select all properties by default
+        selectedPropertyIds.value = Array.from(discoveredProperties.value.keys())
+        // Save to localStorage
+        localStorage.setItem(STATS_COLUMN_SETTINGS_KEY, JSON.stringify(selectedPropertyIds.value))
+    }
+})
+
+function selectAllProperties() {
+    selectedPropertyIds.value = Array.from(discoveredProperties.value.keys())
+}
+
+function deselectAllProperties() {
+    selectedPropertyIds.value = []
 }
 </script>
 
