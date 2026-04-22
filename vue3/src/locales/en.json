@@ -1057,10 +1057,15 @@
   "Overview": "Overview",
   "Poultry": "Poultry",
   "Pre-cooked Meals": "Pre-cooked Meals",
+  "RecipeSummaryScope": "Applies to the collapsed summary at the top of the recipe.",
+  "RecipeSummarySection": "Recipe summary",
   "Soup/Stew": "Soup/Stew",
   "StartExpanded": "Start expanded",
+  "StartExpandedHelper": "Show the summary open when you load a recipe.",
   "StatusIcons": "Status icons",
   "StepDetails": "Details",
   "Vegetables": "Vegetables",
+  "WhileCookingScope": "Applies to the expanded step-by-step view.",
+  "WhileCookingSection": "While cooking",
   "not_on_hand": "Not on hand"
 }

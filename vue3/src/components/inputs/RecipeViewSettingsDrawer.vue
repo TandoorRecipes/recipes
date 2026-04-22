@@ -7,97 +7,90 @@
         :use-sheet="mobile"
     >
         <template #settings>
-            <div class="px-4 pt-3 pb-1 text-overline text-medium-emphasis">{{ $t('Overview') }}</div>
-
-            <v-switch
-                v-model="deviceSettings.recipe_overviewExpanded"
-                :label="$t('StartExpanded')"
-                hide-details density="compact" class="px-4"
-            />
-            <v-switch
-                v-model="deviceSettings.recipe_showIngredientActions"
-                :label="$t('IngredientActions')"
-                hide-details density="compact" class="px-4"
-            />
-            <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
-            <v-select
-                v-if="deviceSettings.recipe_showIngredientActions"
-                v-model="deviceSettings.recipe_contextMenuColor"
-                :label="$t('HighlightWhen')"
-                :items="contextMenuColorOptions"
-                item-title="label" item-value="value"
-                hide-details density="compact" variant="outlined"
-                class="px-4 py-2"
-            />
-            <v-select
-                v-model="deviceSettings.recipe_overviewNotesDisplay"
-                :label="$t('IngredientNotes')"
-                :items="notesDisplayOptions"
-                item-title="label" item-value="value"
-                hide-details density="compact" variant="outlined"
-                class="px-4 py-2"
-            />
-            <v-text-field
-                v-if="deviceSettings.recipe_overviewNotesDisplay === 'truncate'"
-                v-model.number="deviceSettings.recipe_notesTruncateLength"
-                :label="$t('MaxCharacters')"
-                type="number" min="10" max="200"
-                hide-details density="compact" variant="outlined"
-                class="px-4 pb-2"
-            />
-            <v-switch
-                v-if="!mobile"
-                v-model="deviceSettings.recipe_overviewInlineStatus"
-                :label="$t('IngredientStatusIcons')"
-                hide-details density="compact" class="px-4"
-            />
-
-            <v-divider class="my-2" />
-
-            <div class="px-4 pt-2 pb-1 text-overline text-medium-emphasis">{{ $t('StepDetails') }}</div>
-
-            <v-switch
-                v-model="deviceSettings.recipe_showCheckboxes"
-                :label="$t('CheckOffIngredients')"
-                hide-details density="compact" class="px-4"
-            />
-            <v-select
-                v-model="deviceSettings.recipe_stepNotesDisplay"
-                :label="$t('IngredientNotes')"
-                :items="notesDisplayOptions"
-                item-title="label" item-value="value"
-                hide-details density="compact" variant="outlined"
-                class="px-4 py-2"
-            />
-            <v-text-field
-                v-if="deviceSettings.recipe_stepNotesDisplay === 'truncate'"
-                v-model.number="deviceSettings.recipe_notesTruncateLength"
-                :label="$t('MaxCharacters')"
-                type="number" min="10" max="200"
-                hide-details density="compact" variant="outlined"
-                class="px-4 pb-2"
-            />
-            <v-switch
-                v-if="!mobile"
-                v-model="deviceSettings.recipe_stepInlineStatus"
-                :label="$t('IngredientStatusIcons')"
-                hide-details density="compact" class="px-4 pb-2"
-            />
-            <v-switch
-                v-model="deviceSettings.recipe_showIngredientActions"
-                :label="$t('IngredientActions')"
-                hide-details density="compact" class="px-4"
-            />
-            <div class="text-caption px-4 pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
-            <v-select
-                v-if="deviceSettings.recipe_showIngredientActions"
-                v-model="deviceSettings.recipe_contextMenuColor"
-                :label="$t('HighlightWhen')"
-                :items="contextMenuColorOptions"
-                item-title="label" item-value="value"
-                hide-details density="compact" variant="outlined"
-                class="px-4 py-2"
-            />
+            <v-expansion-panels :model-value="[0, 1]" multiple variant="accordion" class="mt-2">
+                <v-expansion-panel>
+                    <v-expansion-panel-title>{{ $t('RecipeSummarySection') }}</v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                        <div class="text-caption pb-2 text-medium-emphasis">{{ $t('RecipeSummaryScope') }}</div>
+                        <v-switch
+                            v-model="deviceSettings.recipe_overviewExpanded"
+                            :label="$t('StartExpanded')"
+                            hide-details density="compact"
+                        />
+                        <div class="text-caption pb-1 text-medium-emphasis">{{ $t('StartExpandedHelper') }}</div>
+                        <v-switch
+                            v-model="deviceSettings.recipe_showIngredientActions"
+                            :label="$t('IngredientActions')"
+                            hide-details density="compact"
+                        />
+                        <div class="text-caption pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
+                        <v-select
+                            v-if="deviceSettings.recipe_showIngredientActions"
+                            v-model="deviceSettings.recipe_contextMenuColor"
+                            :label="$t('HighlightWhen')"
+                            :items="contextMenuColorOptions"
+                            item-title="label" item-value="value"
+                            hide-details density="compact" variant="outlined"
+                            class="py-2"
+                        />
+                        <v-select
+                            v-model="deviceSettings.recipe_overviewNotesDisplay"
+                            :label="$t('IngredientNotes')"
+                            :items="notesDisplayOptions"
+                            item-title="label" item-value="value"
+                            hide-details density="compact" variant="outlined"
+                            class="py-2"
+                        />
+                        <v-text-field
+                            v-if="deviceSettings.recipe_overviewNotesDisplay === 'truncate'"
+                            v-model.number="deviceSettings.recipe_notesTruncateLength"
+                            :label="$t('MaxCharacters')"
+                            type="number" min="10" max="200"
+                            hide-details density="compact" variant="outlined"
+                            class="pb-2"
+                        />
+                        <v-switch
+                            v-if="!mobile"
+                            v-model="deviceSettings.recipe_overviewInlineStatus"
+                            :label="$t('IngredientStatusIcons')"
+                            hide-details density="compact"
+                        />
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+                <v-expansion-panel>
+                    <v-expansion-panel-title>{{ $t('WhileCookingSection') }}</v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                        <div class="text-caption pb-2 text-medium-emphasis">{{ $t('WhileCookingScope') }}</div>
+                        <v-switch
+                            v-model="deviceSettings.recipe_showCheckboxes"
+                            :label="$t('CheckOffIngredients')"
+                            hide-details density="compact"
+                        />
+                        <v-select
+                            v-model="deviceSettings.recipe_stepNotesDisplay"
+                            :label="$t('IngredientNotes')"
+                            :items="notesDisplayOptions"
+                            item-title="label" item-value="value"
+                            hide-details density="compact" variant="outlined"
+                            class="py-2"
+                        />
+                        <v-text-field
+                            v-if="deviceSettings.recipe_stepNotesDisplay === 'truncate'"
+                            v-model.number="deviceSettings.recipe_notesTruncateLength"
+                            :label="$t('MaxCharacters')"
+                            type="number" min="10" max="200"
+                            hide-details density="compact" variant="outlined"
+                            class="pb-2"
+                        />
+                        <v-switch
+                            v-if="!mobile"
+                            v-model="deviceSettings.recipe_stepInlineStatus"
+                            :label="$t('IngredientStatusIcons')"
+                            hide-details density="compact"
+                        />
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+            </v-expansion-panels>
         </template>
     </TabbedDrawer>
 </template>

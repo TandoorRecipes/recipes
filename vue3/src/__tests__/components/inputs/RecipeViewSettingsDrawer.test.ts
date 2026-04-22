@@ -45,6 +45,11 @@ function mountDrawer() {
             InShoppingList: 'In shopping list',
             HasSubstitute: 'Has substitute',
             Never: 'Never',
+            RecipeSummarySection: 'Recipe summary',
+            RecipeSummaryScope: 'Applies to the collapsed summary at the top of the recipe.',
+            WhileCookingSection: 'While cooking',
+            WhileCookingScope: 'Applies to the expanded step-by-step view.',
+            StartExpandedHelper: 'Show the summary open when you load a recipe.',
         }},
         missingWarn: false, fallbackWarn: false,
     })
@@ -112,10 +117,18 @@ describe('RecipeViewSettingsDrawer', () => {
         expect(options).toContain('onhand')
     })
 
-    it('renders both Overview and Step Details section headings', () => {
+    it('renders Recipe summary and While cooking section titles with scope helper text', () => {
         const w = mountDrawer()
         const html = w.html()
-        expect(html).toContain('Overview')
-        expect(html).toContain('StepDetails')
+        expect(html).toContain('Recipe summary')
+        expect(html).toContain('Applies to the collapsed summary at the top of the recipe.')
+        expect(html).toContain('While cooking')
+        expect(html).toContain('Applies to the expanded step-by-step view.')
+    })
+
+    it('wraps each scoped section in its own v-expansion-panel', () => {
+        const w = mountDrawer()
+        const panels = w.findAll('.v-expansion-panel')
+        expect(panels.length).toBe(2)
     })
 })
