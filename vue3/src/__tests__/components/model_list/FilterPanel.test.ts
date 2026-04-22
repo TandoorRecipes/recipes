@@ -112,5 +112,22 @@ describe('FilterPanel', () => {
             )
             expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('false')
         })
+
+        it('tag-group (RecipeTagFilterGroup) dropdowns stay inline when rendered inside a drawer', () => {
+            const wrapper = mountPanel(
+                [{
+                    key: 'keywords', labelKey: 'Keywords', type: 'tag-group' as any,
+                    modelName: 'Keyword' as any,
+                    variantKeys: ['keywords', 'keywordsAnd', 'keywordsOrNot', 'keywordsAndNot'] as any,
+                }],
+                {},
+                {inDrawer: true},
+            )
+            const stubs = wrapper.findAll('.model-select-stub')
+            expect(stubs.length).toBeGreaterThan(0)
+            for (const s of stubs) {
+                expect(s.attributes('data-append-to-body')).toBe('false')
+            }
+        })
     })
 })

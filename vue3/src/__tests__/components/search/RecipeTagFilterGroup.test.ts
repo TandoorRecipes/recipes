@@ -8,7 +8,7 @@ import {h, ref, nextTick} from 'vue'
 
 const ModelSelectStub = {
     name: 'ModelSelect',
-    props: ['model', 'modelValue', 'mode'],
+    props: ['model', 'modelValue', 'mode', 'appendToBody'],
     emits: ['update:modelValue'],
     render() {
         return h('div', {class: 'model-select-stub', 'data-model-value': JSON.stringify(this.modelValue)})
@@ -19,7 +19,7 @@ import RecipeTagFilterGroup from '@/components/search/RecipeTagFilterGroup.vue'
 
 const KEYS = ['keywords', 'keywordsAnd', 'keywordsOrNot', 'keywordsAndNot'] as const
 
-function mountWidget(initialState: Partial<Record<string, string>> = {}) {
+function mountWidget(initialState: Partial<Record<string, string>> = {}, extraProps: Record<string, any> = {}) {
     const state = ref<Record<string, string | undefined>>({...initialState})
     const getFilter = (key: string) => state.value[key]
     const setFilter = vi.fn((key: string, value: any) => {
@@ -49,6 +49,7 @@ function mountWidget(initialState: Partial<Record<string, string>> = {}) {
             getFilter,
             setFilter,
             clearFilter,
+            ...extraProps,
         },
         global: {
             plugins: [vuetify, i18n],
@@ -182,6 +183,29 @@ describe('RecipeTagFilterGroup', () => {
             const {wrapper} = mountWidget({keywords: '1,2', keywordsOrNot: '3'})
             const badge = wrapper.find('.v-badge')
             expect(badge.text()).toContain('3')
+        })
+    })
+
+    describe('drawer teleport', () => {
+        it('defaults to appending multiselect dropdowns to body (inline card usage)', () => {
+            const {wrapper} = mountWidget({keywords: '1', keywordsAnd: '2', keywordsOrNot: '3', keywordsAndNot: '4'})
+            const selects = wrapper.findAllComponents(ModelSelectStub)
+            expect(selects.length).toBeGreaterThan(0)
+            for (const s of selects) {
+                expect(s.props('appendToBody')).toBe(true)
+            }
+        })
+
+        it('keeps multiselect dropdowns inside the drawer when inDrawer is true', () => {
+            const {wrapper} = mountWidget(
+                {keywords: '1', keywordsAnd: '2', keywordsOrNot: '3', keywordsAndNot: '4'},
+                {inDrawer: true},
+            )
+            const selects = wrapper.findAllComponents(ModelSelectStub)
+            expect(selects.length).toBeGreaterThan(0)
+            for (const s of selects) {
+                expect(s.props('appendToBody')).toBe(false)
+            }
         })
     })
 })

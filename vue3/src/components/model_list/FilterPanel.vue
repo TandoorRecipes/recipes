@@ -21,6 +21,7 @@
                         :show-toggles="def.showToggles !== false"
                         :expandable="def.expandable !== false"
                         :select-placeholder="def.selectPlaceholder"
+                        :in-drawer="inDrawer"
                         class="mx-2 my-1"
                     />
                     <div v-else-if="def.type === 'tag-select' && def.modelName" class="px-4 py-1" @click.stop>
