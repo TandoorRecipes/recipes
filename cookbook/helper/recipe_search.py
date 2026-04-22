@@ -96,10 +96,19 @@ class SearchParams:
 
     @staticmethod
     def _parse_makenow(value):
+        # The tristate UI (RecipeList.ts) sends the string '1' for "Yes" —
+        # show only fully cookable recipes — and '0' for "No". Treat those as
+        # booleans, not as the integer "allow N missing" path that previously
+        # admitted near-makenow recipes. Integer callers (tests passing
+        # makenow=1 or =2 directly) still get the fuzzy semantic.
         if isinstance(value, bool) and value is True:
             return 0
-        if isinstance(value, str) and value in ('yes', 'true'):
-            return 0
+        if isinstance(value, str):
+            low = value.lower()
+            if low in ('yes', 'true', '1'):
+                return 0
+            if low in ('no', 'false', '0'):
+                return None
         try:
             return int(value)
         except (ValueError, TypeError):
