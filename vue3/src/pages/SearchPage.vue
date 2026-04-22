@@ -204,6 +204,7 @@
                     :stats="stats"
                     :stat-defs="RECIPE_STAT_DEFS"
                     :loading="statsLoading"
+                    @apply-filter="applyStatFilter"
                 />
             </v-col>
         </v-row>
@@ -363,17 +364,26 @@ import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 
 import {useUrlFilters} from '@/composables/useUrlFilters'
 import {RECIPE_FILTER_DEFS, RECIPE_SORT_DEFS} from '@/composables/modellist/RecipeList'
-import type {FilterDef, StatDef} from '@/composables/modellist/types'
+import type {FilterDef, FilterValue, StatDef} from '@/composables/modellist/types'
+
+function isoDaysAgo(days: number): string {
+    const d = new Date()
+    d.setDate(d.getDate() - days)
+    return d.toISOString().slice(0, 10)
+}
 
 // Keys match the TypeScript RecipeStats interface (what RecipeStatsFromJSON
 // produces), not the backend JSON — snake_case keys like `makenow_ready`
 // silently resolve to 0 because the client has already renamed them.
+// `filter` (where defined) turns the chip into a "jump to this filter" shortcut
+// that matches the stat's own definition — makenow_ready uses the makenow
+// tristate, new uses createdon_gte = 7 days ago, etc.
 const RECIPE_STAT_DEFS: StatDef[] = [
-    {key: 'makenowReady', labelKey: 'MakenowReady', icon: 'fa-solid fa-utensils', color: 'success'},
-    {key: '_new', labelKey: 'New', icon: 'fa-solid fa-star', color: 'info'},
-    {key: 'unrated', labelKey: 'Unrated', icon: 'fa-solid fa-star-half-stroke', color: 'warning'},
-    {key: 'neverCooked', labelKey: 'NeverCooked', icon: 'fa-regular fa-clock', color: 'warning'},
-    {key: '_private', labelKey: 'Private', icon: 'fa-solid fa-user-lock', color: 'info'},
+    {key: 'makenowReady', labelKey: 'MakenowReady', icon: 'fa-solid fa-utensils', color: 'success', filter: () => ({makenow: '1'})},
+    {key: '_new',         labelKey: 'New',          icon: 'fa-solid fa-star',          color: 'info',    filter: () => ({createdon: {gte: isoDaysAgo(7)}})},
+    {key: 'unrated',      labelKey: 'Unrated',      icon: 'fa-solid fa-star-half-stroke', color: 'warning', filter: () => ({unrated: '1'})},
+    {key: 'neverCooked',  labelKey: 'NeverCooked',  icon: 'fa-regular fa-clock',       color: 'warning', filter: () => ({timescooked: {lte: 0}})},
+    {key: '_private',     labelKey: 'Private',      icon: 'fa-solid fa-user-lock',     color: 'info'},
 ]
 import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
 import {useFilterPlacement} from '@/composables/useFilterPlacement'
@@ -727,6 +737,15 @@ function loadStats() {
 }
 
 watch(showStats, (on) => { if (on) loadStats() })
+
+// Apply filters emitted by a stat-chip click. Additive semantics: the filter
+// layers on top of whatever the user already has. Users who want an isolated
+// "just this stat" view can clear first via the toolbar reset.
+function applyStatFilter(filter: Record<string, FilterValue>) {
+    for (const [k, v] of Object.entries(filter)) {
+        setFilter(k, v)
+    }
+}
 
 /* ─── Lifecycle ─────────────────────────────────────────────────────── */
 

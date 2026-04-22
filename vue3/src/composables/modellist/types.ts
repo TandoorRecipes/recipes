@@ -207,6 +207,11 @@ export type StatDef = {
     icon: string,
     /** Vuetify color for the chip */
     color: string,
+    /** Optional: when present, the chip becomes clickable. Returns a map of
+     *  filter-key → FilterValue to apply on click (resolved lazily so
+     *  time-sensitive filters like "created in last N days" pick up the
+     *  click-time value). */
+    filter?: () => Record<string, FilterValue>,
 }
 
 /**
