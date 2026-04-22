@@ -365,12 +365,15 @@ import {useUrlFilters} from '@/composables/useUrlFilters'
 import {RECIPE_FILTER_DEFS, RECIPE_SORT_DEFS} from '@/composables/modellist/RecipeList'
 import type {FilterDef, StatDef} from '@/composables/modellist/types'
 
+// Keys match the TypeScript RecipeStats interface (what RecipeStatsFromJSON
+// produces), not the backend JSON — snake_case keys like `makenow_ready`
+// silently resolve to 0 because the client has already renamed them.
 const RECIPE_STAT_DEFS: StatDef[] = [
-    {key: 'makenow_ready', labelKey: 'MakenowReady', icon: 'fa-solid fa-utensils', color: 'success'},
-    {key: 'new', labelKey: 'New', icon: 'fa-solid fa-star', color: 'info'},
+    {key: 'makenowReady', labelKey: 'MakenowReady', icon: 'fa-solid fa-utensils', color: 'success'},
+    {key: '_new', labelKey: 'New', icon: 'fa-solid fa-star', color: 'info'},
     {key: 'unrated', labelKey: 'Unrated', icon: 'fa-solid fa-star-half-stroke', color: 'warning'},
-    {key: 'never_cooked', labelKey: 'NeverCooked', icon: 'fa-regular fa-clock', color: 'warning'},
-    {key: 'private', labelKey: 'Private', icon: 'fa-solid fa-user-lock', color: 'info'},
+    {key: 'neverCooked', labelKey: 'NeverCooked', icon: 'fa-regular fa-clock', color: 'warning'},
+    {key: '_private', labelKey: 'Private', icon: 'fa-solid fa-user-lock', color: 'info'},
 ]
 import {useModelListSettings} from '@/composables/modellist/useModelListSettings'
 import {useFilterPlacement} from '@/composables/useFilterPlacement'

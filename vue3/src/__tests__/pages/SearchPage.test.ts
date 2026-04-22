@@ -228,10 +228,19 @@ describe('SearchPage (Phase 3 rewrite)', () => {
         })
 
         it('fetches stats on mount when search_showStats is on', async () => {
-            apiMock.apiRecipeStatsRetrieve = vi.fn().mockResolvedValue({total: 5, makenow_ready: 2, new: 1, unrated: 3, never_cooked: 2, private: 0})
-            await mountSearchPage({}, 'grid', {search_showStats: true})
+            // The OpenAPI client's RecipeStatsFromJSON converts snake_case to the
+            // TypeScript interface shape (makenowReady, _new, neverCooked, _private),
+            // so stat-def keys must match that transformed shape.
+            apiMock.apiRecipeList = vi.fn().mockResolvedValue({results: [{id: 1, name: 'R'}], count: 1, next: null, previous: null})
+            apiMock.apiRecipeStatsRetrieve = vi.fn().mockResolvedValue({total: 5, makenowReady: 2, _new: 1, unrated: 3, neverCooked: 2, _private: 0})
+            const {wrapper} = await mountSearchPage({}, 'grid', {search_showStats: true})
             await flushPromises()
             expect(apiMock.apiRecipeStatsRetrieve).toHaveBeenCalled()
+            // The stats footer must actually render each count, not fall back to 0.
+            const footerText = wrapper.text()
+            expect(footerText).toMatch(/MakenowReady[^0-9]*2/)
+            expect(footerText).toMatch(/New[^0-9]*1/)
+            expect(footerText).toMatch(/NeverCooked[^0-9]*2/)
         })
 
         // E-7: changing the items-per-page dropdown must not clear active filters.
