@@ -531,7 +531,7 @@ function openSettingsPanel(tab: 'settings' | 'filters') {
 }
 
 // Exposed for component tests — script setup doesn't auto-expose bindings.
-defineExpose({openSettingsPanel, settingsActiveTab, settingsPanelOpen, onTableUpdate, filterParams, pageSize})
+defineExpose({openSettingsPanel, settingsActiveTab, settingsPanelOpen, onTableUpdate, filterParams, pageSize, applyStatFilter})
 
 function resetAll() {
     query.value = ''
@@ -738,10 +738,12 @@ function loadStats() {
 
 watch(showStats, (on) => { if (on) loadStats() })
 
-// Apply filters emitted by a stat-chip click. Additive semantics: the filter
-// layers on top of whatever the user already has. Users who want an isolated
-// "just this stat" view can clear first via the toolbar reset.
+// Apply filters emitted by a stat-chip click. Replace semantics: the chip
+// represents a global stat over the whole visible set, so the drill-down
+// should yield exactly that population — any existing filters are cleared
+// first. Users can then layer additional filters on top manually.
 function applyStatFilter(filter: Record<string, FilterValue>) {
+    clearAllFilters()
     for (const [k, v] of Object.entries(filter)) {
         setFilter(k, v)
     }

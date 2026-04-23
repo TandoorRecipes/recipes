@@ -227,6 +227,23 @@ describe('SearchPage (Phase 3 rewrite)', () => {
             expect(apiMock.apiRecipeStatsRetrieve).not.toHaveBeenCalled()
         })
 
+        it('stat-chip apply-filter replaces existing filters, does not append', async () => {
+            apiMock.apiRecipeList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
+            const {wrapper, router} = await mountSearchPage({unrated: '1', internal: '1'})
+            // Sanity: both preexisting filters are in the URL before the click
+            expect(router.currentRoute.value.query.unrated).toBe('1')
+            expect(router.currentRoute.value.query.internal).toBe('1')
+            // Jump to "Ready to cook" (what a makenow chip click emits)
+            ;(wrapper.vm as any).applyStatFilter({makenow: '1'})
+            await flushPromises()
+            await flushPromises()
+            // Prior filters must be cleared
+            expect(router.currentRoute.value.query.unrated).toBeUndefined()
+            expect(router.currentRoute.value.query.internal).toBeUndefined()
+            // New filter is applied
+            expect(router.currentRoute.value.query.makenow).toBe('1')
+        })
+
         it('fetches stats on mount when search_showStats is on', async () => {
             // The OpenAPI client's RecipeStatsFromJSON converts snake_case to the
             // TypeScript interface shape (makenowReady, _new, neverCooked, _private),
