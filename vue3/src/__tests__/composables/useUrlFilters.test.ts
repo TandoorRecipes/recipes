@@ -107,7 +107,10 @@ describe('useUrlFilters (multi-param)', () => {
             mockQuery.value = {createdon_gte: '2026-04-16', createdon_lte: '2026-04-20'}
             const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
             const {filterParams, activeFilterCount} = useUrlFilters(defs)
-            expect(filterParams.value).toEqual({createdonGte: '2026-04-16', createdonLte: '2026-04-20'})
+            const gte = (filterParams.value as any).createdonGte as Date
+            const lte = (filterParams.value as any).createdonLte as Date
+            expect(gte.toISOString().slice(0, 10)).toBe('2026-04-16')
+            expect(lte.toISOString().slice(0, 10)).toBe('2026-04-20')
             expect(activeFilterCount.value).toBe(1)
         })
 
@@ -115,7 +118,9 @@ describe('useUrlFilters (multi-param)', () => {
             mockQuery.value = {createdon_gte: '2026-04-16'}
             const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
             const {filterParams} = useUrlFilters(defs)
-            expect(filterParams.value).toEqual({createdonGte: '2026-04-16'})
+            const gte = (filterParams.value as any).createdonGte as Date
+            expect(gte.toISOString().slice(0, 10)).toBe('2026-04-16')
+            expect('createdonLte' in (filterParams.value as any)).toBe(false)
         })
 
         it('back-compat: accepts legacy {key}_lte alone for number-range', () => {
@@ -129,7 +134,33 @@ describe('useUrlFilters (multi-param)', () => {
             mockQuery.value = {createdon: '2026-04-16~2026-04-20', createdon_gte: '1999-01-01'}
             const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
             const {filterParams} = useUrlFilters(defs)
-            expect(filterParams.value).toEqual({createdonGte: '2026-04-16', createdonLte: '2026-04-20'})
+            const gte = (filterParams.value as any).createdonGte as Date
+            expect(gte.toISOString().slice(0, 10)).toBe('2026-04-16')
+        })
+
+        // The OpenAPI client types date-range params as Date and serializes
+        // via .toISOString(). If filterParams emits a plain string the client
+        // throws "error while fetching" on apiRecipeList. Coerce to Date so
+        // the API call survives.
+        it('date-range values are coerced to Date for the API client', () => {
+            mockQuery.value = {createdon: '2026-04-16~2026-04-20'}
+            const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
+            const {filterParams} = useUrlFilters(defs)
+            const gte = (filterParams.value as any).createdonGte
+            const lte = (filterParams.value as any).createdonLte
+            expect(gte).toBeInstanceOf(Date)
+            expect(lte).toBeInstanceOf(Date)
+            expect((gte as Date).toISOString().slice(0, 10)).toBe('2026-04-16')
+            expect((lte as Date).toISOString().slice(0, 10)).toBe('2026-04-20')
+        })
+
+        it('open-ended date-range gte-only still returns Date', () => {
+            mockQuery.value = {createdon: '2026-04-16~'}
+            const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
+            const {filterParams} = useUrlFilters(defs)
+            const gte = (filterParams.value as any).createdonGte
+            expect(gte).toBeInstanceOf(Date)
+            expect('createdonLte' in (filterParams.value as any)).toBe(false)
         })
 
         // ModelListPage loads filterDefs from a computed that depends on
@@ -372,16 +403,17 @@ describe('useUrlFilters (multi-param)', () => {
         })
     })
 
-    describe('date-range filters (string values, not number coercion)', () => {
-        it('parses ISO gte~lte into two string API params', () => {
+    describe('date-range filters (Date values for OpenAPI client)', () => {
+        it('parses ISO gte~lte into two Date API params', () => {
             mockQuery.value = { cookedon: '2025-01-01~2025-12-31' }
             const defs = computed(() => makeDefs([{ key: 'cookedon', type: 'date-range' }]))
             const { filterParams } = useUrlFilters(defs)
-            expect(filterParams.value).toEqual({
-                cookedonGte: '2025-01-01',
-                cookedonLte: '2025-12-31',
-            })
-            expect(typeof filterParams.value.cookedonGte).toBe('string')
+            const gte = (filterParams.value as any).cookedonGte as Date
+            const lte = (filterParams.value as any).cookedonLte as Date
+            expect(gte).toBeInstanceOf(Date)
+            expect(lte).toBeInstanceOf(Date)
+            expect(gte.toISOString().slice(0, 10)).toBe('2025-01-01')
+            expect(lte.toISOString().slice(0, 10)).toBe('2025-12-31')
         })
     })
 

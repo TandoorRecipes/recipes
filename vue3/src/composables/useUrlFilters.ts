@@ -114,9 +114,9 @@ export function useUrlFilters(
 
     const activeFilterCount = computed<number>(() => state.size)
 
-    const filterParams = computed<Record<string, string | number | (string | number)[]>>(() => {
+    const filterParams = computed<Record<string, string | number | Date | (string | number)[]>>(() => {
         if (state.size === 0) return {}
-        const params: Record<string, string | number | (string | number)[]> = {}
+        const params: Record<string, string | number | Date | (string | number)[]> = {}
         for (const [key, val] of state) {
             const def = defsByKey.value.get(key)
             if (def?.type === 'select') {
@@ -132,13 +132,20 @@ export function useUrlFilters(
                 const gteRaw = val.slice(0, sepIdx)
                 const lteRaw = val.slice(sepIdx + 1)
                 const isNumber = def.type === 'number-range'
+                const isDate = def.type === 'date-range'
+                // The generated OpenAPI client types date-range params as Date
+                // and serializes via .toISOString() — emitting a plain string
+                // here throws at request time. Coerce to Date (invalid dates
+                // drop through).
                 if (gteRaw.length > 0) {
-                    const v = isNumber ? Number(gteRaw) : gteRaw
-                    if (!isNumber || !isNaN(v as number)) params[`${key}Gte`] = v
+                    const v: number | Date | string = isNumber ? Number(gteRaw) : (isDate ? new Date(gteRaw) : gteRaw)
+                    const invalid = isNumber ? isNaN(v as number) : (isDate && isNaN((v as Date).getTime()))
+                    if (!invalid) params[`${key}Gte`] = v
                 }
                 if (lteRaw.length > 0) {
-                    const v = isNumber ? Number(lteRaw) : lteRaw
-                    if (!isNumber || !isNaN(v as number)) params[`${key}Lte`] = v
+                    const v: number | Date | string = isNumber ? Number(lteRaw) : (isDate ? new Date(lteRaw) : lteRaw)
+                    const invalid = isNumber ? isNaN(v as number) : (isDate && isNaN((v as Date).getTime()))
+                    if (!invalid) params[`${key}Lte`] = v
                 }
             } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number' || def?.type === 'rating-half') {
                 const num = Number(val)
