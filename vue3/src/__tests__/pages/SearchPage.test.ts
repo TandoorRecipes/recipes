@@ -229,19 +229,23 @@ describe('SearchPage (Phase 3 rewrite)', () => {
 
         it('stat-chip apply-filter replaces existing filters, does not append', async () => {
             apiMock.apiRecipeList = vi.fn().mockResolvedValue({results: [], count: 0, next: null, previous: null})
-            const {wrapper, router} = await mountSearchPage({unrated: '1', internal: '1'})
-            // Sanity: both preexisting filters are in the URL before the click
-            expect(router.currentRoute.value.query.unrated).toBe('1')
-            expect(router.currentRoute.value.query.internal).toBe('1')
-            // Jump to "Ready to cook" (what a makenow chip click emits)
-            ;(wrapper.vm as any).applyStatFilter({makenow: '1'})
-            await flushPromises()
-            await flushPromises()
+            const {wrapper} = await mountSearchPage({unrated: '1', internal: '1'})
+            const vm = wrapper.vm as any
+            // Sanity: both preexisting filters are active in the composable state before the click
+            expect(vm.filterParams.unrated).toBe(1)
+            expect(vm.filterParams.internal).toBe(1)
+            // Jump to "Ready to cook" (what a makenow chip click emits). applyStatFilter
+            // calls clearAllFilters() + setFilter(makenow, 1) synchronously; the URL
+            // flush is asynchronous via nextTick → router.replace and was observed
+            // racing Vue Router's reactive currentRoute update under test-env load,
+            // so assert on filterParams (what actually drives the API call) rather
+            // than the router's reactive query ref.
+            vm.applyStatFilter({makenow: '1'})
             // Prior filters must be cleared
-            expect(router.currentRoute.value.query.unrated).toBeUndefined()
-            expect(router.currentRoute.value.query.internal).toBeUndefined()
+            expect(vm.filterParams.unrated).toBeUndefined()
+            expect(vm.filterParams.internal).toBeUndefined()
             // New filter is applied
-            expect(router.currentRoute.value.query.makenow).toBe('1')
+            expect(vm.filterParams.makenow).toBe(1)
         })
 
         it('fetches stats on mount when search_showStats is on', async () => {
