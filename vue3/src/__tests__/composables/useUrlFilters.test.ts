@@ -98,6 +98,40 @@ describe('useUrlFilters (multi-param)', () => {
             expect(filterParams.value).toEqual({ internal: ['true'] })
         })
 
+        // Before the multi-param refactor (commit b56131264), date/number ranges
+        // were shipped to the backend as separate snake_case params
+        // (?createdon_gte=X&createdon_lte=Y). Bookmarked URLs in that old shape
+        // must still populate the new combined state so user deep-links don't
+        // silently drop filters after upgrade.
+        it('back-compat: accepts legacy {key}_gte/{key}_lte pair for date-range', () => {
+            mockQuery.value = {createdon_gte: '2026-04-16', createdon_lte: '2026-04-20'}
+            const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
+            const {filterParams, activeFilterCount} = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({createdonGte: '2026-04-16', createdonLte: '2026-04-20'})
+            expect(activeFilterCount.value).toBe(1)
+        })
+
+        it('back-compat: accepts legacy {key}_gte alone (open-ended upper)', () => {
+            mockQuery.value = {createdon_gte: '2026-04-16'}
+            const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
+            const {filterParams} = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({createdonGte: '2026-04-16'})
+        })
+
+        it('back-compat: accepts legacy {key}_lte alone for number-range', () => {
+            mockQuery.value = {timescooked_lte: '0'}
+            const defs = computed(() => makeDefs([{key: 'timescooked', type: 'number-range'}]))
+            const {filterParams} = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({timescookedLte: 0})
+        })
+
+        it('modern range param wins if both shapes are present', () => {
+            mockQuery.value = {createdon: '2026-04-16~2026-04-20', createdon_gte: '1999-01-01'}
+            const defs = computed(() => makeDefs([{key: 'createdon', type: 'date-range'}]))
+            const {filterParams} = useUrlFilters(defs)
+            expect(filterParams.value).toEqual({createdonGte: '2026-04-16', createdonLte: '2026-04-20'})
+        })
+
         // ModelListPage loads filterDefs from a computed that depends on
         // `genericModel`, which isn't set until onBeforeMount — so at
         // `useUrlFilters` setup time `filterDefs.value` is still `[]`. Without

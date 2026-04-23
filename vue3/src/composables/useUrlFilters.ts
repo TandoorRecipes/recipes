@@ -47,6 +47,22 @@ export function useUrlFilters(
             if (val != null && val !== '') {
                 state.set(def.key, String(val))
                 matchedAny = true
+                continue
+            }
+            // Back-compat: before the multi-param refactor the UI (and any
+            // bookmarks) shipped date/number ranges as separate snake_case
+            // params, e.g. ?createdon_gte=2026-04-16&createdon_lte=2026-04-20.
+            // Accept that shape too for range-type defs so deep-links don't
+            // silently lose filters after the upgrade.
+            if (def.type === 'date-range' || def.type === 'number-range') {
+                const gte = route.query[`${def.key}_gte`]
+                const lte = route.query[`${def.key}_lte`]
+                const gteStr = gte != null && gte !== '' ? String(gte) : ''
+                const lteStr = lte != null && lte !== '' ? String(lte) : ''
+                if (gteStr || lteStr) {
+                    state.set(def.key, `${gteStr}~${lteStr}`)
+                    matchedAny = true
+                }
             }
         }
         // When the URL has no filter params but sessionStorage does,
