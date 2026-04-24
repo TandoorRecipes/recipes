@@ -22,57 +22,57 @@
     </v-input>
 
     <v-dialog max-width="1000px" v-model="dialog">
-        <v-card max-height="90vh" class="d-flex flex-column">
+        <v-card max-height="90vh" class="user-file-dialog-card d-flex flex-column">
             <v-card-title>{{ $t('Files') }}</v-card-title>
             <v-tabs v-model="tab" grow>
                 <v-tab v-if="model?.id" value="preview">{{ $t('Preview') }}</v-tab>
                 <v-tab value="new">{{ $t('New') }}</v-tab>
                 <v-tab value="search">{{ $t('Search') }}</v-tab>
             </v-tabs>
-            <v-tabs-window v-model="tab" class="flex-grow-1 overflow-y-auto">
+            <v-tabs-window v-model="tab" class="user-file-dialog-window">
                 <!-- Preview tab -->
-                <v-tabs-window-item v-if="model?.id" value="preview">
-                    <v-card>
+                <v-tabs-window-item v-if="model?.id" value="preview" class="user-file-dialog-item">
+                    <v-card class="user-file-dialog-inner d-flex flex-column">
                         <v-card-title>{{ model.name }}</v-card-title>
-                        <v-card-text>
+                        <v-card-text class="flex-grow-1 overflow-y-auto">
                             {{ model.fileSizeKb ? $n(model.fileSizeKb / 1000) + ' MB' : '' }} <br/>
                             {{ model.createdBy?.displayName }} <br/>
                             {{ model.createdAt ? DateTime.fromJSDate(model.createdAt).toLocaleString(DateTime.DATETIME_SHORT) : '' }}
+
+                            <!-- Re-crop mode -->
+                            <template v-if="recropActive">
+                                <div class="mx-4">
+                                    <image-editor
+                                        ref="recropEditor"
+                                        :image-src="model.preview"
+                                        :existing-crop-data="model.cropData as Record<string, number> | null"
+                                    />
+                                </div>
+                            </template>
+
+                            <!-- Normal preview -->
+                            <template v-else>
+                                <v-img class="mr-4 ml-4" max-height="50vh" rounded :src="model.preview" />
+                            </template>
                         </v-card-text>
-
-                        <!-- Re-crop mode -->
-                        <template v-if="recropActive">
-                            <div class="mx-4">
-                                <image-editor
-                                    ref="recropEditor"
-                                    :image-src="model.preview"
-                                    :existing-crop-data="model.cropData as Record<string, number> | null"
-                                />
-                            </div>
-                            <v-card-actions>
-                                <v-btn color="save" prepend-icon="$save" @click="saveRecrop()" :loading="uploading">{{ $t('Save') }}</v-btn>
-                                <v-btn @click="recropActive = false">{{ $t('Cancel') }}</v-btn>
-                            </v-card-actions>
-                        </template>
-
-                        <!-- Normal preview -->
-                        <template v-else>
-                            <v-img class="mr-4 ml-4" max-height="50vh" rounded :src="model.preview" />
-                            <v-card-actions>
-                                <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
-                                <v-btn v-if="model.preview" color="info" prepend-icon="fa-solid fa-crop" @click="recropActive = true">{{ $t('Crop') }}</v-btn>
-                                <v-btn color="warning" prepend-icon="fa-solid fa-link-slash" @click="model = null">{{ $t('Remove') }}</v-btn>
-                                <v-btn color="delete" prepend-icon="$delete" @click="model = null">{{ $t('Delete') }}</v-btn>
-                                <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
-                            </v-card-actions>
-                        </template>
+                        <v-card-actions v-if="recropActive">
+                            <v-btn color="save" prepend-icon="$save" @click="saveRecrop()" :loading="uploading">{{ $t('Save') }}</v-btn>
+                            <v-btn @click="recropActive = false">{{ $t('Cancel') }}</v-btn>
+                        </v-card-actions>
+                        <v-card-actions v-else>
+                            <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
+                            <v-btn v-if="model.preview" color="info" prepend-icon="fa-solid fa-crop" @click="recropActive = true">{{ $t('Crop') }}</v-btn>
+                            <v-btn color="warning" prepend-icon="fa-solid fa-link-slash" @click="model = null">{{ $t('Remove') }}</v-btn>
+                            <v-btn color="delete" prepend-icon="$delete" @click="model = null">{{ $t('Delete') }}</v-btn>
+                            <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
+                        </v-card-actions>
                     </v-card>
                 </v-tabs-window-item>
 
                 <!-- New upload tab -->
-                <v-tabs-window-item value="new">
-                    <v-card>
-                        <v-card-text>
+                <v-tabs-window-item value="new" class="user-file-dialog-item">
+                    <v-card class="user-file-dialog-inner d-flex flex-column">
+                        <v-card-text class="flex-grow-1 overflow-y-auto">
                             <v-text-field :label="$t('Name')" v-model="newFileName" />
                             <image-editor
                                 ref="uploadEditor"
@@ -88,9 +88,9 @@
                 </v-tabs-window-item>
 
                 <!-- Search existing tab -->
-                <v-tabs-window-item value="search">
-                    <v-card>
-                        <v-card-text>
+                <v-tabs-window-item value="search" class="user-file-dialog-item">
+                    <v-card class="user-file-dialog-inner d-flex flex-column">
+                        <v-card-text class="flex-grow-1 overflow-y-auto">
                             <v-text-field :label="$t('Search')" prepend-inner-icon="$search" v-model="tableSearch" />
                             <v-data-table density="compact" :headers="tableHeaders" :items="userFiles" v-model:search="tableSearch">
                                 <template #item.preview="{item}">
@@ -249,3 +249,44 @@ async function uploadFile() {
     }
 }
 </script>
+
+<!-- Non-scoped: v-dialog teleports its content out of this component's DOM
+     subtree into a body-level overlay, so scoped [data-v-*] selectors never
+     match the teleported elements in the production bundle. The class names
+     below are unique (user-file-dialog-*) so collision with other components
+     is not a concern. -->
+<style>
+/* Force every nested flex level to allow shrinking below content size so the
+ * scrollable v-card-text inside each tab item actually scrolls instead of
+ * pushing the v-card-actions below the viewport. Without min-height: 0 at each
+ * level, flex children default to min-content and the chain never constrains.
+ * v-tabs-window + v-window-item also need explicit height + overflow reset
+ * because Vuetify's default window styles set their own overflow on the
+ * internal container, which traps the scroll above the action bar in the
+ * production bundle. */
+.user-file-dialog-card {
+    min-height: 0;
+}
+.user-file-dialog-window {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+}
+.user-file-dialog-window .v-window__container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+.user-file-dialog-item {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    height: 100%;
+}
+.user-file-dialog-inner {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
+</style>
+
