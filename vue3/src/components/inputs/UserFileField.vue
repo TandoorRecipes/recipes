@@ -22,8 +22,9 @@
     </v-input>
 
     <v-dialog max-width="1000px" v-model="dialog">
-        <v-card max-height="90vh" class="user-file-dialog-card d-flex flex-column">
-            <v-card-title>{{ $t('Files') }}</v-card-title>
+        <v-card max-height="90vh" :loading="loading" class="user-file-dialog-card d-flex flex-column">
+            <v-closable-card-title :title="$t('Files')" icon="fa-solid fa-file" v-model="dialog" />
+            <v-divider />
             <v-tabs v-model="tab" grow>
                 <v-tab v-if="model?.id" value="preview">{{ $t('Preview') }}</v-tab>
                 <v-tab value="new">{{ $t('New') }}</v-tab>
@@ -56,8 +57,8 @@
                             </template>
                         </v-card-text>
                         <v-card-actions v-if="recropActive">
-                            <v-btn color="save" prepend-icon="$save" @click="saveRecrop()" :loading="uploading">{{ $t('Save') }}</v-btn>
                             <v-btn @click="recropActive = false">{{ $t('Cancel') }}</v-btn>
+                            <v-btn color="save" prepend-icon="$save" @click="saveRecrop()" :loading="uploading">{{ $t('Save') }}</v-btn>
                         </v-card-actions>
                         <v-card-actions v-else>
                             <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
@@ -81,8 +82,8 @@
                             />
                         </v-card-text>
                         <v-card-actions>
+                            <v-btn @click="dialog = false">{{ $t('Cancel') }}</v-btn>
                             <v-btn color="save" prepend-icon="$save" @click="uploadFile()" :loading="uploading">{{ $t('Save') }}</v-btn>
-                            <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-tabs-window-item>
@@ -91,8 +92,17 @@
                 <v-tabs-window-item value="search" class="user-file-dialog-item">
                     <v-card class="user-file-dialog-inner d-flex flex-column">
                         <v-card-text class="flex-grow-1 overflow-y-auto">
-                            <v-text-field :label="$t('Search')" prepend-inner-icon="$search" v-model="tableSearch" />
-                            <v-data-table density="compact" :headers="tableHeaders" :items="userFiles" v-model:search="tableSearch">
+                            <v-text-field :label="$t('Search')" prepend-inner-icon="$search" v-model="tableSearch" clearable />
+                            <v-data-table-server
+                                density="compact"
+                                :headers="tableHeaders"
+                                :items="userFiles"
+                                :items-length="itemCount"
+                                :loading="loading"
+                                :page="page"
+                                :items-per-page="pageSize"
+                                @update:options="loadItems"
+                            >
                                 <template #item.preview="{item}">
                                     <v-avatar>
                                         <v-img :src="item.preview" cover :position="cropPosition(item?.cropData)" />
@@ -101,7 +111,7 @@
                                 <template #item.actions="{item}">
                                     <v-btn icon="fa-solid fa-hand-pointer" color="save" density="comfortable" @click="model = item; tab='preview'" />
                                 </template>
-                            </v-data-table>
+                            </v-data-table-server>
                         </v-card-text>
                         <v-card-actions>
                             <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
@@ -123,6 +133,12 @@ import {useI18n} from "vue-i18n"
 import {cropPosition} from "@/utils/image_crop"
 import {useFileApi} from "@/composables/useFileApi"
 import ImageEditor from "@/components/inputs/ImageEditor.vue"
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue"
+
+interface TableOptions {
+    page: number
+    itemsPerPage: number
+}
 
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
 const ALL_EXTENSIONS = [...IMAGE_EXTENSIONS, '.pdf', '.docx', '.xlsx', '.css', '.mp4', '.mov', '.md', '.txt']
@@ -149,6 +165,10 @@ const dialog = ref(false)
 const tab = ref<string>('new')
 const newFileName = ref('')
 const userFiles = ref([] as UserFile[])
+const itemCount = ref(0)
+const page = ref(1)
+const pageSize = ref(25)
+const loading = ref(false)
 const uploading = ref(false)
 const recropActive = ref(false)
 
@@ -166,7 +186,8 @@ const tableHeaders = ref([
 
 watch(() => dialog.value, (value, oldValue) => {
     if (value && !oldValue) {
-        loadFiles()
+        page.value = 1
+        loadItems({page: page.value, itemsPerPage: pageSize.value})
         tab.value = model.value?.id ? 'preview' : 'new'
     }
     if (!value) {
@@ -174,6 +195,12 @@ watch(() => dialog.value, (value, oldValue) => {
         uploadEditor.value?.reset()
         newFileName.value = ''
     }
+})
+
+/** Reset to page 1 and refetch whenever the query text changes. */
+watch(tableSearch, () => {
+    page.value = 1
+    loadItems({page: 1, itemsPerPage: pageSize.value})
 })
 
 watch(() => model.value?.id, (id) => {
@@ -189,12 +216,22 @@ function onNonImageFileSelected(file: File, _cropData: Record<string, number> | 
     }
 }
 
-function loadFiles() {
-    let api = new ApiApi()
-    api.apiUserFileList().then(r => {
+function loadItems(options: TableOptions) {
+    page.value = options.page
+    pageSize.value = options.itemsPerPage
+    loading.value = true
+    const api = new ApiApi()
+    api.apiUserFileList({
+        page: options.page,
+        pageSize: options.itemsPerPage,
+        ...(tableSearch.value ? {query: tableSearch.value} : {}),
+    }).then(r => {
         userFiles.value = r.results
+        itemCount.value = r.count
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        loading.value = false
     })
 }
 
@@ -248,6 +285,8 @@ async function uploadFile() {
         uploading.value = false
     }
 }
+
+defineExpose({dialog, tab, tableSearch, userFiles, itemCount, page, pageSize, loading, loadItems})
 </script>
 
 <!-- Non-scoped: v-dialog teleports its content out of this component's DOM
