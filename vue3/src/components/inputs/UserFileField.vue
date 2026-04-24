@@ -29,7 +29,7 @@
                 <v-tab value="new">{{ $t('New') }}</v-tab>
                 <v-tab value="search">{{ $t('Search') }}</v-tab>
             </v-tabs>
-            <v-tabs-window v-model="tab" class="overflow-y-auto">
+            <v-tabs-window v-model="tab" class="flex-grow-1 overflow-y-auto">
                 <!-- Preview tab -->
                 <v-tabs-window-item v-if="model?.id" value="preview">
                     <v-card>

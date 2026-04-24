@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {ApiApi, User} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
@@ -74,6 +74,20 @@ onMounted(() => {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
+})
+
+// Auto-persist avatar changes. UserFileField writes directly into
+// userPrefs.userSettings.image via v-model; the store persists that to
+// localStorage via useStorage — but the server-side UserPreference is
+// only updated by updateUserSettings() (called from the outer Save
+// button). Users expected the inner dialog's Save to be enough, got a
+// reverted avatar on reload because loadUserSettings() during init
+// overwrote their localStorage with the still-stale server state. This
+// watch closes the gap: when image.id changes in the store, PATCH it
+// silently so server and localStorage stay aligned.
+watch(() => userPrefs.userSettings.image?.id, (newId, oldId) => {
+    if (newId === oldId) return
+    userPrefs.updateUserSettings(true)
 })
 
 function save() {
