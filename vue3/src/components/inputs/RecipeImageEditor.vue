@@ -30,7 +30,7 @@
         </v-card>
 
         <!-- Upload dialog -->
-        <v-dialog v-model="showUpload" max-width="1000">
+        <v-dialog v-model="showUpload" max-width="1000" scrollable>
             <v-card>
                 <v-card-title>{{ $t('add_image') }}</v-card-title>
                 <v-card-text>
@@ -44,7 +44,7 @@
         </v-dialog>
 
         <!-- Crop dialog -->
-        <v-dialog v-model="cropDialog" max-width="1000">
+        <v-dialog v-model="cropDialog" max-width="1000" scrollable>
             <v-card>
                 <v-card-title>{{ $t('Crop') }}</v-card-title>
                 <v-card-text>
