@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:smoke": "playwright test",
     "healthcheck": "node scripts/dev-server-healthcheck.mjs"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
+    "@playwright/test": "^1.59.1",
     "@tsconfig/node22": "^22.0.5",
     "@types/jsdom": "^28.0.1",
     "@types/node": "^25.5.0",

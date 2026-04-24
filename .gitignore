@@ -83,6 +83,8 @@ vue/webpack-stats.json
 cookbook/templates/sw.js
 vue/.yarn
 vue3/.vite
+vue3/test-results/
+vue3/playwright-report/
 
 # Configs
 vetur.config.js
