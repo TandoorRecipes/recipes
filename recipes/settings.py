@@ -21,6 +21,7 @@ import traceback
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
+from os import getenv
 
 
 def extract_bool(env_key, default):
@@ -722,3 +723,9 @@ EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE',
 
 mimetypes.add_type("text/javascript", ".js", True)
 mimetypes.add_type("text/javascript", ".mjs", True)
+
+
+
+# The URL to redirect users to after logging out when using a reverse proxy.
+#If not set , the default internal logout flow is used.
+REVERSE_PROXY_AUTH_LOGOUT = getenv('REVERSE_PROXY_AUTH_LOGOUT', None)
