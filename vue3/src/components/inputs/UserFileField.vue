@@ -266,6 +266,12 @@ async function uploadFile() {
  * production bundle. */
 .user-file-dialog-card {
     min-height: 0;
+    /* Vuetify's default v-card has overflow-y: auto, which makes the WHOLE
+     * card scroll — including the v-card-actions inside the tab item — so
+     * Save is inside the scroll region instead of pinned. Force visible so
+     * the inner flex chain (v-card-text scrollable, v-card-actions pinned)
+     * actually determines layout. */
+    overflow: hidden !important;
 }
 .user-file-dialog-window {
     flex: 1 1 auto;
@@ -284,6 +290,14 @@ async function uploadFile() {
     height: 100%;
 }
 .user-file-dialog-inner {
+    /* !important needed: in the production CSS bundle Vuetify's
+     * `.v-card { display: block }` loads AFTER the `d-flex` utility class and
+     * wins the cascade, leaving the inner card in block layout. Verified live:
+     * without !important, computed display was `block` and v-card-text
+     * (790px) overflowed its parent (736px), pushing v-card-actions below
+     * the visible card. */
+    display: flex !important;
+    flex-direction: column !important;
     flex: 1 1 auto;
     min-height: 0;
     width: 100%;
