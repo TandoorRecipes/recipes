@@ -12,6 +12,7 @@ const mockRoute = reactive({
 vi.mock('vue-router', () => ({
     useRoute: () => mockRoute,
     useRouter: () => ({
+        isReady: () => Promise.resolve(),
         replace: (opts: { query: Record<string, string | string[]> }) => {
             replacedQueries.push({ ...opts.query })
             mockQuery.value = { ...opts.query }

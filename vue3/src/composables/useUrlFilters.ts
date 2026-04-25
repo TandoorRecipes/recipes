@@ -75,7 +75,11 @@ export function useUrlFilters(
                     const v = persisted[def.key]
                     if (v != null && v !== '') state.set(def.key, String(v))
                 }
-                if (state.size > 0) scheduleFlush()
+                // Defer the URL flush until vue-router has committed the initial
+                // navigation; otherwise the router.replace fires mid-transition
+                // during setup and the URL update is silently dropped, leaving
+                // state hydrated but the address bar empty.
+                if (state.size > 0) router.isReady().then(scheduleFlush)
             }
         }
     }
