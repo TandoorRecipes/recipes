@@ -921,7 +921,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
                 household = user_space.household if hasattr(user_space, 'household') else None
             except AttributeError:
                 shared_users = []
-            return Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).exists()
+                household = None
+            from cookbook.helper.food_availability_helper import _is_available
+            return Food.objects.filter(self._substitute_candidates_filter(obj)).filter(_is_available(household, shared_users)).exists()
         except AttributeError:
             return False
 
@@ -940,12 +942,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
             if not self.context["request"].user.is_authenticated:
                 return []
             try:
-                shared_users = get_household_user_ids(self.context["request"].user_space)
+                user_space = self.context["request"].user_space
+                shared_users = get_household_user_ids(user_space)
+                household = user_space.household if hasattr(user_space, 'household') else None
             except AttributeError:
                 return []
-            if not shared_users:
+            if not shared_users and household is None:
                 return []
-            available = Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).distinct()
+            from cookbook.helper.food_availability_helper import _is_available
+            available = Food.objects.filter(self._substitute_candidates_filter(obj)).filter(_is_available(household, shared_users)).distinct()
             return FoodSimpleSerializer(available, many=True, context=self.context).data
         except AttributeError:
             return []

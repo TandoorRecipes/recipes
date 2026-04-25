@@ -1264,6 +1264,10 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         Replaces per-food N+1 queries in the serializer with 2–4 batch queries.
         """
         shared_users = self._shared_users
+        try:
+            household = self.request.user_space.household
+        except AttributeError:
+            household = None
 
         # Build each food's full substitute ID set (direct + siblings + children)
         food_sub_ids = {f.id: set(s.id for s in f.substitute.all()) for f in foods}
@@ -1302,19 +1306,24 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             empty = {f.id: False for f in foods}
             return empty, empty.copy()
 
-        # 1 query: which substitutes have onhand users?
-        onhand_ids = set(
-            Food.objects.filter(id__in=all_sub_ids, onhand_users__id__in=shared_users)
-            .values_list('id', flat=True)
-        ) if shared_users else set()
+        from cookbook.helper.food_availability_helper import _is_available
 
-        # 1 query: which substitutes have inventory?
-        inventory_ids = set(
-            Food.objects.filter(id__in=all_sub_ids, inventoryentry__amount__gt=0)
+        # 1 query: which substitutes are available (legacy onhand_users OR inventory)?
+        available_ids = set(
+            Food.objects.filter(id__in=all_sub_ids).filter(_is_available(household, shared_users))
             .values_list('id', flat=True)
         )
 
-        sub_onhand = {f.id: bool(food_sub_ids[f.id] & onhand_ids) for f in foods}
+        # 1 query: which substitutes have inventory only? (drives substitute_inventory)
+        inventory_q = Q(inventoryentry__amount__gt=0)
+        if household is not None:
+            inventory_q &= Q(inventoryentry__inventory_location__household=household)
+        inventory_ids = set(
+            Food.objects.filter(id__in=all_sub_ids).filter(inventory_q)
+            .values_list('id', flat=True)
+        )
+
+        sub_onhand = {f.id: bool(food_sub_ids[f.id] & available_ids) for f in foods}
         sub_inventory = {f.id: bool(food_sub_ids[f.id] & inventory_ids) for f in foods}
         return sub_onhand, sub_inventory
 
