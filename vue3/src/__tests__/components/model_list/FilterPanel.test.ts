@@ -95,25 +95,30 @@ describe('FilterPanel', () => {
             expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('true')
         })
 
-        it('model-select dropdowns stay inline when rendered inside a drawer', () => {
+        // Reverted fe6cca553: keeping dropdowns inline caused the drawer's
+        // overflow-y: auto to clip them to 1-2 visible rows. Always teleport
+        // to body so the dropdown escapes the clip. The temporary-drawer
+        // close-on-click case is a separate concern handled outside the
+        // multiselect's appendToBody flag.
+        it('model-select dropdowns body-teleport even when inside a drawer', () => {
             const wrapper = mountPanel(
                 [{key: 'created_by', labelKey: 'CreatedBy', type: 'model-select', modelName: 'User' as any}],
                 {},
                 {inDrawer: true},
             )
-            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('false')
+            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('true')
         })
 
-        it('tag-select dropdowns stay inline when rendered inside a drawer', () => {
+        it('tag-select dropdowns body-teleport even when inside a drawer', () => {
             const wrapper = mountPanel(
                 [{key: 'keywords_or', labelKey: 'Keywords', type: 'tag-select' as any, modelName: 'Keyword' as any}],
                 {},
                 {inDrawer: true},
             )
-            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('false')
+            expect(wrapper.find('.model-select-stub').attributes('data-append-to-body')).toBe('true')
         })
 
-        it('tag-group (RecipeTagFilterGroup) dropdowns stay inline when rendered inside a drawer', () => {
+        it('tag-group (RecipeTagFilterGroup) dropdowns body-teleport even when inside a drawer', () => {
             const wrapper = mountPanel(
                 [{
                     key: 'keywords', labelKey: 'Keywords', type: 'tag-group' as any,
@@ -126,7 +131,7 @@ describe('FilterPanel', () => {
             const stubs = wrapper.findAll('.model-select-stub')
             expect(stubs.length).toBeGreaterThan(0)
             for (const s of stubs) {
-                expect(s.attributes('data-append-to-body')).toBe('false')
+                expect(s.attributes('data-append-to-body')).toBe('true')
             }
         })
     })

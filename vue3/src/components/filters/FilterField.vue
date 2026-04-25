@@ -18,7 +18,7 @@
             mode="single"
             :can-clear="true"
             :search-on-load="true"
-            :append-to-body="!inDrawer"
+            :append-to-body="true"
             :hide-details="true"
         />
     </div>
