@@ -256,6 +256,15 @@ def test_move(u1_s1, obj_tree_1, obj_2, obj_3, space_1):
     assert r.status_code == 405
     r = u1_s1.put(url)
     assert r.status_code == 200
+    # The frontend OpenAPI client expects the move endpoint to return the
+    # updated Food (per the schema). Returning a generic {msg: ...} body
+    # makes FoodFromJSON crash on `.map(undefined)` for required nested
+    # arrays, surfacing as a generic "Error while updating" toast even
+    # though the move succeeded server-side. Assert the response is a
+    # serialized Food.
+    body = json.loads(r.content)
+    assert body.get('id') == obj_tree_1.id, f"move response should be the moved Food: {body}"
+    assert body.get('name') == obj_tree_1.name
     with scopes_disabled():
         # django-treebeard bypasses django ORM so object needs retrieved again
         parent = Food.objects.get(pk=parent.id)
