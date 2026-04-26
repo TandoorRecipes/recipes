@@ -16,12 +16,28 @@ export function useUrlFilters(
         return path ? `url_filters:${path}` : null
     }
 
+    // 2-hour expiry for hydrated filters: the user expects yesterday's search
+    // to be gone when they come back. Anything older — or anything in the
+    // pre-TTL bare-object format — is silently discarded on read.
+    const TTL_MS = 2 * 60 * 60 * 1000
+
     function loadFromStorage(): Record<string, string> | null {
         const key = storageKey()
         if (!key || typeof window === 'undefined') return null
         try {
             const raw = window.sessionStorage.getItem(key)
-            return raw ? JSON.parse(raw) : null
+            if (!raw) return null
+            const parsed = JSON.parse(raw)
+            // Envelope shape: { filters: {...}, ts: <ms> }. Anything else
+            // (including the pre-TTL bare format) is treated as expired.
+            if (!parsed || typeof parsed !== 'object'
+                || typeof parsed.ts !== 'number'
+                || !parsed.filters || typeof parsed.filters !== 'object'
+                || Date.now() - parsed.ts > TTL_MS) {
+                window.sessionStorage.removeItem(key)
+                return null
+            }
+            return parsed.filters as Record<string, string>
         } catch { return null }
     }
 
@@ -32,9 +48,9 @@ export function useUrlFilters(
             if (state.size === 0) {
                 window.sessionStorage.removeItem(key)
             } else {
-                const obj: Record<string, string> = {}
-                for (const [k, v] of state) obj[k] = v
-                window.sessionStorage.setItem(key, JSON.stringify(obj))
+                const filters: Record<string, string> = {}
+                for (const [k, v] of state) filters[k] = v
+                window.sessionStorage.setItem(key, JSON.stringify({filters, ts: Date.now()}))
             }
         } catch { /* storage unavailable */ }
     }
