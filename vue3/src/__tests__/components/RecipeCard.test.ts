@@ -143,4 +143,80 @@ describe('RecipeCard display settings', () => {
             expect(w.find('.recipe-card-new-badge').exists()).toBe(false)
         })
     })
+
+    describe('photo refresh after context-menu edit', () => {
+        // Regression: editing a photo via the recipe context menu refreshes
+        // the dialog but didn't propagate the new recipe back to the card,
+        // so the thumbnail stayed stale until manual page refresh. The
+        // RecipeContextMenu already emits update:recipe after the dialog
+        // closes; the card must listen and re-bind RecipeImage.
+
+        function mountForRefreshTest(originalRecipe: any, opts: {imageStub?: boolean} = {}) {
+            const ContextMenuStub = {
+                props: ['recipe'],
+                emits: ['update:recipe'],
+                template: '<div class="stub-context-menu"></div>',
+            }
+            const RecipeImageStub = {
+                props: ['recipe'],
+                template: '<div class="stub-recipe-image" :data-image="recipe?.image"><slot name="overlay"/></div>',
+            }
+            const prePopulate: PiniaPlugin = ({ store }) => {
+                if (store.$id === 'user_preference_store') {
+                    store.userSettings = makeUserPreference() as any
+                    store.activeSpace = makeSpace() as any
+                }
+            }
+            const pinia = createPinia()
+            pinia.use(prePopulate)
+            const i18n = createI18n({legacy: false, locale: 'en', messages: {en: {}}, missingWarn: false, fallbackWarn: false})
+            const router = createRouter({history: createMemoryHistory(), routes: [
+                {path: '/', name: 'StartPage', component: {template: '<div/>'}},
+                {path: '/recipe/:id', name: 'RecipeViewPage', component: {template: '<div/>'}},
+            ]})
+            return mount(RecipeCard, {
+                props: {recipe: originalRecipe, showMenu: true},
+                global: {
+                    plugins: [pinia, i18n, router],
+                    stubs: {
+                        RecipeContextMenu: ContextMenuStub,
+                        RecipeImage: opts.imageStub === false
+                            ? {template: '<div class="stub-recipe-image"><slot name="overlay"/></div>'}
+                            : RecipeImageStub,
+                        PrivateRecipeBadge: {template: '<div/>'},
+                        KeywordsBar: {template: '<div/>'},
+                    },
+                },
+            })
+        }
+
+        it('rebinds RecipeImage to the new recipe when context menu emits update:recipe', async () => {
+            const original = makeRecipeOverview({ id: 7, image: '/media/old.jpg' })
+            const updated = { ...original, image: '/media/new.jpg' }
+            const w = mountForRefreshTest(original)
+
+            expect(w.find('.stub-recipe-image').attributes('data-image')).toBe('/media/old.jpg')
+            // Programmatically emit from the stubbed context menu
+            const ctx = w.findComponent({name: 'RecipeContextMenu'})
+            // RecipeContextMenu is stubbed; locate by its rendered class
+            const ctxStub = w.find('.stub-context-menu')
+            expect(ctxStub.exists()).toBe(true)
+            ;(ctxStub as any).element.__vueParentComponent.emit('update:recipe', updated)
+            await w.vm.$nextTick()
+            expect(w.find('.stub-recipe-image').attributes('data-image')).toBe('/media/new.jpg')
+        })
+
+        it('forwards update:recipe to its parent so list owners can keep their data fresh', async () => {
+            const original = makeRecipeOverview({ id: 7, image: '/media/old.jpg' })
+            const updated = { ...original, image: '/media/new.jpg' }
+            const w = mountForRefreshTest(original, {imageStub: false})
+
+            const ctxStub = w.find('.stub-context-menu')
+            ;(ctxStub as any).element.__vueParentComponent.emit('update:recipe', updated)
+            await w.vm.$nextTick()
+            const emitted = w.emitted('update:recipe')
+            expect(emitted).toBeTruthy()
+            expect(emitted![0][0]).toMatchObject({id: 7, image: '/media/new.jpg'})
+        })
+    })
 })
