@@ -13,7 +13,18 @@
         <v-chip v-if="chipDisplay" label :color="chipDisplay.color" :style="header.chipClickHandler ? 'cursor: pointer' : ''" @click="header.chipClickHandler?.(item)">{{ t(chipDisplay.label) }}</v-chip>
     </template>
     <template v-else-if="header.type === 'number'">
-        <span v-if="value != null" :class="{'text-disabled': value === 0, 'font-weight-medium': value > 0 && header.emphasizeNonZero}">
+        <router-link
+            v-if="value != null && value > 0 && header.filterLink"
+            :to="{name: header.filterLink.route, query: {[header.filterLink.param]: item.id}}"
+            class="text-decoration-none text-inherit"
+            :aria-label="t(header.title) + ': ' + value"
+            @click.stop
+        >
+            <span :class="{'font-weight-medium': header.emphasizeNonZero}">
+                <span v-if="!showHeaders" class="text-medium-emphasis">{{ t(header.title) }}: </span>{{ value }}
+            </span>
+        </router-link>
+        <span v-else-if="value != null" :class="{'text-disabled': value === 0, 'font-weight-medium': value > 0 && header.emphasizeNonZero}">
             <span v-if="!showHeaders" class="text-medium-emphasis">{{ t(header.title) }}: </span>{{ value }}
         </span>
     </template>

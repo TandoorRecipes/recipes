@@ -104,6 +104,10 @@ export type ModelTableHeaders = {
     field?: string,
     /** For number type: apply font-weight-medium when value > 0 */
     emphasizeNonZero?: boolean,
+    /** For number type: when value > 0, render as a router-link that
+     *  drills into the matching filter on the target page (typically
+     *  SearchPage). Param value is the row's `id`. */
+    filterLink?: {route: string, param: string},
     /** For label-chip type: maps stringified values to chip display. Special key '_default' for catch-all. */
     chipMap?: Record<string, {label: string, color: string}>,
     /** For label-chip type: resolves the chip map key from the full item (when logic needs more than the cell value) */
@@ -271,7 +275,8 @@ export const TFood = {
     tableHeaders: [
         {title: 'Name', key: 'name', type: 'text'},
         {title: 'Category', key: 'supermarketCategory.name', type: 'text'},
-        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end'},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end',
+            filterLink: {route: 'SearchPage', param: 'foods'}},
         {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true, emphasizeNonZero: true},
         {title: 'Plural', key: 'pluralName', type: 'text'},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
@@ -302,7 +307,8 @@ export const TUnit = {
     tableHeaders: [
         {title: 'Name', key: 'name', type: 'text'},
         {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
-        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true,
+            filterLink: {route: 'SearchPage', param: 'units'}},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
     filterDefs: UNIT_FILTER_DEFS,
@@ -331,7 +337,8 @@ export const TKeyword = {
     tableHeaders: [
         {title: 'Name', key: 'name', type: 'text'},
         {title: 'FullName', key: 'fullName', type: 'text', hidden: true},
-        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true,
+            filterLink: {route: 'SearchPage', param: 'keywords'}},
         {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
         {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
