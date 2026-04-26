@@ -3,7 +3,10 @@
  *
  * Smoke + a11y: mounts with an ingredient prop, and the activator
  * v-btn has the i18n-translated aria-label per MEMORY's a11y fix
- * (M-UX-2 replaced a hardcoded English "Ingredient actions" string).
+ * (M-UX-2 replaced a hardcoded English "Ingredient actions" string;
+ * the user-facing label has since been renamed to "Ingredient menu",
+ * but the underlying a11y guarantee — translated, not hardcoded — is
+ * the same property the test enforces).
  */
 import {describe, it, expect, vi, beforeEach} from 'vitest'
 import {mount} from '@vue/test-utils'
@@ -49,7 +52,7 @@ function mountMenu(ingredient: any = INGREDIENT) {
     pinia.use(prePopulate)
     const i18n = createI18n({
         legacy: false, locale: 'en',
-        messages: {en: {IngredientActions: 'Ingredient actions'}},
+        messages: {en: {IngredientMenu: 'Ingredient menu'}},
         missingWarn: false, fallbackWarn: false,
     })
     const vuetify = createVuetify({components: vuetifyComponents, directives: vuetifyDirectives})
@@ -82,7 +85,7 @@ describe('IngredientContextMenu', () => {
         const w = mountMenu()
         const btn = w.find('.v-btn')
         expect(btn.exists()).toBe(true)
-        expect(btn.attributes('aria-label')).toBe('Ingredient actions')
+        expect(btn.attributes('aria-label')).toBe('Ingredient menu')
     })
 
     it('mounts cleanly when the food is already on-hand', () => {

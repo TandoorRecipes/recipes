@@ -39,16 +39,16 @@ function mountDrawer() {
     const i18n = createI18n({
         legacy: false, locale: 'en',
         messages: {en: {
-            IngredientActions: 'Ingredient actions',
+            IngredientMenu: 'Ingredient menu',
             HighlightWhen: 'Highlight when',
             OnHand: 'On hand',
             InShoppingList: 'In shopping list',
             HasSubstitute: 'Has substitute',
             Never: 'Never',
-            RecipeSummarySection: 'Recipe summary',
-            RecipeSummaryScope: 'Applies to the collapsed summary at the top of the recipe.',
-            WhileCookingSection: 'While cooking',
-            WhileCookingScope: 'Applies to the expanded step-by-step view.',
+            IngredientSummarySection: 'Ingredient summary',
+            IngredientSummaryScope: 'Applies to the collapsed summary at the top of the recipe.',
+            StepIngredientsSection: 'Step ingredients',
+            StepIngredientsScope: 'Applies to the expanded step-by-step view.',
             StartExpandedHelper: 'Show the summary open when you load a recipe.',
         }},
         missingWarn: false, fallbackWarn: false,
@@ -117,12 +117,12 @@ describe('RecipeViewSettingsDrawer', () => {
         expect(options).toContain('onhand')
     })
 
-    it('renders Recipe summary and While cooking section titles with scope helper text', () => {
+    it('renders Ingredient summary and Step ingredients section titles with scope helper text', () => {
         const w = mountDrawer()
         const html = w.html()
-        expect(html).toContain('Recipe summary')
+        expect(html).toContain('Ingredient summary')
         expect(html).toContain('Applies to the collapsed summary at the top of the recipe.')
-        expect(html).toContain('While cooking')
+        expect(html).toContain('Step ingredients')
         expect(html).toContain('Applies to the expanded step-by-step view.')
     })
 
