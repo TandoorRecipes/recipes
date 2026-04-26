@@ -154,7 +154,7 @@ describe('RecipeViewSettingsDrawer', () => {
         routeState.name = 'RecipeViewPage'
         const w = mountDrawer()
         const panels = w.findAll('.v-expansion-panel')
-        // Recipe summary + While cooking + Card display = 3
+        // Ingredient summary + Step ingredients + Card display = 3
         expect(panels.length).toBe(3)
     })
 })
@@ -181,20 +181,20 @@ describe('Card Display panel', () => {
         expect(w.html()).toContain('Card display')
     })
 
-    it('hides Recipe summary and While cooking sections when route is not RecipeViewPage', () => {
+    it('hides Ingredient summary and Step ingredients sections when route is not RecipeViewPage', () => {
         routeState.name = 'SearchPage'
         const w = mountDrawer()
         const html = w.html()
-        expect(html).not.toContain('Recipe summary')
-        expect(html).not.toContain('While cooking')
+        expect(html).not.toContain('Ingredient summary')
+        expect(html).not.toContain('Step ingredients')
     })
 
-    it('shows Recipe summary and While cooking sections when route is RecipeViewPage', () => {
+    it('shows Ingredient summary and Step ingredients sections when route is RecipeViewPage', () => {
         routeState.name = 'RecipeViewPage'
         const w = mountDrawer()
         const html = w.html()
-        expect(html).toContain('Recipe summary')
-        expect(html).toContain('While cooking')
+        expect(html).toContain('Ingredient summary')
+        expect(html).toContain('Step ingredients')
     })
 
     it('toggles Show Rating updates deviceSettings.card_showRating', async () => {
