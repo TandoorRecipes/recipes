@@ -5,14 +5,19 @@
  *   - Cell-type branches (boolean-indicator, status-chip, color-chip, number, fallback) — D-4 regression batch.
  *   - filterLink router-link rendering on the number type — Phase 2 / item 12.
  *
- * Vuetify is registered globally via vitest.setup.ts so cells render real
- * Vuetify DOM (`.v-chip`, `.v-icon`). The router is mounted per-test only
- * when the test exercises a router-link (filterLink branch).
+ * The global Vuetify in vitest.setup.ts ships theme/icons but tree-shakes
+ * components, so this file mounts a per-test Vuetify with the full
+ * components+directives bundle so `.v-chip` / `.v-icon` selectors resolve.
+ * The router is mounted per-test only when the test exercises a
+ * router-link (filterLink branch).
  */
 import {describe, it, expect} from 'vitest'
 import {mount} from '@vue/test-utils'
 import {createI18n} from 'vue-i18n'
 import {createRouter, createMemoryHistory, RouterLink} from 'vue-router'
+import {createVuetify} from 'vuetify'
+import * as vuetifyComponents from 'vuetify/components'
+import * as vuetifyDirectives from 'vuetify/directives'
 
 import ModelListCellRenderer from '@/components/model_list/ModelListCellRenderer.vue'
 import type {ModelTableHeaders} from '@/types/Models'
@@ -41,8 +46,12 @@ function mountCell(props: {
         missingWarn: false,
         fallbackWarn: false,
     })
-    const plugins: any[] = [i18n]
-    if (props.withRouter) plugins.push(makeRouter())
+    const vuetify = createVuetify({components: vuetifyComponents, directives: vuetifyDirectives})
+    // Vuetify's VChip / VBtn use vue-router's useLink internally for the
+    // optional chip-as-link case; missing router → "Cannot read properties
+    // of undefined (reading 'resolve')". Include a no-op router for every
+    // mount even when the test doesn't exercise router-link directly.
+    const plugins: any[] = [i18n, vuetify, makeRouter()]
     return mount(ModelListCellRenderer, {
         props: {
             item: props.item,
