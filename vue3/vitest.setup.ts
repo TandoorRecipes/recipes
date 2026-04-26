@@ -1,15 +1,22 @@
 import { vi } from 'vitest'
 
-// Suppress Vue resolve-component warnings.
+// KNOWN TEST DEBT: many component tests mount without registering Vuetify,
+// so Vuetify components like <v-btn>, <v-chip>, <v-card> render as
+// unresolved custom elements (no real behavior) and Vue logs "Failed to
+// resolve component" warnings. Tests that pass this way are not exercising
+// real component rendering — they're matching against literal element
+// selectors like findAll('v-chip').
 //
-// Many existing component tests mount with @vue/test-utils but do not register
-// Vuetify globally, which produces a flood of "Failed to resolve component:
-// v-btn" / v-card / v-row / etc. console.warn calls (~4000+ per CI run).
-// Under CI load this floods vitest's worker RPC channel and surfaces as
-// EnvironmentTeardownError ("Closing rpc while onUserConsoleLog was pending"),
-// causing exit 1 even when all tests pass. The warnings themselves are
-// harmless — Vuetify components render as their custom-element fallback —
-// so silencing them is safe and removes the race surface.
+// Fixing this properly requires updating ~13 tests across KeywordsBar,
+// AddToShoppingDialog, BooksPage, ModelMergeDialog, and RecipeContextMenu
+// to either register Vuetify per-test or use proper component selectors.
+// That refactor is out of scope here. For now we suppress the warnings to
+// stop them flooding vitest's worker RPC channel during teardown — the
+// flood (~4400 warnings per CI run) was triggering EnvironmentTeardownError
+// and exiting CI non-zero even when all tests passed.
+//
+// TODO: register Vuetify globally via @vue/test-utils config and update
+// the affected tests to query rendered Vuetify DOM (.v-chip class, etc.).
 const _origWarn = console.warn
 console.warn = (...args: unknown[]) => {
     const first = args[0]
