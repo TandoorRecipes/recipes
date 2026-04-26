@@ -274,21 +274,26 @@ describe('useUrlFilters (multi-param)', () => {
             window.sessionStorage.clear()
         })
 
-        it('persists active filters to sessionStorage keyed by route path', async () => {
+        it('persists active filters to sessionStorage with a timestamp envelope', async () => {
             mockQuery.value = {}
             ;(mockRoute as any).path = '/search'
             const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
             const { setFilter } = useUrlFilters(defs)
+            const before = Date.now()
             setFilter('onHand', '1')
             await nextTick()
             const stored = window.sessionStorage.getItem('url_filters:/search')
             expect(stored).toBeTruthy()
-            expect(JSON.parse(stored as string)).toEqual({ onHand: '1' })
+            const parsed = JSON.parse(stored as string)
+            expect(parsed.filters).toEqual({ onHand: '1' })
+            expect(parsed.ts).toBeGreaterThanOrEqual(before)
+            expect(parsed.ts).toBeLessThanOrEqual(Date.now())
         })
 
         it('hydrates from sessionStorage when URL has no filter keys', async () => {
             ;(mockRoute as any).path = '/search'
-            window.sessionStorage.setItem('url_filters:/search', JSON.stringify({ onHand: '1' }))
+            window.sessionStorage.setItem('url_filters:/search',
+                JSON.stringify({ filters: { onHand: '1' }, ts: Date.now() }))
             mockQuery.value = {}
             const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
             const { activeFilterCount, getFilter } = useUrlFilters(defs)
@@ -301,7 +306,8 @@ describe('useUrlFilters (multi-param)', () => {
 
         it('URL query wins over sessionStorage when both have filters', () => {
             ;(mockRoute as any).path = '/search'
-            window.sessionStorage.setItem('url_filters:/search', JSON.stringify({ onHand: '1' }))
+            window.sessionStorage.setItem('url_filters:/search',
+                JSON.stringify({ filters: { onHand: '1' }, ts: Date.now() }))
             mockQuery.value = { onHand: '0' }
             const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
             const { getFilter } = useUrlFilters(defs)
@@ -315,6 +321,43 @@ describe('useUrlFilters (multi-param)', () => {
             const { clearAllFilters } = useUrlFilters(defs)
             clearAllFilters()
             await nextTick()
+            expect(window.sessionStorage.getItem('url_filters:/search')).toBeNull()
+        })
+
+        it('discards stored filters older than 2 hours and removes the entry', () => {
+            ;(mockRoute as any).path = '/search'
+            const TWO_HOURS_MS = 2 * 60 * 60 * 1000
+            const stale = Date.now() - TWO_HOURS_MS - 1
+            window.sessionStorage.setItem('url_filters:/search',
+                JSON.stringify({ filters: { onHand: '1' }, ts: stale }))
+            mockQuery.value = {}
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { activeFilterCount } = useUrlFilters(defs)
+            expect(activeFilterCount.value).toBe(0)
+            expect(window.sessionStorage.getItem('url_filters:/search')).toBeNull()
+        })
+
+        it('keeps stored filters younger than 2 hours', () => {
+            ;(mockRoute as any).path = '/search'
+            const fresh = Date.now() - (60 * 60 * 1000) // 1 hour ago
+            window.sessionStorage.setItem('url_filters:/search',
+                JSON.stringify({ filters: { onHand: '1' }, ts: fresh }))
+            mockQuery.value = {}
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { activeFilterCount, getFilter } = useUrlFilters(defs)
+            expect(activeFilterCount.value).toBe(1)
+            expect(getFilter('onHand')).toBe('1')
+        })
+
+        it('discards legacy bare-object format (back-compat: pre-TTL stored entries)', () => {
+            ;(mockRoute as any).path = '/search'
+            // Pre-TTL format: just the filters dict, no envelope
+            window.sessionStorage.setItem('url_filters:/search',
+                JSON.stringify({ onHand: '1' }))
+            mockQuery.value = {}
+            const defs = computed(() => makeDefs([{ key: 'onHand', type: 'tristate' }]))
+            const { activeFilterCount } = useUrlFilters(defs)
+            expect(activeFilterCount.value).toBe(0)
             expect(window.sessionStorage.getItem('url_filters:/search')).toBeNull()
         })
     })
