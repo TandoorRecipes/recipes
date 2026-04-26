@@ -37,6 +37,9 @@
                         <menu-user-info></menu-user-info>
                         <v-divider></v-divider>
 
+                        <v-list-item prepend-icon="fa-solid fa-gear" @click="recipeSettingsOpen = true">
+                            {{ $t('DisplaySettings') }}
+                        </v-list-item>
                         <component :is="item.component" v-bind="{prependIcon: item.prependIcon, title: item.title, to: item.to, href: item.href, onClick: item.onClick}" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
                     </v-list>
                 </v-menu>
@@ -132,7 +135,7 @@ import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
-import {nextTick, onMounted, ref, watch} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {cropPosition} from "@/utils/image_crop";
 import {useTitle} from "@vueuse/core";
@@ -150,10 +153,6 @@ const title = useTitle()
 const router = useRouter()
 const route = useRoute()
 const {isOpen: recipeSettingsOpen} = useRecipeViewSettings()
-
-watch(() => route.name, (name) => {
-    if (name !== 'RecipeViewPage') recipeSettingsOpen.value = false
-})
 
 onMounted(() => {
     useUserPreferenceStore().init().then(() => {
