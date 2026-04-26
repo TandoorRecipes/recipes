@@ -17,7 +17,11 @@ import {ref} from 'vue'
 import {apiMock, resetApiMock} from '@/__tests__/api-mock'
 import {makeUserPreference} from '@/__tests__/factories'
 
-vi.mock('vue-router', async (imp) => ({...(await imp<any>()), useRoute: () => ({query: {}})}))
+const currentRouteName = ref<string | null>('RecipeViewPage')
+vi.mock('vue-router', async (imp) => ({
+    ...(await imp<any>()),
+    useRoute: () => ({query: {}, get name() { return currentRouteName.value }}),
+}))
 vi.mock('@vueuse/core', async (imp) => ({...(await imp<any>()), useStorage: (_k: string, d: any) => ref(d)}))
 vi.mock('@vueuse/router', () => ({useRouteQuery: (_k: string, d: any) => ref(d)}))
 vi.mock('@/openapi', async (imp) => ({...(await imp<any>()), ApiApi: class { constructor() { return apiMock } }}))
@@ -50,6 +54,26 @@ function mountDrawer() {
             StepIngredientsSection: 'Step ingredients',
             StepIngredientsScope: 'Applies to the expanded step-by-step view.',
             StartExpandedHelper: 'Show the summary open when you load a recipe.',
+            CardDisplay: 'Card display',
+            Show_Rating: 'Show rating',
+            Show_Author: 'Show author',
+            Show_Last_Cooked: 'Show last cooked',
+            Show_New_Badge: 'Show new badge',
+            Max_Keywords: 'Max keywords',
+            Menu_Items: 'Menu items',
+            All: 'All',
+            Edit: 'Edit',
+            Add_to_Plan: 'Add to plan',
+            Add_to_Shopping: 'Add to shopping',
+            Add_to_Book: 'Add to book',
+            Log_Cooking: 'Log cooking',
+            Edit_Photo: 'Edit photo',
+            Property_Editor: 'Property editor',
+            Share: 'Share',
+            Export: 'Export',
+            Duplicate: 'Duplicate',
+            Print: 'Print',
+            Delete: 'Delete',
         }},
         missingWarn: false, fallbackWarn: false,
     })
@@ -127,8 +151,98 @@ describe('RecipeViewSettingsDrawer', () => {
     })
 
     it('wraps each scoped section in its own v-expansion-panel', () => {
+        currentRouteName.value = 'RecipeViewPage'
         const w = mountDrawer()
         const panels = w.findAll('.v-expansion-panel')
-        expect(panels.length).toBe(2)
+        // Recipe summary + While cooking + Card display = 3
+        expect(panels.length).toBe(3)
+    })
+})
+
+describe('Card Display panel', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+        resetApiMock()
+        const {isOpen, isPinned} = useRecipeViewSettings()
+        isOpen.value = false
+        isPinned.value = false
+        currentRouteName.value = 'SearchPage'
+    })
+
+    it('renders Card Display panel when route is SearchPage', () => {
+        currentRouteName.value = 'SearchPage'
+        const w = mountDrawer()
+        expect(w.html()).toContain('Card display')
+    })
+
+    it('renders Card Display panel when route is RecipeViewPage', () => {
+        currentRouteName.value = 'RecipeViewPage'
+        const w = mountDrawer()
+        expect(w.html()).toContain('Card display')
+    })
+
+    it('hides Recipe summary and While cooking sections when route is not RecipeViewPage', () => {
+        currentRouteName.value = 'SearchPage'
+        const w = mountDrawer()
+        const html = w.html()
+        expect(html).not.toContain('Recipe summary')
+        expect(html).not.toContain('While cooking')
+    })
+
+    it('shows Recipe summary and While cooking sections when route is RecipeViewPage', () => {
+        currentRouteName.value = 'RecipeViewPage'
+        const w = mountDrawer()
+        const html = w.html()
+        expect(html).toContain('Recipe summary')
+        expect(html).toContain('While cooking')
+    })
+
+    it('toggles Show Rating updates deviceSettings.card_showRating', async () => {
+        currentRouteName.value = 'SearchPage'
+        const w = mountDrawer()
+        const store = (w.vm.$pinia as any)._s.get('user_preference_store')
+        expect(store.deviceSettings.card_showRating).toBe(false)
+        const switches = w.findAll('input[type="checkbox"]')
+        // Find the switch labeled Show Rating; Vuetify renders aria-labels
+        const showRating = w.findAll('.v-switch').find(s => s.text().includes('Show rating'))
+        expect(showRating, 'Show rating switch should exist').toBeTruthy()
+        await showRating!.find('input').setValue(true)
+        expect(store.deviceSettings.card_showRating).toBe(true)
+    })
+
+    it('selecting 5 in max-keywords updates deviceSettings.card_maxKeywords', async () => {
+        currentRouteName.value = 'SearchPage'
+        const w = mountDrawer()
+        const store = (w.vm.$pinia as any)._s.get('user_preference_store')
+        expect(store.deviceSettings.card_maxKeywords).toBe(3)
+        // Vuetify v-select renders a hidden native <select>; locate by label
+        const select = w.findAll('.v-select').find(s => s.text().includes('Max keywords'))
+        expect(select, 'Max keywords select should exist').toBeTruthy()
+        // Drive the model directly through the input for test simplicity
+        store.deviceSettings.card_maxKeywords = 5
+        await w.vm.$nextTick()
+        expect(store.deviceSettings.card_maxKeywords).toBe(5)
+    })
+
+    it('checking book adds it to card_visibleMenuItems (additive, default-off)', async () => {
+        currentRouteName.value = 'SearchPage'
+        const w = mountDrawer()
+        const store = (w.vm.$pinia as any)._s.get('user_preference_store')
+        expect(store.deviceSettings.card_visibleMenuItems).not.toContain('book')
+        const bookCheckbox = w.findAll('.v-checkbox').find(c => c.text().includes('Add to book'))
+        expect(bookCheckbox, 'Add to book checkbox should exist').toBeTruthy()
+        await bookCheckbox!.find('input[type="checkbox"]').setValue(true)
+        expect(store.deviceSettings.card_visibleMenuItems).toContain('book')
+    })
+
+    it('unchecking edit removes it from card_visibleMenuItems (default-on)', async () => {
+        currentRouteName.value = 'SearchPage'
+        const w = mountDrawer()
+        const store = (w.vm.$pinia as any)._s.get('user_preference_store')
+        expect(store.deviceSettings.card_visibleMenuItems).toContain('edit')
+        const editCheckbox = w.findAll('.v-checkbox').find(c => c.text().includes('Edit') && !c.text().includes('Photo'))
+        expect(editCheckbox, 'Edit checkbox should exist').toBeTruthy()
+        await editCheckbox!.find('input[type="checkbox"]').setValue(false)
+        expect(store.deviceSettings.card_visibleMenuItems).not.toContain('edit')
     })
 })
