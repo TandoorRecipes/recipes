@@ -268,7 +268,11 @@ class FoodAdmin(TreeAdmin):
     search_fields = ('name',)
     actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
 
-    def get_form(self, request, obj=None, **kwargs):
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        # `change` is part of Django >= 5.2's ModelAdmin.get_form signature.
+        # treebeard 5.0.5's movenodeform_factory forwards **kwargs to
+        # django.forms.models.modelform_factory which rejects unknown kwargs.
+        # Accept `change` explicitly so it doesn't reach **kwargs.
         return movenodeform_factory(Food, **kwargs)
 
 
