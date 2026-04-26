@@ -1,5 +1,5 @@
 <template>
-    <v-btn density="compact" variant="plain" @click.stop="" icon :color="triggerColor" :aria-label="$t('IngredientActions')">
+    <v-btn density="compact" variant="plain" @click.stop="" icon :color="triggerColor" :aria-label="$t('IngredientMenu')">
         <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
         <v-menu activator="parent" :close-on-content-click="false" v-model="menuOpen">
             <v-list density="compact" min-width="220">

@@ -9,9 +9,9 @@
         <template #settings>
             <v-expansion-panels :model-value="[0, 1]" multiple variant="accordion" class="mt-2">
                 <v-expansion-panel>
-                    <v-expansion-panel-title>{{ $t('RecipeSummarySection') }}</v-expansion-panel-title>
+                    <v-expansion-panel-title>{{ $t('IngredientSummarySection') }}</v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <div class="text-caption pb-2 text-medium-emphasis">{{ $t('RecipeSummaryScope') }}</div>
+                        <div class="text-caption pb-2 text-medium-emphasis">{{ $t('IngredientSummaryScope') }}</div>
                         <v-switch
                             v-model="deviceSettings.recipe_overviewExpanded"
                             :label="$t('StartExpanded')"
@@ -20,10 +20,10 @@
                         <div class="text-caption pb-1 text-medium-emphasis">{{ $t('StartExpandedHelper') }}</div>
                         <v-switch
                             v-model="deviceSettings.recipe_showIngredientActions"
-                            :label="$t('IngredientActions')"
+                            :label="$t('IngredientMenu')"
                             hide-details density="compact"
                         />
-                        <div class="text-caption pb-1 text-medium-emphasis">{{ $t('IngredientActionsHelp') }}</div>
+                        <div class="text-caption pb-1 text-medium-emphasis">{{ $t('IngredientMenuHelp') }}</div>
                         <v-select
                             v-if="deviceSettings.recipe_showIngredientActions"
                             v-model="deviceSettings.recipe_contextMenuColor"
@@ -58,9 +58,9 @@
                     </v-expansion-panel-text>
                 </v-expansion-panel>
                 <v-expansion-panel>
-                    <v-expansion-panel-title>{{ $t('WhileCookingSection') }}</v-expansion-panel-title>
+                    <v-expansion-panel-title>{{ $t('StepIngredientsSection') }}</v-expansion-panel-title>
                     <v-expansion-panel-text>
-                        <div class="text-caption pb-2 text-medium-emphasis">{{ $t('WhileCookingScope') }}</div>
+                        <div class="text-caption pb-2 text-medium-emphasis">{{ $t('StepIngredientsScope') }}</div>
                         <v-switch
                             v-model="deviceSettings.recipe_showCheckboxes"
                             :label="$t('CheckOffIngredients')"
