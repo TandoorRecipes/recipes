@@ -2,22 +2,22 @@
     <template v-if="!props.loading">
 
         <router-link :to="dest" :target="linkTarget">
-            <recipe-image :style="{height: props.height}" :recipe="props.recipe" rounded="lg" class="mr-3 ml-3" :disable-lightbox="true">
+            <recipe-image :style="{height: props.height}" :recipe="recipe" rounded="lg" class="mr-3 ml-3" :disable-lightbox="true">
                 <template #overlay>
-                    <span v-if="deviceSettings.card_showRating && props.recipe.rating != null"
+                    <span v-if="deviceSettings.card_showRating && recipe.rating != null"
                           class="card-overlay-top-right recipe-card-rating">
                         <v-icon icon="fa-solid fa-star" size="x-small" color="amber" />
-                        <span class="card-overlay-rating-text">{{ props.recipe.rating.toFixed(1) }}</span>
+                        <span class="card-overlay-rating-text">{{ recipe.rating.toFixed(1) }}</span>
                     </span>
-                    <span v-if="deviceSettings.card_showNewBadge && props.recipe._new"
+                    <span v-if="deviceSettings.card_showNewBadge && recipe._new"
                           class="card-overlay-bottom-left card-overlay-new recipe-card-new-badge">
                         {{ t('New') }}
                     </span>
                     <span v-if="hasMetadataOverlay"
                           class="card-overlay-bottom-right">
-                        <span v-if="deviceSettings.card_showAuthor" class="recipe-card-author">{{ props.recipe.createdBy?.displayName }}</span>
-                        <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && props.recipe.lastCooked"> · </span>
-                        <span v-if="deviceSettings.card_showLastCooked && props.recipe.lastCooked" class="recipe-card-last-cooked">{{ lastCookedText }}</span>
+                        <span v-if="deviceSettings.card_showAuthor" class="recipe-card-author">{{ recipe.createdBy?.displayName }}</span>
+                        <span v-if="deviceSettings.card_showAuthor && deviceSettings.card_showLastCooked && recipe.lastCooked"> · </span>
+                        <span v-if="deviceSettings.card_showLastCooked && recipe.lastCooked" class="recipe-card-last-cooked">{{ lastCookedText }}</span>
                     </span>
                 </template>
             </recipe-image>
@@ -25,23 +25,23 @@
         <div class="ml-3">
             <div class="d-flex ">
                 <div class="flex-grow-1 cursor-pointer" @click="openRecipe()">
-                    <p class="font-weight-bold mt-1">{{ props.recipe.name }}</p>
+                    <p class="font-weight-bold mt-1">{{ recipe.name }}</p>
                 </div>
                 <div class="mt-1">
-                    <recipe-context-menu :recipe="props.recipe" size="small" v-if="props.showMenu"></recipe-context-menu>
+                    <recipe-context-menu :recipe="recipe" size="small" v-if="props.showMenu" @update:recipe="onContextMenuRecipeUpdated"></recipe-context-menu>
                 </div>
             </div>
-            <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="deviceSettings.card_maxKeywords" v-if="props.showKeywords">
+            <keywords-component variant="outlined" :keywords="recipe.keywords" :max-keywords="deviceSettings.card_maxKeywords" v-if="props.showKeywords">
                 <template #prepend>
                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" v-if="recipe._private">
                         <private-recipe-badge  :show-text="false"></private-recipe-badge>
                     </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" label variant="outlined" color="info"
-                            v-if="props.recipe.internal == false">
+                            v-if="recipe.internal == false">
                         {{ $t('External') }}
                     </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined"
-                            v-if="props.recipe.workingTime != undefined && props.recipe.workingTime > 0">
+                            v-if="recipe.workingTime != undefined && recipe.workingTime > 0">
                         {{ recipe.workingTime! + recipe.waitingTime! }}
                     </v-chip>
                 </template>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, PropType} from 'vue'
+import {computed, PropType, ref, watch} from 'vue'
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import {Recipe, RecipeOverview} from "@/openapi";
 
@@ -86,18 +86,35 @@ const props = defineProps({
     servings: {type: Number, required: false},
 })
 
+const emit = defineEmits<{
+    'update:recipe': [recipe: Recipe | RecipeOverview]
+}>()
+
+// Shadow the recipe prop so the card can refresh its own display when the
+// context menu (e.g. inline photo editor) reports an updated recipe — list
+// owners that don't listen for update:recipe still see the new image
+// without a manual page reload. Watch the prop so an external update from
+// a parent that DOES listen still propagates in.
+const recipe = ref(props.recipe)
+watch(() => props.recipe, (r) => { recipe.value = r })
+
+function onContextMenuRecipeUpdated(updated: Recipe | RecipeOverview) {
+    recipe.value = updated
+    emit('update:recipe', updated)
+}
+
 const router = useRouter()
 const {t} = useI18n()
 const deviceSettings = useUserPreferenceStore().deviceSettings
 
 const hasMetadataOverlay = computed(() =>
-    (deviceSettings.card_showAuthor && props.recipe.createdBy?.displayName) ||
-    (deviceSettings.card_showLastCooked && props.recipe.lastCooked)
+    (deviceSettings.card_showAuthor && recipe.value.createdBy?.displayName) ||
+    (deviceSettings.card_showLastCooked && recipe.value.lastCooked)
 )
 
 const lastCookedText = computed(() => {
-    if (!props.recipe.lastCooked) return ''
-    const date = new Date(props.recipe.lastCooked)
+    if (!recipe.value.lastCooked) return ''
+    const date = new Date(recipe.value.lastCooked)
     if (isNaN(date.getTime())) return ''
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
@@ -113,7 +130,7 @@ const lastCookedText = computed(() => {
 })
 
 const dest = computed(() => {
-    const route: any = { name: 'RecipeViewPage', params: { id: props.recipe.id } };
+    const route: any = { name: 'RecipeViewPage', params: { id: recipe.value.id } };
     if (props.servings !== undefined) {
         route.query = { servings: String(props.servings) };
     }
