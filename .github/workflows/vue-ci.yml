@@ -15,17 +15,17 @@ on:
 jobs:
   vue-tests:
     runs-on: ubuntu-latest
-    # Node 22 (oldest LTS we support) and Node 24 (prod). Node 25 was here
-    # for forward coverage but currently fails on a jsdom / localStorage
-    # polyfill mismatch (`storage.getItem is not a function`). Even with
-    # continue-on-error, the failing matrix entry shows up as a failed
-    # status check that blocks GitHub's native auto-merge on dependabot
-    # PRs (auto-merge refuses to fire while any check is failing, even
-    # informational ones). Drop Node 25 until the jsdom incompat is fixed.
+    # Node 25 is bleeding-edge (not LTS) and currently fails on a jsdom /
+    # localStorage polyfill mismatch (`storage.getItem is not a function`).
+    # Run it for forward coverage but don't fail the workflow on it.
+    continue-on-error: ${{ matrix.experimental == true }}
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["22", "24"]
+        node-version: ["22", "24", "25"]
+        include:
+          - node-version: "25"
+            experimental: true
     steps:
       - uses: actions/checkout@v6
 
