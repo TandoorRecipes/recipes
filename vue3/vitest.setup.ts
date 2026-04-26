@@ -38,6 +38,12 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 // Mock window.print (used by RecipeViewPage)
 window.print = vi.fn()
 
+// Mock window.scrollTo — jsdom doesn't implement it, so any code path that
+// calls it (Vuetify VOverlay, page navigation handlers, etc.) prints
+// "Not implemented: Window's scrollTo() method" to stderr. The mock keeps
+// that output clean without changing behavior.
+window.scrollTo = vi.fn() as any
+
 // Mock IntersectionObserver (used by Vuetify v-intersect and VProgressLinear)
 class MockIntersectionObserver {
     observe = vi.fn()
