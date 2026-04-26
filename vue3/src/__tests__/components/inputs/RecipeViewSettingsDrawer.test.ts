@@ -17,10 +17,10 @@ import {ref} from 'vue'
 import {apiMock, resetApiMock} from '@/__tests__/api-mock'
 import {makeUserPreference} from '@/__tests__/factories'
 
-const currentRouteName = ref<string | null>('RecipeViewPage')
+const routeState = vi.hoisted(() => ({name: 'RecipeViewPage' as string | null}))
 vi.mock('vue-router', async (imp) => ({
     ...(await imp<any>()),
-    useRoute: () => ({query: {}, get name() { return currentRouteName.value }}),
+    useRoute: () => ({query: {}, get name() { return routeState.name }}),
 }))
 vi.mock('@vueuse/core', async (imp) => ({...(await imp<any>()), useStorage: (_k: string, d: any) => ref(d)}))
 vi.mock('@vueuse/router', () => ({useRouteQuery: (_k: string, d: any) => ref(d)}))
@@ -151,7 +151,7 @@ describe('RecipeViewSettingsDrawer', () => {
     })
 
     it('wraps each scoped section in its own v-expansion-panel', () => {
-        currentRouteName.value = 'RecipeViewPage'
+        routeState.name = 'RecipeViewPage'
         const w = mountDrawer()
         const panels = w.findAll('.v-expansion-panel')
         // Recipe summary + While cooking + Card display = 3
@@ -166,23 +166,23 @@ describe('Card Display panel', () => {
         const {isOpen, isPinned} = useRecipeViewSettings()
         isOpen.value = false
         isPinned.value = false
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
     })
 
     it('renders Card Display panel when route is SearchPage', () => {
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
         const w = mountDrawer()
         expect(w.html()).toContain('Card display')
     })
 
     it('renders Card Display panel when route is RecipeViewPage', () => {
-        currentRouteName.value = 'RecipeViewPage'
+        routeState.name = 'RecipeViewPage'
         const w = mountDrawer()
         expect(w.html()).toContain('Card display')
     })
 
     it('hides Recipe summary and While cooking sections when route is not RecipeViewPage', () => {
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
         const w = mountDrawer()
         const html = w.html()
         expect(html).not.toContain('Recipe summary')
@@ -190,7 +190,7 @@ describe('Card Display panel', () => {
     })
 
     it('shows Recipe summary and While cooking sections when route is RecipeViewPage', () => {
-        currentRouteName.value = 'RecipeViewPage'
+        routeState.name = 'RecipeViewPage'
         const w = mountDrawer()
         const html = w.html()
         expect(html).toContain('Recipe summary')
@@ -198,7 +198,7 @@ describe('Card Display panel', () => {
     })
 
     it('toggles Show Rating updates deviceSettings.card_showRating', async () => {
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
         const w = mountDrawer()
         const store = (w.vm.$pinia as any)._s.get('user_preference_store')
         expect(store.deviceSettings.card_showRating).toBe(false)
@@ -211,7 +211,7 @@ describe('Card Display panel', () => {
     })
 
     it('selecting 5 in max-keywords updates deviceSettings.card_maxKeywords', async () => {
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
         const w = mountDrawer()
         const store = (w.vm.$pinia as any)._s.get('user_preference_store')
         expect(store.deviceSettings.card_maxKeywords).toBe(3)
@@ -225,7 +225,7 @@ describe('Card Display panel', () => {
     })
 
     it('checking book adds it to card_visibleMenuItems (additive, default-off)', async () => {
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
         const w = mountDrawer()
         const store = (w.vm.$pinia as any)._s.get('user_preference_store')
         expect(store.deviceSettings.card_visibleMenuItems).not.toContain('book')
@@ -236,7 +236,7 @@ describe('Card Display panel', () => {
     })
 
     it('unchecking edit removes it from card_visibleMenuItems (default-on)', async () => {
-        currentRouteName.value = 'SearchPage'
+        routeState.name = 'SearchPage'
         const w = mountDrawer()
         const store = (w.vm.$pinia as any)._s.get('user_preference_store')
         expect(store.deviceSettings.card_visibleMenuItems).toContain('edit')
