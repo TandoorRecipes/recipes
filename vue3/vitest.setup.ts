@@ -18,9 +18,14 @@ import { vi } from 'vitest'
 // TODO: register Vuetify globally via @vue/test-utils config and update
 // the affected tests to query rendered Vuetify DOM (.v-chip class, etc.).
 const _origWarn = console.warn
+const _suppressed = [
+    '[Vue warn]: Failed to resolve component',
+    '[Vue Router warn]:',
+    '[Vuetify UPGRADE]',
+]
 console.warn = (...args: unknown[]) => {
     const first = args[0]
-    if (typeof first === 'string' && first.includes('[Vue warn]: Failed to resolve component')) return
+    if (typeof first === 'string' && _suppressed.some(p => first.includes(p))) return
     _origWarn(...args)
 }
 
