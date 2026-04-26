@@ -503,11 +503,12 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             try:
                 with scopes_disabled():
                     child.move(self.model.get_first_root_node(), f'{node_location}-sibling')
-                content = {'msg': _(f'{child.name} was moved successfully to the root.')}
-                return Response(content, status=status.HTTP_200_OK)
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
                 content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            # Re-fetch via ORM — treebeard bypasses the ORM during move().
+            child = self.model.objects.get(pk=pk, space=self.request.space)
+            return Response(self.get_serializer(child).data, status=status.HTTP_200_OK)
         elif parent == child.id:
             content = {'error': True, 'msg': _('Cannot move an object to itself!')}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
@@ -521,11 +522,17 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         try:
             with scopes_disabled():
                 child.move(parent, f'{node_location}-child')
-            content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
-            return Response(content, status=status.HTTP_200_OK)
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
             content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        # Re-fetch via ORM — treebeard bypasses the ORM during move() so the
+        # in-memory `child` instance has stale parent / path data. The
+        # frontend OpenAPI client expects the moved Food back per the schema
+        # (returning `{msg: ...}` makes FoodFromJSON crash on missing array
+        # fields and the user sees a generic "Error while updating" toast
+        # even though the move succeeded).
+        child = self.model.objects.get(pk=pk, space=self.request.space)
+        return Response(self.get_serializer(child).data, status=status.HTTP_200_OK)
 
 
 def paginate(func):
