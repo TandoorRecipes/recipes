@@ -1,33 +1,17 @@
 import { vi } from 'vitest'
+import { config } from '@vue/test-utils'
+import vuetify from '@/vuetify'
 
-// KNOWN TEST DEBT: many component tests mount without registering Vuetify,
-// so Vuetify components like <v-btn>, <v-chip>, <v-card> render as
-// unresolved custom elements (no real behavior) and Vue logs "Failed to
-// resolve component" warnings. Tests that pass this way are not exercising
-// real component rendering — they're matching against literal element
-// selectors like findAll('v-chip').
+// Register the production Vuetify instance for every test. Tests get the
+// same component set, theme, icon aliases, and defaults the production app
+// uses — so assertions can query rendered Vuetify DOM (`.v-chip`,
+// `.v-list-item-title`, etc.) and selectors mean what they mean in production.
 //
-// Fixing this properly requires updating ~13 tests across KeywordsBar,
-// AddToShoppingDialog, BooksPage, ModelMergeDialog, and RecipeContextMenu
-// to either register Vuetify per-test or use proper component selectors.
-// That refactor is out of scope here. For now we suppress the warnings to
-// stop them flooding vitest's worker RPC channel during teardown — the
-// flood (~4400 warnings per CI run) was triggering EnvironmentTeardownError
-// and exiting CI non-zero even when all tests passed.
-//
-// TODO: register Vuetify globally via @vue/test-utils config and update
-// the affected tests to query rendered Vuetify DOM (.v-chip class, etc.).
-const _origWarn = console.warn
-const _suppressed = [
-    '[Vue warn]: Failed to resolve component',
-    '[Vue Router warn]:',
-    '[Vuetify UPGRADE]',
-]
-console.warn = (...args: unknown[]) => {
-    const first = args[0]
-    if (typeof first === 'string' && _suppressed.some(p => first.includes(p))) return
-    _origWarn(...args)
-}
+// Browser-API polyfills below cover the jsdom gaps Vuetify relies on at
+// runtime (matchMedia, ResizeObserver, IntersectionObserver). Without them
+// Vuetify mounts but throws on first reactive layout call.
+config.global.plugins = [...(config.global.plugins ?? []), vuetify]
+
 
 // Mock window.matchMedia (used by breakpoint_utils and Vuetify)
 Object.defineProperty(window, 'matchMedia', {
