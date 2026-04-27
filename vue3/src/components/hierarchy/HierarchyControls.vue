@@ -147,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, computed} from "vue"
+import {ref, computed, watch} from "vue"
 import type {EditorSupportedTypes, EditorSupportedModels} from "@/types/Models"
 import ModelSelect from "@/components/inputs/ModelSelect.vue"
 
@@ -156,6 +156,7 @@ const props = defineProps<{
     editingItem: EditorSupportedTypes
     model: EditorSupportedModels
     operating: boolean
+    currentParent?: EditorSupportedTypes | null
 }>()
 
 const emit = defineEmits<{
@@ -166,7 +167,10 @@ const emit = defineEmits<{
 }>()
 
 const addChildObj = ref<EditorSupportedTypes | undefined>(undefined)
-const setParentObj = ref<EditorSupportedTypes | undefined>(undefined)
+const setParentObj = ref<EditorSupportedTypes | undefined>(props.currentParent ?? undefined)
+watch(() => props.selectedItem?.id, () => {
+    setParentObj.value = props.currentParent ?? undefined
+})
 const mergeTargetObj = ref<EditorSupportedTypes | undefined>(undefined)
 const confirmRemoveParent = ref(false)
 const confirmMerge = ref(false)
