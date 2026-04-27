@@ -185,7 +185,7 @@
                 </v-card-title>
                 <v-divider />
                 <v-card-text class="pa-0">
-                    <AsyncHelpView v-model="helpDrawer" default-section="hierarchy" />
+                    <HelpView v-model="helpDrawer" default-section="hierarchy" />
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -193,7 +193,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, defineAsyncComponent, onMounted, ref, watch} from "vue"
+import {computed, onMounted, ref, watch} from "vue"
 import {useDisplay} from "vuetify"
 import {useI18n} from "vue-i18n"
 import type {EditorSupportedModels, EditorSupportedTypes} from "@/types/Models"
@@ -203,7 +203,11 @@ import type {FlatTreeNode} from "@/composables/hierarchy/types"
 import HierarchyTree from "@/components/hierarchy/HierarchyTree.vue"
 import HierarchyDrillDown from "@/components/hierarchy/HierarchyDrillDown.vue"
 import HierarchyControls from "@/components/hierarchy/HierarchyControls.vue"
-const AsyncHelpView = defineAsyncComponent(() => import("@/components/display/HelpView.vue"))
+// Static import: HelpView is already loaded eagerly via Tandoor.vue → HelpDialog,
+// so defineAsyncComponent here adds no runtime savings — and produces a lazy chunk
+// that hits a Rollup tree-shake bug stripping makeDimensionProps from the main
+// bundle ("R is not a function" at runtime when the lazy chunk loads).
+import HelpView from "@/components/display/HelpView.vue"
 
 const props = defineProps<{
     model: EditorSupportedModels
