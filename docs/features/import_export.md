@@ -44,6 +44,7 @@ Overview of the capabilities of the different integrations.
 | Cookmate           | ✔️     | ⌚     | ✔️     |
 | PDF (experimental) | ⌚️     | ✔️     | ✔️     |
 | Gourmet            | ✔️     | ❌     | ✔️     |
+| Pestle             | ✔️     | ❌     | ✔️     |
 
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
@@ -302,3 +303,14 @@ To generate the file, export to HTML in Gourmet and zip the generated folder.
 The import of menus is not supported.
 
 Export is not supported due to problems with the `.grmt` format.
+
+## Pestle 
+
+An importer for your [Pestle](https://pestlechef.app/) recipe collection. To use it, navigate to the settings in the Pestle app, click on "Export" and select "Pestle Recipe Format". You will get a file called `mm-dd-yyyy.pestle` which you can use for the import.
+
+If available the following information will be imported: Name, Description, Servings, Waiting time, Working time, Category (keyword), Keywords, Ingredients (as extra step), Instructions, Nutrition, Image and Source.
+
+> [!WARNING]
+> Other fields like: Rating, Author, Notes, Cuisine or Video will be lost.
+
+Export is not supported because Pestle needs image URLs which are not included in the import.
