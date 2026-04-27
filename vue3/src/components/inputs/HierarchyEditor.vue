@@ -116,6 +116,7 @@
                 v-if="tree.selectedItem.value"
                 :selected-item="tree.selectedItem.value"
                 :editing-item="editingObj"
+                :current-parent="currentParent"
                 :model="model"
                 :operating="tree.operating.value"
                 @add-child="onAddChild"
@@ -229,6 +230,13 @@ const panelOpen = ref(false)
 const showHelpDialog = ref(false)
 const helpDrawer = ref(!mobile.value)
 const searchInput = ref('')
+
+const currentParent = computed(() => {
+    const sel = tree.selectedItem.value
+    const parentId = (sel as any)?.parent
+    if (!parentId) return null
+    return tree.findItemInCache(parentId)
+})
 
 // Sync panel with selection
 watch(() => tree.selectedItem.value, (val) => {
