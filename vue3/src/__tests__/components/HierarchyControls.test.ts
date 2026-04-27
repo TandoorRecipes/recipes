@@ -70,7 +70,10 @@ function mountControls(props: Partial<InstanceType<typeof HierarchyControls>['$p
         global: {
             plugins: [pinia, i18n, vuetify, router],
             stubs: {
-                ModelSelect: {template: '<div class="stub-model-select"><slot name="append"/></div>'},
+                ModelSelect: {
+                    props: ['modelValue'],
+                    template: '<div class="stub-model-select" :data-model-id="modelValue?.id ?? \'\'"><slot name="append"/></div>',
+                },
             },
         },
     })
@@ -124,5 +127,55 @@ describe('HierarchyControls', () => {
         })
         expect(wrapper.text()).toContain('Edit')
         expect(wrapper.text()).toContain('Recipes')
+    })
+
+    describe('parent prepopulation', () => {
+        function getParentSelectId(wrapper: ReturnType<typeof mountControls>) {
+            return wrapper.findAll('.stub-model-select')[0]?.attributes('data-model-id') ?? ''
+        }
+
+        it('seeds the Parent field with currentParent on mount', () => {
+            const wrapper = mountControls({
+                selectedItem: makeItem(5, 'Garlic'),
+                currentParent: makeItem(2, 'Vegetables'),
+            } as any)
+            expect(getParentSelectId(wrapper)).toBe('2')
+        })
+
+        it('leaves Parent empty when currentParent is null (root item)', () => {
+            const wrapper = mountControls({
+                selectedItem: makeItem(5, 'Garlic'),
+                currentParent: null,
+            } as any)
+            expect(getParentSelectId(wrapper)).toBe('')
+        })
+
+        it('re-seeds Parent when selectedItem switches to a different node', async () => {
+            const wrapper = mountControls({
+                selectedItem: makeItem(5, 'Garlic'),
+                currentParent: makeItem(2, 'Vegetables'),
+            } as any)
+            expect(getParentSelectId(wrapper)).toBe('2')
+
+            await wrapper.setProps({
+                selectedItem: makeItem(7, 'Pepper'),
+                currentParent: makeItem(3, 'Spices'),
+            } as any)
+            expect(getParentSelectId(wrapper)).toBe('3')
+        })
+
+        it('clears Parent when navigating to a root item', async () => {
+            const wrapper = mountControls({
+                selectedItem: makeItem(5, 'Garlic'),
+                currentParent: makeItem(2, 'Vegetables'),
+            } as any)
+            expect(getParentSelectId(wrapper)).toBe('2')
+
+            await wrapper.setProps({
+                selectedItem: makeItem(9, 'Produce'),
+                currentParent: null,
+            } as any)
+            expect(getParentSelectId(wrapper)).toBe('')
+        })
     })
 })
