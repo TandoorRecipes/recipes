@@ -36,7 +36,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
                              Keyword, MealPlan, MealType, NutritionInformation, Property,
                              PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport,
-                             ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
+                             RecipeUserWeight, ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
@@ -1655,6 +1655,20 @@ class CookLogSerializer(serializers.ModelSerializer):
         model = CookLog
         fields = ('id', 'recipe', 'servings', 'rating', 'comment', 'created_by', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_by')
+
+
+class RecipeUserWeightSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = RecipeUserWeight
+        fields = ('id', 'recipe', 'user', 'weight', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'user', 'created_at', 'updated_at')
 
 
 class ViewLogSerializer(serializers.ModelSerializer):
