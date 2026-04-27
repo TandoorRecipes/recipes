@@ -27,7 +27,10 @@
 
                                 <div v-for="filter in Object.values(filters)" :key="filter.id">
                                     <template v-if="filter.enabled">
-                                        <component :="filter" :is="filter.is" density="compact" v-model="filter.modelValue">
+                                        <component :is="filter.is" :id="filter.id" :label="filter.label" :hint="filter.hint"
+                                                     :items="filter.items" :model="filter.model" :mode="filter.mode"
+                                                     :object="filter.object" :search-on-load="filter.searchOnLoad"
+                                                     density="compact" v-model="filter.modelValue">
                                             <template #append>
                                                 <v-btn icon="fa-solid fa-times" size="small" variant="plain"
                                                        @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>
@@ -49,6 +52,11 @@
                                         <v-btn icon="$save" class="ms-1" color="save" @click="saveCustomFilter()"></v-btn>
                                     </template>
                                 </model-select>
+
+                                <closable-help-alert
+                                    v-if="savedFilterModified"
+                                    :text="$t('saved_filter_override_hint')"
+                                />
                             </v-form>
                             <v-row>
                                 <v-col cols="6">
@@ -173,6 +181,7 @@ import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/open
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {VDateInput} from 'vuetify/labs/VDateInput'
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import {useRouter} from "vue-router";
@@ -240,6 +249,7 @@ const tableItemCount = ref(0)
 
 const recipes = ref([] as RecipeOverview[])
 const selectedCustomFilter = ref<null | CustomFilter>(null)
+const loadedFilterSnapshot = ref<Record<string, any>>({})
 const newFilterName = ref('')
 
 const selectedItems = ref([] as EditorSupportedTypes[])
@@ -312,6 +322,15 @@ function searchRecipes(options: VDataTableUpdateOptions) {
 /**
  * reset all search parameters and perform emtpy search
  */
+const savedFilterModified = computed(() => {
+    if (!selectedCustomFilter.value || Object.keys(loadedFilterSnapshot.value).length === 0) return false
+    return Object.values(filters.value).some((filter) => {
+        const filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+        if (!(filterName in loadedFilterSnapshot.value)) return false
+        return JSON.stringify(filter.modelValue) !== JSON.stringify(loadedFilterSnapshot.value[filterName])
+    })
+})
+
 function reset() {
     page.value = 1
     resetQuery()
@@ -320,6 +339,7 @@ function reset() {
         filter.modelValue = filter.default
     })
     selectedCustomFilter.value = null
+    loadedFilterSnapshot.value = {}
     recipes.value = []
     searchRecipes({page: 1})
 }
@@ -350,7 +370,8 @@ function enableFiltersWithValues() {
  */
 function isFilterDefaultValue(filter: any) {
     if (Array.isArray(filter.default) && Array.isArray(filter.modelValue)) {
-        return filter.default.length == filter.modelValue.length
+        return filter.default.length === filter.modelValue.length &&
+            filter.default.every((v: any, i: number) => v === filter.modelValue[i])
     } else if (isNaN(filter.default) && isNaN(filter.modelValue)) {
         return true
     } else {
@@ -370,7 +391,7 @@ function saveCustomFilter() {
 
     if (selectedCustomFilter.value != null) {
         loading.value = true
-        selectedCustomFilter.value.search = JSON.stringify(filtersToCustomFilterFormat())
+        selectedCustomFilter.value.search = filtersToCustomFilterFormat()
         api.apiCustomFilterUpdate({id: selectedCustomFilter.value.id!, customFilter: selectedCustomFilter.value}).then((r) => {
             selectedCustomFilter.value = r
         }).catch(err => {
@@ -392,7 +413,7 @@ function createCustomFilter() {
 
     dialog.value = false
     loading.value = true
-    api.apiCustomFilterCreate({customFilter: {name: newFilterName.value, search: JSON.stringify(filtersToCustomFilterFormat())} as CustomFilter}).then((r) => {
+    api.apiCustomFilterCreate({customFilter: {name: newFilterName.value, type: 'RECIPE', search: filtersToCustomFilterFormat()} as CustomFilter}).then((r) => {
         selectedCustomFilter.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
@@ -405,7 +426,10 @@ function createCustomFilter() {
  * load selected custom filter into the filters system
  */
 function loadSelectedCustomFilter() {
-    let customFilterParams = JSON.parse(selectedCustomFilter.value.search)
+    let customFilterParams = selectedCustomFilter.value.search
+    if (typeof customFilterParams === 'string') {
+        try { customFilterParams = JSON.parse(customFilterParams) } catch { customFilterParams = {} }
+    }
     if (customFilterParams['version'] == null) {
         customFilterParams = transformTandoor1Filter(customFilterParams)
     }
@@ -414,14 +438,19 @@ function loadSelectedCustomFilter() {
         query.value = customFilterParams['query']
     }
 
+    // Snapshot the saved filter values before applying
+    loadedFilterSnapshot.value = {}
     Object.values(filters.value).forEach((filter) => {
         let filterName = filter.id.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
         if (customFilterParams[filterName] != null) {
             filter.modelValue = customFilterParams[filterName]
             filter.enabled = true
+            loadedFilterSnapshot.value[filterName] = JSON.parse(JSON.stringify(customFilterParams[filterName]))
         }
     })
 
+    // Trigger search after loading filter
+    searchRecipes({page: 1, itemsPerPage: pageSize.value, sortBy: []} as VDataTableUpdateOptions)
 }
 
 /**
@@ -453,13 +482,15 @@ function filtersToCustomFilterFormat() {
 function transformTandoor1Filter(customFilterParams: any) {
 
     // _or was basically an alias to the standard filter which behaves like an or filter
-    [['books_or', 'books'], ['foods_or', 'foods'], ['keywords_or', 'keywords'],].forEach(pair => {
-        if (customFilterParams[pair[1]] != null) {
-            if (customFilterParams[pair[2]] != null) {
-                customFilterParams[pair[2]].concat(customFilterParams[pair[1]])
+    // pair[0] = old key (e.g. 'books_or'), pair[1] = new key (e.g. 'books')
+    [['books_or', 'books'], ['foods_or', 'foods'], ['keywords_or', 'keywords']].forEach(pair => {
+        if (customFilterParams[pair[0]] != null) {
+            if (customFilterParams[pair[1]] != null) {
+                customFilterParams[pair[1]] = customFilterParams[pair[1]].concat(customFilterParams[pair[0]])
             } else {
-                customFilterParams[pair[2]] = customFilterParams[pair[1]]
+                customFilterParams[pair[1]] = customFilterParams[pair[0]]
             }
+            delete customFilterParams[pair[0]]
         }
     })
 

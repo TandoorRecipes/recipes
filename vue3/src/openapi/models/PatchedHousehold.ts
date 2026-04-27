@@ -69,7 +69,7 @@ export function PatchedHouseholdFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedHouseholdToJSON(value?: Omit<PatchedHousehold, 'createdAt'|'updatedAt'> | null): any {
+export function PatchedHouseholdToJSON(value?: Omit<PatchedHousehold, 'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -107,4 +107,4 @@ echo "Starting gunicorn"
 # --umask parameter isn't respected when gunicorn is running in foreground, needed for when users change to non root users
 # use /tmp as directory since that is writable as a non-root user
 # https://github.com/benoitc/gunicorn/issues/2245
-umask 0 && exec gunicorn --bind unix:/tmp/tandoor.sock --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --timeout ${GUNICORN_TIMEOUT:-30} --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
+umask 0 && exec gunicorn --bind unix:/tmp/tandoor.sock --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --timeout ${GUNICORN_TIMEOUT:-30} --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi

@@ -33,11 +33,9 @@
                         <v-col cols="0" md="6">
                             <h3>{{ $t('AvailableCategories') }}</h3>
 
-                            <draggable class="mt-4" tag="VList" v-model="unusedSupermarketCategories" handle=".drag-handle" item-key="id" group="categories"
-                                       :move="trackMovedItem"
+                            <vue-draggable class="mt-4" v-model="availableCategories" handle=".drag-handle" group="categories"
                             >
-                                <template #item="{element}">
-                                    <v-list-item border :key="element.category.id">
+                                    <v-list-item v-for="element in availableCategories" :key="element.category.id" border>
                                         <template #prepend>
                                             <v-icon class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                         </template>
@@ -48,33 +46,27 @@
                                             </v-btn>
                                         </template>
                                     </v-list-item>
-                                </template>
-                                <template #footer>
-                                    <v-list-item class="cursor-pointer" border prepend-icon="$create" variant="tonal" base-color="create">
-                                        {{ $t('New_Supermarket_Category') }}
-                                        <model-edit-dialog model="SupermarketCategory"
-                                                           @create="(args: SupermarketCategory) => supermarketCategories.push(args)"></model-edit-dialog>
-                                    </v-list-item>
-                                </template>
-                            </draggable>
+                            </vue-draggable>
+                            <v-list-item class="cursor-pointer" border prepend-icon="$create" variant="tonal" base-color="create">
+                                {{ $t('New_Supermarket_Category') }}
+                                <model-edit-dialog model="SupermarketCategory"
+                                                   @create="(args: SupermarketCategory) => supermarketCategories.push(args)"></model-edit-dialog>
+                            </v-list-item>
 
                         </v-col>
                         <v-col cols="12" md="6">
                             <h3> {{ $t('SelectedCategories') }} </h3>
-                            <draggable
-                                tag="VList"
+                            <vue-draggable
                                 v-model="editingObjectSupermarketCategoriesRelations"
-                                handle=".drag-handle" item-key="id" group="categories"
+                                handle=".drag-handle" group="categories"
                                 :empty-insert-threshold="20"
-                                @sort="sortCategoryRelations()"
-                                :move="trackMovedItem"
-                                @add="addCategoryRelation(lastMovedCategoryRelation)"
-                                @remove="removeCategoryRelation(lastMovedCategoryRelation)"
+                                :on-sort="() => sortCategoryRelations()"
+                                :on-add="onCategoryAdded"
+                                :on-remove="onCategoryRemoved"
                             >
-                                <template #item="{element}">
-                                    <v-list-item border :key="element.category.id">
+                                    <v-list-item v-for="element in editingObjectSupermarketCategoriesRelations" :key="element.category.id" border>
                                         <template #prepend>
-                                            <v-icon class="drag-handle" icon="$dragHandle"></v-icon>
+                                            <v-icon class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                         </template>
                                         {{ element.category.name }}
                                         <v-chip>{{ element.order }}</v-chip>
@@ -85,8 +77,7 @@
                                             </v-btn>
                                         </template>
                                     </v-list-item>
-                                </template>
-                            </draggable>
+                            </vue-draggable>
                             <v-list class="mt-4">
 
                             </v-list>
@@ -109,7 +100,7 @@ import {ApiApi, Supermarket, SupermarketCategory, SupermarketCategoryRelation} f
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
-import draggable from "vuedraggable";
+import {VueDraggable} from "vue-draggable-plus";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 const props = defineProps({
@@ -139,22 +130,25 @@ const supermarketCategories = ref([] as SupermarketCategory[])
 // all relations existing on the editing obj (internal datastructure, UI works with computed/manual list of categories)
 const editingObjectSupermarketCategoriesRelations = ref([] as SupermarketCategoryRelation[])
 
-// track the last moved item in the draggable list to use in add/remove functions
-const lastMovedCategoryRelation = ref({} as SupermarketCategoryRelation)
 
 // variable to prevent sorting while some other operation is currently running that would conflict / would make sorting unnecessary (e.g. adding item)
 const preventSort = ref(false)
 
-// computed: categories not yet used in editing supermarket
-const unusedSupermarketCategories = computed(() => {
-    let sCR = [] as SupermarketCategoryRelation[]
-    supermarketCategories.value.forEach((sc) => {
-        if (editingObjectSupermarketCategoriesRelations.value.findIndex(e => e.category.id == sc.id) == -1) {
-            sCR.push({supermarket: editingObj.value.id, category: sc, order: 0,} as SupermarketCategoryRelation)
-        }
-    })
-    return sCR
-})
+// available categories as a ref (not computed) so vue-draggable-plus can mutate it during drag
+const availableCategories = ref([] as SupermarketCategoryRelation[])
+
+/**
+ * Recompute available categories whenever the source data changes.
+ * This replaces the old computed property with a writable ref that
+ * vue-draggable-plus can bind to via v-model.
+ */
+function updateAvailableCategories() {
+    availableCategories.value = supermarketCategories.value
+        .filter(sc => editingObjectSupermarketCategoriesRelations.value.findIndex(e => e.category.id == sc.id) == -1)
+        .map(sc => ({supermarket: editingObj.value.id, category: sc, order: 0} as SupermarketCategoryRelation))
+}
+
+watch([supermarketCategories, editingObjectSupermarketCategoriesRelations], updateAvailableCategories, {deep: true})
 
 onMounted(() => {
     initializeEditor()
@@ -180,11 +174,29 @@ function initializeEditor(){
 }
 
 /**
- * called whenever something in the list is moved to track the last moved element (to be used in add/remove functions)
- * @param operation
+ * Called when an item is dragged into the selected list.
+ * vue-draggable-plus already spliced the item into editingObjectSupermarketCategoriesRelations,
+ * so we just need to persist it to the server.
  */
-function trackMovedItem(operation: any) {
-    lastMovedCategoryRelation.value = operation.draggedContext.element
+function onCategoryAdded(evt: any) {
+    const sCR = editingObjectSupermarketCategoriesRelations.value[evt.newIndex]
+    if (sCR) {
+        addCategoryRelation(sCR)
+    }
+}
+
+/**
+ * Called when an item is dragged out of the selected list.
+ * vue-draggable-plus already removed it from editingObjectSupermarketCategoriesRelations,
+ * so we just need to delete it from the server.
+ */
+function onCategoryRemoved(evt: any) {
+    // The item was already removed from the array by vue-draggable-plus.
+    // We need to find it in the available list where it was moved to.
+    const sCR = availableCategories.value[evt.newIndex]
+    if (sCR) {
+        removeCategoryRelation(sCR)
+    }
 }
 
 function sortCategoryRelations(startIndex: number = 0) {

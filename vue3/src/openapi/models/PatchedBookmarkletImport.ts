@@ -76,7 +76,7 @@ export function PatchedBookmarkletImportFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletImport, 'createdBy'|'createdAt'> | null): any {
+export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletImport, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

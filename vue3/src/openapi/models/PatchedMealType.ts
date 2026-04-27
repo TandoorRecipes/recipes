@@ -83,7 +83,7 @@ export function PatchedMealTypeFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'createdBy'> | null): any {
+export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }
