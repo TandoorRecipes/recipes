@@ -60,25 +60,53 @@ describe('cropPreviewStyle', () => {
         expect(s.backgroundRepeat).toBeUndefined()
     })
 
+    // CSS background-position percentage spec: P% positions the image so
+    // that its P% point aligns with the container's P% point. With the
+    // image scaled to (100/w)x of container, the formula to show the
+    // crop region [x, x+w] is `posX = x / (100 - w) * 100`. Using the
+    // focal-point formula (x + w/2) instead silently mis-positions the
+    // visible region — the rendered output doesn't match the saved
+    // selection (item 11 WYSIWYG bug).
+
     it('returns zoom-into-crop when forceCrop=true regardless of fit', () => {
         const s = cropPreviewStyle(SRC, { x: 10, y: 20, width: 50, height: 50 }, true)
         // bgSize = 100/50 = 200%
         expect(s.backgroundSize).toBe('200%')
-        // pos = clamp(10+25), clamp(20+25) = 35% 45%
-        expect(s.backgroundPosition).toBe('35% 45%')
+        // pos = 10/(100-50)*100, 20/(100-50)*100 = 20% 40%
+        expect(s.backgroundPosition).toBe('20% 40%')
         expect(s.backgroundRepeat).toBe('no-repeat')
     })
 
     it('returns zoom-into-crop when fit=true and forceCrop=false', () => {
         const s = cropPreviewStyle(SRC, { x: 0, y: 0, width: 50, height: 50, fit: 1 })
         expect(s.backgroundSize).toBe('200%')
-        expect(s.backgroundPosition).toBe('25% 25%')
+        // top-left quadrant: pos = 0/(100-50)*100, 0/(100-50)*100 = 0% 0%
+        expect(s.backgroundPosition).toBe('0% 0%')
         expect(s.backgroundRepeat).toBe('no-repeat')
     })
 
-    it('clamps focal positions to [0, 100]', () => {
+    it('positions the bottom-right quadrant correctly', () => {
+        const s = cropPreviewStyle(SRC, { x: 50, y: 50, width: 50, height: 50 }, true)
+        // pos = 50/(100-50)*100, 50/(100-50)*100 = 100% 100%
+        expect(s.backgroundPosition).toBe('100% 100%')
+    })
+
+    it('positions a centered crop at 50% 50%', () => {
+        const s = cropPreviewStyle(SRC, { x: 25, y: 25, width: 50, height: 50 }, true)
+        expect(s.backgroundPosition).toBe('50% 50%')
+    })
+
+    it('handles full-image crop (w/h = 100) without divide-by-zero', () => {
+        const s = cropPreviewStyle(SRC, { x: 0, y: 0, width: 100, height: 100 }, true)
+        expect(s.backgroundSize).toBe('100%')
+        // No room to scroll — position irrelevant; default to 0% 0%.
+        expect(s.backgroundPosition).toBe('0% 0%')
+    })
+
+    it('clamps positions when crop x/y + w/h exceeds image bounds', () => {
+        // Saved x=90, w=50 means crop extends beyond right edge — clamp
+        // to 100% so the rightmost visible region is shown.
         const s = cropPreviewStyle(SRC, { x: 90, y: 90, width: 50, height: 50 }, true)
-        // pos = clamp(90+25)=100, clamp(90+25)=100
         expect(s.backgroundPosition).toBe('100% 100%')
     })
 })
