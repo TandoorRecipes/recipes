@@ -14,13 +14,16 @@
             <v-form :disabled="loading">
 
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                <v-select :label="$t('Type')" :items="['HomeAssistant']" v-model="editingObj.type"></v-select>
+                <v-select :label="$t('Type')" :items="['HomeAssistant', 'Bring']" v-model="editingObj.type"></v-select>
 
-                <v-text-field :label="$t('Url')" v-model="editingObj.url"></v-text-field>
-                <v-text-field :label="$t('Access_Token')" v-model="editingObj.token"></v-text-field>
+                <v-text-field :label="$t('Url')" v-model="editingObj.url" v-if="editingObj.type == 'HomeAssistant'"></v-text-field>
+                <v-text-field :label="$t('Access_Token')" v-model="editingObj.token" v-if="editingObj.type == 'HomeAssistant'"></v-text-field>
 
-                <v-text-field label="Todo entity" v-model="editingObj.todoEntity"></v-text-field>
-                <v-checkbox :label="$t('SupportsDescriptionField')" hide-details v-model="editingObj.supportsDescriptionField"></v-checkbox>
+                <v-text-field :label="$t('Email')" v-model="editingObj.email" v-if="editingObj.type == 'Bring'"></v-text-field>
+                <v-text-field :label="$t('Password')" v-model="editingObj.password" type="password" v-if="editingObj.type == 'Bring'"></v-text-field>
+
+                <v-text-field :label="editingObj.type == 'Bring' ? 'List UUID' : 'Todo entity'" v-model="editingObj.listId"></v-text-field>
+                <v-checkbox :label="$t('SupportsDescriptionField')" hide-details v-model="editingObj.supportsDescriptionField" v-if="editingObj.type == 'HomeAssistant'"></v-checkbox>
 
                 <v-checkbox :label="$t('Enabled')"  v-model="editingObj.enabled"></v-checkbox>
 
