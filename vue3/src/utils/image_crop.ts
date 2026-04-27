@@ -80,22 +80,45 @@ export function cropPreviewStyle(
     //
     // CSS `background-position` percentage spec: P% positions the image
     // so its P% point aligns with the container's P% point. When the
-    // image is scaled to (100/w)x of the container, the formula to make
-    // the visible region exactly the saved crop [x, x+w] is:
-    //   posX = x / (100 - w) * 100
-    // The previous implementation used the focal-point formula
-    // `x + w/2`, which centers the crop's MIDPOINT at the container's
-    // center but doesn't actually frame the crop region — the rendered
-    // output silently mismatched the saved selection.
-    const bgSize = w > 0 ? Math.round(100 / w * 10000) / 100 : 100
+    // image is scaled so the crop spans exactly the container, the
+    // formula to make the visible region exactly the saved crop is:
+    //     posX = x / (100 - w) * 100
+    // (and same for y/h). At w=100 / h=100 there's no scrolling room so
+    // posX / posY default to 0% (position is irrelevant when image fills
+    // the container in that axis).
+    //
+    // backgroundSize handling:
+    //   • w > 100 (crop wider than image, horizontal padding bars):
+    //     image fills container HEIGHT exactly — `auto 100%`.
+    //   • h > 100 (crop taller than image, vertical padding bars):
+    //     image fills container WIDTH exactly — `100% auto`.
+    //   • w ≤ 100 AND h ≤ 100 (crop inside image, zoom): standard
+    //     `${100/w * 100}%` width-anchored zoom.
+    //
+    // No clamp on position values — overflow crops produce legitimate
+    // negative or >100 backgroundPosition values that render as padding
+    // bars filled by the consumer's container background-color.
+    const round = (v: number) => Math.round(v * 100) / 100
+    const position = (coord: number, dim: number): number => {
+        const denom = 100 - dim
+        return denom === 0 ? 0 : round(coord / denom * 100)
+    }
+    const posX = position(x, w)
+    const posY = position(y, h)
 
-    const clamp = (v: number) => Math.max(0, Math.min(100, Math.round(v * 100) / 100))
-    const posX = w >= 100 ? 0 : clamp(x / (100 - w) * 100)
-    const posY = h >= 100 ? 0 : clamp(y / (100 - h) * 100)
+    let backgroundSize: string
+    if (w > 100) {
+        backgroundSize = 'auto 100%'
+    } else if (h > 100) {
+        backgroundSize = '100% auto'
+    } else {
+        const bgSize = w > 0 ? Math.round(100 / w * 10000) / 100 : 100
+        backgroundSize = `${bgSize}%`
+    }
 
     return {
         backgroundImage: `url("${src}")`,
-        backgroundSize: `${bgSize}%`,
+        backgroundSize,
         backgroundPosition: `${posX}% ${posY}%`,
         backgroundRepeat: 'no-repeat',
     }

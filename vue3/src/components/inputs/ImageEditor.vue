@@ -206,37 +206,56 @@ function startSelectionObserver() {
         const selection = cropperInstance.value?.getCropperSelection()
         if (!selection) return
 
-        // Clamp selection to image bounds
+        // Constrain selection per item 10: square (already enforced by
+        // cropperjs aspectRatio=1) up to size = max(image.w, image.h).
+        // The selection may extend off the image on the SHORTER axis (so
+        // the saved crop has padding bars on that axis when displayed),
+        // but the LONGER axis must keep at least the image visible —
+        // never both axes overflowing simultaneously.
         const bounds = getImageBounds()
         if (bounds && bounds.w > 0 && bounds.h > 0) {
             let {x, y, width, height} = selection
             let changed = false
-            const maxX = bounds.x + bounds.w
-            const maxY = bounds.y + bounds.h
-            // Clamp position first
-            if (x < bounds.x) { x = bounds.x; changed = true }
-            if (y < bounds.y) { y = bounds.y; changed = true }
-            // Then clamp size, shifting position if needed to keep selection inside
-            if (x + width > maxX) {
-                x = Math.max(bounds.x, maxX - width)
-                width = Math.min(width, maxX - x)
-                changed = true
-            }
-            if (y + height > maxY) {
-                y = Math.max(bounds.y, maxY - height)
-                height = Math.min(height, maxY - y)
-                changed = true
-            }
-            if (width < 10) width = 10
-            if (height < 10) height = 10
-            // Re-enforce square after independent axis clamping
-            if (changed && Math.abs(width - height) > 1) {
+            const maxSize = Math.max(bounds.w, bounds.h)
+            const minSize = Math.min(bounds.w, bounds.h)
+
+            // Floor at sane minimum
+            if (width < 10) { width = 10; changed = true }
+            if (height < 10) { height = 10; changed = true }
+
+            // Cap size at max(W, H) — selecting beyond that would
+            // overflow BOTH axes, which the spec forbids.
+            if (width > maxSize) { width = maxSize; changed = true }
+            if (height > maxSize) { height = maxSize; changed = true }
+
+            // Re-enforce square AFTER size cap
+            if (Math.abs(width - height) > 1) {
                 const squareSize = Math.min(width, height)
                 if (squareSize < width) x += (width - squareSize) / 2
                 if (squareSize < height) y += (height - squareSize) / 2
                 width = squareSize
                 height = squareSize
+                changed = true
             }
+
+            // Position constraint: selection is allowed to extend off
+            // the image on the SHORTER axis (when width > minSize the
+            // square overflows that axis intentionally) but must keep
+            // image visible on the LONGER axis. For each axis: when
+            // selection ≤ image dim, clamp position so selection stays
+            // inside; when selection > image dim, leave position free
+            // (overflow rendered as padding bars by cropPreviewStyle).
+            const maxX = bounds.x + bounds.w
+            const maxY = bounds.y + bounds.h
+            if (width <= bounds.w) {
+                if (x < bounds.x) { x = bounds.x; changed = true }
+                if (x + width > maxX) { x = maxX - width; changed = true }
+            }
+            if (height <= bounds.h) {
+                if (y < bounds.y) { y = bounds.y; changed = true }
+                if (y + height > maxY) { y = maxY - height; changed = true }
+            }
+
             if (changed) {
                 selection.$change(x, y, width, height)
             }
@@ -331,12 +350,18 @@ function extractCropData(): Record<string, number> | null {
     const bounds = getImageBounds()
     if (!bounds || bounds.w <= 0 || bounds.h <= 0) return null
 
-    const clamp = (v: number) => Math.max(0, Math.min(100, Math.round(v * 100) / 100))
+    // No clamp on x/y/width/height — item 10 allows the saved crop to
+    // exceed image bounds in one axis (negative x or y, or width/height
+    // > 100) so the rendered output has padding bars on that axis. The
+    // editor's startSelectionObserver enforces the "one axis only" rule
+    // at the source; clamping here would silently drop legitimate
+    // overflow values back to image bounds.
+    const round = (v: number) => Math.round(v * 100) / 100
     return {
-        x: clamp(((selection.x - bounds.x) / bounds.w) * 100),
-        y: clamp(((selection.y - bounds.y) / bounds.h) * 100),
-        width: clamp((selection.width / bounds.w) * 100),
-        height: clamp((selection.height / bounds.h) * 100),
+        x: round(((selection.x - bounds.x) / bounds.w) * 100),
+        y: round(((selection.y - bounds.y) / bounds.h) * 100),
+        width: round((selection.width / bounds.w) * 100),
+        height: round((selection.height / bounds.h) * 100),
         ...(fitToFrame.value ? {fit: 1} : {}),
     }
 }
