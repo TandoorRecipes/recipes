@@ -76,12 +76,22 @@ export function cropPreviewStyle(
         }
     }
 
-    // Zoom into the crop region so the cropped square fills the container
+    // Zoom into the crop region so the cropped square fills the container.
+    //
+    // CSS `background-position` percentage spec: P% positions the image
+    // so its P% point aligns with the container's P% point. When the
+    // image is scaled to (100/w)x of the container, the formula to make
+    // the visible region exactly the saved crop [x, x+w] is:
+    //   posX = x / (100 - w) * 100
+    // The previous implementation used the focal-point formula
+    // `x + w/2`, which centers the crop's MIDPOINT at the container's
+    // center but doesn't actually frame the crop region — the rendered
+    // output silently mismatched the saved selection.
     const bgSize = w > 0 ? Math.round(100 / w * 10000) / 100 : 100
 
     const clamp = (v: number) => Math.max(0, Math.min(100, Math.round(v * 100) / 100))
-    const posX = clamp(x + w / 2)
-    const posY = clamp(y + h / 2)
+    const posX = w >= 100 ? 0 : clamp(x / (100 - w) * 100)
+    const posY = h >= 100 ? 0 : clamp(y / (100 - h) * 100)
 
     return {
         backgroundImage: `url("${src}")`,
