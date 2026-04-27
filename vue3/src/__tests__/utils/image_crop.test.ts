@@ -103,11 +103,14 @@ describe('cropPreviewStyle', () => {
         expect(s.backgroundPosition).toBe('0% 0%')
     })
 
-    it('clamps positions when crop x/y + w/h exceeds image bounds', () => {
-        // Saved x=90, w=50 means crop extends beyond right edge — clamp
-        // to 100% so the rightmost visible region is shown.
+    it('does not clamp when crop position extends past image edge (item 10 — preserves overflow)', () => {
+        // Saved x=90 with w=50 means the crop extends 40% past the image
+        // right edge. Pre-item-10 this was clamped to 100% (silently
+        // mis-positioning the rendered output). Now the math-correct
+        // value 180% is preserved so the rightmost visible image region
+        // is shown, with padding on the right where the crop overflowed.
         const s = cropPreviewStyle(SRC, { x: 90, y: 90, width: 50, height: 50 }, true)
-        expect(s.backgroundPosition).toBe('100% 100%')
+        expect(s.backgroundPosition).toBe('180% 180%')
     })
 
     // -------- Item 10: one-axis overflow --------
@@ -117,11 +120,53 @@ describe('cropPreviewStyle', () => {
     // the overflow axis. See `.claude/plans/item-10-crop-one-axis-overflow.md`.
     // Padding fill comes from CropImage's container background-color.
 
-    it.todo('letterboxes vertically when crop height exceeds image (e.g. {x:0, y:-25, w:100, h:150})')
-    it.todo('letterboxes horizontally when crop width exceeds image (e.g. {x:-25, y:0, w:150, h:100})')
-    it.todo('handles offset overflow ({x:50, y:-10, w:50, h:120}) — half-image x + overflow y')
-    it.todo('preserves negative x or y in backgroundPosition (no clamp to 0% when overflow is intentional)')
-    it.todo('preserves x/y > 100-w in backgroundPosition (no clamp to 100% when overflow is intentional)')
+    it('letterboxes vertically when crop height exceeds image (e.g. {x:0, y:-25, w:100, h:150})', () => {
+        // Crop is square (1:1) on a 1.5:1 image: image fills crop's width
+        // exactly, height overflows by 50% (25% off top + 25% off bottom).
+        const s = cropPreviewStyle(SRC, { x: 0, y: -25, width: 100, height: 150 }, true)
+        // bgSize: '100% auto' — image fills width, height auto-scales
+        expect(s.backgroundSize).toBe('100% auto')
+        // posX: w=100 → no horizontal scrolling, default 0%
+        // posY: -25/(100-150)*100 = 50% (image vertically centered)
+        expect(s.backgroundPosition).toBe('0% 50%')
+        expect(s.backgroundRepeat).toBe('no-repeat')
+    })
+
+    it('letterboxes horizontally when crop width exceeds image (e.g. {x:-25, y:0, w:150, h:100})', () => {
+        const s = cropPreviewStyle(SRC, { x: -25, y: 0, width: 150, height: 100 }, true)
+        // bgSize: 'auto 100%' — image fills height, width auto-scales
+        expect(s.backgroundSize).toBe('auto 100%')
+        // posX: -25/(100-150)*100 = 50% (image horizontally centered)
+        // posY: h=100 → no vertical scrolling, default 0%
+        expect(s.backgroundPosition).toBe('50% 0%')
+        expect(s.backgroundRepeat).toBe('no-repeat')
+    })
+
+    it('asymmetric vertical overflow lands on bottom edge ({x:0, y:-50, w:100, h:150})', () => {
+        // y=-50 means crop top is 50% above image top — image bottom aligns with crop bottom.
+        const s = cropPreviewStyle(SRC, { x: 0, y: -50, width: 100, height: 150 }, true)
+        expect(s.backgroundSize).toBe('100% auto')
+        // posY: -50/(100-150)*100 = 100% (image bottom-aligned in container)
+        expect(s.backgroundPosition).toBe('0% 100%')
+    })
+
+    it('preserves x > 100-w in backgroundPosition (no clamp when crop position extends past image)', () => {
+        // {x:50, y:0, w:60, h:60}: w doesn't overflow (60 ≤ 100) but
+        // x+w = 110 extends past image right edge. Previously clamped
+        // to 100% (which silently mis-positioned). Now preserved at
+        // the math-correct 125% so the rightmost visible image region
+        // is shown with padding on the right.
+        const s = cropPreviewStyle(SRC, { x: 50, y: 0, width: 60, height: 60 }, true)
+        // posX: 50/(100-60)*100 = 125%
+        expect(s.backgroundPosition).toBe('125% 0%')
+    })
+
+    it('preserves negative y when crop extends above image with no scaling overflow', () => {
+        // {x:0, y:-10, w:80, h:80}: h doesn't overflow but y < 0.
+        const s = cropPreviewStyle(SRC, { x: 0, y: -10, width: 80, height: 80 }, true)
+        // posY: -10/(100-80)*100 = -50%
+        expect(s.backgroundPosition).toBe('0% -50%')
+    })
 })
 
 describe('shouldFitFrame', () => {
