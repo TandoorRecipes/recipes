@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-04-23 13:21+0000\n"
-"Last-Translator: Jan <janmarcoschmitz@web.de>\n"
+"PO-Revision-Date: 2026-04-27 10:09+0000\n"
+"Last-Translator: am9zZWY <tandoor@jmueller.simplelogin.com>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/de/>\n"
 "Language: de\n"
@@ -1752,7 +1752,7 @@ msgstr "Zeit"
 
 #: .\cookbook\templates\system.html:271
 msgid "Error Code"
-msgstr ""
+msgstr "Fehlercode"
 
 #: .\cookbook\templates\system.html:272
 msgid "Details"
@@ -1805,7 +1805,7 @@ msgstr "Die folgenden Sitzungen sind aktuell in deinem Profil aktiv."
 #, fuzzy
 #| msgid "Saturated Fat"
 msgid "Started At"
-msgstr "Gesättigte Fette"
+msgstr "Gestartet um"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:17
 msgid "IP Address"
@@ -1825,7 +1825,7 @@ msgstr "Aktuell"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:45
 msgid "Sign Out Other Sessions"
-msgstr ""
+msgstr "Andere Sitzungen abmelden"
 
 #: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
@@ -1890,6 +1890,8 @@ msgid ""
 "If true also return empty entries, if false (default) only return entries "
 "with amount > 0."
 msgstr ""
+"Wenn wahr, gebe auch leere Einträge zurück. Wenn falsch (Standard), gebe nur "
+"Einträge mit amount > 0 zurück."
 
 #: .\cookbook\views\api.py:868
 msgid ""
