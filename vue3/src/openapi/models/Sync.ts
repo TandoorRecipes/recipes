@@ -100,7 +100,7 @@ export function SyncFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sync
     };
 }
 
-export function SyncToJSON(value?: Omit<Sync, 'createdAt'|'updatedAt'> | null): any {
+export function SyncToJSON(value?: Omit<Sync, 'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

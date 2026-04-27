@@ -72,7 +72,7 @@ export function HouseholdFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function HouseholdToJSON(value?: Omit<Household, 'createdAt'|'updatedAt'> | null): any {
+export function HouseholdToJSON(value?: Omit<Household, 'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

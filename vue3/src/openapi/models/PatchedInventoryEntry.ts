@@ -144,7 +144,7 @@ export function PatchedInventoryEntryFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedInventoryEntryToJSON(value?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'> | null): any {
+export function PatchedInventoryEntryToJSON(value?: Omit<PatchedInventoryEntry, 'label'|'created_at'|'created_by'> | null): any {
     if (value == null) {
         return value;
     }
