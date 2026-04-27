@@ -30,7 +30,7 @@
                     </span>
                 </div>
                 <div class="d-flex  flex-column flex-grow-1 align-self-center">
-                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0]?.amount ?? 1)) }} 
+                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0]?.amount ?? 1)) }}
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
             </div>
@@ -200,7 +200,7 @@ const infoRow = computed(() => {
         let e = entries.value[i]
 
 
-        if (authors.indexOf(e.createdBy.displayName) === -1) {
+        if (e.createdBy?.displayName && authors.indexOf(e.createdBy.displayName) === -1) {
             authors.push(e.createdBy.displayName)
         }
 

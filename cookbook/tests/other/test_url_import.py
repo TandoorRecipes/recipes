@@ -84,6 +84,19 @@ def test_url_import_sends_accept_header(u1_s1):
     assert 'Accept' in headers
 
 
+@pytest.mark.parametrize("value,expected", [
+    (None, ''),
+    ('', ''),
+    ('Serves 4', 'Serves'),
+    ('4 servings', 'servings'),
+    (4, '4'),
+    (['foo', 'bar'], 'bar'),
+])
+def test_parse_servings_text(value, expected):
+    from cookbook.helper.recipe_url_import import parse_servings_text
+    assert parse_servings_text(value) == expected
+
+
 @pytest.mark.parametrize("arg", RECIPES, ids=[x['file'][0] for x in RECIPES])
 def test_recipe_import(arg, u1_s1):
     url = arg['url']

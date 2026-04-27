@@ -10445,6 +10445,33 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserSpace'
           description: ''
+  /api/user-space/batch_update/:
+    put:
+      operationId: apiUserSpaceBatchUpdateUpdate
+      description: logs request counts to redis cache total/per user/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSpaceBatchUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserSpaceBatchUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserSpaceBatchUpdate'
+        required: true
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSpaceBatchUpdate'
+          description: ''
   /api/user/{id}/:
     get:
       operationId: apiUserRetrieve
@@ -11298,6 +11325,11 @@ components:
         substitute_onhand:
           type: boolean
           readOnly: true
+        available_substitutes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoodSimple'
+          readOnly: true
         child_inherit_fields:
           type: array
           items:
@@ -11312,6 +11344,7 @@ components:
           items:
             $ref: '#/components/schemas/ShoppingList'
       required:
+      - available_substitutes
       - full_name
       - name
       - numchild
@@ -12077,6 +12110,10 @@ components:
           maxLength: 254
         group:
           $ref: '#/components/schemas/Group'
+        household:
+          allOf:
+          - $ref: '#/components/schemas/Household'
+          nullable: true
         valid_until:
           type: string
           format: date
@@ -12250,11 +12287,6 @@ components:
         created_by:
           type: integer
           readOnly: true
-        shared:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         recipe_name:
           type: string
           readOnly: true
@@ -13784,6 +13816,11 @@ components:
         substitute_onhand:
           type: boolean
           readOnly: true
+        available_substitutes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FoodSimple'
+          readOnly: true
         child_inherit_fields:
           type: array
           items:
@@ -14006,6 +14043,10 @@ components:
           maxLength: 254
         group:
           $ref: '#/components/schemas/Group'
+        household:
+          allOf:
+          - $ref: '#/components/schemas/Household'
+          nullable: true
         valid_until:
           type: string
           format: date
@@ -14132,11 +14173,6 @@ components:
         created_by:
           type: integer
           readOnly: true
-        shared:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         recipe_name:
           type: string
           readOnly: true
@@ -14692,6 +14728,8 @@ components:
           nullable: true
         space_setup_completed:
           type: boolean
+        household_setup_completed:
+          type: boolean
     PatchedStep:
       type: object
       description: Adds nested create feature
@@ -15115,11 +15153,6 @@ components:
           type: boolean
         use_kj:
           type: boolean
-        plan_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         nav_sticky:
           type: boolean
         ingredient_decimals:
@@ -15149,11 +15182,6 @@ components:
           type: boolean
         mealplan_autoexclude_onhand:
           type: boolean
-        shopping_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         shopping_recent_days:
           type: integer
           maximum: 2147483647
@@ -16160,6 +16188,9 @@ components:
           $ref: '#/components/schemas/SourceImportUnit'
         note:
           type: string
+        order:
+          type: integer
+          nullable: true
         original_text:
           type: string
       required:
@@ -16393,6 +16424,8 @@ components:
           - $ref: '#/components/schemas/AiProvider'
           nullable: true
         space_setup_completed:
+          type: boolean
+        household_setup_completed:
           type: boolean
       required:
       - ai_monthly_credits_used
@@ -16970,11 +17003,6 @@ components:
           type: boolean
         use_kj:
           type: boolean
-        plan_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         nav_sticky:
           type: boolean
         ingredient_decimals:
@@ -17004,11 +17032,6 @@ components:
           type: boolean
         mealplan_autoexclude_onhand:
           type: boolean
-        shopping_share:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
-          nullable: true
         shopping_recent_days:
           type: integer
           maximum: 2147483647
@@ -17094,6 +17117,23 @@ components:
       - space
       - updated_at
       - user
+    UserSpaceBatchUpdate:
+      type: object
+      properties:
+        user_spaces:
+          type: array
+          items:
+            type: integer
+        household:
+          type: integer
+          nullable: true
+        group_set:
+          type: array
+          items:
+            type: integer
+      required:
+      - group_set
+      - user_spaces
     ViewLog:
       type: object
       properties:

@@ -10,7 +10,7 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none d-print-none">
+        <template v-if="mobile">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -61,7 +61,7 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block d-print-block">
+        <template v-else>
             <v-row dense>
                 <v-col cols="8">
                     <recipe-image
@@ -75,8 +75,9 @@
                         <v-card-text class="flex-grow-1">
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"
-                                                     class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
+                                <div class="flex-column mb-auto mt-2 float-right" v-if="useUserPreferenceStore().isAuthenticated">
+                                    <recipe-context-menu :recipe="recipe" :servings="servings"></recipe-context-menu>
+                                </div>
                             </div>
                             <p>
                                 {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
@@ -216,14 +217,16 @@ import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import {useDisplay} from "vuetify";
 
+const {mobile} = useDisplay()
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()
 
 const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
 const props = defineProps<{
-    servings: {type: Number, required: false},
+    servings?: number,
 }>()
 
 const servings = ref(props.servings ?? recipe.value.servings ?? 1)

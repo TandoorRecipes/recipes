@@ -114,7 +114,7 @@ export function ExportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ExportLogToJSON(value?: Omit<ExportLog, 'createdBy'|'createdAt'> | null): any {
+export function ExportLogToJSON(value?: Omit<ExportLog, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

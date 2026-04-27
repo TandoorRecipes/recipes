@@ -83,7 +83,7 @@ export function PatchedCustomFilterFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedCustomFilterToJSON(value?: Omit<PatchedCustomFilter, 'createdBy'> | null): any {
+export function PatchedCustomFilterToJSON(value?: Omit<PatchedCustomFilter, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

@@ -27,7 +27,9 @@
 
                                 <div v-for="filter in Object.values(filters)" :key="filter.id">
                                     <template v-if="filter.enabled">
-                                        <component :="filter" :is="filter.is" density="compact" v-model="filter.modelValue">
+                                        <component :is="filter.is" :id="filter.id" :label="filter.label" :hint="filter.hint"
+                                                     :items="filter.items" :model="filter.model" :mode="filter.mode"
+                                                     density="compact" v-model="filter.modelValue">
                                             <template #append>
                                                 <v-btn icon="fa-solid fa-times" size="small" variant="plain"
                                                        @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>

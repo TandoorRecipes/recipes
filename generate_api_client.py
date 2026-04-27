@@ -9,6 +9,11 @@ os.chdir('vue3/src/openapi')
 # generate base API client for all models
 os.system('openapi-generator-cli generate -g typescript-fetch -t templates -i http://127.0.0.1:8000/openapi/')
 
+# generate test factories from the schema
+os.chdir('../../..')
+print('\nGenerating test factories...')
+os.system(sys.executable + ' vue3/scripts/generate-test-factories.py')
+
 sys.exit(0)
 
 # TODO this code was written as a test and commited for archiving
