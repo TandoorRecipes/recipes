@@ -17,6 +17,16 @@ import {ref} from 'vue'
 
 import {apiMock, resetApiMock} from '@/__tests__/api-mock'
 
+// HierarchyEditor → HelpView → @/i18n.ts → virtual:locale-coverage,
+// which is provided by a Vite plugin not loaded in the vitest env. Short-
+// circuit by mocking @/i18n so the virtual module is never reached.
+vi.mock('@/i18n', () => ({
+    SUPPORT_LOCALES: [{code: 'en', label: 'English'}],
+    resolveLocale: (c: string) => c,
+    localeCoverage: {en: 100},
+    LOCALE_MIN_COVERAGE: 0,
+}))
+
 vi.mock('vue-router', () => ({
     useRoute: () => ({query: {}}),
     useRouter: () => ({push: vi.fn()}),
