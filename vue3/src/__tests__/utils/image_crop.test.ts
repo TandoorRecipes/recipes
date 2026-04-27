@@ -109,6 +109,19 @@ describe('cropPreviewStyle', () => {
         const s = cropPreviewStyle(SRC, { x: 90, y: 90, width: 50, height: 50 }, true)
         expect(s.backgroundPosition).toBe('100% 100%')
     })
+
+    // -------- Item 10: one-axis overflow --------
+    // Spec: cropData with w > 100 OR h > 100 represents a square crop
+    // larger than the image's smaller dimension; the renderer must
+    // letterbox the image inside the container with padding bars on
+    // the overflow axis. See `.claude/plans/item-10-crop-one-axis-overflow.md`.
+    // Padding fill comes from CropImage's container background-color.
+
+    it.todo('letterboxes vertically when crop height exceeds image (e.g. {x:0, y:-25, w:100, h:150})')
+    it.todo('letterboxes horizontally when crop width exceeds image (e.g. {x:-25, y:0, w:150, h:100})')
+    it.todo('handles offset overflow ({x:50, y:-10, w:50, h:120}) — half-image x + overflow y')
+    it.todo('preserves negative x or y in backgroundPosition (no clamp to 0% when overflow is intentional)')
+    it.todo('preserves x/y > 100-w in backgroundPosition (no clamp to 100% when overflow is intentional)')
 })
 
 describe('shouldFitFrame', () => {
