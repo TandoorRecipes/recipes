@@ -22,6 +22,7 @@ import {ref} from "vue";
 const {t} = useI18n()
 
 const MEALPLAN_PERIODS = ref([
+    {title: t("Three-Day"), value: "three-day"},
     {title: t("Week"), value: "week"},
     {title: t("Month"), value: "month"},
     {title: t("Year"), value: "year"},

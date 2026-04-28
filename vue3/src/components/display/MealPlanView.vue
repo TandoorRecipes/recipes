@@ -115,7 +115,9 @@ onMounted(() => {
  */
 function refreshVisiblePeriod(startDateUnknown: boolean) {
     let daysInPeriod = 7
-    if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'month') {
+    if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'three-day') {
+        daysInPeriod = 3
+    } else if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'month') {
         daysInPeriod = 31
     } else if (useUserPreferenceStore().deviceSettings.mealplan_displayPeriod == 'year') {
         daysInPeriod = 365
