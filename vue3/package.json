@@ -12,7 +12,7 @@
     "@types/luxon": "^3.7.1",
     "@types/sortablejs": "^1.15.9",
     "@vueform/multiselect": "^2.6.11",
-    "@vueuse/core": "^14.1.0",
+    "@vueuse/core": "^14.2.1",
     "@vueuse/router": "^14.2.1",
     "luxon": "^3.7.2",
     "mavon-editor": "^3.0.1",
