@@ -103,6 +103,7 @@ import type {
     UserFileView,
     UserPreference,
     UserSpace,
+    UserSpaceBatchUpdate,
     ViewLog
 } from '@/openapi'
 
@@ -520,9 +521,10 @@ export function makeCustomFilter(overrides: Partial<CustomFilter> = {}): CustomF
     return {
         id: 1,
         name: 'Test name',
-        search: '',
+        type: 'RECIPE' as any,
+        search: undefined as any,
         shared: [],
-        createdBy: 0,
+        createdBy: undefined as any,
         ...overrides,
     } as CustomFilter
 }
@@ -531,8 +533,7 @@ export function makeMinimalCustomFilter(overrides: Partial<CustomFilter> = {}): 
     return {
         id: 1,
         name: 'Test name',
-        search: '',
-        createdBy: 0,
+        createdBy: undefined as any,
         ...overrides,
     } as CustomFilter
 }
@@ -541,9 +542,10 @@ export function makeEdgeCaseCustomFilter(overrides: Partial<CustomFilter> = {}):
     return {
         id: 0,
         name: '',
-        search: '',
+        type: 'KEYWORD' as any,
+        search: undefined as any,
         shared: [],
-        createdBy: 0,
+        createdBy: undefined as any,
         ...overrides,
     } as CustomFilter
 }
@@ -698,6 +700,7 @@ export function makeFood(overrides: Partial<Food> = {}): Food {
         substituteSiblings: false,
         substituteChildren: false,
         substituteOnhand: false,
+        availableSubstitutes: [],
         childInheritFields: [],
         openDataSlug: '',
         shoppingLists: [],
@@ -714,6 +717,7 @@ export function makeMinimalFood(overrides: Partial<Food> = {}): Food {
         numchild: 0,
         fullName: 'Test full_name',
         substituteOnhand: false,
+        availableSubstitutes: [],
         ...overrides,
     } as Food
 }
@@ -742,6 +746,7 @@ export function makeEdgeCaseFood(overrides: Partial<Food> = {}): Food {
         substituteSiblings: false,
         substituteChildren: false,
         substituteOnhand: false,
+        availableSubstitutes: [],
         childInheritFields: null,
         openDataSlug: null,
         shoppingLists: [],
@@ -1519,6 +1524,7 @@ export function makeInviteLink(overrides: Partial<InviteLink> = {}): InviteLink 
         uuid: '',
         email: 'test@example.com',
         group: makeGroup(),
+        household: undefined as any,
         validUntil: new Date('2026-01-01T00:00:00Z'),
         usedBy: 0,
         reusable: false,
@@ -1549,6 +1555,7 @@ export function makeEdgeCaseInviteLink(overrides: Partial<InviteLink> = {}): Inv
         uuid: '',
         email: '',
         group: makeMinimalGroup(),
+        household: null,
         validUntil: new Date(0),
         usedBy: null,
         reusable: false,
@@ -1664,7 +1671,6 @@ export function makeMealPlan(overrides: Partial<MealPlan> = {}): MealPlan {
         toDate: new Date('2026-01-01T00:00:00Z'),
         mealType: makeMealType(),
         createdBy: 0,
-        shared: [],
         recipeName: 'Test recipe_name',
         mealTypeName: 'Test meal_type_name',
         shopping: false,
@@ -1700,7 +1706,6 @@ export function makeEdgeCaseMealPlan(overrides: Partial<MealPlan> = {}): MealPla
         toDate: new Date(0),
         mealType: makeMinimalMealType(),
         createdBy: 0,
-        shared: null,
         recipeName: '',
         mealTypeName: '',
         shopping: false,
@@ -2724,6 +2729,7 @@ export function makeSourceImportIngredient(overrides: Partial<SourceImportIngred
         food: makeSourceImportFood(),
         unit: makeSourceImportUnit(),
         note: '',
+        order: 0,
         originalText: '',
         ...overrides,
     } as SourceImportIngredient
@@ -2745,6 +2751,7 @@ export function makeEdgeCaseSourceImportIngredient(overrides: Partial<SourceImpo
         food: makeMinimalSourceImportFood(),
         unit: makeMinimalSourceImportUnit(),
         note: '',
+        order: null,
         originalText: '',
         ...overrides,
     } as SourceImportIngredient
@@ -2940,7 +2947,6 @@ export function makeSpace(overrides: Partial<Space> = {}): Space {
         spaceTheme: 'BLANK' as any,
         customSpaceTheme: undefined as any,
         navBgColor: '',
-        navTextColor: 'BLANK' as any,
         logoColor32: undefined as any,
         logoColor128: undefined as any,
         logoColor144: undefined as any,
@@ -2954,6 +2960,7 @@ export function makeSpace(overrides: Partial<Space> = {}): Space {
         aiEnabled: false,
         aiDefaultProvider: undefined as any,
         spaceSetupCompleted: false,
+        householdSetupCompleted: false,
         ...overrides,
     } as Space
 }
@@ -2997,7 +3004,6 @@ export function makeEdgeCaseSpace(overrides: Partial<Space> = {}): Space {
         spaceTheme: 'TANDOOR_DARK' as any,
         customSpaceTheme: null,
         navBgColor: '',
-        navTextColor: 'DARK' as any,
         logoColor32: null,
         logoColor128: null,
         logoColor144: null,
@@ -3011,6 +3017,7 @@ export function makeEdgeCaseSpace(overrides: Partial<Space> = {}): Space {
         aiEnabled: false,
         aiDefaultProvider: null,
         spaceSetupCompleted: false,
+        householdSetupCompleted: false,
         ...overrides,
     } as Space
 }
@@ -3459,13 +3466,10 @@ export function makeUserPreference(overrides: Partial<UserPreference> = {}): Use
         image: undefined as any,
         theme: 'TANDOOR' as any,
         navBgColor: '',
-        navTextColor: 'LIGHT' as any,
         navShowLogo: false,
         defaultUnit: '',
-        defaultPage: 'SEARCH' as any,
+        defaultPage: 'HOME' as any,
         useFractions: false,
-        useKj: false,
-        planShare: [],
         navSticky: false,
         ingredientDecimals: 0,
         comments: false,
@@ -3475,7 +3479,6 @@ export function makeUserPreference(overrides: Partial<UserPreference> = {}): Use
         defaultDelay: 0,
         mealplanAutoincludeRelated: false,
         mealplanAutoexcludeOnhand: false,
-        shoppingShare: [],
         shoppingRecentDays: 0,
         csvDelim: '',
         csvPrefix: '',
@@ -3486,6 +3489,7 @@ export function makeUserPreference(overrides: Partial<UserPreference> = {}): Use
         leftHanded: false,
         showStepIngredients: false,
         foodChildrenExist: false,
+        startPageSections: undefined as any,
         ...overrides,
     } as UserPreference
 }
@@ -3505,13 +3509,10 @@ export function makeEdgeCaseUserPreference(overrides: Partial<UserPreference> = 
         image: null,
         theme: 'TANDOOR_DARK' as any,
         navBgColor: '',
-        navTextColor: 'DARK' as any,
         navShowLogo: false,
         defaultUnit: '',
         defaultPage: 'SHOPPING' as any,
         useFractions: false,
-        useKj: false,
-        planShare: null,
         navSticky: false,
         ingredientDecimals: 0,
         comments: false,
@@ -3521,7 +3522,6 @@ export function makeEdgeCaseUserPreference(overrides: Partial<UserPreference> = 
         defaultDelay: 0,
         mealplanAutoincludeRelated: false,
         mealplanAutoexcludeOnhand: false,
-        shoppingShare: null,
         shoppingRecentDays: 0,
         csvDelim: '',
         csvPrefix: '',
@@ -3532,6 +3532,7 @@ export function makeEdgeCaseUserPreference(overrides: Partial<UserPreference> = 
         leftHanded: false,
         showStepIngredients: false,
         foodChildrenExist: false,
+        startPageSections: undefined as any,
         ...overrides,
     } as UserPreference
 }
@@ -3579,6 +3580,32 @@ export function makeEdgeCaseUserSpace(overrides: Partial<UserSpace> = {}): UserS
         updatedAt: new Date(0),
         ...overrides,
     } as UserSpace
+}
+
+export function makeUserSpaceBatchUpdate(overrides: Partial<UserSpaceBatchUpdate> = {}): UserSpaceBatchUpdate {
+    return {
+        userSpaces: [],
+        household: 0,
+        groupSet: [],
+        ...overrides,
+    } as UserSpaceBatchUpdate
+}
+
+export function makeMinimalUserSpaceBatchUpdate(overrides: Partial<UserSpaceBatchUpdate> = {}): UserSpaceBatchUpdate {
+    return {
+        userSpaces: [],
+        groupSet: [],
+        ...overrides,
+    } as UserSpaceBatchUpdate
+}
+
+export function makeEdgeCaseUserSpaceBatchUpdate(overrides: Partial<UserSpaceBatchUpdate> = {}): UserSpaceBatchUpdate {
+    return {
+        userSpaces: [],
+        household: null,
+        groupSet: [],
+        ...overrides,
+    } as UserSpaceBatchUpdate
 }
 
 export function makeViewLog(overrides: Partial<ViewLog> = {}): ViewLog {
