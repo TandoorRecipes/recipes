@@ -237,3 +237,62 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     assert r.status_code == 200
     get_response = json.loads(r.content)
     assert len(get_response['food_properties']) > 0
+
+
+def test_create_recipe_with_steps_sets_internal(u1_s1):
+    """
+    Recipes created via the API with steps should automatically be marked as
+    internal so they appear in exports and auto-plan features.
+    See: https://github.com/TandoorRecipes/recipes/issues/XXXX
+    """
+    recipe_data = {
+        "name": "API Recipe With Steps",
+        "description": "Created via API",
+        "steps": [
+            {
+                "instruction": "Mix ingredients",
+                "ingredients": [
+                    {
+                        "food": {"name": "Flour"},
+                        "amount": 500,
+                        "unit": {"name": "grams"},
+                    }
+                ],
+            }
+        ],
+    }
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    assert response['internal'] is True
+
+    # Verify persisted value
+    with scopes_disabled():
+        recipe = Recipe.objects.get(pk=response['id'])
+        assert recipe.internal is True
+
+
+def test_create_recipe_without_steps_stays_external(u1_s1):
+    """A recipe with no steps should remain external (default)."""
+    recipe_data = {
+        "name": "API Recipe No Steps",
+        "steps": [],
+    }
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    assert response['internal'] is False
+
+
+def test_create_recipe_explicit_internal_false(u1_s1):
+    """Explicitly passing internal=False should be respected even with steps."""
+    recipe_data = {
+        "name": "Explicit External Recipe",
+        "internal": False,
+        "steps": [{"instruction": "Do something", "ingredients": []}],
+    }
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+    assert response['internal'] is False
+

@@ -1230,6 +1230,15 @@ class RecipeSerializer(RecipeBaseSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
+        # If the recipe has steps with content, mark it as internal so it is
+        # treated as a native recipe (visible in exports, meal-plan auto-plan,
+        # etc.).  This mirrors the behaviour of the URL-import helper which
+        # always sets internal=True.  Without this, recipes created via the
+        # REST API default to internal=False and are incorrectly flagged as
+        # "External".
+        if 'internal' not in self.initial_data:
+            if validated_data.get('steps'):
+                validated_data['internal'] = True
         return super().create(validated_data)
 
 
