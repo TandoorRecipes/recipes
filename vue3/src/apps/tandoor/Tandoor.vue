@@ -117,12 +117,15 @@
             location="top center"
         ></v-snackbar-queued>
 
+        <recipe-view-settings-drawer v-if="useUserPreferenceStore().isAuthenticated" />
+
     </v-app>
 
 </template>
 
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
+import RecipeViewSettingsDrawer from "@/components/inputs/RecipeViewSettingsDrawer.vue"
 
 import {useDisplay, useLocale} from "vuetify"
 import {VDivider} from "vuetify/components"
@@ -454,5 +457,28 @@ router.afterEach((to, from) => {
 .multiselect-option.is-selected {
     background: #b55e4f !important;
 }
+
+/*
+ * Vuetify 4.0.6 emits .text-X / .bg-X theme color rules into
+ * <style id="vuetify-theme-stylesheet"> wrapped in @layer
+ * vuetify-utilities { @layer theme-base } without !important. The
+ * unlayered .v-application { color: ... } rule wins the cascade,
+ * so v-switch / v-checkbox color="primary" applies bg-primary to
+ * the thumb but the rule loses and the on-state stays grey.
+ * Re-assert each rule unlayered with !important. Drop when Vuetify
+ * reinstates !important on the layered rules.
+ */
+.text-primary { color: rgb(var(--v-theme-primary)) !important; }
+.text-secondary { color: rgb(var(--v-theme-secondary)) !important; }
+.text-success { color: rgb(var(--v-theme-success)) !important; }
+.text-warning { color: rgb(var(--v-theme-warning)) !important; }
+.text-error { color: rgb(var(--v-theme-error)) !important; }
+.text-info { color: rgb(var(--v-theme-info)) !important; }
+.bg-primary { background-color: rgb(var(--v-theme-primary)) !important; color: rgb(var(--v-theme-on-primary)) !important; }
+.bg-secondary { background-color: rgb(var(--v-theme-secondary)) !important; color: rgb(var(--v-theme-on-secondary)) !important; }
+.bg-success { background-color: rgb(var(--v-theme-success)) !important; color: rgb(var(--v-theme-on-success)) !important; }
+.bg-warning { background-color: rgb(var(--v-theme-warning)) !important; color: rgb(var(--v-theme-on-warning)) !important; }
+.bg-error { background-color: rgb(var(--v-theme-error)) !important; color: rgb(var(--v-theme-on-error)) !important; }
+.bg-info { background-color: rgb(var(--v-theme-info)) !important; color: rgb(var(--v-theme-on-info)) !important; }
 
 </style>

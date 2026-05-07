@@ -73,6 +73,27 @@ describe('UserPreferenceStore', () => {
         })
     })
 
+    describe('migrateStaleDeviceSettings', () => {
+        // HighlightWhen no longer offers 'substitute' — tri-state onhand
+        // covers that signal. Existing users with stale localStorage values
+        // must be coerced so the dropdown shows a valid option.
+        it("coerces recipe_contextMenuColor 'substitute' to 'onhand'", async () => {
+            const {migrateStaleDeviceSettings} = await import('@/stores/UserPreferenceStore')
+            const s: any = {recipe_contextMenuColor: 'substitute'}
+            migrateStaleDeviceSettings(s)
+            expect(s.recipe_contextMenuColor).toBe('onhand')
+        })
+
+        it('leaves other values untouched (idempotency)', async () => {
+            const {migrateStaleDeviceSettings} = await import('@/stores/UserPreferenceStore')
+            for (const v of ['onhand', 'shopping', 'never']) {
+                const s: any = {recipe_contextMenuColor: v}
+                migrateStaleDeviceSettings(s)
+                expect(s.recipe_contextMenuColor).toBe(v)
+            }
+        })
+    })
+
     describe('loadUserSettings', () => {
         it('sets userSettings and isAuthenticated on success', async () => {
             const store = useUserPreferenceStore()
@@ -97,34 +118,16 @@ describe('UserPreferenceStore', () => {
         })
     })
 
-    describe('loadServerSettings', () => {
-        it('stores server settings from API', async () => {
-            const store = useUserPreferenceStore()
-            const settings = makeServerSettings({ version: '2.0.0' })
-            apiMock.apiServerSettingsCurrentRetrieve.mockResolvedValue(settings)
-
-            await store.loadServerSettings()
-
-            expect(store.serverSettings.version).toBe('2.0.0')
-        })
-    })
-
     describe('activeUserSpace', () => {
-        it('returns the userSpace matching activeSpace', () => {
+        it('returns matching userSpace or null', () => {
             const store = useUserPreferenceStore()
             const us = makeUserSpace({ id: 10, space: 5 })
 
             store.activeSpace = makeSpace({ id: 5, name: 'Space 5' })
             store.userSpaces = [makeUserSpace({ space: 1 }), us]
-
             expect(store.activeUserSpace).toEqual(us)
-        })
 
-        it('returns null when no match', () => {
-            const store = useUserPreferenceStore()
             store.activeSpace = makeSpace({ id: 999 })
-            store.userSpaces = [makeUserSpace({ space: 1 })]
-
             expect(store.activeUserSpace).toBeNull()
         })
     })

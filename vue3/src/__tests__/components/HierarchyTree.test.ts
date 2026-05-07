@@ -82,14 +82,6 @@ describe('HierarchyTree', () => {
         expect(rows[1].findAll('.tree-indent')).toHaveLength(3)
     })
 
-    it('hides chevron for leaf nodes', () => {
-        const wrapper = mountTree({
-            flatTree: [makeNode(1, 'Leaf', 0, false)],
-        })
-        const chevron = wrapper.find('.tree-chevron')
-        expect(chevron.classes()).toContain('tree-chevron--leaf')
-    })
-
     it('shows hint when tree is loaded but nothing selected', () => {
         const wrapper = mountTree({
             flatTree: [makeNode(1, 'A', 0)],

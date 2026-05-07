@@ -10,6 +10,7 @@ from icalendar import Calendar
 from oauth2_provider.models import AccessToken
 from rest_framework.test import APIClient
 
+from cookbook.helper.permission_helper import invalidate_household_cache
 from cookbook.models import Household, Keyword, MealPlan, MealType, Recipe, UserSpace
 from cookbook.tests.factories import RecipeFactory
 
@@ -417,6 +418,9 @@ def test_household_visibility(obj_1, u1_s1, u2_s1, space_1):
     with scopes_disabled():
         household = Household.objects.create(name='test', space=space_1)
         UserSpace.objects.filter(user__in=[user1, user2], space=space_1).update(household=household)
+        # .update() bypasses signals — manually invalidate household cache
+        for us in UserSpace.objects.filter(space=space_1, household=household):
+            invalidate_household_cache(us)
 
     # now user2 should see user1's meal plan
     results = json.loads(u2_s1.get(reverse(LIST_URL)).content)['results']

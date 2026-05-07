@@ -123,14 +123,18 @@ class CustomOnHandField(serializers.Field):
     def to_representation(self, obj):
         try:
             if not self.context["request"].user.is_authenticated:
-                return []
+                return False
             try:
-                shared_users = get_household_user_ids(self.context["request"].user_space)
+                user_space = self.context["request"].user_space
+                shared_users = get_household_user_ids(user_space)
+                household = user_space.household if hasattr(user_space, 'household') else None
             except AttributeError:  # Anonymous users (using share links) don't have shared users
                 shared_users = []
-            return obj.onhand_users.filter(id__in=shared_users).exists()
+                household = None
+            from cookbook.helper.food_availability_helper import _is_available
+            return Food.objects.filter(pk=obj.pk).filter(_is_available(household, shared_users)).exists()
         except AttributeError:
-            return []
+            return False
 
     def to_internal_value(self, data):
         return data
@@ -910,14 +914,18 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
         # Fallback for single-object serialization (retrieve, create, etc.)
         try:
             if not self.context["request"].user.is_authenticated:
-                return []
+                return False
             try:
-                shared_users = get_household_user_ids(self.context["request"].user_space)
-            except AttributeError:  # Anonymous users (using share links) don't have shared users
+                user_space = self.context["request"].user_space
+                shared_users = get_household_user_ids(user_space)
+                household = user_space.household if hasattr(user_space, 'household') else None
+            except AttributeError:
                 shared_users = []
-            return Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).exists()
+                household = None
+            from cookbook.helper.food_availability_helper import _is_available
+            return Food.objects.filter(self._substitute_candidates_filter(obj)).filter(_is_available(household, shared_users)).exists()
         except AttributeError:
-            return []
+            return False
 
     @extend_schema_field(FoodSimpleSerializer(many=True))
     def get_available_substitutes(self, obj):
@@ -934,12 +942,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, RecipeCou
             if not self.context["request"].user.is_authenticated:
                 return []
             try:
-                shared_users = get_household_user_ids(self.context["request"].user_space)
+                user_space = self.context["request"].user_space
+                shared_users = get_household_user_ids(user_space)
+                household = user_space.household if hasattr(user_space, 'household') else None
             except AttributeError:
                 return []
-            if not shared_users:
+            if not shared_users and household is None:
                 return []
-            available = Food.objects.filter(self._substitute_candidates_filter(obj)).filter(onhand_users__id__in=shared_users).distinct()
+            from cookbook.helper.food_availability_helper import _is_available
+            available = Food.objects.filter(self._substitute_candidates_filter(obj)).filter(_is_available(household, shared_users)).distinct()
             return FoodSimpleSerializer(available, many=True, context=self.context).data
         except AttributeError:
             return []
@@ -1710,6 +1721,16 @@ class ShareLinkSerializer(SpacedModelSerializer):
 class CookLogSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     recipe_name = serializers.CharField(source='recipe.name', read_only=True)
+
+    def validate_rating(self, value):
+        # Vuetify's clearable v-rating emits 0 on clear; normalize to NULL so the DB
+        # invariant is "rating is NULL (unrated) or 1-5". The search layer already
+        # treats ?rating=0 as "unrated" for backwards compatibility.
+        if value == 0:
+            return None
+        if value is not None and not (1 <= value <= 5):
+            raise serializers.ValidationError('Rating must be between 1 and 5.')
+        return value
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user

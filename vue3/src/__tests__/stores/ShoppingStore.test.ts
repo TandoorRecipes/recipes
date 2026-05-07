@@ -42,18 +42,10 @@ describe('ShoppingStore', () => {
     })
 
     describe('initial state', () => {
-        it('starts uninitialized', () => {
+        it('starts uninitialized with empty entries', () => {
             const store = useShoppingStore()
             expect(store.initialized).toBe(false)
-        })
-
-        it('starts with empty entries', () => {
-            const store = useShoppingStore()
             expect(store.entries.size).toBe(0)
-        })
-
-        it('starts with zero totalFoods', () => {
-            const store = useShoppingStore()
             expect(store.totalFoods).toBe(0)
         })
     })

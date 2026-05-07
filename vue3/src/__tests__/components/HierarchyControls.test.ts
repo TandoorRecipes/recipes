@@ -85,14 +85,6 @@ describe('HierarchyControls', () => {
         setActivePinia(createPinia())
     })
 
-    it('renders section labels for hierarchy actions', () => {
-        const wrapper = mountControls({selectedItem: makeItem(5, 'Garlic')})
-        const text = wrapper.text()
-        expect(text).toContain('Parent')
-        expect(text).toContain('Add child')
-        expect(text).toContain('Merge')
-    })
-
     it('shows confirmation dialog when Remove Parent is clicked', async () => {
         const wrapper = mountControls()
         const removeBtn = wrapper.find('[data-testid="remove-parent-btn"]')

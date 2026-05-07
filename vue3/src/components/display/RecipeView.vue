@@ -194,6 +194,8 @@
 
         <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
     </template>
+
+
 </template>
 
 <script setup lang="ts">

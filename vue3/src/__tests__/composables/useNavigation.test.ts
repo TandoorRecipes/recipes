@@ -72,19 +72,12 @@ describe('useNavigation', () => {
     })
 
     describe('getBottomNavigation', () => {
-        it('returns bottom nav items', () => {
+        it('returns bottom nav items including settings', () => {
             const { getBottomNavigation } = useNavigation()
             const nav = getBottomNavigation()
 
             expect(nav.length).toBeGreaterThanOrEqual(6)
-        })
-
-        it('includes settings in bottom nav', () => {
-            const { getBottomNavigation } = useNavigation()
-            const nav = getBottomNavigation()
-            const titles = nav.map(n => n.title)
-
-            expect(titles).toContain('Settings')
+            expect(nav.map(n => n.title)).toContain('Settings')
         })
     })
 
@@ -102,26 +95,15 @@ describe('useNavigation', () => {
             expect(titles).toContain('Logout')
         })
 
-        it('includes admin link for superusers', () => {
+        it('shows admin link only for superusers', () => {
             const store = useUserPreferenceStore()
+            const { getUserNavigation } = useNavigation()
+
             store.userSettings = { user: makeUser({ isSuperuser: true }) } as any
+            expect(getUserNavigation().map((n: any) => n.title).filter(Boolean)).toContain('Admin')
 
-            const { getUserNavigation } = useNavigation()
-            const nav = getUserNavigation()
-            const titles = nav.map((n: any) => n.title).filter(Boolean)
-
-            expect(titles).toContain('Admin')
-        })
-
-        it('excludes admin link for regular users', () => {
-            const store = useUserPreferenceStore()
             store.userSettings = { user: makeUser({ isSuperuser: false }) } as any
-
-            const { getUserNavigation } = useNavigation()
-            const nav = getUserNavigation()
-            const titles = nav.map((n: any) => n.title).filter(Boolean)
-
-            expect(titles).not.toContain('Admin')
+            expect(getUserNavigation().map((n: any) => n.title).filter(Boolean)).not.toContain('Admin')
         })
 
         it('shows space switcher when multiple spaces exist', () => {

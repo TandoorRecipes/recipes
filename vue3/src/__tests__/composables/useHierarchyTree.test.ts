@@ -275,36 +275,30 @@ describe('useHierarchyTree', () => {
     })
 
     describe('expandToItem', () => {
-        it('expands ancestors and optionally selects the target', async () => {
+        it('expands ancestors and selects or skips based on selectAfter flag', async () => {
             const editingItem = makeItem(1, 'Root', null)
-            // Target: item 10, child of 1
             mockList
-                .mockResolvedValueOnce({results: [makeItem(1, 'Root', null, 2)], next: null}) // root
-                .mockResolvedValueOnce({results: [makeItem(10, 'Target', 1, 0), makeItem(11, 'Other', 1)], next: null}) // children of 1
-                .mockResolvedValueOnce({results: [], next: null}) // children of 10
-
+                .mockResolvedValueOnce({results: [makeItem(1, 'Root', null, 2)], next: null})
+                .mockResolvedValueOnce({results: [makeItem(10, 'Target', 1, 0), makeItem(11, 'Other', 1)], next: null})
+                .mockResolvedValueOnce({results: [], next: null})
             mockRetrieve.mockResolvedValueOnce(makeItem(10, 'Target', 1))
 
             const tree = createTree(editingItem)
             await tree.expandToItem(10, true)
-
             expect(tree.expandedIds.value.has(1)).toBe(true)
             expect(tree.selectedItem.value?.id).toBe(10)
-        })
 
-        it('expands without selecting when selectAfter is false', async () => {
+            // Without selection
             mockList
                 .mockResolvedValueOnce({results: [makeItem(1, 'Root', null, 1)], next: null})
                 .mockResolvedValueOnce({results: [makeItem(10, 'Child', 1)], next: null})
                 .mockResolvedValueOnce({results: [], next: null})
-
             mockRetrieve.mockResolvedValueOnce(makeItem(10, 'Child', 1))
 
-            const tree = createTree()
-            await tree.expandToItem(10, false)
-
-            expect(tree.expandedIds.value.has(1)).toBe(true)
-            expect(tree.selectedItem.value).toBeNull()
+            const tree2 = createTree()
+            await tree2.expandToItem(10, false)
+            expect(tree2.expandedIds.value.has(1)).toBe(true)
+            expect(tree2.selectedItem.value).toBeNull()
         })
     })
 
@@ -383,7 +377,7 @@ describe('useHierarchyTree', () => {
             expect(tree.drillParentId.value).toBe(1)
         })
 
-        it('drillBack from depth-1 returns to root', async () => {
+        it('drillBack from depth-1 and drillTo(null) both return to root', async () => {
             mockList
                 .mockResolvedValueOnce({results: [makeItem(1, 'Root', null, 1)], next: null})
                 .mockResolvedValueOnce({results: [makeItem(5, 'Child', 1)], next: null})
@@ -395,16 +389,10 @@ describe('useHierarchyTree', () => {
 
             await tree.drillBack()
             expect(tree.drillParentId.value).toBeNull()
-        })
 
-        it('drillTo(null) resets to root level', async () => {
-            mockList.mockResolvedValue({results: [makeItem(1, 'Root', null)], next: null})
-
-            const tree = createTree()
-            await tree.loadChildren(null)
+            // drillTo(null) achieves the same result
             await tree.drillInto(1)
             await tree.drillTo(null)
-
             expect(tree.drillParentId.value).toBeNull()
         })
 

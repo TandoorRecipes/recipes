@@ -797,6 +797,18 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    def get_substitutes(self):
+        """Return a queryset of all substitute foods: direct M2M, tree siblings, and tree children."""
+        filters = Q()
+        if self.substitute.exists():
+            filters |= Q(id__in=self.substitute.values('id'))
+        if self.substitute_children:
+            filters |= Q(path__startswith=self.path, depth__gt=self.depth)
+        if self.substitute_siblings:
+            sibling_path = self.path[:Food.steplen * (self.depth - 1)]
+            filters |= Q(path__startswith=sibling_path, depth=self.depth)
+        return Food.objects.filter(filters).exclude(id=self.id)
+
     def merge_into(self, target):
         """
         very simple merge function that replaces the current food with the target food

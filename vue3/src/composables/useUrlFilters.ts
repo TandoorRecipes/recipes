@@ -1,18 +1,74 @@
-import {computed, type ComputedRef} from 'vue'
-import {useRouteQuery} from '@vueuse/router'
-import type {FilterDef} from './modellist/types'
+import {computed, reactive, nextTick, watch, type ComputedRef} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import type {FilterDef, FilterValue, RangeValue} from './modellist/types'
 
-/**
- * Generic composable for managing filter state via a single serialized URL param.
- *
- * Uses a compact (?paramName=key:val,key:val) format to avoid
- * multiple useRouteQuery() refs per component.
- */
 export function useUrlFilters(
     filterDefs: ComputedRef<FilterDef[]>,
-    paramName: string = 'filters'
 ) {
-    const rawFilters = useRouteQuery<string>(paramName, '')
+    const route = useRoute()
+    const router = useRouter()
+
+    const state = reactive(new Map<string, string>())
+    let flushScheduled = false
+
+    function storageKey(): string | null {
+        const path = route.path
+        return path ? `url_filters:${path}` : null
+    }
+
+    function loadFromStorage(): Record<string, string> | null {
+        const key = storageKey()
+        if (!key || typeof window === 'undefined') return null
+        try {
+            const raw = window.sessionStorage.getItem(key)
+            return raw ? JSON.parse(raw) : null
+        } catch { return null }
+    }
+
+    function saveToStorage(): void {
+        const key = storageKey()
+        if (!key || typeof window === 'undefined') return
+        try {
+            if (state.size === 0) {
+                window.sessionStorage.removeItem(key)
+            } else {
+                const obj: Record<string, string> = {}
+                for (const [k, v] of state) obj[k] = v
+                window.sessionStorage.setItem(key, JSON.stringify(obj))
+            }
+        } catch { /* storage unavailable */ }
+    }
+
+    function initFromRoute() {
+        state.clear()
+        let matchedAny = false
+        for (const def of filterDefs.value) {
+            const val = route.query[def.key]
+            if (val != null && val !== '') {
+                state.set(def.key, String(val))
+                matchedAny = true
+            }
+        }
+        // When the URL has no filter params but sessionStorage does,
+        // hydrate from storage so menu-nav back to the page restores the last
+        // filter set. URL always wins if it carries any filter key.
+        if (!matchedAny) {
+            const persisted = loadFromStorage()
+            if (persisted) {
+                for (const def of filterDefs.value) {
+                    const v = persisted[def.key]
+                    if (v != null && v !== '') state.set(def.key, String(v))
+                }
+                if (state.size > 0) scheduleFlush()
+            }
+        }
+    }
+
+    initFromRoute()
+
+    watch(() => route.query, () => {
+        if (!flushScheduled) initFromRoute()
+    })
 
     const groupedFilterDefs = computed<Map<string, FilterDef[]>>(() => {
         const map = new Map<string, FilterDef[]>()
@@ -25,70 +81,76 @@ export function useUrlFilters(
         return map
     })
 
-    /** Parse "key:val,key:val" into a Map (values are URI-decoded to handle commas) */
-    function parseFilters(str: string): Map<string, string> {
-        if (!str) return new Map()
-        const map = new Map<string, string>()
-        for (const pair of str.split(',')) {
-            const idx = pair.indexOf(':')
-            if (idx > 0) {
-                map.set(pair.slice(0, idx), decodeURIComponent(pair.slice(idx + 1)))
-            }
-        }
-        return map
-    }
+    const activeFilterCount = computed<number>(() => state.size)
 
-    /** Serialize a Map back to "key:val,key:val" (values are URI-encoded to protect commas/colons) */
-    function serializeFilters(map: Map<string, string>): string {
-        const pairs: string[] = []
-        for (const [k, v] of map) {
-            pairs.push(`${k}:${encodeURIComponent(v)}`)
-        }
-        return pairs.join(',')
-    }
-
-    /** Single parsed computed to avoid redundant re-parsing across multiple consumers */
-    const parsedFilters = computed(() => parseFilters(rawFilters.value))
-
-    const activeFilterCount = computed<number>(() => parsedFilters.value.size)
-
-    /** Convert snake_case to camelCase for OpenAPI client compatibility */
-    function snakeToCamel(s: string): string {
-        return s.replace(/_([a-z])/g, (_, c) => c.toUpperCase())
-    }
-
-    /** Convert filter values to API-ready types and camelCase keys for the OpenAPI client */
-    const filterParams = computed<Record<string, string | number | string[]>>(() => {
-        const map = parsedFilters.value
-        if (map.size === 0) return {}
-        const params: Record<string, string | number | string[]> = {}
-        for (const [key, val] of map) {
+    const filterParams = computed<Record<string, string | number | (string | number)[]>>(() => {
+        if (state.size === 0) return {}
+        const params: Record<string, string | number | (string | number)[]> = {}
+        for (const [key, val] of state) {
             const def = filterDefs.value.find(d => d.key === key)
-            const paramKey = snakeToCamel(key)
             if (def?.type === 'select') {
-                params[paramKey] = [val]
+                params[key] = [val]
             } else if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
                 const num = Number(val)
-                if (!isNaN(num)) params[paramKey] = num
+                if (!isNaN(num)) params[key] = num
             } else {
-                params[paramKey] = val
+                params[key] = val
             }
         }
         return params
     })
 
-    function getFilter(key: string): string | undefined {
-        return parsedFilters.value.get(key)
+    function scheduleFlush() {
+        if (flushScheduled) return
+        flushScheduled = true
+        nextTick(() => {
+            const query: Record<string, string | string[]> = {}
+            for (const [k, v] of Object.entries(route.query)) {
+                if (!filterDefs.value.some(d => d.key === k)) {
+                    query[k] = v as string | string[]
+                }
+            }
+            for (const [k, v] of state) {
+                query[k] = v
+            }
+            // Keep the guard set across the router update so the route.query
+            // watcher skips the re-entry we just caused; clear it only once
+            // navigation settles (finally so a cancelled nav still clears it).
+            router.replace({query}).finally(() => {
+                flushScheduled = false
+            })
+            saveToStorage()
+        })
     }
 
-    function setFilter(key: string, value: string | undefined): void {
-        const map = new Map(parsedFilters.value)
-        if (value === undefined || value === '') {
-            map.delete(key)
+    function getFilter(key: string): string | undefined {
+        return state.get(key)
+    }
+
+    function setFilter(key: string, value: FilterValue): void {
+        const serialized = serializeFilterValue(value)
+        if (serialized === undefined) {
+            state.delete(key)
         } else {
-            map.set(key, value)
+            state.set(key, serialized)
         }
-        rawFilters.value = serializeFilters(map)
+        scheduleFlush()
+    }
+
+    function serializeFilterValue(value: FilterValue): string | undefined {
+        if (value === undefined || value === '') return undefined
+        if (Array.isArray(value)) {
+            if (value.length === 0) return undefined
+            return value.map(v => String(v)).join(',')
+        }
+        if (typeof value === 'object') {
+            const r = value as RangeValue
+            const gte = r.gte === null || r.gte === undefined ? '' : String(r.gte)
+            const lte = r.lte === null || r.lte === undefined ? '' : String(r.lte)
+            if (gte === '' && lte === '') return undefined
+            return `${gte}~${lte}`
+        }
+        return String(value)
     }
 
     function clearFilter(key: string): void {
@@ -96,7 +158,8 @@ export function useUrlFilters(
     }
 
     function clearAllFilters(): void {
-        rawFilters.value = ''
+        state.clear()
+        scheduleFlush()
     }
 
     return {

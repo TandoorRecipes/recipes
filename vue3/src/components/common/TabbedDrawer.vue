@@ -25,14 +25,16 @@
             />
         </v-toolbar>
 
-        <v-tabs v-model="currentTab" density="compact" grow>
-            <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.key">
-                <v-icon start size="small">{{ tab.icon }}</v-icon>
-                {{ tab.label }}
-            </v-tab>
-        </v-tabs>
+        <template v-if="tabs.length > 1">
+            <v-tabs v-model="currentTab" density="compact" grow>
+                <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.key">
+                    <v-icon start size="small">{{ tab.icon }}</v-icon>
+                    {{ tab.label }}
+                </v-tab>
+            </v-tabs>
 
-        <v-divider />
+            <v-divider />
+        </template>
 
         <v-tabs-window v-model="currentTab">
             <v-tabs-window-item v-for="tab in tabs" :key="tab.key" :value="tab.key">
@@ -54,12 +56,13 @@
             </div>
 
             <v-card-title class="d-flex align-center pa-0">
-                <v-tabs v-model="currentTab" density="compact" grow>
+                <v-tabs v-if="tabs.length > 1" v-model="currentTab" density="compact" grow>
                     <v-tab v-for="tab in tabs" :key="tab.key" :value="tab.key">
                         <v-icon start size="small">{{ tab.icon }}</v-icon>
                         {{ tab.label }}
                     </v-tab>
                 </v-tabs>
+                <span v-else class="text-subtitle-2 px-4 flex-grow-1">{{ tabs[0]?.label }}</span>
                 <v-btn icon="fa-solid fa-times" variant="plain" size="small" :aria-label="$t('Close')" @click="isOpen = false" />
             </v-card-title>
 
@@ -92,10 +95,12 @@ const props = withDefaults(defineProps<{
     pinned?: boolean
     tabs: { key: string, label: string, icon: string }[]
     width?: number
+    useSheet?: boolean
 }>(), {
     activeTab: undefined,
     pinned: false,
     width: 320,
+    useSheet: false,
 })
 
 const emit = defineEmits<{
@@ -104,7 +109,8 @@ const emit = defineEmits<{
     'update:pinned': [val: boolean]
 }>()
 
-const {mobile} = useDisplay()
+const {mobile: vuetifyMobile} = useDisplay()
+const mobile = computed(() => vuetifyMobile.value || props.useSheet)
 
 const isOpen = computed({
     get: () => props.modelValue,

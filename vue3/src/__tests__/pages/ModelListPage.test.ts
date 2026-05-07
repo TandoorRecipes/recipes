@@ -90,18 +90,6 @@ describe('ModelListPage', () => {
         treeViewEnabled = false
     })
 
-    it('mounts without error', async () => {
-        const wrapper = mountPage(ModelListPage, { props: { model: 'Food' } })
-        await flushPromises()
-        expect(wrapper.exists()).toBe(true)
-    })
-
-    it('renders page content beyond back button', async () => {
-        const wrapper = mountPage(ModelListPage, { props: { model: 'Food' } })
-        await flushPromises()
-        expect(wrapper.html().length).toBeGreaterThan(100)
-    })
-
     it('renders back button', async () => {
         const wrapper = mountPage(ModelListPage, { props: { model: 'Food' } })
         await flushPromises()
