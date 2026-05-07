@@ -150,6 +150,7 @@ models/RecipeImport.ts
 models/RecipeOverview.ts
 models/RecipeShoppingUpdate.ts
 models/RecipeSimple.ts
+models/RecipeStats.ts
 models/SearchEnum.ts
 models/SearchFields.ts
 models/SearchPreference.ts

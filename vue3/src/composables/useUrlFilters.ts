@@ -16,12 +16,28 @@ export function useUrlFilters(
         return path ? `url_filters:${path}` : null
     }
 
+    // 2-hour expiry for hydrated filters: the user expects yesterday's search
+    // to be gone when they come back. Anything older — or anything in the
+    // pre-TTL bare-object format — is silently discarded on read.
+    const TTL_MS = 2 * 60 * 60 * 1000
+
     function loadFromStorage(): Record<string, string> | null {
         const key = storageKey()
         if (!key || typeof window === 'undefined') return null
         try {
             const raw = window.sessionStorage.getItem(key)
-            return raw ? JSON.parse(raw) : null
+            if (!raw) return null
+            const parsed = JSON.parse(raw)
+            // Envelope shape: { filters: {...}, ts: <ms> }. Anything else
+            // (including the pre-TTL bare format) is treated as expired.
+            if (!parsed || typeof parsed !== 'object'
+                || typeof parsed.ts !== 'number'
+                || !parsed.filters || typeof parsed.filters !== 'object'
+                || Date.now() - parsed.ts > TTL_MS) {
+                window.sessionStorage.removeItem(key)
+                return null
+            }
+            return parsed.filters as Record<string, string>
         } catch { return null }
     }
 
@@ -32,9 +48,9 @@ export function useUrlFilters(
             if (state.size === 0) {
                 window.sessionStorage.removeItem(key)
             } else {
-                const obj: Record<string, string> = {}
-                for (const [k, v] of state) obj[k] = v
-                window.sessionStorage.setItem(key, JSON.stringify(obj))
+                const filters: Record<string, string> = {}
+                for (const [k, v] of state) filters[k] = v
+                window.sessionStorage.setItem(key, JSON.stringify({filters, ts: Date.now()}))
             }
         } catch { /* storage unavailable */ }
     }
@@ -47,6 +63,22 @@ export function useUrlFilters(
             if (val != null && val !== '') {
                 state.set(def.key, String(val))
                 matchedAny = true
+                continue
+            }
+            // Back-compat: before the multi-param refactor the UI (and any
+            // bookmarks) shipped date/number ranges as separate snake_case
+            // params, e.g. ?createdon_gte=2026-04-16&createdon_lte=2026-04-20.
+            // Accept that shape too for range-type defs so deep-links don't
+            // silently lose filters after the upgrade.
+            if (def.type === 'date-range' || def.type === 'number-range') {
+                const gte = route.query[`${def.key}_gte`]
+                const lte = route.query[`${def.key}_lte`]
+                const gteStr = gte != null && gte !== '' ? String(gte) : ''
+                const lteStr = lte != null && lte !== '' ? String(lte) : ''
+                if (gteStr || lteStr) {
+                    state.set(def.key, `${gteStr}~${lteStr}`)
+                    matchedAny = true
+                }
             }
         }
         // When the URL has no filter params but sessionStorage does,
@@ -59,7 +91,11 @@ export function useUrlFilters(
                     const v = persisted[def.key]
                     if (v != null && v !== '') state.set(def.key, String(v))
                 }
-                if (state.size > 0) scheduleFlush()
+                // Defer the URL flush until vue-router has committed the initial
+                // navigation; otherwise the router.replace fires mid-transition
+                // during setup and the URL update is silently dropped, leaving
+                // state hydrated but the address bar empty.
+                if (state.size > 0) router.isReady().then(scheduleFlush)
             }
         }
     }
@@ -68,6 +104,21 @@ export function useUrlFilters(
 
     watch(() => route.query, () => {
         if (!flushScheduled) initFromRoute()
+    })
+
+    // Re-init when filter defs become available. ModelListPage passes a
+    // computed that depends on `genericModel` set in onBeforeMount, so at
+    // the time `useUrlFilters` runs, `filterDefs.value` is still `[]` and
+    // `initFromRoute` sees no known keys. Re-run once defs arrive so URL
+    // params like ?expiringSoon=3 actually populate state.
+    watch(() => filterDefs.value.length, (len, prev) => {
+        if (prev === 0 && len > 0) initFromRoute()
+    })
+
+    const defsByKey = computed(() => {
+        const map = new Map<string, FilterDef>()
+        for (const def of filterDefs.value) map.set(def.key, def)
+        return map
     })
 
     const groupedFilterDefs = computed<Map<string, FilterDef[]>>(() => {
@@ -83,14 +134,40 @@ export function useUrlFilters(
 
     const activeFilterCount = computed<number>(() => state.size)
 
-    const filterParams = computed<Record<string, string | number | (string | number)[]>>(() => {
+    const filterParams = computed<Record<string, string | number | Date | (string | number)[]>>(() => {
         if (state.size === 0) return {}
-        const params: Record<string, string | number | (string | number)[]> = {}
+        const params: Record<string, string | number | Date | (string | number)[]> = {}
         for (const [key, val] of state) {
-            const def = filterDefs.value.find(d => d.key === key)
+            const def = defsByKey.value.get(key)
             if (def?.type === 'select') {
                 params[key] = [val]
-            } else if (def?.type === 'tristate' || def?.type === 'model-select' || def?.type === 'number') {
+            } else if (def?.type === 'tag-select') {
+                const items = val.split(',').filter(s => s.length > 0)
+                if (items.length === 0) continue
+                const nums = items.map(s => Number(s))
+                params[key] = nums.every(n => !isNaN(n)) ? nums : items
+            } else if (def?.type === 'number-range' || def?.type === 'date-range') {
+                const sepIdx = val.indexOf('~')
+                if (sepIdx < 0) continue
+                const gteRaw = val.slice(0, sepIdx)
+                const lteRaw = val.slice(sepIdx + 1)
+                const isNumber = def.type === 'number-range'
+                const isDate = def.type === 'date-range'
+                // The generated OpenAPI client types date-range params as Date
+                // and serializes via .toISOString() — emitting a plain string
+                // here throws at request time. Coerce to Date (invalid dates
+                // drop through).
+                if (gteRaw.length > 0) {
+                    const v: number | Date | string = isNumber ? Number(gteRaw) : (isDate ? new Date(gteRaw) : gteRaw)
+                    const invalid = isNumber ? isNaN(v as number) : (isDate && isNaN((v as Date).getTime()))
+                    if (!invalid) params[`${key}Gte`] = v
+                }
+                if (lteRaw.length > 0) {
+                    const v: number | Date | string = isNumber ? Number(lteRaw) : (isDate ? new Date(lteRaw) : lteRaw)
+                    const invalid = isNumber ? isNaN(v as number) : (isDate && isNaN((v as Date).getTime()))
+                    if (!invalid) params[`${key}Lte`] = v
+                }
+            } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number' || def?.type === 'rating-half') {
                 const num = Number(val)
                 if (!isNaN(num)) params[key] = num
             } else {

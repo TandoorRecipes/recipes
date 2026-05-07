@@ -259,6 +259,35 @@ def test_makenow_ignoreshopping_onhand_no_double_count(recipes, shared_household
         assert recipe.id not in set(results.values_list('id', flat=True))
 
 
+def test_makenow_string_one_is_strict(recipes, shared_household, space_1, make_search_request, u1_s1):
+    """The tristate makenow filter sends ``makenow=1`` (string) from the UI to
+    mean "show only fully cookable recipes". That string must map to
+    ``missing=0`` (strict), not the integer fuzzy-missing path that would
+    admit recipes with 1 missing ingredient.
+    """
+    household, location = shared_household
+    with scope(space=space_1):
+        recipe = RecipeFactory.create(space=space_1)
+        foods = list(Food.objects.filter(ingredient__step__recipe=recipe.id))
+        assert len(foods) == 10
+
+        # put 9 of 10 foods in inventory so exactly 1 is truly missing
+        for food in foods[1:]:
+            InventoryEntryFactory(
+                food=food, inventory_location=location, amount=1,
+                space=space_1, created_by=auth.get_user(u1_s1),
+            )
+
+        request = make_search_request(u1_s1)
+        # makenow='1' (string, as sent by the tristate UI) must be STRICT.
+        # A recipe with 1 truly-missing ingredient must NOT appear.
+        results = do_search(request, space_1, makenow='1')
+        assert recipe.id not in set(results.values_list('id', flat=True)), (
+            f"Recipe {recipe.id} appeared under makenow='1' despite a truly missing "
+            "ingredient; the string form must map to missing=0."
+        )
+
+
 def test_makenow_no_household_returns_empty(recipes, space_1, u1_s1, make_search_request):
     """User with no household gets empty queryset for makenow."""
     user1 = auth.get_user(u1_s1)

@@ -6,16 +6,31 @@
         :tabs="drawerTabs"
     >
         <template #filters>
-            <ModelFilterPanel
+            <FilterPanel
                 :grouped-filter-defs="groupedFilterDefs"
                 :get-filter="getFilter"
                 :set-filter="setFilter"
+                :clear-filter="clearFilter"
                 :clear-all-filters="clearAllFilters"
                 :active-filter-count="activeFilterCount"
             />
         </template>
 
         <template #settings>
+            <!-- Include Children (for hierarchical keyword/food search) -->
+            <template v-if="includeChildrenAvailable">
+                <div class="px-4 py-1">
+                    <v-switch
+                        v-model="includeChildren"
+                        :label="$t('IncludeChildren')"
+                        color="primary"
+                        hide-details
+                        density="compact"
+                    />
+                </div>
+                <v-divider class="my-2" />
+            </template>
+
             <!-- Quick Actions -->
             <template v-if="actionDefs.length > 0">
                 <CollapsibleSection :label="$t('QuickActions')">
@@ -40,8 +55,8 @@
                 <v-divider class="my-2" />
             </template>
 
-            <!-- Desktop: Columns -->
-            <template v-if="!mobile">
+            <!-- Desktop: Columns/Subtitle/Table (only for pages with columns) -->
+            <template v-if="!mobile && toggleableColumns.length > 0">
                 <CollapsibleSection :label="$t('Columns')">
                     <div v-for="col in toggleableColumns" :key="col.key" class="d-flex align-center px-4 py-0">
                         <v-checkbox
@@ -71,7 +86,6 @@
                 </CollapsibleSection>
                 <v-divider class="my-2" />
 
-                <!-- Desktop: Subtitle -->
                 <CollapsibleSection :label="$t('Subtitle')">
                     <div class="text-caption px-4 text-medium-emphasis">{{ $t('Subtitle_Description') }}</div>
                     <div class="d-flex flex-wrap ga-2 px-4 py-2">
@@ -93,8 +107,7 @@
                 </CollapsibleSection>
                 <v-divider class="my-2" />
 
-                <!-- Desktop: Table -->
-                <CollapsibleSection :label="$t('Table')">
+                <CollapsibleSection v-if="allColumns.length > 0" :label="$t('Table')">
                     <div class="px-4 py-1">
                         <v-switch
                             v-model="showColumnHeaders"
@@ -105,6 +118,31 @@
                         />
                     </div>
                 </CollapsibleSection>
+                <v-divider class="my-2" />
+            </template>
+
+            <!-- Filter visibility (grouped by filter section) -->
+            <template v-if="filterVisibilityAvailable && configurableFiltersByGroup.size > 0">
+                <template v-for="[group, defs] in configurableFiltersByGroup" :key="group">
+                    <CollapsibleSection :label="$t(group)">
+                        <div v-for="def in defs" :key="def.key" class="d-flex align-center px-4 py-1 ga-1">
+                            <span class="text-body-2 flex-grow-1">{{ $t(def.labelKey) }}</span>
+                            <v-btn-toggle density="compact" multiple>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isInlineSelected(def.key)"
+                                    @click="toggleInline(def.key)"
+                                >{{ $t('Page') }}</v-btn>
+                                <v-btn
+                                    size="x-small"
+                                    :active="isDrawerSelected(def.key)"
+                                    @click="toggleDrawer(def.key)"
+                                >{{ $t('Panel') }}</v-btn>
+                            </v-btn-toggle>
+                        </div>
+                    </CollapsibleSection>
+                </template>
+                <v-divider class="my-2" />
             </template>
 
             <!-- Tree View (not collapsible) -->
@@ -128,6 +166,7 @@
                     density="compact"
                 />
             </div>
+
 
             <!-- Mobile-specific settings -->
             <template v-if="hasMobileList && mobile">
@@ -294,12 +333,14 @@ import {computed, inject, ref} from 'vue'
 import {useDisplay} from 'vuetify'
 import {useI18n} from 'vue-i18n'
 import type {Model, ModelTableHeaders} from '@/types/Models'
-import type {ActionDef, FilterDef} from '@/composables/modellist/types'
+import type {ActionDef, FilterDef, FilterValue} from '@/composables/modellist/types'
 import {MODEL_LIST_SETTINGS_KEY} from '@/composables/modellist/useModelListSettings'
+import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
+import {useFilterPlacement} from '@/composables/useFilterPlacement'
 import {useTouchDetect} from '@/composables/useTouchDetect'
 import TabbedDrawer from '@/components/common/TabbedDrawer.vue'
 import CollapsibleSection from '@/components/common/CollapsibleSection.vue'
-import ModelFilterPanel from '@/components/model_list/ModelFilterPanel.vue'
+import FilterPanel from '@/components/model_list/FilterPanel.vue'
 
 const {t} = useI18n()
 const {mobile} = useDisplay()
@@ -309,22 +350,32 @@ const props = withDefaults(defineProps<{
     modelValue: boolean
     activeTab?: string
     model: Model
-    allColumns: ModelTableHeaders[]
-    isColumnVisible: (key: string) => boolean
-    toggleColumn: (key: string) => void
-    getDisplayMode: (key: string) => 'icon' | 'text'
-    setDisplayMode: (key: string, mode: 'icon' | 'text') => void
+    /** Column-related props are optional so pages that don't surface column
+     *  visibility (e.g. SearchPage, which is a one-off page rather than a
+     *  generic model list) can mount the panel without passing identity stubs. */
+    allColumns?: ModelTableHeaders[]
+    isColumnVisible?: (key: string) => boolean
+    toggleColumn?: (key: string) => void
+    getDisplayMode?: (key: string) => 'icon' | 'text'
+    setDisplayMode?: (key: string, mode: 'icon' | 'text') => void
     groupedFilterDefs?: Map<string, FilterDef[]>
     getFilter?: (key: string) => string | undefined
-    setFilter?: (key: string, value: string | undefined) => void
+    setFilter?: (key: string, value: FilterValue) => void
+    clearFilter?: (key: string) => void
     clearAllFilters?: () => void
     activeFilterCount?: number
     actionDefs?: ActionDef[]
 }>(), {
     activeTab: 'settings',
+    allColumns: () => [],
+    isColumnVisible: () => () => true,
+    toggleColumn: () => () => {},
+    getDisplayMode: () => () => 'text',
+    setDisplayMode: () => () => {},
     groupedFilterDefs: () => new Map(),
     getFilter: () => () => undefined,
     setFilter: () => () => {},
+    clearFilter: () => () => {},
     clearAllFilters: () => () => {},
     activeFilterCount: 0,
     actionDefs: () => [],
@@ -354,11 +405,13 @@ const drawerTabs = computed(() => [
 // Settings from parent via provide/inject (single instance shared across page, mobile view, settings panel)
 const {isPinned, showStats, showColumnHeaders, treeEnabled, quickActionKeys,
     desktopSubtitleKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys,
-    swipeRightKeys, showMobileHeaders} = inject(MODEL_LIST_SETTINGS_KEY)!
+    swipeRightKeys, showMobileHeaders, includeChildren} = inject(MODEL_LIST_SETTINGS_KEY)!
 
 // Computed model flags
 const treeAvailable = computed(() => !!props.model.isTree && !!props.model.listSettings?.treeEnabled)
 const statsAvailable = computed(() => !!props.model.listSettings?.statsFooter)
+const includeChildrenAvailable = computed(() => !!props.model.listSettings?.includeChildren)
+const filterVisibilityAvailable = computed(() => !!props.model.listSettings?.filterVisibility)
 const hasMobileList = computed(() => !!props.model.listSettings?.mobileList)
 const toggleableColumns = computed(() => props.allColumns.filter(c => c.key !== 'name'))
 
@@ -413,6 +466,10 @@ function toggleMobileSubtitle(key: string) {
     }
     mobileSubtitleKeys.value = keys
 }
+
+// Page Layout — per-filter inline/drawer visibility
+const {isInlineSelected, toggleInline, isDrawerSelected, toggleDrawer, configurableFiltersByGroup: makeConfigurable} = useFilterPlacement()
+const configurableFiltersByGroup = makeConfigurable(computed(() => props.groupedFilterDefs))
 
 // Swipe action management
 const swipePickerOpen = ref(false)

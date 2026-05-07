@@ -26,17 +26,17 @@ function isInInventory(item: ModelItem): boolean {
  */
 export const FOOD_FILTER_DEFS: FilterDef[] = [
     {key: 'onhand', labelKey: 'OnHand', type: 'tristate', icon: 'fa-solid fa-check-circle', group: 'Status'},
-    {key: 'in_shopping_list', labelKey: 'Shopping', type: 'tristate', icon: 'fa-solid fa-cart-shopping', group: 'Status'},
-    {key: 'ignore_shopping', labelKey: 'IgnoreShopping', type: 'tristate', icon: 'fa-solid fa-ban', group: 'Status'},
-    {key: 'has_substitute', labelKey: 'Substitute', type: 'tristate', icon: 'fa-solid fa-right-left', group: 'Attributes'},
-    {key: 'has_children', labelKey: 'Children', type: 'tristate', icon: 'fa-solid fa-sitemap', group: 'Attributes'},
-    {key: 'has_recipe', labelKey: 'Recipe', type: 'tristate', icon: 'fa-solid fa-book', group: 'Attributes'},
-    {key: 'used_in_recipes', labelKey: 'UsedInRecipes', type: 'tristate', icon: 'fa-solid fa-utensils', group: 'Attributes'},
-    {key: 'supermarket_category', labelKey: 'Category', type: 'model-select', icon: 'fa-solid fa-boxes-stacked', modelName: 'SupermarketCategory', group: 'Attributes'},
-    {key: 'has_inventory', labelKey: 'InInventory', type: 'tristate', icon: 'fa-solid fa-warehouse', group: 'Inventory'},
-    {key: 'inventory_location', labelKey: 'InventoryLocation', type: 'model-select', icon: 'fa-solid fa-location-dot', modelName: 'InventoryLocation', group: 'Inventory'},
+    {key: 'inShoppingList', labelKey: 'Shopping', type: 'tristate', icon: 'fa-solid fa-cart-shopping', group: 'Status'},
+    {key: 'ignoreShopping', labelKey: 'IgnoreShopping', type: 'tristate', icon: 'fa-solid fa-ban', group: 'Status'},
+    {key: 'hasSubstitute', labelKey: 'Substitute', type: 'tristate', icon: 'fa-solid fa-right-left', group: 'Attributes'},
+    {key: 'hasChildren', labelKey: 'Children', type: 'tristate', icon: 'fa-solid fa-sitemap', group: 'Attributes'},
+    {key: 'hasRecipe', labelKey: 'Recipe', type: 'tristate', icon: 'fa-solid fa-book', group: 'Attributes'},
+    {key: 'usedInRecipes', labelKey: 'UsedInRecipes', type: 'tristate', icon: 'fa-solid fa-utensils', group: 'Attributes'},
+    {key: 'supermarketCategory', labelKey: 'Category', type: 'model-select', icon: 'fa-solid fa-boxes-stacked', modelName: 'SupermarketCategory', group: 'Attributes'},
+    {key: 'hasInventory', labelKey: 'InInventory', type: 'tristate', icon: 'fa-solid fa-warehouse', group: 'Inventory'},
+    {key: 'inventoryLocation', labelKey: 'InventoryLocation', type: 'model-select', icon: 'fa-solid fa-location-dot', modelName: 'InventoryLocation', group: 'Inventory'},
     {key: 'expired', labelKey: 'Expired', type: 'tristate', icon: 'fa-solid fa-calendar-xmark', group: 'Inventory'},
-    {key: 'expiring_soon', labelKey: 'ExpiringSoon', type: 'number', icon: 'fa-solid fa-clock', defaultValue: '3', suffixKey: 'Days', group: 'Inventory'},
+    {key: 'expiringSoon', labelKey: 'ExpiringSoon', type: 'number', icon: 'fa-solid fa-clock', defaultValue: '3', suffixKey: 'Days', group: 'Inventory'},
 ]
 
 /**

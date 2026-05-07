@@ -6,23 +6,27 @@
         :width="width"
         :permanent="isPinned && isOpen"
         :temporary="!isPinned"
+        disable-resize-watcher
     >
         <v-toolbar density="compact" flat>
             <v-spacer />
             <v-btn
                 v-if="pinnable"
-                :icon="isPinned ? 'fa-solid fa-thumbtack' : 'fa-solid fa-thumbtack fa-rotate-90'"
+                icon
                 variant="plain"
                 size="small"
                 :aria-label="isPinned ? $t('Unpin') : $t('Pin')"
                 @click="isPinned = !isPinned"
-            />
+            >
+                <v-icon :class="{'fa-rotate-90': !isPinned}">fa-solid fa-thumbtack</v-icon>
+                <v-tooltip activator="parent" :text="isPinned ? $t('UnpinPanel') : $t('PinPanel')" location="bottom" :open-delay="400" />
+            </v-btn>
             <v-btn
                 icon="fa-solid fa-times"
                 variant="plain"
                 size="small"
                 :aria-label="$t('Close')"
-                @click="isOpen = false"
+                @click="closeAndUnpin"
             />
         </v-toolbar>
 
@@ -130,6 +134,17 @@ const isPinned = computed({
     get: () => props.pinned,
     set: (val: boolean) => emit('update:pinned', val),
 })
+
+// Closing the drawer also drops the pinned state. The pin preference is
+// persisted to localStorage, but the drawer itself starts closed on every
+// route change — if close left pinned=true, the user would land on a page
+// with a pinned drawer that's closed and no way to reach the unpin toggle,
+// effectively stranding them. Treating close as "dismiss and unpin" keeps
+// the pin meaningful: it expires the next time the user actively dismisses.
+function closeAndUnpin() {
+    isOpen.value = false
+    if (isPinned.value) isPinned.value = false
+}
 
 // Bottom sheet drag-to-dismiss
 const dragStartY = ref(0)

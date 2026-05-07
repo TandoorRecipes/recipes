@@ -1,33 +1,35 @@
 <template>
-    <div v-if="!mobile" class="d-flex align-center ga-2">
-        <v-btn
-            v-if="hasFilters"
-            icon
-            variant="text"
-            size="small"
-            :aria-label="$t('Filters')"
-            @click="emit('open-filters')"
-        >
-            <v-badge
-                :model-value="activeFilterCount > 0"
-                :content="activeFilterCount"
-                color="primary"
+    <div v-if="!mobile" class="model-list-toolbar-desktop">
+        <div class="model-list-toolbar-left">
+            <v-btn
+                v-if="hasFilters"
+                icon
+                variant="text"
+                size="small"
+                :aria-label="$t('Filters')"
+                @click="emit('open-filters')"
             >
-                <v-icon>fa-solid fa-filter</v-icon>
-            </v-badge>
-        </v-btn>
+                <v-badge
+                    :model-value="activeFilterCount > 0"
+                    :content="activeFilterCount"
+                    color="primary"
+                >
+                    <v-icon>fa-solid fa-filter</v-icon>
+                </v-badge>
+            </v-btn>
 
-        <v-btn
-            v-if="hasMultiSelect"
-            icon
-            variant="text"
-            size="small"
-            :color="selectMode ? 'primary' : undefined"
-            :aria-label="$t('Select')"
-            @click="emit('toggle-select')"
-        >
-            <v-icon>{{ selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check' }}</v-icon>
-        </v-btn>
+            <v-btn
+                v-if="hasMultiSelect"
+                icon
+                variant="text"
+                size="small"
+                :color="selectMode ? 'primary' : undefined"
+                :aria-label="$t('Select')"
+                @click="emit('toggle-select')"
+            >
+                <v-icon>{{ selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check' }}</v-icon>
+            </v-btn>
+        </div>
 
         <v-text-field
             v-if="!disableSearch"
@@ -38,52 +40,70 @@
             clearable
             hide-details
             density="compact"
-            class="flex-grow-1"
-        />
-
-        <v-btn
-            v-if="showReset"
-            icon
-            variant="text"
-            size="small"
-            :aria-label="$t('Reset')"
-            @click="emit('reset')"
+            class="model-list-toolbar-search"
+            :class="{'toolbar-search--flush-end': !!$slots['search-append-inner']}"
         >
-            <v-icon>fa-solid fa-arrow-rotate-left</v-icon>
-            <v-tooltip activator="parent" :text="$t('Reset')" location="top" :open-delay="400" />
-        </v-btn>
+            <template v-if="$slots['search-append-inner']" #append-inner>
+                <slot name="search-append-inner" />
+            </template>
+        </v-text-field>
 
-        <v-btn
-            v-if="sortOptions.length > 0"
-            variant="text"
-            class="text-none flex-shrink-0"
-            :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
-        >
-            {{ $t('sort_by') }} {{ currentLabel }}
-            <v-menu activator="parent" close-on-content-click>
-                <v-list density="compact">
-                    <v-list-item
-                        v-for="opt in sortOptions"
-                        :key="opt.key"
-                        :active="currentField === opt.key"
-                        @click="onSortSelect(opt.key)"
-                    >
-                        {{ $t(opt.labelKey) }}
-                    </v-list-item>
-                </v-list>
-            </v-menu>
-        </v-btn>
+        <div class="model-list-toolbar-right">
+            <v-btn
+                v-if="showReset"
+                icon
+                variant="text"
+                size="small"
+                :aria-label="$t('Reset')"
+                @click="emit('reset')"
+            >
+                <v-icon>fa-solid fa-arrow-rotate-left</v-icon>
+                <v-tooltip activator="parent" :text="$t('Reset')" location="top" :open-delay="400" />
+            </v-btn>
 
-        <v-btn
-            v-if="hasFilters"
-            icon
-            variant="text"
-            size="small"
-            :aria-label="$t('Settings')"
-            @click="emit('open-settings')"
-        >
-            <v-icon>fa-solid fa-sliders</v-icon>
-        </v-btn>
+            <v-btn
+                v-if="sortOptions.length > 0"
+                variant="text"
+                class="text-none flex-shrink-0"
+                :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
+            >
+                {{ $t('sort_by') }} {{ currentLabel }}
+                <v-menu activator="parent" close-on-content-click>
+                    <v-list density="compact">
+                        <v-list-item
+                            v-for="opt in sortOptions"
+                            :key="opt.key"
+                            :active="currentField === opt.key"
+                            color="primary"
+                            @click="onSortSelect(opt.key)"
+                        >
+                            <template #append v-if="currentField === opt.key">
+                                <v-icon size="small" :icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'" />
+                            </template>
+                            {{ $t(opt.labelKey) }}
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-btn>
+
+            <v-btn
+                v-if="hasFilters"
+                icon
+                variant="text"
+                size="small"
+                :aria-label="$t('Settings')"
+                @click="emit('open-settings')"
+            >
+                <v-icon>fa-solid fa-sliders</v-icon>
+            </v-btn>
+        </div>
+
+        <div v-if="$slots['below-search']" style="grid-column: 2">
+            <slot name="below-search" />
+        </div>
+        <div v-if="$slots['below-search-actions']" class="model-list-toolbar-right">
+            <slot name="below-search-actions" />
+        </div>
     </div>
 
     <div v-else>
@@ -96,14 +116,25 @@
             clearable
             hide-details
             density="compact"
-        />
+            :class="{'toolbar-search--flush-end': !!$slots['search-append-inner']}"
+        >
+            <template v-if="$slots['search-append-inner']" #append-inner>
+                <slot name="search-append-inner" />
+            </template>
+        </v-text-field>
+        <div v-if="$slots['below-search']" class="d-flex align-center ga-2 mt-1">
+            <div style="flex: 1 1 0; min-width: 0">
+                <slot name="below-search" />
+            </div>
+            <slot name="below-search-actions" />
+        </div>
 
         <div class="model-list-toolbar-carousel-wrapper mt-2">
         <div ref="carouselRef" class="model-list-toolbar-carousel" role="toolbar" :aria-label="$t('Actions')" @scroll.passive="onCarouselScroll">
             <v-btn
                 v-if="showReset"
                 variant="text"
-                density="compact"
+                size="large"
                 prepend-icon="fa-solid fa-arrow-rotate-left"
                 class="text-none flex-shrink-0"
                 @click="emit('reset')"
@@ -114,7 +145,7 @@
             <v-btn
                 v-if="hasFilters"
                 variant="text"
-                density="compact"
+                size="large"
                 prepend-icon="fa-solid fa-filter"
                 class="text-none flex-shrink-0"
                 @click="emit('open-filters')"
@@ -132,7 +163,7 @@
             <v-btn
                 v-if="hasMultiSelect"
                 variant="text"
-                density="compact"
+                size="large"
                 class="text-none flex-shrink-0"
                 :color="selectMode ? 'primary' : undefined"
                 :prepend-icon="selectMode ? 'fa-solid fa-square-check' : 'fa-regular fa-square-check'"
@@ -144,19 +175,23 @@
             <v-btn
                 v-if="sortOptions.length > 0"
                 variant="text"
-                density="compact"
+                size="large"
                 class="text-none flex-shrink-0"
                 :append-icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'"
             >
-                {{ $t('sort_by') }} {{ currentLabel }}
+                {{ currentLabel }}
                 <v-menu activator="parent" close-on-content-click>
                     <v-list density="compact">
                         <v-list-item
                             v-for="opt in sortOptions"
                             :key="opt.key"
                             :active="currentField === opt.key"
+                            color="primary"
                             @click="onSortSelect(opt.key)"
                         >
+                            <template #append v-if="currentField === opt.key">
+                                <v-icon size="small" :icon="isDescending ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-up-short-wide'" />
+                            </template>
                             {{ $t(opt.labelKey) }}
                         </v-list-item>
                     </v-list>
@@ -166,7 +201,7 @@
             <v-btn
                 v-if="hasFilters"
                 variant="text"
-                density="compact"
+                size="large"
                 prepend-icon="fa-solid fa-sliders"
                 class="text-none flex-shrink-0"
                 @click="emit('open-settings')"
@@ -247,9 +282,13 @@ function onSearchInput(val: string | null) {
     debouncedEmitQuery(val ?? '')
 }
 
-const effectiveOrdering = computed(() =>
-    props.ordering || (props.sortOptions.length > 0 ? props.sortOptions[0]!.key : '')
-)
+const effectiveOrdering = computed(() => {
+    if (props.ordering) return props.ordering
+    // No explicit sort: match backend default — score when searching, name otherwise
+    if (props.query && props.sortOptions.some(o => o.key === 'score')) return 'score'
+    if (props.sortOptions.some(o => o.key === 'name')) return 'name'
+    return props.sortOptions.length > 0 ? props.sortOptions[0]!.key : ''
+})
 
 const currentField = computed(() => {
     const ord = effectiveOrdering.value
@@ -276,6 +315,32 @@ function onSortSelect(key: string) {
 </script>
 
 <style scoped>
+.model-list-toolbar-desktop {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.model-list-toolbar-left,
+.model-list-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.model-list-toolbar-search {
+    min-width: 0;
+}
+
+.toolbar-search--flush-end :deep(.v-field) {
+    padding-inline-end: 0;
+}
+
+.model-list-toolbar-desktop :deep(.below-search-slot) {
+    grid-column: 2;
+}
+
 .model-list-toolbar-carousel-wrapper {
     position: relative;
     display: flex;

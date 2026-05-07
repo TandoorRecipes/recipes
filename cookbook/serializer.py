@@ -1228,7 +1228,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True, read_only=True)
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(source='lastcooked', required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
@@ -1261,7 +1261,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     keywords = KeywordSerializer(many=True, required=False)
     shared = UserSerializer(many=True, required=False)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(source='lastcooked', required=False, allow_null=True, read_only=True)
     food_properties = serializers.SerializerMethodField('get_food_properties')
     created_by = UserSerializer(read_only=True)
 
@@ -1345,6 +1345,20 @@ class FoodStatsSerializer(serializers.Serializer):
     ignored = serializers.IntegerField()
     inventory = serializers.IntegerField()
     expired = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
+class RecipeStatsSerializer(serializers.Serializer):
+    """Actionable-state counts for the recipe search / list view.
+
+    Scope: space + user-visible (non-private OR owned/shared). All counts
+    reflect the full list the caller can see, not the active filter set.
+    """
+    makenow_ready = serializers.IntegerField()
+    new = serializers.IntegerField()
+    unrated = serializers.IntegerField()
+    never_cooked = serializers.IntegerField()
+    private = serializers.IntegerField()
     total = serializers.IntegerField()
 
 

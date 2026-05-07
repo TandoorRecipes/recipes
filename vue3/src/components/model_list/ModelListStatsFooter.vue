@@ -13,6 +13,9 @@
                 size="small"
                 variant="tonal"
                 label
+                :role="stat.filter ? 'button' : undefined"
+                :style="stat.filter ? {cursor: 'pointer'} : undefined"
+                @click="stat.filter ? emit('apply-filter', stat.filter()) : undefined"
             >
                 {{ $t(stat.labelKey) }}: {{ stat.count }}
             </v-chip>
@@ -22,7 +25,7 @@
 
 <script setup lang="ts">
 import {computed} from 'vue'
-import type {StatDef} from '@/composables/modellist/types'
+import type {StatDef, FilterValue} from '@/composables/modellist/types'
 
 const props = withDefaults(defineProps<{
     pageCount: number
@@ -33,6 +36,10 @@ const props = withDefaults(defineProps<{
 }>(), {
     loading: false,
 })
+
+const emit = defineEmits<{
+    'apply-filter': [filter: Record<string, FilterValue>]
+}>()
 
 const totalCount = computed(() => props.stats.total ?? props.itemCount)
 const hasData = computed(() => props.pageCount > 0)

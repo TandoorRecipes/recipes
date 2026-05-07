@@ -3954,6 +3954,16 @@ paths:
       description: logs request counts to redis cache total/per user/
       parameters:
       - in: query
+        name: has_children
+        schema:
+          type: boolean
+        description: Filter by whether keyword has child keywords
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether keyword is used by at least one recipe
+      - in: query
         name: limit
         schema:
           type: string
@@ -6837,6 +6847,23 @@ paths:
                 items:
                   $ref: '#/components/schemas/RecipeFlat'
           description: ''
+  /api/recipe/stats/:
+    get:
+      operationId: apiRecipeStatsRetrieve
+      description: |-
+        Aggregate counts over the user-visible recipe set (space scoped,
+        private-visibility enforced). Used by the SearchPage stats footer.
+      tags:
+      - api
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeStats'
+          description: ''
   /api/reset-food-inheritance/:
     post:
       operationId: apiResetFoodInheritanceCreate
@@ -9511,6 +9538,11 @@ paths:
       operationId: apiUnitList
       description: logs request counts to redis cache total/per user/
       parameters:
+      - in: query
+        name: has_recipe
+        schema:
+          type: boolean
+        description: Filter by whether unit is used by at least one recipe ingredient
       - in: query
         name: limit
         schema:
@@ -15966,6 +15998,33 @@ components:
       required:
       - name
       - url
+    RecipeStats:
+      type: object
+      description: |-
+        Actionable-state counts for the recipe search / list view.
+
+        Scope: space + user-visible (non-private OR owned/shared). All counts
+        reflect the full list the caller can see, not the active filter set.
+      properties:
+        makenow_ready:
+          type: integer
+        new:
+          type: integer
+        unrated:
+          type: integer
+        never_cooked:
+          type: integer
+        private:
+          type: integer
+        total:
+          type: integer
+      required:
+      - makenow_ready
+      - never_cooked
+      - new
+      - private
+      - total
+      - unrated
     SearchEnum:
       enum:
       - plain
