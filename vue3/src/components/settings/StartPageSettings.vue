@@ -59,6 +59,7 @@
                         <model-select
                             :model="MODEL_FOR_MODE[section.mode]"
                             v-model="section._filterObj"
+                            @update:model-value="section.filter_id = ($event as any)?.id"
                             density="compact"
                             hide-details
                             search-on-load
@@ -209,7 +210,7 @@ const ratingOptions = [
     {value: 5, label: '5'},
 ]
 
-const ALL_MODES: {value: StartPageSectionMode, label: string}[] = [
+const ALL_MODES = computed<{value: StartPageSectionMode, label: string}[]>(() => [
     {value: 'recent', label: t('Recently_Viewed')},
     {value: 'new', label: t('New')},
     {value: 'random', label: t('Random')},
@@ -219,9 +220,9 @@ const ALL_MODES: {value: StartPageSectionMode, label: string}[] = [
     {value: 'books', label: t('Recipe_Book')},
     {value: 'created_by', label: t('Created_By')},
     {value: 'saved_search', label: t('Saved_Filter')},
-]
+])
 
-const MODE_DESCRIPTIONS: Record<string, string> = {
+const MODE_DESCRIPTIONS = computed<Record<string, string>>(() => ({
     recent: t('section_desc_recent'),
     new: t('section_desc_new'),
     keyword: t('section_desc_keyword'),
@@ -231,7 +232,7 @@ const MODE_DESCRIPTIONS: Record<string, string> = {
     books: t('section_desc_books'),
     food: t('section_desc_food'),
     saved_search: t('section_desc_saved_search'),
-}
+}))
 
 const DEFAULT_SECTIONS: StartPageSection[] = [
     {mode: 'recent', enabled: true, min_recipes: 10},
@@ -257,20 +258,20 @@ const defaultPage = ref('HOME')
 const showMealPlan = ref(true)
 const localSections = ref<LocalSection[]>([])
 const newMode = ref<StartPageSectionMode | null>(null)
-const availableModes = computed(() => ALL_MODES)
+const availableModes = ALL_MODES
 const availableUsers = ref<{value: number, label: string}[]>([])
 const confirmReset = ref(false)
 const confirmDelete = ref(false)
 const deleteSectionKey = ref<string | null>(null)
 const deleteSectionName = ref('')
 
-const defaultPageOptions = [
+const defaultPageOptions = computed(() => [
     {page: 'HOME', label: t('Home')},
     {page: 'SEARCH', label: t('Search')},
     {page: 'PLAN', label: t('Meal_Plan')},
     {page: 'BOOKS', label: t('Books')},
     {page: 'SHOPPING', label: t('Shopping_list')},
-]
+])
 
 let keyCounter = 0
 function makeKey(): string {
@@ -280,11 +281,11 @@ function makeKey(): string {
 // --- Helpers ---
 
 function modeLabel(mode: StartPageSectionMode): string {
-    return ALL_MODES.find(m => m.value === mode)?.label ?? mode
+    return ALL_MODES.value.find(m => m.value === mode)?.label ?? mode
 }
 
 function modeDescription(mode: StartPageSectionMode): string {
-    return MODE_DESCRIPTIONS[mode] ?? ''
+    return MODE_DESCRIPTIONS.value[mode] ?? ''
 }
 
 function toLocalSection(s: StartPageSection): LocalSection {

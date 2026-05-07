@@ -16,7 +16,7 @@
 
                 <v-select
                     :label="$t('Type')"
-                    v-model="(editingObj as any).type"
+                    v-model="editingObj.type"
                     :items="filterTypes"
                     item-title="label"
                     item-value="value"

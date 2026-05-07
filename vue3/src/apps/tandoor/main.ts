@@ -113,7 +113,7 @@ router.beforeEach((to) => {
         const stored = localStorage.getItem('TANDOOR_USER_PREFERENCE')
         if (!stored) return
         const prefs = JSON.parse(stored)
-        const target = DEFAULT_PAGE_ROUTES[prefs.default_page]
+        const target = DEFAULT_PAGE_ROUTES[prefs.defaultPage]
         if (target) return {name: target, replace: true}
     } catch { /* ignore parse errors */ }
 })

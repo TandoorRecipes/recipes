@@ -566,10 +566,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
 
-    def check_start_page_sections(self, validated_data):
-        if 'start_page_sections' not in validated_data:
-            return
-        value = validated_data['start_page_sections']
+    def validate_start_page_sections(self, value):
         allowed_keys = {"mode", "enabled", "min_recipes", "filter_id"}
         if not isinstance(value, list):
             raise ValidationError("start_page_sections must be a list")
@@ -592,9 +589,9 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             if "filter_id" in entry:
                 if not isinstance(entry["filter_id"], int) or entry["filter_id"] < 1:
                     raise ValidationError("start_page_sections filter_id must be a positive integer")
+        return value
 
     def update(self, instance, validated_data):
-        self.check_start_page_sections(validated_data)
         with scopes_disabled():
             return super().update(instance, validated_data)
 
