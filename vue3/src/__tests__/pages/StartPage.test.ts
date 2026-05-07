@@ -3,7 +3,8 @@ import { flushPromises } from '@vue/test-utils'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 import { mountPage } from '@/__tests__/pages/page-mount-helper'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
 }))
 

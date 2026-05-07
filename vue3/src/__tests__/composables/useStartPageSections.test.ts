@@ -5,7 +5,8 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 import { makeUserPreference } from '@/__tests__/factories'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error {
         response: any

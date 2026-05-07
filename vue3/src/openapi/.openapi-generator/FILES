@@ -18,7 +18,6 @@ models/CookLog.ts
 models/CustomFilter.ts
 models/CustomFilterTypeEnum.ts
 models/DefaultPageEnum.ts
-models/DeleteEnum.ts
 models/ExportLog.ts
 models/ExportRequest.ts
 models/FdcQuery.ts
@@ -27,8 +26,8 @@ models/Food.ts
 models/FoodBatchUpdate.ts
 models/FoodInheritField.ts
 models/FoodShopping.ts
-models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
+models/FoodStats.ts
 models/GenericModelReference.ts
 models/Group.ts
 models/Household.ts

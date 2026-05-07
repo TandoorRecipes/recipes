@@ -15,6 +15,9 @@ import * as vuetifyLocales from "vuetify/locale";
 // warnings on v-card / v-btn / v-dialog and selector queries return empty.
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export const vuetifyOptions = {
+    display: {
+        mobileBreakpoint: 'md',
+    },
     defaults: {
         // disabled as this leads to cards overflowing if not careful, manually set on cards containing a multiselect until proper solution is found
         // VCard: {
@@ -129,8 +132,8 @@ export default createVuetify(vuetifyOptions)
 
 export type VDataTableUpdateOptions = {
     page: number;
-    itemsPerPage: number;
-    search: string;
+    itemsPerPage?: number;
+    search?: string;
     sortBy?: string;
     groupBy?: string;
 }

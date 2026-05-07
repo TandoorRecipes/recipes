@@ -70,25 +70,31 @@ export interface PatchedUnit {
      * @type {string}
      * @memberof PatchedUnit
      */
-    pluralName?: string | null;
+    pluralName?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    baseUnit?: string | null;
+    baseUnit?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnit
+     */
+    readonly numrecipe?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
 }
 
 /**
@@ -113,19 +119,15 @@ export function PatchedUnitFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'baseUnit': json['base_unit'] == null ? undefined : json['base_unit'],
+        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
-export function PatchedUnitToJSON(json: any): PatchedUnit {
-    return PatchedUnitToJSONTyped(json, false);
-}
-
-export function PatchedUnitToJSONTyped(value?: PatchedUnit | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedUnitToJSON(value?: Omit<PatchedUnit, 'numrecipe'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

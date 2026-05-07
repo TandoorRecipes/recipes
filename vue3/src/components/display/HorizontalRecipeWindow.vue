@@ -76,7 +76,6 @@ const ENTITY_MODES: Partial<Record<StartPageSectionMode, EntityConfig>> = {
     created_by: {retrieve: (api, id) => api.apiUserRetrieve({id}), param: 'createdby'},
 }
 
-//TODO mode ideas "last year/month/cooked long ago"
 const props = defineProps<{
     mode: StartPageSectionMode
     skeletons?: number

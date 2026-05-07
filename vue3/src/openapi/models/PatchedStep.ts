@@ -18,14 +18,12 @@ import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { Ingredient } from './Ingredient';
 import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
-    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -87,25 +85,19 @@ export interface PatchedStep {
      * @type {UserFileView}
      * @memberof PatchedStep
      */
-    file?: UserFileView | null;
+    file?: UserFileView;
     /**
      * 
      * @type {number}
      * @memberof PatchedStep
      */
-    stepRecipe?: number | null;
+    stepRecipe?: number;
     /**
      * 
      * @type {any}
      * @memberof PatchedStep
      */
-    readonly stepRecipeData?: any | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedStep
-     */
-    readonly numrecipe?: number;
+    readonly stepRecipeData?: any;
     /**
      * 
      * @type {boolean}
@@ -142,20 +134,14 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
         'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'stepRecipeData': json['step_recipe_data'] == null ? undefined : json['step_recipe_data'],
-        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
 
-export function PatchedStepToJSON(json: any): PatchedStep {
-    return PatchedStepToJSONTyped(json, false);
-}
-
-export function PatchedStepToJSONTyped(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

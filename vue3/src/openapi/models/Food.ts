@@ -18,49 +18,42 @@ import {
     ShoppingListFromJSON,
     ShoppingListFromJSONTyped,
     ShoppingListToJSON,
-    ShoppingListToJSONTyped,
 } from './ShoppingList';
 import type { SupermarketCategory } from './SupermarketCategory';
 import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    UnitToJSONTyped,
 } from './Unit';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
-    PropertyToJSONTyped,
 } from './Property';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { FoodSimple } from './FoodSimple';
 import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
-    FoodSimpleToJSONTyped,
 } from './FoodSimple';
 import type { RecipeSimple } from './RecipeSimple';
 import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
-    RecipeSimpleToJSONTyped,
 } from './RecipeSimple';
 
 /**
@@ -120,7 +113,7 @@ export interface Food {
      * @type {string}
      * @memberof Food
      */
-    pluralName?: string | null;
+    pluralName?: string;
     /**
      * 
      * @type {string}
@@ -138,19 +131,19 @@ export interface Food {
      * @type {RecipeSimple}
      * @memberof Food
      */
-    recipe?: RecipeSimple | null;
+    recipe?: RecipeSimple;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {Array<Property>}
      * @memberof Food
      */
-    properties?: Array<Property> | null;
+    properties?: Array<Property>;
     /**
      * 
      * @type {number}
@@ -162,25 +155,25 @@ export interface Food {
      * @type {Unit}
      * @memberof Food
      */
-    propertiesFoodUnit?: Unit | null;
+    propertiesFoodUnit?: Unit;
     /**
      * 
      * @type {number}
      * @memberof Food
      */
-    fdcId?: number | null;
+    fdcId?: number;
     /**
      * 
      * @type {boolean}
      * @memberof Food
      */
-    foodOnhand?: boolean | null;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategory}
      * @memberof Food
      */
-    supermarketCategory?: SupermarketCategory | null;
+    supermarketCategory?: SupermarketCategory;
     /**
      * 
      * @type {number}
@@ -195,10 +188,16 @@ export interface Food {
     readonly numchild: number;
     /**
      * 
+     * @type {number}
+     * @memberof Food
+     */
+    readonly numrecipe: number;
+    /**
+     * 
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    inheritFields?: Array<FoodInheritField> | null;
+    inheritFields?: Array<FoodInheritField>;
     /**
      * Returns a string representation of a tree node and it's ancestors,
      * e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -217,7 +216,7 @@ export interface Food {
      * @type {Array<FoodSimple>}
      * @memberof Food
      */
-    substitute?: Array<FoodSimple> | null;
+    substitute?: Array<FoodSimple>;
     /**
      * 
      * @type {boolean}
@@ -247,19 +246,37 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    childInheritFields?: Array<FoodInheritField> | null;
+    childInheritFields?: Array<FoodInheritField>;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
     /**
      * 
      * @type {Array<ShoppingList>}
      * @memberof Food
      */
     shoppingLists?: Array<ShoppingList>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
+    readonly inInventory: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Food
+     */
+    readonly substituteInventory: boolean;
+    /**
+     * None for non-expanded responses, bool when tree_search=true (E-8).
+     * @type {boolean}
+     * @memberof Food
+     */
+    readonly matchedFilter: boolean;
 }
 
 /**
@@ -270,9 +287,13 @@ export function instanceOfFood(value: object): value is Food {
     if (!('shopping' in value) || value['shopping'] === undefined) return false;
     if (!('parent' in value) || value['parent'] === undefined) return false;
     if (!('numchild' in value) || value['numchild'] === undefined) return false;
+    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     if (!('fullName' in value) || value['fullName'] === undefined) return false;
     if (!('substituteOnhand' in value) || value['substituteOnhand'] === undefined) return false;
     if (!('availableSubstitutes' in value) || value['availableSubstitutes'] === undefined) return false;
+    if (!('inInventory' in value) || value['inInventory'] === undefined) return false;
+    if (!('substituteInventory' in value) || value['substituteInventory'] === undefined) return false;
+    if (!('matchedFilter' in value) || value['matchedFilter'] === undefined) return false;
     return true;
 }
 
@@ -301,6 +322,7 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'supermarketCategory': json['supermarket_category'] == null ? undefined : SupermarketCategoryFromJSON(json['supermarket_category']),
         'parent': json['parent'],
         'numchild': json['numchild'],
+        'numrecipe': json['numrecipe'],
         'inheritFields': json['inherit_fields'] == null ? undefined : ((json['inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'fullName': json['full_name'],
         'ignoreShopping': json['ignore_shopping'] == null ? undefined : json['ignore_shopping'],
@@ -312,18 +334,16 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
         'shoppingLists': json['shopping_lists'] == null ? undefined : ((json['shopping_lists'] as Array<any>).map(ShoppingListFromJSON)),
+        'inInventory': json['in_inventory'],
+        'substituteInventory': json['substitute_inventory'],
+        'matchedFilter': json['matched_filter'],
     };
 }
 
-export function FoodToJSON(json: any): Food {
-    return FoodToJSONTyped(json, false);
-}
-
-export function FoodToJSONTyped(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'|'available_substitutes'> | null, ignoreDiscriminator: boolean = false): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'numrecipe'|'full_name'|'substitute_onhand'|'available_substitutes'|'in_inventory'|'substitute_inventory'|'matched_filter'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

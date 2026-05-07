@@ -89,7 +89,7 @@ const props = withDefaults(defineProps<{
     canClear?: boolean
     mode?: 'single' | 'multiple' | 'tags'
     appendToBody?: boolean
-    object?: boolean // TODO broken either fix or finally get other multiselect working
+    object?: boolean
     allowCreate?: boolean
     placeholder?: string
     noOptionsText?: string

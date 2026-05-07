@@ -3,7 +3,8 @@ import { setActivePinia, createPinia } from 'pinia'
 import { makeShoppingListEntry } from '@/__tests__/factories'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))
@@ -12,7 +13,8 @@ vi.mock('vue-i18n', () => ({
     useI18n: () => ({ t: (key: string) => key }),
 }))
 
-vi.mock('vuetify', () => ({
+vi.mock('vuetify', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('vuetify')>()),
     useTheme: () => ({ change: vi.fn() }),
 }))
 

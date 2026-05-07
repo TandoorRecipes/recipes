@@ -5,7 +5,8 @@ vi.mock('vue-i18n', () => ({
     useI18n: () => ({ t: (key: string) => key }),
 }))
 
-vi.mock('vuetify', () => ({
+vi.mock('vuetify', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('vuetify')>()),
     useTheme: () => ({ change: vi.fn() }),
 }))
 
@@ -29,7 +30,8 @@ vi.mock('@vueuse/core', async () => {
     }
 })
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class {},
     ResponseError: class extends Error {},
 }))

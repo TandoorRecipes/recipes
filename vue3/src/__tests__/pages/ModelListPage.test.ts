@@ -3,7 +3,8 @@ import { flushPromises } from '@vue/test-utils'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 import { mountPage } from '@/__tests__/pages/page-mount-helper'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))
@@ -41,6 +42,8 @@ vi.mock('@vueuse/core', async () => {
     return {
         useStorage: (_key: string, defaultValue: any) => ref(defaultValue),
         useTitle: () => ref(''),
+        useResizeObserver: () => ({ stop: vi.fn() }),
+        useDebounceFn: (fn: any) => fn,
     }
 })
 

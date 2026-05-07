@@ -70,25 +70,31 @@ export interface Unit {
      * @type {string}
      * @memberof Unit
      */
-    pluralName?: string | null;
+    pluralName?: string;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    baseUnit?: string | null;
+    baseUnit?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Unit
+     */
+    readonly numrecipe: number;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
 }
 
 /**
@@ -96,6 +102,7 @@ export interface Unit {
  */
 export function instanceOfUnit(value: object): value is Unit {
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     return true;
 }
 
@@ -114,19 +121,15 @@ export function UnitFromJSONTyped(json: any, ignoreDiscriminator: boolean): Unit
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'baseUnit': json['base_unit'] == null ? undefined : json['base_unit'],
+        'numrecipe': json['numrecipe'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
-export function UnitToJSON(json: any): Unit {
-    return UnitToJSONTyped(json, false);
-}
-
-export function UnitToJSONTyped(value?: Unit | null, ignoreDiscriminator: boolean = false): any {
+export function UnitToJSON(value?: Omit<Unit, 'numrecipe'> | null): any {
     if (value == null) {
         return value;
     }
-
     return {
         
         'id': value['id'],

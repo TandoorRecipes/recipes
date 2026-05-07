@@ -5,7 +5,8 @@ import { createI18n } from 'vue-i18n'
 import { createVuetify } from 'vuetify'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
 
-vi.mock('@/openapi', () => ({
+vi.mock('@/openapi', async (importOriginal) => ({
+    ...(await importOriginal<any>()),
     ApiApi: class { constructor() { return apiMock } },
     ResponseError: class extends Error { response: any; constructor(r: any) { super(); this.response = r } },
 }))
