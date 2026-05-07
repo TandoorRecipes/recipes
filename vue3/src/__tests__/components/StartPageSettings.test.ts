@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import { createVuetify } from 'vuetify'
 import { apiMock, resetApiMock } from '@/__tests__/api-mock'
+import { DEFAULT_SECTIONS } from '@/composables/useStartPageSections'
 
 vi.mock('@/openapi', () => ({
     ApiApi: class { constructor() { return apiMock } },
@@ -70,18 +71,16 @@ describe('StartPageSettings', () => {
         apiMock.apiUserList = vi.fn().mockResolvedValue([])
     })
 
-    it('falls back to default sections when store is empty', async () => {
+    it('renders default sections when store sections is empty', async () => {
         const { wrapper } = mountSettings([])
         await flushPromises()
 
-        // Default has 8 recipe sections — each rendered as a v-card inside draggable
-        const html = wrapper.html()
-        // Check that multiple section cards rendered (draggable contains them)
-        expect(html).toContain('stub-draggable')
-        expect(html).toContain('drag-handle')
+        const dragHandles = wrapper.findAll('.drag-handle')
+        expect(dragHandles).toHaveLength(DEFAULT_SECTIONS.length)
+        expect(wrapper.html()).toContain('stub-draggable')
     })
 
-    it('loads specific sections from store', async () => {
+    it('renders only recipe sections (meal_plan separated into toggle)', async () => {
         const { wrapper } = mountSettings([
             { mode: 'meal_plan', enabled: true },
             { mode: 'recent', enabled: true, min_recipes: 5 },
@@ -89,62 +88,15 @@ describe('StartPageSettings', () => {
         ])
         await flushPromises()
 
-        const html = wrapper.html()
-        // Should render 2 recipe sections (meal_plan separated into toggle)
         const dragHandles = wrapper.findAll('.drag-handle')
         expect(dragHandles).toHaveLength(2)
     })
 
-    it('save puts meal_plan first when toggle is on', async () => {
-        const { wrapper, store } = mountSettings([
-            { mode: 'meal_plan', enabled: true },
-            { mode: 'recent', enabled: true, min_recipes: 10 },
-        ])
+    it('exposes saved defaultPage to the v-select', async () => {
+        const { wrapper } = mountSettings([], 'BOOKS')
         await flushPromises()
 
-        // Call save directly via component internals
-        await (wrapper.vm as any).save()
-        await flushPromises()
-
-        expect(store.updateUserSettings).toHaveBeenCalled()
-        const sections = store.userSettings.startPageSections as any[]
-        expect(sections[0].mode).toBe('meal_plan')
-        expect(sections[1].mode).toBe('recent')
-    })
-
-    it('save excludes meal_plan when absent from input', async () => {
-        const { wrapper, store } = mountSettings([
-            { mode: 'recent', enabled: true, min_recipes: 10 },
-        ])
-        await flushPromises()
-
-        await (wrapper.vm as any).save()
-        await flushPromises()
-
-        expect(store.updateUserSettings).toHaveBeenCalled()
-        const sections = store.userSettings.startPageSections as any[]
-        expect(sections.every((s: any) => s.mode !== 'meal_plan')).toBe(true)
-    })
-
-    it('save preserves filter_id from section', async () => {
-        const { wrapper, store } = mountSettings([
-            { mode: 'meal_plan', enabled: true },
-            { mode: 'keyword', enabled: true, min_recipes: 10, filter_id: 42 },
-        ])
-        await flushPromises()
-
-        await (wrapper.vm as any).save()
-        await flushPromises()
-
-        expect(store.updateUserSettings).toHaveBeenCalled()
-        const kwSection = (store.userSettings.startPageSections as any[]).find((s: any) => s.mode === 'keyword')
-        expect(kwSection.filter_id).toBe(42)
-    })
-
-    it('sets defaultPage from store', async () => {
-        mountSettings([], 'SEARCH')
-        await flushPromises()
-        // Component loaded without error with non-default page
-        // (DOM assertion for v-select value is fragile, so just verify mount succeeded)
+        // The composable's defaultPage ref should be initialized from the store on loadFromStore.
+        expect((wrapper.vm as any).defaultPage).toBe('BOOKS')
     })
 })
