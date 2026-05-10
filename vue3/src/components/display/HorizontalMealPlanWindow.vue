@@ -120,9 +120,13 @@ const meal_plan_grid = computed(() => {
             DateTime.fromJSDate(m.toDate != undefined ? m.toDate : m.fromDate).startOf("day") >= grid_day_date.startOf("day")
         )
         .sort((a: MealPlan, b: MealPlan) => {
-          const timeA = a.mealType?.time ?? "￿"
-          const timeB = b.mealType?.time ?? "￿"
-          if (timeA !== timeB) return timeA < timeB ? -1 : 1
+          const timeA = a.mealType?.time
+          const timeB = b.mealType?.time
+          if (timeA !== timeB) {
+            if (timeA == null) return 1
+            if (timeB == null) return -1
+            return timeA < timeB ? -1 : 1
+          }
           return (a.mealType?.order ?? 0) - (b.mealType?.order ?? 0)
         }),
     } as MealPlanGridItem)
