@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-05-11 10:23+0000\n"
-"Last-Translator: Daniel <tandoor@ducklings.work>\n"
+"PO-Revision-Date: 2026-05-12 22:28+0000\n"
+"Last-Translator: Elektrobarista <alex_lind2003@yahoo.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/de/>\n"
 "Language: de\n"
@@ -261,7 +261,7 @@ msgstr "Ballaststoffe"
 
 #: .\cookbook\integration\mealie1.py:247
 msgid "Protein"
-msgstr "Proteine"
+msgstr "Protein"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
