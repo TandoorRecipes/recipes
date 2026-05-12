@@ -982,7 +982,7 @@
     "warning_duplicate_filter": "Warnung: Wegen technischen Limitierungen können mehrere Filter der selben Kombination (und/oder/nicht) zu unerwarteten Ergebnissen führen.",
     "warning_feature_beta": "Diese Funktion ist aktuell in einer BETA (Test) Phase. Es ist sowohl mit Fehlern, als auch mit zukünftigen Änderungen der Funktionsweise zu rechnen, wodurch es bei Verwendung entsprechender Funktionen zu Datenverlust kommen kann.",
     "warning_space_delete": "Du kannst deinen Space inklusive all deiner Rezepte, Shoppinglisten, Essensplänen und allem anderen, das du erstellt hast, löschen. Dieser Schritt kann nicht rückgängig gemacht werden! Bist du sicher, dass du das tun möchtest?",
-    "EnableSwipe": "Wischen aktivieren",
+    "EnableSwipe": "Swipe aktivieren",
     "Any": "Jedes",
     "ExpandAll": "Alle aufklappen",
     "Substitute": "Alternative",
