@@ -986,5 +986,10 @@
     "Any": "Jedes",
     "ExpandAll": "Alle aufklappen",
     "Substitute": "Alternative",
-    "Showing": "Anzeigen"
+    "Showing": "Anzeigen",
+    "Subtitle": "Untertitel",
+    "SwipeActions": "Wischgesten",
+    "SwipeHint": "Wische nach links oder rechts, um weitere Optionen anzuzeigen",
+    "SwipeLeft": "Wische nach links",
+    "SwipeRight": "Wische nach rechts"
 }
