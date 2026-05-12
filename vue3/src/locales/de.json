@@ -70,7 +70,7 @@
     "BatchEdit": "Massenbearbeitung",
     "BatchEditUpdatingItemsCount": "Bearbeite {count} {type}",
     "Blocking": "Blockierend",
-    "BlockingHelp": "Die folgenden Objekte verhindern das löschen der ausgewählten {type}",
+    "BlockingHelp": "Die folgenden Objekte verhindern das Löschen der ausgewählten {type}",
     "Book": "Buch",
     "BookingType": "Buchungstyp",
     "Bookmarklet": "Lesezeichen",
