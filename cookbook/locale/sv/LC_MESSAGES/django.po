@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-03-28 03:02+0000\n"
-"Last-Translator: Johan <johanden@gmail.com>\n"
+"PO-Revision-Date: 2026-05-18 03:54+0000\n"
+"Last-Translator: Gabriel Sjöberg <ga22be@live.se>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
-msgstr "Förvalt"
+msgstr "Standardvärde"
 
 #: .\cookbook\forms.py:90
 msgid ""
@@ -253,8 +253,6 @@ msgid "Fiber"
 msgstr ""
 
 #: .\cookbook\integration\mealie1.py:247
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
 msgstr "Protein"
 
@@ -376,7 +374,7 @@ msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr "Protein"
+msgstr "Proteiner"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
@@ -409,7 +407,7 @@ msgstr "Handla"
 
 #: .\cookbook\models.py:998
 msgid "Nutrition"
-msgstr "Näringsinnehåll"
+msgstr "Näring"
 
 #: .\cookbook\models.py:999
 msgid "Allergen"
@@ -425,7 +423,7 @@ msgstr "Mål"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "Lägg till"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -433,10 +431,8 @@ msgid "Remove"
 msgstr "Ta bort"
 
 #: .\cookbook\models.py:1409
-#, fuzzy
-#| msgid "Move Up"
 msgid "Move"
-msgstr "Flytta upp"
+msgstr "Flytta"
 
 #: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -797,10 +793,8 @@ msgstr ""
 "några minuter, vänligen kontakta oss."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "API Token"
+msgstr "Dålig Token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -823,20 +817,16 @@ msgstr ""
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:10
 #: .\cookbook\templates\account\password_set.html:15
-#, fuzzy
-#| msgid "Password Reset"
 msgid "Set Password"
-msgstr "Återställ lösenord"
+msgstr "Sätt lösenord"
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
 msgstr "Registrera"
 
 #: .\cookbook\templates\account\signup.html:11
-#, fuzzy
-#| msgid "Create your Account"
 msgid "Create an Account"
-msgstr "Skapa ditt konto"
+msgstr "Skapa ett konto"
 
 #: .\cookbook\templates\account\signup.html:41
 msgid "I accept the follwoing"
@@ -962,8 +952,6 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr "eller genom att lämna en tom rad däremellan."
 
@@ -987,10 +975,6 @@ msgid "Lists"
 msgstr "Listor"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1120,10 +1104,8 @@ msgstr "API-dokumentation"
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
-#, fuzzy
-#| msgid "Search String"
 msgid "Search Settings"
-msgstr "Söksträng"
+msgstr "Sök inställningar"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1138,10 +1120,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:19
-#, fuzzy
-#| msgid "Search"
 msgid "Search Methods"
-msgstr "Sök"
+msgstr "Sökmetoder"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1223,10 +1203,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
-#, fuzzy
-#| msgid "Search Recipe"
 msgid "Search Fields"
-msgstr "Sök recept"
+msgstr "Fält att söka"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1264,10 +1242,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Sök"
+msgstr "Sökindex"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1303,10 +1279,8 @@ msgstr "Skapa ett superanvändarkonto"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Social inloggning"
+msgstr "Socialt-nätverksinloggning misslyckas"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
@@ -1345,10 +1319,8 @@ msgstr "Lägg till ett konto från tredje part"
 
 #: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
-#, fuzzy
-#| msgid "Sign Out"
 msgid "Signup"
-msgstr "Logga ut"
+msgstr "Registrera"
 
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
@@ -1400,20 +1372,16 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:111
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign in using"
-msgstr "Logga in"
+msgstr "Logga in med"
 
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
 msgstr "Överblick"
 
 #: .\cookbook\templates\space_overview.html:13
-#, fuzzy
-#| msgid "No Space"
 msgid "Space"
-msgstr "Inget utrymme"
+msgstr "Utrymme"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -1427,10 +1395,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Inget utrymme"
+msgstr "Dina utrymmen"
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
@@ -1438,10 +1404,8 @@ msgstr "Ägare"
 
 #: .\cookbook\templates\space_overview.html:73
 #: .\cookbook\templates\space_overview.html:83
-#, fuzzy
-#| msgid "No Space"
 msgid "Join Space"
-msgstr "Inget utrymme"
+msgstr "Gå med i utrymme"
 
 #: .\cookbook\templates\space_overview.html:76
 msgid "Join an existing space."
@@ -1452,13 +1416,13 @@ msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
 msgstr ""
+"För att gå med i ett existerande utrymme fyll antingen i din inbjudanstoken "
+"eller klicka på inbjudanslänken som utrymmets ägare skickat dig."
 
 #: .\cookbook\templates\space_overview.html:91
 #: .\cookbook\templates\space_overview.html:100
-#, fuzzy
-#| msgid "Create User"
 msgid "Create Space"
-msgstr "Skapa användare"
+msgstr "Skapa utrymme"
 
 #: .\cookbook\templates\space_overview.html:94
 msgid "Create your own recipe space."
@@ -1696,10 +1660,8 @@ msgid "Hide"
 msgstr "Göm"
 
 #: .\cookbook\templates\system.html:336
-#, fuzzy
-#| msgid "Show help"
 msgid "Show"
-msgstr "Visa hjälp"
+msgstr "Visa"
 
 #: .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
@@ -1717,10 +1679,8 @@ msgid "Sessions"
 msgstr "Inga behörigheter"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:9
-#, fuzzy
-#| msgid "The following e-mail addresses are associated with your account:"
 msgid "The following sessions are currently active on your account."
-msgstr "Följande epost-addresser är associerade med ditt konto:"
+msgstr "Följande sessioner är för närvarande aktiva på ditt konto."
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
 #, fuzzy
@@ -1735,10 +1695,8 @@ msgid "IP Address"
 msgstr "Email adresser"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:18
-#, fuzzy
-#| msgid "API Browser"
 msgid "Browser"
-msgstr "API-browser"
+msgstr "Utforskare"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
 #, fuzzy
@@ -1773,10 +1731,8 @@ msgid "No {self.basename} with id {target} exists"
 msgstr ""
 
 #: .\cookbook\views\api.py:375
-#, fuzzy
-#| msgid "Cannot merge with the same object!"
 msgid "Cannot merge with child object!"
-msgstr "Kan inte slås samman med samma objekt!"
+msgstr "Kan inte slås samman med ett underordnat objekt!"
 
 #: .\cookbook\views\api.py:418
 #, python-brace-format
@@ -1874,10 +1830,8 @@ msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
 
 #: .\cookbook\views\api.py:1573
-#, fuzzy
-#| msgid "No recipes selected"
 msgid "No recipes found."
-msgstr "Inga recept har valts"
+msgstr "Inga recept funna."
 
 #: .\cookbook\views\api.py:1670
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2110,10 +2064,8 @@ msgid "Bad URL Schema."
 msgstr ""
 
 #: .\cookbook\views\api.py:2681
-#, fuzzy
-#| msgid "The requested page could not be found."
 msgid "No usable data could be found."
-msgstr "Sidan kunde inte hittas."
+msgstr "Ingen användbar data hittades."
 
 #: .\cookbook\views\api.py:2950 .\cookbook\views\api.py:3119
 msgid "File is above space limit"
@@ -2130,10 +2082,9 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\api.py:3335
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "Denna funktion är inte tillgänglig i demoversionen!"
+msgstr ""
+"Denna funktion är ännu inte tillgänglig i den hostade versionen av tandoor!"
 
 #: .\cookbook\views\api.py:3356
 msgid "Sync successful!"
@@ -2168,29 +2119,14 @@ msgid "Unable to determine PostgreSQL version."
 msgstr ""
 
 #: .\cookbook\views\views.py:193
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"            Denna applikation körs inte med en Postgres-databasbackend. "
-"Detta är ok men rekommenderas inte då vissa\n"
-"             funktioner bara fungerar med postgres-databaser.\n"
-"        "
+"Denna applikation körs inte med en Postgres-databasbackend. Detta är ok men "
+"rekommenderas inte då vissa funktioner bara fungerar med postgres-databaser."
 
 #: .\cookbook\views\views.py:354
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
@@ -2233,10 +2169,8 @@ msgid "View your meal Plan"
 msgstr ""
 
 #: .\cookbook\views\views.py:479
-#, fuzzy
-#| msgid "Shopping Lists"
 msgid "View your shopping lists"
-msgstr "Inköpslistor"
+msgstr "Se dina inköpslistor"
 
 #~ msgid "Cannot modify Space owner permission."
 #~ msgstr "Kan inte modifiera utrymmets ägar-rättigheter."
