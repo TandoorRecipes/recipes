@@ -144,7 +144,7 @@ function loadRecipes() {
             break;
         case 'new':
             requestParameters._new = 'true'
-            queryParams.value = {sortOrder: '-created_at', createdonGte: DateTime.now().minus({days: 14}).toISODate()}
+            queryParams.value = {sortOrder: '-created_at', createdonGte: DateTime.now().minus({days: 7}).toISODate()}
             break;
         case 'rating':
             requestParameters.rating = 4
