@@ -94,11 +94,11 @@
     "Create_New_Shopping Category": "Opret ny indkøbskategori",
     "Create_New_Shopping_Category": "Opret ny indkøbskategori",
     "Create_New_Unit": "Tilføj ny enhed",
-    "Created": "Skabt",
+    "Created": "Oprettet",
     "Credits": "",
     "Current_Period": "Nuværende periode",
     "Custom Filter": "Tilpasset filter",
-    "CustomImageHelp": "Upload et billede for at vise dets plade i område-oversigten.",
+    "CustomImageHelp": "Upload et billede til at blive vist i område-oversigten.",
     "CustomLogoHelp": "Upload kvadratiske billeder i forskellige størrelser for at ændre logoet i browser-faneblad og installeret web-app.",
     "CustomLogos": "Personlige logoer",
     "CustomNavLogoHelp": "Upload et billede til brug som navigationsbarrelogo.",
@@ -510,7 +510,7 @@
     "create_food_desc": "Opret mad og sammenkæd den med denne opskrift.",
     "create_rule": "og opret automation",
     "create_title": "Ny {type}",
-    "created_by": "Skabt af",
+    "created_by": "Oprettet af",
     "created_on": "Oprettet den",
     "csv_delim_help": "Tegn der skal afgrænse elementer i CSV eksporteringer.",
     "csv_delim_label": "CSV afgrænsningstegn",
@@ -831,5 +831,6 @@
     "seconds": "sekunder",
     "theUsernameCannotBeChanged": "Brugernavnet kan ikke ændres.",
     "Ai": "AI",
-    "Attributes": "Attributter"
+    "Attributes": "Attributter",
+    "UnitHelp": "Enheder bruges sammen med fødevarer og mængder til at lave ingredienser. Du kan give dem de navne som du foretrækker, og knytte dem til standardenheder, så de automatisk kan omregnes. Enheder hjælper også med at skabe klarhed over mængdeangivelser mange steder - for eksempel i indkøbslister, omregninger og egenskaber. "
 }
