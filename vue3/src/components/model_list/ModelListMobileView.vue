@@ -258,7 +258,7 @@ const props = withDefaults(defineProps<{
     labelField: 'name',
 })
 
-const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders} = inject(MODEL_LIST_SETTINGS_KEY)!
+const {quickActionKeys, mobileSubtitleKeys, swipeEnabled, swipeLeftKeys, swipeRightKeys, showMobileHeaders, swipeHintDismissed} = inject(MODEL_LIST_SETTINGS_KEY)!
 
 const emit = defineEmits<{
     'update:selectedItems': [items: ModelItem[]],
@@ -308,21 +308,13 @@ const swipe = useSwipeGesture(enabledRef, leftSlotCount, rightSlotCount, handleF
 const itemIdKey = computed(() => props.items.map(i => i.id).join(','))
 watch(itemIdKey, () => swipe.resetAll())
 
-/** Swipe hint banner */
-const hintStorageKey = computed(() => `${props.settingsKey}_swipeHintDismissed`)
-const hintDismissed = ref(false)
-
-onMounted(() => {
-    hintDismissed.value = localStorage.getItem(hintStorageKey.value) === 'true'
-})
-
+/** Swipe hint banner — persisted via deviceSettings so no raw localStorage access is needed */
 const showSwipeHint = computed(() =>
-    swipeActive.value && !hintDismissed.value
+    swipeActive.value && !swipeHintDismissed.value
 )
 
 function dismissSwipeHint() {
-    hintDismissed.value = true
-    localStorage.setItem(hintStorageKey.value, 'true')
+    swipeHintDismissed.value = true
 }
 
 /** Get background color for a swipe action button */
