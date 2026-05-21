@@ -618,7 +618,12 @@ watch(() => props.model, (newValue, oldValue) => {
     }
 })
 
+// Skip the first invocation — it fires when the model is set in onBeforeMount
+// (treeActive flips false→true), which is initialisation, not a user-driven change.
+// Every subsequent firing is a real filter/ordering/tree toggle and should reset to page 1.
+let filterWatchInitialized = false
 watch([ordering, filterParams, treeActive], () => {
+    if (!filterWatchInitialized) { filterWatchInitialized = true; return }
     clearTreeState()
     loadItems({page: 1})
 })
