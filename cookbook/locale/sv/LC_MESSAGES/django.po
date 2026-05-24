@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-05-18 03:54+0000\n"
-"Last-Translator: Gabriel Sjöberg <ga22be@live.se>\n"
+"PO-Revision-Date: 2026-05-25 07:28+0000\n"
+"Last-Translator: Gisli Jonsson <gisli.broncomedia@gmail.com>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -131,54 +131,52 @@ msgid "ferment"
 msgstr "fermentera"
 
 #: .\cookbook\helper\recipe_url_import.py:318
-#, fuzzy
-#| msgid "Last cooked"
 msgid "slow cook"
-msgstr "Senast tillagad"
+msgstr "långkok"
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
-msgstr ""
+msgstr "Äggkokare"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
-msgstr ""
+msgstr "vattenkokare"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
-msgstr ""
+msgstr "mixa"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "pre-clean"
-msgstr ""
+msgstr "försköljning"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
-msgstr ""
+msgstr "hög temperatur"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
-msgstr ""
+msgstr "riskokare"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
-msgstr ""
+msgstr "karamellisera"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
-msgstr ""
+msgstr "skalare"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "slicer"
-msgstr ""
+msgstr "kniv för skalning"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
-msgstr ""
+msgstr "rivjärn"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
-msgstr ""
+msgstr "spiraliserare"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
@@ -241,7 +239,7 @@ msgstr "Kolhydrater"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "kolesterol"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -250,7 +248,7 @@ msgstr "Fett"
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "Fibrer"
 
 #: .\cookbook\integration\mealie1.py:247
 msgid "Protein"
@@ -258,27 +256,27 @@ msgstr "Protein"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Mättat fett"
 
 #: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
-msgstr ""
+msgstr "natrium"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "socker"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
-msgstr ""
+msgstr "transfett"
 
 #: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "omättat fett"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr "Recept källa:"
+msgstr "receptkälla:"
 
 #: .\cookbook\integration\paprika.py:47
 msgid "Notes"
@@ -294,13 +292,15 @@ msgstr "Källa"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Metod inte implementerad i lagringsintegrationen"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"Pdf-export är inte tillgänglig för närvarande. använd webbläsarens "
+"utskriftsfunktion (ctrl+p) för att spara recept som pdf."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -329,7 +329,7 @@ msgstr "Sektion"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr "Korrigerar livsmedel med "
+msgstr "Fixar livsmedel med "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -512,20 +512,20 @@ msgstr "Du har nått din maxgräns för uppladdningar."
 
 #: .\cookbook\serializer.py:304
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "Den angivna filtypen är inte tillåten."
 
 #: .\cookbook\serializer.py:444 .\cookbook\views\views.py:97
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr ""
+msgstr "Du har nått det maximala antalet utrymmen som kan ägas av dig."
 
 #: .\cookbook\serializer.py:457
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "Utrymmesnamnet måste vara unikt."
 
 #: .\cookbook\serializer.py:505
 msgid "You must select at least one group."
-msgstr ""
+msgstr "Du måste välja minst en grupp."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -804,6 +804,9 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Llänken för återställning av lösenord var ogiltig, möjligen eftersom den "
+"redan har använts. Begär en <a href=\"%(passwd_reset_url)s\">ny "
+"lösenordsåterställning</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
@@ -812,7 +815,7 @@ msgstr "byt lösenord"
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Ditt lösenord har nu ändrats."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:10
@@ -830,12 +833,12 @@ msgstr "Skapa ett konto"
 
 #: .\cookbook\templates\account\signup.html:41
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Jag accepterar följande"
 
 #: .\cookbook\templates\account\signup.html:44
 #: .\cookbook\templates\socialaccount\signup.html:35
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Villkor"
 
 #: .\cookbook\templates\account\signup.html:47
 #: .\cookbook\templates\socialaccount\signup.html:38
@@ -853,16 +856,16 @@ msgstr "Skapa användare"
 
 #: .\cookbook\templates\account\signup.html:68
 msgid "Already have an account?"
-msgstr ""
+msgstr "Har du redan ett konto?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Registreringen är stängd"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "Vi beklagar, men registreringen är för närvarande stängd."
 
 #: .\cookbook\templates\frontend\tandoor.html:15
 #, fuzzy
