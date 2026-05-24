@@ -1,19 +1,19 @@
 {
     "AIImportSubtitle": "Använd AI för att importera bilder av recept.",
-    "AISettingsHostedHelp": "",
+    "AISettingsHostedHelp": "Du kan aktivera AI-funktioner eller ändra tillgängliga krediter genom att hantera din prenumeration.",
     "API": "API",
-    "API_Browser": "",
-    "API_Documentation": "",
-    "AboutTandoor": "",
+    "API_Browser": "API-bläddrare",
+    "API_Documentation": "API-dokumentation",
+    "AboutTandoor": "Tandoor är en open source-plattform för att hantera recept, veckomenyer, inköpslistor och mycket mer.",
     "AccessTokenHelp": "Nycklar för tillgång till REST API:t.",
     "Access_Token": "Åtkomstnyckel",
     "Account": "Konto",
     "Actions": "Åtgärder",
-    "Active": "",
+    "Active": "Aktiv",
     "Activity": "Aktivitet",
     "Add": "Lägg till",
     "AddAll": "Lägg till alla",
-    "AddChild": "",
+    "AddChild": "Lägg till underkategori",
     "AddFilter": "Lägg till filter",
     "AddFoodToShopping": "Lägg till {food} på din inköpslista",
     "AddMany": "Lägg till många",
@@ -764,5 +764,6 @@
     "ExternalStorage": "Extern lagring",
     "Filters": "Filter",
     "FinishedAt": "Avslutades vid",
-    "First": "Först"
+    "First": "Först",
+    "APIKey": "API-nyckel"
 }
