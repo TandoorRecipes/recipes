@@ -8,57 +8,65 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-05-24 15:29+0000\n"
+"Last-Translator: yama <yamada2662@gmail.com>\n"
+"Language-Team: Japanese <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
-msgstr ""
+msgstr "デフォルト"
 
 #: .\cookbook\forms.py:90
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"重複を防ぐため、既存のレシピと同じ名前のレシピは無視されます。すべて"
+"インポートするには、このチェックボックスをオンにしてください。"
 
 #: .\cookbook\forms.py:120
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "このスペースの最大ユーザー数に達しました。"
 
 #: .\cookbook\forms.py:126
 msgid "Email address already taken!"
-msgstr ""
+msgstr "メールアドレスは既に使用されています！"
 
 #: .\cookbook\forms.py:134
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"メールアドレスは必須ではありませんが、入力されている場合は招待リンクが"
+"ユーザーに送信されます。"
 
 #: .\cookbook\forms.py:149
 msgid "Name already taken."
-msgstr ""
+msgstr "この名前は既に使われています。"
 
 #: .\cookbook\forms.py:160 .\cookbook\forms.py:174
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "利用規約とプライバシーポリシーに同意する"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:55
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"スパム対策のため、ご依頼いただいたメールは送信されませんでした。数分お待ちい"
+"ただいてから、再度お試しください。"
 
 #: .\cookbook\helper\permission_helper.py:215
 #: .\cookbook\helper\permission_helper.py:236 .\cookbook\views\views.py:149
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "ログインしていないため、このページは表示できません！"
 
 #: .\cookbook\helper\permission_helper.py:218
 #: .\cookbook\helper\permission_helper.py:223
@@ -71,32 +79,34 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:420
 #: .\cookbook\helper\permission_helper.py:436
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "このページを表示するための権限がありません！"
 
 #: .\cookbook\helper\permission_helper.py:241
 #: .\cookbook\helper\permission_helper.py:264
 #: .\cookbook\helper\permission_helper.py:294
 #: .\cookbook\helper\permission_helper.py:309
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "このオブジェクトはあなたの所有物ではないため、操作することはできません！"
 
 #: .\cookbook\helper\permission_helper.py:323
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
 msgstr ""
+"あなたはこのオブジェクトを作成したユーザーと同じ世帯にいないため、この"
+"オブジェクトを操作することはできません！"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "お使いのスペースで保存できるレシピの最大数に達しました。"
 
 #: .\cookbook\helper\permission_helper.py:517
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "あなたのスペースには、許可されているユーザー数よりも多くのユーザーがいます。"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "reverse rotation"
-msgstr ""
+msgstr "逆回転"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "careful rotation"
