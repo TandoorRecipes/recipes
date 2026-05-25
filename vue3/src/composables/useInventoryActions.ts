@@ -23,6 +23,14 @@ export type InventoryQuickAddDialogInstance = {
         amount?: number,
         unit?: Unit | null,
     }) => Promise<InventoryQuickAddResult | null>
+    openManage: (opts: {
+        title: string,
+        foodId: number,
+        locations: {value: number, label: string}[],
+        defaultLocationId?: number | null,
+        amount?: number,
+        unit?: Unit | null,
+    }) => Promise<{hasEntries: boolean}>
 }
 
 export function useInventoryActions() {
@@ -230,6 +238,48 @@ export function useInventoryActions() {
     }
 
     /**
+     * Open a unified manage dialog that shows existing inventory entries for a food
+     * and allows adding new ones or deleting existing ones.
+     * Returns true if at least one entry exists when the dialog closes.
+     */
+    async function manageInventory(
+        food: FoodRef,
+        dialog: InventoryQuickAddDialogInstance,
+        t: TranslateFunc,
+        defaults?: {amount?: number, unit?: Unit | null},
+    ): Promise<boolean> {
+        let locations: InventoryLocationRef[]
+        try {
+            const result = await api.apiInventoryLocationList({pageSize: 100})
+            locations = (result.results ?? []).filter(l => l.id != null).map(l => ({
+                id: l.id!,
+                name: l.name,
+                household: {id: l.household.id!, name: l.household.name},
+            }))
+        } catch (err) {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            return false
+        }
+
+        if (locations.length === 0) {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, t('NoInventoryLocations'))
+            return false
+        }
+
+        const saved = getDefaultLocation()
+        const result = await dialog.openManage({
+            title: `${t('Pantry')}: ${food.name}`,
+            foodId: food.id,
+            locations: locations.map(l => ({value: l.id, label: l.name})),
+            defaultLocationId: saved?.id ?? null,
+            amount: defaults?.amount ?? 1,
+            unit: defaults?.unit ?? null,
+        })
+
+        return result.hasEntries
+    }
+
+    /**
      * Get the currently saved default inventory location, or null.
      */
     function getDefaultLocation(): InventoryLocationRef | null {
@@ -254,5 +304,5 @@ export function useInventoryActions() {
         }
     }
 
-    return {addToInventory, quickAddToInventory, removeFromInventory, ensureDefaultLocation, getDefaultLocation, checkInventoryStatus}
+    return {addToInventory, quickAddToInventory, manageInventory, removeFromInventory, ensureDefaultLocation, getDefaultLocation, checkInventoryStatus}
 }

@@ -87,6 +87,7 @@ import {TFood, TUnit} from '@/types/Models.ts'
 import {ErrorMessageType, PreparedMessage, useMessageStore} from '@/stores/MessageStore.ts'
 import {useShoppingActions} from '@/composables/useShoppingActions'
 import {useInventoryActions} from '@/composables/useInventoryActions'
+import type {InventoryQuickAddDialogInstance} from '@/composables/useInventoryActions'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 
 const props = defineProps<{
@@ -100,7 +101,7 @@ const emit = defineEmits<{
 
 const {t} = useI18n()
 const {addToShopping, removeFromShopping, checkShoppingStatus} = useShoppingActions()
-const {quickAddToInventory, removeFromInventory, checkInventoryStatus} = useInventoryActions()
+const {manageInventory} = useInventoryActions()
 const userPrefStore = useUserPreferenceStore()
 
 const menuOpen = ref(false)
@@ -212,32 +213,18 @@ async function toggleInventory() {
     loadingInventory.value = true
 
     try {
-        if (inventoryStatus.value) {
-            const dialog = confirmDialogRef.value
-            if (!dialog) return
-            const removed = await removeFromInventory({id: food.id, name: food.name}, dialog, t)
-            if (removed) {
-                inventoryStatus.value = await checkInventoryStatus(food.id)
-                food.inInventory = inventoryStatus.value ? 'True' : 'False'
-                food.foodOnhand = inventoryStatus.value
-            }
-        } else {
-            const dialog = inventoryDialogRef.value
-            if (!dialog) return
-            const added = await quickAddToInventory(
-                {id: food.id, name: food.name},
-                dialog, t,
-                {amount: props.ingredient.amount * props.ingredientFactor, unit: props.ingredient.unit ?? null},
-            )
-            if (added) {
-                inventoryStatus.value = true
-                food.inInventory = 'True'
-                food.foodOnhand = true
-                useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
-            }
-        }
+        const dialog = inventoryDialogRef.value
+        if (!dialog) return
+        const hasEntries = await manageInventory(
+            {id: food.id, name: food.name},
+            dialog as unknown as InventoryQuickAddDialogInstance, t,
+            {amount: props.ingredient.amount * props.ingredientFactor, unit: props.ingredient.unit ?? null},
+        )
+        inventoryStatus.value = hasEntries
+        food.inInventory = hasEntries ? 'True' : 'False'
+        food.foodOnhand = hasEntries
     } catch (err) {
-        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     } finally {
         loadingInventory.value = false
     }
