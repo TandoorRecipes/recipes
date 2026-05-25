@@ -2631,12 +2631,16 @@ class ShoppingListViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMix
         return queryset
 
 
-@extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='updated_after',
-                     description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'),
-                     type=datetime.datetime),
-    OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int)
-]))
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='updated_after', description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'), type=datetime.datetime),
+            OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int),
+            OpenApiParameter(name='food', description=_('Returns only entries for the given food id'), type=int),
+            OpenApiParameter(name='checked', description=_('Filter by checked state. When omitted, returns unchecked entries plus recently-completed ones within the shopping_recent_days window.'), type=bool),
+        ]
+    )
+)
 class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     """
     individual entries of a shopping list

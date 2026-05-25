@@ -104,8 +104,19 @@ const {quickAddToInventory, removeFromInventory, checkInventoryStatus} = useInve
 const userPrefStore = useUserPreferenceStore()
 
 const menuOpen = ref(false)
-const shoppingStatus = ref<boolean | null>(null)
-const inventoryStatus = ref<boolean | null>(null)
+const shoppingStatus = ref<boolean>(parseFoodShopping(props.ingredient.food))
+const inventoryStatus = ref<boolean>(parseFoodInventory(props.ingredient.food))
+
+function parseFoodShopping(food: typeof props.ingredient.food): boolean {
+    const s = food?.shopping
+    return s === true || s === 'True' || s === 'true'
+}
+
+function parseFoodInventory(food: typeof props.ingredient.food): boolean {
+    const inv = food?.inInventory
+    if (inv === true || inv === 'True' || inv === 'true') return true
+    return !!food?.foodOnhand
+}
 const localIgnoreShopping = ref(false)
 const substitutesExpanded = ref(false)
 const allSubstitutes = ref<Array<{id: number, name: string}>>([])
@@ -132,24 +143,13 @@ const triggerColor = computed(() => {
     if (!food) return undefined
 
     if (mode === 'onhand') {
-        // After menu interaction, local inventory status overrides stale API data
-        if (inventoryStatus.value !== null) {
-            return inventoryStatus.value ? 'success' : undefined
-        }
-        const inv = food.inInventory
-        if (inv === true || inv === 'True' || inv === 'true') return 'success'
-        if (food.foodOnhand) return 'success'
+        if (inventoryStatus.value) return 'success'
         if (food.substituteOnhand) return 'warning'
         return undefined
     }
 
     if (mode === 'shopping') {
-        if (shoppingStatus.value !== null) {
-            return shoppingStatus.value ? 'success' : undefined
-        }
-        const s = food.shopping
-        if (s === true || s === 'True' || s === 'true') return 'success'
-        return undefined
+        return shoppingStatus.value ? 'success' : undefined
     }
 
     return undefined
@@ -162,17 +162,9 @@ const hasSubstitutes = computed(() => {
 
 watch(menuOpen, (open) => {
     if (!open) return
-    const foodId = props.ingredient.food?.id
-    if (!foodId) return
-
     localIgnoreShopping.value = props.ingredient.food?.ignoreShopping ?? false
     substitutesExpanded.value = false
     allSubstitutes.value = []
-
-    // Re-fetch but keep last known value (don't reset to null) so
-    // triggerColor doesn't flash back to stale API data after actions
-    checkShoppingStatus(foodId).then(v => { shoppingStatus.value = v })
-    checkInventoryStatus(foodId).then(v => { inventoryStatus.value = v })
 })
 
 function toggleSubstitutes() {

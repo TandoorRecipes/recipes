@@ -81,7 +81,7 @@ export function useShoppingActions() {
      */
     async function checkShoppingStatus(foodId: number): Promise<boolean> {
         try {
-            const result = await api.apiShoppingListEntryList({food: foodId, pageSize: 1})
+            const result = await api.apiShoppingListEntryList({food: foodId, checked: false, pageSize: 1})
             return (result.count ?? 0) > 0
         } catch {
             return false
