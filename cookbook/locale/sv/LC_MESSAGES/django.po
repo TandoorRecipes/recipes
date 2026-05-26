@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-05-26 11:11+0000\n"
+"PO-Revision-Date: 2026-05-26 14:46+0000\n"
 "Last-Translator: Gisli Jonsson <gisli.broncomedia@gmail.com>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
@@ -408,7 +408,7 @@ msgstr "Näring"
 
 #: .\cookbook\models.py:999
 msgid "Allergen"
-msgstr "Allergen"
+msgstr "Allergener"
 
 #: .\cookbook\models.py:1000
 msgid "Price"
@@ -802,7 +802,8 @@ msgid ""
 "password reset</a>."
 msgstr ""
 "Llänken för återställning av lösenord var ogiltig, möjligen eftersom den "
-"redan har använts. Begär en <a href=\"%(passwd_reset_url)s\">ny "
+"redan har använts. \n"
+"Vänligen begär en <a href=\"%(passwd_reset_url)s\">ny "
 "lösenordsåterställning</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
@@ -822,7 +823,7 @@ msgstr "Sätt lösenord"
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
-msgstr "Registrera"
+msgstr "Register"
 
 #: .\cookbook\templates\account\signup.html:11
 msgid "Create an Account"
@@ -1118,10 +1119,11 @@ msgid ""
 msgstr ""
 "\n"
 "        Att skapa en optimal sökupplevelse är komplicerat och påverkas "
-"starkt av din personliga konfiguration. Att ändra i sökinställningarna kan "
-"ha en betydande inverkan på både hastighet och resultatens kvalitet. "
+"starkt av din personliga konfiguration. \n"
+"Att ändra i sökinställningarna kan ha en betydande inverkan på både "
+"hastighet och resultatens kvalitet. \n"
 "Inställningar för sökmetoder, trigram och fulltextsökning är endast "
-"tillgängliga om du använder PostgreSQL som databas.\n"
+"tillgängliga om du använder Postgre-SQL som databas.\n"
 "    "
 
 #: .\cookbook\templates\search_info.html:19
@@ -1182,9 +1184,10 @@ msgid ""
 msgstr ""
 " \n"
 "            Sökningar på fraser ignorerar skiljetecken, men söker efter alla "
-"ord i exakt den ordning de har angetts. En sökning efter 'apple or flour' "
-"kommer endast att returnera recept som innehåller just den exakta frasen "
-"'apple or flour' i de fält som har valts för fulltextsökning.\n"
+"ord i exakt den ordning de har angetts. \n"
+"En sökning efter 'apple or flour' kommer endast att returnera recept som "
+"innehåller just den exakta frasen 'apple or flour' i de fält som har valts "
+"för fulltextsökning.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:39
@@ -1207,15 +1210,15 @@ msgid ""
 msgstr ""
 " \n"
 "            Webbsökningar efterliknar den funktionalitet som finns på många "
-"sökmotorer som stöder särskild syntax. Genom att använda citattecken runt "
-"flera ord omvandlas dessa till en fras. Ordet 'or' tolkas som att man söker "
-"efter ordet (eller frasen) precis före 'or', ELLER ordet (eller frasen) "
-"direkt efter. Tecknet '-' tolkas som att man söker efter recept som inte "
-"innehåller det ord (eller den fras) som följer direkt efter. En sökning "
-"efter exempelvis 'apple pie' eller 'cherry -butter' kommer att returnera "
-"alla recept som innehåller frasen 'apple pie' eller ordet 'cherry' i de "
-"valda fälten, men exkluderar alla recept som innehåller ordet 'butter' i de "
-"valda fälten.\n"
+"sökmotorer som stöder särskild syntax. \n"
+"Genom att använda citattecken runt flera ord omvandlas dessa till en fras. "
+"Ordet 'or' tolkas som att man söker efter ordet (eller frasen) precis före "
+"'or', ELLER ordet (eller frasen) direkt efter. Tecknet '-' tolkas som att "
+"man söker efter recept som inte innehåller det ord (eller den fras) som "
+"följer direkt efter. En sökning efter exempelvis 'apple pie' eller 'cherry -"
+"butter' kommer att returnera alla recept som innehåller frasen 'apple pie' "
+"eller ordet 'cherry' i de valda fälten, men exkluderar alla recept som "
+"innehåller ordet 'butter' i de valda fälten.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:48
@@ -1245,11 +1248,11 @@ msgid ""
 "            "
 msgstr ""
 " \n"
-"            Ett annat sätt att söka, som också kräver PostgreSQL, är trigram-"
-"sökning eller trigram-likhet. Ett trigram är en grupp av tre på varandra "
-"följande tecken. Om du till exempel söker efter 'apple' skapas tre trigram: "
-"'app', 'ppl' och 'ple'. Systemet beräber sedan ett värde för hur väl "
-"sökordet matchar de genererade trigrammen. En fördel med att söka med "
+"            Ett annat sätt att söka, som också kräver Postgre-SQL, är "
+"trigram-sökning eller trigram-likhet. Ett trigram är en grupp av tre på "
+"varandra följande tecken. Om du till exempel söker efter 'apple' skapas tre "
+"trigram: 'app', 'ppl' och 'ple'. Systemet beräber sedan ett värde för hur "
+"väl sökordet matchar de genererade trigrammen. En fördel med att söka med "
 "trigram är att en sökning efter 'sandwich' även kan hitta felstavade ord som "
 "'sandwhich', vilket andra metoder skulle missa.\n"
 "            "
@@ -1525,15 +1528,6 @@ msgid "System"
 msgstr "System"
 
 #: .\cookbook\templates\system.html:24
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "        Django Recipes is an open source free software application. It "
-#| "can be found on\n"
-#| "        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-#| "        Changelogs can be found <a href=\"https://github.com/vabene1111/"
-#| "recipes/releases\">here</a>.\n"
-#| "    "
 msgid ""
 "\n"
 "        Tandoor Recipes is an open source free software application. It can "
@@ -1783,8 +1777,6 @@ msgid "The following sessions are currently active on your account."
 msgstr "Följande sessioner är för närvarande aktiva på ditt konto."
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
-#, fuzzy
-#| msgid "Starts With"
 msgid "Started At"
 msgstr "Börjar med"
 
@@ -1797,8 +1789,6 @@ msgid "Browser"
 msgstr "Utforskare"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
-#, fuzzy
-#| msgid "Last viewed"
 msgid "Last Seen"
 msgstr "Senast öppnade"
 
@@ -2116,7 +2106,7 @@ msgstr "ID för anpassat filter; returnerar matchande recept."
 
 #: .\cookbook\views\api.py:1761
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
-msgstr "Filtrera efter tillgängliga livsmedel. [true/<b>false[/b]"
+msgstr "Filtrera efter tillgängliga livsmedel. [true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:1762
 msgid "Include child keywords and foods in search results. [<b>true</b>/false]"
@@ -2273,7 +2263,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:444
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "Allt för dina recept, inköpslistor och måltidsplaner."
 
 #: .\cookbook\views\views.py:458 .\cookbook\views\views.py:459
 msgid "Plan"
@@ -2281,7 +2271,7 @@ msgstr "Planen"
 
 #: .\cookbook\views\views.py:460
 msgid "View your meal Plan"
-msgstr ""
+msgstr "Visa måltidsplan"
 
 #: .\cookbook\views\views.py:479
 msgid "View your shopping lists"
