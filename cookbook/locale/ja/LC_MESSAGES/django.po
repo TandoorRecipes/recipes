@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-05-24 15:29+0000\n"
+"PO-Revision-Date: 2026-05-26 05:16+0000\n"
 "Last-Translator: yama <yamada2662@gmail.com>\n"
 "Language-Team: Japanese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ja/>\n"
@@ -109,80 +109,83 @@ msgid "reverse rotation"
 msgstr "逆回転"
 
 #: .\cookbook\helper\recipe_url_import.py:313
+#, fuzzy
 msgid "careful rotation"
-msgstr ""
+msgstr "慎重な回転"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "knead"
-msgstr ""
+msgstr "練る"
 
 #: .\cookbook\helper\recipe_url_import.py:315
+#, fuzzy
 msgid "thicken"
-msgstr ""
+msgstr "煮詰める"
 
 #: .\cookbook\helper\recipe_url_import.py:316
+#, fuzzy
 msgid "warm up"
-msgstr ""
+msgstr "温める"
 
 #: .\cookbook\helper\recipe_url_import.py:317
 msgid "ferment"
-msgstr ""
+msgstr "寝かせる"
 
 #: .\cookbook\helper\recipe_url_import.py:318
 msgid "slow cook"
-msgstr ""
+msgstr "じっくり煮込む"
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
-msgstr ""
+msgstr "卵ゆで器"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
-msgstr ""
+msgstr "ケトル"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
-msgstr ""
+msgstr "混ぜる"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "pre-clean"
-msgstr ""
+msgstr "事前洗浄"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
-msgstr ""
+msgstr "高温"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
-msgstr ""
+msgstr "炊飯器"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
-msgstr ""
+msgstr "キャラメリゼ"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
-msgstr ""
+msgstr "ピーラー"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "slicer"
-msgstr ""
+msgstr "スライサー"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
-msgstr ""
+msgstr "おろし金"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
-msgstr ""
+msgstr "スパイラルスライサー"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
-msgstr ""
+msgstr "真空加熱"
 
 #: .\cookbook\helper\shopping_helper.py:154
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "一人分の量を指定する必要があります"
 
 #: .\cookbook\helper\template_helper.py:135
 #: .\cookbook\helper\template_helper.py:137
@@ -190,64 +193,69 @@ msgstr ""
 #: .\cookbook\helper\template_helper.py:141
 #: .\cookbook\helper\template_helper.py:143
 msgid "Could not parse template code."
-msgstr ""
+msgstr "テンプレートコードを解析できませんでした。"
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "お気に入り"
 
 #: .\cookbook\integration\copymethat.py:50
+#, fuzzy
 msgid "I made this"
-msgstr ""
+msgstr "作成経験あり"
 
 #: .\cookbook\integration\integration.py:233
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"インポーターは.zipファイルを想定していました。データに適したインポーターの種"
+"類を選択しましたか？"
 
 #: .\cookbook\integration\integration.py:235
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"インポート中に予期せぬエラーが発生しました。有効なファイルをアップロードした"
+"ことを確認してください。"
 
 #: .\cookbook\integration\integration.py:239
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "以下のレシピは既に存在していたため、無視されました。"
 
 #: .\cookbook\integration\integration.py:242
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "%s のレシピをインポートしました。"
 
 #: .\cookbook\integration\mealie1.py:242
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "カロリー"
 
 #: .\cookbook\integration\mealie1.py:243
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "炭水化物"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "コレステロール"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "脂質"
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "食物繊維"
 
 #: .\cookbook\integration\mealie1.py:247
 msgid "Protein"
-msgstr ""
+msgstr "たんぱく質"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
