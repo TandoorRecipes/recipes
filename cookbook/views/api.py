@@ -2736,7 +2736,7 @@ class AiImportView(APIView):
                     img = PIL.Image.open(uploaded_file)
                     buffer = io.BytesIO()
                     img.save(buffer, format=img.format)
-                    base64type = 'image/' + img.format
+                    base64type = 'image/' + img.format.lower()
                     file_bytes = buffer.getvalue()
                 except PIL.UnidentifiedImageError:
                     uploaded_file.seek(0)
@@ -2812,6 +2812,18 @@ class AiImportView(APIView):
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
             response_text = ai_response.choices[0].message.content
+
+            # Strip Markdown code fences. Some providers (notably Anthropic Claude
+            # via LiteLLM) wrap JSON responses in ```json ... ``` even when
+            # response_format={"type":"json_object"} is requested, which breaks
+            # json.loads() below.
+            stripped = response_text.strip()
+            if stripped.startswith("```"):
+                lines = stripped.split("\n")
+                if len(lines) >= 2 and lines[-1].strip() == "```":
+                    response_text = "\n".join(lines[1:-1])
+                else:
+                    response_text = "\n".join(lines[1:])
 
             try:
                 data_json = json.loads(response_text)
