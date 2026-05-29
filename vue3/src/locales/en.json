@@ -956,6 +956,8 @@
   "show_step_ingredients": "Show Step Ingredients",
   "show_step_ingredients_setting": "Show Ingredients Next To Recipe Steps",
   "show_step_ingredients_setting_help": "Show ingredients table next to recipe steps. Applies at creation time. Can be changed for each recipe step.",
+  "show_ingredient_notes_setting": "Show Ingredient Notes Inline",
+  "show_ingredient_notes_setting_help": "Always show ingredient notes inline below the ingredient instead of requiring a tap or hover.",
   "show_units": "Show Units",
   "simple_mode": "Simple Mode",
   "sort_by": "Sort By",
