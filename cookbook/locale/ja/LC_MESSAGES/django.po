@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-05-26 05:16+0000\n"
+"PO-Revision-Date: 2026-05-30 16:21+0000\n"
 "Last-Translator: yama <yamada2662@gmail.com>\n"
 "Language-Team: Japanese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ja/>\n"
@@ -259,86 +259,90 @@ msgstr "たんぱく質"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "飽和脂肪酸"
 
 #: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
-msgstr ""
+msgstr "ナトリウム"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "砂糖"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
-msgstr ""
+msgstr "トランス脂肪酸"
 
 #: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "不飽和脂肪"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr ""
+msgstr "レシピ元:"
 
 #: .\cookbook\integration\paprika.py:47
 msgid "Notes"
-msgstr ""
+msgstr "ノート"
 
 #: .\cookbook\integration\paprika.py:50
 msgid "Nutritional Information"
-msgstr ""
+msgstr "栄養成分表示"
 
 #: .\cookbook\integration\paprika.py:54 .\cookbook\templates\system.html:242
 msgid "Source"
-msgstr ""
+msgstr "ソース"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "ストレージ統合ではこの方法は実装されていません"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"現在、PDFへのエクスポート機能はご利用いただけません。レシピをPDFとして保存す"
+"るには、ブラウザの印刷機能（Ctrl+P）をご利用ください。"
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr ""
+msgstr "インポート元"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr ""
+msgstr "人数"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "待ち時間"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "準備時間"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:6
 msgid "Cookbook"
-msgstr ""
+msgstr "料理本"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "セクション"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "で始まる食品を修正 "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "レシピの全文検索インデックスを再構築します"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"PostgreSQLデータベースのみが全文検索を使用し、インデックスを再構築する必要は"
+"ありません。"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
