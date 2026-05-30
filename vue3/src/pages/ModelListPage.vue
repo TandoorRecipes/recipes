@@ -347,7 +347,10 @@ const itemsPerPageOptions = [
 
 const query = useRouteQuery('query', "")
 const page = useRouteQuery('page', 1, {transform: Number})
-const pageSize = useRouteQuery('pageSize', useUserPreferenceStore().deviceSettings.general_tableItemsPerPage, {transform: Number})
+// Pinia v3 useStore() disrupts Vue's injection context when called inline as a
+// function argument — evaluate the default separately before calling useRouteQuery.
+const _defaultPageSize = useUserPreferenceStore().deviceSettings.general_tableItemsPerPage
+const pageSize = useRouteQuery('pageSize', _defaultPageSize, {transform: Number})
 const ordering = useRouteQuery('ordering', '')
 
 // Clear custom ordering when a search query is entered — relevance takes priority
