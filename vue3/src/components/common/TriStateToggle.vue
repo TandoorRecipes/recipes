@@ -8,7 +8,6 @@
             mandatory
             density="compact"
             class="ms-2"
-            @click.stop
         >
             <v-btn value="any" size="x-small">{{ $t('Any') }}</v-btn>
             <v-btn value="1" size="x-small">{{ $t('Yes') }}</v-btn>
