@@ -33,6 +33,7 @@
         <template #item.action="{item}">
             <v-btn-group divided border density="comfortable">
                 <v-btn icon="fa-solid fa-clock-rotate-left" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
+                <v-btn icon="$create" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'add'}}"></v-btn>
                 <v-btn icon="fa-solid fa-minus" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'remove'}}"></v-btn>
                 <v-btn icon="fa-solid fa-arrow-right" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'move'}}"></v-btn>
             </v-btn-group>
