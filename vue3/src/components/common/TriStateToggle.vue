@@ -7,7 +7,9 @@
             @update:model-value="onToggle"
             mandatory
             density="compact"
-            class="ms-2"
+            color="primary"
+            variant="outlined"
+            class="ms-2 flex-shrink-0"
         >
             <v-btn value="any" size="x-small">{{ $t('Any') }}</v-btn>
             <v-btn value="1" size="x-small">{{ $t('Yes') }}</v-btn>
