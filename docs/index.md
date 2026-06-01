@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
+  <a href="https://tandoor.dev"><img src="https://github.com/TandoorRecipes/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
   <br>
   Tandoor Recipes
   <br>
@@ -9,12 +9,12 @@
 <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
 
 <p align="center">
-<a href="https://github.com/vabene1111/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/vabene1111/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>
-<a href="https://github.com/vabene1111/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/vabene1111/recipes" ></a>
-<a href="https://github.com/vabene1111/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/vabene1111/recipes" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/TandoorRecipes/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/TandoorRecipes/recipes" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/TandoorRecipes/recipes" ></a>
 <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/badge/icon/discord?icon=discord&label" ></a>
-<a href="https://hub.docker.com/r/vabene1111/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/vabene1111/recipes" ></a>
-<a href="https://github.com/vabene1111/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/vabene1111/recipes" ></a>
+<a href="https://hub.docker.com/r/TandoorRecipes/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/TandoorRecipes/recipes" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/TandoorRecipes/recipes" ></a>
 <a href="https://app.tandoor.dev/e/demo-auto-login/" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>
 </p>
 
@@ -81,7 +81,7 @@ This application has been under rapid development over the last year.
 During this time I have learnt a lot and added tons of features, I have also moved to some new technologies like Vue.js.
 This has led to some great features but has left the Quality unsatisfactory in regard to the details and technical implementation.
 
-So in addition to the new Features and Ideas which can always be found in the [Issues & Milestones](https://github.com/vabene1111/recipes/issues)
+So in addition to the new Features and Ideas which can always be found in the [Issues & Milestones](https://github.com/TandoorRecipes/recipes/issues)
 there are some greater overall goals for the future (in no particular order)
 
 - Improve the UI! The Design is inconsistent and many pages work but don't look great. This needs to change.
