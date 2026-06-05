@@ -89,7 +89,7 @@
                         @open-filters="openSettingsPanel('filters')"
                     />
 
-                    <v-row v-if="inlineGroups.length > 0" dense class="mt-2">
+                    <v-row v-if="inlineGroups.length > 0" density="compact" class="mt-2">
                         <template v-for="[group, defs] in inlineGroups" :key="group">
                             <template v-for="def in defs" :key="def.key">
                                 <v-col v-if="def.type === 'tag-group' && def.variantKeys && def.modelName" cols="12" md="4">
