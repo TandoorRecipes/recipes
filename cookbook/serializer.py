@@ -2133,6 +2133,19 @@ class RecipeShoppingUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'list_recipe', 'ingredients', 'servings', ]
 
 
+class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
+    amount = serializers.IntegerField(write_only=True, allow_null=True, required=False,
+                                      help_text=_("Amount of food to add to the shopping list"))
+    unit = serializers.IntegerField(write_only=True, allow_null=True, required=False,
+                                    help_text=_("ID of unit to use for the shopping list"))
+    delete = serializers.ChoiceField(choices=['true'], write_only=True, allow_null=True, allow_blank=True,
+                                     help_text=_("When set to true will delete all food from active shopping lists."))
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'amount', 'unit', 'delete', ]
+
+
 # non model serializers
 
 class RecipeFromSourceSerializer(serializers.Serializer):
