@@ -94,19 +94,6 @@ export function registerModel(model: Model) {
 }
 
 /**
- * returns a list of models that should be shown in the list/database view
- */
-export function getListModels() {
-    let modelList: Model[] = []
-    SUPPORTED_MODELS.forEach((model) => {
-        if (!model.disableListView) {
-            modelList.push(model)
-        }
-    })
-    return modelList
-}
-
-/**
  * common list parameters shared by all generic models
  * index signature allows filter params to pass through to API
  */
@@ -188,7 +175,6 @@ export type Model = {
     disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
     disableSearch?: boolean | undefined,
-    disableListView?: boolean | undefined,
 
     isAdvancedDelete: boolean | undefined,
     isPaginated: boolean | undefined,
@@ -411,7 +397,6 @@ export const TRecipe = {
     isAdvancedDelete: true,
     toStringKeys: ['name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -429,7 +414,6 @@ export const TStep = {
     isPaginated: true,
     toStringKeys: ['name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -447,7 +431,6 @@ export const TIngredient = {
     isPaginated: true,
     toStringKeys: ['id'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'id'},
@@ -486,7 +469,6 @@ export const TMealPlan = {
     isPaginated: true,
     toStringKeys: ['title', 'recipe.name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Title', key: 'title'},
@@ -508,7 +490,6 @@ export const TRecipeBook = {
     isAdvancedDelete: true,
     toStringKeys: ['name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -526,7 +507,6 @@ export const TRecipeBookEntry = {
     isPaginated: true,
     toStringKeys: ['book.name', 'recipe.name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Book', key: 'book.name'},
@@ -568,7 +548,6 @@ export const TUser = {
     disableCreate: true,
     disableDelete: true,
     disableUpdate: true,
-    disableListView: true,
 
     isPaginated: false,
     toStringKeys: ['displayName'],
@@ -590,7 +569,6 @@ export const TGroup = {
     disableCreate: true,
     disableDelete: true,
     disableUpdate: true,
-    disableListView: true,
 
     isPaginated: false,
     toStringKeys: ['name'],
@@ -651,7 +629,6 @@ export const TShoppingList = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ShoppingListEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['name'],
 
@@ -672,7 +649,6 @@ export const TShoppingListEntry = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ShoppingListEntryEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['amount', 'unit.name', 'food.name'],
 
@@ -712,7 +688,6 @@ export const TProperty = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/PropertyEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['propertyAmount', 'propertyType.name'],
 
@@ -852,7 +827,6 @@ export const TAccessToken = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/AccessTokenEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['token'],
 
@@ -891,7 +865,6 @@ export const TUserSpace = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/UserSpaceEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['user.displayName'],
 
@@ -977,7 +950,6 @@ export const TStorage = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/StorageEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -1064,7 +1036,6 @@ export const TSync = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SyncEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['path'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -1089,7 +1060,6 @@ export const TSyncLog = {
     localizationKeyDescription: 'SyncLogHelp',
     icon: 'fa-solid fa-bars-staggered',
 
-    disableListView: false,
     toStringKeys: ['sync.path'],
     isPaginated: true,
 
@@ -1112,7 +1082,6 @@ export const TRecipeImport = {
     localizationKeyDescription: 'ExternalRecipeImportHelp',
     icon: 'fa-solid fa-file-half-dashed',
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
 
@@ -1155,7 +1124,6 @@ export const TConnectorConfig = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ConnectorConfigEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -1180,7 +1148,6 @@ export const TAiProvider = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/AiProviderEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -1205,7 +1172,6 @@ export const TAiLog = {
     localizationKeyDescription: 'AiLogHelp',
     icon: 'fa-solid fa-wand-magic-sparkles',
 
-    disableListView: false,
     toStringKeys: ['aiProvider.name', 'function', 'created_at'],
     isPaginated: true,
 
@@ -1233,7 +1199,6 @@ export const TFoodInheritField = {
     localizationKeyDescription: 'food_inherit_info',
     icon: 'fa-solid fa-list',
 
-    disableListView: true,
     toStringKeys: ['name'],
 
     disableCreate: true,
@@ -1250,7 +1215,6 @@ export const TSearchFields = {
     localizationKeyDescription: '',
     icon: 'fa-solid fa-search',
 
-    disableListView: true,
     toStringKeys: ['name'],
 
     disableCreate: true,
