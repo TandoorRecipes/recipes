@@ -2688,6 +2688,12 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             if mealplan is not None:
                 self.queryset = self.queryset.filter(list_recipe__mealplan_id=mealplan)
 
+            if food is not None:
+                try:
+                    self.queryset = self.queryset.filter(food_id=int(food))
+                except ValueError:
+                    self.queryset = self.queryset.none()
+
         try:
             if updated_after:
                 updated_after = parse_datetime(updated_after)
