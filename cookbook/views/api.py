@@ -102,7 +102,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  BookmarkletImportListSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, CustomFilterSerializer,
                                  ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
-                                 FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer,
+                                 FoodSimpleSerializer, FoodStatsSerializer, GroupSerializer,
                                  ImportLogSerializer, IngredientSerializer, IngredientSimpleSerializer,
                                  InviteLinkSerializer, KeywordSerializer, MealPlanSerializer, MealTypeSerializer,
                                  PropertySerializer, PropertyTypeSerializer,
@@ -250,30 +250,30 @@ class ExtendedRecipeMixin():
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
         extended = str2bool(request.query_params.get('extended', None))
         recipe_filter = getattr(serializer, 'recipe_filter', None)
-        if extended and recipe_filter:
-            images = serializer.images
+        if recipe_filter:
             space = request.space
 
-            # add a recipe count annotation to the query
-            #  explanation on construction https://stackoverflow.com/a/43771738/15762829
+            # recipe_count is always annotated — used by _apply_list_filters regardless of extended
             recipe_count = Recipe.objects.filter(**{recipe_filter: OuterRef('id')}, space=space).values(
                 recipe_filter).annotate(count=Count('pk', distinct=True)).values('count')
             queryset = queryset.annotate(recipe_count=Coalesce(Subquery(recipe_count), 0))
 
-            # add a recipe image annotation to the query
-            image_subquery = Recipe.objects.filter(**{
-                recipe_filter: OuterRef('id')
-            }, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
-            if tree:
-                image_children_subquery = Recipe.objects.filter(**{
-                    f"{recipe_filter}__path__startswith": OuterRef('path')
+            if extended:
+                # recipe_image is only annotated when extended=true (expensive)
+                images = serializer.images
+                image_subquery = Recipe.objects.filter(**{
+                    recipe_filter: OuterRef('id')
                 }, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
-            else:
-                image_children_subquery = None
-            if images:
-                queryset = queryset.annotate(recipe_image=Coalesce(*images, image_subquery, image_children_subquery))
-            else:
-                queryset = queryset.annotate(recipe_image=Coalesce(image_subquery, image_children_subquery))
+                if tree:
+                    image_children_subquery = Recipe.objects.filter(**{
+                        f"{recipe_filter}__path__startswith": OuterRef('path')
+                    }, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
+                else:
+                    image_children_subquery = None
+                if images:
+                    queryset = queryset.annotate(recipe_image=Coalesce(*images, image_subquery, image_children_subquery))
+                else:
+                    queryset = queryset.annotate(recipe_image=Coalesce(image_subquery, image_children_subquery))
         return queryset
 
 
@@ -1137,6 +1137,24 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         except AttributeError:  # Anonymous users (using share links) don't have shared users
             return []
 
+    def _apply_tristate(self, qs, param, true_q, false_q, distinct=False):
+        value = self.request.query_params.get(param, None)
+        if value is None:
+            return qs
+        if str2bool(value):
+            qs = qs.filter(true_q)
+            if distinct:
+                qs = qs.distinct()
+        else:
+            qs = qs.filter(false_q)
+        return qs
+
+    def _inventory_subquery(self, space):
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=space)
+
+    def _expired_subquery(self, space):
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, expires__lt=timezone.localdate(), space=space)
+
     def _annotate_and_prefetch(self, qs):
         shared_users = self._shared_users
         if shared_users:
@@ -1148,22 +1166,285 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         else:
             qs = qs.annotate(shopping_status=Value(False, output_field=BooleanField()))
 
+        qs = qs.annotate(has_inventory_status=Exists(self._inventory_subquery(self.request.space)))
+        qs = qs.annotate(has_expired_status=Exists(self._expired_subquery(self.request.space)))
+
         return qs \
             .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
             .select_related('recipe', 'supermarket_category')
 
+    def _apply_list_filters(self, qs):
+        shared_users = self._shared_users
+
+        onhand = self.request.query_params.get('onhand', None)
+        if onhand is not None:
+            if str2bool(onhand):
+                qs = qs.filter(onhand_users__id__in=shared_users).distinct()
+            else:
+                qs = qs.exclude(onhand_users__id__in=shared_users)
+
+        qs = self._apply_tristate(qs, 'has_substitute', Q(substitute__isnull=False), Q(substitute__isnull=True), distinct=True)
+        qs = self._apply_tristate(qs, 'in_shopping_list', Q(shopping_status=True), Q(shopping_status=False))
+        qs = self._apply_tristate(qs, 'has_children', Q(numchild__gt=0), Q(numchild=0))
+        qs = self._apply_tristate(qs, 'has_recipe', Q(recipe__isnull=False), Q(recipe__isnull=True))
+        qs = self._apply_tristate(qs, 'used_in_recipes', Q(recipe_count__gt=0), Q(recipe_count=0))
+
+        ignore_shopping = self.request.query_params.get('ignore_shopping', None)
+        if ignore_shopping is not None:
+            qs = qs.filter(ignore_shopping=str2bool(ignore_shopping))
+
+        supermarket_category = self.request.query_params.get('supermarket_category', None)
+        if supermarket_category is not None:
+            try:
+                qs = qs.filter(supermarket_category_id=int(supermarket_category))
+            except ValueError:
+                qs = qs.none()
+
+        qs = self._apply_tristate(qs, 'has_inventory', Q(has_inventory_status=True), Q(has_inventory_status=False))
+
+        inventory_location = self.request.query_params.get('inventory_location', None)
+        if inventory_location is not None:
+            try:
+                qs = qs.filter(
+                    inventoryentry__inventory_location_id=int(inventory_location),
+                    inventoryentry__amount__gt=0,
+                ).distinct()
+            except ValueError:
+                qs = qs.none()
+
+        qs = self._apply_tristate(qs, 'expired', Q(has_expired_status=True), Q(has_expired_status=False))
+
+        expiring_soon = self.request.query_params.get('expiring_soon', None)
+        if expiring_soon is not None:
+            try:
+                days = int(expiring_soon)
+                today = timezone.localdate()
+                qs = qs.filter(
+                    inventoryentry__expires__gte=today,
+                    inventoryentry__expires__lte=today + datetime.timedelta(days=days),
+                    inventoryentry__amount__gt=0,
+                ).distinct()
+            except ValueError:
+                pass
+
+        return qs
+
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+
+        lower_fields = {
+            'name': Lower('name').asc(),
+            '-name': Lower('name').desc(),
+            'supermarket_category__name': Lower('supermarket_category__name').asc(nulls_last=True),
+            '-supermarket_category__name': Lower('supermarket_category__name').desc(nulls_last=True),
+        }
+        field_map = {
+            'numrecipe': 'recipe_count',
+            '-numrecipe': '-recipe_count',
+            'created_at': 'pk',
+            '-created_at': '-pk',
+        }
+        allowed = lower_fields.keys() | field_map.keys() | {'numchild', '-numchild'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                db_field = field_map.get(ordering_param, ordering_param)
+                qs = qs.order_by(db_field)
+
+        return qs
+
     def get_queryset(self):
-        self.queryset = super().get_queryset()
-        return self._annotate_and_prefetch(self.queryset)
+        qs = super().get_queryset()
+        qs = self._annotate_and_prefetch(qs)
+        qs = self._apply_list_filters(qs)
+        qs = self._apply_ordering(qs)
+        qs = self._expand_with_ancestors(qs)
+        return qs
+
+    def _expand_with_ancestors(self, qs):
+        """When `tree_search=true` is passed AND any filter is active, expand
+        the filtered queryset to include every ancestor of a match so the
+        client can render the original tree hierarchy with matches in
+        context. Each food is annotated with ``matched_filter`` (bool)
+        indicating whether it satisfied the filter itself (True) or is
+        present solely as ancestor context (False). Without this param or
+        without filters, the queryset passes through unchanged."""
+        if self.request.query_params.get('tree_search', '').lower() not in ('1', 'true', 'yes'):
+            return qs
+        if not self._has_list_filters():
+            return qs
+
+        matched = list(qs.values_list('id', 'path', 'depth'))
+        if not matched:
+            return qs
+
+        matched_ids = [row[0] for row in matched]
+        # True ancestors only — each matched node's path prefixes, not its
+        # sibling-under-same-root. Build (path_prefix, depth) pairs per level.
+        steplen = Food.steplen
+        ancestor_q = Q()
+        for _, path, depth in matched:
+            for k in range(1, depth):
+                ancestor_q |= Q(path=path[:steplen * k], depth=k)
+
+        ancestor_ids = list(Food.objects.filter(ancestor_q).values_list('id', flat=True)) if ancestor_q else []
+        all_ids = set(matched_ids) | set(ancestor_ids)
+
+        expanded = Food.objects.filter(id__in=all_ids, space=self.request.space)
+        expanded = self._annotate_and_prefetch(expanded)
+        expanded = expanded.annotate(
+            matched_filter=Case(
+                When(id__in=matched_ids, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            ),
+        )
+        return expanded.order_by(Lower('name').asc())
+
+    def _has_list_filters(self):
+        """True if any FoodViewSet list-filter query param is set."""
+        keys = (
+            'onhand', 'has_substitute', 'in_shopping_list', 'has_children',
+            'has_recipe', 'used_in_recipes', 'ignore_shopping',
+            'supermarket_category', 'has_inventory', 'inventory_location',
+            'expired', 'expiring_soon', 'query',
+        )
+        params = self.request.query_params
+        return any(params.get(k) not in (None, '') for k in keys)
+
+    def _compute_substitute_flags(self, foods):
+        """
+        Batch-compute substitute_onhand and substitute_inventory for a page of foods.
+        Replaces per-food N+1 queries in the serializer with 2–4 batch queries.
+        """
+        shared_users = self._shared_users
+        try:
+            household = self.request.user_space.household
+        except AttributeError:
+            household = None
+
+        # Build each food's full substitute ID set (direct + siblings + children)
+        food_sub_ids = {f.id: set(s.id for s in f.substitute.all()) for f in foods}
+
+        # Batch-fetch sibling IDs (1 query for all foods with substitute_siblings)
+        sibling_foods = [f for f in foods if f.substitute_siblings]
+        if sibling_foods:
+            sibling_q = Q()
+            for f in sibling_foods:
+                parent_path = f.path[:Food.steplen * (f.depth - 1)]
+                sibling_q |= Q(path__startswith=parent_path, depth=f.depth)
+            candidates = list(Food.objects.filter(sibling_q).values_list('id', 'path', 'depth'))
+            for f in sibling_foods:
+                parent_path = f.path[:Food.steplen * (f.depth - 1)]
+                for cid, cpath, cdepth in candidates:
+                    if cdepth == f.depth and cpath.startswith(parent_path) and cid != f.id:
+                        food_sub_ids[f.id].add(cid)
+
+        # Batch-fetch child IDs (1 query for all foods with substitute_children)
+        children_foods = [f for f in foods if f.substitute_children]
+        if children_foods:
+            children_q = Q()
+            for f in children_foods:
+                children_q |= Q(path__startswith=f.path, depth__gt=f.depth)
+            candidates = list(Food.objects.filter(children_q).values_list('id', 'path', 'depth'))
+            for f in children_foods:
+                for cid, cpath, cdepth in candidates:
+                    if cpath.startswith(f.path) and cdepth > f.depth:
+                        food_sub_ids[f.id].add(cid)
+
+        all_sub_ids = set()
+        for sids in food_sub_ids.values():
+            all_sub_ids |= sids
+
+        if not all_sub_ids:
+            empty = {f.id: False for f in foods}
+            return empty, empty.copy()
+
+        from cookbook.helper.food_availability_helper import _is_available
+
+        # 1 query: which substitutes are available (legacy onhand_users OR inventory)?
+        available_ids = set(
+            Food.objects.filter(id__in=all_sub_ids).filter(_is_available(household, shared_users))
+            .values_list('id', flat=True)
+        )
+
+        # 1 query: which substitutes have inventory only? (drives substitute_inventory)
+        inventory_q = Q(inventoryentry__amount__gt=0)
+        if household is not None:
+            inventory_q &= Q(inventoryentry__inventory_location__household=household)
+        inventory_ids = set(
+            Food.objects.filter(id__in=all_sub_ids).filter(inventory_q)
+            .values_list('id', flat=True)
+        )
+
+        sub_onhand = {f.id: bool(food_sub_ids[f.id] & available_ids) for f in foods}
+        sub_inventory = {f.id: bool(food_sub_ids[f.id] & inventory_ids) for f in foods}
+        return sub_onhand, sub_inventory
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        foods = page if page is not None else list(queryset)
+
+        serializer = self.get_serializer(foods, many=True)
+
+        # Batch-compute substitute flags for the full serializer (skip for ?simple=true)
+        if not request.query_params.get('simple', False):
+            sub_onhand, sub_inventory = self._compute_substitute_flags(foods)
+            serializer.context['_substitute_onhand'] = sub_onhand
+            serializer.context['_substitute_inventory'] = sub_inventory
+
+        if page is not None:
+            return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.request and self.request.query_params.get('simple', False):
             return FoodSimpleSerializer
         return self.serializer_class
 
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=FoodStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        shared_users = self._shared_users
+        base_qs = Food.objects.filter(space=request.space)
+
+        base_qs = base_qs.annotate(
+            _has_inventory=Exists(self._inventory_subquery(request.space)),
+            _has_expired=Exists(self._expired_subquery(request.space)),
+        )
+
+        if shared_users:
+            shopping_sub = ShoppingListEntry.objects.filter(
+                space=request.space,
+                food=OuterRef('id'),
+                checked=False,
+                created_by__in=shared_users,
+            )
+            agg = base_qs.annotate(_shopping=Exists(shopping_sub)).aggregate(
+                onhand=Count('pk', filter=Q(onhand_users__id__in=shared_users), distinct=True),
+                shopping=Count('pk', filter=Q(_shopping=True), distinct=True),
+                ignored=Count('pk', filter=Q(ignore_shopping=True), distinct=True),
+                inventory=Count('pk', filter=Q(_has_inventory=True), distinct=True),
+                expired=Count('pk', filter=Q(_has_expired=True), distinct=True),
+                total=Count('pk', distinct=True),
+            )
+        else:
+            agg = base_qs.aggregate(
+                ignored=Count('pk', filter=Q(ignore_shopping=True)),
+                inventory=Count('pk', filter=Q(_has_inventory=True)),
+                expired=Count('pk', filter=Q(_has_expired=True)),
+                total=Count('pk'),
+            )
+            agg.update(onhand=0, shopping=0)
+
+        return Response({k: v or 0 for k, v in agg.items()})
+
     # TODO I could not find any usage of this and it causes schema generation issues, so commenting it for now
     # this is used on the Shopping Badge
-    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
+    @decorators.action(detail=True, methods=['PUT'])
     # # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
         if self.request.space.demo:
@@ -1189,11 +1470,13 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             if unit and unit is None:
                 raise APIException({'error': 'Unit not found in current space'}, code=status.HTTP_400_BAD_REQUEST)
 
-        ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space,
-                                         created_by=request.user)
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+    @decorators.action(detail=True, methods=['GET'], serializer_class=FoodSimpleSerializer)
+    def substitutes(self, request, pk):
+        obj = self.get_object()
+        qs = obj.get_substitutes()
+        return Response(FoodSimpleSerializer(qs, many=True).data)
 
-    @decorators.action(detail=True, methods=['POST'], )
+    @decorators.action(detail=True, methods=['POST'])
     def fdc(self, request, pk):
         """
         updates the food with all possible data from the FDC Api
