@@ -105,6 +105,8 @@ function loadItems(options: VDataTableUpdateOptions) {
 
     page.value = options.page
     pageSize.value = options.itemsPerPage
+    parameters.page = options.page
+    parameters.pageSize = options.itemsPerPage > 0 ? options.itemsPerPage : undefined
 
     api.apiInventoryEntryList(parameters).then((r: any) => {
         items.value = r.results
