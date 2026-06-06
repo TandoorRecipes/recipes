@@ -1290,12 +1290,15 @@ export class GenericModel {
      * @param genericListRequestParameter parameters
      * @return promise of request
      */
-    list(genericListRequestParameter: GenericListRequestParameter, initOverrides?: RequestInit) {
+    list(genericListRequestParameter: GenericListRequestParameter, initOverrides?: RequestInit): Promise<{ count: number, results: any[], next?: string | null }> {
         if (this.model.disableList) {
             throw new Error('Cannot list on this model!')
-        } else {
-            return this.api[`api${this.model.name}List`](genericListRequestParameter, initOverrides)
         }
+        // Non-paginated endpoints (model.isPaginated === false, e.g. User/Group) return a bare
+        // array; paginated ones return {count, results, next}. Normalize to a single envelope so
+        // every caller gets a consistent shape (branch on the response, robust to a mis-set flag).
+        return this.api[`api${this.model.name}List`](genericListRequestParameter, initOverrides)
+            .then((raw: any) => Array.isArray(raw) ? { count: raw.length, results: raw, next: null } : raw)
     }
 
     /**

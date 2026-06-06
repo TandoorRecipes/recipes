@@ -159,13 +159,10 @@ onBeforeMount(() => {
 function search(query: string) {
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: props.limit}).then((r: any) => {
-        if (modelClass.value.model.isPaginated) {
-            hasMoreItems.value = !!r.next
-            return r.results
-        } else {
-            hasMoreItems.value = false
-            return r
-        }
+        // list() now always resolves a {count, results, next} envelope (non-paginated models
+        // are normalized in GenericModel.list), so no per-shape branch is needed here.
+        hasMoreItems.value = !!r.next
+        return r.results
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {

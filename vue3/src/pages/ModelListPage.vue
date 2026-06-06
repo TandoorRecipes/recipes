@@ -180,6 +180,9 @@
                     :items-per-page="pageSize"
                     disable-sort
                 >
+                    <!-- Non-paginated models (e.g. User/Group) return a bare array, not a server
+                         page — suppress VDataTableServer's server-pagination footer for them. -->
+                    <template v-if="!genericModel.model.isPaginated" #bottom></template>
                     <template v-slot:header.action v-if="selectedItems.length > 0">
                         <v-btn icon="fa-solid fa-ellipsis-v" variant="plain" color="info">
                             <v-icon icon="fa-solid fa-ellipsis-v"></v-icon>
