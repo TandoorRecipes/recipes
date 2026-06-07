@@ -56,7 +56,7 @@
                                        :open-on-hover="false" :open-on-click="false">{{ i.note }}</v-tooltip>
                         </v-icon>
                     </td>
-                    <td v-if="showActions && mobile" style="width: 1%; text-wrap: nowrap; padding-left: 0; padding-right: 4px;">
+                    <td v-if="showActions && mobile" class="ingredient-action-sticky" style="width: 1%; text-wrap: nowrap; padding-left: 0; padding-right: 4px;">
                         <IngredientContextMenu
                             v-if="!i.isHeader && i.food"
                             :ingredient="i"
@@ -192,4 +192,17 @@ function substituteLabel(i: Ingredient): string {
 }
 
 </script>
+
+<style scoped>
+/* On mobile the detailed-step ingredient table can exceed the viewport width
+   (it carries an extra checkbox column), pushing the action kebab into the
+   table's horizontal-overflow zone where it's clipped off-screen. Pin the
+   action cell to the right edge so the kebab stays visible (pattern-013b). */
+.ingredient-action-sticky {
+    position: sticky;
+    right: 0;
+    background: rgb(var(--v-theme-surface));
+    z-index: 1;
+}
+</style>
 
