@@ -236,3 +236,85 @@ describe('IngredientsTable note truncation', () => {
         expect(html).toContain('abcdefghijklmnopqrstuvwxy')
     })
 })
+
+describe('IngredientsTable mobile Option-C list layout', () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
+        resetApiMock()
+    })
+
+    function mountTableMobile(ingredients: any[], context: 'overview' | 'step' = 'step', extraProps: any = {}) {
+        const prePopulate: PiniaPlugin = ({store}) => {
+            if (store.$id === 'user_preference_store') {
+                store.userSettings = makeUserPreference() as any
+                store.deviceSettings.recipe_overviewInlineStatus = true
+                store.deviceSettings.recipe_stepInlineStatus = true
+            }
+        }
+        const pinia = createPinia()
+        pinia.use(prePopulate)
+        const i18n = createI18n({legacy: false, locale: 'en', messages: {en: {}}, missingWarn: false, fallbackWarn: false})
+        const vuetify = createVuetify({
+            components: vuetifyComponents, directives: vuetifyDirectives,
+            display: {mobileBreakpoint: 9999}, // force mobile at any width
+        })
+        const router = createRouter({history: createMemoryHistory(), routes: [{path: '/', component: {template: '<div/>'}}]})
+        return mount(IngredientsTable, {
+            props: {modelValue: ingredients, ingredientFactor: 1, showCheckbox: true, showActions: true, context, ...extraProps},
+            global: {
+                plugins: [pinia, i18n, vuetify, router],
+                stubs: {IngredientContextMenu: {template: '<div class="stub-ctxmenu"/>'}},
+            },
+        })
+    }
+
+    it('renders a v-list-item row (data-test=ingredient-item) on mobile, not a data table', () => {
+        const w = mountTableMobile([makeIngredient()])
+        expect(w.find('[data-test="ingredient-item"]').exists()).toBe(true)
+    })
+
+    it('shows the actions kebab on mobile when showActions', () => {
+        const w = mountTableMobile([makeIngredient()], 'step', {showActions: true})
+        expect(w.find('.stub-ctxmenu').exists()).toBe(true)
+    })
+
+    it('hides the kebab on mobile when not showActions', () => {
+        const w = mountTableMobile([makeIngredient()], 'step', {showActions: false})
+        expect(w.find('.stub-ctxmenu').exists()).toBe(false)
+    })
+
+    it('substitute chip lists the on-hand substitutes (availableSubstitutes) with +N for extras', () => {
+        const ing = makeIngredient({food: {foodOnhand: false, availableSubstitutes: [{id: 2, name: 'Margarine'}, {id: 3, name: 'Ghee'}]}})
+        const chip = mountTableMobile([ing]).find('[data-test="ingredient-substitute"]')
+        expect(chip.exists()).toBe(true)
+        expect(chip.text()).toContain('Margarine')
+        expect(chip.text()).toContain('+1')
+    })
+
+    it('no chip when the food has substitutes DEFINED but none on hand (availableSubstitutes empty)', () => {
+        const ing = makeIngredient({food: {foodOnhand: false, availableSubstitutes: [], substitute: [{id: 2, name: 'Ghee'}]}})
+        expect(mountTableMobile([ing]).find('[data-test="ingredient-substitute"]').exists()).toBe(false)
+    })
+
+    it('no substitute chip when there are no substitutes', () => {
+        const w = mountTableMobile([makeIngredient()])
+        expect(w.find('[data-test="ingredient-substitute"]').exists()).toBe(false)
+    })
+
+    it('truncate mode shows a trailing ellipsis and expands the note when clicked', async () => {
+        const longNote = 'use the freshest bunch you can find, stems removed and finely minced'
+        const w = mountTableMobile([makeIngredient({note: longNote})])
+        const store = (w.vm.$pinia as any)._s.get('user_preference_store')
+        store.deviceSettings.recipe_stepNotesDisplay = 'truncate'
+        store.deviceSettings.recipe_notesTruncateLength = 20
+        await w.vm.$nextTick()
+
+        const note = w.find('[data-test="ingredient-note"]')
+        expect(note.exists()).toBe(true)
+        expect(note.text()).toContain('...') // ellipsis is the truncation cue
+        expect(note.text()).not.toContain('finely minced')
+
+        await note.trigger('click')
+        expect(w.find('[data-test="ingredient-note"]').text()).toContain('finely minced')
+    })
+})
