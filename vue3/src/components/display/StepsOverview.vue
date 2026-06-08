@@ -25,7 +25,7 @@
                     <v-col class="pa-1" cols="12" md="6">
                         <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
                         <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor"
-                                           :show-actions="useUserPreferenceStore().deviceSettings.recipe_showIngredientActions"
+                                           :show-actions="useUserPreferenceStore().deviceSettings.recipe_overviewShowActions"
                                            :show-checkbox="false" context="overview"
                                            @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
 
@@ -35,7 +35,7 @@
                                 <v-row v-for="subRecipeStep in s.stepRecipeData.steps">
                                     <v-col>
                                         <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor"
-                                        :show-actions="useUserPreferenceStore().deviceSettings.recipe_showIngredientActions"
+                                        :show-actions="useUserPreferenceStore().deviceSettings.recipe_overviewShowActions"
                                         :show-checkbox="false" context="overview"
                                         @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
                                     </v-col>

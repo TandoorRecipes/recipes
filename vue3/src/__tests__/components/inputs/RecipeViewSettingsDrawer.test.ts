@@ -108,7 +108,7 @@ describe('RecipeViewSettingsDrawer', () => {
     it('HighlightWhen options do not include substitute (redundant with tri-state onhand)', async () => {
         const w = mountDrawer()
         const store = (w.vm.$pinia as any)._s.get('user_preference_store')
-        store.deviceSettings.recipe_showIngredientActions = true
+        store.deviceSettings.recipe_overviewShowActions = true
         await w.vm.$nextTick()
         // Vuetify's v-select renders hidden native <option> elements for
         // each item. Look at the HighlightWhen select specifically.

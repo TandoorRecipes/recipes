@@ -19,13 +19,13 @@
                         />
                         <div class="text-caption pb-1 text-medium-emphasis">{{ $t('StartExpandedHelper') }}</div>
                         <v-switch
-                            v-model="deviceSettings.recipe_showIngredientActions"
+                            v-model="deviceSettings.recipe_overviewShowActions"
                             :label="$t('IngredientMenu')"
                             hide-details density="compact"
                         />
                         <div class="text-caption pb-1 text-medium-emphasis">{{ $t('IngredientMenuHelp') }}</div>
                         <v-select
-                            v-if="deviceSettings.recipe_showIngredientActions"
+                            v-if="deviceSettings.recipe_overviewShowActions || deviceSettings.recipe_stepShowActions"
                             v-model="deviceSettings.recipe_contextMenuColor"
                             :label="$t('HighlightWhen')"
                             :items="contextMenuColorOptions"
@@ -66,6 +66,12 @@
                             :label="$t('CheckOffIngredients')"
                             hide-details density="compact"
                         />
+                        <v-switch
+                            v-model="deviceSettings.recipe_stepShowActions"
+                            :label="$t('IngredientMenu')"
+                            hide-details density="compact"
+                        />
+                        <div class="text-caption pb-1 text-medium-emphasis">{{ $t('IngredientMenuHelp') }}</div>
                         <v-select
                             v-model="deviceSettings.recipe_stepNotesDisplay"
                             :label="$t('IngredientNotes')"

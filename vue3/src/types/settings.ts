@@ -19,7 +19,8 @@ export type DeviceSettings = {
     mealplan_displayWeekNumbers: boolean
 
     recipe_mergeStepOverview: boolean,
-    recipe_showIngredientActions: boolean,
+    recipe_overviewShowActions: boolean,
+    recipe_stepShowActions: boolean,
     recipe_showCheckboxes: boolean,
     recipe_overviewExpanded: boolean,
     recipe_overviewInlineStatus: boolean,

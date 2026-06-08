@@ -255,7 +255,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             mealplan_displayWeekNumbers: true,
 
             recipe_mergeStepOverview: false,
-            recipe_showIngredientActions: false,
+            recipe_overviewShowActions: false,
+            recipe_stepShowActions: false,
             recipe_showCheckboxes: true,
             recipe_overviewExpanded: false,
             recipe_overviewInlineStatus: false,
