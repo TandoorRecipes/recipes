@@ -25,7 +25,7 @@
                     <v-col :cols="(useUserPreferenceStore().isPrintMode) ? 6 : 12" md="6" v-if="step.ingredients.length > 0 && (step.showIngredientsTable || step.show_ingredients_table)">
                         <ingredients-table v-model="step.ingredients" :ingredient-factor="ingredientFactor"
                                            :show-actions="showStepActions"
-                                           :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_showCheckboxes"
+                                           :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_stepShowCheckboxes"
                                            @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
                     </v-col>
                     <v-col :cols="(useUserPreferenceStore().isPrintMode) ? 6 : 12" md="6" class="markdown-body">

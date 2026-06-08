@@ -10,6 +10,7 @@
         <v-toolbar density="compact" flat>
             <v-spacer />
             <v-btn
+                v-if="pinnable"
                 :icon="isPinned ? 'fa-solid fa-thumbtack' : 'fa-solid fa-thumbtack fa-rotate-90'"
                 variant="plain"
                 size="small"
@@ -46,13 +47,15 @@
     <v-bottom-sheet v-else v-model="isOpen" scrollable>
         <v-card :style="sheetDragStyle">
             <div
-                role="presentation"
-                style="display: flex; justify-content: center; padding: 12px 0 4px; cursor: grab; touch-action: none;"
+                role="button"
+                :aria-label="$t('Close')"
+                style="display: flex; align-items: center; justify-content: center; height: 36px; cursor: pointer; touch-action: none;"
+                @click="isOpen = false"
                 @touchstart.passive="onSheetDragStart"
                 @touchmove="onSheetDragMove"
                 @touchend.passive="onSheetDragEnd"
             >
-                <div style="width: 40px; height: 4px; border-radius: 2px; background: rgba(var(--v-theme-on-surface), 0.3);" />
+                <div style="width: 48px; height: 5px; border-radius: 3px; background: rgba(var(--v-theme-on-surface), 0.3);" />
             </div>
 
             <v-card-title class="d-flex align-center pa-0">
@@ -63,7 +66,6 @@
                     </v-tab>
                 </v-tabs>
                 <span v-else class="text-subtitle-2 px-4 flex-grow-1">{{ tabs[0]?.label }}</span>
-                <v-btn icon="fa-solid fa-times" variant="plain" size="small" :aria-label="$t('Close')" @click="isOpen = false" />
             </v-card-title>
 
             <v-divider />
@@ -93,12 +95,14 @@ const props = withDefaults(defineProps<{
     modelValue: boolean
     activeTab?: string
     pinned?: boolean
+    pinnable?: boolean
     tabs: { key: string, label: string, icon: string }[]
     width?: number
     useSheet?: boolean
 }>(), {
     activeTab: undefined,
     pinned: false,
+    pinnable: true,
     width: 320,
     useSheet: false,
 })

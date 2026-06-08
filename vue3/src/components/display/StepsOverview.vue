@@ -21,12 +21,13 @@
                         </v-btn-toggle>
                     </v-col>
                 </v-row>
-                <v-row v-for="(s, i) in props.steps" v-if="!useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
+                <template v-if="!useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
+                <v-row v-for="{step: s, index: i} in overviewSteps" :key="s.id ?? i">
                     <v-col class="pa-1" cols="12" md="6">
                         <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
                         <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor"
                                            :show-actions="useUserPreferenceStore().deviceSettings.recipe_overviewShowActions"
-                                           :show-checkbox="false" context="overview"
+                                           :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_overviewShowCheckboxes" context="overview"
                                            @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
 
                         <template v-if="s.stepRecipe">
@@ -36,7 +37,7 @@
                                     <v-col>
                                         <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor"
                                         :show-actions="useUserPreferenceStore().deviceSettings.recipe_overviewShowActions"
-                                        :show-checkbox="false" context="overview"
+                                        :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_overviewShowCheckboxes" context="overview"
                                         @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
                                     </v-col>
                                 </v-row>
@@ -44,10 +45,11 @@
                         </template>
                     </v-col>
                 </v-row>
+                </template>
 
                 <v-row v-if="useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
                     <v-col class="pa-1" cols="12" md="6">
-                        <ingredients-table v-model="mergedIngredients" :ingredient-factor="props.ingredientFactor" :show-checkbox="false" context="overview"></ingredients-table>
+                        <ingredients-table v-model="mergedIngredients" :ingredient-factor="props.ingredientFactor" :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_overviewShowCheckboxes" context="overview"></ingredients-table>
                     </v-col>
                 </v-row>
 
@@ -79,6 +81,21 @@ const props = defineProps({
         required: true,
     },
 })
+
+// A step earns a spot in the structured overview if it has at least one real
+// ingredient (food, not a header divider) or carries a sub-recipe. Instruction-
+// only / header-only steps are skipped so the overview isn't padded with blanks.
+function stepHasIngredients(s: Step): boolean {
+    const hasOwn = (s.ingredients ?? []).some(ing => ing.food && !ing.isHeader)
+    return hasOwn || !!s.stepRecipe
+}
+
+// Keep the original step index so visible step numbers stay true to the recipe.
+const overviewSteps = computed(() =>
+    props.steps
+        .map((step, index) => ({step, index}))
+        .filter(({step}) => stepHasIngredients(step))
+)
 
 const mergedIngredients = computed(() => {
     // Function to collect all ingredients from recipe steps
