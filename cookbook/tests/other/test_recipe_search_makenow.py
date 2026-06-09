@@ -179,6 +179,26 @@ def test_makenow_sibling_substitute(recipes, makenow_recipe, shared_household, s
 # --- New inventory-specific tests ---
 
 
+@pytest.mark.parametrize("makenow_recipe", [({'created_by': 'u1_s1'})], indirect=['makenow_recipe'])
+def test_makenow_exclude_returns_non_cookable(recipes, makenow_recipe, space_1, make_search_request, u1_s1):
+    """The UI 'No' case sends makenow='0' (string) and must return only the
+    recipes that are NOT make-now-able — the complement of makenow='1' — not the
+    full unfiltered list (pattern-006: the exclude branch was a no-op)."""
+    request = make_search_request(u1_s1)
+    include_ids = set(do_search(request, space_1, makenow='1').values_list('id', flat=True))
+    exclude_ids = set(do_search(request, space_1, makenow='0').values_list('id', flat=True))
+    all_ids = set(do_search(request, space_1).values_list('id', flat=True))
+
+    # include = only the cookable recipe
+    assert makenow_recipe.id in include_ids
+    # exclude must remove the cookable recipe ...
+    assert makenow_recipe.id not in exclude_ids
+    # ... and must NOT be the full unfiltered list (the bug returned base count)
+    assert exclude_ids != all_ids
+    # include and exclude are disjoint complements
+    assert include_ids.isdisjoint(exclude_ids)
+
+
 def test_makenow_zero_amount_not_available(recipes, shared_household, space_1, make_search_request, u1_s1):
     """InventoryEntry with amount=0 should NOT count as available."""
     household, location = shared_household
