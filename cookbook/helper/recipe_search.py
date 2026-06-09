@@ -14,6 +14,12 @@ from recipes import settings
 
 _NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
 
+# Sentinel for the makenow tristate "No" (exclude) case: show only recipes that
+# are NOT make-now-able. Distinct from None (filter absent) and from the integer
+# fuzzy "allow N missing" path (>= 0). A negative missing count is otherwise
+# meaningless, so -1 is reserved for the exclude branch.
+MAKENOW_EXCLUDE = -1
+
 
 def _sort_includes(orderby, *fields):
     for f in fields:
@@ -115,7 +121,7 @@ class SearchParams:
             if low in ('yes', 'true', '1'):
                 return 0
             if low in ('no', 'false', '0'):
-                return None
+                return MAKENOW_EXCLUDE
         try:
             return int(value)
         except (ValueError, TypeError):
@@ -386,7 +392,13 @@ class RecipeSearch:
             else:
                 household = getattr(self._request.user_space, 'household', None)
                 shopping_users = get_household_user_ids(self._request.user_space)
-                qs = qs.cookable(household, shopping_users, missing=params.makenow)
+                if params.makenow == MAKENOW_EXCLUDE:
+                    # "No": only recipes that are NOT make-now-able (the complement
+                    # of strictly-cookable within the current queryset).
+                    cookable_ids = qs.cookable(household, shopping_users, missing=0).values('id')
+                    qs = qs.exclude(id__in=cookable_ids)
+                else:
+                    qs = qs.cookable(household, shopping_users, missing=params.makenow)
 
         # Text search
         qs = qs.by_text(self._text_config)
