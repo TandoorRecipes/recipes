@@ -1,6 +1,16 @@
 <template>
     <v-container>
-        <v-card :loading="filtersLoading">
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-text class="pt-2 pb-2">
+                        <v-btn variant="flat" @click="router.go(-1)" prepend-icon="fa-solid fa-arrow-left">{{ $t('Back') }}</v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-card :loading="filtersLoading" class="mt-2">
             <v-card-title>{{ $t('Ingredient Editor') }}</v-card-title>
             <v-card-text>
                 <v-row>
@@ -158,6 +168,7 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {ApiApi, ApiIngredientListRequest, Food, Ingredient, Unit} from "@/openapi";
 import {onMounted, ref} from "vue";
 import {useI18n} from "vue-i18n";
+import {useRouter} from "vue-router";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUrlSearchParams} from "@vueuse/core";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
@@ -165,6 +176,7 @@ import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
 
 const {t} = useI18n()
+const router = useRouter()
 const params = useUrlSearchParams('history', {})
 
 type EditorIngredient = Ingredient & { changed: boolean, loading: boolean }
