@@ -237,3 +237,21 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     assert r.status_code == 200
     get_response = json.loads(r.content)
     assert len(get_response['food_properties']) > 0
+
+
+def test_ingredient_amount_null_triggering_no_amount(u1_s1, space_1):
+    recipe_data = {
+        "name": "Test Recipe",
+        "steps": [{"instruction": "Mix", "ingredients": [{"food": {"name": "Test Food"}, "unit": {"name": "gram"}, "amount": None}]}]
+    }
+
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    response = json.loads(r.content)
+
+    r = u1_s1.get(reverse(DETAIL_URL, args=[response['id']]))
+    assert r.status_code == 200
+    get_response = json.loads(r.content)
+    ingredient = get_response['steps'][0]['ingredients'][0]
+    assert ingredient['no_amount'] is True
+    assert ingredient['amount'] == 0.0
