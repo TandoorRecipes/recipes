@@ -2,8 +2,6 @@
     <v-container>
         <v-row>
             <v-col>
-
-
                 <v-stepper v-model="stepper">
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
@@ -684,7 +682,7 @@ const dialogIngredientSorter = ref(false)
 const editingStep = ref<Step | SourceImportStep>({} as Step)
 const editingStepIndex = ref(0)
 
-onMounted(() => {
+onMounted(async () => {
     loadOrCreateBookmarkletToken()
 
     // handle manifest share intend passing url to import page
@@ -701,7 +699,32 @@ onMounted(() => {
         importType.value = 'url'
         loadRecipeFromUrl({bookmarklet: parseInt(params.bookmarklet_import)})
     }
+
+    if (params.file && typeof params.file === "string") {
+        if (await loadFileFromImportCache(params.file)) {
+            importType.value = 'ai';
+            stepper.value = 'url';
+
+            // if we have a selected AI provider, we can directly import the recipe
+            if (selectedAiProvider.value !== undefined) {
+                loadRecipeFromAiImport();
+            }
+        }
+    }
 })
+
+async function loadFileFromImportCache(fileName: string): Promise<boolean> {
+    const cache = await caches.open('import-file');
+    const cachedFile = await cache.match(`/import-file/${fileName}`);    
+    if (!cachedFile) return false;
+    
+    const fileData = cachedFile.headers;
+    if (fileName !== fileData.get('File-Name')) return false;
+
+    const blob = await cachedFile.blob();
+    image.value = new File([blob], fileName, { type: fileData.get('Content-Type')! });
+    return true;
+}
 
 /**
  * call server to load recipe from a given URl
@@ -764,6 +787,13 @@ function loadRecipeFromAiImport() {
             importResponse.value = r
 
             if (!importResponse.value.error) {
+                // try deleting image from cache after successful import
+                if (image.value != null) {
+                    caches.open('import-file').then(cache => {
+                        cache.delete(`/import-file/${image.value!.name}`)
+                    })
+                }
+
                 if (importResponse.value.images && importResponse.value.images.length > 0) {
                     stepper.value = 'image_chooser'
                 } else {
