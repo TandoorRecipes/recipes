@@ -673,6 +673,7 @@ class Supermarket(models.Model, PermissionModelMixin):
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
     shopping_lists = models.ManyToManyField("ShoppingList", blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
+    updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -692,6 +693,7 @@ class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
     supermarket = models.ForeignKey(Supermarket, on_delete=models.CASCADE, related_name='category_to_supermarket')
     category = models.ForeignKey(SupermarketCategory, on_delete=models.CASCADE, related_name='category_to_supermarket')
     order = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = ScopedManager(space='supermarket__space')
 
@@ -951,6 +953,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
+    updated_at = models.DateTimeField(auto_now=True)
+
     # def __str__(self):
     #     return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
 
@@ -975,6 +979,8 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     def get_instruction_render(self):
         from cookbook.helper.template_helper import render_instructions
@@ -1019,6 +1025,8 @@ class PropertyType(models.Model, PermissionModelMixin, MergeModelMixin):
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f'{self.name}'
 
@@ -1045,6 +1053,8 @@ class Property(models.Model, PermissionModelMixin):
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
@@ -1209,6 +1219,7 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -1226,6 +1237,8 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
     book = models.ForeignKey(RecipeBook, on_delete=models.CASCADE)
 
     objects = ScopedManager(space='book__space')
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     @staticmethod
     def get_space_key():
@@ -1258,6 +1271,8 @@ class MealType(models.Model, PermissionModelMixin):
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return self.name
 
@@ -1281,6 +1296,8 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     def get_label(self):
         if self.title:
@@ -1307,6 +1324,8 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
     objects = ScopedManager(space='space')
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     # def __str__(self):
     #     return f'Shopping list recipe {self.id} - {self.recipe}'
@@ -1734,6 +1753,7 @@ class CustomFilter(models.Model, PermissionModelMixin):
     # could use JSONField, but requires installing extension on SQLite,  don't need to search the objects, so seems unecessary
     search = models.TextField(blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shared = models.ManyToManyField(User, blank=True, related_name='f_shared_with')
 
