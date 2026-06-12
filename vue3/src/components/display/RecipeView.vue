@@ -10,7 +10,42 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none d-print-none">
+        <!-- Print-optimized layout: Title → Image → Meta → Steps -->
+        <template v-if="useUserPreferenceStore().isPrintMode">
+            <div class="print-recipe-header">
+                <h1 class="print-recipe-title">{{ recipe.name }}</h1>
+                <p class="print-recipe-description" v-if="recipe.description">{{ recipe.description }}</p>
+            </div>
+
+            <div class="print-recipe-image" v-if="recipe.image != undefined">
+                <recipe-image
+                    :recipe="recipe"
+                    height="300px"
+                    :rounded="true">
+                </recipe-image>
+            </div>
+
+            <div class="print-recipe-meta">
+                <span class="print-meta-item">
+                    <i class="fas fa-cogs fa-fw"></i> {{ recipe.workingTime }} {{ $t('min') }} {{ $t('WorkingTime') }}
+                </span>
+                <span class="print-meta-item">
+                    <i class="fas fa-hourglass-half fa-fw"></i> {{ recipe.waitingTime }} {{ $t('min') }} {{ $t('WaitingTime') }}
+                </span>
+                <span class="print-meta-item">
+                    <i class="fas fa-sort-numeric-up fa-fw"></i> {{ servings }}
+                    <span v-if="recipe.servingsText">{{ recipe.servingsText }}</span>
+                    <span v-else>{{ $t('Servings') }}</span>
+                </span>
+                <span class="print-meta-item" v-if="recipe.createdBy">
+                    <i class="fas fa-user fa-fw"></i> {{ recipe.createdBy.displayName }}
+                </span>
+            </div>
+
+            <keywords-component variant="flat" :keywords="recipe.keywords" v-if="recipe.keywords && recipe.keywords.length > 0"></keywords-component>
+        </template>
+
+        <template v-if="!useUserPreferenceStore().isPrintMode" class="d-block d-lg-none d-print-none">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -61,7 +96,7 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block d-print-block">
+        <template v-if="!useUserPreferenceStore().isPrintMode" class="d-none d-lg-block">
             <v-row dense>
                 <v-col cols="8">
                     <recipe-image
@@ -136,7 +171,7 @@
             </v-card>
         </template>
 
-        <v-card class="mt-1"
+        <v-card class="mt-1 d-print-none"
                 v-if="recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
             <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor" @scale="(factor: number) => {servings = recipe.servings * factor}"></steps-overview>
         </v-card>
@@ -147,7 +182,7 @@
 
         <property-view v-model="recipe" :ingredientFactor="ingredientFactor"></property-view>
 
-        <v-card class="mt-2">
+        <v-card class="mt-2" v-if="!useUserPreferenceStore().isPrintMode">
             <v-card-text>
                 <v-row dense>
                     <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
@@ -191,7 +226,7 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
+        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments && !useUserPreferenceStore().isPrintMode"></recipe-activity>
     </template>
 </template>
 
@@ -299,5 +334,84 @@ function aiConvertRecipe() {
 </script>
 
 <style scoped>
+
+/* Print-specific layout styles */
+.print-recipe-header {
+    margin-bottom: 12px;
+}
+
+.print-recipe-title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 8px 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    /* Ensure title is never truncated */
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
+}
+
+.print-recipe-description {
+    font-style: italic;
+    color: #555;
+    margin: 0;
+}
+
+.print-recipe-image {
+    margin-bottom: 12px;
+}
+
+.print-recipe-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 8px 0;
+    margin-bottom: 8px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+}
+
+.print-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@media print {
+    /* Remove card shadows and borders for clean print */
+    :deep(.v-card) {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Prevent page breaks inside steps and ingredients */
+    :deep(.v-card) {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Ensure images fit within page */
+    :deep(.v-img) {
+        max-height: 350px !important;
+        break-inside: avoid;
+    }
+
+    /* Override any truncation styles */
+    :deep(.text-truncate) {
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
+    }
+
+    /* Ensure colors print correctly */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
 
 </style>

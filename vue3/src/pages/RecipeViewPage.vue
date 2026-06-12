@@ -68,9 +68,10 @@ function refreshData(recipeId: string) {
 
         setTimeout(() => {
             if (useUserPreferenceStore().isPrintMode) {
+                // Wait for images and layout to render before triggering print dialog
                 window.print()
             }
-        }, 500)
+        }, 1500)
 
         if (useUserPreferenceStore().isAuthenticated) {
             api.apiViewLogCreate({viewLog: {recipe: Number(recipeId)} as ViewLog})

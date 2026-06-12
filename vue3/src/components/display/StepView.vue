@@ -89,4 +89,23 @@ const hasDetails = computed(() => {
 
 <style scoped>
 
+@media print {
+    .v-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+    }
+
+    .v-card-title {
+        font-size: 16px !important;
+        font-weight: 600;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .v-card-text {
+        padding: 8px 16px !important;
+    }
+}
+
 </style>

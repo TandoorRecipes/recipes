@@ -172,4 +172,19 @@ function addToShopping(ingredient: Ingredient) {
 
 <style scoped>
 
+@media print {
+    :deep(.v-table) {
+        font-size: 12px !important;
+    }
+
+    :deep(.v-table td) {
+        padding: 2px 8px !important;
+    }
+
+    :deep(tr) {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
 </style>
