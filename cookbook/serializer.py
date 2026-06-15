@@ -11,6 +11,7 @@ from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
+from django.db import IntegrityError, transaction
 from django.db.models import Q, QuerySet, Sum
 from django.http import BadHeaderError
 from django.urls import reverse
@@ -441,7 +442,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         if Space.objects.filter(created_by=self.context['request'].user).count() >= self.context['request'].user.userpreference.max_owned_spaces:
             raise serializers.ValidationError(
-                _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({self.context['request'].user.userpreference.max_owned_spaces})')
+                _('You have the reached the maximum amount of spaces that can be owned by you.') + f" ({self.context['request'].user.userpreference.max_owned_spaces})")
 
         name = None
         if 'name' in validated_data:
@@ -1750,7 +1751,20 @@ class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSeriali
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
 
-        instance = super().create(validated_data)
+        if validated_data.get('code'):
+            with transaction.atomic():
+                instance = InventoryEntry.objects.select_for_update().filter(space=validated_data['space'], code=validated_data['code']).first()
+                if instance:
+                    return self.add_to_existing_entry(instance, validated_data)
+
+        try:
+            instance = super().create(validated_data)
+        except IntegrityError:
+            if not validated_data.get('code'):
+                raise
+            with transaction.atomic():
+                instance = InventoryEntry.objects.select_for_update().get(space=validated_data['space'], code=validated_data['code'])
+                return self.add_to_existing_entry(instance, validated_data)
 
         if not instance.code:
             instance.code = hex(instance.id)[2:].upper()
@@ -1761,6 +1775,35 @@ class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSeriali
             entry=instance,
             booking_type=InventoryLog.B_ADD,
             old_amount=0,
+            new_amount=instance.amount,
+            old_inventory_location=instance.inventory_location,
+            new_inventory_location=instance.inventory_location,
+        )
+
+        return instance
+
+    def add_to_existing_entry(self, instance, validated_data):
+        unit = validated_data.get('unit')
+        if unit:
+            submitted_unit_names = (
+                {unit.get('name'), unit.get('plural_name')}
+                if isinstance(unit, dict) else {unit.name, unit.plural_name}
+            )
+            existing_unit_names = {instance.unit.name, instance.unit.plural_name} if instance.unit else set()
+            if not submitted_unit_names & existing_unit_names:
+                raise serializers.ValidationError({
+                    'unit': [_('Unit must match existing inventory entry unit for duplicate code.')]
+                })
+
+        old_amount = instance.amount
+        instance.amount += validated_data.get('amount') or Decimal(0)
+        instance.save()
+
+        InventoryLog.objects.create(
+            space=instance.space,
+            entry=instance,
+            booking_type=InventoryLog.B_ADD,
+            old_amount=old_amount,
             new_amount=instance.amount,
             old_inventory_location=instance.inventory_location,
             new_inventory_location=instance.inventory_location,
@@ -1795,6 +1838,7 @@ class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSeriali
             'food', 'unit', 'amount', 'expires', 'note', 'label', 'created_at', 'created_by'
         )
         read_only_fields = ('id', 'created_at', 'created_by')
+        validators = []
 
 
 class InventoryLogSerializer(SpacedModelSerializer):

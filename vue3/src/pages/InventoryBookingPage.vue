@@ -264,7 +264,11 @@ onMounted(() => {
         api.apiInventoryEntryRetrieve({id: inventoryEntryId.value}).then(r => {
             inventoryEntry.value = r
             inventoryEntryId.value = undefined
-            inventoryEntrySelected()
+            if (bookingMode.value == 'add') {
+                prefillAddFormFromInventoryEntry(r)
+            } else {
+                inventoryEntrySelected()
+            }
         })
     }
 })
@@ -412,6 +416,16 @@ function inventoryEntrySelected() {
         amount.value = inventoryEntry.value.amount
         //expires.value = inventoryEntry.value.expires
     }
+}
+
+function prefillAddFormFromInventoryEntry(entry: InventoryEntry) {
+    food.value = entry.food
+    unit.value = entry.unit
+    inventoryLocation.value = entry.inventoryLocation
+    subLocation.value = entry.subLocation ?? ''
+    code.value = entry.code ?? ''
+    expires.value = entry.expires ?? undefined
+    amount.value = 1
 }
 
 /**
