@@ -1,0 +1,63 @@
+version: "3.8"
+
+# Nginx is now included inside the app container
+# No separate Nginx service is needed anymore
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - ${GLOBAL_DATA_FOLDER:-/Data}/tandoor/postgresql:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+    networks:
+      - default
+    healthcheck:
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_PASSWORD}
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  app:
+    image: vabene1111/recipes:${TANDOOR_VERSION:-2}
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - staticfiles:/opt/recipes/staticfiles
+      - ${GLOBAL_DATA_FOLDER:-/Data}/tandoor/mediafiles:/opt/recipes/mediafiles
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - traefik_default
+      - default
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+      traefik.docker.network: traefik_default
+      traefik.enable: true
+      traefik.http.routers.tandoor.entrypoints: websecure
+      traefik.http.routers.tandoor.rule: Host(`${SERVICE_NAME_OVERRIDE:-tandoor}.${DOMAIN_NAME:-local}`)
+      traefik.http.routers.tandoor.service: tandoor
+      traefik.http.routers.tandoor.tls: true
+      traefik.http.routers.tandoor.tls.certresolver: letsencrypt-cloudflare-dns-challenge
+      traefik.http.services.tandoor.loadbalancer.server.port: 80
+      local.yacht.port.80: WebUI
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:80 || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  staticfiles: null
+
+networks:
+  traefik_default:
+    external: true
+  default: null
+
+# Nginx intégré dans le conteneur app, plus besoin d'un service nginx externe
