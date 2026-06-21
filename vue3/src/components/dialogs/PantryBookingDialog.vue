@@ -25,7 +25,18 @@
                             </model-select>
 
                             <v-number-input :label="$t('Amount')" :precision="2" v-model="amount" v-if="['add', 'remove'].includes(bookingMode)"></v-number-input>
-                            <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)"></model-select>
+                            <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)" hide-details>
+                                <template #append-inner>
+                                    <v-chip v-for="u in commonUnits" :key="u.id" @click="unit = u" size="small" class="mr-1">
+                                        {{ u.name }}
+                                    </v-chip>
+                                </template>
+                            </model-select>
+                            <v-chip-group v-if="['add'].includes(bookingMode)" class="mb-2">
+                                <v-chip v-for="u in commonUnits" :key="u.id" @click="unit = u" size="small" class="mr-1">
+                                    {{ u.name }}
+                                </v-chip>
+                            </v-chip-group>
 
                             <v-date-input :label="$t('Expires')" v-model="expires" v-if="['add'].includes(bookingMode)">
                                 <template #append-inner>
@@ -98,10 +109,9 @@
 <script setup lang="ts">
 
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {TInventoryLocation} from "@/types/Models.ts";
 import {DateTime} from "luxon";
 import {ingredientToString} from "@/utils/model_utils.ts";
-import {ApiApi, ApiInventoryEntryListRequest, Food, Ingredient, InventoryEntry, InventoryLocation, Unit} from "@/openapi";
+import {ApiApi, Food, Ingredient, InventoryEntry, InventoryLocation, Unit} from "@/openapi";
 import FreezerExpiryDialog from "@/components/dialogs/FreezerExpiryDialog.vue";
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {VDateInput} from "vuetify/labs/VDateInput";
@@ -111,7 +121,6 @@ import {useI18n} from "vue-i18n";
 import {computed, onMounted, ref, watch} from "vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
-import {VDataTableUpdateOptions} from "@/vuetify.ts";
 
 const emits = defineEmits(['update'])
 
@@ -136,6 +145,8 @@ const code = ref('')
 const amount = ref<number | undefined>(1)
 const unit = ref<Unit | undefined | null>(useUserPreferenceStore().defaultUnitObj)
 const expires = ref<Date | undefined>(undefined)
+
+const commonUnits = ref<Unit[]>([])
 
 const bookingConfirmEntry = ref<InventoryEntry | null>(null)
 
@@ -181,16 +192,39 @@ watch(dialog, (newValue, oldValue) => {
 })
 
 onMounted(() => {
+    let api = new ApiApi()
     bookingMode.value = props.bookingMode
 
     if (props.inventoryEntryId) {
-        let api = new ApiApi()
+        
         api.apiInventoryEntryRetrieve({id: props.inventoryEntryId}).then(r => {
             inventoryEntry.value = r
             inventoryEntrySelected()
         })
     }
+    
+    // TODO tidy up, do I need to load the last page?
+    api.apiInventoryEntryList({pageSize: 100}).then(r => {
+        const counts = new Map<number, { unit: Unit, count: number }>()
+        r.results.forEach(entry => {
+            if (entry.unit) {
+                const u = entry.unit
+                const count = counts.get(u.id!) || {unit: u, count: 0}
+                count.count++
+                counts.set(u.id!, count)
+            }
+        })
+
+        commonUnits.value = Array.from(counts.values())
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 5)
+            .map(c => c.unit)
+    }).catch(err => {
+        
+    })
 })
+
+
 
 /**
  * save form depending on selected booking mode
