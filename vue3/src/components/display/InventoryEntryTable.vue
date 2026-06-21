@@ -33,14 +33,16 @@
         <template #item.action="{item}">
             <v-btn-group divided border density="comfortable">
                 <v-btn icon="fa-solid fa-clock-rotate-left" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
-                <v-btn icon="fa-solid fa-minus" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'remove'}}"></v-btn>
-                <v-btn icon="fa-solid fa-arrow-right" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'move'}}"></v-btn>
+                <v-btn icon="fa-solid fa-minus" @click="bookingDialog = true; bookingMode = 'remove'; bookingEntry = item"></v-btn>
+                <v-btn icon="fa-solid fa-arrow-right" @click="bookingDialog = true; bookingMode = 'move'; bookingEntry = item"></v-btn>
             </v-btn-group>
 
         </template>
     </v-data-table-server>
 
     <inventory-entry-log-dialog v-model="entryLogDialog" :inventory-entry="entryLogEntry"></inventory-entry-log-dialog>
+
+    <pantry-booking-dialog v-model="bookingDialog" :bookingMode="bookingMode" :inventoryEntryId="bookingEntry?.id" @update="loadItems({page: page, itemsPerPage: pageSize})"></pantry-booking-dialog>
 </template>
 
 <script setup lang="ts">
@@ -54,6 +56,7 @@ import InventoryEntryLogDialog from "@/components/dialogs/InventoryEntryLogDialo
 import {VDataTableUpdateOptions} from "@/vuetify.ts";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import PantryBookingDialog from "@/components/dialogs/PantryBookingDialog.vue";
 
 const {t} = useI18n()
 
@@ -85,6 +88,10 @@ const tableHeaders = ref([
     {title: 'Actions', key: 'action', align: 'end'},
 ])
 
+
+const bookingDialog = ref(false)
+const bookingMode = ref('move')
+const bookingEntry = ref<InventoryEntry | null>(null)
 
 /**
  * load inventory data based on current props

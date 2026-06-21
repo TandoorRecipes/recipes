@@ -11,12 +11,10 @@
                         </div>
                     </template>
                     <template #append>
-                        <v-btn class="float-right" icon="fa-solid fa-boxes-stacked fa-fw" color="create" :to="{name: 'InventoryBookingPage'}">
+                        <v-btn class="float-right" icon="$create" color="create" @click="bookingMode = 'add'; bookingDialog = true">
                         </v-btn>
+                        <pantry-booking-dialog v-model="bookingDialog" bookingMode="add"></pantry-booking-dialog>
                     </template>
-                    <v-card-actions>
-                        <v-btn prepend-icon="fa-solid fa-boxes-stacked fa-fw" color="create" :to="{name: 'InventoryBookingPage'}">{{$t('InventoryBooking')}}</v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
@@ -26,11 +24,11 @@
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" md="6">
-                                <model-select model="Food" v-model="food"></model-select>
+                                <model-select model="Food" v-model="food" hide-details></model-select>
                             </v-col>
 
                             <v-col cols="12" md="6">
-                                <model-select model="InventoryLocation" v-model="inventoryLocation"></model-select>
+                                <model-select model="InventoryLocation" v-model="inventoryLocation" hide-details></model-select>
                             </v-col>
                         </v-row>
 
@@ -51,9 +49,12 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ref} from "vue";
 import {Food, InventoryLocation} from "@/openapi";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import PantryBookingDialog from "@/components/dialogs/PantryBookingDialog.vue";
 
 const food = ref<Food | undefined>(undefined)
 const inventoryLocation = ref<InventoryLocation | undefined>(undefined)
+
+const bookingDialog = ref(false)
 
 </script>
 
