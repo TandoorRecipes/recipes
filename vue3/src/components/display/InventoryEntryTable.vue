@@ -1,46 +1,5 @@
 <template>
-    <v-data-table-server
-        return-object
-        @update:options="loadItems"
-        :items="items"
-        :items-length="itemCount"
-        :loading="tableLoading"
-        :headers="tableHeaders"
-        :page="page"
-        :items-per-page="pageSize"
-        disable-sort
-    >
-        <template #item.code="{item}">
-            <v-chip size="small" label color="warning" class="me-2" prepend-icon="fa-solid fa-barcode">{{ item.code }}</v-chip>
-        </template>
-        <template #item.food="{item}">
-            {{ ingredientToString({food: item.food, unit: item.unit, amount: item.amount} as Ingredient) }}
-        </template>
-        <template #item.expires="{item}">
-            <template v-if="item.expires ">
-                <v-chip size="small" label :color="(item.expires < DateTime.now() ? 'error' : 'success')">
-                    {{ DateTime.fromJSDate(item.expires).toLocaleString(DateTime.DATE_MED) }}
-                </v-chip>
-            </template>
-        </template>
-        <template #item.inventoryLocation="{ item }">
-            {{ item.inventoryLocation.name }} <i class="fa-solid fa-snowflake" v-if="item.inventoryLocation.isFreezer"></i>
-            <span class="text-body-2 text-disabled">
-                                    <br/>
-                                {{ item.subLocation }}
-                                </span>
-        </template>
-        <template #item.action="{item}">
-            <v-btn-group divided border density="comfortable">
-                <v-btn icon="fa-solid fa-clock-rotate-left" @click="entryLogDialog = true; entryLogEntry = item"></v-btn>
-                <v-btn icon="fa-solid fa-minus" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'remove'}}"></v-btn>
-                <v-btn icon="fa-solid fa-arrow-right" :to="{name: 'InventoryBookingPage', query: {inventoryEntryId: item.id, bookingMode: 'move'}}"></v-btn>
-            </v-btn-group>
 
-        </template>
-    </v-data-table-server>
-
-    <inventory-entry-log-dialog v-model="entryLogDialog" :inventory-entry="entryLogEntry"></inventory-entry-log-dialog>
 </template>
 
 <script setup lang="ts">
@@ -54,6 +13,7 @@ import InventoryEntryLogDialog from "@/components/dialogs/InventoryEntryLogDialo
 import {VDataTableUpdateOptions} from "@/vuetify.ts";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import PantryBookingDialog from "@/components/dialogs/PantryBookingDialog.vue";
 
 const {t} = useI18n()
 
@@ -86,6 +46,10 @@ const tableHeaders = ref([
 ])
 
 
+const bookingDialog = ref(false)
+const bookingMode = ref('move')
+const bookingEntry = ref<InventoryEntry | null>(null)
+
 /**
  * load inventory data based on current props
  */
@@ -105,6 +69,9 @@ function loadItems(options: VDataTableUpdateOptions) {
 
     page.value = options.page
     pageSize.value = options.itemsPerPage
+
+    parameters.page = options.page
+    parameters.pageSize = options.itemsPerPage
 
     api.apiInventoryEntryList(parameters).then((r: any) => {
         items.value = r.results
