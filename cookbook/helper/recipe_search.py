@@ -26,7 +26,7 @@ def _sort_includes(orderby, *fields):
 def _finalize_ordering(orderby):
     result = []
     ALLOWED_KEYS = ['random', 'score', '-score', 'name', '-name', 'lastcooked', '-lastcooked', 'rating', '-rating', 'times_cooked', '-times_cooked', 'created_at', '-created_at',
-                    'lastviewed', '-lastviewed', 'recent','-recent']
+                    'lastviewed', '-lastviewed', 'recent','-recent', 'new_recipe', '-new_recipe']
     for key in orderby:
         # expressions cant come from user input so add them
         if not isinstance(key, str):
@@ -43,6 +43,8 @@ def _finalize_ordering(orderby):
                 result.append(expr)
             else:
                 result.append(key)
+        else:
+            raise ValueError(f'Invalid sort key: {key}')
     return result
 
 
