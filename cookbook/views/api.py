@@ -895,6 +895,7 @@ class InventoryEntryViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationM
             if inventory_location_id := self.request.query_params.get('inventory_location_id'):
                 queryset = queryset.filter(inventory_location_id=inventory_location_id)
 
+        queryset = queryset.order_by('expires')
         return queryset
 
 
