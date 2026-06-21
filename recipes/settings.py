@@ -149,6 +149,7 @@ HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
 
 AI_RATELIMIT = os.getenv('AI_RATELIMIT', '60/hour')
+AI_ALLOWED_URLS = extract_comma_list('AI_ALLOWED_URLS')
 
 SHARING_ABUSE = extract_bool('SHARING_ABUSE', False)
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))

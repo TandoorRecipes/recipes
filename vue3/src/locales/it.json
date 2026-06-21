@@ -949,7 +949,7 @@
     "Expired": "Scaduti",
     "ExpiringSoon": "Scadono a breve",
     "Filters": "Filtri",
-    "HouseholdSettingsHelp": "Per condividere liste della spesa e menu, crea gruppi familiari e assegna allo stesso gruppo gli utenti che devono condividere le informazioni tra loro. ",
+    "HouseholdSettingsHelp": "Per condividere liste della spesa e menu, crea delle famiglie e assegna gli utenti che devono condividere le informazioni tra loro alla stessa famiglia. ",
     "IgnoreShopping": "Ignora la spesa",
     "InInventory": "In inventario",
     "Inventory": "Inventario",
@@ -984,5 +984,12 @@
     "Upgrade": "Aggiorna",
     "UsedInRecipes": "Utilizzato in Ricette",
     "Yearly": "Annuale",
-    "Showing": "Visualizzazione"
+    "Showing": "Visualizzazione",
+    "Households": "Famiglie",
+    "CreateAndJoin": "Crea e unisci",
+    "HouseholdSetup1": "Le famiglie sono state introdotte nella versione 2.6.0, rilasciata il 30/3/2026. Sostituiscono la condivisione individuale di piani alimentari e liste della spesa presente nelle versioni precedenti.",
+    "HouseholdSetup2": "Le famiglie facilitano la collaborazione condividendo automaticamente piani alimentari e liste della spesa tra i membri. ",
+    "HouseholdSetup3": "Gli elementi precedentemente condivisi non sono attualmente visibili. Crea la tua prima famiglia e aggiungi i membri del tuo spazio per ripristinare l'accesso agli elementi condivisi.",
+    "HouseholdSetup4": "Se non hai bisogno di condividere, puoi saltare questa configurazione. Puoi creare e gestire le famiglie in qualsiasi momento utilizzando la vista Database.",
+    "HouseholdWelcome": "Inserisci un nome per la tua prima famiglia da creare e a cui unirti. Questo ti permetterà di condividere facilmente liste della spesa, piani alimentari e altro ancora. Lascia il campo vuoto se per ora non hai bisogno di condividere. "
 }

@@ -44,6 +44,7 @@
   "Alignment": "Alignment",
   "All": "All",
   "AllRecipes": "All Recipes",
+  "AllowedAiUrlHelp": "URLs must be allowed in Server AI_ALLOWED_URLS settings.",
   "Amount": "Amount",
   "Any": "Any",
   "App": "App",

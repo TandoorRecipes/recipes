@@ -126,7 +126,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_ALLOWED_URLS
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -1274,6 +1274,8 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -1426,10 +1428,12 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        ALLOWED_ORDER_FIELDS = ['id', 'name', 'order']
+
         order_field = self.request.GET.get('order_field')
         order_direction = self.request.GET.get('order_direction')
 
-        if not order_field:
+        if not order_field or order_field.lower() not in ALLOWED_ORDER_FIELDS:
             order_field = 'order'
 
         primary_ordering = f"{'-' if order_direction == 'desc' else ''}{order_field}"
@@ -2076,6 +2080,8 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -2586,7 +2592,7 @@ class RecipeUrlImportView(APIView):
         if serializer.is_valid():
 
             if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
-                    bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
+                    bookmarklet := BookmarkletImport.objects.filter(pk=b_pk, space=request.space, created_by=request.user).first()):
                 serializer.validated_data['url'] = bookmarklet.url
                 serializer.validated_data['data'] = bookmarklet.html
                 bookmarklet.delete()
@@ -2727,6 +2733,10 @@ class AiImportView(APIView):
 
             if serializer.validated_data['recipe_id']:
                 if recipe := Recipe.objects.filter(id=serializer.validated_data['recipe_id']).first():
+                    # check permissions
+                    if not CustomRecipePermission().has_object_permission(request, self, recipe):
+                        raise PermissionDenied()
+
                     if recipe.file_path:
                         uploaded_file = get_recipe_provider(recipe).get_file(recipe)
 
@@ -2797,6 +2807,8 @@ class AiImportView(APIView):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
             except LitellmTimeout:
@@ -2909,6 +2921,8 @@ class AiStepSortView(APIView):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -3302,9 +3316,14 @@ def get_recipe_provider(recipe):
     responses=None,
 )
 @api_view(['GET'])
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
+@permission_classes([CustomIsUser & CustomRecipePermission & CustomTokenHasReadWriteScope])
 def get_external_file_link(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+    recipe = get_object_or_404(Recipe, pk=pk)
+    # manual object permission check for FBV
+    for permission in [CustomRecipePermission()]:
+        if not permission.has_object_permission(request, get_external_file_link, recipe):
+            raise PermissionDenied()
+
     if not recipe.link:
         recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
         recipe.save()
@@ -3320,6 +3339,11 @@ def get_external_file_link(request, pk):
 @permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
 def get_recipe_file(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)  # space check handled by CustomRecipePermission
+    # manual object permission check for FBV
+    for permission in [CustomRecipePermission()]:
+        if not permission.has_object_permission(request, get_recipe_file, recipe):
+            raise PermissionDenied()
+
     if recipe.storage:
         return FileResponse(get_recipe_provider(recipe).get_file(recipe), filename=f'{recipe.name}.pdf')
     else:
@@ -3367,11 +3391,15 @@ def sync_all(request):
                                 fields={'pk': IntegerField(), 'share': UUIDField(), 'link': CharField()})
 )
 @api_view(['GET'])
-# @schema(AutoSchema()) #TODO add proper schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
+@permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
 def share_link(request, pk):
     if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
-        recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+        recipe = get_object_or_404(Recipe, pk=pk)
+        # manual object permission check for FBV
+        for permission in [CustomRecipePermission()]:
+            if not permission.has_object_permission(request, share_link, recipe):
+                raise PermissionDenied()
+
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,
                              'link': request.build_absolute_uri(reverse('index') + f'recipe/{pk}/?share={link.uuid}')})
