@@ -1426,10 +1426,12 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        ALLOWED_ORDER_FIELDS = {'id', 'name', 'order'}
+
         order_field = self.request.GET.get('order_field')
         order_direction = self.request.GET.get('order_direction')
 
-        if not order_field:
+        if not order_field or order_field not in self.ALLOWED_ORDER_FIELDS:
             order_field = 'order'
 
         primary_ordering = f"{'-' if order_direction == 'desc' else ''}{order_field}"

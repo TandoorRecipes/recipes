@@ -25,19 +25,24 @@ def _sort_includes(orderby, *fields):
 
 def _finalize_ordering(orderby):
     result = []
+    ALLOWED_KEYS = ['random', 'score', '-score', 'name', '-name', 'lastcooked', '-lastcooked', 'rating', '-rating', 'times_cooked', '-times_cooked', 'created_at', '-created_at',
+                    'lastviewed', '-lastviewed']
     for key in orderby:
+        # expressions cant come from user input so add them
         if not isinstance(key, str):
             result.append(key)
-        elif key == 'name':
-            result.append(Lower('name').asc())
-        elif key == '-name':
-            result.append(Lower('name').desc())
-        elif key.lstrip('-') in _NULLS_LAST:
-            bare = key.lstrip('-')
-            expr = F(bare).desc(nulls_last=True) if key.startswith('-') else F(bare).asc(nulls_last=True)
-            result.append(expr)
-        else:
-            result.append(key)
+        # check user input to be in allowed keys to prevent sql injection
+        elif Lower(key) in ALLOWED_KEYS:
+            if key == 'name':
+                result.append(Lower('name').asc())
+            elif key == '-name':
+                result.append(Lower('name').desc())
+            elif key.lstrip('-') in _NULLS_LAST:
+                bare = key.lstrip('-')
+                expr = F(bare).desc(nulls_last=True) if key.startswith('-') else F(bare).asc(nulls_last=True)
+                result.append(expr)
+            else:
+                result.append(key)
     return result
 
 
