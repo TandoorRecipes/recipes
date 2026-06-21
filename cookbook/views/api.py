@@ -2588,7 +2588,7 @@ class RecipeUrlImportView(APIView):
         if serializer.is_valid():
 
             if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
-                    bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
+                    bookmarklet := BookmarkletImport.objects.filter(pk=b_pk, space=request.space, created_by=request.user).first()):
                 serializer.validated_data['url'] = bookmarklet.url
                 serializer.validated_data['data'] = bookmarklet.html
                 bookmarklet.delete()
