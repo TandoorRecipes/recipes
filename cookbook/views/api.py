@@ -1426,12 +1426,12 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        ALLOWED_ORDER_FIELDS = {'id', 'name', 'order'}
+        ALLOWED_ORDER_FIELDS = ['id', 'name', 'order']
 
         order_field = self.request.GET.get('order_field')
         order_direction = self.request.GET.get('order_direction')
 
-        if not order_field or order_field not in self.ALLOWED_ORDER_FIELDS:
+        if not order_field or order_field.lower() not in ALLOWED_ORDER_FIELDS:
             order_field = 'order'
 
         primary_ordering = f"{'-' if order_direction == 'desc' else ''}{order_field}"
@@ -3308,7 +3308,7 @@ def get_recipe_provider(recipe):
     responses=None,
 )
 @api_view(['GET'])
-@permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
+@permission_classes([CustomIsUser & CustomRecipePermission & CustomTokenHasReadWriteScope])
 def get_external_file_link(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     # manual object permission check for FBV
