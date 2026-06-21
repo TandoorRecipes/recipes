@@ -26,7 +26,7 @@
 
                 <v-checkbox :label="$t('LogCredits')" :hint="$t('LogCreditsHelp')" v-model="editingObj.logCreditCost" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint
                             class="mb-2"></v-checkbox>
-                <v-text-field :label="$t('Url')" v-model="editingObj.url"></v-text-field>
+                <v-text-field :label="$t('Url')" v-model="editingObj.url" :hint="$t('AllowedAiUrlHelp')"></v-text-field>
 
                 <v-checkbox :label="$t('Global')" :hint="$t('GlobalHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint
                             class="mb-2"></v-checkbox>

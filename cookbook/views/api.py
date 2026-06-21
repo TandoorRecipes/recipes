@@ -126,7 +126,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_ALLOWED_URLS
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -1274,6 +1274,8 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -2078,6 +2080,8 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -2803,6 +2807,8 @@ class AiImportView(APIView):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
             except LitellmTimeout:
@@ -2915,6 +2921,8 @@ class AiStepSortView(APIView):
                     'messages': messages,
                 }
                 if ai_provider.url:
+                    if not ai_provider.url in AI_ALLOWED_URLS:
+                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
