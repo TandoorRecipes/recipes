@@ -15,10 +15,12 @@
 
 /**
  * * `HomeAssistant` - HomeAssistant
+ * * `Bring` - Bring
  * @export
  */
 export const ConnectorConfigTypeEnum = {
-    HomeAssistant: 'HomeAssistant'
+    HomeAssistant: 'HomeAssistant',
+    Bring: 'Bring'
 } as const;
 export type ConnectorConfigTypeEnum = typeof ConnectorConfigTypeEnum[keyof typeof ConnectorConfigTypeEnum];
 

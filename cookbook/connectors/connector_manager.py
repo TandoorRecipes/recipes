@@ -12,6 +12,7 @@ from typing import List, Any, Dict, Optional, Type
 from django.conf import settings
 from django_scopes import scope
 
+from cookbook.connectors.bring import Bring
 from cookbook.connectors.connector import Connector, ShoppingListEntryDTO
 from cookbook.connectors.homeassistant import HomeAssistant
 from cookbook.models import ShoppingListEntry, Space, ConnectorConfig
@@ -29,6 +30,7 @@ class ActionType(Enum):
 class Work:
     instance: REGISTERED_CLASSES | ConnectorConfig
     actionType: ActionType
+    dto: Optional[ShoppingListEntryDTO] = None
 
 
 class Singleton(type):
@@ -80,8 +82,14 @@ class ConnectorManager(metaclass=Singleton):
             if not isinstance(instance, self._listening_to_classes) or not hasattr(instance, "space"):
                 continue
             try:
-                _force_load_instance(instance)
-                self._queue.put_nowait(Work(instance, action_type))
+                # Build DTO in the sync context (signal handler thread) to avoid
+                # DB access from the async worker thread which causes SynchronousOnlyOperation
+                dto = None
+                if isinstance(instance, ShoppingListEntry):
+                    dto = ShoppingListEntryDTO.try_create_from_entry(instance)
+                    if dto is None:
+                        continue
+                self._queue.put_nowait(Work(instance, action_type, dto))
             except queue.Full:
                 self._logger.info(f"queue was full, so skipping {action_type} of type {type(instance)}")
 
@@ -161,7 +169,7 @@ class ConnectorManager(metaclass=Singleton):
 
             logger.debug(f"running {len(connectors)} connectors for {item.instance=} with {item.actionType=}")
 
-            loop.run_until_complete(run_connectors(connectors, item.instance, item.actionType))
+            loop.run_until_complete(run_connectors(connectors, item.instance, item.actionType, item.dto))
             worker_queue.task_done()
 
         logger.info(f"terminating ConnectionManager worker {worker_id}")
@@ -177,15 +185,10 @@ class ConnectorManager(metaclass=Singleton):
         match config.type:
             case ConnectorConfig.HOMEASSISTANT:
                 return HomeAssistant(config)
+            case ConnectorConfig.BRING:
+                return Bring(config)
             case _:
                 return None
-
-
-def _force_load_instance(instance: REGISTERED_CLASSES):
-    if isinstance(instance, ShoppingListEntry):
-        _ = instance.food  # Force load food
-        _ = instance.unit  # Force load unit
-        _ = instance.created_by  # Force load created_by
 
 
 async def _close_connectors(connectors: List[Connector]):
@@ -200,11 +203,11 @@ async def _close_connectors(connectors: List[Connector]):
         logging.exception("received an exception while closing one of the connectors")
 
 
-async def run_connectors(connectors: List[Connector], instance: REGISTERED_CLASSES, action_type: ActionType):
+async def run_connectors(connectors: List[Connector], instance: REGISTERED_CLASSES, action_type: ActionType, dto: Optional[ShoppingListEntryDTO] = None):
     tasks: List[Task] = list()
 
     if isinstance(instance, ShoppingListEntry):
-        shopping_list_entry = ShoppingListEntryDTO.try_create_from_entry(instance)
+        shopping_list_entry = dto
         if shopping_list_entry is None:
             return
 

@@ -632,15 +632,17 @@ class ConnectorConfigSerializer(SpacedModelSerializer):
     class Meta:
         model = ConnectorConfig
         fields = (
-            'id', 'name', 'type', 'url', 'token', 'todo_entity', 'enabled',
+            'id', 'name', 'type', 'url', 'token', 'list_id', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
-            'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'created_by'
+            'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'created_by',
+            'email', 'password',
         )
 
         read_only_fields = ('created_by',)
 
         extra_kwargs = {
             'token': {'write_only': True},
+            'password': {'write_only': True},
         }
 
 
