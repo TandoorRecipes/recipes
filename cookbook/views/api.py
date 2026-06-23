@@ -2092,7 +2092,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
-
+                response_text = re.sub(r"^```(?:json)?\s*\n?(.*?)\n?```\s*$", r"\1", response_text.strip(), flags=re.DOTALL)
                 return Response(json.loads(response_text), status=status.HTTP_200_OK)
             except LitellmTimeout:
                 response = {
@@ -2830,6 +2830,8 @@ class AiImportView(APIView):
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
             response_text = ai_response.choices[0].message.content
+            
+            response_text = re.sub(r"^```(?:json)?\s*\n?(.*?)\n?```\s*$", r"\1", response_text.strip(), flags=re.DOTALL)
 
             try:
                 data_json = json.loads(response_text)
