@@ -1334,6 +1334,7 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    note = models.TextField(blank=True)
     order = models.IntegerField(default=0)
     checked = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
