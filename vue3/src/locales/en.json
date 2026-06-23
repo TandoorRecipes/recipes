@@ -607,6 +607,7 @@
   "Shopping_Category": "Shopping Category",
   "Shopping_List_Empty": "Your shopping list is currently empty, you can add items via the context menu of a meal plan entry (right click on the card or left click the menu icon)",
   "Shopping_input_placeholder": "e.g. 100 g Potatoes",
+  "ShoppingListFood_Note_Placeholder": "Add a note e.g. organic, marinated, ...",
   "Shopping_list": "Shopping List",
   "ShowColumnHeaders": "Show Column Headers",
   "ShowDelayed": "Show delayed items",

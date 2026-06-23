@@ -111,6 +111,10 @@
                                     <v-icon icon="$delete"></v-icon>
                                 </v-btn>
                             </v-btn-group>
+
+                            <v-text-field density="compact" hide-details class="pt-2"
+                                          :placeholder="$t('ShoppingListFood_Note_Placeholder')"
+                                          v-model="e.note" @update:modelValue="updateEntryNote(e)"></v-text-field>
                         </v-list-item>
                     </template>
 
@@ -228,6 +232,19 @@ function deleteAllEntries() {
 function updateEntryAmount(entry: ShoppingListEntry) {
     let api = new ApiApi()
     api.apiShoppingListEntryPartialUpdate({id: entry.id!, patchedShoppingListEntry: {amount: entry.amount} as PatchedShoppingListEntry}).then(r => {
+
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    })
+}
+
+/**
+ * update the note for the given shopping list entry in the database
+ * @param entry
+ */
+function updateEntryNote(entry: ShoppingListEntry) {
+    let api = new ApiApi()
+    api.apiShoppingListEntryPartialUpdate({id: entry.id!, patchedShoppingListEntry: {note: entry.note} as PatchedShoppingListEntry}).then(r => {
 
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)

@@ -88,6 +88,12 @@ export interface ShoppingListEntry {
     amount: number;
     /**
      * 
+     * @type {string}
+     * @memberof ShoppingListEntry
+     */
+    note?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ShoppingListEntry
      */
@@ -177,6 +183,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'food': FoodShoppingFromJSON(json['food']),
         'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'],
+        'note': json['note'] == null ? undefined : json['note'],
         'order': json['order'] == null ? undefined : json['order'],
         'checked': json['checked'] == null ? undefined : json['checked'],
         'ingredient': json['ingredient'] == null ? undefined : json['ingredient'],
@@ -202,6 +209,7 @@ export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRec
         'food': FoodShoppingToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
+        'note': value['note'],
         'order': value['order'],
         'checked': value['checked'],
         'ingredient': value['ingredient'],
