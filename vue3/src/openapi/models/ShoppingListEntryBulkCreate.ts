@@ -18,6 +18,7 @@ import {
     ShoppingListEntrySimpleCreateFromJSON,
     ShoppingListEntrySimpleCreateFromJSONTyped,
     ShoppingListEntrySimpleCreateToJSON,
+    ShoppingListEntrySimpleCreateToJSONTyped,
 } from './ShoppingListEntrySimpleCreate';
 
 /**
@@ -63,10 +64,15 @@ export function ShoppingListEntryBulkCreateFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function ShoppingListEntryBulkCreateToJSON(value?: ShoppingListEntryBulkCreate | null): any {
+export function ShoppingListEntryBulkCreateToJSON(json: any): ShoppingListEntryBulkCreate {
+    return ShoppingListEntryBulkCreateToJSONTyped(json, false);
+}
+
+export function ShoppingListEntryBulkCreateToJSONTyped(value?: ShoppingListEntryBulkCreate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'entries': ((value['entries'] as Array<any>).map(ShoppingListEntrySimpleCreateToJSON)),

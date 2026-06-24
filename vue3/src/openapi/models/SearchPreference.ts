@@ -18,18 +18,21 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { SearchFields } from './SearchFields';
 import {
     SearchFieldsFromJSON,
     SearchFieldsFromJSONTyped,
     SearchFieldsToJSON,
+    SearchFieldsToJSONTyped,
 } from './SearchFields';
 import type { SearchEnum } from './SearchEnum';
 import {
     SearchEnumFromJSON,
     SearchEnumFromJSONTyped,
     SearchEnumToJSON,
+    SearchEnumToJSONTyped,
 } from './SearchEnum';
 
 /**
@@ -61,31 +64,31 @@ export interface SearchPreference {
      * @type {Array<SearchFields>}
      * @memberof SearchPreference
      */
-    unaccent?: Array<SearchFields>;
+    unaccent?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof SearchPreference
      */
-    icontains?: Array<SearchFields>;
+    icontains?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof SearchPreference
      */
-    istartswith?: Array<SearchFields>;
+    istartswith?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof SearchPreference
      */
-    trigram?: Array<SearchFields>;
+    trigram?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof SearchPreference
      */
-    fulltext?: Array<SearchFields>;
+    fulltext?: Array<SearchFields> | null;
     /**
      * 
      * @type {number}
@@ -93,6 +96,8 @@ export interface SearchPreference {
      */
     trigramThreshold?: number;
 }
+
+
 
 /**
  * Check if a given object implements the SearchPreference interface.
@@ -124,10 +129,15 @@ export function SearchPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function SearchPreferenceToJSON(value?: Omit<SearchPreference, 'user'> | null): any {
+export function SearchPreferenceToJSON(json: any): SearchPreference {
+    return SearchPreferenceToJSONTyped(json, false);
+}
+
+export function SearchPreferenceToJSONTyped(value?: Omit<SearchPreference, 'user'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'search': SearchEnumToJSON(value['search']),

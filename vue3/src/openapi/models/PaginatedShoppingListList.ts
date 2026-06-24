@@ -18,6 +18,7 @@ import {
     ShoppingListFromJSON,
     ShoppingListFromJSONTyped,
     ShoppingListToJSON,
+    ShoppingListToJSONTyped,
 } from './ShoppingList';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedShoppingListList {
      * @type {string}
      * @memberof PaginatedShoppingListList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedShoppingListList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ShoppingList>}
@@ -85,17 +86,22 @@ export function PaginatedShoppingListListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedShoppingListListToJSON(value?: PaginatedShoppingListList | null): any {
+export function PaginatedShoppingListListToJSON(json: any): PaginatedShoppingListList {
+    return PaginatedShoppingListListToJSONTyped(json, false);
+}
+
+export function PaginatedShoppingListListToJSONTyped(value?: PaginatedShoppingListList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ShoppingListToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

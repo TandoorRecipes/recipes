@@ -18,6 +18,7 @@ import {
     StorageFromJSON,
     StorageFromJSONTyped,
     StorageToJSON,
+    StorageToJSONTyped,
 } from './Storage';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedStorageList {
      * @type {string}
      * @memberof PaginatedStorageList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedStorageList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Storage>}
@@ -85,17 +86,22 @@ export function PaginatedStorageListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedStorageListToJSON(value?: PaginatedStorageList | null): any {
+export function PaginatedStorageListToJSON(json: any): PaginatedStorageList {
+    return PaginatedStorageListToJSONTyped(json, false);
+}
+
+export function PaginatedStorageListToJSONTyped(value?: PaginatedStorageList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(StorageToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -24,19 +24,19 @@ export interface RecipeFromSource {
      * @type {string}
      * @memberof RecipeFromSource
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
      * @memberof RecipeFromSource
      */
-    data?: string;
+    data?: string | null;
     /**
      * 
      * @type {number}
      * @memberof RecipeFromSource
      */
-    bookmarklet?: number;
+    bookmarklet?: number | null;
 }
 
 /**
@@ -62,10 +62,15 @@ export function RecipeFromSourceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function RecipeFromSourceToJSON(value?: RecipeFromSource | null): any {
+export function RecipeFromSourceToJSON(json: any): RecipeFromSource {
+    return RecipeFromSourceToJSONTyped(json, false);
+}
+
+export function RecipeFromSourceToJSONTyped(value?: RecipeFromSource | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'url': value['url'],

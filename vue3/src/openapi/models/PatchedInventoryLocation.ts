@@ -18,6 +18,7 @@ import {
     HouseholdFromJSON,
     HouseholdFromJSONTyped,
     HouseholdToJSON,
+    HouseholdToJSONTyped,
 } from './Household';
 
 /**
@@ -110,10 +111,15 @@ export function PatchedInventoryLocationFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedInventoryLocationToJSON(value?: PatchedInventoryLocation | null): any {
+export function PatchedInventoryLocationToJSON(json: any): PatchedInventoryLocation {
+    return PatchedInventoryLocationToJSONTyped(json, false);
+}
+
+export function PatchedInventoryLocationToJSONTyped(value?: PatchedInventoryLocation | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

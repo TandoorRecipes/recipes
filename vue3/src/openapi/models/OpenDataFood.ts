@@ -18,24 +18,28 @@ import {
     OpenDataFoodPropertyFromJSON,
     OpenDataFoodPropertyFromJSONTyped,
     OpenDataFoodPropertyToJSON,
+    OpenDataFoodPropertyToJSONTyped,
 } from './OpenDataFoodProperty';
 import type { OpenDataUnit } from './OpenDataUnit';
 import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
+    OpenDataUnitToJSONTyped,
 } from './OpenDataUnit';
 import type { OpenDataCategory } from './OpenDataCategory';
 import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
+    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -119,25 +123,25 @@ export interface OpenDataFood {
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitMetric?: OpenDataUnit;
+    preferredUnitMetric?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitMetric?: OpenDataUnit;
+    preferredShoppingUnitMetric?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitImperial?: OpenDataUnit;
+    preferredUnitImperial?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitImperial?: OpenDataUnit;
+    preferredShoppingUnitImperial?: OpenDataUnit | null;
     /**
      * 
      * @type {Array<OpenDataFoodProperty>}
@@ -167,7 +171,7 @@ export interface OpenDataFood {
      * @type {number}
      * @memberof OpenDataFood
      */
-    fdcId?: number;
+    fdcId?: number | null;
     /**
      * 
      * @type {string}
@@ -227,10 +231,15 @@ export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OpenDataFoodToJSON(value?: Omit<OpenDataFood, 'createdBy'> | null): any {
+export function OpenDataFoodToJSON(json: any): OpenDataFood {
+    return OpenDataFoodToJSONTyped(json, false);
+}
+
+export function OpenDataFoodToJSONTyped(value?: Omit<OpenDataFood, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

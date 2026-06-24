@@ -18,6 +18,7 @@ import {
     OpenDataPropertyFromJSON,
     OpenDataPropertyFromJSONTyped,
     OpenDataPropertyToJSON,
+    OpenDataPropertyToJSONTyped,
 } from './OpenDataProperty';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedOpenDataPropertyList {
      * @type {string}
      * @memberof PaginatedOpenDataPropertyList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedOpenDataPropertyList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<OpenDataProperty>}
@@ -85,17 +86,22 @@ export function PaginatedOpenDataPropertyListFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function PaginatedOpenDataPropertyListToJSON(value?: PaginatedOpenDataPropertyList | null): any {
+export function PaginatedOpenDataPropertyListToJSON(json: any): PaginatedOpenDataPropertyList {
+    return PaginatedOpenDataPropertyListToJSONTyped(json, false);
+}
+
+export function PaginatedOpenDataPropertyListToJSONTyped(value?: PaginatedOpenDataPropertyList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(OpenDataPropertyToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

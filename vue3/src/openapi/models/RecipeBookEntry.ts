@@ -18,12 +18,14 @@ import {
     RecipeBookFromJSON,
     RecipeBookFromJSONTyped,
     RecipeBookToJSON,
+    RecipeBookToJSONTyped,
 } from './RecipeBook';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -93,10 +95,15 @@ export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'bookContent'|'recipeContent'> | null): any {
+export function RecipeBookEntryToJSON(json: any): RecipeBookEntry {
+    return RecipeBookEntryToJSONTyped(json, false);
+}
+
+export function RecipeBookEntryToJSONTyped(value?: Omit<RecipeBookEntry, 'book_content'|'recipe_content'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

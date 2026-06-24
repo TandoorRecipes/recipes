@@ -18,6 +18,7 @@ import {
     UserSpaceFromJSON,
     UserSpaceFromJSONTyped,
     UserSpaceToJSON,
+    UserSpaceToJSONTyped,
 } from './UserSpace';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedUserSpaceList {
      * @type {string}
      * @memberof PaginatedUserSpaceList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUserSpaceList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<UserSpace>}
@@ -85,17 +86,22 @@ export function PaginatedUserSpaceListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedUserSpaceListToJSON(value?: PaginatedUserSpaceList | null): any {
+export function PaginatedUserSpaceListToJSON(json: any): PaginatedUserSpaceList {
+    return PaginatedUserSpaceListToJSONTyped(json, false);
+}
+
+export function PaginatedUserSpaceListToJSONTyped(value?: PaginatedUserSpaceList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(UserSpaceToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

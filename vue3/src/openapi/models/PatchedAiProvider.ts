@@ -54,7 +54,7 @@ export interface PatchedAiProvider {
      * @type {string}
      * @memberof PatchedAiProvider
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {boolean}
@@ -66,7 +66,7 @@ export interface PatchedAiProvider {
      * @type {number}
      * @memberof PatchedAiProvider
      */
-    space?: number;
+    space?: number | null;
     /**
      * 
      * @type {Date}
@@ -111,10 +111,15 @@ export function PatchedAiProviderFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedAiProviderToJSON(value?: Omit<PatchedAiProvider, 'createdAt'|'updatedAt'> | null): any {
+export function PatchedAiProviderToJSON(json: any): PatchedAiProvider {
+    return PatchedAiProviderToJSONTyped(json, false);
+}
+
+export function PatchedAiProviderToJSONTyped(value?: Omit<PatchedAiProvider, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

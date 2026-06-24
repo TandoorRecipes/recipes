@@ -18,6 +18,7 @@ import {
     StorageFromJSON,
     StorageFromJSONTyped,
     StorageToJSON,
+    StorageToJSONTyped,
 } from './Storage';
 
 /**
@@ -55,7 +56,7 @@ export interface PatchedSync {
      * @type {Date}
      * @memberof PatchedSync
      */
-    lastChecked?: Date;
+    lastChecked?: Date | null;
     /**
      * 
      * @type {Date}
@@ -97,17 +98,22 @@ export function PatchedSyncFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'createdAt'|'updatedAt'> | null): any {
+export function PatchedSyncToJSON(json: any): PatchedSync {
+    return PatchedSyncToJSONTyped(json, false);
+}
+
+export function PatchedSyncToJSONTyped(value?: Omit<PatchedSync, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'storage': StorageToJSON(value['storage']),
         'path': value['path'],
         'active': value['active'],
-        'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),
+        'last_checked': value['lastChecked'] == null ? value['lastChecked'] : value['lastChecked'].toISOString(),
     };
 }
 

@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 import type { Step } from './Step';
 import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
+    StepToJSONTyped,
 } from './Step';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { NutritionInformation } from './NutritionInformation';
 import {
     NutritionInformationFromJSON,
     NutritionInformationFromJSONTyped,
     NutritionInformationToJSON,
+    NutritionInformationToJSONTyped,
 } from './NutritionInformation';
 
 /**
@@ -67,7 +72,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -121,7 +126,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    sourceUrl?: string;
+    sourceUrl?: string | null;
     /**
      * 
      * @type {boolean}
@@ -139,7 +144,7 @@ export interface Recipe {
      * @type {NutritionInformation}
      * @memberof Recipe
      */
-    nutrition?: NutritionInformation;
+    nutrition?: NutritionInformation | null;
     /**
      * 
      * @type {Array<Property>}
@@ -263,10 +268,15 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
     };
 }
 
-export function RecipeToJSON(value?: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'> | null): any {
+export function RecipeToJSON(json: any): Recipe {
+    return RecipeToJSONTyped(json, false);
+}
+
+export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

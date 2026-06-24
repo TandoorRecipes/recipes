@@ -18,12 +18,14 @@ import {
     OpenDataStoreCategoryFromJSON,
     OpenDataStoreCategoryFromJSONTyped,
     OpenDataStoreCategoryToJSON,
+    OpenDataStoreCategoryToJSONTyped,
 } from './OpenDataStoreCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -108,10 +110,15 @@ export function OpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function OpenDataStoreToJSON(value?: Omit<OpenDataStore, 'createdBy'> | null): any {
+export function OpenDataStoreToJSON(json: any): OpenDataStore {
+    return OpenDataStoreToJSONTyped(json, false);
+}
+
+export function OpenDataStoreToJSONTyped(value?: Omit<OpenDataStore, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

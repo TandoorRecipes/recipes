@@ -18,6 +18,7 @@ import {
     AiLogFromJSON,
     AiLogFromJSONTyped,
     AiLogToJSON,
+    AiLogToJSONTyped,
 } from './AiLog';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedAiLogList {
      * @type {string}
      * @memberof PaginatedAiLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedAiLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<AiLog>}
@@ -85,17 +86,22 @@ export function PaginatedAiLogListFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PaginatedAiLogListToJSON(value?: PaginatedAiLogList | null): any {
+export function PaginatedAiLogListToJSON(json: any): PaginatedAiLogList {
+    return PaginatedAiLogListToJSONTyped(json, false);
+}
+
+export function PaginatedAiLogListToJSONTyped(value?: PaginatedAiLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(AiLogToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

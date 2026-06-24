@@ -18,6 +18,7 @@ import {
     MethodEnumFromJSON,
     MethodEnumFromJSONTyped,
     MethodEnumToJSON,
+    MethodEnumToJSONTyped,
 } from './MethodEnum';
 
 /**
@@ -49,25 +50,25 @@ export interface Storage {
      * @type {string}
      * @memberof Storage
      */
-    username?: string;
+    username?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    password?: string;
+    password?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
@@ -81,6 +82,8 @@ export interface Storage {
      */
     readonly createdBy: number;
 }
+
+
 
 /**
  * Check if a given object implements the Storage interface.
@@ -113,10 +116,15 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function StorageToJSON(value?: Omit<Storage, 'createdBy'> | null): any {
+export function StorageToJSON(json: any): Storage {
+    return StorageToJSONTyped(json, false);
+}
+
+export function StorageToJSONTyped(value?: Omit<Storage, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

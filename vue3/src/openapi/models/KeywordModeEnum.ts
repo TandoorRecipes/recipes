@@ -28,7 +28,7 @@ export type KeywordModeEnum = typeof KeywordModeEnum[keyof typeof KeywordModeEnu
 export function instanceOfKeywordModeEnum(value: any): boolean {
     for (const key in KeywordModeEnum) {
         if (Object.prototype.hasOwnProperty.call(KeywordModeEnum, key)) {
-            if (KeywordModeEnum[key] === value) {
+            if (KeywordModeEnum[key as keyof typeof KeywordModeEnum] === value) {
                 return true;
             }
         }
@@ -46,5 +46,9 @@ export function KeywordModeEnumFromJSONTyped(json: any, ignoreDiscriminator: boo
 
 export function KeywordModeEnumToJSON(value?: KeywordModeEnum | null): any {
     return value as any;
+}
+
+export function KeywordModeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): KeywordModeEnum {
+    return value as KeywordModeEnum;
 }
 

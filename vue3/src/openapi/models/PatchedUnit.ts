@@ -70,25 +70,25 @@ export interface PatchedUnit {
      * @type {string}
      * @memberof PatchedUnit
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    baseUnit?: string;
+    baseUnit?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
@@ -117,10 +117,15 @@ export function PatchedUnitFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedUnitToJSON(value?: PatchedUnit | null): any {
+export function PatchedUnitToJSON(json: any): PatchedUnit {
+    return PatchedUnitToJSONTyped(json, false);
+}
+
+export function PatchedUnitToJSONTyped(value?: PatchedUnit | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

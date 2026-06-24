@@ -18,6 +18,7 @@ import {
     CookLogFromJSON,
     CookLogFromJSONTyped,
     CookLogToJSON,
+    CookLogToJSONTyped,
 } from './CookLog';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedCookLogList {
      * @type {string}
      * @memberof PaginatedCookLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedCookLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<CookLog>}
@@ -85,17 +86,22 @@ export function PaginatedCookLogListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedCookLogListToJSON(value?: PaginatedCookLogList | null): any {
+export function PaginatedCookLogListToJSON(json: any): PaginatedCookLogList {
+    return PaginatedCookLogListToJSONTyped(json, false);
+}
+
+export function PaginatedCookLogListToJSONTyped(value?: PaginatedCookLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(CookLogToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

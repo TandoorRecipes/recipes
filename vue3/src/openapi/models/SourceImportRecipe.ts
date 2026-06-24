@@ -18,18 +18,21 @@ import {
     SourceImportStepFromJSON,
     SourceImportStepFromJSONTyped,
     SourceImportStepToJSON,
+    SourceImportStepToJSONTyped,
 } from './SourceImportStep';
 import type { SourceImportProperty } from './SourceImportProperty';
 import {
     SourceImportPropertyFromJSON,
     SourceImportPropertyFromJSONTyped,
     SourceImportPropertyToJSON,
+    SourceImportPropertyToJSONTyped,
 } from './SourceImportProperty';
 import type { SourceImportKeyword } from './SourceImportKeyword';
 import {
     SourceImportKeywordFromJSON,
     SourceImportKeywordFromJSONTyped,
     SourceImportKeywordToJSON,
+    SourceImportKeywordToJSONTyped,
 } from './SourceImportKeyword';
 
 /**
@@ -147,10 +150,15 @@ export function SourceImportRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function SourceImportRecipeToJSON(value?: SourceImportRecipe | null): any {
+export function SourceImportRecipeToJSON(json: any): SourceImportRecipe {
+    return SourceImportRecipeToJSONTyped(json, false);
+}
+
+export function SourceImportRecipeToJSONTyped(value?: SourceImportRecipe | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'steps': ((value['steps'] as Array<any>).map(SourceImportStepToJSON)),

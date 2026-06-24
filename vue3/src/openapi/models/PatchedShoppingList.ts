@@ -42,7 +42,7 @@ export interface PatchedShoppingList {
      * @type {string}
      * @memberof PatchedShoppingList
      */
-    color?: string;
+    color?: string | null;
 }
 
 /**
@@ -69,10 +69,15 @@ export function PatchedShoppingListFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedShoppingListToJSON(value?: PatchedShoppingList | null): any {
+export function PatchedShoppingListToJSON(json: any): PatchedShoppingList {
+    return PatchedShoppingListToJSONTyped(json, false);
+}
+
+export function PatchedShoppingListToJSONTyped(value?: PatchedShoppingList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

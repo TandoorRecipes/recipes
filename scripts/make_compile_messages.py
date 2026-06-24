@@ -21,7 +21,7 @@ def call_compilemessages():
 
 if __name__ == "__main__":
     # Specify the path to the folder containing language directories
-    folder_path = "cookbook/locale"
+    folder_path = "../cookbook/locale"
 
     # Detect languages in the folder
     languages = detect_languages(folder_path)

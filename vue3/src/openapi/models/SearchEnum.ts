@@ -32,7 +32,7 @@ export type SearchEnum = typeof SearchEnum[keyof typeof SearchEnum];
 export function instanceOfSearchEnum(value: any): boolean {
     for (const key in SearchEnum) {
         if (Object.prototype.hasOwnProperty.call(SearchEnum, key)) {
-            if (SearchEnum[key] === value) {
+            if (SearchEnum[key as keyof typeof SearchEnum] === value) {
                 return true;
             }
         }
@@ -50,5 +50,9 @@ export function SearchEnumFromJSONTyped(json: any, ignoreDiscriminator: boolean)
 
 export function SearchEnumToJSON(value?: SearchEnum | null): any {
     return value as any;
+}
+
+export function SearchEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): SearchEnum {
+    return value as SearchEnum;
 }
 

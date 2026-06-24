@@ -18,12 +18,14 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -49,7 +51,7 @@ export interface PatchedMealPlan {
      * @type {RecipeOverview}
      * @memberof PatchedMealPlan
      */
-    recipe?: RecipeOverview;
+    recipe?: RecipeOverview | null;
     /**
      * 
      * @type {number}
@@ -152,10 +154,15 @@ export function PatchedMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedMealPlanToJSON(value?: Omit<PatchedMealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'> | null): any {
+export function PatchedMealPlanToJSON(json: any): PatchedMealPlan {
+    return PatchedMealPlanToJSONTyped(json, false);
+}
+
+export function PatchedMealPlanToJSONTyped(value?: Omit<PatchedMealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -163,8 +170,8 @@ export function PatchedMealPlanToJSON(value?: Omit<PatchedMealPlan, 'noteMarkdow
         'recipe': RecipeOverviewToJSON(value['recipe']),
         'servings': value['servings'],
         'note': value['note'],
-        'from_date': value['fromDate'] == null ? undefined : ((value['fromDate']).toISOString()),
-        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
+        'from_date': value['fromDate'] == null ? value['fromDate'] : value['fromDate'].toISOString(),
+        'to_date': value['toDate'] == null ? value['toDate'] : value['toDate'].toISOString(),
         'meal_type': MealTypeToJSON(value['mealType']),
         'addshopping': value['addshopping'],
     };
