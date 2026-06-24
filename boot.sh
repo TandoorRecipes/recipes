@@ -1,5 +1,4 @@
 #!/bin/sh
-source venv/bin/activate
 
 # these are envsubst in the nginx config, make sure they default to something sensible when unset
 export TANDOOR_PORT="${TANDOOR_PORT:-80}"
@@ -86,16 +85,16 @@ echo "Database is ready"
 
 echo "Migrating database"
 
-python manage.py migrate
+uv run python manage.py migrate
 
 if [ "${PLUGINS_BUILD}" -eq 1 ]; then
     echo "Running yarn build at startup because PLUGINS_BUILD is enabled"
-    python plugin.py
+    uv run python plugin.py
 fi
 
 echo "Collecting static files, this may take a while..."
 
-python manage.py collectstatic --noinput --clear
+uv run python manage.py collectstatic --noinput --clear
 
 echo "Done"
 

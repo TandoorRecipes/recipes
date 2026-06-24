@@ -1,3 +1,88 @@
+[project]
+name = "Tandoor"
+version = "2"
+description = "Digital Recipe Manager"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aiohttp==3.14.1",
+    "autopep8==2.3.2",
+    "beautifulsoup4==4.12.3",
+    "bleach==6.4.0",
+    "boto3==1.41.5",
+    "crispy-bootstrap4==2026.2",
+    "cryptography===48.0.1",
+    "django==5.2.15",
+    "django-allauth[mfa,socialaccount]==65.15.0",
+    "django-annoying==0.10.6",
+    "django-cleanup==9.0.0",
+    "django-cors-headers==4.9.0",
+    "django-crispy-forms==2.4",
+    "django-debug-toolbar==6.2.0",
+    "django-hcaptcha==0.2.0",
+    "django-oauth-toolkit==2.4.0",
+    "django-prometheus==2.4.1",
+    "django-scopes==2.0.0",
+    "django-storages==1.14.6",
+    "django-treebeard==4.7.1",
+    "django-vite==3.1.0",
+    "djangorestframework==3.17.1",
+    "drf-spectacular==0.29.0",
+    "drf-spectacular-sidecar==2026.1.1",
+    "drf-writable-nested==0.7.2",
+    "flake8==7.3.0",
+    "frappe-client==0.1.0.dev0",
+    "hiredis==3.3.0",
+    "icalendar==7.0.3",
+    "inflection==0.5.1",
+    "jinja2==3.1.6",
+    "litellm==1.89.3",
+    "lxml==6.1.0",
+    "markdown==3.8.1",
+    "microdata==0.8.0",
+    "mock==5.2.0",
+    "pillow==12.2.0",
+    "psycopg[c]==3.3.4; platform_system == 'Linux'",
+    "psycopg[binary]==3.3.4; platform_system == 'Windows'",
+    "pyjwt==2.13.0",
+    "python-dotenv==1.2.2",
+    "python3-openid==3.2.0",
+    "python3-saml==1.16.0",
+    "pytubefix==10.3.8",
+    "pyyaml==6.0.3",
+    "recipe-scrapers==15.11.0",
+    "redis==7.4.0",
+    "regex==2026.5.9",
+    "requests==2.33.0",
+    "requests-hardened==1.2.1",
+    "requests-oauthlib==2.0.0",
+    "six==1.17.0",
+    "stripe==14.0.0",
+    "thefuzz==0.22.1",
+    "uritemplate==4.1.1",
+    "webdavclient3==3.14.6",
+    "whitenoise==6.12.0",
+    "yapf==0.40.2",
+    "gunicorn==23.0.0",
+]
+
+[project.optional-dependencies]
+ldap = [
+    "python-ldap", # version is ignored because uv.sources overrides download to version specified there
+    "django-auth-ldap==5.3.0"
+]
+
+[dependency-groups]
+dev = [
+    "pytest==9.0.3",
+    "pytest-asyncio==1.4.0",
+    "pytest-cov===6.2.1",
+    "pytest-django==4.11.1",
+    "pytest-factoryboy==2.8.1",
+    "pytest-html==4.1.1",
+    "pytest-xdist==3.8.0",
+]
+
 [tool.yapf]
 column_limit = 179
 based_on_style = "pep8"
@@ -13,3 +98,11 @@ ALLOW_SPLIT_BEFORE_DICT_VALUE = false
 multi_line_output = 5
 skip = [".gitignore", ".dockerignore"]
 line_length = 179
+
+[tool.uv.sources]
+# check https://github.com/cgohlke/python-ldap-build/releases for updates
+python-ldap = [
+    { url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.5/python_ldap-3.4.5-cp312-cp312-win_amd64.whl", marker = "platform_system == 'Windows' and python_version == '3.12'" },
+    { url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.5/python_ldap-3.4.5-cp313-cp313-win_amd64.whl", marker = "platform_system == 'Windows' and python_version == '3.13'" },
+    { url = "https://github.com/cgohlke/python-ldap-build/releases/download/v3.4.5/python_ldap-3.4.5-cp314-cp314-win_amd64.whl", marker = "platform_system == 'Windows' and python_version == '3.14'" },
+]

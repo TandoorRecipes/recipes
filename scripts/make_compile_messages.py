@@ -5,7 +5,7 @@ from recipes.settings import BASE_DIR
 
 def detect_languages(folder_path):
     os.chdir(BASE_DIR)
-    
+
     languages = []
     for root, dirs, files in os.walk(folder_path):
         for dir in dirs:

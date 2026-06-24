@@ -1,4 +1,4 @@
-FROM python:3.13-alpine3.23
+FROM python:3.14-alpine3.24
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
@@ -19,12 +19,7 @@ COPY requirements.txt ./
 # remove Development dependencies from requirements.txt
 RUN sed -i '/# Development/,$d' requirements.txt
 RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
-    python -m venv venv && \
-    /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip debug -v && \
-    venv/bin/pip install wheel==0.45.1 && \
-    venv/bin/pip install setuptools_rust==1.10.2 && \
-    venv/bin/pip install -r requirements.txt --no-cache-dir &&\
+    uv sync --extra ldap && \
     apk --purge del .build-deps
 
 #Copy project and execute it.
