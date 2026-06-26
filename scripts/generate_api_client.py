@@ -8,7 +8,7 @@ from recipes.settings import BASE_DIR
 
 os.chdir(os.path.join(BASE_DIR, "vue3/src/openapi"))
 
-DELETE_PATHS = ["apis", "models", "runtime.ts", "index.ts", ".openapi-generator"]
+DELETE_PATHS = ["apis", "models", "index.ts", ".openapi-generator"]
 for path in DELETE_PATHS:
     path=Path(path)
     if path.is_dir():
@@ -17,6 +17,6 @@ for path in DELETE_PATHS:
         path.unlink()
 
 # generate base API client for all models
-subprocess.run('openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/ -t templates --openapitools openapitools.json --global-property apiDocs=false,modelDocs=false',  shell=True, check=True)
+subprocess.run('openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/ -t templates  --global-property apiDocs=false,modelDocs=false',  shell=True, check=True)
 
 sys.exit(0)
