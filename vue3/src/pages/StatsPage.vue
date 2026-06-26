@@ -144,8 +144,8 @@
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <span v-if="getPropertyValue(item.recipe, prop.id) !== null">
-                                        {{ getPropertyValue(item.recipe, prop.id) }}<span v-if="prop.unit">{{ prop.unit }}</span>
+                                    <span v-if="getScaledPropertyValue(item.recipe, prop.id, item.servings) !== null">
+                                        {{ getScaledPropertyValue(item.recipe, prop.id, item.servings) }}<span v-if="prop.unit">{{ prop.unit }}</span>
                                     </span>
                                     <span v-else class="text-disabled">-</span>
                                 </template>
@@ -447,9 +447,9 @@ const groupedCookLogs = computed<GroupedCookLog[]>(() => {
         group.entries.push(log)
         group.totalServings += log.servings || 0
 
-        // Sum property values for each property type
+        // Sum property values for each property type, scaled by the servings logged
         for (const prop of Array.from(discoveredProperties.value.values())) {
-            const value = getPropertyValue(log.recipe, prop.id)
+            const value = getScaledPropertyValue(log.recipe, prop.id, log.servings)
             if (value !== null) {
                 const current = group.propertyTotals.get(prop.id) || 0
                 group.propertyTotals.set(prop.id, current + value)
@@ -568,9 +568,14 @@ function getRecipeName(recipeId: number): string {
 }
 
 /**
- * Get property value by property type ID, preferring manual properties, falling back to calculated food properties
+ * Get the per-serving property value for a recipe by property type ID, preferring manual
+ * properties, falling back to calculated food properties.
+ *
+ * Manual recipe properties are stored per serving, whereas the calculated food_properties
+ * `total_value` is for the whole recipe (i.e. recipe.servings servings), so it must be
+ * divided by the recipe's base servings to normalise both branches to a per-serving amount.
  */
-function getPropertyValue(recipeId: number, propertyTypeId: number): number | null {
+function getPropertyValuePerServing(recipeId: number, propertyTypeId: number): number | null {
     const cached = recipeCache.value.get(recipeId)
     if (!cached) {
         return null
@@ -578,7 +583,7 @@ function getPropertyValue(recipeId: number, propertyTypeId: number): number | nu
 
     const recipe = cached.recipe
 
-    // 1. First try manual properties array
+    // 1. First try manual properties array (already per serving)
     if (recipe.properties && Array.isArray(recipe.properties)) {
         const prop = recipe.properties.find((p: any) =>
             (p.propertyType || p.property_type)?.id === propertyTypeId
@@ -589,18 +594,32 @@ function getPropertyValue(recipeId: number, propertyTypeId: number): number | nu
         }
     }
 
-    // 2. Fall back to calculated food properties
+    // 2. Fall back to calculated food properties (total_value is for the whole recipe)
     const foodProperties = recipe.food_properties
     if (foodProperties) {
+        const baseServings = Math.max(recipe.servings || 1, 1)
         for (const propId in foodProperties) {
             const prop = foodProperties[propId]
             if (prop.id === propertyTypeId && prop.total_value) {
-                return Math.round(prop.total_value * 100) / 100
+                return prop.total_value / baseServings
             }
         }
     }
 
     return null
+}
+
+/**
+ * Get the property amount for a cook log, scaled by the number of servings logged.
+ * A log without a recorded serving count is treated as a single serving so its
+ * nutrition is still reflected rather than dropping to zero.
+ */
+function getScaledPropertyValue(recipeId: number, propertyTypeId: number, servings?: number | null): number | null {
+    const perServing = getPropertyValuePerServing(recipeId, propertyTypeId)
+    if (perServing === null) {
+        return null
+    }
+    return Math.round(perServing * (servings || 1) * 100) / 100
 }
 
 function editCookLog(item: CookLog) {
