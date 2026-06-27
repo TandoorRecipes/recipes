@@ -2751,8 +2751,8 @@ class AiImportView(APIView):
                 try:
                     img = PIL.Image.open(uploaded_file)
                     buffer = io.BytesIO()
-                    img.save(buffer, format=img.format)
-                    base64type = 'image/' + img.format
+                    img.convert('RGB').save(buffer, format='JPEG')
+                    base64type = 'image/jpeg'
                     file_bytes = buffer.getvalue()
                 except PIL.UnidentifiedImageError:
                     uploaded_file.seek(0)
