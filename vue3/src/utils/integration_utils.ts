@@ -34,4 +34,5 @@ export const INTEGRATIONS: Array<Integration> = [
     {id: 'SAFFRON', name: "Saffron", import: true, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#safron'},
     {id: 'REZEPTSUITEDE', name: "Rezeptsuite.de", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#rezeptsuitede'},
     {id: 'GOURMET', name: "Gourmet", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#gourmet'},
+    {id: 'PESTLE', name: "Pestle", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#pestle'},
 ]
