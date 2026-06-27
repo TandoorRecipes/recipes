@@ -44,8 +44,28 @@
                     </td>
                     <td style="width: 1%; text-wrap: nowrap" class="pr-1" v-else></td>
 
-                    <td style="width: 1%; text-wrap: nowrap" class="pr-1">
-                        <template v-if="i.unit && !i.noAmount && i.amount != 0"> {{ ingredientToUnitString(i, ingredientFactor) }}</template>
+                    <td style="text-wrap: nowrap" class="pr-1">
+                        <template v-if="i.unit && !i.noAmount && i.amount != 0">
+                            <!-- Unit toggle with inline select for conversion -->
+                            <v-select
+                                v-if="!useUserPreferenceStore().isPrintMode && i.conversions && i.conversions.length > 0"
+                                :model-value="getSelectedUnit(i)"
+                                :items="getUnitOptions(i)"
+                                item-title="label"
+                                item-value="id"
+                                variant="plain"
+                                density="compact"
+                                hide-details
+                                class="d-inline"
+                                style="width: 100px"
+                                @update:model-value="onUnitChange(i, $event)"
+                                @click.stop
+                            ></v-select>
+                            <!-- Fallback display for items without conversions or in print mode -->
+                            <template v-else>
+                                {{ ingredientToUnitString(i, ingredientFactor) }}
+                            </template>
+                        </template>
                     </td>
                     <td>
                         <template v-if="i.food">
@@ -132,6 +152,47 @@ const props = defineProps({
 const ingredients = defineModel<Ingredient[]>({required: true})
 
 const openNoteIdx = ref<number | null>(null)
+
+/**
+ * Get all unit options for the dropdown (flat list)
+ */
+function getUnitOptions(ingredient: Ingredient): Array<{id: string, label: string}> {
+    if (!ingredient.conversions || ingredient.conversions.length === 0) {
+        return []
+    }
+
+    const result: Array<{id: string, label: string}> = []
+
+    ingredient.conversions.forEach((c: any) => {
+        result.push({ id: c.unit, label: c.unit })
+    })
+
+    return result
+}
+
+/**
+ * Get the current display value for the dropdown
+ * Uses ingredient.unit.name directly - no separate state needed
+ */
+function getSelectedUnit(ingredient: Ingredient): string {
+    return ingredient.unit?.name || ''
+}
+
+/**
+ * Handle unit selection change
+ */
+function onUnitChange(ingredient: Ingredient, newUnitName: string) {
+    if (!ingredient.conversions || ingredient.conversions.length === 0) return
+
+    const selectedConversion = ingredient.conversions.find((c: any) => {
+        return c.unit.toLowerCase() === newUnitName.toLowerCase()
+    })
+
+    if (selectedConversion) {
+        ingredient.unit = { id: null, name: selectedConversion.unit } as any
+        ingredient.amount = selectedConversion.amount
+    }
+}
 
 const tableHeaders = computed(() => {
     let headers = [
