@@ -117,3 +117,38 @@ describe('GenericModel.list normalizes paginated vs non-paginated responses', ()
         expect(r).toEqual({ count: 0, results: [], next: null })
     })
 })
+
+describe('list-empty-actions — curated editable models expose row edit/delete', () => {
+    // These models are surfaced on the Database page (DATABASE_MODELS), have an
+    // editor component and are deletable, and declare an "Actions" column — but
+    // never defined actionDefs, so their /list Actions column rendered empty
+    // (no way to edit or delete a row). Each must expose at least edit + delete.
+    const EDITABLE_MODELS = [
+        'Supermarket', 'SupermarketCategory', 'MealType',
+        'PropertyType', 'InventoryLocation', 'UserSpace',
+    ]
+
+    it.each(EDITABLE_MODELS)('%s declares an Actions column header', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        const headers = model.tableHeaders ?? []
+        expect(headers.some(h => h.key === 'action')).toBe(true)
+    })
+
+    it.each(EDITABLE_MODELS)('%s defines edit + delete actionDefs', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        const keys = (model.actionDefs ?? []).map(a => a.key)
+        expect(keys).toContain('edit')
+        expect(keys).toContain('delete')
+    })
+})
+
+describe('list-empty-actions — read-only ViewLog has no dead Actions column', () => {
+    // ViewLog has no editor component and disableDelete: a row can never have an
+    // edit or delete action, so the "Actions" column header was permanently empty.
+    // Drop the header rather than render an always-blank column.
+    it('ViewLog declares no Actions column header', () => {
+        const model = getGenericModelFromString('ViewLog', t).model
+        const headers = model.tableHeaders ?? []
+        expect(headers.some(h => h.key === 'action')).toBe(false)
+    })
+})
