@@ -991,5 +991,6 @@
     "HouseholdSetup2": "Le famiglie facilitano la collaborazione condividendo automaticamente piani alimentari e liste della spesa tra i membri. ",
     "HouseholdSetup3": "Gli elementi precedentemente condivisi non sono attualmente visibili. Crea la tua prima famiglia e aggiungi i membri del tuo spazio per ripristinare l'accesso agli elementi condivisi.",
     "HouseholdSetup4": "Se non hai bisogno di condividere, puoi saltare questa configurazione. Puoi creare e gestire le famiglie in qualsiasi momento utilizzando la vista Database.",
-    "HouseholdWelcome": "Inserisci un nome per la tua prima famiglia da creare e a cui unirti. Questo ti permetterà di condividere facilmente liste della spesa, piani alimentari e altro ancora. Lascia il campo vuoto se per ora non hai bisogno di condividere. "
+    "HouseholdWelcome": "Inserisci un nome per la tua prima famiglia da creare e a cui unirti. Questo ti permetterà di condividere facilmente liste della spesa, piani alimentari e altro ancora. Lascia il campo vuoto se per ora non hai bisogno di condividere. ",
+    "AllowedAiUrlHelp": "Gli URL devono essere consentiti nelle impostazioni AI_ALLOWED_URLS del server."
 }
