@@ -123,3 +123,15 @@ def test_ordering_recipe_name(u1_s1, space_1):
 
     r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=recipe__name').content)
     assert r['results'][0]['recipe'] == recipe_aaa.id
+
+
+def test_query_filters_by_recipe_name(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    recipe_pasta = Recipe.objects.create(name='Pasta Bake', created_by=user, space=space_1)
+    recipe_soup = Recipe.objects.create(name='Tomato Soup', created_by=user, space=space_1)
+    CookLog.objects.create(recipe=recipe_pasta, created_by=user, space=space_1)
+    CookLog.objects.create(recipe=recipe_soup, created_by=user, space=space_1)
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=pasta').content)
+    assert r['count'] == 1
+    assert r['results'][0]['recipe'] == recipe_pasta.id
