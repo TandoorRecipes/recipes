@@ -154,6 +154,7 @@ export type SettingsDefaults = {
     quickActions?: string[],
     showStats?: boolean,
     showMobileHeaders?: boolean,
+    mobileSubtitle?: string[],
 }
 
 export type ListSettings = {

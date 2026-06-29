@@ -21,6 +21,7 @@ export const COOKLOG_LIST_SETTINGS: ListSettings = {
     mobileList: true,
     defaults: {
         showMobileHeaders: true,
+        mobileSubtitle: ['createdAt'],
     },
 }
 

@@ -48,7 +48,7 @@ export function useModelListSettings(settingsKey: ComputedRef<string>, modelDefa
         treeEnabled: setting('treeView', false),
         quickActionKeys: modelSetting<string[]>('quickActions', 'quickActions', []),
         desktopSubtitleKeys: setting<string[]>('desktopSubtitle', []),
-        mobileSubtitleKeys: setting<string[]>('mobileSubtitle', []),
+        mobileSubtitleKeys: modelSetting<string[]>('mobileSubtitle', 'mobileSubtitle', []),
         swipeEnabled: setting('swipeEnabled', false),
         swipeLeftKeys: setting<string[]>('swipeLeft', []),
         swipeRightKeys: setting<string[]>('swipeRight', []),

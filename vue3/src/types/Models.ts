@@ -799,6 +799,7 @@ export const TCookLog = {
     disableCreate: true,
 
     isPaginated: true,
+    itemLabel: 'recipeName',
     toStringKeys: ['recipe'],
 
     tableHeaders: [
@@ -825,6 +826,7 @@ export const TViewLog = {
     disableCreate: true,
     disableUpdate: true,
     disableDelete: true,
+    itemLabel: 'recipeName',
     toStringKeys: ['recipe'],
 
     tableHeaders: [
