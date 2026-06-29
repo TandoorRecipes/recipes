@@ -169,3 +169,14 @@ describe('list-inert-search — tiny config models hide the non-working search b
         expect(model.disableSearch).toBeFalsy()
     })
 })
+
+describe('list-numeric-id — log lists show the recipe name, not its id', () => {
+    // CookLog/ViewLog displayed the recipe FK id (e.g. "81") instead of the
+    // recipe name. The serializer now exposes recipeName; the Recipe column
+    // must render that field.
+    it.each(['CookLog', 'ViewLog'])('%s Recipe column keys on recipeName', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        const recipeCol = (model.tableHeaders ?? []).find(h => h.title === 'Recipe')
+        expect(recipeCol?.key).toBe('recipeName')
+    })
+})

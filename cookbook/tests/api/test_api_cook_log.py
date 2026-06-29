@@ -135,3 +135,11 @@ def test_query_filters_by_recipe_name(u1_s1, space_1):
     r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=pasta').content)
     assert r['count'] == 1
     assert r['results'][0]['recipe'] == recipe_pasta.id
+
+
+def test_list_includes_recipe_name(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    recipe = Recipe.objects.create(name='Pasta Bake', created_by=user, space=space_1)
+    CookLog.objects.create(recipe=recipe, created_by=user, space=space_1)
+    r = json.loads(u1_s1.get(reverse(LIST_URL)).content)
+    assert r['results'][0]['recipe_name'] == 'Pasta Bake'
