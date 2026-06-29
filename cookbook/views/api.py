@@ -2738,6 +2738,14 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         description='Order results by field. Allowed: created_at, -created_at, recipe__name, -recipe__name. Ignored when query is active.'
     ),
 ]))
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='query', description='lookup if query string is contained within the recipe name, case insensitive', type=str),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: created_at, -created_at, recipe__name, -recipe__name. Ignored when query is active.'
+    ),
+]))
 class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
@@ -2763,11 +2771,15 @@ class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         # working backwards from the test - this is supposed to be limited to user view logs only??
         qs = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        query = self.request.query_params.get('query', None)
+        if query:
+            qs = qs.filter(recipe__name__icontains=query)
         return self._apply_ordering(qs)
 
 
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int),
+    OpenApiParameter(name='query', description='lookup if query string is contained within the recipe name, case insensitive', type=str),
     OpenApiParameter(
         name='ordering',
         type=str,
@@ -2799,6 +2811,9 @@ class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.query_params.get('recipe', None):
             self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
+        query = self.request.query_params.get('query', None)
+        if query:
+            self.queryset = self.queryset.filter(recipe__name__icontains=query)
         return self._apply_ordering(self.queryset.filter(space=self.request.space))
 
 

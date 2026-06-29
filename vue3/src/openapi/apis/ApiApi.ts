@@ -696,6 +696,7 @@ export interface ApiCookLogListRequest {
     ordering?: string;
     page?: number;
     pageSize?: number;
+    query?: string;
     recipe?: number;
 }
 
@@ -2271,6 +2272,7 @@ export interface ApiViewLogListRequest {
     ordering?: string;
     page?: number;
     pageSize?: number;
+    query?: string;
 }
 
 export interface ApiViewLogPartialUpdateRequest {
@@ -4132,6 +4134,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
         }
 
         if (requestParameters['recipe'] != null) {
@@ -17212,6 +17218,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
