@@ -65,12 +65,16 @@ vi.mock('@vueuse/core', async () => {
 // Mutable per-test override: default returns the defaultValue, but tests can
 // override specific keys (e.g. page=2) to reproduce FOOD-01.
 const routeQueryOverrides: Record<string, any> = {}
+// Cache the ref per key so a test can mutate it after mount (e.g. type a query).
+const routeQueryRefs: Record<string, any> = {}
 vi.mock('@vueuse/router', async () => {
     const { ref } = await import('vue')
     return {
         useRouteQuery: (key: string, defaultValue: any, opts?: any) => {
-            if (key in routeQueryOverrides) return ref(routeQueryOverrides[key])
-            return ref(defaultValue)
+            if (!(key in routeQueryRefs)) {
+                routeQueryRefs[key] = ref(key in routeQueryOverrides ? routeQueryOverrides[key] : defaultValue)
+            }
+            return routeQueryRefs[key]
         },
     }
 })
@@ -82,6 +86,7 @@ describe('ModelListPage', () => {
         resetApiMock()
         mockList.mockReset().mockResolvedValue({ results: [], count: 0 })
         for (const k of Object.keys(routeQueryOverrides)) delete routeQueryOverrides[k]
+        for (const k of Object.keys(routeQueryRefs)) delete routeQueryRefs[k]
         treeViewEnabled = false
     })
 
@@ -119,5 +124,28 @@ describe('ModelListPage', () => {
             pageCalls,
             `list() was called with page=1 — treeActive init reset the page. All page calls: ${JSON.stringify(pageCalls)}`
         ).not.toContain(1)
+    })
+
+    it('R09-2: searching while on page>1 reloads at page 1, never requesting the stale page', async () => {
+        // On page 2, entering a query must reset to page 1 before the request fires.
+        // Bug: the desktop table re-fetched on :search change with the stale page,
+        // yielding GET ?page=2&query=... → backend 404 (out of range) before recovering.
+        routeQueryOverrides['page'] = 2
+        mountPage(ModelListPage, { props: { model: 'Food' } })
+        await flushPromises()
+
+        mockList.mockClear()   // ignore the initial page-2 load
+        routeQueryRefs['query'].value = 'choc'
+        await flushPromises()
+
+        const calls = mockList.mock.calls.map((c: any[]) => c[0])
+        expect(
+            calls.some(c => c?.page === 2 && c?.query === 'choc'),
+            `a stale out-of-range request fired: ${JSON.stringify(calls)}`
+        ).toBe(false)
+        expect(
+            calls.some(c => c?.page === 1 && c?.query === 'choc'),
+            `expected a page-1 reload for the new query: ${JSON.stringify(calls)}`
+        ).toBe(true)
     })
 })
