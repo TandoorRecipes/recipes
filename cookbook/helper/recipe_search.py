@@ -429,4 +429,10 @@ class RecipeSearch:
         else:
             order.append('name')
 
+        # `times_cooked` is the public sort key for the cook count; that count is
+        # annotated internally as `favorite` (see with_favorite / by_times_cooked),
+        # so translate it here. Without this, order_by('times_cooked') raises a
+        # FieldError → HTTP 500 (R09-1).
+        order = [{'times_cooked': 'favorite', '-times_cooked': '-favorite'}.get(o, o) for o in order]
+
         return order
