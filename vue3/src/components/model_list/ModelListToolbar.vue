@@ -30,6 +30,7 @@
         </v-btn>
 
         <v-text-field
+            v-if="!disableSearch"
             prepend-inner-icon="$search"
             :label="$t('Search')"
             :model-value="query"
@@ -87,6 +88,7 @@
 
     <div v-else>
         <v-text-field
+            v-if="!disableSearch"
             prepend-inner-icon="$search"
             :label="$t('Search')"
             :model-value="query"
@@ -215,6 +217,7 @@ const props = withDefaults(defineProps<{
     hasMultiSelect?: boolean
     selectMode?: boolean
     showReset?: boolean
+    disableSearch?: boolean
 }>(), {
     query: '',
     ordering: '',
@@ -224,6 +227,7 @@ const props = withDefaults(defineProps<{
     hasMultiSelect: false,
     selectMode: false,
     showReset: false,
+    disableSearch: false,
 })
 
 const emit = defineEmits<{

@@ -108,7 +108,7 @@
         <v-row>
             <v-col>
                 <ModelListToolbar
-                    v-if="!genericModel.model.disableSearch"
+                    v-if="showListToolbar"
                     v-model:query="query"
                     v-model:ordering="ordering"
                     :sort-options="genericModel.model.sortDefs ?? []"
@@ -117,6 +117,7 @@
                     :has-multi-select="!genericModel.model.disableDelete || genericModel.model.isMerge"
                     :select-mode="selectMode"
                     :show-reset="hasActiveSearchState"
+                    :disable-search="genericModel.model.disableSearch"
                     @open-filters="openSettingsPanel('filters')"
                     @open-settings="openSettingsPanel('settings')"
                     @toggle-select="selectMode = !selectMode"
@@ -412,6 +413,16 @@ const effectiveTreeActive = computed(() =>
 const hasActiveSearchState = computed(() =>
     !!query.value || activeFilterCount.value > 0 || (!!ordering.value && ordering.value !== 'name')
 )
+
+// Render the toolbar whenever it has any control to show. disableSearch hides
+// only the search field (see ModelListToolbar), so a model can still surface
+// multi-select, sort or filter affordances with search turned off.
+const showListToolbar = computed(() => {
+    const m = currentModel.value
+    if (!m) return false
+    const hasMultiSelect = !m.disableDelete || !!m.isMerge
+    return !m.disableSearch || hasMultiSelect || hasEnhancedList.value || (m.sortDefs?.length ?? 0) > 0
+})
 
 function resetAll() {
     query.value = ''

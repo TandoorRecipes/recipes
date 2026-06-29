@@ -441,6 +441,7 @@ registerModel(TIngredient)
 
 export const TMealType = {
     name: 'MealType',
+    disableSearch: true,
     localizationKey: 'Meal_Type',
     localizationKeyDescription: 'MealTypeHelp',
     icon: 'fa-solid fa-utensils',
@@ -675,6 +676,7 @@ registerModel(TShoppingListEntry)
 
 export const TPropertyType = {
     name: 'PropertyType',
+    disableSearch: true,
     localizationKey: 'Property',
     localizationKeyDescription: 'PropertyTypeHelp',
     icon: 'fa-solid fa-database',
@@ -874,6 +876,7 @@ registerModel(THousehold)
 
 export const TUserSpace = {
     name: 'UserSpace',
+    disableSearch: true,
     localizationKey: 'SpaceMembers',
     localizationKeyDescription: 'SpaceMembersHelp',
     icon: 'fa-solid fa-users',
@@ -925,6 +928,7 @@ registerModel(TInviteLink)
 
 export const TSpace = {
     name: 'Space',
+    disableSearch: true,
     localizationKey: 'Space',
     localizationKeyDescription: 'SpaceHelp',
     icon: 'fa-solid fa-hard-drive',
@@ -982,6 +986,7 @@ registerModel(TStorage)
 
 export const TInventoryLocation = {
     name: 'InventoryLocation',
+    disableSearch: true,
     localizationKey: 'InventoryLocation',
     localizationKeyDescription: 'InventoryLocationHelp',
     icon: 'fa-solid fa-warehouse',
