@@ -173,7 +173,6 @@
                     :items="items"
                     :items-length="itemCount"
                     :loading="loading || anyItemLoading"
-                    :search="query"
                     :headers="visibleHeaders"
                     :items-per-page-options="itemsPerPageOptions"
                     :show-select="selectMode"
@@ -641,11 +640,12 @@ watch([ordering, filterParams, treeActive], () => {
     clearTreeState()
     loadItems({page: 1})
 })
-// Mobile v-list doesn't emit update:options on search change like v-data-table does,
-// so watch query explicitly to trigger reload on mobile
-watch(query, () => {
-    if (useMobileList.value) loadItems({page: 1})
-})
+// Reload (always at page 1) when the search query changes — for both the mobile
+// v-list and the desktop table. The table used to drive this itself via :search,
+// but VDataTableServer re-fetches on search change WITHOUT resetting the page, so
+// searching from page>1 requested an out-of-range page (GET ?page=N → 404) before
+// snapping back to page 1. Resetting to page 1 here avoids that stale request.
+watch(query, () => loadItems({page: 1}))
 
 /**
  * select model class before mount because template renders (and requests item load) before onMounted is called
