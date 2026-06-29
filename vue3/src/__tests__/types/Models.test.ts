@@ -180,3 +180,19 @@ describe('list-numeric-id — log lists show the recipe name, not its id', () =>
         expect(recipeCol?.key).toBe('recipeName')
     })
 })
+
+describe('list-mobile-collapse — log mobile rows render recipe name + date', () => {
+    // On mobile the log lists rendered empty rows: ModelListMobileView reads the
+    // primary title from item[itemLabel ?? 'name'] and these models have no name
+    // field. Point itemLabel at recipeName and default the mobile subtitle to the
+    // created date so each row shows "<recipe name> / <date>".
+    it.each(['CookLog', 'ViewLog'])('%s uses recipeName as the mobile primary label', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        expect(model.itemLabel).toBe('recipeName')
+    })
+
+    it.each(['CookLog', 'ViewLog'])('%s defaults the mobile subtitle to createdAt', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        expect(model.listSettings?.defaults?.mobileSubtitle).toContain('createdAt')
+    })
+})
