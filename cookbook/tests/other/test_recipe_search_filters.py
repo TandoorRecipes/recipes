@@ -1100,6 +1100,20 @@ class TestSortOrders:
         ids = list(results.values_list('id', flat=True))
         assert ids.index(s.r1.id) < ids.index(s.r2.id)
 
+    def test_sort_times_cooked(self, search_recipes, u1_s1, space_1, make_search_request):
+        # R09-1: sort_order=-times_cooked raised a FieldError (HTTP 500) because the
+        # cook count is annotated as `favorite` and there is no `times_cooked` field.
+        s = search_recipes
+        user = auth.get_user(u1_s1)
+        for _ in range(5):
+            CookLogFactory.create(recipe=s.r1, created_by=user, space=space_1)
+        for _ in range(2):
+            CookLogFactory.create(recipe=s.r2, created_by=user, space=space_1)
+        req = make_search_request(u1_s1)
+        results = do_search(req, space_1, sort_order='-times_cooked')
+        ids = list(results.values_list('id', flat=True))
+        assert ids.index(s.r1.id) < ids.index(s.r2.id)
+
     def test_sort_lastcooked(self, search_recipes, u1_s1, space_1, make_search_request):
         s = search_recipes
         user = auth.get_user(u1_s1)
