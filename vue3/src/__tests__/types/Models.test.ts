@@ -152,3 +152,20 @@ describe('list-empty-actions — read-only ViewLog has no dead Actions column', 
         expect(headers.some(h => h.key === 'action')).toBe(false)
     })
 })
+
+describe('list-inert-search — tiny config models hide the non-working search box', () => {
+    // These models have no meaningful search (1-4 rows) and no backend query
+    // filter, so the ModelListPage search box (rendered when !disableSearch) was
+    // inert. Hide it. CookLog/ViewLog keep search (real recipe-name filtering).
+    const NON_SEARCHABLE = ['InventoryLocation', 'MealType', 'PropertyType', 'Space', 'UserSpace']
+
+    it.each(NON_SEARCHABLE)('%s disables the search box', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        expect(model.disableSearch).toBe(true)
+    })
+
+    it.each(['CookLog', 'ViewLog'])('%s keeps search enabled (real recipe-name filter)', (name) => {
+        const model = getGenericModelFromString(name, t).model
+        expect(model.disableSearch).toBeFalsy()
+    })
+})
