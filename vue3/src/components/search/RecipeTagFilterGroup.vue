@@ -256,4 +256,13 @@ function onCollapse() {
     z-index: 1;
     pointer-events: none;
 }
+/* The multiselect shipped a translucent fill (rgba(210,210,210,.1)) and no real
+   border, so its interior read lighter than the surrounding card. Render it as a
+   clean outlined field — transparent background + a theme-aware border — which
+   matches the floating-label notch pattern and the rest of the inputs. */
+.floating-label-wrap :deep(.material-multiselect) {
+    --ms-bg: transparent;
+    border: thin solid rgba(var(--v-border-color), var(--v-border-opacity));
+    border-radius: 4px;
+}
 </style>
