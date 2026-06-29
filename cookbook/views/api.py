@@ -2770,7 +2770,7 @@ class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         # working backwards from the test - this is supposed to be limited to user view logs only??
-        qs = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        qs = self.queryset.select_related('recipe').filter(created_by=self.request.user).filter(space=self.request.space)
         query = self.request.query_params.get('query', None)
         if query:
             qs = qs.filter(recipe__name__icontains=query)
@@ -2809,6 +2809,7 @@ class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
         return qs
 
     def get_queryset(self):
+        self.queryset = self.queryset.select_related('recipe')
         if self.request.query_params.get('recipe', None):
             self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
         query = self.request.query_params.get('query', None)

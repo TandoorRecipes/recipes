@@ -1709,6 +1709,7 @@ class ShareLinkSerializer(SpacedModelSerializer):
 
 class CookLogSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
+    recipe_name = serializers.CharField(source='recipe.name', read_only=True)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1717,11 +1718,13 @@ class CookLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CookLog
-        fields = ('id', 'recipe', 'servings', 'rating', 'comment', 'created_by', 'created_at', 'updated_at')
+        fields = ('id', 'recipe', 'recipe_name', 'servings', 'rating', 'comment', 'created_by', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_by')
 
 
 class ViewLogSerializer(serializers.ModelSerializer):
+    recipe_name = serializers.CharField(source='recipe.name', read_only=True)
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
@@ -1739,7 +1742,7 @@ class ViewLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ViewLog
-        fields = ('id', 'recipe', 'created_by', 'created_at')
+        fields = ('id', 'recipe', 'recipe_name', 'created_by', 'created_at')
         read_only_fields = ('created_by',)
 
 

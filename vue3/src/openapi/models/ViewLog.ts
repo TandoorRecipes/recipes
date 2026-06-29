@@ -32,7 +32,13 @@ export interface ViewLog {
      */
     recipe: number;
     /**
-     * 
+     *
+     * @type {string}
+     * @memberof ViewLog
+     */
+    readonly recipeName?: string;
+    /**
+     *
      * @type {number}
      * @memberof ViewLog
      */
@@ -67,6 +73,7 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'],
+        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
     };

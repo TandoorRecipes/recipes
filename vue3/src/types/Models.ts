@@ -802,7 +802,7 @@ export const TCookLog = {
     toStringKeys: ['recipe'],
 
     tableHeaders: [
-        {title: 'Recipe', key: 'recipe', type: 'text'},
+        {title: 'Recipe', key: 'recipeName', type: 'text'},
         {title: 'Rating', key: 'rating', type: 'number', align: 'end', hidden: true},
         {title: 'Servings', key: 'servings', type: 'number', align: 'end', hidden: true},
         {title: 'Created', key: 'createdAt', type: 'text'},
@@ -828,7 +828,7 @@ export const TViewLog = {
     toStringKeys: ['recipe'],
 
     tableHeaders: [
-        {title: 'Recipe', key: 'recipe', type: 'text'},
+        {title: 'Recipe', key: 'recipeName', type: 'text'},
         {title: 'Created', key: 'createdAt', type: 'text'},
     ],
     listSettings: VIEWLOG_LIST_SETTINGS,

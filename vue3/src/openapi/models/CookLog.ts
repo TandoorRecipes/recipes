@@ -40,7 +40,13 @@ export interface CookLog {
      */
     recipe: number;
     /**
-     * 
+     *
+     * @type {string}
+     * @memberof CookLog
+     */
+    readonly recipeName?: string;
+    /**
+     *
      * @type {number}
      * @memberof CookLog
      */
@@ -99,6 +105,7 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'],
+        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
         'servings': json['servings'] == null ? undefined : json['servings'],
         'rating': json['rating'] == null ? undefined : json['rating'],
         'comment': json['comment'] == null ? undefined : json['comment'],
