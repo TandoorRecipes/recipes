@@ -454,7 +454,11 @@ export const TMealType = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TMealType)
 
@@ -596,7 +600,11 @@ export const TSupermarket = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSupermarket)
 
@@ -616,7 +624,11 @@ export const TSupermarketCategory = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSupermarketCategory)
 
@@ -676,7 +688,11 @@ export const TPropertyType = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TPropertyType)
 
@@ -812,7 +828,6 @@ export const TViewLog = {
     tableHeaders: [
         {title: 'Recipe', key: 'recipe', type: 'text'},
         {title: 'Created', key: 'createdAt', type: 'text'},
-        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ],
     listSettings: VIEWLOG_LIST_SETTINGS,
     sortDefs: VIEWLOG_SORT_OPTIONS,
@@ -879,6 +894,10 @@ export const TUserSpace = {
     headerActions: [
         {type: 'button', key: 'invites', labelKey: 'Invites', icon: 'fa-solid fa-link',
             routeName: 'ModelListPage', routeParams: {model: 'InviteLink'}},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
     ],
 } as Model
 registerModel(TUserSpace)
@@ -978,7 +997,11 @@ export const TInventoryLocation = {
         {title: 'Household', key: 'household.name'},
         {title: 'Freezer', key: 'isFreezer'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TInventoryLocation)
 
