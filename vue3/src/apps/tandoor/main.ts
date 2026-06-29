@@ -43,8 +43,6 @@ let routes = [
     {path: '/property-editor', component: () => import("@/pages/PropertyEditorPage.vue"), name: 'PropertyEditorPage', meta: {title: 'Property_Editor'}},
     {path: '/pantry', component: () => import("@/pages/PantryPage.vue"), name: 'PantryPage', meta: {title: 'Pantry'}},
 
-    {path: '/space-setup', component: () => import("@/pages/SpaceSetupPage.vue"), name: 'SpaceSetupPage'},
-
     {path: '/:pathMatch(.*)*', component: () => import("@/pages/404Page.vue"), name: '404Page', meta: {title: 'NotFound'}},
 ]
 
