@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-04-18 05:29+0000\n"
-"Last-Translator: vinch100 <vinch100@hotmail.com>\n"
+"PO-Revision-Date: 2026-06-30 10:54+0000\n"
+"Last-Translator: Enzo La Rafale <enzo.chaussivert@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/fr/>\n"
 "Language: fr\n"
@@ -214,15 +214,15 @@ msgstr "J'ai fait ça"
 
 #: .\cookbook\integration\integration.py:67
 msgid "Too many files in zip"
-msgstr ""
+msgstr "Trop de fichiers dans l'archive zip"
 
 #: .\cookbook\integration\integration.py:71
 msgid "Zip file too large"
-msgstr ""
+msgstr "Archive zip trop grande"
 
 #: .\cookbook\integration\integration.py:84
 msgid "Nested zip files too deep"
-msgstr ""
+msgstr "Fichiers zip imbriqués trop profondément"
 
 #: .\cookbook\integration\integration.py:92
 msgid "File in zip too large"
@@ -542,11 +542,9 @@ msgid "The given file type is not allowed."
 msgstr "Le type de fichier indiqué n'est pas autorisé."
 
 #: .\cookbook\serializer.py:444 .\cookbook\views\views.py:97
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Vous avez atteint le nombre maximum de recettes pour votre groupe."
+msgstr "Vous avez atteint le nombre maximum d'Espaces que vous pouvez posséder."
 
 #: .\cookbook\serializer.py:457
 msgid "Space Name must be unique."
@@ -710,8 +708,8 @@ msgid ""
 "            ."
 msgstr ""
 "Confirmez SVP que\n"
-"            <a href=\"mailto:%(email)s\"></a> est une adresse mail de "
-"l’utilisateur %(user_display)s\n"
+"            <a href=\"mailto:%(email)s\">%(email)</a> est une adresse email "
+"de l’utilisateur %(user_display)s\n"
 "            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
@@ -1697,11 +1695,11 @@ msgid ""
 msgstr ""
 "\n"
 "            Vous n'avez pas de <code>SECRET_KEY</code> configuré dans votre "
-"fichier<code>.env</code>. Django utilise par défaut\n"
-"            la clé standard fournie avec l'application qui est connue "
-"publiquement et non sécurisée ! \n"
-"            Veuillez définir <code>SECRET_KEY</code> dans le fichier<code>."
-"env</code>\n"
+"fichier <code>.env</code>. Django utilise par défaut\n"
+"            la clé standard\n"
+"            fournie avec l'application qui est connue publiquement et non "
+"sécurisée ! Veuillez définir\n"
+"             <code>SECRET_KEY</code> dans le fichier <code>.env</code>\n"
 "        "
 
 #: .\cookbook\templates\system.html:94
@@ -2334,39 +2332,24 @@ msgid "Unable to determine PostgreSQL version."
 msgstr ""
 
 #: .\cookbook\views\views.py:193
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"            Cette application ne tourne pas sur une base de données "
-"Postgres. Ce n'est pas grave mais déconseillé\n"
-"            car certaines fonctionnalités ne fonctionnent qu'avec une base "
-"de données Postgres.\n"
-"        "
+"Cette application ne tourne pas sur une base de données Postgres. Ce n'est "
+"pas grave mais déconseillé car certaines fonctionnalités ne fonctionnent "
+"qu'avec une base de données Postgres."
 
 #: .\cookbook\views\views.py:354
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
 "Cette page d’installation peut uniquement être utilisée pour créer le "
-"premier utilisateur ! Si vous avez oublié vos identifiants de super-"
-"utilisateur, counsultez la documentation Django pour savoir comment "
-"réinitialiser le mot de passe."
+"premier utilisateur !                      Si vous avez oublié vos "
+"identifiants de super-utilisateur, counsultez la documentation Django pour "
+"savoir comment réinitialiser le mot de passe."
 
 #: .\cookbook\views\views.py:362
 msgid "Passwords dont match!"
