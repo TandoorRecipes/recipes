@@ -248,6 +248,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             shopping_item_info_recipe: true,
             shopping_input_autocomplete: true,
             shopping_show_debug: false,
+            shopping_showFoodImages: false,
 
             mealplan_displayPeriod: 'week',
             mealplan_displayPeriodCount: 3,
@@ -266,6 +267,13 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             recipe_stepNotesDisplay: 'bubble',
             recipe_notesTruncateLength: 30,
             recipe_contextMenuColor: 'onhand',
+            recipe_showAuthor: true,
+            recipe_showTimeChips: true,
+            recipe_showServings: true,
+            recipe_showFootCreatedBy: true,
+            recipe_showFootCreatedDate: true,
+            recipe_showFootUpdatedDate: true,
+            recipe_showFootImportedFrom: true,
 
             search_itemsPerPage: 50,
             search_viewMode: 'grid',
@@ -297,6 +305,16 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             food_desktopSubtitle: [],
             food_showMobileHeaders: true,
             food_defaultInventoryLocation: null,
+
+            card_showRating: false,
+            card_showAuthor: false,
+            card_showLastCooked: false,
+            card_showNewBadge: false,
+            // Default ON — preserves the prior unconditional "cook time
+            // chip in the keyword row" behavior on cards.
+            card_show_cook_time: true,
+            card_maxKeywords: 3,
+            card_visibleMenuItems: ['edit', 'plan', 'shopping', 'properties', 'share', 'duplicate', 'print'],
         }
     }
 

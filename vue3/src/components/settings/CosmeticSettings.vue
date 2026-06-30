@@ -55,19 +55,104 @@
                 </v-expansion-panel-text>
             </v-expansion-panel>
 
+            <!-- Recipe Card -->
+            <v-expansion-panel value="recipe-cards">
+                <v-expansion-panel-title>
+                    <v-icon start icon="fa-solid fa-image" />
+                    {{ $t('Recipe_Card') }}
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <v-row>
+                        <!-- Live preview (non-interactive) -->
+                        <v-col v-if="previewRecipe" cols="12" md="5" class="d-flex align-start justify-center">
+                            <div class="card-preview-wrapper" style="pointer-events: none; max-width: 240px; width: 100%;">
+                                <recipe-card :recipe="previewRecipe" :show-menu="false" :show-keywords="true" />
+                            </div>
+                        </v-col>
+                        <!-- Controls -->
+                        <v-col cols="12" md="7">
+                            <v-switch v-model="deviceSettings.card_showRating"
+                                      :label="$t('Rating')" density="compact" hide-details color="primary" />
+                            <v-switch v-model="deviceSettings.card_showAuthor"
+                                      :label="$t('CreatedBy')" density="compact" hide-details color="primary" />
+                            <v-switch v-model="deviceSettings.card_showLastCooked"
+                                      :label="$t('last_cooked')" density="compact" hide-details color="primary" />
+                            <v-switch v-model="deviceSettings.card_showNewBadge"
+                                      :label="$t('New')" density="compact" hide-details color="primary" />
+                            <v-select v-model="deviceSettings.card_maxKeywords"
+                                      :label="$t('Keywords')" density="compact" hide-details class="mt-2"
+                                      :items="[{title: '3', value: 3}, {title: '5', value: 5}, {title: '10', value: 10}, {title: $t('All'), value: 0}]" />
+
+                            <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+
+            <!-- Recipe Context Menu -->
+            <v-expansion-panel value="context-menu">
+                <v-expansion-panel-title>
+                    <v-icon start icon="fa-solid fa-ellipsis-vertical" />
+                    {{ $t('context_menu') }}
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <v-checkbox v-for="item in menuItemOptions" :key="item.key"
+                                v-model="deviceSettings.card_visibleMenuItems"
+                                :label="$t(item.label)" :value="item.key" density="compact" hide-details />
+
+                    <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
+
         </v-expansion-panels>
     </v-form>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue"
+import {onMounted, ref} from "vue"
 import {useI18n} from "vue-i18n"
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore"
+import {ApiApi, type RecipeOverview} from "@/openapi"
 import LanguageSelect from "@/components/inputs/LanguageSelect.vue"
+import RecipeCard from "@/components/display/RecipeCard.vue"
 
 const {t} = useI18n()
 const userPrefs = useUserPreferenceStore()
+const deviceSettings = userPrefs.deviceSettings
 const openPanels = ref(['appearance', 'recipe-display'])
+
+const previewRecipe = ref<RecipeOverview | null>(null)
+
+onMounted(() => {
+    new ApiApi().apiRecipeList({pageSize: 1, random: true}).then(r => {
+        if (r.results?.length) {
+            const recipe = {...r.results[0]}
+            recipe._new = true
+            if (!recipe.lastCooked) {
+                recipe.lastCooked = new Date(Date.now() - 3 * 86400000).toISOString()
+            }
+            if (!recipe.rating) {
+                recipe.rating = 4.5
+            }
+            previewRecipe.value = recipe as RecipeOverview
+        }
+    }).catch(() => {})
+})
+
+const menuItemOptions = [
+    {key: 'edit', label: 'Edit'},
+    {key: 'plan', label: 'Add_to_Plan'},
+    {key: 'shopping', label: 'Add_to_Shopping'},
+    {key: 'book', label: 'Add_to_Book'},
+    {key: 'cooklog', label: 'Log_Cooking'},
+    {key: 'photo', label: 'Edit_Photo'},
+    {key: 'properties', label: 'Property_Editor'},
+    {key: 'share', label: 'Share'},
+    {key: 'export', label: 'Export'},
+    {key: 'duplicate', label: 'Duplicate'},
+    {key: 'print', label: 'Print'},
+    {key: 'delete', label: 'Delete'},
+]
 
 </script>
 

@@ -12,6 +12,7 @@ export type DeviceSettings = {
     shopping_item_info_recipe: boolean
     shopping_input_autocomplete: boolean
     shopping_show_debug: boolean
+    shopping_showFoodImages: boolean
 
     mealplan_displayPeriod: string
     mealplan_displayPeriodCount: number
@@ -30,6 +31,13 @@ export type DeviceSettings = {
     recipe_stepNotesDisplay: 'bubble' | 'inline' | 'truncate',
     recipe_notesTruncateLength: number,
     recipe_contextMenuColor: 'never' | 'onhand' | 'shopping' | 'substitute',
+    recipe_showAuthor: boolean,
+    recipe_showTimeChips: boolean,
+    recipe_showServings: boolean,
+    recipe_showFootCreatedBy: boolean,
+    recipe_showFootCreatedDate: boolean,
+    recipe_showFootUpdatedDate: boolean,
+    recipe_showFootImportedFrom: boolean,
 
     search_itemsPerPage: number,
     search_viewMode: 'table'|'grid',
@@ -41,6 +49,14 @@ export type DeviceSettings = {
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
     general_showModelListDescription: boolean
+
+    card_showRating: boolean
+    card_showAuthor: boolean
+    card_showLastCooked: boolean
+    card_showNewBadge: boolean
+    card_show_cook_time: boolean
+    card_maxKeywords: number
+    card_visibleMenuItems: string[]
 
     // Model list settings are stored with dynamic keys: `${settingsKey}_${suffix}`
     // e.g. food_hiddenColumns, keyword_treeView, unit_quickActions

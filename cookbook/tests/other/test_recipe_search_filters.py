@@ -9,7 +9,7 @@ from django.contrib import auth
 from django.utils import timezone
 from django_scopes import scope, scopes_disabled
 
-from cookbook.models import Food, Keyword, Recipe
+from cookbook.models import Food, Keyword, Recipe, RecipeImage
 from cookbook.tests.factories import (
     CookLogFactory,
     FoodFactory,
@@ -845,20 +845,27 @@ class TestRecipePropertyFilters:
         assert s.r2.id not in ids
 
     def test_has_photo_true(self, search_recipes, u1_s1, space_1, make_search_request):
+        """pattern-014: has_photo now keys on the RecipeImage gallery, not the
+        retired Recipe.image column. r1 gets an image; r2/r3 do not."""
         s = search_recipes
+        with scopes_disabled():
+            RecipeImage.objects.create(recipe=s.r1, file='recipes/p.jpg', is_primary=True,
+                                       order=0, created_by=auth.get_user(u1_s1), space=space_1)
         req = make_search_request(u1_s1)
-        results = do_search(req, space_1, has_photo='true')
-        ids = set(results.values_list('id', flat=True))
-        for r in results:
-            assert r.image is not None or r.image != ''
+        ids = set(do_search(req, space_1, has_photo='true').values_list('id', flat=True))
+        assert s.r1.id in ids
+        assert s.r2.id not in ids and s.r3.id not in ids
 
     def test_has_photo_false(self, search_recipes, u1_s1, space_1, make_search_request):
+        """has_photo=false returns recipes with no RecipeImage."""
         s = search_recipes
+        with scopes_disabled():
+            RecipeImage.objects.create(recipe=s.r1, file='recipes/p.jpg', is_primary=True,
+                                       order=0, created_by=auth.get_user(u1_s1), space=space_1)
         req = make_search_request(u1_s1)
-        results = do_search(req, space_1, has_photo='false')
-        ids = set(results.values_list('id', flat=True))
-        for r in results:
-            assert r.image is None or r.image == ''
+        ids = set(do_search(req, space_1, has_photo='false').values_list('id', flat=True))
+        assert s.r1.id not in ids
+        assert s.r2.id in ids and s.r3.id in ids
 
     def test_has_keywords_true(self, search_recipes, u1_s1, space_1, make_search_request):
         s = search_recipes

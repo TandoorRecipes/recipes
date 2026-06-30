@@ -1089,7 +1089,6 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     servings_text = models.CharField(default='', blank=True, max_length=32)
     diameter = models.IntegerField(default=0)
     diameter_text = models.CharField(default='', blank=True, max_length=32)
-    image = models.ImageField(upload_to='recipes/', blank=True, null=True)
     storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="", blank=True)
     file_path = models.CharField(max_length=512, default="", blank=True)
@@ -1143,6 +1142,25 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
             Index(fields=['name']),
         )
         ordering = ('name',)
+
+
+class RecipeImage(ExportModelOperationsMixin('recipe_image'), models.Model, PermissionModelMixin):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='images')
+    file = models.ImageField(upload_to='recipes/')
+    crop_data = models.JSONField(null=True, blank=True)
+    order = models.IntegerField(default=0)
+    is_primary = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'RecipeImage {self.pk} for {self.recipe.name}{"  [primary]" if self.is_primary else ""}'
+
+    class Meta:
+        ordering = ['order', 'pk']
 
 
 class Comment(ExportModelOperationsMixin('comment'), models.Model, PermissionModelMixin):

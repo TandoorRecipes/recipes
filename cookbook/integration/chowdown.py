@@ -3,7 +3,7 @@ import unicodedata
 from io import BytesIO, StringIO
 from zipfile import ZipFile
 
-from cookbook.helper.image_processing import get_filetype
+from cookbook.helper.image_processing import get_filetype, get_primary_recipe_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
@@ -175,8 +175,9 @@ class Chowdown(Integration):
         data = "---\n\n"
         data += "layout: recipe\n"
         data += "title: " + (recipe.name if recipe.name else "") + "\n"
-        if recipe.image:
-            data += f"image: {self.normalize_name(recipe.name)}{get_filetype(recipe.image.file.name)}\n"
+        primary_image = get_primary_recipe_image(recipe)
+        if primary_image:
+            data += f"image: {self.normalize_name(recipe.name)}{get_filetype(primary_image.file.name)}\n"
 
         if recipe.source_url:
             data += f"url: {recipe.source_url}\n"
@@ -258,8 +259,9 @@ class Chowdown(Integration):
                 recipe_stream.close()
 
                 try:
-                    export_zip_obj.writestr(f"{imgpath}/{self.normalize_name(r.name)}{get_filetype(r.image.file.name)}", r.image.file.read())
-                except (ValueError, FileNotFoundError):
+                    primary_image = get_primary_recipe_image(r)
+                    export_zip_obj.writestr(f"{imgpath}/{self.normalize_name(r.name)}{get_filetype(primary_image.file.name)}", primary_image.file.read())
+                except (ValueError, FileNotFoundError, AttributeError):
                     pass
 
             el.exported_recipes += 1

@@ -154,6 +154,9 @@ class SearchParams:
         def _str_or_none(val):
             return str(val) if val is not None else None
 
+        def _str_or_none(val):
+            return str(val) if val is not None else None
+
         return cls(
             query=query_raw.strip() if query_raw else None,
             rating=_str_or_none(_s(params, 'rating')),
@@ -355,10 +358,12 @@ class RecipeSearch:
             qs = qs.filter(servings__gte=params.servings_gte)
         if params.servings_lte is not None:
             qs = qs.filter(servings__lte=params.servings_lte)
+        # pattern-014: "has photo" now means the recipe has a RecipeImage
+        # (images[] gallery); the legacy Recipe.image column was retired.
         if params.has_photo is True:
-            qs = qs.exclude(image__isnull=True).exclude(image='')
+            qs = qs.filter(images__isnull=False)
         elif params.has_photo is False:
-            qs = qs.filter(Q(image__isnull=True) | Q(image=''))
+            qs = qs.filter(images__isnull=True)
         # has_keywords via subquery avoids fanning rows through the keywords
         # M2M join before the by_keywords / by_foods / by_books joins below.
         if params.has_keywords is True:

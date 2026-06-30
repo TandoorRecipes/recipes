@@ -8,7 +8,11 @@
         :use-sheet="mobile"
     >
         <template #settings>
-            <div data-test="ingredient-display-panel" class="pa-3">
+            <v-expansion-panels :model-value="[0, 1, 2]" multiple variant="accordion" class="mt-2">
+                <!-- Ingredient display: only relevant on the recipe view. -->
+                <v-expansion-panel v-if="isOnRecipeView" data-test="ingredient-display-panel">
+                    <v-expansion-panel-title>{{ $t('IngredientDisplay') }}</v-expansion-panel-title>
+                    <v-expansion-panel-text>
                         <!-- Live preview (mobile only): the desktop recipe uses the multi-column
                              table, which can't be shown faithfully in the narrow drawer, so on
                              desktop we rely on the labelled Summary/Detail controls below. -->
@@ -106,8 +110,101 @@
                             <div class="setting-cell" data-test="detail-status">
                                 <v-switch v-model="deviceSettings.recipe_stepInlineStatus" hide-details density="compact" color="primary" />
                             </div>
-                </div>
-            </div>
+                        </div>
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+
+                <!-- Recipe layout: which recipe-view fields / footer details are shown. -->
+                <v-expansion-panel v-if="isOnRecipeView" data-test="recipe-layout-panel">
+                    <v-expansion-panel-title>{{ $t('RecipeLayout') }}</v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                        <v-switch
+                            v-model="deviceSettings.recipe_showAuthor"
+                            :label="$t('Show_Author')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.recipe_showTimeChips"
+                            :label="$t('Show_Time_Chips')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.recipe_showServings"
+                            :label="$t('Show_Servings')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.recipe_showFootCreatedBy"
+                            :label="$t('Show_Created_By')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.recipe_showFootCreatedDate"
+                            :label="$t('Show_Created_Date')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.recipe_showFootUpdatedDate"
+                            :label="$t('Show_Updated_Date')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.recipe_showFootImportedFrom"
+                            :label="$t('Show_Imported_From')"
+                            hide-details density="compact" color="primary"
+                        />
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+
+                <!-- Card display: applies wherever recipe cards are shown. -->
+                <v-expansion-panel v-if="isOnCardContext" data-test="card-display-panel">
+                    <v-expansion-panel-title>{{ $t('CardDisplay') }}</v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                        <v-switch
+                            v-model="deviceSettings.card_showRating"
+                            :label="$t('Show_Rating')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.card_showAuthor"
+                            :label="$t('Show_Author')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.card_showLastCooked"
+                            :label="$t('Show_Last_Cooked')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.card_showNewBadge"
+                            :label="$t('Show_New_Badge')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-switch
+                            v-model="deviceSettings.card_show_cook_time"
+                            :label="$t('Show_Cook_Time')"
+                            hide-details density="compact" color="primary"
+                        />
+                        <v-select
+                            v-model="deviceSettings.card_maxKeywords"
+                            :label="$t('Max_Keywords')"
+                            :items="maxKeywordsOptions"
+                            item-title="title" item-value="value"
+                            hide-details density="compact" variant="outlined"
+                            class="py-2"
+                        />
+                        <div class="text-caption pt-2 pb-1 text-medium-emphasis">{{ $t('Menu_Items') }}</div>
+                        <v-checkbox
+                            v-for="item in menuItemDefs"
+                            :key="item.key"
+                            :label="$t(item.labelKey)"
+                            :model-value="deviceSettings.card_visibleMenuItems.includes(item.key)"
+                            @update:model-value="onToggleMenuItem(item.key, $event)"
+                            hide-details density="compact" color="primary"
+                        />
+                    </v-expansion-panel-text>
+                </v-expansion-panel>
+            </v-expansion-panels>
         </template>
     </TabbedDrawer>
 </template>
@@ -116,6 +213,7 @@
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useDisplay} from 'vuetify'
+import {useRoute} from 'vue-router'
 import type {Ingredient} from '@/openapi'
 import {useUserPreferenceStore} from '@/stores/UserPreferenceStore'
 import {useRecipeViewSettings} from '@/composables/useRecipeViewSettings'
@@ -124,8 +222,16 @@ import IngredientsTable from '@/components/display/IngredientsTable.vue'
 
 const {t} = useI18n()
 const {mobile} = useDisplay()
+const route = useRoute()
 const {isOpen, isPinned} = useRecipeViewSettings()
 const deviceSettings = useUserPreferenceStore().deviceSettings
+
+const isOnRecipeView = computed(() => route.name === 'RecipeViewPage')
+// Routes where RecipeCard is rendered as part of a list/grid — the only
+// places where the Card Display settings actually affect what the user
+// sees. Outside these, the panel is gated out so the drawer is contextual.
+const CARD_CONTEXT_ROUTES = new Set(['SearchPage', 'StartPage', 'BookEntryPage', 'MealPlanPage'])
+const isOnCardContext = computed(() => CARD_CONTEXT_ROUTES.has(route.name as string))
 
 const drawerTabs = computed(() => [
     {key: 'settings', label: t('DisplaySettings'), icon: 'fa-solid fa-gear'},
@@ -145,6 +251,38 @@ const contextMenuColorOptions = computed(() => [
 
 const anyActions = computed(() => deviceSettings.recipe_overviewShowActions || deviceSettings.recipe_stepShowActions)
 const anyTruncate = computed(() => deviceSettings.recipe_overviewNotesDisplay === 'truncate' || deviceSettings.recipe_stepNotesDisplay === 'truncate')
+
+const maxKeywordsOptions = computed(() => [
+    {title: '3', value: 3},
+    {title: '5', value: 5},
+    {title: '10', value: 10},
+    {title: t('All'), value: 0},
+])
+
+const menuItemDefs: ReadonlyArray<{key: string; labelKey: string}> = [
+    {key: 'edit', labelKey: 'Edit'},
+    {key: 'plan', labelKey: 'Add_to_Plan'},
+    {key: 'shopping', labelKey: 'Add_to_Shopping'},
+    {key: 'book', labelKey: 'Add_to_Book'},
+    {key: 'cooklog', labelKey: 'Log_Cooking'},
+    {key: 'photo', labelKey: 'Edit_Photo'},
+    {key: 'properties', labelKey: 'Property_Editor'},
+    {key: 'share', labelKey: 'Share'},
+    {key: 'export', labelKey: 'Export'},
+    {key: 'duplicate', labelKey: 'Duplicate'},
+    {key: 'print', labelKey: 'Print'},
+    {key: 'delete', labelKey: 'Delete'},
+]
+
+function onToggleMenuItem(key: string, checked: boolean | null) {
+    if (checked) {
+        if (!deviceSettings.card_visibleMenuItems.includes(key)) {
+            deviceSettings.card_visibleMenuItems = [...deviceSettings.card_visibleMenuItems, key]
+        }
+    } else {
+        deviceSettings.card_visibleMenuItems = deviceSettings.card_visibleMenuItems.filter(k => k !== key)
+    }
+}
 
 // A deliberately high-density sample row for the live preview: long amount,
 // unit and name (so wrapping shows), a long note, shopping + ignore flags, and

@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 from PIL import Image
 
-from cookbook.helper.image_processing import get_filetype
+from cookbook.helper.image_processing import get_filetype, get_primary_recipe_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
@@ -154,11 +154,12 @@ class NextcloudCookbook(Integration):
                 recipe_stream.close()
 
                 try:
-                    imageByte = recipe.image.file.read()
+                    primary_image = get_primary_recipe_image(recipe)
+                    imageByte = primary_image.file.read()
                     export_zip_obj.writestr(f'{recipe.name}/full.jpg', self.getJPEG(imageByte))
                     export_zip_obj.writestr(f'{recipe.name}/thumb.jpg', self.getThumb(171, imageByte))
                     export_zip_obj.writestr(f'{recipe.name}/thumb16.jpg', self.getThumb(16, imageByte))
-                except ValueError:
+                except (ValueError, AttributeError):
                     pass
 
             el.exported_recipes += 1

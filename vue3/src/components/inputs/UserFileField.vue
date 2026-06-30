@@ -1,90 +1,118 @@
 <template>
+    <div>
     <v-input :hint="hint" :persistent-hint="persistentHint">
         <v-card width="100%" link @click="dialog = !dialog" >
             <v-card-text class="pt-2 pb-2">
                 <div class="d-flex flex-row">
                     <div>
-                        <v-avatar v-if="model == null" color="primary"><i class="fa-solid fa-file-arrow-up"></i></v-avatar>
-                        <v-avatar v-if="model != null && model.preview != ''" :image="model.preview"></v-avatar>
-                        <v-avatar v-if="model != null && model.preview == ''" color="success"><i class="fa-solid fa-eye-slash"></i></v-avatar>
-
+                        <v-avatar v-if="!model?.id" color="primary"><i class="fa-solid fa-file-arrow-up"></i></v-avatar>
+                        <v-avatar v-else-if="model.preview">
+                            <v-img :src="model.preview" cover :position="cropPosition(model?.cropData)" />
+                        </v-avatar>
+                        <v-avatar v-else color="success"><i class="fa-solid fa-eye-slash"></i></v-avatar>
                     </div>
                     <div class="align-content-center">
                         <template v-if="label != ''"><span class="ms-2 text-disabled">{{ label }}</span><br/></template>
-                        <span class="ms-2" v-if="model == null">{{ $t('select_file') }}</span>
-                        <span class="ms-2" v-if="model != null">{{ model.name }}</span></div>
+                        <span class="ms-2" v-if="!model?.id">{{ $t('select_file') }}</span>
+                        <span class="ms-2" v-if="model?.id">{{ model.name }}</span>
+                    </div>
                 </div>
-
             </v-card-text>
-
-            <!--TODO right floating edit/remove/delete/??? button -->
         </v-card>
     </v-input>
 
-    <v-dialog max-width="1000px" height="90vh" v-model="dialog">
-        <v-card>
-            <v-card-title>{{ $t('Files') }}</v-card-title>
+    <v-dialog max-width="1000px" v-model="dialog">
+        <v-card max-height="90vh" :loading="loading" class="user-file-dialog-card d-flex flex-column">
+            <v-closable-card-title :title="$t('Files')" icon="fa-solid fa-file" v-model="dialog" />
+            <v-divider />
             <v-tabs v-model="tab" grow>
-                <v-tab v-if="model != null">{{ $t('Preview') }}</v-tab>
-                <v-tab>{{ $t('New') }}</v-tab>
-                <v-tab>{{ $t('Search') }}</v-tab>
+                <v-tab v-if="model?.id" value="preview">{{ $t('Preview') }}</v-tab>
+                <v-tab value="new">{{ $t('New') }}</v-tab>
+                <v-tab value="search">{{ $t('Search') }}</v-tab>
             </v-tabs>
-            <v-tabs-window v-model="tab">
-                <v-tabs-window-item v-if="model != null">
-                    <v-card>
+            <v-tabs-window v-model="tab" class="user-file-dialog-window">
+                <!-- Preview tab -->
+                <v-tabs-window-item v-if="model?.id" value="preview" class="user-file-dialog-item">
+                    <v-card class="user-file-dialog-inner d-flex flex-column">
+                        <v-card-title>{{ model.name }}</v-card-title>
+                        <v-card-text class="flex-grow-1 overflow-y-auto">
+                            {{ model.fileSizeKb ? $n(model.fileSizeKb / 1000) + ' MB' : '' }} <br/>
+                            {{ model.createdBy?.displayName }} <br/>
+                            {{ model.createdAt ? DateTime.fromJSDate(model.createdAt).toLocaleString(DateTime.DATETIME_SHORT) : '' }}
 
-                        <v-card-title>
-                            {{ model.name }}
-                        </v-card-title>
-                        <v-card-text>
-                            {{ $n(model.fileSizeKb / 1000) }} MB <br/>
-                            {{ model.createdBy.displayName }} <br/>
-                            {{ DateTime.fromJSDate(model.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
+                            <!-- Re-crop mode -->
+                            <template v-if="recropActive">
+                                <div class="mx-4">
+                                    <image-editor
+                                        ref="recropEditor"
+                                        :image-src="model.preview"
+                                        :existing-crop-data="model.cropData as Record<string, number> | null"
+                                    />
+                                </div>
+                            </template>
+
+                            <!-- Normal preview -->
+                            <template v-else>
+                                <v-img class="mr-4 ml-4" max-height="50vh" rounded :src="model.preview" />
+                            </template>
                         </v-card-text>
-
-                        <v-img class="mr-4 ml-4" max-height="50vh" rounded :src="model.preview"></v-img>
-
-                        <v-card-actions>
+                        <v-card-actions v-if="recropActive">
+                            <v-btn @click="recropActive = false">{{ $t('Cancel') }}</v-btn>
+                            <v-btn color="save" prepend-icon="$save" @click="saveRecrop()" :loading="uploading">{{ $t('Save') }}</v-btn>
+                        </v-card-actions>
+                        <v-card-actions v-else>
                             <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
-                            <!-- TODO implement -->
+                            <v-btn v-if="model.preview" color="info" prepend-icon="fa-solid fa-crop" @click="recropActive = true">{{ $t('Crop') }}</v-btn>
                             <v-btn color="warning" prepend-icon="fa-solid fa-link-slash" @click="model = null">{{ $t('Remove') }}</v-btn>
                             <v-btn color="delete" prepend-icon="$delete" @click="model = null">{{ $t('Delete') }}</v-btn>
                             <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
                         </v-card-actions>
                     </v-card>
-
-
                 </v-tabs-window-item>
-                <v-tabs-window-item>
-                    <v-card>
-                        <v-card-text>
-                            <v-text-field :label="$t('Name')" v-model="newUserFile.name"></v-text-field>
-                            <v-file-input :label="$t('File')" v-model="newUserFile.file"></v-file-input>
 
-
+                <!-- New upload tab -->
+                <v-tabs-window-item value="new" class="user-file-dialog-item">
+                    <v-card class="user-file-dialog-inner d-flex flex-column">
+                        <v-card-text class="flex-grow-1 overflow-y-auto">
+                            <v-text-field :label="$t('Name')" v-model="newFileName" />
+                            <image-editor
+                                ref="uploadEditor"
+                                :allowed-extensions="allowedExtensions"
+                                @file-selected="onNonImageFileSelected"
+                            />
                         </v-card-text>
-
                         <v-card-actions>
-                            <v-btn color="save" prepend-icon="$save" @click="uploadFile()">{{ $t('Save') }}</v-btn>
-                            <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
+                            <v-btn @click="dialog = false">{{ $t('Cancel') }}</v-btn>
+                            <v-btn color="save" prepend-icon="$save" @click="uploadFile()" :loading="uploading">{{ $t('Save') }}</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-tabs-window-item>
-                <v-tabs-window-item>
-                    <v-card>
-                        <v-card-text>
-                            <v-text-field :label="$t('Search')" prepend-inner-icon="$search" v-model="tableSearch"></v-text-field>
-                            <v-data-table density="compact" :headers="tableHeaders" :items="userFiles" v-model:search="tableSearch">
+
+                <!-- Search existing tab -->
+                <v-tabs-window-item value="search" class="user-file-dialog-item">
+                    <v-card class="user-file-dialog-inner d-flex flex-column">
+                        <v-card-text class="flex-grow-1 overflow-y-auto">
+                            <v-text-field :label="$t('Search')" prepend-inner-icon="$search" v-model="tableSearch" clearable />
+                            <v-data-table-server
+                                density="compact"
+                                :headers="tableHeaders"
+                                :items="userFiles"
+                                :items-length="itemCount"
+                                :loading="loading"
+                                :page="page"
+                                :items-per-page="pageSize"
+                                @update:options="loadItems"
+                            >
                                 <template #item.preview="{item}">
-                                    <v-avatar :image="item.preview"></v-avatar>
+                                    <v-avatar>
+                                        <v-img :src="item.preview" cover :position="cropPosition(item?.cropData)" />
+                                    </v-avatar>
                                 </template>
                                 <template #item.actions="{item}">
-                                    <v-btn icon="fa-solid fa-hand-pointer" color="save" density="comfortable" @click="model = item; tab=0"></v-btn>
+                                    <v-btn icon="fa-solid fa-hand-pointer" color="save" density="comfortable" @click="model = item; tab='preview'" />
                                 </template>
-                            </v-data-table>
-
+                            </v-data-table-server>
                         </v-card-text>
-
                         <v-card-actions>
                             <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
                         </v-card-actions>
@@ -93,87 +121,225 @@
             </v-tabs-window>
         </v-card>
     </v-dialog>
+    </div>
 </template>
 
 <script setup lang="ts">
+import {ApiApi, UserFile} from "@/openapi"
+import {ref, watch} from "vue"
+import {DateTime} from "luxon"
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore"
+import {useI18n} from "vue-i18n"
+import {cropPosition} from "@/utils/image_crop"
+import {useFileApi} from "@/composables/useFileApi"
+import ImageEditor from "@/components/inputs/ImageEditor.vue"
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue"
 
-import {ApiApi, UserFile, UserFileFromJSON} from "@/openapi";
-import {onMounted, ref, watch} from "vue";
-import {DateTime} from "luxon";
-import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {getCookie} from "@/utils/cookie";
-import {useI18n} from "vue-i18n";
+interface TableOptions {
+    page: number
+    itemsPerPage: number
+}
 
-const emit = defineEmits(['update:modelValue', 'create'])
+const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp']
+const ALL_EXTENSIONS = [...IMAGE_EXTENSIONS, '.pdf', '.docx', '.xlsx', '.css', '.mp4', '.mov', '.md', '.txt']
 
-const props = defineProps({
-    model: {type: {} as UserFile, default: null},
-    label: {type: String, default: ''},
-    hint: {type: String, default: ''},
-    persistentHint: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+    label?: string
+    hint?: string
+    persistentHint?: boolean
+    imageOnly?: boolean
+}>(), {
+    label: '',
+    hint: '',
+    persistentHint: false,
+    imageOnly: false,
 })
 
-const model = defineModel()
+const model = defineModel<UserFile | null>()
 const {t} = useI18n()
+const {createOrUpdateUserFile, updateUserFileCropData} = useFileApi()
+
+const allowedExtensions = props.imageOnly ? IMAGE_EXTENSIONS : ALL_EXTENSIONS
 
 const dialog = ref(false)
-const tab = ref(0)
-const newUserFile = ref({} as UserFile)
+const tab = ref<string>('new')
+const newFileName = ref('')
 const userFiles = ref([] as UserFile[])
+const itemCount = ref(0)
+const page = ref(1)
+const pageSize = ref(25)
+const loading = ref(false)
+const uploading = ref(false)
+const recropActive = ref(false)
+
+const uploadEditor = ref<InstanceType<typeof ImageEditor> | null>(null)
+const recropEditor = ref<InstanceType<typeof ImageEditor> | null>(null)
 
 const tableSearch = ref('')
 const tableHeaders = ref([
     {title: t('Quick actions'), key: 'actions'},
     {title: t('Preview'), key: 'preview'},
     {title: t('Name'), value: 'name'},
-    {title: t('created_on'), key: 'createdAt', value: item => DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATETIME_MED)},
-    {title: t('created_by'), value: 'createdBy.displayName',},
+    {title: t('created_on'), key: 'createdAt', value: (item: any) => DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATETIME_MED)},
+    {title: t('created_by'), value: 'createdBy.displayName'},
 ])
-
-onMounted(() => {
-
-})
 
 watch(() => dialog.value, (value, oldValue) => {
     if (value && !oldValue) {
-        loadFiles()
+        page.value = 1
+        loadItems({page: page.value, itemsPerPage: pageSize.value})
+        tab.value = model.value?.id ? 'preview' : 'new'
+    }
+    if (!value) {
+        recropActive.value = false
+        uploadEditor.value?.reset()
+        newFileName.value = ''
     }
 })
 
-function loadFiles() {
-    let api = new ApiApi()
-    api.apiUserFileList().then(r => {
-        // TODO implement pagination
+/** Reset to page 1 and refetch whenever the query text changes. */
+watch(tableSearch, () => {
+    page.value = 1
+    loadItems({page: 1, itemsPerPage: pageSize.value})
+})
+
+watch(() => model.value?.id, (id) => {
+    if (dialog.value && !id) {
+        tab.value = 'new'
+    }
+})
+
+function onNonImageFileSelected(file: File, _cropData: Record<string, number> | null) {
+    // For non-image files selected via ImageEditor, auto-fill the name
+    if (!newFileName.value) {
+        newFileName.value = file.name
+    }
+}
+
+function loadItems(options: TableOptions) {
+    page.value = options.page
+    pageSize.value = options.itemsPerPage
+    loading.value = true
+    const api = new ApiApi()
+    api.apiUserFileList({
+        page: options.page,
+        pageSize: options.itemsPerPage,
+        ...(tableSearch.value ? {query: tableSearch.value} : {}),
+    }).then(r => {
         userFiles.value = r.results
+        itemCount.value = r.count
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        loading.value = false
     })
 }
 
-function uploadFile() {
-
-    let formData = new FormData()
-    formData.append('file', newUserFile.value.file)
-    formData.append('name', newUserFile.value.name)
-
-    //TODO proper URL finding (sub path setups)
-    fetch('/api/user-file/', {
-        method: 'POST',
-        headers: {'X-CSRFToken': getCookie('csrftoken')},
-        body: formData
-    }).then(r => { // TODO maybe better use existing URL clients response functions for parsing
-        r.json().then(r => {
-            model.value = UserFileFromJSON(r)
-        })
+async function saveRecrop() {
+    if (!recropEditor.value || !model.value) return
+    uploading.value = true
+    try {
+        const cropData = recropEditor.value.extractCropData()
+        if (!cropData) return
+        model.value = await updateUserFileCropData(model.value.id!, cropData)
+        recropActive.value = false
+        dialog.value = false
         useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
-    }).catch(err => {
+    } catch (err: any) {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-    })
+    } finally {
+        uploading.value = false
+    }
 }
 
+async function uploadFile() {
+    if (!uploadEditor.value) return
+
+    // For images, the editor has the file + crop data
+    // For non-images, the editor already emitted file-selected
+    uploadEditor.value.confirm()
+
+    // Use the explicit getter — refs from defineExpose can be flaky
+    const cropData = uploadEditor.value.extractCropData()
+    const file = uploadEditor.value.getFile()
+    if (!file || !(file instanceof File) || file.size === 0) {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, t('select_file'))
+        return
+    }
+
+    uploading.value = true
+    try {
+        model.value = await createOrUpdateUserFile(
+            newFileName.value || file.name?.replace(/\.[^/.]+$/, '') || 'upload',
+            file,
+            undefined,
+            cropData,
+        )
+        useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+        uploadEditor.value.reset()
+        newFileName.value = ''
+        dialog.value = false
+    } catch (err: any) {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    } finally {
+        uploading.value = false
+    }
+}
+
+defineExpose({dialog, tab, tableSearch, userFiles, itemCount, page, pageSize, loading, loadItems})
 </script>
 
-
-<style scoped>
-
+<!-- Non-scoped: v-dialog teleports its content out of this component's DOM
+     subtree into a body-level overlay, so scoped [data-v-*] selectors never
+     match the teleported elements in the production bundle. The class names
+     below are unique (user-file-dialog-*) so collision with other components
+     is not a concern. -->
+<style>
+/* Force every nested flex level to allow shrinking below content size so the
+ * scrollable v-card-text inside each tab item actually scrolls instead of
+ * pushing the v-card-actions below the viewport. Without min-height: 0 at each
+ * level, flex children default to min-content and the chain never constrains.
+ * v-tabs-window + v-window-item also need explicit height + overflow reset
+ * because Vuetify's default window styles set their own overflow on the
+ * internal container, which traps the scroll above the action bar in the
+ * production bundle. */
+.user-file-dialog-card {
+    min-height: 0;
+    /* Vuetify's default v-card has overflow-y: auto, which makes the WHOLE
+     * card scroll — including the v-card-actions inside the tab item — so
+     * Save is inside the scroll region instead of pinned. Force visible so
+     * the inner flex chain (v-card-text scrollable, v-card-actions pinned)
+     * actually determines layout. */
+    overflow: hidden !important;
+}
+.user-file-dialog-window {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+}
+.user-file-dialog-window .v-window__container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+.user-file-dialog-item {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    height: 100%;
+}
+.user-file-dialog-inner {
+    /* !important needed: in the production CSS bundle Vuetify's
+     * `.v-card { display: block }` loads AFTER the `d-flex` utility class and
+     * wins the cascade, leaving the inner card in block layout. Verified live:
+     * without !important, computed display was `block` and v-card-text
+     * (790px) overflowed its parent (736px), pushing v-card-actions below
+     * the visible card. */
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
 </style>
+

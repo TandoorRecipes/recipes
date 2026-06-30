@@ -48,6 +48,7 @@ const API_METHODS = [
     'apiInventoryEntryList',
     'apiInventoryEntryCreate',
     'apiInventoryEntryDestroy',
+    'apiUserFileList',
 ] as const
 
 function buildApiMock(): Record<string, ReturnType<typeof vi.fn>> {

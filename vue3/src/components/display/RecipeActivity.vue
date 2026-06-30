@@ -58,7 +58,7 @@
 
                         </v-list-item-action>
                     </template>
-                    <model-edit-dialog model="CookLog" :item="c" v-if="c.createdBy.id == useUserPreferenceStore().userSettings?.user.id" @save="recLoadCookLog(props.recipe.id)" @delete="recLoadCookLog(props.recipe.id)"></model-edit-dialog>
+                    <model-edit-dialog model="CookLog" :item="c" v-if="c.createdBy.id == useUserPreferenceStore().userSettings?.user.id" @save="() => { recLoadCookLog(props.recipe.id); emit('cookLogSaved') }" @delete="() => { recLoadCookLog(props.recipe.id); emit('cookLogSaved') }"></model-edit-dialog>
                 </v-list-item>
             </v-list>
         </v-card-text>
@@ -87,6 +87,8 @@ const props = defineProps({
         required: true
     }
 })
+
+const emit = defineEmits(['cookLogSaved'])
 
 const newCookLog = ref({} as CookLog);
 
@@ -139,6 +141,7 @@ function saveCookLog() {
     api.apiCookLogCreate({cookLog: newCookLog.value}).then(r => {
         cookLogs.value.push(r)
         resetForm()
+        emit('cookLogSaved', r)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })

@@ -81,6 +81,12 @@ export interface PatchedRecipe {
     readonly image?: string | null;
     /**
      * 
+     * @type {any}
+     * @memberof PatchedRecipe
+     */
+    readonly imageCropData?: any;
+    /**
+     * 
      * @type {Array<Keyword>}
      * @memberof PatchedRecipe
      */
@@ -234,6 +240,7 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'] == null ? undefined : json['image'],
+        'imageCropData': json['image_crop_data'] == null ? undefined : json['image_crop_data'],
         'keywords': json['keywords'] == null ? undefined : ((json['keywords'] as Array<any>).map(KeywordFromJSON)),
         'steps': json['steps'] == null ? undefined : ((json['steps'] as Array<any>).map(StepFromJSON)),
         'workingTime': json['working_time'] == null ? undefined : json['working_time'],

@@ -14,18 +14,20 @@
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
-                <recipe-image
-                    max-height="25vh"
-                    :recipe="recipe"
-                    v-if="recipe.image != undefined">
-                </recipe-image>
+                <div class="position-relative">
+                    <recipe-image :recipe="recipe" width="100%" height="25vh" disable-lightbox
+                                  :class="{'cursor-pointer': recipe.image}"
+                                  :aria-label="$t('Recipe_Image')"
+                                  @click="recipe.image && openGalleryLightbox(0)" />
+                    <recipe-image-strip :images="recipe.images ?? []" @open-lightbox="openGalleryLightbox" class="hero-strip" />
+                </div>
 
                 <v-card>
                     <div class="d-flex align-center">
                     <span class="ps-2 text-h5  flex-grow-1 pa-1" style="min-width: 0" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
                         {{ recipe.name }}
                     </span>
-                        <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
+                        <recipe-context-menu :recipe="recipe" :servings="servings" context="view" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
                     </div>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
                     <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
@@ -36,22 +38,22 @@
                 </v-card>
             </v-card>
 
-            <v-card class="mt-1">
+            <v-card class="mt-1" v-if="deviceSettings.recipe_showTimeChips || deviceSettings.recipe_showServings">
                 <v-container>
                     <v-row class="text-center text-body-2">
-                        <v-col class="pt-1 pb-1">
+                        <v-col class="pt-1 pb-1" v-if="deviceSettings.recipe_showTimeChips">
                             <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br/>
                             <div class="text-grey">{{ $t('WorkingTime') }}</div>
                         </v-col>
-                        <v-col class="pt-1 pb-1">
+                        <v-col class="pt-1 pb-1" v-if="deviceSettings.recipe_showTimeChips">
                             <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
                             <div class="text-grey">{{ $t('WaitingTime') }}</div>
                         </v-col>
-                        <v-col class="pt-1 pb-1">
+                        <v-col class="pt-1 pb-1" v-if="deviceSettings.recipe_showServings">
 
                             <div class="cursor-pointer">
                                 <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
-                                <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
+                                <div class="text-grey"><span v-if="displayServingsText">{{ displayServingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
                                 <recipe-scaling-dialog :recipe="recipe" :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
                                 </recipe-scaling-dialog>
                             </div>
@@ -64,11 +66,13 @@
         <template v-else>
             <v-row density="compact">
                 <v-col cols="8">
-                    <recipe-image
-                        :rounded="true"
-                        max-height="40vh"
-                        :recipe="recipe">
-                    </recipe-image>
+                    <div class="position-relative">
+                        <recipe-image :recipe="recipe" width="100%" height="40vh" :rounded="true" disable-lightbox
+                                      :class="{'cursor-pointer': recipe.image}"
+                                      :aria-label="$t('Recipe_Image')"
+                                      @click="recipe.image && openGalleryLightbox(0)" />
+                        <recipe-image-strip :images="recipe.images ?? []" @open-lightbox="openGalleryLightbox" class="hero-strip" />
+                    </div>
                 </v-col>
                 <v-col cols="4">
                     <v-card class="h-100 d-flex flex-column">
@@ -76,10 +80,10 @@
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
                                 <div class="flex-column mb-auto mt-2 float-right" v-if="useUserPreferenceStore().isAuthenticated">
-                                    <recipe-context-menu :recipe="recipe" :servings="servings"></recipe-context-menu>
+                                    <recipe-context-menu :recipe="recipe" :servings="servings" context="view"></recipe-context-menu>
                                 </div>
                             </div>
-                            <p>
+                            <p v-if="deviceSettings.recipe_showAuthor">
                                 {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
                             </p>
                             <p>
@@ -94,19 +98,19 @@
 
                         </v-card-text>
 
-                        <v-row class="text-center text-body-2 mb-1 flex-grow-0">
-                            <v-col>
+                        <v-row class="text-center text-body-2 mb-1 flex-grow-0" v-if="deviceSettings.recipe_showTimeChips || deviceSettings.recipe_showServings">
+                            <v-col v-if="deviceSettings.recipe_showTimeChips">
                                 <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} {{ $t('min') }}<br/>
                                 <div class="text-grey">{{ $t('WorkingTime') }}</div>
                             </v-col>
-                            <v-col>
+                            <v-col v-if="deviceSettings.recipe_showTimeChips">
                                 <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} {{ $t('min') }}</div>
                                 <div class="text-grey">{{ $t('WaitingTime') }}</div>
                             </v-col>
-                            <v-col>
+                            <v-col v-if="deviceSettings.recipe_showServings">
                                 <div class="cursor-pointer">
                                     <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
-                                    <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
+                                    <div class="text-grey"><span v-if="displayServingsText">{{ displayServingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
                                     <recipe-scaling-dialog :recipe="recipe" :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
                                     </recipe-scaling-dialog>
                                 </div>
@@ -148,10 +152,10 @@
 
         <property-view v-model="recipe" :ingredientFactor="ingredientFactor"></property-view>
 
-        <v-card class="mt-2">
+        <v-card class="mt-2" v-if="anyFootVisible" data-test="foot-card">
             <v-card-text>
                 <v-row density="compact">
-                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="deviceSettings.recipe_showFootCreatedBy">
                         <v-card
                             variant="outlined"
                             :title="$t('CreatedBy')"
@@ -160,7 +164,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {createdby: recipe.createdBy.id!}}: undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="deviceSettings.recipe_showFootCreatedDate">
                         <v-card
                             variant="outlined"
                             :title="$t('Created')"
@@ -169,7 +173,7 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ? {name: 'SearchPage', query: {createdon: DateTime.fromJSDate(recipe.createdAt).toISODate()}} : undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="deviceSettings.recipe_showFootUpdatedDate">
                         <v-card
                             variant="outlined"
                             :title="$t('Updated')"
@@ -178,13 +182,13 @@
                             :to="(useUserPreferenceStore().isAuthenticated) ?  {name: 'SearchPage', query: {updatedon: DateTime.fromJSDate(recipe.updatedAt).toISODate()}}: undefined">
                         </v-card>
                     </v-col>
-                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="recipe.sourceUrl">
+                    <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4" v-if="recipe.sourceUrl && deviceSettings.recipe_showFootImportedFrom">
                         <v-card
                             variant="outlined"
                             :title="$t('Imported_From')"
                             prepend-icon="$import">
                             <template #subtitle>
-                                <a :href="recipe.sourceUrl" target="_blank">{{ recipe.sourceUrl }}</a>
+                                <a :href="recipe.sourceUrl" target="_blank" style="overflow-wrap: anywhere;">{{ recipe.sourceUrl }}</a>
                             </template>
                         </v-card>
                     </v-col>
@@ -192,7 +196,9 @@
             </v-card-text>
         </v-card>
 
-        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
+        <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments" @cook-log-saved="refreshRecipeRating"></recipe-activity>
+
+        <image-lightbox v-model="galleryLightbox" :images="galleryImageUrls" :start-index="galleryLightboxIndex" />
     </template>
 
 
@@ -208,6 +214,8 @@ import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
+import RecipeImageStrip from "@/components/display/RecipeImageStrip.vue";
+import ImageLightbox from "@/components/display/ImageLightbox.vue";
 import ExternalRecipeViewer from "@/components/display/ExternalRecipeViewer.vue";
 import {useWakeLock} from "@vueuse/core";
 import StepView from "@/components/display/StepView.vue";
@@ -233,6 +241,46 @@ const props = defineProps<{
 
 const servings = ref(props.servings ?? recipe.value.servings ?? 1)
 const showFullRecipeName = ref(false)
+
+const deviceSettings = useUserPreferenceStore().deviceSettings
+
+const displayServingsText = computed(() => {
+    const t = recipe.value.servingsText
+    if (!t) return ''
+    return t.trim().toLowerCase() === 'none' ? '' : t
+})
+
+const anyFootVisible = computed(() =>
+    deviceSettings.recipe_showFootCreatedBy ||
+    deviceSettings.recipe_showFootCreatedDate ||
+    deviceSettings.recipe_showFootUpdatedDate ||
+    (deviceSettings.recipe_showFootImportedFrom && !!recipe.value.sourceUrl)
+)
+
+const galleryLightbox = ref(false)
+const galleryLightboxIndex = ref(0)
+
+const galleryImageUrls = computed(() =>
+    (recipe.value.images ?? []).map(img => typeof img.file === 'string' ? img.file : '').filter(Boolean)
+)
+
+function openGalleryLightbox(index: number) {
+    galleryLightboxIndex.value = index
+    galleryLightbox.value = true
+}
+
+/**
+ * After a CookLog is created or updated the backend recalculates the recipe's
+ * aggregate rating. Refetch so the header stars update immediately.
+ */
+function refreshRecipeRating() {
+    if (!recipe.value.id) return
+    new ApiApi().apiRecipeRetrieve({id: recipe.value.id}).then(fresh => {
+        recipe.value.rating = fresh.rating
+    }).catch(() => {
+        // swallow — stale rating is acceptable vs. error toast
+    })
+}
 
 const selectedAiProvider = ref<undefined | AiProvider>(useUserPreferenceStore().activeSpace.aiDefaultProvider)
 
@@ -305,4 +353,11 @@ function aiConvertRecipe() {
 
 <style scoped>
 
+.hero-strip {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
 </style>
