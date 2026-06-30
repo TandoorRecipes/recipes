@@ -13,7 +13,7 @@ from cookbook.managers import DICTIONARY, TextSearchConfig
 from cookbook.models import CustomFilter, SearchPreference
 from recipes import settings
 
-_NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
+_NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating', 'favorite', 'times_cooked'})
 
 
 def _sort_includes(orderby, *fields):
@@ -25,7 +25,7 @@ def _sort_includes(orderby, *fields):
 
 def _finalize_ordering(orderby):
     result = []
-    ALLOWED_KEYS = ['random', 'score', '-score', 'name', '-name', 'lastcooked', '-lastcooked', 'rating', '-rating', 'times_cooked', '-times_cooked', 'created_at', '-created_at',
+    ALLOWED_KEYS = ['random', 'score', '-score', 'name', '-name', 'lastcooked', '-lastcooked', 'rating', '-rating', 'times_cooked', '-times_cooked', 'favorite', '-favorite', 'created_at', '-created_at',
                     'lastviewed', '-lastviewed', 'recent','-recent', 'new_recipe', '-new_recipe', '?']
     for key in orderby:
         # expressions cant come from user input so add them
