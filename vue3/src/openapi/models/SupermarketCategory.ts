@@ -70,13 +70,13 @@ export interface SupermarketCategory {
      * @type {string}
      * @memberof SupermarketCategory
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof SupermarketCategory
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
@@ -104,10 +104,15 @@ export function SupermarketCategoryFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function SupermarketCategoryToJSON(value?: SupermarketCategory | null): any {
+export function SupermarketCategoryToJSON(json: any): SupermarketCategory {
+    return SupermarketCategoryToJSONTyped(json, false);
+}
+
+export function SupermarketCategoryToJSONTyped(value?: SupermarketCategory | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

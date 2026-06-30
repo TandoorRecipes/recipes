@@ -18,42 +18,49 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { UserPreferenceNavTextColorEnum } from './UserPreferenceNavTextColorEnum';
 import {
     UserPreferenceNavTextColorEnumFromJSON,
     UserPreferenceNavTextColorEnumFromJSONTyped,
     UserPreferenceNavTextColorEnumToJSON,
+    UserPreferenceNavTextColorEnumToJSONTyped,
 } from './UserPreferenceNavTextColorEnum';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { ThemeEnum } from './ThemeEnum';
 import {
     ThemeEnumFromJSON,
     ThemeEnumFromJSONTyped,
     ThemeEnumToJSON,
+    ThemeEnumToJSONTyped,
 } from './ThemeEnum';
 import type { DefaultPageEnum } from './DefaultPageEnum';
 import {
     DefaultPageEnumFromJSON,
     DefaultPageEnumFromJSONTyped,
     DefaultPageEnumToJSON,
+    DefaultPageEnumToJSONTyped,
 } from './DefaultPageEnum';
 
 /**
@@ -73,7 +80,7 @@ export interface PatchedUserPreference {
      * @type {UserFileView}
      * @memberof PatchedUserPreference
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {ThemeEnum}
@@ -205,7 +212,7 @@ export interface PatchedUserPreference {
      * @type {MealType}
      * @memberof PatchedUserPreference
      */
-    defaultMealType?: MealType;
+    defaultMealType?: MealType | null;
     /**
      * 
      * @type {boolean}
@@ -237,6 +244,8 @@ export interface PatchedUserPreference {
      */
     readonly foodChildrenExist?: boolean;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedUserPreference interface.
@@ -287,10 +296,15 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 'user'|'foodInheritDefault'|'foodChildrenExist'> | null): any {
+export function PatchedUserPreferenceToJSON(json: any): PatchedUserPreference {
+    return PatchedUserPreferenceToJSONTyped(json, false);
+}
+
+export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'image': UserFileViewToJSON(value['image']),

@@ -18,6 +18,7 @@ import {
     GenericModelReferenceFromJSON,
     GenericModelReferenceFromJSONTyped,
     GenericModelReferenceToJSON,
+    GenericModelReferenceToJSONTyped,
 } from './GenericModelReference';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedGenericModelReferenceList {
      * @type {string}
      * @memberof PaginatedGenericModelReferenceList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedGenericModelReferenceList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<GenericModelReference>}
@@ -85,17 +86,22 @@ export function PaginatedGenericModelReferenceListFromJSONTyped(json: any, ignor
     };
 }
 
-export function PaginatedGenericModelReferenceListToJSON(value?: PaginatedGenericModelReferenceList | null): any {
+export function PaginatedGenericModelReferenceListToJSON(json: any): PaginatedGenericModelReferenceList {
+    return PaginatedGenericModelReferenceListToJSONTyped(json, false);
+}
+
+export function PaginatedGenericModelReferenceListToJSONTyped(value?: PaginatedGenericModelReferenceList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(GenericModelReferenceToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

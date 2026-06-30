@@ -57,10 +57,15 @@ export function StripePortalFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function StripePortalToJSON(value?: StripePortal | null): any {
+export function StripePortalToJSON(json: any): StripePortal {
+    return StripePortalToJSONTyped(json, false);
+}
+
+export function StripePortalToJSONTyped(value?: StripePortal | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'portal_url': value['portalUrl'],

@@ -18,6 +18,7 @@ import {
     EnterpriseBillingPlanFromJSON,
     EnterpriseBillingPlanFromJSONTyped,
     EnterpriseBillingPlanToJSON,
+    EnterpriseBillingPlanToJSONTyped,
 } from './EnterpriseBillingPlan';
 
 /**
@@ -43,7 +44,7 @@ export interface EnterpriseSpace {
      * @type {string}
      * @memberof EnterpriseSpace
      */
-    billingCustomerId?: string;
+    billingCustomerId?: string | null;
     /**
      * 
      * @type {EnterpriseBillingPlan}
@@ -55,13 +56,13 @@ export interface EnterpriseSpace {
      * @type {string}
      * @memberof EnterpriseSpace
      */
-    billingSubscriptionId?: string;
+    billingSubscriptionId?: string | null;
     /**
      * 
      * @type {string}
      * @memberof EnterpriseSpace
      */
-    billingSubscriptionStatus?: string;
+    billingSubscriptionStatus?: string | null;
     /**
      * 
      * @type {number}
@@ -100,10 +101,15 @@ export function EnterpriseSpaceFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function EnterpriseSpaceToJSON(value?: EnterpriseSpace | null): any {
+export function EnterpriseSpaceToJSON(json: any): EnterpriseSpace {
+    return EnterpriseSpaceToJSONTyped(json, false);
+}
+
+export function EnterpriseSpaceToJSONTyped(value?: EnterpriseSpace | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'space': value['space'],

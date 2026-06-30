@@ -18,6 +18,7 @@ import {
     AiProviderFromJSON,
     AiProviderFromJSONTyped,
     AiProviderToJSON,
+    AiProviderToJSONTyped,
 } from './AiProvider';
 
 /**
@@ -73,19 +74,19 @@ export interface AiLog {
      * @type {Date}
      * @memberof AiLog
      */
-    startTime?: Date;
+    startTime?: Date | null;
     /**
      * 
      * @type {Date}
      * @memberof AiLog
      */
-    endTime?: Date;
+    endTime?: Date | null;
     /**
      * 
      * @type {number}
      * @memberof AiLog
      */
-    createdBy?: number;
+    createdBy?: number | null;
     /**
      * 
      * @type {Date}
@@ -137,10 +138,15 @@ export function AiLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): AiL
     };
 }
 
-export function AiLogToJSON(value?: Omit<AiLog, 'aiProvider'|'createdAt'|'updatedAt'> | null): any {
+export function AiLogToJSON(json: any): AiLog {
+    return AiLogToJSONTyped(json, false);
+}
+
+export function AiLogToJSONTyped(value?: Omit<AiLog, 'ai_provider'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -149,8 +155,8 @@ export function AiLogToJSON(value?: Omit<AiLog, 'aiProvider'|'createdAt'|'update
         'credits_from_balance': value['creditsFromBalance'],
         'input_tokens': value['inputTokens'],
         'output_tokens': value['outputTokens'],
-        'start_time': value['startTime'] == null ? undefined : ((value['startTime'] as any).toISOString()),
-        'end_time': value['endTime'] == null ? undefined : ((value['endTime'] as any).toISOString()),
+        'start_time': value['startTime'] == null ? value['startTime'] : value['startTime'].toISOString(),
+        'end_time': value['endTime'] == null ? value['endTime'] : value['endTime'].toISOString(),
         'created_by': value['createdBy'],
     };
 }

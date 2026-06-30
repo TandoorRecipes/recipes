@@ -42,13 +42,13 @@ export interface PatchedEnterpriseBillingProduct {
      * @type {number}
      * @memberof PatchedEnterpriseBillingProduct
      */
-    priceDiscount?: number;
+    priceDiscount?: number | null;
     /**
      * Text to show as reason for the discount
      * @type {string}
      * @memberof PatchedEnterpriseBillingProduct
      */
-    discountReason?: string;
+    discountReason?: string | null;
     /**
      * 
      * @type {string}
@@ -72,7 +72,7 @@ export interface PatchedEnterpriseBillingProduct {
      * @type {number}
      * @memberof PatchedEnterpriseBillingProduct
      */
-    aiCredits?: number;
+    aiCredits?: number | null;
     /**
      * 
      * @type {boolean}
@@ -111,10 +111,15 @@ export function PatchedEnterpriseBillingProductFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function PatchedEnterpriseBillingProductToJSON(value?: PatchedEnterpriseBillingProduct | null): any {
+export function PatchedEnterpriseBillingProductToJSON(json: any): PatchedEnterpriseBillingProduct {
+    return PatchedEnterpriseBillingProductToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseBillingProductToJSONTyped(value?: PatchedEnterpriseBillingProduct | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

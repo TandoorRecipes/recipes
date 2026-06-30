@@ -18,36 +18,42 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
 import {
     SpaceNavTextColorEnumFromJSON,
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
+    SpaceNavTextColorEnumToJSONTyped,
 } from './SpaceNavTextColorEnum';
 import type { AiProvider } from './AiProvider';
 import {
     AiProviderFromJSON,
     AiProviderFromJSONTyped,
     AiProviderToJSON,
+    AiProviderToJSONTyped,
 } from './AiProvider';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { SpaceThemeEnum } from './SpaceThemeEnum';
 import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
+    SpaceThemeEnumToJSONTyped,
 } from './SpaceThemeEnum';
 
 /**
@@ -145,13 +151,13 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    navLogo?: UserFileView;
+    navLogo?: UserFileView | null;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -163,7 +169,7 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    customSpaceTheme?: UserFileView;
+    customSpaceTheme?: UserFileView | null;
     /**
      * 
      * @type {string}
@@ -181,43 +187,43 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor32?: UserFileView;
+    logoColor32?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor128?: UserFileView;
+    logoColor128?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor144?: UserFileView;
+    logoColor144?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor180?: UserFileView;
+    logoColor180?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor192?: UserFileView;
+    logoColor192?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor512?: UserFileView;
+    logoColor512?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColorSvg?: UserFileView;
+    logoColorSvg?: UserFileView | null;
     /**
      * 
      * @type {number}
@@ -247,7 +253,7 @@ export interface PatchedSpace {
      * @type {AiProvider}
      * @memberof PatchedSpace
      */
-    aiDefaultProvider?: AiProvider;
+    aiDefaultProvider?: AiProvider | null;
     /**
      * 
      * @type {boolean}
@@ -261,6 +267,8 @@ export interface PatchedSpace {
      */
     householdSetupCompleted?: boolean;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedSpace interface.
@@ -316,10 +324,15 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'> | null): any {
+export function PatchedSpaceToJSON(json: any): PatchedSpace {
+    return PatchedSpaceToJSONTyped(json, false);
+}
+
+export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

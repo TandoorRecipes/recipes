@@ -18,6 +18,7 @@ import {
     EnterpriseSpaceFromJSON,
     EnterpriseSpaceFromJSONTyped,
     EnterpriseSpaceToJSON,
+    EnterpriseSpaceToJSONTyped,
 } from './EnterpriseSpace';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedEnterpriseSpaceList {
      * @type {string}
      * @memberof PaginatedEnterpriseSpaceList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedEnterpriseSpaceList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<EnterpriseSpace>}
@@ -85,17 +86,22 @@ export function PaginatedEnterpriseSpaceListFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PaginatedEnterpriseSpaceListToJSON(value?: PaginatedEnterpriseSpaceList | null): any {
+export function PaginatedEnterpriseSpaceListToJSON(json: any): PaginatedEnterpriseSpaceList {
+    return PaginatedEnterpriseSpaceListToJSONTyped(json, false);
+}
+
+export function PaginatedEnterpriseSpaceListToJSONTyped(value?: PaginatedEnterpriseSpaceList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(EnterpriseSpaceToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

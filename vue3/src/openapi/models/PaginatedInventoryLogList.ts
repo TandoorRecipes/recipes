@@ -18,6 +18,7 @@ import {
     InventoryLogFromJSON,
     InventoryLogFromJSONTyped,
     InventoryLogToJSON,
+    InventoryLogToJSONTyped,
 } from './InventoryLog';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedInventoryLogList {
      * @type {string}
      * @memberof PaginatedInventoryLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedInventoryLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<InventoryLog>}
@@ -85,17 +86,22 @@ export function PaginatedInventoryLogListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedInventoryLogListToJSON(value?: PaginatedInventoryLogList | null): any {
+export function PaginatedInventoryLogListToJSON(json: any): PaginatedInventoryLogList {
+    return PaginatedInventoryLogListToJSONTyped(json, false);
+}
+
+export function PaginatedInventoryLogListToJSONTyped(value?: PaginatedInventoryLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(InventoryLogToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

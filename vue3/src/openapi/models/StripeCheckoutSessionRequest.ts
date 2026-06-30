@@ -55,10 +55,15 @@ export function StripeCheckoutSessionRequestFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function StripeCheckoutSessionRequestToJSON(value?: StripeCheckoutSessionRequest | null): any {
+export function StripeCheckoutSessionRequestToJSON(json: any): StripeCheckoutSessionRequest {
+    return StripeCheckoutSessionRequestToJSONTyped(json, false);
+}
+
+export function StripeCheckoutSessionRequestToJSONTyped(value?: StripeCheckoutSessionRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'product_id': value['productId'],

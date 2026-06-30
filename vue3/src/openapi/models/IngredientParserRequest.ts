@@ -55,10 +55,15 @@ export function IngredientParserRequestFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function IngredientParserRequestToJSON(value?: IngredientParserRequest | null): any {
+export function IngredientParserRequestToJSON(json: any): IngredientParserRequest {
+    return IngredientParserRequestToJSONTyped(json, false);
+}
+
+export function IngredientParserRequestToJSONTyped(value?: IngredientParserRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'ingredient': value['ingredient'],

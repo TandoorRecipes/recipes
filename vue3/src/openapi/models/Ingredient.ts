@@ -18,12 +18,14 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -67,7 +69,7 @@ export interface Ingredient {
      * @type {string}
      * @memberof Ingredient
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
@@ -91,7 +93,7 @@ export interface Ingredient {
      * @type {string}
      * @memberof Ingredient
      */
-    originalText?: string;
+    originalText?: string | null;
     /**
      * 
      * @type {Array<any>}
@@ -144,10 +146,15 @@ export function IngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'> | null): any {
+export function IngredientToJSON(json: any): Ingredient {
+    return IngredientToJSONTyped(json, false);
+}
+
+export function IngredientToJSONTyped(value?: Omit<Ingredient, 'conversions'|'used_in_recipes'|'checked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

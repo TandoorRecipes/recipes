@@ -18,6 +18,7 @@ import {
     MethodEnumFromJSON,
     MethodEnumFromJSONTyped,
     MethodEnumToJSON,
+    MethodEnumToJSONTyped,
 } from './MethodEnum';
 
 /**
@@ -49,25 +50,25 @@ export interface PatchedStorage {
      * @type {string}
      * @memberof PatchedStorage
      */
-    username?: string;
+    username?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    password?: string;
+    password?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
@@ -81,6 +82,8 @@ export interface PatchedStorage {
      */
     readonly createdBy?: number;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedStorage interface.
@@ -111,10 +114,15 @@ export function PatchedStorageFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedStorageToJSON(value?: Omit<PatchedStorage, 'createdBy'> | null): any {
+export function PatchedStorageToJSON(json: any): PatchedStorage {
+    return PatchedStorageToJSONTyped(json, false);
+}
+
+export function PatchedStorageToJSONTyped(value?: Omit<PatchedStorage, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,6 +18,7 @@ import {
     EnterpriseBillingPlanFromJSON,
     EnterpriseBillingPlanFromJSONTyped,
     EnterpriseBillingPlanToJSON,
+    EnterpriseBillingPlanToJSONTyped,
 } from './EnterpriseBillingPlan';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedEnterpriseBillingPlanList {
      * @type {string}
      * @memberof PaginatedEnterpriseBillingPlanList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedEnterpriseBillingPlanList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<EnterpriseBillingPlan>}
@@ -85,17 +86,22 @@ export function PaginatedEnterpriseBillingPlanListFromJSONTyped(json: any, ignor
     };
 }
 
-export function PaginatedEnterpriseBillingPlanListToJSON(value?: PaginatedEnterpriseBillingPlanList | null): any {
+export function PaginatedEnterpriseBillingPlanListToJSON(json: any): PaginatedEnterpriseBillingPlanList {
+    return PaginatedEnterpriseBillingPlanListToJSONTyped(json, false);
+}
+
+export function PaginatedEnterpriseBillingPlanListToJSONTyped(value?: PaginatedEnterpriseBillingPlanList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(EnterpriseBillingPlanToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -64,10 +64,15 @@ export function GenericModelReferenceFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function GenericModelReferenceToJSON(value?: GenericModelReference | null): any {
+export function GenericModelReferenceToJSON(json: any): GenericModelReference {
+    return GenericModelReferenceToJSONTyped(json, false);
+}
+
+export function GenericModelReferenceToJSONTyped(value?: GenericModelReference | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

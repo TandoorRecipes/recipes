@@ -24,13 +24,13 @@ export interface RecipeImage {
      * @type {string}
      * @memberof RecipeImage
      */
-    image?: string;
+    image?: string | null;
     /**
      * 
      * @type {string}
      * @memberof RecipeImage
      */
-    imageUrl?: string;
+    imageUrl?: string | null;
 }
 
 /**
@@ -55,10 +55,15 @@ export function RecipeImageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function RecipeImageToJSON(value?: RecipeImage | null): any {
+export function RecipeImageToJSON(json: any): RecipeImage {
+    return RecipeImageToJSONTyped(json, false);
+}
+
+export function RecipeImageToJSONTyped(value?: RecipeImage | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'image': value['image'],

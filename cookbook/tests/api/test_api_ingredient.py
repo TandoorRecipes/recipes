@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from django.contrib import auth
 from django.db.models import Subquery, OuterRef
 from django.urls import reverse
 from django_scopes import scopes_disabled
@@ -30,7 +31,22 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
         recipe_1_s1.space = space_2
         recipe_1_s1.save()
         Step.objects.update(space=Subquery(Step.objects.filter(pk=OuterRef('pk')).values('recipe__space')[:1]))
-        Ingredient.objects.update(space=Subquery(Ingredient.objects.filter(pk=OuterRef('pk')).values('step__recipe__space')[:1]))
+        Ingredient.objects.update(
+            space=Subquery(Ingredient.objects.filter(pk=OuterRef('pk')).values('step__recipe__space')[:1]))
+
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 10
+
+    # ingredients that are part of a private recipe should not be listable by users not shared in that recipe
+    with scopes_disabled():
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 0
+
+    with scopes_disabled():
+        recipe_1_s1.shared.add(auth.get_user(u1_s2))
 
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 10
@@ -47,6 +63,36 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
 ])
 def test_update(arg, request, recipe_1_s1):
     with scopes_disabled():
+        i = recipe_1_s1.steps.first().ingredients.first()
+        c = request.getfixturevalue(arg[0])
+        r = c.patch(
+            reverse(
+                DETAIL_URL,
+                args={i.id}
+            ),
+            {'note': 'new'},
+            content_type='application/json'
+        )
+        response = json.loads(r.content)
+        assert r.status_code == arg[1]
+        if r.status_code == 200:
+            assert response['note'] == 'new'
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 200],
+    ['a1_s1', 404],
+    ['g1_s2', 403],
+    ['u1_s2', 404],
+    ['a1_s2', 404],
+])
+def test_update_private_recipe(arg, request, recipe_1_s1):
+    with scopes_disabled():
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
         i = recipe_1_s1.steps.first().ingredients.first()
         c = request.getfixturevalue(arg[0])
         r = c.patch(
@@ -88,7 +134,7 @@ def test_add(arg, request, u1_s2):
         assert r.status_code == 404
 
 
-def test_delete(u1_s1, u1_s2, recipe_1_s1):
+def test_delete(u1_s1, u1_s2, a1_s1, recipe_1_s1):
     with scopes_disabled():
         i = recipe_1_s1.steps.first().ingredients.first()
         r = u1_s2.delete(
@@ -98,6 +144,20 @@ def test_delete(u1_s1, u1_s2, recipe_1_s1):
             )
         )
         assert r.status_code == 404
+
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+        r = a1_s1.delete(
+            reverse(
+                DETAIL_URL,
+                args={i.id}
+            )
+        )
+        assert r.status_code == 404
+
+        recipe_1_s1.private = False
+        recipe_1_s1.save()
 
         r = u1_s1.delete(
             reverse(

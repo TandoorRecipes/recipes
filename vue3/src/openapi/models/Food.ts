@@ -18,42 +18,49 @@ import {
     ShoppingListFromJSON,
     ShoppingListFromJSONTyped,
     ShoppingListToJSON,
+    ShoppingListToJSONTyped,
 } from './ShoppingList';
 import type { SupermarketCategory } from './SupermarketCategory';
 import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { FoodSimple } from './FoodSimple';
 import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
+    FoodSimpleToJSONTyped,
 } from './FoodSimple';
 import type { RecipeSimple } from './RecipeSimple';
 import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
+    RecipeSimpleToJSONTyped,
 } from './RecipeSimple';
 
 /**
@@ -113,7 +120,7 @@ export interface Food {
      * @type {string}
      * @memberof Food
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {string}
@@ -131,19 +138,19 @@ export interface Food {
      * @type {RecipeSimple}
      * @memberof Food
      */
-    recipe?: RecipeSimple;
+    recipe?: RecipeSimple | null;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {Array<Property>}
      * @memberof Food
      */
-    properties?: Array<Property>;
+    properties?: Array<Property> | null;
     /**
      * 
      * @type {number}
@@ -155,25 +162,25 @@ export interface Food {
      * @type {Unit}
      * @memberof Food
      */
-    propertiesFoodUnit?: Unit;
+    propertiesFoodUnit?: Unit | null;
     /**
      * 
      * @type {number}
      * @memberof Food
      */
-    fdcId?: number;
+    fdcId?: number | null;
     /**
      * 
      * @type {boolean}
      * @memberof Food
      */
-    foodOnhand?: boolean;
+    foodOnhand?: boolean | null;
     /**
      * 
      * @type {SupermarketCategory}
      * @memberof Food
      */
-    supermarketCategory?: SupermarketCategory;
+    supermarketCategory?: SupermarketCategory | null;
     /**
      * 
      * @type {number}
@@ -191,7 +198,7 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    inheritFields?: Array<FoodInheritField>;
+    inheritFields?: Array<FoodInheritField> | null;
     /**
      * Returns a string representation of a tree node and it's ancestors,
      * e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -210,7 +217,7 @@ export interface Food {
      * @type {Array<FoodSimple>}
      * @memberof Food
      */
-    substitute?: Array<FoodSimple>;
+    substitute?: Array<FoodSimple> | null;
     /**
      * 
      * @type {boolean}
@@ -234,13 +241,13 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    childInheritFields?: Array<FoodInheritField>;
+    childInheritFields?: Array<FoodInheritField> | null;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
     /**
      * 
      * @type {Array<ShoppingList>}
@@ -300,10 +307,15 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
     };
 }
 
-export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'fullName'|'substituteOnhand'> | null): any {
+export function FoodToJSON(json: any): Food {
+    return FoodToJSONTyped(json, false);
+}
+
+export function FoodToJSONTyped(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

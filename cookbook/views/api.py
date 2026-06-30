@@ -1659,7 +1659,9 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                   Prefetch('unit__unit_conversion_base_relation', queryset=unit_conversion_qs),
                                                   Prefetch('unit__unit_conversion_converted_relation', queryset=unit_conversion_qs),
                                                   'step_set',
-                                                  'step_set__recipe_set', ).filter(step__recipe__space=self.request.space)
+                                                  'step_set__recipe_set', ).filter(step__recipe__space=self.request.space).filter(
+            Q(step__recipe__private=False) | (Q(step__recipe__private=True) & (Q(step__recipe__created_by=self.request.user) | Q(step__recipe__shared=self.request.user))))
+
         food = self.request.query_params.get('food', None)
         if food and re.match(r'^(\d)+$', food):
             queryset = queryset.filter(food_id=food)
@@ -1683,6 +1685,9 @@ class StepViewSet(LoggingMixin, viewsets.ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        self.queryset = self.queryset.prefetch_related('recipe_set').filter(recipe__space=self.request.space).filter(
+            Q(recipe__private=False) | (Q(recipe__private=True) & (Q(recipe__created_by=self.request.user) | Q(recipe__shared=self.request.user))))
+
         recipes = self.request.query_params.getlist('recipe', [])
         query = self.request.query_params.get('query', None)
         if len(recipes) > 0:

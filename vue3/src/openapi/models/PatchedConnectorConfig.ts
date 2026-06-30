@@ -18,6 +18,7 @@ import {
     ConnectorConfigTypeEnumFromJSON,
     ConnectorConfigTypeEnumFromJSONTyped,
     ConnectorConfigTypeEnumToJSON,
+    ConnectorConfigTypeEnumToJSONTyped,
 } from './ConnectorConfigTypeEnum';
 
 /**
@@ -49,19 +50,19 @@ export interface PatchedConnectorConfig {
      * @type {string}
      * @memberof PatchedConnectorConfig
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfig
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfig
      */
-    todoEntity?: string;
+    todoEntity?: string | null;
     /**
      * Is Connector Enabled
      * @type {boolean}
@@ -100,6 +101,8 @@ export interface PatchedConnectorConfig {
     readonly createdBy?: number;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedConnectorConfig interface.
  */
@@ -132,10 +135,15 @@ export function PatchedConnectorConfigFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedConnectorConfigToJSON(value?: Omit<PatchedConnectorConfig, 'createdBy'> | null): any {
+export function PatchedConnectorConfigToJSON(json: any): PatchedConnectorConfig {
+    return PatchedConnectorConfigToJSONTyped(json, false);
+}
+
+export function PatchedConnectorConfigToJSONTyped(value?: Omit<PatchedConnectorConfig, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

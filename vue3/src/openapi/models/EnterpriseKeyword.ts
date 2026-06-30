@@ -71,10 +71,15 @@ export function EnterpriseKeywordFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function EnterpriseKeywordToJSON(value?: Omit<EnterpriseKeyword, 'label'> | null): any {
+export function EnterpriseKeywordToJSON(json: any): EnterpriseKeyword {
+    return EnterpriseKeywordToJSONTyped(json, false);
+}
+
+export function EnterpriseKeywordToJSONTyped(value?: Omit<EnterpriseKeyword, 'label'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,6 +18,7 @@ import {
     HouseholdFromJSON,
     HouseholdFromJSONTyped,
     HouseholdToJSON,
+    HouseholdToJSONTyped,
 } from './Household';
 
 /**
@@ -112,10 +113,15 @@ export function InventoryLocationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function InventoryLocationToJSON(value?: InventoryLocation | null): any {
+export function InventoryLocationToJSON(json: any): InventoryLocation {
+    return InventoryLocationToJSONTyped(json, false);
+}
+
+export function InventoryLocationToJSONTyped(value?: InventoryLocation | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

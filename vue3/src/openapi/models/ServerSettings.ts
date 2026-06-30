@@ -191,10 +191,15 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function ServerSettingsToJSON(value?: ServerSettings | null): any {
+export function ServerSettingsToJSON(json: any): ServerSettings {
+    return ServerSettingsToJSONTyped(json, false);
+}
+
+export function ServerSettingsToJSONTyped(value?: ServerSettings | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'shopping_min_autosync_interval': value['shoppingMinAutosyncInterval'],

@@ -18,6 +18,7 @@ import {
     ShoppingListEntryFromJSON,
     ShoppingListEntryFromJSONTyped,
     ShoppingListEntryToJSON,
+    ShoppingListEntryToJSONTyped,
 } from './ShoppingListEntry';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedShoppingListEntryList {
      * @type {string}
      * @memberof PaginatedShoppingListEntryList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedShoppingListEntryList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ShoppingListEntry>}
@@ -85,17 +86,22 @@ export function PaginatedShoppingListEntryListFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function PaginatedShoppingListEntryListToJSON(value?: PaginatedShoppingListEntryList | null): any {
+export function PaginatedShoppingListEntryListToJSON(json: any): PaginatedShoppingListEntryList {
+    return PaginatedShoppingListEntryListToJSONTyped(json, false);
+}
+
+export function PaginatedShoppingListEntryListToJSONTyped(value?: PaginatedShoppingListEntryList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ShoppingListEntryToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

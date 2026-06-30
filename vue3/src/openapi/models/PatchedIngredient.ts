@@ -18,12 +18,14 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -43,13 +45,13 @@ export interface PatchedIngredient {
      * @type {Food}
      * @memberof PatchedIngredient
      */
-    food?: Food;
+    food?: Food | null;
     /**
      * 
      * @type {Unit}
      * @memberof PatchedIngredient
      */
-    unit?: Unit;
+    unit?: Unit | null;
     /**
      * 
      * @type {number}
@@ -67,7 +69,7 @@ export interface PatchedIngredient {
      * @type {string}
      * @memberof PatchedIngredient
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
@@ -91,7 +93,7 @@ export interface PatchedIngredient {
      * @type {string}
      * @memberof PatchedIngredient
      */
-    originalText?: string;
+    originalText?: string | null;
     /**
      * 
      * @type {Array<any>}
@@ -138,10 +140,15 @@ export function PatchedIngredientFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'> | null): any {
+export function PatchedIngredientToJSON(json: any): PatchedIngredient {
+    return PatchedIngredientToJSONTyped(json, false);
+}
+
+export function PatchedIngredientToJSONTyped(value?: Omit<PatchedIngredient, 'conversions'|'used_in_recipes'|'checked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

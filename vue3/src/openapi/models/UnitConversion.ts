@@ -18,12 +18,14 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -73,13 +75,13 @@ export interface UnitConversion {
      * @type {Food}
      * @memberof UnitConversion
      */
-    food?: Food;
+    food?: Food | null;
     /**
      * 
      * @type {string}
      * @memberof UnitConversion
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
@@ -115,10 +117,15 @@ export function UnitConversionFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UnitConversionToJSON(value?: Omit<UnitConversion, 'name'> | null): any {
+export function UnitConversionToJSON(json: any): UnitConversion {
+    return UnitConversionToJSONTyped(json, false);
+}
+
+export function UnitConversionToJSONTyped(value?: Omit<UnitConversion, 'name'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

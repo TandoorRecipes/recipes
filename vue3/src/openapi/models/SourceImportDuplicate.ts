@@ -56,10 +56,15 @@ export function SourceImportDuplicateFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function SourceImportDuplicateToJSON(value?: SourceImportDuplicate | null): any {
+export function SourceImportDuplicateToJSON(json: any): SourceImportDuplicate {
+    return SourceImportDuplicateToJSONTyped(json, false);
+}
+
+export function SourceImportDuplicateToJSONTyped(value?: SourceImportDuplicate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

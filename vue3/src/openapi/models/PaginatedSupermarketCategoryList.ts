@@ -18,6 +18,7 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedSupermarketCategoryList {
      * @type {string}
      * @memberof PaginatedSupermarketCategoryList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketCategoryList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<SupermarketCategory>}
@@ -85,17 +86,22 @@ export function PaginatedSupermarketCategoryListFromJSONTyped(json: any, ignoreD
     };
 }
 
-export function PaginatedSupermarketCategoryListToJSON(value?: PaginatedSupermarketCategoryList | null): any {
+export function PaginatedSupermarketCategoryListToJSON(json: any): PaginatedSupermarketCategoryList {
+    return PaginatedSupermarketCategoryListToJSONTyped(json, false);
+}
+
+export function PaginatedSupermarketCategoryListToJSONTyped(value?: PaginatedSupermarketCategoryList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SupermarketCategoryToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

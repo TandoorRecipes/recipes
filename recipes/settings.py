@@ -573,7 +573,7 @@ DJANGO_VITE = {
 }
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.settimeout(0.001)
+    s.settimeout(1)
     try:
         s.connect((DJANGO_VITE['default']['dev_server_host'], DJANGO_VITE['default']['dev_server_port']))
         if DEBUG:

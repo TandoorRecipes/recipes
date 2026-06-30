@@ -18,18 +18,21 @@ import {
     InventoryLocationFromJSON,
     InventoryLocationFromJSONTyped,
     InventoryLocationToJSON,
+    InventoryLocationToJSONTyped,
 } from './InventoryLocation';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { Food } from './Food';
 import {
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
+    FoodToJSONTyped,
 } from './Food';
 
 /**
@@ -55,13 +58,13 @@ export interface PatchedInventoryEntry {
      * @type {string}
      * @memberof PatchedInventoryEntry
      */
-    subLocation?: string;
+    subLocation?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedInventoryEntry
      */
-    code?: string;
+    code?: string | null;
     /**
      * 
      * @type {Food}
@@ -85,13 +88,13 @@ export interface PatchedInventoryEntry {
      * @type {Date}
      * @memberof PatchedInventoryEntry
      */
-    expires?: Date;
+    expires?: Date | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedInventoryEntry
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {string}
@@ -144,10 +147,15 @@ export function PatchedInventoryEntryFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedInventoryEntryToJSON(value?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'> | null): any {
+export function PatchedInventoryEntryToJSON(json: any): PatchedInventoryEntry {
+    return PatchedInventoryEntryToJSONTyped(json, false);
+}
+
+export function PatchedInventoryEntryToJSONTyped(value?: Omit<PatchedInventoryEntry, 'label'|'created_at'|'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -157,7 +165,7 @@ export function PatchedInventoryEntryToJSON(value?: Omit<PatchedInventoryEntry, 
         'food': FoodToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
-        'expires': value['expires'] == null ? undefined : ((value['expires'] as any).toISOString().substring(0,10)),
+        'expires': value['expires'] == null ? value['expires'] : value['expires'].toISOString().substring(0,10),
         'note': value['note'],
     };
 }

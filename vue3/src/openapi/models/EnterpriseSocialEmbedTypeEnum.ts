@@ -34,7 +34,7 @@ export type EnterpriseSocialEmbedTypeEnum = typeof EnterpriseSocialEmbedTypeEnum
 export function instanceOfEnterpriseSocialEmbedTypeEnum(value: any): boolean {
     for (const key in EnterpriseSocialEmbedTypeEnum) {
         if (Object.prototype.hasOwnProperty.call(EnterpriseSocialEmbedTypeEnum, key)) {
-            if (EnterpriseSocialEmbedTypeEnum[key] === value) {
+            if (EnterpriseSocialEmbedTypeEnum[key as keyof typeof EnterpriseSocialEmbedTypeEnum] === value) {
                 return true;
             }
         }
@@ -52,5 +52,9 @@ export function EnterpriseSocialEmbedTypeEnumFromJSONTyped(json: any, ignoreDisc
 
 export function EnterpriseSocialEmbedTypeEnumToJSON(value?: EnterpriseSocialEmbedTypeEnum | null): any {
     return value as any;
+}
+
+export function EnterpriseSocialEmbedTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): EnterpriseSocialEmbedTypeEnum {
+    return value as EnterpriseSocialEmbedTypeEnum;
 }
 

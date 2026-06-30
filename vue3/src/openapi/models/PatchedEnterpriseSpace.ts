@@ -18,6 +18,7 @@ import {
     EnterpriseBillingPlanFromJSON,
     EnterpriseBillingPlanFromJSONTyped,
     EnterpriseBillingPlanToJSON,
+    EnterpriseBillingPlanToJSONTyped,
 } from './EnterpriseBillingPlan';
 
 /**
@@ -43,7 +44,7 @@ export interface PatchedEnterpriseSpace {
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingCustomerId?: string;
+    billingCustomerId?: string | null;
     /**
      * 
      * @type {EnterpriseBillingPlan}
@@ -55,13 +56,13 @@ export interface PatchedEnterpriseSpace {
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingSubscriptionId?: string;
+    billingSubscriptionId?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingSubscriptionStatus?: string;
+    billingSubscriptionStatus?: string | null;
     /**
      * 
      * @type {number}
@@ -97,10 +98,15 @@ export function PatchedEnterpriseSpaceFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedEnterpriseSpaceToJSON(value?: PatchedEnterpriseSpace | null): any {
+export function PatchedEnterpriseSpaceToJSON(json: any): PatchedEnterpriseSpace {
+    return PatchedEnterpriseSpaceToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseSpaceToJSONTyped(value?: PatchedEnterpriseSpace | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'space': value['space'],
