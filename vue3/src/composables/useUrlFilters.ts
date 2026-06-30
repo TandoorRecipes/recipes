@@ -167,7 +167,7 @@ export function useUrlFilters(
                     const invalid = isNumber ? isNaN(v as number) : (isDate && isNaN((v as Date).getTime()))
                     if (!invalid) params[`${key}Lte`] = v
                 }
-            } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number' || def?.type === 'rating-half') {
+            } else if (def?.type === 'tristate' || def?.type === 'toggle' || def?.type === 'model-select' || def?.type === 'number' || def?.type === 'rating-half' || def?.type === 'rating-unrated') {
                 const num = Number(val)
                 if (!isNaN(num)) params[key] = num
             } else {

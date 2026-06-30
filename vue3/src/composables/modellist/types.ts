@@ -45,7 +45,7 @@ export type ColumnType = 'text' | 'number' | 'boolean-indicator' | 'status-chip'
 /**
  * Filter control types for the filter panel.
  */
-export type FilterType = 'tristate' | 'toggle' | 'model-select' | 'number' | 'select' | 'tag-select' | 'tag-group' | 'date-range' | 'number-range' | 'rating-half'
+export type FilterType = 'tristate' | 'toggle' | 'model-select' | 'number' | 'select' | 'tag-select' | 'tag-group' | 'date-range' | 'number-range' | 'rating-half' | 'rating-unrated'
 
 /** Range filter value: an open- or closed-ended interval. */
 export type RangeValue = {
@@ -89,6 +89,10 @@ export type FilterDef = {
     expandable?: boolean,
     /** Override multiselect placeholder text */
     selectPlaceholder?: string,
+    /** For rating-unrated: the companion boolean filter key set when the
+     *  "0 / Unrated" position is chosen (e.g. 'unrated'). Picking a star clears
+     *  it; picking 0 sets it and clears this filter's own rating value. */
+    unratedKey?: string,
 }
 
 /**

@@ -39,9 +39,11 @@ const BOOK_FILTERS: FilterDef[] = [
 
 
 const RATING_FILTERS: FilterDef[] = [
-    {key: 'ratingGte',         labelKey: 'RatingGte',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-greater-than-equal'},
+    {key: 'ratingGte',         labelKey: 'RatingGte',          type: 'rating-unrated', unratedKey: 'unrated', group: 'Rating', icon: 'fa-solid fa-greater-than-equal'},
     {key: 'ratingLte',         labelKey: 'RatingLte',          type: 'rating-half', group: 'Rating', icon: 'fa-solid fa-less-than-equal'},
-    {key: 'unrated',           labelKey: 'Unrated',            type: 'toggle', group: 'Rating'},
+    // Folded into the ratingGte control's "0 / Unrated" position. Kept (hidden)
+    // so it still backs filter chips and the Unrated stat-chip drilldown.
+    {key: 'unrated',           labelKey: 'Unrated',            type: 'toggle', group: 'Rating', hidden: true},
 ]
 
 const RECIPE_FILTERS: FilterDef[] = [

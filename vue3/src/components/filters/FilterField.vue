@@ -76,6 +76,36 @@
             @click="clearFilter(def.key)"
         />
     </div>
+    <div v-else-if="def.type === 'rating-unrated'" :class="[wrapClass, 'd-flex align-center ga-2']">
+        <v-icon v-if="def.icon" size="small" :icon="def.icon" class="text-medium-emphasis" />
+        <!-- "0 / Unrated" position: folds the standalone unrated toggle into the
+             rating control. Selecting it sets unrated and clears any star value;
+             selecting a star clears unrated (the two are mutually exclusive). -->
+        <v-btn
+            class="unrated-toggle"
+            :variant="isUnrated ? 'flat' : 'tonal'"
+            :color="isUnrated ? 'warning' : undefined"
+            size="small" density="comfortable" min-width="0"
+            @click="toggleUnrated"
+        >
+            0
+            <v-tooltip activator="parent" location="top">{{ $t('Unrated') }}</v-tooltip>
+        </v-btn>
+        <v-rating
+            :model-value="unratedRatingValue"
+            @update:model-value="onSelectStar"
+            half-increments
+            clearable
+            hover
+            density="comfortable"
+        />
+        <v-btn
+            v-if="hasRatingFilter"
+            class="rating-clear"
+            icon="$close" variant="plain" size="x-small" density="compact"
+            @click="clearRatingAndUnrated"
+        />
+    </div>
     <div v-else-if="def.type === 'number-range'" :class="[wrapClass, 'd-flex align-center ga-2']">
         <v-text-field
             type="number"
@@ -153,4 +183,42 @@ const props = withDefaults(defineProps<{
 })
 
 const wrapClass = computed(() => props.compact ? 'mt-1' : 'px-4 py-1')
+
+// ─── rating-unrated: unified "0 / Unrated" + 1–5 star control ────────────
+const isUnrated = computed(() => !!(props.def.unratedKey && props.getFilter(props.def.unratedKey)))
+
+// Star value shown by v-rating. When unrated is active the stars read 0 so the
+// "0 / Unrated" position is the only thing highlighted.
+const unratedRatingValue = computed(() => {
+    if (isUnrated.value) return 0
+    const v = props.getFilter(props.def.key)
+    return v ? Number(v) : 0
+})
+
+const hasRatingFilter = computed(() => isUnrated.value || !!props.getFilter(props.def.key))
+
+function toggleUnrated() {
+    const k = props.def.unratedKey
+    if (!k) return
+    if (isUnrated.value) {
+        props.clearFilter(k)            // toggle off → no rating filter
+    } else {
+        props.setFilter(k, '1')         // 0 stars === unrated (rating IS NULL)
+        props.clearFilter(props.def.key) // mutually exclusive with a star floor
+    }
+}
+
+function onSelectStar(value: number) {
+    if (value > 0) {
+        props.setFilter(props.def.key, String(value))
+        if (props.def.unratedKey) props.clearFilter(props.def.unratedKey)
+    } else {
+        props.clearFilter(props.def.key)
+    }
+}
+
+function clearRatingAndUnrated() {
+    props.clearFilter(props.def.key)
+    if (props.def.unratedKey) props.clearFilter(props.def.unratedKey)
+}
 </script>

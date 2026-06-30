@@ -635,7 +635,7 @@ function filtersToJson(): FilterBlob {
             const isNum = def.type === 'number-range'
             if (gte) out[`${prefix}_gte`] = isNum ? Number(gte) : gte
             if (lte) out[`${prefix}_lte`] = isNum ? Number(lte) : lte
-        } else if (def.type === 'rating-half') {
+        } else if (def.type === 'rating-half' || def.type === 'rating-unrated') {
             const n = Number(raw); if (!isNaN(n)) out[def.key] = n
         } else if (def.type === 'tristate' || def.type === 'toggle') {
             out[def.key] = raw === '1'
@@ -662,7 +662,7 @@ function applyFilterBlob(params: FilterBlob) {
             const gte = params[`${prefix}_gte`] ?? params[`${def.key}_gte`]
             const lte = params[`${prefix}_lte`] ?? params[`${def.key}_lte`]
             if (gte != null || lte != null) setFilter(def.key, {gte: gte ?? null, lte: lte ?? null})
-        } else if (def.type === 'rating-half') {
+        } else if (def.type === 'rating-half' || def.type === 'rating-unrated') {
             const v = params[def.key]
             if (v != null && v !== '') setFilter(def.key, String(v))
         } else if (def.type === 'tag-select') {
