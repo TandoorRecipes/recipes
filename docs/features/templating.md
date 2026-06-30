@@ -11,7 +11,7 @@ from recipe scaling.
 
 !!! info
     Templating is a very new feature and still WIP. Feel free to open an issue to provide feedback and ideas.
-    Please also refer to [Issue #218](https://github.com/vabene1111/recipes/issues/218) where this feature has been discussed.
+    Please also refer to [Issue #218](https://github.com/TandoorRecipes/recipes/issues/218) where this feature has been discussed.
 
 ## Using Templating
 Currently the only available variable in the Templating context is `ingredients`.

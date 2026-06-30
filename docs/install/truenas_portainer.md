@@ -91,7 +91,7 @@ services:
       - stack.env
 
   web_recipes:
-    image: vabene1111/recipes:latest
+    image: TandoorRecipes/recipes:latest
     env_file:
       - stack.env
     volumes:
@@ -122,7 +122,7 @@ volumes:
   staticfiles:
 ```
 
--Download the .env template from [HERE](https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template) and load this file by pressing the "Load Variables from .env File" button:
+-Download the .env template from [HERE](https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template) and load this file by pressing the "Load Variables from .env File" button:
 ![Screenshot of Add Stack screen](https://www.portainer.io/hubfs/image-png-Feb-21-2022-06-21-15-88-PM.png)
 
 -You will need to change the following variables:

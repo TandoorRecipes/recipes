@@ -25,7 +25,7 @@ volume1/docker/
 ### 2. `.env` and `docker-compose.yml`
 !!!info The guide uses the `plain` setup.
 
-- Open the [.env template](https://github.com/vabene1111/recipes/blob/develop/.env.template)
+- Open the [.env template](https://github.com/TandoorRecipes/recipes/blob/develop/.env.template)
   - Copy the text and save it as `.env.txt` to your recipes folder (the .txt extension allows you to modify it)
   - Open the file with Text Editor. Populate the necessary fields, such as `SECRET_KEY` and `POSTGRES_PASSWORD`. 
   - Save the file and then rename it as `.env` (without the .txt extension) 
@@ -110,8 +110,8 @@ Easiest way is to do it via Reverse Proxy.
 The following are older guides that may be useful if you are running older versions of DSM. 
 
 - The following documentation was provided by 
-@therealschimmi in [this issue discussion](https://github.com/vabene1111/recipes/issues/98#issuecomment-643062907).
+@therealschimmi in [this issue discussion](https://github.com/TandoorRecipes/recipes/issues/98#issuecomment-643062907).
 
 - There is also this 
-([word](https://github.com/vabene1111/recipes/files/6708738/Tandoor.on.a.Synology.Disk.Station.docx), 
-[pdf](https://github.com/vabene1111/recipes/files/6901601/Tandoor.on.a.Synology.Disk.Station.pdf)) awesome and very detailed guide provided by @DiversityBug.
+([word](https://github.com/TandoorRecipes/recipes/files/6708738/Tandoor.on.a.Synology.Disk.Station.docx), 
+[pdf](https://github.com/TandoorRecipes/recipes/files/6901601/Tandoor.on.a.Synology.Disk.Station.pdf)) awesome and very detailed guide provided by @DiversityBug.

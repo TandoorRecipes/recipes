@@ -2,13 +2,13 @@ This application features a very versatile import and export feature in order
 to offer the best experience possible and allow you to freely choose where your data goes.
 
 !!! WARNING "WIP"
-    The module is relatively new. There is a known issue with [timeouts](https://github.com/vabene1111/recipes/issues/417) on large exports.
+    The module is relatively new. There is a known issue with [timeouts](https://github.com/TandoorRecipes/recipes/issues/417) on large exports.
     A fix is being developed and will likely be released with the next version.
 
 The module is built with maximum flexibility and expandability in mind and allows to easily add new
 integrations to allow you to both import and export your recipes into whatever format you desire.
 
-Feel like there is an important integration missing? Just take a look at the [integration issues](https://github.com/vabene1111/recipes/issues?q=is%3Aissue+is%3Aopen+label%3Aintegration) or open a new one
+Feel like there is an important integration missing? Just take a look at the [integration issues](https://github.com/TandoorRecipes/recipes/issues?q=is%3Aissue+is%3Aopen+label%3Aintegration) or open a new one
 if your favorite one is missing.
 
 !!! info "Export"

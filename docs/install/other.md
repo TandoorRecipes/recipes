@@ -8,7 +8,7 @@
 
 ## Apache + Traefik + Sub-Path
 
-This guide was contributes by [incaseoftrouble](https://github.com/incaseoftrouble) in [Issue #266](https://github.com/vabene1111/recipes/issues/266)
+This guide was contributes by [incaseoftrouble](https://github.com/incaseoftrouble) in [Issue #266](https://github.com/TandoorRecipes/recipes/issues/266)
 
 My setup is docker-compose / traefik / apache / recipes. Swapping out apache for nginx should be straightforward.
 
@@ -98,7 +98,7 @@ and the relevant section from the docker-compose.yml:
    tandoor:
      restart: always
      container_name: tandoor
-     image: vabene1111/recipes
+     image: TandoorRecipes/recipes
      environment:
        - SCRIPT_NAME=/tandoor
        - STATIC_URL=/tandoor/static/

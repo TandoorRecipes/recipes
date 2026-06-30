@@ -18,7 +18,7 @@
 cd /opt
 mkdir recipes
 cd recipes
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
+wget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template -O .env
 base64 /dev/urandom | head -c50
 ``` 
 Copy the response from that last command and paste the key into the `.env` file:
@@ -79,7 +79,7 @@ services:
       - ./recipes/.env
 
   recipes:
-    image: vabene1111/recipes
+    image: TandoorRecipes/recipes
     container_name: recipes
     restart: unless-stopped
     env_file:
