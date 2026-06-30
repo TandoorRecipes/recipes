@@ -63,8 +63,7 @@
                             :icon="filtersCollapsed ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-up'"
                             color="primary"
                             variant="flat"
-                            rounded="0"
-                            style="height: 40px; min-width: 36px; padding: 0;"
+                            size="small"
                             @click.stop="filtersCollapsed = !filtersCollapsed"
                         />
                     </template>
