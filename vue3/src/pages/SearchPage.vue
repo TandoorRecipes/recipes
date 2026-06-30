@@ -287,6 +287,16 @@
                 </div>
 
                 <div class="d-flex align-center px-4 py-1 ga-1">
+                    <span class="text-body-2 flex-grow-1">{{ $t('View') }}</span>
+                    <v-btn-toggle density="compact" mandatory
+                        :model-value="useUserPreferenceStore().deviceSettings.search_viewMode"
+                        @update:model-value="useUserPreferenceStore().deviceSettings.search_viewMode = $event">
+                        <v-btn value="table" size="x-small">{{ $t('Table') }}</v-btn>
+                        <v-btn value="grid" size="x-small">{{ $t('Cards') }}</v-btn>
+                    </v-btn-toggle>
+                </div>
+
+                <div class="d-flex align-center px-4 py-1 ga-1">
                     <span class="text-body-2 flex-grow-1">{{ $t('SavedSearch') }}</span>
                     <v-btn-toggle density="compact" mandatory :model-value="savedSearchInline ? 'page' : 'panel'" @update:model-value="savedSearchInline = $event === 'page'">
                         <v-btn value="page" size="x-small">{{ $t('Page') }}</v-btn>
