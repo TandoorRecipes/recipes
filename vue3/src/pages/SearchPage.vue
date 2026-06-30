@@ -437,7 +437,7 @@ const savedSearchInline = computed({
 })
 
 // ─── Drawer filter visibility (search-specific) ────────────────────────
-const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', 'ratingGte', 'unrated', 'servings', 'makenow', 'cookedon', 'createdon', 'totalTime', 'createdby', 'internal']
+const DEFAULT_DRAWER = ['_keywordsGroup', '_foodsGroup', '_booksGroup', 'ratingGte', 'unrated', 'servings', 'timescooked', 'makenow', 'cookedon', 'createdon', 'totalTime', 'createdby', 'internal']
 
 const drawerFilterDefs = computed(() => {
     const raw = useUserPreferenceStore().deviceSettings.search_drawerFilters
