@@ -34,7 +34,10 @@
                         <menu-user-info></menu-user-info>
                         <v-divider></v-divider>
 
-                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
+                        <template v-for="(item, idx) in useNavigation().getUserNavigation()" :key="`user-nav-${idx}`">
+                            <v-divider v-if="item.component === VDivider"></v-divider>
+                            <component v-else :is="item.component" :prepend-icon="item.prependIcon" :title="item.title" :to="item.to" :href="item.href" @click="item.onClick"></component>
+                        </template>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -70,7 +73,7 @@
             <v-list>
                 <menu-user-info></menu-user-info>
                 <v-divider></v-divider>
-                <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
+                <component :is="item.component" v-bind="{prependIcon: item.prependIcon, title: item.title, to: item.to}" :key="item.title" v-for="item in useNavigation().getNavigationDrawer()"></component>
 
                 <navigation-drawer-context-menu></navigation-drawer-context-menu>
             </v-list>
@@ -104,7 +107,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
-                        <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
+                        <component :is="item.component" v-bind="{prependIcon: item.prependIcon, title: item.title, to: item.to}" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
                     </v-list>
                 </v-bottom-sheet>
             </v-btn>
@@ -123,6 +126,7 @@
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
 import {useDisplay, useLocale} from "vuetify"
+import {VDivider} from "vuetify/components"
 import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";

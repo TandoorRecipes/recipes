@@ -1,5 +1,5 @@
 <template>
-    <v-row justify="space-between" dense>
+    <v-row justify="space-between" density="compact">
         <v-col cols="6">
             <v-card :loading="loading" variant="outlined">
                 <v-card-text>

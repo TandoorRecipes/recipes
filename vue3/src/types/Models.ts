@@ -14,7 +14,8 @@ import {
     SupermarketCategory, Sync, SyncLog,
     Unit,
     UnitConversion, User, UserFile,
-    UserSpace, ViewLog, Household
+    UserSpace, ViewLog, Household,
+    type PaginatedGenericModelReferenceList
 } from "@/openapi";
 import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
@@ -35,6 +36,54 @@ export function getGenericModelFromString(modelName: EditorSupportedModels, t: a
         return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
         return false
+    }
+}
+
+/**
+ * Models surfaced as a list on the Database page (one <database-model-col> each).
+ * This is the single source of truth for which models are reachable via /list/:model
+ * from the UI. The generic router accepts ANY model string, so without this gate a
+ * typed URL like /list/RecipeBookEntry renders an unwired (often empty/blank) page.
+ * Kept in sync with DatabasePage.vue by a drift test in __tests__/types/Models.test.ts.
+ */
+export const DATABASE_MODELS: ReadonlySet<string> = new Set([
+    'Food', 'Unit', 'Keyword', 'PropertyType',
+    'Supermarket', 'ShoppingList', 'SupermarketCategory', 'MealType',
+    'InventoryLocation',
+    'Space', 'UserSpace', 'Household', 'InviteLink',
+    'AiProvider', 'AiLog',
+    'UnitConversion', 'Automation', 'UserFile', 'CustomFilter', 'CookLog', 'ViewLog',
+    'Sync', 'SyncLog', 'Storage', 'RecipeImport', 'ConnectorConfig',
+])
+
+export type ModelRouteOperation = 'list' | 'edit' | 'delete'
+
+/**
+ * Whether the generic /list, /edit or /delete route should render for a given model.
+ * The router auto-generates these routes for every registered model, but most models
+ * are relational/internal (no editor, not wired into the UI). A disallowed route is
+ * redirected to 404 instead of rendering a blank shell.
+ *
+ *   edit   → the model has an editor component (a form exists)
+ *   list   → the model is surfaced on the Database page (DATABASE_MODELS)
+ *   delete → either of the above (a user-facing model can have its rows deleted)
+ *
+ * Case-insensitive: call-sites use both 'Food' and 'food'.
+ */
+export function canRouteToModel(modelName: string, operation: ModelRouteOperation): boolean {
+    const model = SUPPORTED_MODELS.get(modelName.toLowerCase())
+    if (!model) return false
+    const editable = !!model.editorComponent
+    const listable = DATABASE_MODELS.has(model.name)
+    switch (operation) {
+        case 'edit':
+            return editable
+        case 'list':
+            return listable
+        case 'delete':
+            return editable || listable
+        default:
+            return false
     }
 }
 
@@ -1222,7 +1271,7 @@ export class GenericModel {
      * @return promise of request
      */
     getDeleteProtecting(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
-        return this.api[`api${this.model.name}ProtectingList`](deleteRelationRequestParameter)
+        return this.deleteRelation('Protecting', deleteRelationRequestParameter)
     };
 
     /**
@@ -1231,7 +1280,7 @@ export class GenericModel {
      * @return promise of request
      */
     getDeleteCascading(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
-        return this.api[`api${this.model.name}CascadingList`](deleteRelationRequestParameter)
+        return this.deleteRelation('Cascading', deleteRelationRequestParameter)
     };
 
     /**
@@ -1240,7 +1289,27 @@ export class GenericModel {
      * @return promise of request
      */
     getDeleteNulling(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
-        return this.api[`api${this.model.name}NullingList`](deleteRelationRequestParameter)
+        return this.deleteRelation('Nulling', deleteRelationRequestParameter)
+    };
+
+    /**
+     * dispatch a delete-relationship list endpoint (Protecting/Cascading/Nulling).
+     * These endpoints only exist on the generated client for models whose viewset
+     * has DeleteRelationMixing; for the rest the method is absent. Guard on the
+     * real client (the source of truth) rather than the hand-maintained
+     * isAdvancedDelete flag: degrade to an empty result instead of throwing, but
+     * shout in DEV if the flag claims the endpoint should exist (stale client).
+     */
+    private deleteRelation(suffix: 'Protecting' | 'Cascading' | 'Nulling', deleteRelationRequestParameter: DeleteRelationRequestParameter): Promise<PaginatedGenericModelReferenceList> {
+        const name = `api${this.model.name}${suffix}List`
+        if (typeof (this.api as any)[name] !== 'function') {
+            if (this.model.isAdvancedDelete && import.meta.env.DEV) {
+                console.error(`[GenericModel] expected ${name} on the generated API client but it is missing — stale OpenAPI client?`)
+            }
+            return Promise.resolve({count: 0, results: []})
+        }
+        // index inline to preserve `this` binding on the generated method
+        return (this.api as any)[name](deleteRelationRequestParameter)
     };
 
     /**

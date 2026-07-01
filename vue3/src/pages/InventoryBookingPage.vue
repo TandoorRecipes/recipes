@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row dense>
+        <v-row density="compact">
             <v-col>
                 <v-card prepend-icon="fa-solid fa-boxes-stacked" :title="$t('InventoryBooking')">
                     <template #subtitle>
