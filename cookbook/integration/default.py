@@ -6,7 +6,7 @@ from zipfile import ZipFile
 
 from rest_framework.renderers import JSONRenderer
 
-from cookbook.helper.image_processing import get_filetype
+from cookbook.helper.image_processing import get_filetype, get_primary_recipe_image
 from cookbook.integration.integration import Integration
 from cookbook.serializer import RecipeExportSerializer
 
@@ -78,8 +78,9 @@ class Default(Integration):
                 recipe_stream.close()
 
                 try:
-                    recipe_zip_obj.writestr(f'image{get_filetype(r.image.file.name)}', r.image.file.read())
-                except (ValueError, FileNotFoundError):
+                    primary_image = get_primary_recipe_image(r)
+                    recipe_zip_obj.writestr(f'image{get_filetype(primary_image.file.name)}', primary_image.file.read())
+                except (ValueError, FileNotFoundError, AttributeError):
                     pass
 
                 recipe_zip_obj.close()

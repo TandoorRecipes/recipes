@@ -976,6 +976,8 @@
     "Subtitle": "Subtítulo",
     "Subtitle_Description": "Información que aparece debajo del nombre del alimento (máx. 2).",
     "Summary": "Resumen",
+    "Detail": "Detalle",
+    "Checkboxes": "Casillas",
     "SwipeActions": "Acciones al deslizar",
     "SwipeHint": "Desliza el dedo hacia la izquierda o hacia la derecha para ver más opciones",
     "SwipeLeft": "Desliza hacia la izquierda",

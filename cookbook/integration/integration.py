@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scope
 from lxml import etree
 
-from cookbook.helper.image_processing import handle_image
+from cookbook.helper.image_processing import handle_image, set_primary_recipe_image
 from cookbook.models import Keyword, Recipe
 from recipes.settings import DEBUG, EXPORT_FILE_CACHE_DURATION, MAX_ZIP_FILE_COUNT, MAX_ZIP_FILE_SIZE, MAX_ZIP_NESTING_DEPTH, MAX_ZIP_TOTAL_SIZE
 
@@ -297,8 +297,8 @@ class Integration:
         :param image_file: ByteIO stream containing the image
         :param filetype: type of file to write bytes to, default to .jpeg if unknown
         """
-        recipe.image = File(handle_image(self.request, File(image_file, name='image'), filetype=filetype), name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
-        recipe.save()
+        image = File(handle_image(self.request, File(image_file, name='image'), filetype=filetype), name=f'{uuid.uuid4()}_{recipe.pk}{filetype}')
+        set_primary_recipe_image(recipe, image, request=self.request)
 
     def get_recipe_from_file(self, file):
         """

@@ -3,7 +3,7 @@
         <p class="text-h6">{{ $t('Meal_Plan') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-        <closable-help-alert :text="$t('HouseholdSettingsHelp')" :title="$t('Household')"></closable-help-alert>
+        <closable-help-alert :text="$t('HouseholdHelp')" :title="$t('Household')"></closable-help-alert>
 
         <model-select model="MealType" v-model="useUserPreferenceStore().userSettings.defaultMealType"></model-select>
 

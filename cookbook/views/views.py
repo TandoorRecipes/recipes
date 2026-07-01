@@ -29,7 +29,7 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import InviteLink, ShareLink, Space, UserSpace
+from cookbook.models import InviteLink, ShareLink, Space, UserPreference, UserSpace
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS, BASE_DIR
@@ -48,7 +48,20 @@ def index(request, path=None, resource=None):
         request.session.modified = True
         return HttpResponseRedirect(reverse('view_invite', args=[value]))
 
-    if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
+    if request.user.is_authenticated or (re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share')):
+        # Redirect root URL to user's default page preference
+        if request.user.is_authenticated and request.path == reverse('index'):
+            default_page = getattr(request.user, 'userpreference', None)
+            if default_page:
+                page_routes = {
+                    UserPreference.SEARCH: '/advanced-search',
+                    UserPreference.PLAN: '/mealplan',
+                    UserPreference.BOOKS: '/books',
+                    UserPreference.SHOPPING: '/shopping',
+                }
+                route = page_routes.get(default_page.default_page)
+                if route:
+                    return HttpResponseRedirect(route)
         return render(request, 'frontend/tandoor.html', {})
     else:
         return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)

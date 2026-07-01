@@ -85,7 +85,7 @@
                             </v-col>
 
                         </v-row>
-                        <v-row dense>
+                        <v-row density="compact">
                             <v-col cols="12">
                                 <v-textarea :label="$t('Note')" v-model="editingObj.note" rows="3"></v-textarea>
                             </v-col>

@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from datetime import timedelta
+from decimal import Decimal
 
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.db import models
-from django.db.models import Avg, Case, Count, F, Max, OuterRef, Q, Subquery, Value, When
+from django.db.models import Avg, Case, Count, DecimalField, F, Max, OuterRef, Q, Subquery, Value, When
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
@@ -51,11 +52,14 @@ class RecipeQuerySet(models.QuerySet):
     def with_rating(self, user):
         if self._has_annotation('rating'):
             return self
-        from cookbook.helper.HelperFunctions import Round
-        return self.annotate(rating=Round(Avg(
+        return self.annotate(rating=Avg(
             'cooklog__rating',
-            filter=Q(cooklog__created_by=user, cooklog__rating__isnull=False),
-        )))
+            # cooklog__rating__gt=0 excludes legacy rating=0 rows (which meant "cleared"
+            # under the old overloaded semantic) so they don't poison the average.
+            # Post-migration there should be no rating=0 rows, but the filter is defensive.
+            filter=Q(cooklog__created_by=user, cooklog__rating__isnull=False, cooklog__rating__gt=0),
+            output_field=DecimalField(max_digits=3, decimal_places=2),
+        ))
 
     def with_last_cooked(self, user, space):
         if self._has_annotation('lastcooked'):
@@ -151,12 +155,15 @@ class RecipeQuerySet(models.QuerySet):
             step_ids = [step_ids]
         return self.filter(steps__id__in=step_ids)
 
-    def by_units(self, unit_ids):
-        if not unit_ids:
-            return self
-        if not isinstance(unit_ids, list):
-            unit_ids = [unit_ids]
-        return self.filter(steps__ingredients__unit__in=unit_ids)
+    def by_units(self, or_=None, and_=None, or_not=None, and_not=None):
+
+        def q_or(pks):
+            return Q(steps__ingredients__unit__id__in=pks)
+
+        def q_and(pk):
+            return Q(steps__ingredients__unit__id=pk)
+
+        return self._entity_filter(or_, and_, or_not, and_not, q_or, q_and)
 
     # ------------------------------------------------------------------ #
     #  Annotation + filter methods
@@ -167,13 +174,20 @@ class RecipeQuerySet(models.QuerySet):
             return self
         qs = self.with_rating(user)
         if exact is not None:
-            if int(exact) == 0:
-                return qs.filter(Q(rating__isnull=True) | Q(rating=0))
-            return qs.filter(rating=round(int(exact)))
+            # Decimal(str(...)) round-trip avoids float→Decimal precision loss.
+            exact_dec = Decimal(str(exact))
+            if exact_dec == 0:
+                # exact=0 is the canonical "unrated" sentinel — kept for
+                # backwards compatibility with existing ?rating=0 URLs.
+                return qs.filter(rating__isnull=True)
+            # Half-open tolerance band: rating ∈ [exact-0.5, exact+0.5).
+            # Matches "round half up" applied at filter time against the true average.
+            half = Decimal('0.5')
+            return qs.filter(rating__gte=exact_dec - half, rating__lt=exact_dec + half)
         if gte is not None:
-            qs = qs.filter(rating__gte=int(gte))
+            qs = qs.filter(rating__gte=Decimal(str(gte)))
         if lte is not None:
-            qs = qs.filter(rating__lte=int(lte))
+            qs = qs.filter(rating__lte=Decimal(str(lte)))
         return qs
 
     def by_times_cooked(self, user, space, exact=None, gte=None, lte=None):
