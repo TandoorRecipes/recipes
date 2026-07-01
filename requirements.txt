@@ -18,7 +18,7 @@ Pillow==12.2.0
 psycopg2-binary==2.9.10
 python-dotenv==1.2.2
 requests==2.33.0
-requests_hardened==1.2.1
+requests_hardened==1.2.2
 six==1.17.0
 webdavclient3==3.14.6
 whitenoise==6.12.0
