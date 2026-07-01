@@ -92,10 +92,15 @@ export function RecipeStatsFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function RecipeStatsToJSON(value?: RecipeStats | null): any {
+export function RecipeStatsToJSON(json: any): RecipeStats {
+    return RecipeStatsToJSONTyped(json, false);
+}
+
+export function RecipeStatsToJSONTyped(value?: RecipeStats | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'makenow_ready': value['makenowReady'],

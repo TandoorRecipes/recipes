@@ -12392,8 +12392,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/stats/`;
+
         const response = await this.request({
-            path: `/api/recipe/stats/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
