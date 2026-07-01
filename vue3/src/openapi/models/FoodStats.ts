@@ -89,10 +89,15 @@ export function FoodStatsFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function FoodStatsToJSON(value?: FoodStats | null): any {
+export function FoodStatsToJSON(json: any): FoodStats {
+    return FoodStatsToJSONTyped(json, false);
+}
+
+export function FoodStatsToJSONTyped(value?: FoodStats | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'onhand': value['onhand'],

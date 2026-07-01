@@ -154,10 +154,15 @@ export function KeywordFromJSONTyped(json: any, ignoreDiscriminator: boolean): K
     };
 }
 
-export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'> | null): any {
+export function KeywordToJSON(json: any): Keyword {
+    return KeywordToJSONTyped(json, false);
+}
+
+export function KeywordToJSONTyped(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

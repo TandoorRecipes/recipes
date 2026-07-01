@@ -18,12 +18,14 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { KeywordLabel } from './KeywordLabel';
 import {
     KeywordLabelFromJSON,
     KeywordLabelFromJSONTyped,
     KeywordLabelToJSON,
+    KeywordLabelToJSONTyped,
 } from './KeywordLabel';
 
 /**
@@ -49,7 +51,7 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -187,10 +189,15 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'keywords'|'working_time'|'waiting_time'|'created_by'|'created_at'|'updated_at'|'internal'|'servings'|'servings_text'|'rating'|'last_cooked'|'new'> | null): any {
+export function RecipeOverviewToJSON(json: any): RecipeOverview {
+    return RecipeOverviewToJSONTyped(json, false);
+}
+
+export function RecipeOverviewToJSONTyped(value?: Omit<RecipeOverview, 'image'|'keywords'|'working_time'|'waiting_time'|'created_by'|'created_at'|'updated_at'|'internal'|'servings'|'servings_text'|'rating'|'last_cooked'|'new'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

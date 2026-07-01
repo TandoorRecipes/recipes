@@ -50,7 +50,6 @@ export * from './Localization';
 export * from './MealPlan';
 export * from './MealType';
 export * from './MethodEnum';
-export * from './NavTextColorEnum';
 export * from './NutritionInformation';
 export * from './PaginatedAiLogList';
 export * from './PaginatedAiProviderList';

@@ -146,10 +146,15 @@ export function PatchedKeywordFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedKeywordToJSON(value?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'> | null): any {
+export function PatchedKeywordToJSON(json: any): PatchedKeyword {
+    return PatchedKeywordToJSONTyped(json, false);
+}
+
+export function PatchedKeywordToJSONTyped(value?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'numrecipe'|'created_at'|'updated_at'|'full_name'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

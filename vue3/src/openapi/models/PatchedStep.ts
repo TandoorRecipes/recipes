@@ -18,12 +18,14 @@ import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { Ingredient } from './Ingredient';
 import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
+    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -85,19 +87,19 @@ export interface PatchedStep {
      * @type {UserFileView}
      * @memberof PatchedStep
      */
-    file?: UserFileView;
+    file?: UserFileView | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedStep
      */
-    stepRecipe?: number;
+    stepRecipe?: number | null;
     /**
      * 
      * @type {any}
      * @memberof PatchedStep
      */
-    readonly stepRecipeData?: any;
+    readonly stepRecipeData?: any | null;
     /**
      * 
      * @type {boolean}
@@ -138,10 +140,15 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'> | null): any {
+export function PatchedStepToJSON(json: any): PatchedStep {
+    return PatchedStepToJSONTyped(json, false);
+}
+
+export function PatchedStepToJSONTyped(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
