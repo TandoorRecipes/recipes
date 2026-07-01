@@ -128,3 +128,16 @@ def test_delete_admin(u1_s1, u2_s1, u1_s2, a1_s1, space_1):
         )
     )
     assert r.status_code == 204
+
+
+def test_delete_space_owner_blocked(a1_s1, space_1):
+    """Deleting the space owner's own UserSpace is forbidden and must return
+    a clean 403, not a 500 (pattern-012)."""
+    owner = auth.get_user(a1_s1)
+    with scopes_disabled():
+        space_1.created_by = owner
+        space_1.save()
+        owner_userspace = owner.userspace_set.get(space=space_1)
+
+    r = a1_s1.delete(reverse(DETAIL_URL, args={owner_userspace.id}))
+    assert r.status_code == 403
