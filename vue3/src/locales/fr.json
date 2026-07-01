@@ -1,4 +1,7 @@
 {
+    "Summary": "Résumé",
+    "Detail": "Détail",
+    "Checkboxes": "Cases à cocher",
     "AI": "IA",
     "AIImportSubtitle": "Utiliser l'IA pour importer des images de recettes.",
     "AISettingsHostedHelp": "Vous pouvez activer les fonctionnalité d'IA ou modifier les crédits disponible depuis les paramètres de votre abonnement.",

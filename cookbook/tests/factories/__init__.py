@@ -83,7 +83,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 @register
 class SupermarketCategoryFactory(factory.django.DjangoModelFactory):
     """SupermarketCategory factory."""
-    name = factory.LazyAttribute(lambda x: faker.word())
+    name = factory.Sequence(lambda n: f'category-{n}')
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     space = factory.SubFactory(SpaceFactory)
 

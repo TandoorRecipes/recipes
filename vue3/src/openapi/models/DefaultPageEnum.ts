@@ -14,6 +14,7 @@
 
 
 /**
+ * * `HOME` - Home
  * * `SEARCH` - Search
  * * `PLAN` - Meal-Plan
  * * `BOOKS` - Books
@@ -21,6 +22,7 @@
  * @export
  */
 export const DefaultPageEnum = {
+    Home: 'HOME',
     Search: 'SEARCH',
     Plan: 'PLAN',
     Books: 'BOOKS',

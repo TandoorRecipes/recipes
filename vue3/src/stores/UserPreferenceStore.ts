@@ -5,8 +5,8 @@ import {ApiApi, ServerSettings, Space, Unit, UserPreference, UserSpace} from "@/
 import {ShoppingGroupingOptions} from "@/types/Shopping";
 import {computed, ComputedRef, ref} from "vue";
 import {DeviceSettings} from "@/types/settings";
-import {useTheme} from "vuetify";
 import {useRouter} from "vue-router";
+import vuetify from '@/vuetify'
 import {useRouteQuery} from "@vueuse/router";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
@@ -16,11 +16,26 @@ const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 const USER_SPACES_KEY = 'TANDOOR_USER_SPACES'
 const SPACES_KEY = 'TANDOOR_SPACES'
 
+/**
+ * Rewrites any device-setting values whose domain has shrunk since the
+ * setting was first saved. Runs once on store init so stale localStorage
+ * entries do not leave the user pinned to a removed option.
+ */
+export function migrateStaleDeviceSettings(settings: DeviceSettings): DeviceSettings {
+    // Cast: 'substitute' is no longer in the recipe_contextMenuColor union,
+    // but older localStorage values may still carry it.
+    if ((settings.recipe_contextMenuColor as any) === 'substitute') {
+        settings.recipe_contextMenuColor = 'onhand'
+    }
+    return settings
+}
+
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {
     /**
      * settings only saved on device to allow per device customization
      */
     let deviceSettings = useStorage(DEVICE_SETTINGS_KEY, getDefaultDeviceSettings(), localStorage, {mergeDefaults: true})
+    migrateStaleDeviceSettings(deviceSettings.value)
     /**
      * database user settings, cache in local storage in case application is started offline
      */
@@ -61,7 +76,6 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     const isPrintMode = useRouteQuery('print', false, {transform: Boolean})
 
-    const theme = useTheme()
     const router = useRouter()
 
     /**
@@ -241,6 +255,17 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
             mealplan_displayWeekNumbers: true,
 
             recipe_mergeStepOverview: false,
+            recipe_overviewShowActions: true,
+            recipe_stepShowActions: false,
+            recipe_overviewShowCheckboxes: true,
+            recipe_stepShowCheckboxes: true,
+            recipe_overviewExpanded: false,
+            recipe_overviewInlineStatus: false,
+            recipe_overviewNotesDisplay: 'bubble',
+            recipe_stepInlineStatus: false,
+            recipe_stepNotesDisplay: 'bubble',
+            recipe_notesTruncateLength: 30,
+            recipe_contextMenuColor: 'onhand',
 
             search_itemsPerPage: 50,
             search_viewMode: 'grid',
@@ -250,6 +275,22 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
             general_tableItemsPerPage: 10,
             general_closedHelpAlerts: [],
+            general_showModelListDescription: true,
+
+            food_hiddenColumns: null,
+            food_columnDisplayModes: {},
+            food_quickActions: ['shopping', 'recipe', 'pantry'],
+            food_treeView: false,
+            food_showStats: true,
+            food_showColumnHeaders: true,
+            food_settingsPinned: false,
+            food_swipeEnabled: false,
+            food_swipeLeft: ['edit', 'shopping'],
+            food_swipeRight: ['pantry', 'delete'],
+            food_mobileSubtitle: ['supermarketCategory.name'],
+            food_desktopSubtitle: [],
+            food_showMobileHeaders: true,
+            food_defaultInventoryLocation: null,
         }
     }
 
@@ -258,24 +299,32 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      */
     function updateTheme() {
         if (userSettings.value.theme == 'TANDOOR_DARK' && !isPrintMode.value) {
-            theme.change('dark')
+            vuetify.theme.change('dark')
         } else {
-            theme.change('light')
+            vuetify.theme.change('light')
         }
     }
 
+    let initPromise: Promise<any> | null = null
+
     function init() {
-        const promises = [] as Promise<any>[]
-        promises.push(loadUserSettings())
-        promises.push(loadServerSettings())
-        promises.push(loadActiveSpace())
-        promises.push(loadUserSpaces())
-        promises.push(loadSpaces())
+        if (initPromise) return initPromise
+        if (initCompleted.value) return Promise.resolve()
+
+        const promises = [
+            loadUserSettings(),
+            loadServerSettings(),
+            loadActiveSpace(),
+            loadUserSpaces(),
+            loadSpaces(),
+        ]
         updateTheme()
 
-        return Promise.allSettled(promises).then(() => {
+        initPromise = Promise.allSettled(promises).then(() => {
             initCompleted.value = true
+            initPromise = null
         })
+        return initPromise
     }
 
     return {
@@ -296,7 +345,6 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         updateUserSettings,
         switchSpace,
         resetDeviceSettings,
-        loadUserSpaces,
         updateTheme,
     }
 })

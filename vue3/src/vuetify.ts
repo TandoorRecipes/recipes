@@ -7,8 +7,17 @@ import {createVuetify} from 'vuetify'
 import {DateTime} from "luxon";
 import * as vuetifyLocales from "vuetify/locale";
 
+// Production-time Vuetify configuration. Exported separately so test setup
+// (vitest.setup.ts) can reuse the same theme / locale / icon aliases /
+// defaults while attaching all components and directives explicitly — the
+// test bundle has no vite-plugin-vuetify auto-import, so without explicit
+// component registration tests would hit "Failed to resolve component"
+// warnings on v-card / v-btn / v-dialog and selector queries return empty.
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
-export default createVuetify({
+export const vuetifyOptions = {
+    display: {
+        mobileBreakpoint: 'md',
+    },
     defaults: {
         // disabled as this leads to cards overflowing if not careful, manually set on cards containing a multiselect until proper solution is found
         // VCard: {
@@ -117,12 +126,14 @@ export default createVuetify({
             fa,
         },
     },
-})
+}
+
+export default createVuetify(vuetifyOptions)
 
 export type VDataTableUpdateOptions = {
     page: number;
-    itemsPerPage: number;
-    search: string;
+    itemsPerPage?: number;
+    search?: string;
     sortBy?: string;
     groupBy?: string;
 }

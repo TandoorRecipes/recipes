@@ -85,6 +85,12 @@ export interface PatchedUnit {
     baseUnit?: string | null;
     /**
      * 
+     * @type {number}
+     * @memberof PatchedUnit
+     */
+    readonly numrecipe?: number;
+    /**
+     * 
      * @type {string}
      * @memberof PatchedUnit
      */
@@ -113,6 +119,7 @@ export function PatchedUnitFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'description': json['description'] == null ? undefined : json['description'],
         'baseUnit': json['base_unit'] == null ? undefined : json['base_unit'],
+        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
@@ -121,7 +128,7 @@ export function PatchedUnitToJSON(json: any): PatchedUnit {
     return PatchedUnitToJSONTyped(json, false);
 }
 
-export function PatchedUnitToJSONTyped(value?: PatchedUnit | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedUnitToJSONTyped(value?: Omit<PatchedUnit, 'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

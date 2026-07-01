@@ -1,6 +1,6 @@
 <template>
-    <v-expansion-panels>
-        <v-expansion-panel>
+    <v-expansion-panels v-model="overviewPanel">
+        <v-expansion-panel value="overview">
             <v-expansion-panel-title>
                 <i class="far fa-list-alt fa-fw me-2"></i> {{ $t('StepsOverview') }}
             </v-expansion-panel-title>
@@ -21,10 +21,13 @@
                         </v-btn-toggle>
                     </v-col>
                 </v-row>
-                <v-row v-for="(s, i) in props.steps" v-if="!useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
+                <template v-if="!useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
+                <v-row v-for="{step: s, index: i} in overviewSteps" :key="s.id ?? i">
                     <v-col class="pa-1" cols="12" md="6">
                         <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
-                        <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor" show-actions
+                        <ingredients-table v-model="s.ingredients" :ingredient-factor="props.ingredientFactor"
+                                           :show-actions="useUserPreferenceStore().deviceSettings.recipe_overviewShowActions"
+                                           :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_overviewShowCheckboxes" context="overview"
                                            @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
 
                         <template v-if="s.stepRecipe">
@@ -32,7 +35,9 @@
                                     :to="{name: 'RecipeViewPage', params: {id: s.stepRecipeData.id}}" target="_blank">
                                 <v-row v-for="subRecipeStep in s.stepRecipeData.steps">
                                     <v-col>
-                                        <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor" show-actions
+                                        <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor"
+                                        :show-actions="useUserPreferenceStore().deviceSettings.recipe_overviewShowActions"
+                                        :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_overviewShowCheckboxes" context="overview"
                                         @scale="(factor: number) => emit('scale', factor)"></ingredients-table>
                                     </v-col>
                                 </v-row>
@@ -40,10 +45,11 @@
                         </template>
                     </v-col>
                 </v-row>
+                </template>
 
                 <v-row v-if="useUserPreferenceStore().deviceSettings.recipe_mergeStepOverview">
                     <v-col class="pa-1" cols="12" md="6">
-                        <ingredients-table v-model="mergedIngredients" :ingredient-factor="props.ingredientFactor" :show-checkbox="false"></ingredients-table>
+                        <ingredients-table v-model="mergedIngredients" :ingredient-factor="props.ingredientFactor" :show-checkbox="useUserPreferenceStore().deviceSettings.recipe_overviewShowCheckboxes" context="overview"></ingredients-table>
                     </v-col>
                 </v-row>
 
@@ -63,6 +69,8 @@ import {useDisplay} from "vuetify";
 
 const emit = defineEmits(['scale'])
 
+const overviewPanel = ref(useUserPreferenceStore().deviceSettings.recipe_overviewExpanded ? 'overview' : undefined)
+
 const props = defineProps({
     steps: {
         type: Array as PropType<Array<Step>>,
@@ -73,6 +81,21 @@ const props = defineProps({
         required: true,
     },
 })
+
+// A step earns a spot in the structured overview if it has at least one real
+// ingredient (food, not a header divider) or carries a sub-recipe. Instruction-
+// only / header-only steps are skipped so the overview isn't padded with blanks.
+function stepHasIngredients(s: Step): boolean {
+    const hasOwn = (s.ingredients ?? []).some(ing => ing.food && !ing.isHeader)
+    return hasOwn || !!s.stepRecipe
+}
+
+// Keep the original step index so visible step numbers stay true to the recipe.
+const overviewSteps = computed(() =>
+    props.steps
+        .map((step, index) => ({step, index}))
+        .filter(({step}) => stepHasIngredients(step))
+)
 
 const mergedIngredients = computed(() => {
     // Function to collect all ingredients from recipe steps

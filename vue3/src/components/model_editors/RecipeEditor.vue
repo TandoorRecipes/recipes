@@ -49,7 +49,7 @@
 
                         <v-label>{{ $t('Keywords') }}</v-label>
                         <model-select mode="tags" v-model="editingObj.keywords" model="Keyword" allow-create></model-select>
-                        <v-row dense>
+                        <v-row density="compact">
                             <v-col cols="12" md="6">
                                 <v-number-input :label="$t('WaitingTime')" v-model="editingObj.waitingTime" :step="5"></v-number-input>
                             </v-col>
@@ -109,7 +109,7 @@
                             </v-col>
                         </v-row>
 
-                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" dense>
+                        <v-row v-for="(s,i ) in editingObj.steps" :key="s.id" density="compact">
                             <v-col>
                                 <step-editor v-model="editingObj.steps[i]" v-model:recipe="editingObj" :step-index="i" @delete="deleteStepAtIndex(i)"
                                              @move="dialogStepManager = true"></step-editor>
