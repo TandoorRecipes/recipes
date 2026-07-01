@@ -6,7 +6,7 @@ This guide shows you some basic setups using Docker and docker compose. For conf
 
 ## **Versions**
 
-There are different versions (tags) released on [Docker Hub](https://hub.docker.com/r/vabene1111/recipes/tags).
+There are different versions (tags) released on [Docker Hub](https://hub.docker.com/r/TandoorRecipes/recipes/tags).
 
 -   **latest** Default image. The one you should use if you don't know that you need anything else.
 -   **beta** Partially stable version that gets updated every now and then. Expect to have some problems.
@@ -20,7 +20,7 @@ There are different versions (tags) released on [Docker Hub](https://hub.docker.
 
 ## **Docker**
 
-The docker image (`vabene1111/recipes`) simply exposes the application on the container's port `80` through the integrated nginx webserver.
+The docker image (`TandoorRecipes/recipes`) simply exposes the application on the container's port `80` through the integrated nginx webserver.
 
 ```shell
 docker run -d \
@@ -35,7 +35,7 @@ docker run -d \
     -e POSTGRES_PASSWORD=YOUR_POSTGRES_SECRET_KEY \
     -e POSTGRES_DB=djangodb \
     --name recipes_1 \
-    vabene1111/recipes
+    TandoorRecipes/recipes
 ```
 
 Please make sure to replace the ```SECRET_KEY``` and ```POSTGRES_PASSWORD``` placeholders!
@@ -47,7 +47,7 @@ The main, and also recommended, installation option for this application is Dock
 1. Choose your `docker-compose.yml` from the examples below.
 2. Download the `.env` configuration file with `wget`
     ```shell
-    wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
+    wget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template -O .env
     ```
 3. **Edit it accordingly** (you NEED to set `SECRET_KEY`, `ALLOWED_HOSTS` and `POSTGRES_PASSWORD`), see [configuration page](https://docs.tandoor.dev/system/configuration/).
 4. Start your container using `docker-compose up -d`.
@@ -58,7 +58,7 @@ This configuration exposes the application through a containerized nginx web ser
 Be aware that having some other web server or container running on your host machine on port 80 will block this from working.
 
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
+wget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/install/docker/plain/docker-compose.yml
 ```
 
 ~~~yaml
@@ -79,7 +79,7 @@ If you use Traefik, this configuration is the one for you.
     [this little example](traefik.md) might be for you.
 
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
+wget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
 ```
 
 ~~~yaml
@@ -106,7 +106,7 @@ LETSENCRYPT_EMAIL=
 ```
 
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
+wget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/install/docker/nginx-proxy/docker-compose.yml
 ```
 
 ~~~yaml

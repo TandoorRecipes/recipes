@@ -16,7 +16,7 @@ See [here](/contribute/translations/) for further information on how to contribu
 ## Issues and Feature Requests
 
 The most basic but also crucial way of contributing is reporting issues and commenting on ideas and feature requests
-over at [GitHub issues](https://github.com/vabene1111/recipes/issues).
+over at [GitHub issues](https://github.com/TandoorRecipes/recipes/issues).
 
 Without feedback, improvement can't happen, so don't hesitate to say what you want to say.
 

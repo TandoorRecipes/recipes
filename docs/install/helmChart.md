@@ -22,7 +22,7 @@ fullnameOverride: "recipes"
 Change to latest version if out of date.
 #global:
 #  create_namespace: false
-#  image: vabene1111/recipes
+#  image: TandoorRecipes/recipes
 #  tandoor_version: 2.3
 
 # Environment variables

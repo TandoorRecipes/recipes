@@ -70,11 +70,11 @@ If you are getting CSRF Errors this is most likely due to a reverse proxy not pa
 If you are using swag by linuxserver you might need `proxy_set_header X-Forwarded-Proto $scheme;` in your nginx config.
 If you are using a plain ngix you might need `proxy_set_header Host $http_host;`.
 
-Further discussions can be found in this [Issue #518](https://github.com/vabene1111/recipes/issues/518)
+Further discussions can be found in this [Issue #518](https://github.com/TandoorRecipes/recipes/issues/518)
 
 ## Why are images not loading?
 If images are not loading this might be related to the same issue as the CSRF errors (see above).
-A discussion about that can be found at [Issue #452](https://github.com/vabene1111/recipes/issues/452)
+A discussion about that can be found at [Issue #452](https://github.com/TandoorRecipes/recipes/issues/452)
 
 The other common issue is that the recommended nginx container is removed from the deployment stack.
 If removed, the nginx webserver needs to be replaced by something else that servers the /mediafiles/ directory or
