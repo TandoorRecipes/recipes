@@ -123,9 +123,6 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
         "a": ["href", "alt", "title"],
     }
 
-    # do a first, strict round of cleaning
-    instructions = bleach.clean(instructions, allowed_tags, allowed_attributes)
-
     # parse markdown
     instructions = md.markdown(
         instructions,
@@ -134,6 +131,9 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )
+
+    # do a first, strict round of cleaning
+    instructions = bleach.clean(instructions, allowed_tags, allowed_attributes)
 
     # prepare template context
     ingredients = []
