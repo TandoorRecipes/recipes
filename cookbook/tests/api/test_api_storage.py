@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Storage
+from cookbook.models import Storage, Sync
 
 LIST_URL = 'api:storage-list'
 DETAIL_URL = 'api:storage-detail'
@@ -120,3 +120,15 @@ def test_delete(a1_s1, a1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert Storage.objects.count() == 0
+
+
+def test_delete_storage_referenced_by_sync_is_blocked(a1_s1, obj_1, space_1):
+    """A storage referenced by a Sync (PROTECT) must return a clean 4xx (403),
+    not a 500, and the storage must survive."""
+    Sync.objects.create(storage=obj_1, path='/protected', space=space_1)
+
+    r = a1_s1.delete(reverse(DETAIL_URL, args={obj_1.id}))
+    assert r.status_code == 403
+
+    # delete was blocked (not a 500 / partial); the storage is still retrievable
+    assert a1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).status_code == 200

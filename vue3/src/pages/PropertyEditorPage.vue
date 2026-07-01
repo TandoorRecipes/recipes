@@ -113,7 +113,7 @@
 
                 <v-card prepend-icon="fa-solid fa-calculator" :title="$t('Calculator')">
                     <v-card-text>
-                        <v-row dense>
+                        <v-row density="compact">
                             <v-col cols="3">
                                 <v-text-field type="number" v-model="calculatorFromNumerator">
                                     <template #append>

@@ -102,12 +102,6 @@ export interface Step {
     readonly stepRecipeData: any | null;
     /**
      * 
-     * @type {number}
-     * @memberof Step
-     */
-    readonly numrecipe: number;
-    /**
-     * 
      * @type {boolean}
      * @memberof Step
      */
@@ -121,7 +115,6 @@ export function instanceOfStep(value: object): value is Step {
     if (!('ingredients' in value) || value['ingredients'] === undefined) return false;
     if (!('instructionsMarkdown' in value) || value['instructionsMarkdown'] === undefined) return false;
     if (!('stepRecipeData' in value) || value['stepRecipeData'] === undefined) return false;
-    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     return true;
 }
 
@@ -146,7 +139,6 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
         'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
         'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'stepRecipeData': json['step_recipe_data'],
-        'numrecipe': json['numrecipe'],
         'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
@@ -155,7 +147,7 @@ export function StepToJSON(json: any): Step {
     return StepToJSONTyped(json, false);
 }
 
-export function StepToJSONTyped(value?: Omit<Step, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
+export function StepToJSONTyped(value?: Omit<Step, 'instructions_markdown'|'step_recipe_data'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

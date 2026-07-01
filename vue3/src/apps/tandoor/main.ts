@@ -13,13 +13,13 @@ import {createRulesPlugin} from 'vuetify/labs/rules'
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
+import {canRouteToModel, ModelRouteOperation} from "@/types/Models.ts";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
-    {path: '/household-setup', component: () => import("@/pages/HouseholdPage.vue"), name: 'HouseholdPage', meta: {title: 'Household'}},
     {path: '/help', component: () => import("@/pages/HelpPage.vue"), name: 'HelpPage', meta: {title: 'Help'}},
 
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
@@ -56,6 +56,7 @@ let settings = {
         {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings', meta: {title: 'Settings'}},
         {path: 'meal-plan', component: () => import("@/components/settings/MealPlanSettings.vue"), name: 'MealPlanSettings', meta: {title: 'Settings'}},
         {path: 'search', component: () => import("@/components/settings/SearchSettings.vue"), name: 'SearchSettings', meta: {title: 'Settings'}},
+        {path: 'start-page', component: () => import("@/components/settings/StartPageSettings.vue"), name: 'StartPageSettingsPage', meta: {title: 'Settings'}},
         {path: 'space', component: () => import("@/components/settings/SpaceSettings.vue"), name: 'SpaceSettings', meta: {title: 'Settings'}},
         {path: 'open-data-import', component: () => import("@/components/settings/OpenDataImportSettings.vue"), name: 'OpenDataImportSettings', meta: {title: 'Settings'}},
         {path: 'export', component: () => import("@/components/settings/ExportDataSettings.vue"), name: 'ExportDataSettings', meta: {title: 'Settings'}},
@@ -77,6 +78,43 @@ routes.push(settings)
 const router = createRouter({
     history: createWebHistory(),
     routes,
+})
+
+// Map the generic model routes to the operation they perform. The router accepts any
+// model string for these, so a typed URL for an unwired/non-editable model would render
+// a blank shell — guard it to 404 instead.
+const MODEL_ROUTE_OPERATIONS: Record<string, ModelRouteOperation> = {
+    ModelListPage: 'list',
+    ModelEditPage: 'edit',
+    ModelDeletePage: 'delete',
+}
+
+router.beforeEach((to) => {
+    const operation = MODEL_ROUTE_OPERATIONS[to.name as string]
+    if (operation) {
+        const model = to.params.model as string | undefined
+        if (model && !canRouteToModel(model, operation)) {
+            return {name: '404Page', replace: true}
+        }
+    }
+})
+
+const DEFAULT_PAGE_ROUTES: Record<string, string> = {
+    SEARCH: 'SearchPage',
+    PLAN: 'MealPlanPage',
+    BOOKS: 'BooksPage',
+    SHOPPING: 'ShoppingListPage',
+}
+
+router.beforeEach((to) => {
+    if (to.name !== 'StartPage') return
+    try {
+        const stored = localStorage.getItem('TANDOOR_USER_PREFERENCE')
+        if (!stored) return
+        const prefs = JSON.parse(stored)
+        const target = DEFAULT_PAGE_ROUTES[prefs.defaultPage]
+        if (target) return {name: target, replace: true}
+    } catch { /* ignore parse errors */ }
 })
 
 let i18n = setupI18n()
