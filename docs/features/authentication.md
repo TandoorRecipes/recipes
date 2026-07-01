@@ -330,6 +330,31 @@ Use `docker volume inspect recipes_nginx` to find out where your volume is store
     `docker-compose.yml`, but then you will need to manually create it. See section `Volumes vs Bind Mounts` below
     for more information.
 
+### User Information from Headers
+
+Tandoor can automatically populate user information from reverse proxy headers. In addition to the standard
+`REMOTE_USER` header (for username), the following headers are supported:
+
+- `REMOTE_NAME` - Full name of the user (will be split into first and last name)
+- `REMOTE_EMAIL` - Email address of the user
+
+When a user logs in via reverse proxy authentication, Tandoor will automatically update their profile information
+if these headers are provided. This eliminates the need to manually manage user details in both your SSO provider
+and Tandoor.
+
+### Custom Logout URL
+
+By default, clicking logout in Tandoor will redirect to the Tandoor index page. If you're using an SSO solution
+like Authelia or Authentik, you may want users to be logged out from the SSO provider as well.
+
+Set the `REVERSE_PROXY_AUTH_LOGOUT` environment variable to your SSO logout URL:
+
+```ini
+REVERSE_PROXY_AUTH_LOGOUT=https://authelia.example.com/logout
+```
+
+When set, clicking logout in Tandoor will redirect users to the specified URL instead of the default logout behavior.
+
 ### Configuration Example for Authelia
 
 ```
@@ -361,14 +386,18 @@ server {
     include /config/nginx/authelia.conf;
 
     auth_request_set $user $upstream_http_remote_user;
+    auth_request_set $name $upstream_http_remote_name;
+    auth_request_set $email $upstream_http_remote_email;
+    
     proxy_set_header REMOTE-USER $user;
+    proxy_set_header REMOTE-NAME $name;
+    proxy_set_header REMOTE-EMAIL $email;
   }
 
-  # Required to allow user to logout of authentication from within Recipes
-  # Ensure the <auth_endpoint> below is changed to actual the authentication url
-  location /accounts/logout/ {
-    return 301 http://<auth_endpoint>/logout;
-  }
+  # No longer needed - logout is now handled by REVERSE_PROXY_AUTH_LOGOUT environment variable
+  # location /accounts/logout/ {
+  #   return 301 http://<auth_endpoint>/logout;
+  # }
 }
 ```
 
@@ -387,4 +416,5 @@ VIRTUAL_HOST=
 LETSENCRYPT_HOST=
 LETSENCRYPT_EMAIL=
 PROXY_HEADER=
+REVERSE_PROXY_AUTH_LOGOUT=https://authelia.example.com/logout
 ```
