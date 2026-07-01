@@ -6,7 +6,7 @@ from django_scopes import scopes_disabled
 
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.property_helper import FoodPropertyHelper
-from cookbook.models import Food, Property, PropertyType, Recipe, Step, Unit, UnitConversion
+from cookbook.models import Food, Ingredient, Property, PropertyType, Recipe, Step, Unit, UnitConversion
 
 
 def test_food_property(space_1, space_2, u1_s1):
@@ -126,3 +126,127 @@ def test_food_property(space_1, space_2, u1_s1):
         property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_2)
 
         assert property_fat.id not in property_values
+
+
+def test_no_unit_uses_default_unit_with_conversion(space_1, u1_s1):
+    """Ingredient without unit uses space's default_unit, conversion exists - calculates correctly."""
+    with scopes_disabled():
+        # Given: space has default_unit=pcs, food has properties per 100g, conversion 1pcs=60g exists
+        unit_pcs = Unit.objects.create(name='pcs', space=space_1)
+        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+
+        space_1.default_unit = unit_pcs
+        space_1.save()
+
+        food = Food.objects.create(name='lemon', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        property_type = PropertyType.objects.create(name='vitamin_c', space=space_1)
+        prop = Property.objects.create(property_amount=50, property_type=property_type, space=space_1)
+        food.properties.add(prop)
+
+        UnitConversion.objects.create(
+            base_amount=60,
+            base_unit=unit_gram,
+            converted_amount=1,
+            converted_unit=unit_pcs,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+
+        recipe = Recipe.objects.create(name='test', space=space_1, created_by=auth.get_user(u1_s1))
+        step = Step.objects.create(instruction='test', space=space_1)
+        step.ingredients.create(amount=2, unit=None, food=food, space=space_1)  # 2 lemons, no unit
+        recipe.steps.add(step)
+
+        # When: calculating recipe properties
+        result = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe)
+
+        # Then: property is calculated using default unit (2 pcs * 60g/pcs = 120g, 120g/100g * 50 = 60)
+        assert abs(result[property_type.id]['total_value'] - Decimal(60)) < 0.0001
+        assert 'missing_unit' not in result[property_type.id]['food_values'][food.id]
+
+
+def test_no_unit_and_no_default_unit_marks_missing_unit(space_1, u1_s1):
+    """Ingredient without unit and no space default_unit - marks missing_unit."""
+    with scopes_disabled():
+        # Given: space has no default_unit, ingredient has no unit
+        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+
+        space_1.default_unit = None
+        space_1.save()
+
+        food = Food.objects.create(name='lemon', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        property_type = PropertyType.objects.create(name='vitamin_c', space=space_1)
+        prop = Property.objects.create(property_amount=50, property_type=property_type, space=space_1)
+        food.properties.add(prop)
+
+        recipe = Recipe.objects.create(name='test', space=space_1, created_by=auth.get_user(u1_s1))
+        step = Step.objects.create(instruction='test', space=space_1)
+        step.ingredients.create(amount=2, unit=None, food=food, space=space_1)
+        recipe.steps.add(step)
+
+        # When: calculating recipe properties
+        result = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe)
+
+        # Then: result is marked as missing_unit, total is 0
+        assert result[property_type.id]['total_value'] == 0
+        assert result[property_type.id]['food_values'][food.id]['missing_unit'] is True
+
+
+def test_no_unit_default_unit_missing_conversion_shows_details(space_1, u1_s1):
+    """Ingredient without unit, default_unit set but conversion missing - shows missing_conversion details."""
+    with scopes_disabled():
+        # Given: space has default_unit=pcs, food has properties per gram, but NO conversion pcs->gram
+        unit_pcs = Unit.objects.create(name='pcs', space=space_1)
+        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+
+        space_1.default_unit = unit_pcs
+        space_1.save()
+
+        food = Food.objects.create(name='lemon', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        property_type = PropertyType.objects.create(name='vitamin_c', space=space_1)
+        prop = Property.objects.create(property_amount=50, property_type=property_type, space=space_1)
+        food.properties.add(prop)
+
+        recipe = Recipe.objects.create(name='test', space=space_1, created_by=auth.get_user(u1_s1))
+        step = Step.objects.create(instruction='test', space=space_1)
+        step.ingredients.create(amount=2, unit=None, food=food, space=space_1)
+        recipe.steps.add(step)
+
+        # When: calculating recipe properties
+        result = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe)
+
+        # Then: missing_conversion shows which units need a conversion (pcs -> gram)
+        assert result[property_type.id]['missing_value'] is True
+        assert result[property_type.id]['food_values'][food.id]['value'] is None
+        assert 'missing_unit' not in result[property_type.id]['food_values'][food.id]
+        assert 'missing_conversion' in result[property_type.id]['food_values'][food.id]
+        assert result[property_type.id]['food_values'][food.id]['missing_conversion']['base_unit']['id'] == unit_pcs.id
+        assert result[property_type.id]['food_values'][food.id]['missing_conversion']['converted_unit']['id'] == unit_gram.id
+
+
+def test_no_unit_default_unit_matches_property_unit_no_conversion_needed(space_1, u1_s1):
+    """Ingredient without unit, default_unit same as food's property unit - calculates without conversion."""
+    with scopes_disabled():
+        # Given: space has default_unit=gram, food has properties per gram (same unit, no conversion needed)
+        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+
+        space_1.default_unit = unit_gram
+        space_1.save()
+
+        food = Food.objects.create(name='flour', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        property_type = PropertyType.objects.create(name='calories', space=space_1)
+        prop = Property.objects.create(property_amount=364, property_type=property_type, space=space_1)
+        food.properties.add(prop)
+
+        recipe = Recipe.objects.create(name='test', space=space_1, created_by=auth.get_user(u1_s1))
+        step = Step.objects.create(instruction='test', space=space_1)
+        step.ingredients.create(amount=200, unit=None, food=food, space=space_1)
+        recipe.steps.add(step)
+
+        # When: calculating recipe properties
+        result = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe)
+
+        # Then: property is calculated directly (200g / 100g * 364 = 728 calories)
+        assert abs(result[property_type.id]['total_value'] - Decimal(728)) < 0.0001
+        assert 'missing_unit' not in result[property_type.id]['food_values'][food.id]
+        assert 'missing_conversion' not in result[property_type.id]['food_values'][food.id]
