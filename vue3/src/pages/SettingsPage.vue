@@ -7,7 +7,8 @@
 
                     <v-divider></v-divider>
                     <v-list-subheader>{{ $t('Settings') }}</v-list-subheader>
-                    <v-list-item :to="{name: 'CosmeticSettings'}" prepend-icon="fa-solid fa-palette">{{ $t('Cosmetic') }}</v-list-item>
+                    <v-list-item :to="{name: 'CosmeticSettings'}" prepend-icon="fa-solid fa-palette">{{ $t('Appearance') }}</v-list-item>
+                    <v-list-item :to="{name: 'StartPageSettingsPage'}" prepend-icon="fa-solid fa-house">{{ $t('Home') }}</v-list-item>
                     <v-list-item :to="{name: 'ShoppingSettings'}" prepend-icon="$shopping">{{ $t('Shopping_list') }}</v-list-item>
                     <v-list-item :to="{name: 'MealPlanSettings'}" prepend-icon="$mealplan">{{ $t('Meal_Plan') }}</v-list-item>
                     <v-list-item :to="{name: 'SearchSettings'}" prepend-icon="$search">{{ $t('Search') }}</v-list-item>

@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import CookLog
+from cookbook.models import CookLog, Recipe
 
 LIST_URL = 'api:cooklog-list'
 DETAIL_URL = 'api:cooklog-detail'
@@ -112,3 +112,14 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert CookLog.objects.count() == 0
+
+
+def test_ordering_recipe_name(u1_s1, space_1):
+    user = auth.get_user(u1_s1)
+    recipe_zzz = Recipe.objects.create(name='zzz_recipe', created_by=user, space=space_1)
+    recipe_aaa = Recipe.objects.create(name='aaa_recipe', created_by=user, space=space_1)
+    CookLog.objects.create(recipe=recipe_zzz, created_by=user, space=space_1)
+    CookLog.objects.create(recipe=recipe_aaa, created_by=user, space=space_1)
+
+    r = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=recipe__name').content)
+    assert r['results'][0]['recipe'] == recipe_aaa.id

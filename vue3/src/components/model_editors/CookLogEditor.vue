@@ -14,7 +14,7 @@
             <v-form :disabled="loading">
 
                 <v-textarea :label="$t('Comment')" rows="2" v-model="editingObj.comment"></v-textarea>
-                <v-row dense>
+                <v-row density="compact">
                     <v-col cols="12" md="4">
                         <v-label>{{ $t('Rating') }}</v-label>
                         <br/>
