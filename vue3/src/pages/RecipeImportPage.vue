@@ -7,40 +7,40 @@
                 <v-stepper v-model="stepper">
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
-                            <v-stepper-item :title="$t('Type')" value="type" icon=" "></v-stepper-item>
+                            <v-stepper-item :title="$t('Type')" value="type"></v-stepper-item>
                             <v-divider></v-divider>
 
                             <template v-if="['url','ai', 'source'].includes(importType)">
-                                <v-stepper-item :title="$t('Import')" value="url" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="url"></v-stepper-item>
                                 <v-divider></v-divider>
                                 <template v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
-                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates" icon=" "></v-stepper-item>
+                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates"></v-stepper-item>
                                     <v-divider></v-divider>
                                 </template>
-                                <v-stepper-item :title="$t('Image')" value="image_chooser" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Image')" value="image_chooser"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Steps')" value="step_editor" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Steps')" value="step_editor"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Save')" value="confirm" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Save')" value="confirm"></v-stepper-item>
                             </template>
                             <template v-if="importType == 'app'">
-                                <v-stepper-item :title="$t('App')" value="app" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('App')" value="app"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('File')" value="file" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('File')" value="file"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Import')" value="import_log" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="import_log"></v-stepper-item>
                             </template>
 
                             <template v-if="importType == 'bookmarklet'">
-                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet"></v-stepper-item>
                             </template>
 
                             <template v-if="importType == 'url-list'">
-                                <v-stepper-item :title="$t('UrlList')" value="url_list_input" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('UrlList')" value="url_list_input"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Import')" value="url_list_import" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="url_list_import"></v-stepper-item>
                             </template>
 
                         </v-stepper-header>
@@ -221,7 +221,7 @@
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <h2 class="text-h5">{{ $t('Available') }}</h2>
-                                        <v-row dense>
+                                        <v-row density="compact">
                                             <v-col cols="4" v-for="i in importResponse.images">
                                                 <v-img max-height="10vh" cover aspect-ratio="1" :src="i" @click="importResponse.recipe.imageUrl = i"></v-img>
                                             </v-col>
@@ -539,7 +539,7 @@
                 </v-stepper>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <v-col class="text-center">
                 <v-btn size="small" prepend-icon="fa-solid fa-arrow-rotate-left" variant="tonal" color="warning" @click="resetImporter()">{{ $t('Reset') }}</v-btn>
             </v-col>

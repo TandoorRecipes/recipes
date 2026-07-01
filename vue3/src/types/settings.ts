@@ -19,13 +19,40 @@ export type DeviceSettings = {
     mealplan_displayWeekNumbers: boolean
 
     recipe_mergeStepOverview: boolean,
+    recipe_overviewShowActions: boolean,
+    recipe_stepShowActions: boolean,
+    recipe_overviewShowCheckboxes: boolean,
+    recipe_stepShowCheckboxes: boolean,
+    recipe_overviewExpanded: boolean,
+    recipe_overviewInlineStatus: boolean,
+    recipe_overviewNotesDisplay: 'bubble' | 'inline' | 'truncate',
+    recipe_stepInlineStatus: boolean,
+    recipe_stepNotesDisplay: 'bubble' | 'inline' | 'truncate',
+    recipe_notesTruncateLength: number,
+    recipe_contextMenuColor: 'never' | 'onhand' | 'shopping' | 'substitute',
 
     search_itemsPerPage: number,
     search_viewMode: 'table'|'grid',
     search_visibleFilters: String[],
+    search_showStats: boolean,
 
     start_showMealPlan: boolean,
 
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
+    general_showModelListDescription: boolean
+
+    // Model list settings are stored with dynamic keys: `${settingsKey}_${suffix}`
+    // e.g. food_hiddenColumns, keyword_treeView, unit_quickActions
+    // Index signature allows new models without adding explicit properties
+    [key: string]: any
+}
+
+export type StartPageSectionMode = 'meal_plan' | 'recent' | 'new' | 'keyword' | 'random' | 'created_by' | 'rating' | 'books' | 'food' | 'saved_search'
+
+export interface StartPageSection {
+    mode: StartPageSectionMode
+    enabled: boolean
+    min_recipes?: number
+    filter_id?: number
 }

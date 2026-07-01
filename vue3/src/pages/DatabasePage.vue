@@ -17,7 +17,7 @@
                 <h2>{{ $t('Basics') }}</h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <database-model-col model="Food"></database-model-col>
             <database-model-col model="Unit"></database-model-col>
             <database-model-col model="Keyword"></database-model-col>
@@ -29,7 +29,7 @@
                 <h2>{{ $t('Planning&Shopping') }}</h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <database-model-col model="Supermarket"></database-model-col>
             <database-model-col model="ShoppingList"></database-model-col>
             <database-model-col model="SupermarketCategory"></database-model-col>
@@ -41,7 +41,7 @@
                 <h2>{{ $t('Inventory') }}</h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <database-link-col :to="{name: 'PantryPage'}"
                                prepend-icon="$pantry"
                                :title="$t('Pantry')"
@@ -63,7 +63,7 @@
                 <h2>{{ $t('Space') }}</h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <database-model-col model="Space"></database-model-col>
             <database-model-col model="UserSpace"></database-model-col>
             <database-model-col model="Household"></database-model-col>
@@ -76,7 +76,7 @@
                     <h2>{{ $t('Ai') }}</h2>
                 </v-col>
             </v-row>
-            <v-row dense>
+            <v-row density="compact">
                 <database-model-col model="AiProvider"></database-model-col>
                 <database-model-col model="AiLog"></database-model-col>
             </v-row>
@@ -91,7 +91,7 @@
                 <h2>{{ $t('Miscellaneous') }}</h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <database-model-col model="UnitConversion"></database-model-col>
             <database-model-col model="Automation"></database-model-col>
             <database-model-col model="UserFile"></database-model-col>
@@ -112,7 +112,7 @@
                 <h2>{{ $t('External') }}</h2>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <database-model-col model="Sync"></database-model-col>
             <database-model-col model="SyncLog"></database-model-col>
             <database-model-col model="Storage"></database-model-col>

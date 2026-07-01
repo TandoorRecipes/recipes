@@ -146,12 +146,16 @@ def with_ratings(search_recipes, space_1, u1_s1, u2_s1):
 
 @pytest.fixture
 def with_ratings_null(search_recipes, space_1, u1_s1):
-    """Null rating handling: r1=5.0, r2=None, r3=0."""
+    """Null rating handling: r1=5.0, r2=None, r3=None.
+
+    r3 previously used rating=0 under the old overloaded semantics where 0 == unrated.
+    Under the new contract 0 is invalid (normalized to NULL at the serializer),
+    so r3 is now explicitly NULL. Legacy-zero coverage lives in a dedicated test."""
     from cookbook.models import CookLog
     user1 = auth.get_user(u1_s1)
     CookLogFactory.create(recipe=search_recipes.r1, created_by=user1, rating=5.0, space=space_1)
     CookLog.objects.create(recipe=search_recipes.r2, created_by=user1, rating=None, space=space_1)
-    CookLog.objects.create(recipe=search_recipes.r3, created_by=user1, rating=0, space=space_1)
+    CookLog.objects.create(recipe=search_recipes.r3, created_by=user1, rating=None, space=space_1)
     return search_recipes
 
 

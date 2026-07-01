@@ -20,8 +20,8 @@ def _make_userspace(user, space, household=None):
 class TestHouseholdCacheInvalidation:
     """Tests that get_household_user_ids cache is properly invalidated on UserSpace changes."""
 
-    def _cache_key_household(self, space_id, household_id):
-        return f'household_user_ids_{space_id}_{household_id}'
+    def _cache_key_household(self, space_id, household_id, user_id):
+        return f'household_user_ids_{space_id}_{household_id}_user_{user_id}'
 
     def _cache_key_user(self, space_id, user_id):
         return f'household_user_ids_{space_id}_user_{user_id}'
@@ -38,14 +38,14 @@ class TestHouseholdCacheInvalidation:
             # Prime the cache
             result = get_household_user_ids(us1)
             assert user1.id in result
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id)) is not None
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id, user1.id)) is not None
 
             # Add a second user to the household
             user2 = UserFactory(space=space)
             _make_userspace(user2, space, household)
 
-            # Cache should be invalidated
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id)) is None
+            # Cache should be invalidated for user1 (existing member)
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id, user1.id)) is None
 
             # Fresh call should include both users
             result = get_household_user_ids(us1)
@@ -72,8 +72,8 @@ class TestHouseholdCacheInvalidation:
             us2.household = None
             us2.save()
 
-            # Old household cache should be invalidated
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id)) is None
+            # Old household cache should be invalidated for the remaining member
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id, user1.id)) is None
 
             # Fresh call should only include user1
             result = get_household_user_ids(us1)
@@ -95,16 +95,16 @@ class TestHouseholdCacheInvalidation:
             # Prime both caches
             get_household_user_ids(us1)
             get_household_user_ids(us2)
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household_a.id)) is not None
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household_b.id)) is not None
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household_a.id, user1.id)) is not None
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household_b.id, user2.id)) is not None
 
             # Move user1 from household_a to household_b
             us1.household = household_b
             us1.save()
 
             # Both caches should be invalidated
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household_a.id)) is None
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household_b.id)) is None
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household_a.id, user1.id)) is None
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household_b.id, user2.id)) is None
 
             # Fresh call for household_b should include both users
             result_b = get_household_user_ids(us1)
@@ -132,8 +132,8 @@ class TestHouseholdCacheInvalidation:
             # Delete user2's UserSpace
             us2.delete()
 
-            # Cache should be invalidated
-            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id)) is None
+            # Cache should be invalidated for the remaining member
+            assert caches[cache_backend].get(self._cache_key_household(space.id, household.id, user1.id)) is None
 
             # Fresh call should only include user1
             result = get_household_user_ids(us1)

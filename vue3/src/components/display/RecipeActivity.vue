@@ -2,7 +2,7 @@
     <v-card class="mt-1" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode" :loading="loading">
         <v-card-text>
             <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment" auto-grow></v-textarea>
-            <v-row dense>
+            <v-row density="compact">
                 <v-col cols="12" md="4">
                     <v-label>{{ $t('Rating') }}</v-label>
                     <br/>

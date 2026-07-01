@@ -179,6 +179,26 @@ def test_makenow_sibling_substitute(recipes, makenow_recipe, shared_household, s
 # --- New inventory-specific tests ---
 
 
+@pytest.mark.parametrize("makenow_recipe", [({'created_by': 'u1_s1'})], indirect=['makenow_recipe'])
+def test_makenow_exclude_returns_non_cookable(recipes, makenow_recipe, space_1, make_search_request, u1_s1):
+    """The UI 'No' case sends makenow='0' (string) and must return only the
+    recipes that are NOT make-now-able — the complement of makenow='1' — not the
+    full unfiltered list (pattern-006: the exclude branch was a no-op)."""
+    request = make_search_request(u1_s1)
+    include_ids = set(do_search(request, space_1, makenow='1').values_list('id', flat=True))
+    exclude_ids = set(do_search(request, space_1, makenow='0').values_list('id', flat=True))
+    all_ids = set(do_search(request, space_1).values_list('id', flat=True))
+
+    # include = only the cookable recipe
+    assert makenow_recipe.id in include_ids
+    # exclude must remove the cookable recipe ...
+    assert makenow_recipe.id not in exclude_ids
+    # ... and must NOT be the full unfiltered list (the bug returned base count)
+    assert exclude_ids != all_ids
+    # include and exclude are disjoint complements
+    assert include_ids.isdisjoint(exclude_ids)
+
+
 def test_makenow_zero_amount_not_available(recipes, shared_household, space_1, make_search_request, u1_s1):
     """InventoryEntry with amount=0 should NOT count as available."""
     household, location = shared_household
@@ -259,6 +279,35 @@ def test_makenow_ignoreshopping_onhand_no_double_count(recipes, shared_household
         assert recipe.id not in set(results.values_list('id', flat=True))
 
 
+def test_makenow_string_one_is_strict(recipes, shared_household, space_1, make_search_request, u1_s1):
+    """The tristate makenow filter sends ``makenow=1`` (string) from the UI to
+    mean "show only fully cookable recipes". That string must map to
+    ``missing=0`` (strict), not the integer fuzzy-missing path that would
+    admit recipes with 1 missing ingredient.
+    """
+    household, location = shared_household
+    with scope(space=space_1):
+        recipe = RecipeFactory.create(space=space_1)
+        foods = list(Food.objects.filter(ingredient__step__recipe=recipe.id))
+        assert len(foods) == 10
+
+        # put 9 of 10 foods in inventory so exactly 1 is truly missing
+        for food in foods[1:]:
+            InventoryEntryFactory(
+                food=food, inventory_location=location, amount=1,
+                space=space_1, created_by=auth.get_user(u1_s1),
+            )
+
+        request = make_search_request(u1_s1)
+        # makenow='1' (string, as sent by the tristate UI) must be STRICT.
+        # A recipe with 1 truly-missing ingredient must NOT appear.
+        results = do_search(request, space_1, makenow='1')
+        assert recipe.id not in set(results.values_list('id', flat=True)), (
+            f"Recipe {recipe.id} appeared under makenow='1' despite a truly missing "
+            "ingredient; the string form must map to missing=0."
+        )
+
+
 def test_makenow_no_household_returns_empty(recipes, space_1, u1_s1, make_search_request):
     """User with no household gets empty queryset for makenow."""
     user1 = auth.get_user(u1_s1)
@@ -267,3 +316,68 @@ def test_makenow_no_household_returns_empty(recipes, space_1, u1_s1, make_search
     request = make_search_request(u1_s1)
     results = do_search(request, space_1, makenow='true')
     assert results.count() == 0
+
+
+def test_makenow_recipe_3244_data_pattern(recipes, shared_household, space_1, make_search_request, u1_s1):
+    """E-5 reproduction using the exact field shape reported from recipes.savor.li
+    recipe 3244 (Paniolo Old-Fashioned).
+
+    The recipe has three ingredients:
+      1. A sub-recipe food (``food.recipe`` non-null) with NO inventory,
+         NO substitutes, ``ignore_shopping=False`` — must be MISSING.
+      2. A tree-substituted food (substitute_children=True AND a child has
+         inventory) — must be RESOLVED via children_substitute_filter.
+      3. A directly on-hand food — must be RESOLVED via _is_available.
+
+    Under makenow=true (missing=0), this recipe MUST NOT appear. User
+    reported that it DID appear, so this test locks the expected
+    exclusion.
+    """
+    household, location = shared_household
+    user = auth.get_user(u1_s1)
+    with scope(space=space_1):
+        recipe = RecipeFactory.create(space=space_1)
+        recipe_foods = list(Food.objects.filter(ingredient__step__recipe=recipe.id))
+        assert len(recipe_foods) >= 3
+
+        # Ingredient 1: sub-recipe food, missing
+        missing_food = recipe_foods[0]
+        sub_recipe = RecipeFactory.create(space=space_1)
+        missing_food.recipe = sub_recipe
+        missing_food.save()
+
+        # Ingredient 2: tree-substituted food with an in-inventory child
+        tree_food = recipe_foods[1]
+        tree_food.substitute_children = True
+        tree_food.save()
+        child = FoodFactory.create(space=space_1)
+        child.move(tree_food, _node_pos)
+        time.sleep(0.1)
+        child = Food.objects.get(id=child.id)
+        InventoryEntryFactory(
+            food=child, inventory_location=location, amount=1,
+            space=space_1, created_by=user,
+        )
+
+        # Ingredient 3: directly on-hand (via InventoryEntry)
+        onhand_food = recipe_foods[2]
+        InventoryEntryFactory(
+            food=onhand_food, inventory_location=location, amount=1,
+            space=space_1, created_by=user,
+        )
+
+        # Preconditions mirror the production data exactly
+        missing_food.refresh_from_db()
+        assert missing_food.recipe_id is not None
+        assert missing_food.ignore_shopping is False
+        assert missing_food.substitute.count() == 0
+        assert not InventoryEntry.objects.filter(food=missing_food).exists()
+
+        request = make_search_request(u1_s1)
+        results = do_search(request, space_1, makenow='true')
+        ids = set(results.values_list('id', flat=True))
+        assert recipe.id not in ids, (
+            f"Recipe {recipe.id} matched makenow=true despite a missing "
+            f"sub-recipe food (food {missing_food.id}, recipe={missing_food.recipe_id}). "
+            f"This is the recipe 3244 production failure mode."
+        )
