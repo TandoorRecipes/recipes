@@ -27,6 +27,13 @@ import {
     KeywordToJSON,
     KeywordToJSONTyped,
 } from './Keyword';
+import type { RecipeImage } from './RecipeImage';
+import {
+    RecipeImageFromJSON,
+    RecipeImageFromJSONTyped,
+    RecipeImageToJSON,
+    RecipeImageToJSONTyped,
+} from './RecipeImage';
 import type { Step } from './Step';
 import {
     StepFromJSON,
@@ -34,12 +41,6 @@ import {
     StepToJSON,
     StepToJSONTyped,
 } from './Step';
-import type { RecipeImage } from './RecipeImage';
-import {
-    RecipeImageFromJSON,
-    RecipeImageFromJSONTyped,
-    RecipeImageToJSON,
-} from './RecipeImage';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
@@ -56,7 +57,9 @@ import {
 } from './NutritionInformation';
 
 /**
- * Adds nested create feature
+ * Expose the derived ``image`` URL + ``image_crop_data`` of a recipe's
+ * primary RecipeImage (pattern-014: the legacy ``Recipe.image`` column is no
+ * longer read).
  * @export
  * @interface Recipe
  */
@@ -92,13 +95,13 @@ export interface Recipe {
      */
     readonly imageCropData: any | null;
     /**
-     *
+     * 
      * @type {Array<RecipeImage>}
      * @memberof Recipe
      */
     readonly images: Array<RecipeImage>;
     /**
-     *
+     * 
      * @type {Array<Keyword>}
      * @memberof Recipe
      */
@@ -294,7 +297,7 @@ export function RecipeToJSON(json: any): Recipe {
     return RecipeToJSONTyped(json, false);
 }
 
-export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'image_crop_data'|'images'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

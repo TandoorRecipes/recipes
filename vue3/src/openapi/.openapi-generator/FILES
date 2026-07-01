@@ -77,6 +77,7 @@ models/PaginatedPropertyList.ts
 models/PaginatedPropertyTypeList.ts
 models/PaginatedRecipeBookEntryList.ts
 models/PaginatedRecipeBookList.ts
+models/PaginatedRecipeImageList.ts
 models/PaginatedRecipeImportList.ts
 models/PaginatedRecipeOverviewList.ts
 models/PaginatedShoppingListEntryList.ts
@@ -118,6 +119,7 @@ models/PatchedPropertyType.ts
 models/PatchedRecipe.ts
 models/PatchedRecipeBook.ts
 models/PatchedRecipeBookEntry.ts
+models/PatchedRecipeImage.ts
 models/PatchedRecipeImport.ts
 models/PatchedSearchPreference.ts
 models/PatchedShoppingList.ts

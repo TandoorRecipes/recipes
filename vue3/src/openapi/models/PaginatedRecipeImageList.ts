@@ -18,6 +18,7 @@ import {
     RecipeImageFromJSON,
     RecipeImageFromJSONTyped,
     RecipeImageToJSON,
+    RecipeImageToJSONTyped,
 } from './RecipeImage';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedRecipeImageList {
      * @type {string}
      * @memberof PaginatedRecipeImageList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedRecipeImageList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<RecipeImage>}
@@ -85,17 +86,22 @@ export function PaginatedRecipeImageListFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PaginatedRecipeImageListToJSON(value?: PaginatedRecipeImageList | null): any {
+export function PaginatedRecipeImageListToJSON(json: any): PaginatedRecipeImageList {
+    return PaginatedRecipeImageListToJSONTyped(json, false);
+}
+
+export function PaginatedRecipeImageListToJSONTyped(value?: PaginatedRecipeImageList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(RecipeImageToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

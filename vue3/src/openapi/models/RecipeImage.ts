@@ -42,7 +42,7 @@ export interface RecipeImage {
      * @type {any}
      * @memberof RecipeImage
      */
-    cropData?: any;
+    cropData?: any | null;
     /**
      * 
      * @type {number}
@@ -101,10 +101,15 @@ export function RecipeImageFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function RecipeImageToJSON(value?: Omit<RecipeImage, 'created_by'|'created_at'> | null): any {
+export function RecipeImageToJSON(json: any): RecipeImage {
+    return RecipeImageToJSONTyped(json, false);
+}
+
+export function RecipeImageToJSONTyped(value?: Omit<RecipeImage, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

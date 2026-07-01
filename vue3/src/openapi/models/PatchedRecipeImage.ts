@@ -42,7 +42,7 @@ export interface PatchedRecipeImage {
      * @type {any}
      * @memberof PatchedRecipeImage
      */
-    cropData?: any;
+    cropData?: any | null;
     /**
      * 
      * @type {number}
@@ -97,10 +97,15 @@ export function PatchedRecipeImageFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedRecipeImageToJSON(value?: Omit<PatchedRecipeImage, 'created_by'|'created_at'> | null): any {
+export function PatchedRecipeImageToJSON(json: any): PatchedRecipeImage {
+    return PatchedRecipeImageToJSONTyped(json, false);
+}
+
+export function PatchedRecipeImageToJSONTyped(value?: Omit<PatchedRecipeImage, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
