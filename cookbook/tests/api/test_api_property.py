@@ -1,7 +1,9 @@
+import datetime
 import json
 
 import pytest
 from django.urls import reverse
+from django.utils import timezone
 from django_scopes import scopes_disabled
 
 from cookbook.models import MealType, Property, PropertyType
@@ -105,3 +107,16 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert MealType.objects.count() == 0
+
+
+def test_updated_at_filter(obj_1, obj_2, u1_s1):
+    with scopes_disabled():
+        Property.objects.filter(pk=obj_1.pk).update(updated_at=timezone.now() - datetime.timedelta(hours=1))
+    cutoff = timezone.now().isoformat()
+    obj_2.property_amount = 200
+    obj_2.save()
+    r = u1_s1.get(reverse(LIST_URL), {'updated_at': cutoff})
+    data = json.loads(r.content)
+    ids = [x['id'] for x in data['results']]
+    assert obj_2.id in ids
+    assert obj_1.id not in ids

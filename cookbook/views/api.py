@@ -55,6 +55,7 @@ from rest_framework import mixins
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework.filters import BaseFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer, BaseRenderer
@@ -173,6 +174,32 @@ class LoggingMixin(object):
                 pipe.execute()
             except:
                 pass
+
+
+class UpdatedAtFilterBackend(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        updated_at = request.query_params.get('updated_at', None)
+        if updated_at is not None:
+            try:
+                return queryset.filter(updated_at__gte=updated_at)
+            except FieldError:
+                pass
+            except ValidationError:
+                raise APIException(_('Parameter updated_at incorrectly formatted'))
+        return queryset
+
+    def get_schema_operation_parameters(self, view):
+        return [{
+            'name': 'updated_at',
+            'required': False,
+            'in': 'query',
+            'description': 'if model has an updated_at timestamp, filter only models updated at or after datetime',
+            'schema': {'type': 'string', 'format': 'date-time'},
+        }]
+
+
+class UpdatedAtFilterMixin:
+    filter_backends = [UpdatedAtFilterBackend]
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -1451,7 +1478,7 @@ class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelation
     OpenApiParameter(name='recipe', description='id of recipe - only return books for that recipe', type=int),
     OpenApiParameter(name='book', description='id of book - only return recipes in that book', type=int),
 ]))
-class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
+class RecipeBookEntryViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet):
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [(CustomIsOwner | (CustomIsShared & IsReadOnlyDRF)) & CustomTokenHasReadWriteScope]
@@ -1492,7 +1519,7 @@ MealPlanViewQueryParameters = [
 
 
 @extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters))
-class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
+class MealPlanViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet):
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsHousehold) & CustomTokenHasReadWriteScope]
@@ -1614,7 +1641,7 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
         return Response(serializer.errors, 400)
 
 
-class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
+class MealTypeViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     """
     returns list of meal types created by the
     requesting user ordered by the order field.
@@ -1634,7 +1661,7 @@ class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing)
     OpenApiParameter(name='food', description='ID of food to filter for', type=int),
     OpenApiParameter(name='unit', description='ID of unit to filter for', type=int),
 ]))
-class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
+class IngredientViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1678,7 +1705,7 @@ class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
                      type=int, many=True),
     OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against object name.'), type=str),
 ]))
-class StepViewSet(LoggingMixin, viewsets.ModelViewSet):
+class StepViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet):
     queryset = Step.objects
     serializer_class = StepSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -2162,7 +2189,7 @@ class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
         enum=[m[0] for m in PropertyType.CHOICES])
     ]
 ))
-class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
+class PropertyTypeViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -2176,7 +2203,7 @@ class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMix
         return self.queryset.filter(space=self.request.space)
 
 
-class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
+class PropertyViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet):
     queryset = Property.objects
     serializer_class = PropertySerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -2189,7 +2216,7 @@ class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int)
 ]))
-class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
+class ShoppingListRecipeViewSet(LoggingMixin, UpdatedAtFilterMixin, viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
