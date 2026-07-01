@@ -18,36 +18,42 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { ThemeEnum } from './ThemeEnum';
 import {
     ThemeEnumFromJSON,
     ThemeEnumFromJSONTyped,
     ThemeEnumToJSON,
+    ThemeEnumToJSONTyped,
 } from './ThemeEnum';
 import type { DefaultPageEnum } from './DefaultPageEnum';
 import {
     DefaultPageEnumFromJSON,
     DefaultPageEnumFromJSONTyped,
     DefaultPageEnumToJSON,
+    DefaultPageEnumToJSONTyped,
 } from './DefaultPageEnum';
 
 /**
@@ -67,7 +73,7 @@ export interface UserPreference {
      * @type {UserFileView}
      * @memberof UserPreference
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {ThemeEnum}
@@ -187,7 +193,7 @@ export interface UserPreference {
      * @type {MealType}
      * @memberof UserPreference
      */
-    defaultMealType?: MealType;
+    defaultMealType?: MealType | null;
     /**
      * 
      * @type {boolean}
@@ -223,8 +229,10 @@ export interface UserPreference {
      * @type {any}
      * @memberof UserPreference
      */
-    startPageSections?: any;
+    startPageSections?: any | null;
 }
+
+
 
 /**
  * Check if a given object implements the UserPreference interface.
@@ -277,10 +285,15 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UserPreferenceToJSON(value?: Omit<UserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null): any {
+export function UserPreferenceToJSON(json: any): UserPreference {
+    return UserPreferenceToJSONTyped(json, false);
+}
+
+export function UserPreferenceToJSONTyped(value?: Omit<UserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'image': UserFileViewToJSON(value['image']),

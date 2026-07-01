@@ -25,6 +25,7 @@ import {
     CustomFilterTypeEnumFromJSON,
     CustomFilterTypeEnumFromJSONTyped,
     CustomFilterTypeEnumToJSON,
+    CustomFilterTypeEnumToJSONTyped,
 } from './CustomFilterTypeEnum';
 
 /**
@@ -56,7 +57,7 @@ export interface PatchedCustomFilter {
      * @type {any}
      * @memberof PatchedCustomFilter
      */
-    search?: any;
+    search?: any | null;
     /**
      * 
      * @type {Array<User>}
@@ -70,6 +71,8 @@ export interface PatchedCustomFilter {
      */
     readonly createdBy?: User;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedCustomFilter interface.

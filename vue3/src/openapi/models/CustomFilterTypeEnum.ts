@@ -30,7 +30,7 @@ export type CustomFilterTypeEnum = typeof CustomFilterTypeEnum[keyof typeof Cust
 export function instanceOfCustomFilterTypeEnum(value: any): boolean {
     for (const key in CustomFilterTypeEnum) {
         if (Object.prototype.hasOwnProperty.call(CustomFilterTypeEnum, key)) {
-            if (CustomFilterTypeEnum[key] === value) {
+            if (CustomFilterTypeEnum[key as keyof typeof CustomFilterTypeEnum] === value) {
                 return true;
             }
         }
@@ -48,5 +48,9 @@ export function CustomFilterTypeEnumFromJSONTyped(json: any, ignoreDiscriminator
 
 export function CustomFilterTypeEnumToJSON(value?: CustomFilterTypeEnum | null): any {
     return value as any;
+}
+
+export function CustomFilterTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): CustomFilterTypeEnum {
+    return value as CustomFilterTypeEnum;
 }
 

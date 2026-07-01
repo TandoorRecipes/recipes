@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
+    UserFileViewToJSONTyped,
 } from './UserFileView';
 import type { AiProvider } from './AiProvider';
 import {
     AiProviderFromJSON,
     AiProviderFromJSONTyped,
     AiProviderToJSON,
+    AiProviderToJSONTyped,
 } from './AiProvider';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
+    FoodInheritFieldToJSONTyped,
 } from './FoodInheritField';
 import type { SpaceThemeEnum } from './SpaceThemeEnum';
 import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
+    SpaceThemeEnumToJSONTyped,
 } from './SpaceThemeEnum';
 
 /**
@@ -139,13 +144,13 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    navLogo?: UserFileView;
+    navLogo?: UserFileView | null;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -157,7 +162,7 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    customSpaceTheme?: UserFileView;
+    customSpaceTheme?: UserFileView | null;
     /**
      * 
      * @type {string}
@@ -169,43 +174,43 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor32?: UserFileView;
+    logoColor32?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor128?: UserFileView;
+    logoColor128?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor144?: UserFileView;
+    logoColor144?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor180?: UserFileView;
+    logoColor180?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor192?: UserFileView;
+    logoColor192?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor512?: UserFileView;
+    logoColor512?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColorSvg?: UserFileView;
+    logoColorSvg?: UserFileView | null;
     /**
      * 
      * @type {number}
@@ -235,7 +240,7 @@ export interface Space {
      * @type {AiProvider}
      * @memberof Space
      */
-    aiDefaultProvider?: AiProvider;
+    aiDefaultProvider?: AiProvider | null;
     /**
      * 
      * @type {boolean}
@@ -249,6 +254,8 @@ export interface Space {
      */
     householdSetupCompleted?: boolean;
 }
+
+
 
 /**
  * Check if a given object implements the Space interface.
@@ -314,10 +321,15 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
     };
 }
 
-export function SpaceToJSON(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null): any {
+export function SpaceToJSON(json: any): Space {
+    return SpaceToJSONTyped(json, false);
+}
+
+export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
