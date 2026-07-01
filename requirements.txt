@@ -1,6 +1,6 @@
 Django==5.2.15
 cryptography===48.0.1
-django-annoying==0.10.6
+django-annoying==0.10.8
 django-cleanup==9.0.0
 django-crispy-forms==2.4
 crispy-bootstrap4==2026.2
