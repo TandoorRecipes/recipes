@@ -13,6 +13,7 @@ import {createRulesPlugin} from 'vuetify/labs/rules'
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
+import {canRouteToModel, ModelRouteOperation} from "@/types/Models.ts";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
@@ -77,6 +78,25 @@ routes.push(settings)
 const router = createRouter({
     history: createWebHistory(),
     routes,
+})
+
+// Map the generic model routes to the operation they perform. The router accepts any
+// model string for these, so a typed URL for an unwired/non-editable model would render
+// a blank shell — guard it to 404 instead.
+const MODEL_ROUTE_OPERATIONS: Record<string, ModelRouteOperation> = {
+    ModelListPage: 'list',
+    ModelEditPage: 'edit',
+    ModelDeletePage: 'delete',
+}
+
+router.beforeEach((to) => {
+    const operation = MODEL_ROUTE_OPERATIONS[to.name as string]
+    if (operation) {
+        const model = to.params.model as string | undefined
+        if (model && !canRouteToModel(model, operation)) {
+            return {name: '404Page', replace: true}
+        }
+    }
 })
 
 let i18n = setupI18n()

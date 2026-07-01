@@ -10,7 +10,7 @@
             </v-col>
         </v-row>
 
-        <v-row dense>
+        <v-row density="compact">
             <v-col>
                 <v-card :prepend-icon="genericModel.model.icon" :title="$t(genericModel.model.localizationKey)">
                     <template #subtitle v-if="genericModel.model.localizationKeyDescription">

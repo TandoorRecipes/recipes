@@ -492,7 +492,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             node_location = 'last'
 
         try:
-            child = self.model.objects.get(pk=pk, space=self.request.space)
+            child = self.model.objects.get(pk=pk)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
             return Response(content, status=status.HTTP_404_NOT_FOUND)
@@ -503,17 +503,18 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             try:
                 with scopes_disabled():
                     child.move(self.model.get_first_root_node(), f'{node_location}-sibling')
-                content = {'msg': _(f'{child.name} was moved successfully to the root.')}
-                return Response(content, status=status.HTTP_200_OK)
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
                 content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            # Re-fetch via ORM — treebeard bypasses the ORM during move().
+            child = self.model.objects.get(pk=pk)
+            return Response(self.get_serializer(child).data, status=status.HTTP_200_OK)
         elif parent == child.id:
             content = {'error': True, 'msg': _('Cannot move an object to itself!')}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         try:
-            parent = self.model.objects.get(pk=parent, space=self.request.space)
+            parent = self.model.objects.get(pk=parent)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {parent} exists')}
             return Response(content, status=status.HTTP_404_NOT_FOUND)
@@ -521,11 +522,12 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         try:
             with scopes_disabled():
                 child.move(parent, f'{node_location}-child')
-            content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
-            return Response(content, status=status.HTTP_200_OK)
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
             content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        # Re-fetch via ORM — treebeard bypasses the ORM during move().
+        child = self.model.objects.get(pk=pk)
+        return Response(self.get_serializer(child).data, status=status.HTTP_200_OK)
 
 
 def paginate(func):
@@ -722,6 +724,15 @@ class HouseholdViewSet(LoggingMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
 
+    def destroy(self, request, *args, **kwargs):
+        # a Household referenced by a protected FK (InventoryLocation/UserSpace.household)
+        # cannot be deleted; return a clean 4xx instead of an unhandled ProtectedError 500
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError as e:
+            content = {'error': True, 'msg': e.args[0]}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
 
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='internal_note', description='text field to store information about the invite link', type=str),
@@ -736,7 +747,8 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         userspace = UserSpace.objects.get(pk=kwargs['pk'])
         if userspace.space.created_by == userspace.user:
-            raise APIException('Cannot delete Space owner permission.')
+            # business-rule rejection, not a server error -> 403, not 500
+            raise PermissionDenied('Cannot delete Space owner permission.')
         return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -843,7 +855,6 @@ class AiLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 
 class StorageViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
-    # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -851,6 +862,15 @@ class StorageViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
+
+    def destroy(self, request, *args, **kwargs):
+        # a Storage referenced by a protected FK (Sync/Recipe/RecipeImport.storage)
+        # cannot be deleted; return a clean 4xx instead of an unhandled ProtectedError 500
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError as e:
+            content = {'error': True, 'msg': e.args[0]}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
 class InventoryLocationViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
@@ -1027,6 +1047,13 @@ class SupermarketCategoryRelationViewSet(LoggingMixin, StandardFilterModelViewSe
         return super().get_queryset()
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe, numchild, -numchild. Ignored when query is active.'
+    ),
+]))
 class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Keyword.objects
     model = Keyword
@@ -1034,13 +1061,54 @@ class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
     permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+        field_map = {'numrecipe': 'recipe_count', '-numrecipe': '-recipe_count'}
+        allowed = lower_fields.keys() | field_map.keys() | {'numchild', '-numchild'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(field_map.get(ordering_param, ordering_param))
+        return qs
 
+    def get_queryset(self):
+        return self._apply_ordering(super().get_queryset())
+
+
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe. Ignored when query is active.'
+    ),
+]))
 class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+        field_map = {'numrecipe': 'recipe_count', '-numrecipe': '-recipe_count'}
+        allowed = lower_fields.keys() | field_map.keys()
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(field_map.get(ordering_param, ordering_param))
+        return qs
+
+    def get_queryset(self):
+        return self._apply_ordering(super().get_queryset())
 
 
 class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
@@ -2381,29 +2449,75 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             return Response(serializer.errors, 400)
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: created_at, -created_at, recipe__name, -recipe__name. Ignored when query is active.'
+    ),
+]))
 class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {
+            'recipe__name': Lower('recipe__name').asc(),
+            '-recipe__name': Lower('recipe__name').desc(),
+        }
+        allowed = lower_fields.keys() | {'created_at', '-created_at'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(ordering_param)
+        return qs
+
     def get_queryset(self):
         # working backwards from the test - this is supposed to be limited to user view logs only??
-        return self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        qs = self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        return self._apply_ordering(qs)
 
 
-@extend_schema_view(list=extend_schema(
-    parameters=[OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int), ]))
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: created_at, -created_at, rating, -rating, recipe__name, -recipe__name. Ignored when query is active.'
+    ),
+]))
 class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {
+            'recipe__name': Lower('recipe__name').asc(),
+            '-recipe__name': Lower('recipe__name').desc(),
+        }
+        allowed = lower_fields.keys() | {'created_at', '-created_at', 'rating', '-rating'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(ordering_param)
+        return qs
+
     def get_queryset(self):
         if self.request.query_params.get('recipe', None):
             self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
-        return self.queryset.filter(space=self.request.space)
+        return self._apply_ordering(self.queryset.filter(space=self.request.space))
 
 
 class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -2442,6 +2556,13 @@ class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space, created_by=self.request.user).all()
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, file_size_kb, -file_size_kb, created_at, -created_at. Ignored when query is active.'
+    ),
+]))
 class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
@@ -2449,34 +2570,71 @@ class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMi
     pagination_class = DefaultPagination
     parser_classes = [MultiPartParser]
 
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+        allowed = lower_fields.keys() | {'file_size_kb', '-file_size_kb', 'created_at', '-created_at'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(ordering_param)
+        return qs
+
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()
-        return super().get_queryset()
+        return self._apply_ordering(super().get_queryset())
+
+    def destroy(self, request, *args, **kwargs):
+        # a UserFile referenced by a protected FK (e.g. Step.file) cannot be
+        # deleted; return a clean 4xx instead of an unhandled ProtectedError 500
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError as e:
+            content = {'error': True, 'msg': e.args[0]}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='type',
+        description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
+        type=str,
+        many=True,
+        enum=[a[0] for a in Automation.automation_types]
+    ),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, type, -type, order, -order. Ignored when query is active.'
+    ),
+]))
 class AutomationViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
-    @extend_schema(
-        parameters=[OpenApiParameter(
-            name='type',
-            description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
-            type=str,
-            many=True,
-            enum=[a[0] for a in Automation.automation_types])
-        ]
-    )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+        allowed = lower_fields.keys() | {'type', '-type', 'order', '-order'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(ordering_param)
+        return qs
 
     def get_queryset(self):
         automation_type = self.request.query_params.getlist('type', [])
         if automation_type:
             self.queryset = self.queryset.filter(type__in=automation_type)
-        return self.queryset.filter(space=self.request.space).all()
+        return self._apply_ordering(self.queryset.filter(space=self.request.space).all())
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -2505,20 +2663,38 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
             return None
 
 
-@extend_schema_view(list=extend_schema(
-    parameters=[OpenApiParameter(
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
         name='type',
         description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
         type=str,
         many=True,
-        enum=[m[0] for m in CustomFilter.MODELS])
-    ]
-))
+        enum=[m[0] for m in CustomFilter.MODELS]
+    ),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, type, -type, created_at, -created_at. Ignored when query is active.'
+    ),
+]))
 class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+        allowed = lower_fields.keys() | {'type', '-type', 'created_at', '-created_at'}
+        if ordering_param in allowed:
+            if ordering_param in lower_fields:
+                qs = qs.order_by(lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(ordering_param)
+        return qs
 
     def get_queryset(self):
         # TODO add tests for filter
@@ -2527,7 +2703,7 @@ class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
             self.queryset = self.queryset.filter(type__in=filter_type)
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
-        return super().get_queryset()
+        return self._apply_ordering(super().get_queryset())
 
 
 class AccessTokenViewSet(LoggingMixin, viewsets.ModelViewSet):

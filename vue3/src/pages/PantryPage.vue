@@ -2,7 +2,7 @@
 
 
     <v-container>
-        <v-row dense>
+        <v-row density="compact">
             <v-col>
                 <v-card prepend-icon="$pantry" :title="$t('Pantry')">
                     <template #subtitle>
