@@ -57,10 +57,10 @@
 
                         </template>
                     </td>
-                    <td v-if="useUserPreferenceStore().isPrintMode">
+                    <td v-if="useUserPreferenceStore().isPrintMode || useUserPreferenceStore().userSettings.showIngredientNotes">
                         <span class="text-disabled font-italic"> {{ i.note }}</span>
                     </td>
-                    <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode">
+                    <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode && !useUserPreferenceStore().userSettings.showIngredientNotes">
                         <v-icon class="far fa-comment float-right"
                                 v-if="i.note != '' && i.note != undefined"
                                 @click.stop="openNoteIdx = openNoteIdx === idx ? null : idx">
