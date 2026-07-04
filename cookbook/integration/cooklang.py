@@ -1,5 +1,4 @@
 import os
-from io import BytesIO, StringIO
 
 from recipe_scrapers._utils import get_minutes
 

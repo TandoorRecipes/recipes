@@ -1,7 +1,6 @@
 import json
 import re
 from io import BytesIO
-from zipfile import ZipFile
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser

@@ -264,18 +264,26 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         }
     }
 
+    let initPromise: Promise<any> | null = null
+
     function init() {
-        const promises = [] as Promise<any>[]
-        promises.push(loadUserSettings())
-        promises.push(loadServerSettings())
-        promises.push(loadActiveSpace())
-        promises.push(loadUserSpaces())
-        promises.push(loadSpaces())
+        if (initPromise) return initPromise
+        if (initCompleted.value) return Promise.resolve()
+
+        const promises = [
+            loadUserSettings(),
+            loadServerSettings(),
+            loadActiveSpace(),
+            loadUserSpaces(),
+            loadSpaces(),
+        ]
         updateTheme()
 
-        return Promise.allSettled(promises).then(() => {
+        initPromise = Promise.allSettled(promises).then(() => {
             initCompleted.value = true
+            initPromise = null
         })
+        return initPromise
     }
 
     return {

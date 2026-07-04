@@ -137,3 +137,149 @@ def test_default_inherit_fields(u1_s1, u1_s2, space_1, space_2):
         reverse(DETAIL_URL, args={auth.get_user(u1_s2).id}),
     )
     assert space_2.food_inherit.all().count() == 0 == len([x['field'] for x in json.loads(r.content)['food_inherit_default']])
+
+
+def test_sections_default_populated(u1_s1):
+    """Default is empty list — frontend provides its own defaults when stored value is empty."""
+    r = u1_s1.get(reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}))
+    assert r.status_code == 200
+    sections = json.loads(r.content)['start_page_sections']
+    assert isinstance(sections, list)
+    assert len(sections) == 0
+
+
+def test_sections_round_trip(u1_s1):
+    custom = [
+        {"mode": "recent", "enabled": True, "min_recipes": 5},
+        {"mode": "random", "enabled": False},
+        {"mode": "books", "enabled": True},
+        {"mode": "saved_search", "enabled": True},
+    ]
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': custom},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+
+    r = u1_s1.get(reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}))
+    sections = json.loads(r.content)['start_page_sections']
+    assert len(sections) == 4
+    assert sections[0]['mode'] == 'recent'
+    assert sections[0]['min_recipes'] == 5
+    assert sections[1]['enabled'] is False
+    assert sections[2]['mode'] == 'books'
+    assert sections[3]['mode'] == 'saved_search'
+
+
+def test_sections_empty_list_accepted(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': []},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    assert json.loads(r.content)['start_page_sections'] == []
+
+
+def test_sections_invalid_mode_rejected(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "nonsense", "enabled": True}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+
+def test_sections_max_entries_enforced(u1_s1):
+    sections = [{"mode": "random", "enabled": True}] * 21
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': sections},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+
+def test_sections_missing_required_fields(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "recent"}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"enabled": True}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+
+def test_sections_enabled_must_be_boolean(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "recent", "enabled": "yes"}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+
+def test_sections_min_recipes_must_be_non_negative_int(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "recent", "enabled": True, "min_recipes": -1}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "recent", "enabled": True, "min_recipes": "ten"}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+
+def test_sections_unknown_keys_rejected(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "recent", "enabled": True, "color": "blue"}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+
+def test_sections_filter_id_valid(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "books", "enabled": True, "filter_id": 5}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    sections = json.loads(r.content)['start_page_sections']
+    assert sections[0]['filter_id'] == 5
+
+
+def test_sections_filter_id_must_be_positive_int(u1_s1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "books", "enabled": True, "filter_id": 0}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "books", "enabled": True, "filter_id": -1}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
+        {'start_page_sections': [{"mode": "books", "enabled": True, "filter_id": "abc"}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 400

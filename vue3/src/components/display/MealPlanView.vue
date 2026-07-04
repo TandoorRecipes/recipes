@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import {CalendarView, CalendarViewHeader} from "vue-simple-calendar"
-import "vue-simple-calendar/dist/style.css"
+import "vue-simple-calendar/dist/vue-simple-calendar.css"
 import "vue-simple-calendar/dist/css/default.css"
 
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";

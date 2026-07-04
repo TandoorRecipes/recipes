@@ -370,3 +370,15 @@ def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert response['count'] == 4
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
+
+
+def test_ordering_name(u1_s1, space_1):
+    with scopes_disabled():
+        Keyword.objects.get_or_create(name='zzz_ordering', space=space_1)
+        Keyword.objects.get_or_create(name='aaa_ordering', space=space_1)
+
+    asc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=name').content)
+    assert asc['results'][0]['name'] == 'aaa_ordering'
+
+    desc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=-name').content)
+    assert desc['results'][0]['name'] == 'zzz_ordering'

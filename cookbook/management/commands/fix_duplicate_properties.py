@@ -1,13 +1,9 @@
-from django.conf import settings
-from django.contrib.postgres.search import SearchVector
 from django.core.management.base import BaseCommand
 from django.db.models import Count
-from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 
-from cookbook.managers import DICTIONARY
-from cookbook.models import Recipe, Step, FoodProperty, Food
+from cookbook.models import Food
 
 
 # can be executed at the command line with 'python manage.py rebuildindex'

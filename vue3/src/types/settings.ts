@@ -29,3 +29,12 @@ export type DeviceSettings = {
     general_tableItemsPerPage: number
     general_closedHelpAlerts: String[]
 }
+
+export type StartPageSectionMode = 'meal_plan' | 'recent' | 'new' | 'keyword' | 'random' | 'created_by' | 'rating' | 'books' | 'food' | 'saved_search'
+
+export interface StartPageSection {
+    mode: StartPageSectionMode
+    enabled: boolean
+    min_recipes?: number
+    filter_id?: number
+}

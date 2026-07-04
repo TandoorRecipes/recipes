@@ -20,6 +20,13 @@ import {
     UserToJSON,
     UserToJSONTyped,
 } from './User';
+import type { CustomFilterTypeEnum } from './CustomFilterTypeEnum';
+import {
+    CustomFilterTypeEnumFromJSON,
+    CustomFilterTypeEnumFromJSONTyped,
+    CustomFilterTypeEnumToJSON,
+    CustomFilterTypeEnumToJSONTyped,
+} from './CustomFilterTypeEnum';
 
 /**
  * Adds nested create feature
@@ -41,10 +48,16 @@ export interface CustomFilter {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {CustomFilterTypeEnum}
      * @memberof CustomFilter
      */
-    search: string;
+    type?: CustomFilterTypeEnum;
+    /**
+     * 
+     * @type {any}
+     * @memberof CustomFilter
+     */
+    search?: any | null;
     /**
      * 
      * @type {Array<User>}
@@ -53,18 +66,19 @@ export interface CustomFilter {
     shared?: Array<User>;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof CustomFilter
      */
-    readonly createdBy: number;
+    readonly createdBy: User;
 }
+
+
 
 /**
  * Check if a given object implements the CustomFilter interface.
  */
 export function instanceOfCustomFilter(value: object): value is CustomFilter {
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('search' in value) || value['search'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
@@ -81,9 +95,10 @@ export function CustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
-        'search': json['search'],
+        'type': json['type'] == null ? undefined : CustomFilterTypeEnumFromJSON(json['type']),
+        'search': json['search'] == null ? undefined : json['search'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
-        'createdBy': json['created_by'],
+        'createdBy': UserFromJSON(json['created_by']),
     };
 }
 
@@ -100,6 +115,7 @@ export function CustomFilterToJSONTyped(value?: Omit<CustomFilter, 'created_by'>
         
         'id': value['id'],
         'name': value['name'],
+        'type': CustomFilterTypeEnumToJSON(value['type']),
         'search': value['search'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
