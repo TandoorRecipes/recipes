@@ -120,6 +120,8 @@
   "ConfirmAction": "{action} {name}?",
   "ConnectorConfig": "Connectors",
   "ConnectorConfigHelp": "With connectors you can automatically sync data from Tandoor with external services. ",
+  "Consumed_Fraction": "Counted for Properties",
+  "ConsumedFractionHelp": "Share of this ingredient that ends up in the served dish and is counted for property (nutrition) calculations, e.g. only the absorbed part of frying oil.",
   "Continue": "Continue",
   "Conversion": "Conversion",
   "ConversionsHelp": "With conversions you can calculate the amount of a food in different units. Currently this is only used for property calculation, later it might also be used in other parts of tandoor. ",

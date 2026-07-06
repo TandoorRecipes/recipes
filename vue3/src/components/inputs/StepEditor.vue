@@ -102,6 +102,13 @@
                                                         <v-list-item>
                                                             <v-switch v-model="step.ingredients[index].noAmount" :label="$t('Disable_Amount')" hide-details></v-switch>
                                                         </v-list-item>
+                                                        <v-list-item v-if="!ingredient.isHeader" @click.stop>
+                                                            <v-number-input :label="$t('Consumed_Fraction')" density="compact" hide-details control-variant="hidden"
+                                                                            :min="0" :max="100" :precision="2" suffix="%" style="min-width: 220px"
+                                                                            :disabled="ingredient.noAmount"
+                                                                            :model-value="consumedFractionPercent(ingredient)"
+                                                                            @update:model-value="(v: number) => setConsumedFractionPercent(ingredient, v)"></v-number-input>
+                                                        </v-list-item>
                                                         <v-list-item @click="editingIngredientIndex = index; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">
                                                             {{ $t('Move') }}
                                                         </v-list-item>
@@ -219,6 +226,12 @@
                         :label="$t('Disable_Amount')"
                         v-if="!step.ingredients[editingIngredientIndex].isHeader"
                     ></v-checkbox>
+                    <v-number-input :label="$t('Consumed_Fraction')" :hint="$t('ConsumedFractionHelp')" persistent-hint
+                                    :min="0" :max="100" :precision="2" suffix="%" inset control-variant="stacked"
+                                    :disabled="step.ingredients[editingIngredientIndex].noAmount"
+                                    v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                                    :model-value="consumedFractionPercent(step.ingredients[editingIngredientIndex])"
+                                    @update:model-value="(v: number) => setConsumedFractionPercent(step.ingredients[editingIngredientIndex], v)"></v-number-input>
                 </v-form>
                 <v-btn color="info" class="mt-2" @click="dialogIngredientEditor = false; dialogIngredientSorter = true" prepend-icon="fa-solid fa-sort">{{ $t('Move') }}</v-btn>
             </v-card-text>
@@ -246,6 +259,24 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
 
 const emit = defineEmits(['delete', 'move'])
+
+/**
+ * expose the ingredients properties consumed fraction (0-1, e.g. share of frying oil absorbed
+ * into the served dish) as a percentage for editing
+ * @param ingredient ingredient to read the fraction from
+ */
+function consumedFractionPercent(ingredient: Ingredient) {
+    return Math.round((ingredient.propertiesConsumedFraction ?? 1) * 10000) / 100
+}
+
+/**
+ * update the ingredients properties consumed fraction from a percentage input
+ * @param ingredient ingredient to update
+ * @param percent new value in percent, cleared inputs reset to 100%
+ */
+function setConsumedFractionPercent(ingredient: Ingredient, percent: number | null) {
+    ingredient.propertiesConsumedFraction = (percent == null) ? 1 : Math.min(Math.max(percent, 0), 100) / 100
+}
 
 const step = defineModel<Step>({required: true})
 const recipe = defineModel<Recipe>('recipe', {required: true})

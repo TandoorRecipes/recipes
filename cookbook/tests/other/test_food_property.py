@@ -105,6 +105,34 @@ def test_food_property(space_1, space_2, u1_s1):
         assert abs(property_values[property_fat.id]['food_values'][food_1.id]['value'] - Decimal(250)) < 0.0001
         assert abs(property_values[property_fat.id]['food_values'][food_2.id]['value'] - Decimal(250)) < 0.0001
 
+        print('\n----------- TEST PROPERTY - PROPERTIES CONSUMED FRACTION ---------------')
+        recipe_3 = Recipe.objects.create(name='recipe_3', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1))
+
+        step_1 = Step.objects.create(instruction='instruction_step_1', space=space_1)
+        # only a quarter of food_1 ends up in the served dish (e.g. absorbed frying oil)
+        step_1.ingredients.create(amount=1000, unit=unit_gram, food=food_1, properties_consumed_fraction=Decimal('0.25'), space=space_1)
+        step_1.ingredients.create(amount=1000, unit=unit_gram, food=food_2, space=space_1)
+        recipe_3.steps.add(step_1)
+
+        property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_3)
+
+        assert abs(property_values[property_fat.id]['total_value'] - Decimal(375)) < 0.0001
+        assert abs(property_values[property_fat.id]['food_values'][food_1.id]['value'] - Decimal(125)) < 0.0001
+        assert abs(property_values[property_fat.id]['food_values'][food_2.id]['value'] - Decimal(250)) < 0.0001
+        assert not property_values[property_fat.id]['missing_value']
+
+        print('\n----------- TEST PROPERTY - PROPERTIES CONSUMED FRACTION ZERO ---------------')
+        recipe_4 = Recipe.objects.create(name='recipe_4', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1))
+
+        step_1 = Step.objects.create(instruction='instruction_step_1', space=space_1)
+        step_1.ingredients.create(amount=500, unit=unit_gram, food=food_1, properties_consumed_fraction=Decimal(0), space=space_1)
+        recipe_4.steps.add(step_1)
+
+        property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_4)
+
+        assert abs(property_values[property_fat.id]['total_value']) < 0.0001
+        assert not property_values[property_fat.id]['missing_value']
+
         print('\n----------- TEST PROPERTY - MISSING FOOD REFERENCE AMOUNT ---------------')
         food_1.properties_food_unit = None
         food_1.save()
