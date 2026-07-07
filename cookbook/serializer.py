@@ -1163,7 +1163,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
     recent = serializers.CharField(read_only=True)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(source='lastcooked', required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
@@ -1196,7 +1196,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     keywords = KeywordSerializer(many=True, required=False)
     shared = UserSerializer(many=True, required=False)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(source='lastcooked', required=False, allow_null=True, read_only=True)
     food_properties = serializers.SerializerMethodField('get_food_properties')
     created_by = UserSerializer(read_only=True)
 
