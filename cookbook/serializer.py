@@ -1198,6 +1198,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     food_properties = serializers.SerializerMethodField('get_food_properties')
+    food_weight = serializers.SerializerMethodField('get_food_weight')
     created_by = UserSerializer(read_only=True)
 
     @extend_schema_field(serializers.JSONField)
@@ -1212,14 +1213,24 @@ class RecipeSerializer(RecipeBaseSerializer):
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 
+    @extend_schema_field(float)
+    def get_food_weight(self, obj):
+        view = self.context.get('view')
+        if view and getattr(view, 'action', None) == 'create':
+            return 0
+
+        fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
+        fph.calculate_recipe_properties(obj)
+        return fph.total_weight_grams
+
     class Meta:
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'food_weight', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
             'last_cooked', 'private', 'shared'
         )
-        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties']
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'food_weight']
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)

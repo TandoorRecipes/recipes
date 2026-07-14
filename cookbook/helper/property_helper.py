@@ -1,7 +1,7 @@
 from django.core.cache import caches
 
 from cookbook.helper.cache_helper import CacheHelper
-from cookbook.helper.unit_conversion_helper import UnitConversionHelper
+from cookbook.helper.unit_conversion_helper import BASE_UNITS_WEIGHT, UnitConversionHelper
 from cookbook.models import PropertyType
 
 
@@ -23,6 +23,7 @@ class FoodPropertyHelper:
         """
         ingredients = []
         computed_properties = {}
+        self.total_weight_grams = 0
 
         for s in recipe.steps.all():
             ingredients += s.ingredients.all()
@@ -43,6 +44,12 @@ class FoodPropertyHelper:
         for i in ingredients:
             if i.food is not None:
                 conversions = uch.get_conversions(i)
+
+                for c in conversions:
+                    if c.unit and c.unit.base_unit in BASE_UNITS_WEIGHT:
+                        self.total_weight_grams += uch.convert_from_to(c.unit.base_unit, 'g', c.amount)
+                        break
+
                 for pt in property_types:
                     # if a property could be calculated with an actual value
                     found_property = False

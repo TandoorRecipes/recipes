@@ -14,7 +14,13 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th>{{ $t('per_serving') }}</th>
+                    <th>
+                        {{ $t('per_serving') }}
+                        <div class="text-caption text-medium-emphasis" v-if="showPer100g && servingWeightGrams > 0">
+                            {{ $n(roundDecimals(servingWeightGrams)) }} g
+                        </div>
+                    </th>
+                    <th v-if="showPer100g">{{ $t('per_100g') }}</th>
                     <th>{{ $t('total') }}</th>
                     <th v-if="sourceSelectedToShow == 'food'"></th>
                 </tr>
@@ -23,6 +29,7 @@
                 <tr v-for="p in propertyList" :key="p.id">
                     <td>{{ p.name }}</td>
                     <td>{{ $n(roundDecimals(p.propertyAmountPerServing)) }} {{ p.unit }}</td>
+                    <td v-if="showPer100g">{{ $n(roundDecimals(p.propertyAmountPer100g)) }} {{ p.unit }}</td>
                     <td>{{ $n(roundDecimals(p.propertyAmountTotal)) }} {{ p.unit }}</td>
                     <td v-if="sourceSelectedToShow == 'food'">
                         <v-btn @click="dialogProperty = p; dialog = true" variant="plain" color="warning" icon="fa-solid fa-triangle-exclamation" size="small" class="d-print-none"
@@ -95,6 +102,7 @@ type PropertyWrapper = {
     foodValues: [],
     propertyAmountPerServing: number,
     propertyAmountTotal: number,
+    propertyAmountPer100g: number,
     missingValue: boolean,
     unit?: string,
     type: PropertyType,
@@ -130,6 +138,10 @@ const hasFoodProperties = computed(() => {
     return propertiesFound
 })
 
+const totalWeightGrams = computed(() => recipe.value.foodWeight ?? 0)
+const servingWeightGrams = computed(() => totalWeightGrams.value > 0 && recipe.value.servings > 0 ? totalWeightGrams.value / recipe.value.servings : 0)
+const showPer100g = computed(() => sourceSelectedToShow.value == 'food' && totalWeightGrams.value > 0)
+
 /**
  * compute list of properties based on recipe or food, depending on what is selected
  */
@@ -147,6 +159,7 @@ const propertyList = computed(() => {
                         foodValues: [],
                         propertyAmountPerServing: rp.propertyAmount,
                         propertyAmountTotal: rp.propertyAmount * recipe.value.servings * props.ingredientFactor,
+                        propertyAmountPer100g: 0,
                         missingValue: false,
                         unit: rp.propertyType.unit,
                         type: rp.propertyType,
@@ -165,6 +178,7 @@ const propertyList = computed(() => {
                     foodValues: fp.food_values,
                     propertyAmountPerServing: fp.total_value / recipe.value.servings,
                     propertyAmountTotal: fp.total_value * props.ingredientFactor,
+                    propertyAmountPer100g: totalWeightGrams.value > 0 ? fp.total_value / totalWeightGrams.value * 100 : 0,
                     missingValue: fp.missing_value,
                     unit: fp.unit,
                     type: fp,

@@ -235,7 +235,7 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     CREATE skips expensive food_properties computation (returns {}) to avoid
     N+1 query timeouts. GET returns full computed values.
     """
-    from cookbook.models import PropertyType, Property
+    from cookbook.models import Property, PropertyType
 
     with scopes_disabled():
         unit = Unit.objects.create(name='gram', base_unit='g', space=space_1)
@@ -253,9 +253,11 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     assert r.status_code == 201
     response = json.loads(r.content)
     assert response['food_properties'] == {}
+    assert response['food_weight'] == 0
 
     # GET returns computed food_properties
     r = u1_s1.get(reverse(DETAIL_URL, args=[response['id']]))
     assert r.status_code == 200
     get_response = json.loads(r.content)
     assert len(get_response['food_properties']) > 0
+    assert get_response['food_weight'] > 0

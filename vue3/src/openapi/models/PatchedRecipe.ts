@@ -162,6 +162,12 @@ export interface PatchedRecipe {
      * @type {number}
      * @memberof PatchedRecipe
      */
+    readonly foodWeight?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipe
+     */
     servings?: number;
     /**
      * 
@@ -247,6 +253,7 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
         'nutrition': json['nutrition'] == null ? undefined : NutritionInformationFromJSON(json['nutrition']),
         'properties': json['properties'] == null ? undefined : ((json['properties'] as Array<any>).map(PropertyFromJSON)),
         'foodProperties': json['food_properties'] == null ? undefined : json['food_properties'],
+        'foodWeight': json['food_weight'] == null ? undefined : json['food_weight'],
         'servings': json['servings'] == null ? undefined : json['servings'],
         'filePath': json['file_path'] == null ? undefined : json['file_path'],
         'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
@@ -263,7 +270,7 @@ export function PatchedRecipeToJSON(json: any): PatchedRecipe {
     return PatchedRecipeToJSONTyped(json, false);
 }
 
-export function PatchedRecipeToJSONTyped(value?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedRecipeToJSONTyped(value?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'food_weight'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

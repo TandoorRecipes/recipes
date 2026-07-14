@@ -126,3 +126,77 @@ def test_food_property(space_1, space_2, u1_s1):
         property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_2)
 
         assert property_fat.id not in property_values
+
+
+def test_recipe_weight(space_1, space_2, u1_s1):
+    with scopes_disabled():
+        unit_gram = Unit.objects.create(name='gram_w', base_unit='g', space=space_1)
+        unit_kg = Unit.objects.create(name='kg_w', base_unit='kg', space=space_1)
+        unit_pcs = Unit.objects.create(name='pcs_w', base_unit='', space=space_1)
+
+        food_flour = Food.objects.create(name='flour_w', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        food_sugar = Food.objects.create(name='sugar_w', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        food_egg = Food.objects.create(name='egg_w', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+
+        pt_calories = PropertyType.objects.create(name='calories_w', space=space_1, unit='kcal')
+
+        prop_flour_cal = Property.objects.create(property_amount=364, property_type=pt_calories, space=space_1)
+        prop_sugar_cal = Property.objects.create(property_amount=400, property_type=pt_calories, space=space_1)
+        prop_egg_cal = Property.objects.create(property_amount=155, property_type=pt_calories, space=space_1)
+        food_flour.properties.add(prop_flour_cal)
+        food_sugar.properties.add(prop_sugar_cal)
+        food_egg.properties.add(prop_egg_cal)
+
+        caches['default'].delete(CacheHelper(space_1).PROPERTY_TYPE_CACHE_KEY)
+
+        print('\n----------- TEST RECIPE WEIGHT - GRAM UNITS ---------------')
+        recipe = Recipe.objects.create(name='recipe_weight_1', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1), servings=1)
+        step = Step.objects.create(instruction='step', space=space_1)
+        step.ingredients.create(amount=500, unit=unit_gram, food=food_flour, space=space_1)
+        step.ingredients.create(amount=500, unit=unit_gram, food=food_sugar, space=space_1)
+        recipe.steps.add(step)
+
+        fph = FoodPropertyHelper(space_1)
+        result = fph.calculate_recipe_properties(recipe)
+
+        assert abs(fph.total_weight_grams - Decimal(1000)) < 0.0001
+        assert abs(result[pt_calories.id]['total_value'] - Decimal(3820)) < 0.0001
+
+        print('\n----------- TEST RECIPE WEIGHT - KG CONVERSION ---------------')
+        recipe2 = Recipe.objects.create(name='recipe_weight_2', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1), servings=1)
+        step2 = Step.objects.create(instruction='step', space=space_1)
+        step2.ingredients.create(amount=1, unit=unit_kg, food=food_flour, space=space_1)
+        step2.ingredients.create(amount=200, unit=unit_gram, food=food_sugar, space=space_1)
+        recipe2.steps.add(step2)
+
+        fph2 = FoodPropertyHelper(space_1)
+        fph2.calculate_recipe_properties(recipe2)
+
+        assert abs(fph2.total_weight_grams - Decimal(1200)) < 0.0001
+
+        print('\n----------- TEST RECIPE WEIGHT - NO PCS CONVERSION ---------------')
+        recipe3 = Recipe.objects.create(name='recipe_weight_3', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1), servings=1)
+        step3 = Step.objects.create(instruction='step', space=space_1)
+        step3.ingredients.create(amount=500, unit=unit_gram, food=food_flour, space=space_1)
+        step3.ingredients.create(amount=2, unit=unit_pcs, food=food_egg, space=space_1)
+        recipe3.steps.add(step3)
+
+        fph3 = FoodPropertyHelper(space_1)
+        fph3.calculate_recipe_properties(recipe3)
+
+        assert abs(fph3.total_weight_grams - Decimal(500)) < 0.0001
+
+        print('\n----------- TEST RECIPE WEIGHT - PCS CONVERSION ---------------')
+        UnitConversion.objects.create(
+            base_amount=100,
+            base_unit=unit_gram,
+            converted_amount=2,
+            converted_unit=unit_pcs,
+            space=space_1,
+            created_by=auth.get_user(u1_s1),
+        )
+
+        fph4 = FoodPropertyHelper(space_1)
+        fph4.calculate_recipe_properties(recipe3)
+
+        assert abs(fph4.total_weight_grams - Decimal(600)) < 0.0001
