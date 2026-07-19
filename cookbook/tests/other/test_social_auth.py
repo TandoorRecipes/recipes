@@ -2,12 +2,13 @@ import uuid
 from datetime import timedelta
 
 import pytest
-from django.contrib.auth.models import Group, User
+from allauth.socialaccount.models import SocialAccount, SocialLogin
+from django.contrib.auth.models import AnonymousUser, Group, User
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory, override_settings
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
-from cookbook.forms import AllAuthSocialSignupForm
 from cookbook.helper.AllAuthCustomAdapter import AllAuthCustomAdapter
 from cookbook.helper.social_adapter import TandoorSocialAccountAdapter, _mask_email
 from cookbook.models import InviteLink, Space, UserSpace
@@ -24,13 +25,12 @@ def social_signup_space():
 
 
 @pytest.fixture
-def new_social_user():
-    return User.objects.create_user(username='social_user', password='test')
-
-
-@pytest.fixture
 def signup_request():
-    return RequestFactory().get('/accounts/social/signup/')
+    request = RequestFactory().get('/accounts/social/signup/')
+    SessionMiddleware(lambda r: None).process_request(request)
+    # allauth only logs the new user in after save_user returns
+    request.user = AnonymousUser()
+    return request
 
 
 @pytest.fixture
@@ -73,87 +73,90 @@ def invite_link(invite_space):
         return link
 
 
-# ---------------------- SOCIAL SIGNUP FORM TESTS -----------------------
+# ---------------------- SOCIAL SIGNUP SPACE ASSIGNMENT TESTS -----------------------
+
+def _make_sociallogin():
+    """Build an unsaved SocialLogin as allauth provides it at signup time."""
+    user = User(username='social_user', email='social_user@example.com')
+    account = SocialAccount(provider='openid_connect', uid='oidc-uid-123')
+    return SocialLogin(user=user, account=account, email_addresses=[])
+
+
+def _save_social_user(request):
+    """Run the social adapter's save_user hook as auto signup does, returning the created user."""
+    # ScopeMiddleware disables scopes for the unauthenticated auth callbacks that reach save_user
+    with scopes_disabled():
+        return TandoorSocialAccountAdapter().save_user(request, _make_sociallogin(), form=None)
+
+
+def _assert_only_own_space(user):
+    """Assert the user has exactly one, active, UserSpace: a new space they administer."""
+    with scopes_disabled():
+        user_spaces = UserSpace.objects.filter(user=user)
+        assert user_spaces.count() == 1
+        us = user_spaces.first()
+        assert us.active is True
+        assert us.space.created_by == user
+        assert us.groups.filter(name='admin').exists()
+
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_adds_user_to_existing_space(
-    social_signup_space, new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_ACCESS is enabled, social signup should add
-    the user to the first existing space with the configured group."""
+def test_save_user_assigns_default_space(social_signup_space, signup_request):
+    """With SOCIAL_DEFAULT_ACCESS, the user gets an active membership of the
+    first space with SOCIAL_DEFAULT_GROUP, and no space of their own."""
+    user = _save_social_user(signup_request)
+    assert user.pk is not None
     with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
-
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
-
-    with scopes_disabled():
-        user_spaces = UserSpace.objects.filter(user=new_social_user)
+        user_spaces = UserSpace.objects.filter(user=user)
         assert user_spaces.count() == 1
         us = user_spaces.first()
         assert us.space == social_signup_space
-        assert us.groups.filter(name='guest').exists()
-
-
-@override_settings(SOCIAL_DEFAULT_ACCESS=False, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_disabled_does_nothing(
-    social_signup_space, new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_ACCESS is disabled, social signup should
-    not auto-add the user to any space."""
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
-
-    with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+        assert us.active is True
+        assert list(us.groups.values_list('name', flat=True)) == ['guest']
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_uses_first_space(
-    new_social_user, signup_request
-):
-    """When multiple spaces exist, social signup should add the user
-    to the first space."""
+def test_save_user_uses_first_space(signup_request):
+    """When multiple spaces exist, the user joins the first space."""
     with scopes_disabled():
         space_a = Space.objects.create(name='First Space')
         Space.objects.create(name='Second Space')
-
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
-
+    user = _save_social_user(signup_request)
     with scopes_disabled():
-        user_spaces = UserSpace.objects.filter(user=new_social_user)
-        assert user_spaces.count() == 1
-        assert user_spaces.first().space == space_a
+        assert [us.space for us in UserSpace.objects.filter(user=user)] == [space_a]
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_no_space_exists(
-    new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_ACCESS is enabled but no spaces exist,
-    signup should not crash and should not create a UserSpace."""
+def test_save_user_default_space_with_invite(social_signup_space, invite_link, invite_space, signup_request):
+    """An invite token takes precedence: its space becomes active, and the
+    default space membership is kept but deactivated."""
+    signup_request.session['signup_token'] = str(invite_link.uuid)
+    user = _save_social_user(signup_request)
+    with scopes_disabled():
+        active_spaces = {us.space: us.active for us in UserSpace.objects.filter(user=user)}
+    assert active_spaces == {social_signup_space: False, invite_space: True}
+    assert 'signup_token' not in signup_request.session
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=False, SOCIAL_DEFAULT_GROUP='guest')
+def test_save_user_default_access_disabled_creates_own_space(social_signup_space, signup_request):
+    """Without SOCIAL_DEFAULT_ACCESS, the user gets a space of their own."""
+    _assert_only_own_space(_save_social_user(signup_request))
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
+def test_save_user_no_space_exists_creates_own_space(signup_request):
+    """When no space exists to join, the user gets a space of their own."""
     with scopes_disabled():
         assert Space.objects.count() == 0
-
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
-
-    with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+    _assert_only_own_space(_save_social_user(signup_request))
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='nonexistent_group')
-def test_social_default_access_bad_group(
-    social_signup_space, new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_GROUP doesn't match any Group,
-    signup should not crash and should not create a UserSpace."""
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
-
-    with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+def test_save_user_bad_group_creates_own_space(social_signup_space, signup_request):
+    """When SOCIAL_DEFAULT_GROUP matches no Group, the user gets a space of
+    their own rather than joining the default space without permissions."""
+    _assert_only_own_space(_save_social_user(signup_request))
 
 
 # ---------------------- ADAPTER is_open_for_signup TESTS -----------------------
