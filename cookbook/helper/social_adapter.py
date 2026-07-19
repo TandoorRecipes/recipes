@@ -48,6 +48,21 @@ def _store_error(error_entry):
         pass
 
 
+def _join_default_space(user):
+    """Add the user to the first space with SOCIAL_DEFAULT_GROUP, returning whether this succeeded."""
+    space = Space.objects.first()
+    group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+    if not space:
+        print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {user}.')
+    if not group:
+        print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {user}.')
+    if not (space and group):
+        return False
+    user_space = UserSpace.objects.create(space=space, user=user, active=True)
+    user_space.groups.add(group)
+    return True
+
+
 class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def is_open_for_signup(self, request, sociallogin):
@@ -130,16 +145,11 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def save_user(self, request, sociallogin, form=None):
         """
-        create a default space for new users
+        add new users to the default space (SOCIAL_DEFAULT_ACCESS), or else create a space of their own
         """
         user = super().save_user(request, sociallogin, form=form)
 
-        if settings.SOCIAL_DEFAULT_ACCESS:
-            space = Space.objects.first()
-            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-            if space and group:
-                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
-                user_space.groups.add(group)
+        joined_default_space = settings.SOCIAL_DEFAULT_ACCESS and _join_default_space(user)
 
         if 'signup_token' in request.session:
             value = request.session['signup_token']
@@ -147,6 +157,7 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
             request.session.modified = True
             process_invite_token(user, value)
 
-        create_space_for_user(user)
+        if not joined_default_space:
+            create_space_for_user(user)
 
         return user
