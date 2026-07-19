@@ -2,7 +2,9 @@ import uuid
 from datetime import timedelta
 
 import pytest
+from allauth.socialaccount.models import SocialAccount, SocialLogin
 from django.contrib.auth.models import Group, User
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory, override_settings
 from django.utils import timezone
 from django_scopes import scopes_disabled
@@ -24,13 +26,10 @@ def social_signup_space():
 
 
 @pytest.fixture
-def new_social_user():
-    return User.objects.create_user(username='social_user', password='test')
-
-
-@pytest.fixture
 def signup_request():
-    return RequestFactory().get('/accounts/social/signup/')
+    request = RequestFactory().get('/accounts/social/signup/')
+    SessionMiddleware(lambda r: None).process_request(request)
+    return request
 
 
 @pytest.fixture
@@ -73,87 +72,109 @@ def invite_link(invite_space):
         return link
 
 
-# ---------------------- SOCIAL SIGNUP FORM TESTS -----------------------
+# ---------------------- SOCIAL SIGNUP DEFAULT SPACE TESTS -----------------------
+
+def _make_sociallogin():
+    """Build an unsaved SocialLogin as allauth provides it at signup time."""
+    user = User(username='social_user', email='social_user@example.com')
+    account = SocialAccount(provider='openid_connect', uid='oidc-uid-123')
+    return SocialLogin(user=user, account=account, email_addresses=[])
+
+
+def _save_social_user(request, form=None):
+    """Run the social adapter's save_user hook and return the created user."""
+    return TandoorSocialAccountAdapter().save_user(request, _make_sociallogin(), form=form)
+
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_adds_user_to_existing_space(
-    social_signup_space, new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_ACCESS is enabled, social signup should add
-    the user to the first existing space with the configured group."""
-    with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+def test_save_user_auto_signup_assigns_default_space(social_signup_space, signup_request):
+    """Automatic signup (form=None) must create an active UserSpace in the
+    first space with SOCIAL_DEFAULT_GROUP — the auto-signup regression test."""
+    user = _save_social_user(signup_request)
 
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
-
+    assert user.pk is not None
     with scopes_disabled():
-        user_spaces = UserSpace.objects.filter(user=new_social_user)
+        user_spaces = UserSpace.objects.filter(user=user)
         assert user_spaces.count() == 1
         us = user_spaces.first()
         assert us.space == social_signup_space
+        assert us.active is True
         assert us.groups.filter(name='guest').exists()
 
 
-@override_settings(SOCIAL_DEFAULT_ACCESS=False, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_disabled_does_nothing(
-    social_signup_space, new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_ACCESS is disabled, social signup should
-    not auto-add the user to any space."""
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
+def test_save_user_form_signup_assigns_default_space_once(social_signup_space, signup_request):
+    """Form-based signup should assign the default space exactly once, even
+    after the form's signup() hook also runs."""
+    sociallogin = _make_sociallogin()
+    form = AllAuthSocialSignupForm(
+        sociallogin=sociallogin,
+        data={
+            'username': 'social_user',
+            'email': 'social_user@example.com',
+            'email2': 'social_user@example.com',
+        },
+    )
+    assert form.is_valid(), form.errors
+
+    user = TandoorSocialAccountAdapter().save_user(signup_request, sociallogin, form=form)
+    form.signup(signup_request, user)
 
     with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+        user_spaces = UserSpace.objects.filter(user=user)
+        assert user_spaces.count() == 1
+        assert user_spaces.first().space == social_signup_space
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=False, SOCIAL_DEFAULT_GROUP='guest')
+def test_save_user_default_access_disabled_does_nothing(social_signup_space, signup_request):
+    """When SOCIAL_DEFAULT_ACCESS is disabled, the user is created without
+    any space membership."""
+    user = _save_social_user(signup_request)
+
+    assert user.pk is not None
+    with scopes_disabled():
+        assert UserSpace.objects.filter(user=user).count() == 0
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_uses_first_space(
-    new_social_user, signup_request
-):
-    """When multiple spaces exist, social signup should add the user
-    to the first space."""
+def test_save_user_uses_first_space(signup_request):
+    """When multiple spaces exist, the user joins the first space."""
     with scopes_disabled():
         space_a = Space.objects.create(name='First Space')
         Space.objects.create(name='Second Space')
 
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
+    user = _save_social_user(signup_request)
 
     with scopes_disabled():
-        user_spaces = UserSpace.objects.filter(user=new_social_user)
+        user_spaces = UserSpace.objects.filter(user=user)
         assert user_spaces.count() == 1
         assert user_spaces.first().space == space_a
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
-def test_social_default_access_no_space_exists(
-    new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_ACCESS is enabled but no spaces exist,
-    signup should not crash and should not create a UserSpace."""
+def test_save_user_no_space_exists(signup_request):
+    """When no spaces exist, save_user must not crash and must still
+    create the user, just without a UserSpace."""
     with scopes_disabled():
         assert Space.objects.count() == 0
 
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
+    user = _save_social_user(signup_request)
 
+    assert user.pk is not None
     with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+        assert UserSpace.objects.filter(user=user).count() == 0
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='nonexistent_group')
-def test_social_default_access_bad_group(
-    social_signup_space, new_social_user, signup_request
-):
-    """When SOCIAL_DEFAULT_GROUP doesn't match any Group,
-    signup should not crash and should not create a UserSpace."""
-    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
-    form.signup(signup_request, new_social_user)
+def test_save_user_bad_group(social_signup_space, signup_request):
+    """When SOCIAL_DEFAULT_GROUP matches no Group, save_user must not crash
+    and must not create a UserSpace."""
+    user = _save_social_user(signup_request)
 
+    assert user.pk is not None
     with scopes_disabled():
-        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+        assert UserSpace.objects.filter(user=user).count() == 0
 
 
 # ---------------------- ADAPTER is_open_for_signup TESTS -----------------------
