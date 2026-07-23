@@ -41,6 +41,12 @@ export interface PatchedCookLog {
     recipe?: number;
     /**
      * 
+     * @type {string}
+     * @memberof PatchedCookLog
+     */
+    readonly recipeName?: string;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedCookLog
      */
@@ -96,6 +102,7 @@ export function PatchedCookLogFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
         'servings': json['servings'] == null ? undefined : json['servings'],
         'rating': json['rating'] == null ? undefined : json['rating'],
         'comment': json['comment'] == null ? undefined : json['comment'],
@@ -109,7 +116,7 @@ export function PatchedCookLogToJSON(json: any): PatchedCookLog {
     return PatchedCookLogToJSONTyped(json, false);
 }
 
-export function PatchedCookLogToJSONTyped(value?: Omit<PatchedCookLog, 'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedCookLogToJSONTyped(value?: Omit<PatchedCookLog, 'recipe_name'|'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

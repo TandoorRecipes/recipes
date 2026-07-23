@@ -4,7 +4,7 @@ import pytest
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import MealType, PropertyType, AiProvider
+from cookbook.models import AiProvider
 
 LIST_URL = 'api:aiprovider-list'
 DETAIL_URL = 'api:aiprovider-detail'

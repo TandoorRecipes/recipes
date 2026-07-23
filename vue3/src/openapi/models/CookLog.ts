@@ -41,6 +41,12 @@ export interface CookLog {
     recipe: number;
     /**
      * 
+     * @type {string}
+     * @memberof CookLog
+     */
+    readonly recipeName: string;
+    /**
+     * 
      * @type {number}
      * @memberof CookLog
      */
@@ -82,6 +88,7 @@ export interface CookLog {
  */
 export function instanceOfCookLog(value: object): value is CookLog {
     if (!('recipe' in value) || value['recipe'] === undefined) return false;
+    if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     return true;
@@ -99,6 +106,7 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'],
+        'recipeName': json['recipe_name'],
         'servings': json['servings'] == null ? undefined : json['servings'],
         'rating': json['rating'] == null ? undefined : json['rating'],
         'comment': json['comment'] == null ? undefined : json['comment'],
@@ -112,7 +120,7 @@ export function CookLogToJSON(json: any): CookLog {
     return CookLogToJSONTyped(json, false);
 }
 
-export function CookLogToJSONTyped(value?: Omit<CookLog, 'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function CookLogToJSONTyped(value?: Omit<CookLog, 'recipe_name'|'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

@@ -130,6 +130,7 @@ def is_object_household(user, obj):
 def get_household_user_ids(user_space):
     """
     Return user IDs sharing the same household, or just the user's own ID if no household.
+    Also includes legacy shopping_share users as a bridge until that feature is deprecated.
     Results are cached for 5 minutes per space/household (or space/user if no household).
     :param user_space: UserSpace instance (e.g. request.user_space)
     :return: list of user IDs
@@ -137,8 +138,12 @@ def get_household_user_ids(user_space):
     if user_space is None:
         return []
 
+    # Cache key includes user_id because the result mixes in the user's own
+    # shopping_share list below — two users in the same household can legitimately
+    # see different sets depending on their personal share configuration, and
+    # excluding user_id caused stale cross-user reads for up to the cache TTL.
     if user_space.household_id:
-        cache_key = f'household_user_ids_{user_space.space_id}_{user_space.household_id}'
+        cache_key = f'household_user_ids_{user_space.space_id}_{user_space.household_id}_user_{user_space.user_id}'
     else:
         cache_key = f'household_user_ids_{user_space.space_id}_user_{user_space.user_id}'
 
@@ -151,15 +156,29 @@ def get_household_user_ids(user_space):
     else:
         result = {user_space.user_id}
 
+    # Bridge: include legacy shopping_share users until the feature is deprecated
+    try:
+        result.update(user_space.user.userpreference.shopping_share.values_list('id', flat=True))
+    except (AttributeError, ObjectDoesNotExist):
+        pass
+
     result = list(result)
     cache.set(cache_key, result, timeout=5 * 60)
     return result
 
 
 def invalidate_household_cache(user_space):
-    """Delete the cached household_user_ids for a UserSpace's household."""
+    """Delete the cached household_user_ids for every user in a UserSpace's household.
+
+    Cache keys are per-user (see get_household_user_ids), so we have to fan out
+    to every member of the household rather than deleting a single key.
+    """
     if user_space.household_id:
-        cache.delete(f'household_user_ids_{user_space.space_id}_{user_space.household_id}')
+        for member_user_id in UserSpace.objects.filter(
+            space=user_space.space, household=user_space.household
+        ).values_list('user_id', flat=True):
+            cache.delete(f'household_user_ids_{user_space.space_id}_{user_space.household_id}_user_{member_user_id}')
+    cache.delete(f'household_user_ids_{user_space.space_id}_user_{user_space.user_id}')
 
 
 def share_link_valid(recipe, share):

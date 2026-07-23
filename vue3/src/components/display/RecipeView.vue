@@ -10,7 +10,7 @@
 
     <template v-if="recipe.name != undefined">
 
-        <template class="d-block d-lg-none d-print-none">
+        <template v-if="mobile">
 
             <!-- mobile layout -->
             <v-card class="rounded-0">
@@ -21,12 +21,12 @@
                 </recipe-image>
 
                 <v-card>
-                    <v-sheet class="d-flex align-center">
-                    <span class="ps-2 text-h5  flex-grow-1 pa-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
+                    <div class="d-flex align-center">
+                    <span class="ps-2 text-h5  flex-grow-1 pa-1" style="min-width: 0" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">
                         {{ recipe.name }}
                     </span>
                         <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"></recipe-context-menu>
-                    </v-sheet>
+                    </div>
                     <keywords-component variant="flat" class="ms-1" :keywords="recipe.keywords"></keywords-component>
                     <private-recipe-badge :users="recipe.shared" v-if="recipe._private"></private-recipe-badge>
                     <v-rating v-model="recipe.rating" size="x-small" v-if="recipe.rating" half-increments readonly></v-rating>
@@ -61,8 +61,8 @@
             </v-card>
         </template>
         <!-- Desktop horizontal layout -->
-        <template class="d-none d-lg-block d-print-block">
-            <v-row dense>
+        <template v-else>
+            <v-row density="compact">
                 <v-col cols="8">
                     <recipe-image
                         :rounded="true"
@@ -75,8 +75,9 @@
                         <v-card-text class="flex-grow-1">
                             <div class="d-flex">
                                 <h1 class="flex-column flex-grow-1">{{ recipe.name }}</h1>
-                                <recipe-context-menu :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().isAuthenticated"
-                                                     class="flex-column mb-auto mt-2 float-right"></recipe-context-menu>
+                                <div class="flex-column mb-auto mt-2 float-right" v-if="useUserPreferenceStore().isAuthenticated">
+                                    <recipe-context-menu :recipe="recipe" :servings="servings"></recipe-context-menu>
+                                </div>
                             </div>
                             <p>
                                 {{ $t('created_by') }} {{ recipe.createdBy.displayName }} ({{ DateTime.fromJSDate(recipe.createdAt).toLocaleString(DateTime.DATE_SHORT) }})
@@ -149,7 +150,7 @@
 
         <v-card class="mt-2">
             <v-card-text>
-                <v-row dense>
+                <v-row density="compact">
                     <v-col cols="12" :sm="(recipe.sourceUrl) ? 3 : 4">
                         <v-card
                             variant="outlined"
@@ -193,6 +194,8 @@
 
         <recipe-activity :recipe="recipe" :servings="servings" v-if="useUserPreferenceStore().userSettings.comments"></recipe-activity>
     </template>
+
+
 </template>
 
 <script setup lang="ts">
@@ -216,14 +219,16 @@ import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import {useDisplay} from "vuetify";
 
+const {mobile} = useDisplay()
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()
 
 const loading = ref(false)
 const recipe = defineModel<Recipe>({required: true})
 const props = defineProps<{
-    servings: {type: Number, required: false},
+    servings?: number,
 }>()
 
 const servings = ref(props.servings ?? recipe.value.servings ?? 1)

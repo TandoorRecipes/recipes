@@ -12,19 +12,36 @@
         :editing-object="editingObj">
         <v-card-text>
             <v-form :disabled="loading">
-                Coming Soon
+                <v-text-field :label="$t('Name')" v-model="editingObj.name" />
+
+                <v-select
+                    :label="$t('Type')"
+                    v-model="(editingObj as any).type"
+                    :items="filterTypes"
+                    item-title="label"
+                    item-value="value"
+                />
+
+                <model-select
+                    model="User"
+                    v-model="editingObj.shared"
+                    :label="$t('Shared')"
+                    mode="tags"
+                />
             </v-form>
         </v-card-text>
     </model-editor-base>
 </template>
 
 <script setup lang="ts">
+import {computed, onMounted, PropType, watch} from "vue"
+import {CustomFilter} from "@/openapi"
+import {useI18n} from "vue-i18n"
+import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions"
+import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue"
+import ModelSelect from "@/components/inputs/ModelSelect.vue"
 
-import {onMounted, PropType, watch} from "vue";
-import {CustomFilter} from "@/openapi";
-
-import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
+const {t} = useI18n()
 
 const props = defineProps({
     item: {type: {} as PropType<CustomFilter>, required: false, default: null},
@@ -36,29 +53,23 @@ const props = defineProps({
 const emit = defineEmits(['create', 'save', 'delete', 'close', 'changedState'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, editingObjChanged, modelClass} = useModelEditorFunctions<CustomFilter>('CustomFilter', emit)
 
-/**
- * watch prop changes and re-initialize editor
- * required to embed editor directly into pages and be able to change item from the outside
- */
+const filterTypes = computed(() => [
+    {value: 'RECIPE', label: t('Recipe')},
+    {value: 'FOOD', label: t('Food')},
+    {value: 'KEYWORD', label: t('Keyword')},
+])
+
 watch([() => props.item, () => props.itemId], () => {
     initializeEditor()
 })
-
-// object specific data (for selects/display)
 
 onMounted(() => {
     initializeEditor()
 })
 
-/**
- * component specific state setup logic
- */
-function initializeEditor(){
+function initializeEditor() {
     setupState(props.item, props.itemId, {itemDefaults: props.itemDefaults})
 }
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

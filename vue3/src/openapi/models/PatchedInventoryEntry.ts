@@ -76,7 +76,7 @@ export interface PatchedInventoryEntry {
      * @type {Unit}
      * @memberof PatchedInventoryEntry
      */
-    unit?: Unit;
+    unit?: Unit | null;
     /**
      * 
      * @type {number}

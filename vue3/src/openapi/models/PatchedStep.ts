@@ -102,12 +102,6 @@ export interface PatchedStep {
     readonly stepRecipeData?: any | null;
     /**
      * 
-     * @type {number}
-     * @memberof PatchedStep
-     */
-    readonly numrecipe?: number;
-    /**
-     * 
      * @type {boolean}
      * @memberof PatchedStep
      */
@@ -142,7 +136,6 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
         'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'stepRecipeData': json['step_recipe_data'] == null ? undefined : json['step_recipe_data'],
-        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
         'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
@@ -151,7 +144,7 @@ export function PatchedStepToJSON(json: any): PatchedStep {
     return PatchedStepToJSONTyped(json, false);
 }
 
-export function PatchedStepToJSONTyped(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedStepToJSONTyped(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

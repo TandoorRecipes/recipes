@@ -1,4 +1,3 @@
-import os
 from io import BytesIO
 
 from django.contrib import auth

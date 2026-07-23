@@ -23,7 +23,7 @@ from django_scopes import ScopedManager, scopes_disabled
 from PIL import Image
 from treebeard.mp_tree import MP_Node, MP_NodeManager
 
-from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PREF_DEFAULT,
+from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT,
                               SORT_TREE_BY_NAME, STICKY_NAV_PREF_DEFAULT, MAX_OWNED_SPACES_PREF_DEFAULT)
 
 
@@ -280,15 +280,6 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
     )
 
-    LIGHT = 'LIGHT'
-    DARK = 'DARK'
-
-    NAV_TEXT_COLORS = (
-        (BLANK, '-------'),
-        (LIGHT, 'Light'),
-        (DARK, 'Dark')
-    )
-
     name = models.CharField(max_length=128, default='Default')
 
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
@@ -296,7 +287,6 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     custom_space_theme = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_theme')
     nav_logo = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_nav_logo')
     nav_bg_color = models.CharField(max_length=8, default='', blank=True, )
-    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=BLANK)
     app_name = models.CharField(max_length=40, null=True, blank=True, )
     logo_color_32 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_32')
     logo_color_128 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_128')
@@ -494,41 +484,38 @@ class UserPreference(models.Model, PermissionModelMixin):
         (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
     )
 
-    # Nav colors
-    LIGHT = 'LIGHT'
-    DARK = 'DARK'
-
-    NAV_TEXT_COLORS = (
-        (LIGHT, 'Light'),
-        (DARK, 'Dark')
-    )
-
     # Default Page
+    HOME = 'HOME'
     SEARCH = 'SEARCH'
     PLAN = 'PLAN'
     BOOKS = 'BOOKS'
     SHOPPING = 'SHOPPING'
 
     PAGES = (
+        (HOME, _('Home')),
         (SEARCH, _('Search')),
         (PLAN, _('Meal-Plan')),
         (BOOKS, _('Books')),
         (SHOPPING, _('Shopping')),
     )
 
+    # Valid modes for start_page_sections JSONField (validation set, not Django choices)
+    SECTION_MODES = {
+        "meal_plan", "recent", "new", "keyword", "random",
+        "created_by", "rating", "books", "saved_search", "food",
+    }
+
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
 
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_bg_color = models.CharField(max_length=8, default='#ddbf86')
-    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=DARK)
     nav_show_logo = models.BooleanField(default=True)
     nav_sticky = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
     max_owned_spaces = models.IntegerField(default=MAX_OWNED_SPACES_PREF_DEFAULT)
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=False)
-    use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
-    default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
+    default_page = models.CharField(choices=PAGES, max_length=64, default=HOME)
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
     shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
@@ -547,6 +534,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     csv_delim = models.CharField(max_length=2, default=",")
     csv_prefix = models.CharField(max_length=10, blank=True, )
     default_meal_type = models.ForeignKey("MealType", on_delete=models.SET_NULL, null=True, blank=True)
+    start_page_sections = models.JSONField(default=list, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
@@ -556,7 +544,6 @@ class UserPreference(models.Model, PermissionModelMixin):
             self.max_owned_spaces = MAX_OWNED_SPACES_PREF_DEFAULT
             self.comments = COMMENT_PREF_DEFAULT
             self.nav_sticky = STICKY_NAV_PREF_DEFAULT
-            self.use_kj = KJ_PREF_DEFAULT
             self.use_fractions = FRACTION_PREF_DEFAULT
 
         return super().save(*args, **kwargs)
@@ -809,6 +796,18 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     def __str__(self):
         return self.name
+
+    def get_substitutes(self):
+        """Return a queryset of all substitute foods: direct M2M, tree siblings, and tree children."""
+        filters = Q()
+        if self.substitute.exists():
+            filters |= Q(id__in=self.substitute.values('id'))
+        if self.substitute_children:
+            filters |= Q(path__startswith=self.path, depth__gt=self.depth)
+        if self.substitute_siblings:
+            sibling_path = self.path[:Food.steplen * (self.depth - 1)]
+            filters |= Q(path__startswith=sibling_path, depth=self.depth)
+        return Food.objects.filter(filters).exclude(id=self.id)
 
     def merge_into(self, target):
         """
@@ -1727,9 +1726,8 @@ class CustomFilter(models.Model, PermissionModelMixin):
     )
 
     name = models.CharField(max_length=128, null=False, blank=False)
-    type = models.CharField(max_length=128, choices=(MODELS), default=MODELS[0])
-    # could use JSONField, but requires installing extension on SQLite,  don't need to search the objects, so seems unecessary
-    search = models.TextField(blank=False, null=False)
+    type = models.CharField(max_length=128, choices=MODELS, default=RECIPE)
+    search = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shared = models.ManyToManyField(User, blank=True, related_name='f_shared_with')
