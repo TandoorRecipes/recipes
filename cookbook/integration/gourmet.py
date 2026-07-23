@@ -1,16 +1,12 @@
-import base64
 from io import BytesIO
-from lxml import etree
-import requests
 from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
 
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time, iso_duration_to_minutes
+from cookbook.helper.recipe_url_import import parse_servings
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step, Keyword
-from recipe_scrapers import scrape_html
 
 
 class Gourmet(Integration):

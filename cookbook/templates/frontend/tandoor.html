@@ -11,12 +11,28 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <base href="{{ request.META.SCRIPT_NAME|default:'' }}/">
+
+    {% comment %}
+       Pin Vuetify's cascade-layer order before anything else loads. Vuetify 4
+       injects its theme colours into a runtime style element wrapped in
+       @layer vuetify-utilities; in the production build that style lands in the
+       head before the bundled vuetify/styles link, so the browser registers
+       vuetify-utilities as the FIRST (lowest-priority) layer and component base
+       styles (e.g. .v-card display:block) win over utilities (.d-flex, .pa-3, …).
+       Declaring the canonical order here — first CSS in the document — fixes the
+       precedence so utilities win as intended. Works in dev and build; harmless
+       where the order is already correct. NB: use a block comment, not an inline
+       one — the inline form is single-line only and would leak this text.
+    {% endcomment %}
+    <style>@layer vuetify-core, vuetify-components, vuetify-overrides, vuetify-utilities, vuetify-final;</style>
+
     <title>Tandoor</title>
     <meta name="description" content="{% trans 'Tandoor Recipe Manager' %}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
 
     <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
 
@@ -30,8 +46,6 @@
     <meta name="msapplication-TileImage" content="{{ theme_values.logo_color_144 }}">
 
     <meta name="theme-color" content="{{ theme_values.nav_bg_color }}">
-
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
 
     {% if theme_values.custom_theme %}
         <link id="id_custom_space_css" href="{{ theme_values.custom_theme }}" rel="stylesheet">

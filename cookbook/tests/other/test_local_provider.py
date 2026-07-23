@@ -1,4 +1,3 @@
-import os
 from django.test import TestCase, override_settings
 from cookbook.provider.local import Local
 from cookbook.models import Recipe

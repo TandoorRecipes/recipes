@@ -1,18 +1,13 @@
 import json
-import re
-import traceback
 import uuid
 from decimal import Decimal
 from io import BytesIO
-from zipfile import ZipFile
 from gettext import gettext as _
 
 from django.db import transaction
 
-from cookbook.helper import ingredient_parser
-from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
+from cookbook.helper.recipe_url_import import parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step, Food, Unit, SupermarketCategory, PropertyType, Property, MealType, MealPlan, CookLog, ShoppingListEntry
 

@@ -53,7 +53,7 @@ import {UserFile, UserSpace} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {DateTime} from "luxon";
-import {VFileUpload} from 'vuetify/labs/VFileUpload'
+import {VFileUpload} from 'vuetify/components'
 import {useFileApi} from "@/composables/useFileApi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 

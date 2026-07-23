@@ -107,12 +107,12 @@
                 <!--                <v-row class="pa-0" dense>-->
                 <!--                    <v-col class="pa-0">-->
                 <!--                        <v-chip-group v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket" v-if="supermarkets.length > 0">-->
-                <!--                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label density="compact" variant="outlined" color="primary">{{ s.name }}</v-chip>-->
+                <!--                            <v-chip v-for="s in supermarkets" :value="s" :key="s.id" label dense variant="outlined" color="primary">{{ s.name }}</v-chip>-->
                 <!--                        </v-chip-group>-->
                 <!--                    </v-col>-->
                 <!--                </v-row>-->
 
-                <v-row class="pa-0" dense>
+                <v-row class="pa-0" density="compact">
                     <v-col class="pa-0">
                         <v-chip-group>
                             <!-- enable selection -->
