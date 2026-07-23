@@ -12,8 +12,7 @@ from unittest.mock import MagicMock
 from django_scopes import scopes_disabled
 
 from cookbook.helper.open_data_importer import OpenDataImporter
-from cookbook.models import Food, SupermarketCategory, Unit
-from cookbook.tests.factories import SpaceFactory
+from cookbook.models import Food, SupermarketCategory
 
 
 def _make_request(space, user=None):
@@ -175,7 +174,7 @@ class TestIssue3030_UniqueConstraintOnExistingSpace:
 
         # BUG: This should handle the name collision gracefully, but raises IntegrityError
         try:
-            result = _import_with_scopes_disabled(importer, 'import_food')
+            _import_with_scopes_disabled(importer, 'import_food')
             with scopes_disabled():
                 foods = Food.objects.filter(space=space_1, name='Kers')
                 assert foods.count() == 1, f"Expected 1 food named 'Kers', got {foods.count()}"

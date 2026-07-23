@@ -1,11 +1,15 @@
 <template>
-    <v-alert :title="props.title" closable @click:close="closeAlert()" v-if="showAlert">
-        <template #prepend>
-            <v-icon icon="$help"></v-icon>
-        </template>
+    <v-alert density="compact" closable @click:close="closeAlert()" v-if="showAlert">
+        <!-- Icon inline with the title so the body text below can use the full
+             width of the alert instead of being indented under a prepend icon. -->
+        <div v-if="props.title" class="d-flex align-center mb-1">
+            <v-icon icon="$help" size="small" class="me-2"></v-icon>
+            <span class="text-subtitle-2 font-weight-bold">{{ props.title }}</span>
+        </div>
         <p>
         {{ props.text}}
-            <v-btn color="success" class="float-right" v-if="props.actionText" @click="emit('click')">{{ actionText}}</v-btn>
+            <v-btn color="success" class="float-right" v-if="props.actionText && !props.actionLink" @click="emit('click')">{{ actionText}}</v-btn>
+            <v-btn v-if="props.actionLink" icon="$help" variant="plain" size="small" class="float-right" @click="emit('click')" :aria-label="props.actionText" />
         </p>
     </v-alert>
 </template>
@@ -25,6 +29,9 @@ const props = defineProps({
 
     // show an action button if any text is given and emit click event if button is pressed
     actionText: {type: String, required: false,},
+
+    // when true, shows a subtle icon button instead of the success button
+    actionLink: {type: Boolean, default: false},
 })
 
 /**
@@ -55,5 +62,13 @@ function closeAlert() {
 </script>
 
 <style scoped>
-
+/* v-alert lays out content and the close button in a flex row, so the close
+ * reserves a right-hand column and the body text wraps short of the margin.
+ * Float the close out of flow (top-right) so the text uses the full width. */
+:deep(.v-alert__close) {
+    position: absolute;
+    top: 6px;
+    inset-inline-end: 6px;
+    margin: 0;
+}
 </style>

@@ -1,6 +1,5 @@
 import re
 from io import BytesIO
-from zipfile import ZipFile
 
 from bs4 import BeautifulSoup
 

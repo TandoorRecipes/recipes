@@ -113,7 +113,6 @@ else:
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = extract_bool('COMMENT_PREF_DEFAULT', True)
 FRACTION_PREF_DEFAULT = extract_bool('FRACTION_PREF_DEFAULT', False)
-KJ_PREF_DEFAULT = extract_bool('KJ_PREF_DEFAULT', False)
 STICKY_NAV_PREF_DEFAULT = extract_bool('STICKY_NAV_PREF_DEFAULT', True)
 MAX_OWNED_SPACES_PREF_DEFAULT = int(os.getenv('MAX_OWNED_SPACES_PREF_DEFAULT', 100))
 UNAUTHENTICATED_THEME_FROM_SPACE = int(os.getenv('UNAUTHENTICATED_THEME_FROM_SPACE', 0))
@@ -194,7 +193,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_vite',
     'hcaptcha',
-    'django.db.migrations',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -607,7 +606,7 @@ def _discover_languages():
     # Weblate directory names that map to different Django LANG_INFO keys.
     # The value becomes both the LANG_INFO lookup key AND the language code.
     DIR_CODE_MAP = {
-        'hu-hu': 'hu',  # Weblate uses hu_HU, Django uses hu
+        'hu-hu': 'hu',       # Weblate uses hu_HU, Django uses hu
         'zh-cn': 'zh-hans',  # Weblate uses zh_CN, Django uses zh-hans
     }
 

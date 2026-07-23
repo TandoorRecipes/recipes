@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from decimal import Decimal
 
-import pytest
 
 from cookbook.helper.template_helper import _resolve_unit_name, _resolve_food_name, _plural_name_tag, IngredientObject
 

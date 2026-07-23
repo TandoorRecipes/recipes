@@ -33,6 +33,12 @@ export interface PatchedViewLog {
     recipe?: number;
     /**
      * 
+     * @type {string}
+     * @memberof PatchedViewLog
+     */
+    readonly recipeName?: string;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedViewLog
      */
@@ -64,6 +70,7 @@ export function PatchedViewLogFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
     };
@@ -73,7 +80,7 @@ export function PatchedViewLogToJSON(json: any): PatchedViewLog {
     return PatchedViewLogToJSONTyped(json, false);
 }
 
-export function PatchedViewLogToJSONTyped(value?: Omit<PatchedViewLog, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedViewLogToJSONTyped(value?: Omit<PatchedViewLog, 'recipe_name'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

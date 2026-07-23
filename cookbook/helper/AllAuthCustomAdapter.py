@@ -1,5 +1,4 @@
 
-import datetime
 import logging
 
 from gettext import gettext as _

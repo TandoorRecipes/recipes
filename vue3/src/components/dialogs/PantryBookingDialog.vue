@@ -114,7 +114,7 @@ import {ingredientToString} from "@/utils/model_utils.ts";
 import {ApiApi, Food, Ingredient, InventoryEntry, InventoryLocation, Unit} from "@/openapi";
 import FreezerExpiryDialog from "@/components/dialogs/FreezerExpiryDialog.vue";
 import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
-import {VDateInput} from "vuetify/labs/VDateInput";
+import {VDateInput} from "vuetify/components";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useI18n} from "vue-i18n";

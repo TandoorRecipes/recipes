@@ -5,7 +5,7 @@
         <ai-action-button color="info" @selected="propertiesFromAi" :loading="aiLoading" prepend-icon="$ai">{{ $t('AI') }}</ai-action-button>
     </v-btn-group>
 
-    <v-row class="d-none d-md-flex mt-2" v-for="p in editingObj.properties" dense>
+    <v-row class="d-none d-md-flex mt-2" v-for="p in editingObj.properties" density="compact">
         <v-col cols="0" md="6">
             <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked" :precision="2">
                 <template #append-inner v-if="p.propertyType">

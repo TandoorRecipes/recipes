@@ -44,7 +44,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ApiApi, AutoMealPlan} from "@/openapi";
 import {onMounted, ref} from "vue";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {VDateInput} from 'vuetify/labs/VDateInput'
+import {VDateInput} from 'vuetify/components'
 import {DateTime} from "luxon";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";

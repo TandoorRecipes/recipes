@@ -1,11 +1,3 @@
-import socket
-import requests
-import struct
-from ipaddress import ip_address
-from urllib.parse import urlparse, quote, urlunparse
-
-from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator
 from django.db.models import Func
 from thefuzz import fuzz
 from thefuzz import process as fuzz_process

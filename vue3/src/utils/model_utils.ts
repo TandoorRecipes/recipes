@@ -9,6 +9,15 @@ export function isSingularAmount(amount: number): boolean {
 }
 
 /**
+ * Normalizes a backend existence annotation to a boolean. Exists() checks
+ * (shopping_status, has_inventory_status) serialize through a CharField as the
+ * strings "True"/"False", so accept those alongside a native boolean.
+ */
+export function parseBooleanAnnotation(v: unknown): boolean {
+    return v === true || v === 'True' || v === 'true'
+}
+
+/**
  * returns a string representing an ingredient
  * @param ingredient
  */

@@ -1,7 +1,6 @@
 import json
 import re
 from io import BytesIO
-from zipfile import ZipFile
 
 from django.utils.translation import gettext as _
 

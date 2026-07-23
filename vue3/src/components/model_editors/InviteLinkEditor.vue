@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 
-import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
+import {VDateInput} from 'vuetify/components'
 import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Group, InviteLink} from "@/openapi";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore"

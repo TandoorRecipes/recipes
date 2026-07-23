@@ -102,7 +102,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  BookmarkletImportListSerializer, BookmarkletImportSerializer,
                                  CookLogSerializer, CustomFilterSerializer,
                                  ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer,
-                                 FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer,
+                                 FoodSimpleSerializer, FoodStatsSerializer, UnitStatsSerializer,
+                                 KeywordStatsSerializer, AutomationStatsSerializer, RecipeStatsSerializer, GroupSerializer,
                                  ImportLogSerializer, IngredientSerializer, IngredientSimpleSerializer,
                                  InviteLinkSerializer, KeywordSerializer, MealPlanSerializer, MealTypeSerializer,
                                  PropertySerializer, PropertyTypeSerializer,
@@ -173,6 +174,35 @@ class LoggingMixin(object):
                 pipe.execute()
             except:
                 pass
+
+
+class OrderingMixin:
+    """Applies a validated ``?ordering=`` query param against a per-viewset allow-list.
+
+    Subclasses declare up to three class attributes:
+
+    * ``ordering_lower_fields`` — {param: OrderBy} for case-insensitive (``Lower``) orderings.
+    * ``ordering_field_map`` — {param: db_field} where the exposed param name differs from the
+      column (e.g. ``numrecipe`` -> ``recipe_count``, ``created_at`` -> ``pk``).
+    * ``ordering_plain_fields`` — params that order by their own name as-is.
+
+    Any ``ordering`` value not in the union of these is ignored (no ordering applied).
+    """
+    ordering_lower_fields: dict = {}
+    ordering_field_map: dict = {}
+    ordering_plain_fields: set = set()
+
+    def _apply_ordering(self, qs):
+        ordering_param = self.request.query_params.get('ordering', None)
+        if not ordering_param:
+            return qs
+        allowed = self.ordering_lower_fields.keys() | self.ordering_field_map.keys() | self.ordering_plain_fields
+        if ordering_param in allowed:
+            if ordering_param in self.ordering_lower_fields:
+                qs = qs.order_by(self.ordering_lower_fields[ordering_param])
+            else:
+                qs = qs.order_by(self.ordering_field_map.get(ordering_param, ordering_param))
+        return qs
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -250,30 +280,30 @@ class ExtendedRecipeMixin():
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
         extended = str2bool(request.query_params.get('extended', None))
         recipe_filter = getattr(serializer, 'recipe_filter', None)
-        if extended and recipe_filter:
-            images = serializer.images
+        if recipe_filter:
             space = request.space
 
-            # add a recipe count annotation to the query
-            #  explanation on construction https://stackoverflow.com/a/43771738/15762829
+            # recipe_count is always annotated — used by _apply_list_filters regardless of extended
             recipe_count = Recipe.objects.filter(**{recipe_filter: OuterRef('id')}, space=space).values(
                 recipe_filter).annotate(count=Count('pk', distinct=True)).values('count')
             queryset = queryset.annotate(recipe_count=Coalesce(Subquery(recipe_count), 0))
 
-            # add a recipe image annotation to the query
-            image_subquery = Recipe.objects.filter(**{
-                recipe_filter: OuterRef('id')
-            }, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
-            if tree:
-                image_children_subquery = Recipe.objects.filter(**{
-                    f"{recipe_filter}__path__startswith": OuterRef('path')
+            if extended:
+                # recipe_image is only annotated when extended=true (expensive)
+                images = serializer.images
+                image_subquery = Recipe.objects.filter(**{
+                    recipe_filter: OuterRef('id')
                 }, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
-            else:
-                image_children_subquery = None
-            if images:
-                queryset = queryset.annotate(recipe_image=Coalesce(*images, image_subquery, image_children_subquery))
-            else:
-                queryset = queryset.annotate(recipe_image=Coalesce(image_subquery, image_children_subquery))
+                if tree:
+                    image_children_subquery = Recipe.objects.filter(**{
+                        f"{recipe_filter}__path__startswith": OuterRef('path')
+                    }, space=space).exclude(image__isnull=True).exclude(image__exact='').order_by("?").values('image')[:1]
+                else:
+                    image_children_subquery = None
+                if images:
+                    queryset = queryset.annotate(recipe_image=Coalesce(*images, image_subquery, image_children_subquery))
+                else:
+                    queryset = queryset.annotate(recipe_image=Coalesce(image_subquery, image_children_subquery))
         return queryset
 
 
@@ -287,6 +317,18 @@ class ExtendedRecipeMixin():
     OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
 ]))
 class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
+
+    def _apply_tristate(self, qs, param, true_q, false_q, distinct=False):
+        value = self.request.query_params.get(param, None)
+        if value is None:
+            return qs
+        if str2bool(value):
+            qs = qs.filter(true_q)
+            if distinct:
+                qs = qs.distinct()
+        else:
+            qs = qs.filter(false_q)
+        return qs
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
@@ -492,7 +534,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             node_location = 'last'
 
         try:
-            child = self.model.objects.get(pk=pk, space=self.request.space)
+            child = self.model.objects.get(pk=pk)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {pk} exists')}
             return Response(content, status=status.HTTP_404_NOT_FOUND)
@@ -503,17 +545,18 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             try:
                 with scopes_disabled():
                     child.move(self.model.get_first_root_node(), f'{node_location}-sibling')
-                content = {'msg': _(f'{child.name} was moved successfully to the root.')}
-                return Response(content, status=status.HTTP_200_OK)
             except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
                 content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            # Re-fetch via ORM — treebeard bypasses the ORM during move().
+            child = self.model.objects.get(pk=pk)
+            return Response(self.get_serializer(child).data, status=status.HTTP_200_OK)
         elif parent == child.id:
             content = {'error': True, 'msg': _('Cannot move an object to itself!')}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         try:
-            parent = self.model.objects.get(pk=parent, space=self.request.space)
+            parent = self.model.objects.get(pk=parent)
         except (self.model.DoesNotExist):
             content = {'error': True, 'msg': _(f'No {self.basename} with id {parent} exists')}
             return Response(content, status=status.HTTP_404_NOT_FOUND)
@@ -521,11 +564,12 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
         try:
             with scopes_disabled():
                 child.move(parent, f'{node_location}-child')
-            content = {'msg': _(f'{child.name} was moved successfully to parent {parent.name}')}
-            return Response(content, status=status.HTTP_200_OK)
         except (PathOverflow, InvalidMoveToDescendant, InvalidPosition):
             content = {'error': True, 'msg': _('An error occurred attempting to move ') + child.name}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        # Re-fetch via ORM — treebeard bypasses the ORM during move().
+        child = self.model.objects.get(pk=pk)
+        return Response(self.get_serializer(child).data, status=status.HTTP_200_OK)
 
 
 def paginate(func):
@@ -665,6 +709,16 @@ class DeleteRelationMixing:
             return []
 
 
+class ProtectedDestroyMixin:
+    """Return a clean 403 instead of an unhandled 500 when a protected FK blocks deletion."""
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError as e:
+            return Response({'error': True, 'msg': e.args[0]}, status=status.HTTP_403_FORBIDDEN)
+
+
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str, many=True),
 ]))
@@ -713,7 +767,8 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
         return Response(self.serializer_class(self.request.space, many=False, context={'request': self.request}).data)
 
 
-class HouseholdViewSet(LoggingMixin, viewsets.ModelViewSet):
+# destroy() 403s (not 500s) when a protected FK — InventoryLocation/UserSpace.household — blocks deletion
+class HouseholdViewSet(ProtectedDestroyMixin, LoggingMixin, viewsets.ModelViewSet):
     queryset = Household.objects
     serializer_class = HouseholdSerializer
     permission_classes = [CustomIsSpaceOwner & CustomTokenHasReadWriteScope]
@@ -736,7 +791,8 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         userspace = UserSpace.objects.get(pk=kwargs['pk'])
         if userspace.space.created_by == userspace.user:
-            raise APIException('Cannot delete Space owner permission.')
+            # business-rule rejection, not a server error -> 403, not 500
+            raise PermissionDenied('Cannot delete Space owner permission.')
         return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -842,8 +898,8 @@ class AiLogViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class StorageViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
-    # TODO handle delete protect error and adjust test
+# destroy() 403s (not 500s) when a protected FK — Sync/Recipe/RecipeImport.storage — blocks deletion
+class StorageViewSet(ProtectedDestroyMixin, LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     queryset = Storage.objects
     serializer_class = StorageSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -1027,20 +1083,72 @@ class SupermarketCategoryRelationViewSet(LoggingMixin, StandardFilterModelViewSe
         return super().get_queryset()
 
 
-class KeywordViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='ordering', type=str, description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe, numchild, -numchild. Ignored when query is active.'),
+            OpenApiParameter(name='has_recipe', type=bool, description='Filter by whether keyword is used by at least one recipe'),
+            OpenApiParameter(name='has_children', type=bool, description='Filter by whether keyword has child keywords'),
+        ],
+    ),
+)
+class KeywordViewSet(OrderingMixin, LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
     permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    ordering_lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+    ordering_field_map = {'numrecipe': 'recipe_count', '-numrecipe': '-recipe_count'}
+    ordering_plain_fields = {'numchild', '-numchild'}
 
-class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = self._apply_tristate(qs, 'has_children', Q(numchild__gt=0), Q(numchild=0))
+        qs = self._apply_tristate(qs, 'has_recipe', Q(recipe_count__gt=0), Q(recipe_count=0))
+        return self._apply_ordering(qs)
+
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=KeywordStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        agg = Keyword.objects.filter(space=request.space).aggregate(
+            with_recipe=Count('pk', filter=Q(recipe__isnull=False), distinct=True),
+            with_children=Count('pk', filter=Q(numchild__gt=0)),
+            total=Count('pk'),
+        )
+        return Response({k: v or 0 for k, v in agg.items()})
+
+
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='ordering', type=str, description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe. Ignored when query is active.'),
+            OpenApiParameter(name='has_recipe', type=bool, description='Filter by whether unit is used by at least one recipe ingredient'),
+        ],
+    ),
+)
+class UnitViewSet(OrderingMixin, LoggingMixin, MergeMixin, FuzzyFilterMixin, DeleteRelationMixing):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+
+    ordering_lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+    ordering_field_map = {'numrecipe': 'recipe_count', '-numrecipe': '-recipe_count'}
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = self._apply_tristate(qs, 'has_recipe', Q(recipe_count__gt=0), Q(recipe_count=0))
+        return self._apply_ordering(qs)
+
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=UnitStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        agg = Unit.objects.filter(space=request.space).aggregate(
+            with_recipe=Count('pk', filter=Q(ingredient__isnull=False), distinct=True),
+            total=Count('pk'),
+        )
+        return Response({k: v or 0 for k, v in agg.items()})
 
 
 class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
@@ -1055,7 +1163,26 @@ class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
-class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='query', description='Search foods whose name contains this string (case insensitive).', type=str),
+    OpenApiParameter(name='ordering', description='Order results by field. Allowed: name, -name, numrecipe, -numrecipe, numchild, -numchild, created_at, -created_at, supermarket_category__name, -supermarket_category__name.', type=str),
+    OpenApiParameter(name='root', description='Return only children of the food with this id (tree navigation).', type=int),
+    OpenApiParameter(name='tree', description='Return the food with this id and all of its descendants (tree navigation).', type=int),
+    OpenApiParameter(name='tree_search', description='When true and a filter is active, expand the result to include ancestors of matches for tree context.', type=bool),
+    OpenApiParameter(name='onhand', description='Filter foods currently on hand for the user/household.', type=bool),
+    OpenApiParameter(name='has_substitute', description='Filter foods that have (true) / do not have (false) substitutes.', type=bool),
+    OpenApiParameter(name='in_shopping_list', description='Filter foods that are (true) / are not (false) on the shopping list.', type=bool),
+    OpenApiParameter(name='has_children', description='Filter foods that have (true) / do not have (false) child foods.', type=bool),
+    OpenApiParameter(name='has_recipe', description='Filter foods that are (true) / are not (false) linked to a recipe.', type=bool),
+    OpenApiParameter(name='used_in_recipes', description='Filter foods that are (true) / are not (false) used in any recipe.', type=bool),
+    OpenApiParameter(name='ignore_shopping', description='Filter foods with ignore_shopping set to this value.', type=bool),
+    OpenApiParameter(name='supermarket_category', description='Filter foods by supermarket category id.', type=int),
+    OpenApiParameter(name='has_inventory', description='Filter foods that have (true) / do not have (false) inventory on hand.', type=bool),
+    OpenApiParameter(name='inventory_location', description='Filter foods with on-hand inventory at this inventory location id.', type=int),
+    OpenApiParameter(name='expired', description='Filter foods that have (true) / do not have (false) expired inventory.', type=bool),
+    OpenApiParameter(name='expiring_soon', description='Filter foods with inventory expiring within this many days.', type=int),
+]))
+class FoodViewSet(OrderingMixin, LoggingMixin, TreeMixin, DeleteRelationMixing):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
@@ -1069,6 +1196,12 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         except AttributeError:  # Anonymous users (using share links) don't have shared users
             return []
 
+    def _inventory_subquery(self, space):
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=space)
+
+    def _expired_subquery(self, space):
+        return InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, expires__lt=timezone.localdate(), space=space)
+
     def _annotate_and_prefetch(self, qs):
         shared_users = self._shared_users
         if shared_users:
@@ -1080,22 +1213,272 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
         else:
             qs = qs.annotate(shopping_status=Value(False, output_field=BooleanField()))
 
+        qs = qs.annotate(has_inventory_status=Exists(self._inventory_subquery(self.request.space)))
+        qs = qs.annotate(has_expired_status=Exists(self._expired_subquery(self.request.space)))
+
         return qs \
             .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
             .select_related('recipe', 'supermarket_category')
 
+    def _apply_list_filters(self, qs):
+        shared_users = self._shared_users
+
+        onhand = self.request.query_params.get('onhand', None)
+        if onhand is not None:
+            if str2bool(onhand):
+                qs = qs.filter(onhand_users__id__in=shared_users).distinct()
+            else:
+                qs = qs.exclude(onhand_users__id__in=shared_users)
+
+        qs = self._apply_tristate(qs, 'has_substitute', Q(substitute__isnull=False), Q(substitute__isnull=True), distinct=True)
+        qs = self._apply_tristate(qs, 'in_shopping_list', Q(shopping_status=True), Q(shopping_status=False))
+        qs = self._apply_tristate(qs, 'has_children', Q(numchild__gt=0), Q(numchild=0))
+        qs = self._apply_tristate(qs, 'has_recipe', Q(recipe__isnull=False), Q(recipe__isnull=True))
+        qs = self._apply_tristate(qs, 'used_in_recipes', Q(recipe_count__gt=0), Q(recipe_count=0))
+
+        ignore_shopping = self.request.query_params.get('ignore_shopping', None)
+        if ignore_shopping is not None:
+            qs = qs.filter(ignore_shopping=str2bool(ignore_shopping))
+
+        supermarket_category = self.request.query_params.get('supermarket_category', None)
+        if supermarket_category is not None:
+            try:
+                qs = qs.filter(supermarket_category_id=int(supermarket_category))
+            except ValueError:
+                qs = qs.none()
+
+        qs = self._apply_tristate(qs, 'has_inventory', Q(has_inventory_status=True), Q(has_inventory_status=False))
+
+        inventory_location = self.request.query_params.get('inventory_location', None)
+        if inventory_location is not None:
+            try:
+                qs = qs.filter(
+                    inventoryentry__inventory_location_id=int(inventory_location),
+                    inventoryentry__amount__gt=0,
+                ).distinct()
+            except ValueError:
+                qs = qs.none()
+
+        qs = self._apply_tristate(qs, 'expired', Q(has_expired_status=True), Q(has_expired_status=False))
+
+        expiring_soon = self.request.query_params.get('expiring_soon', None)
+        if expiring_soon is not None:
+            try:
+                days = int(expiring_soon)
+                today = timezone.localdate()
+                qs = qs.filter(
+                    inventoryentry__expires__gte=today,
+                    inventoryentry__expires__lte=today + datetime.timedelta(days=days),
+                    inventoryentry__amount__gt=0,
+                ).distinct()
+            except ValueError:
+                pass
+
+        return qs
+
+    ordering_lower_fields = {
+        'name': Lower('name').asc(),
+        '-name': Lower('name').desc(),
+        'supermarket_category__name': Lower('supermarket_category__name').asc(nulls_last=True),
+        '-supermarket_category__name': Lower('supermarket_category__name').desc(nulls_last=True),
+    }
+    ordering_field_map = {
+        'numrecipe': 'recipe_count',
+        '-numrecipe': '-recipe_count',
+        'created_at': 'pk',
+        '-created_at': '-pk',
+    }
+    ordering_plain_fields = {'numchild', '-numchild'}
+
     def get_queryset(self):
-        self.queryset = super().get_queryset()
-        return self._annotate_and_prefetch(self.queryset)
+        qs = super().get_queryset()
+        qs = self._annotate_and_prefetch(qs)
+        qs = self._apply_list_filters(qs)
+        qs = self._apply_ordering(qs)
+        qs = self._expand_with_ancestors(qs)
+        return qs
+
+    def _expand_with_ancestors(self, qs):
+        """When `tree_search=true` is passed AND any filter is active, expand
+        the filtered queryset to include every ancestor of a match so the
+        client can render the original tree hierarchy with matches in
+        context. Each food is annotated with ``matched_filter`` (bool)
+        indicating whether it satisfied the filter itself (True) or is
+        present solely as ancestor context (False). Without this param or
+        without filters, the queryset passes through unchanged."""
+        if self.request.query_params.get('tree_search', '').lower() not in ('1', 'true', 'yes'):
+            return qs
+        if not self._has_list_filters():
+            return qs
+
+        matched = list(qs.values_list('id', 'path', 'depth'))
+        if not matched:
+            return qs
+
+        matched_ids = [row[0] for row in matched]
+        # True ancestors only — each matched node's path prefixes, not its
+        # sibling-under-same-root. Build (path_prefix, depth) pairs per level.
+        steplen = Food.steplen
+        ancestor_q = Q()
+        for _, path, depth in matched:
+            for k in range(1, depth):
+                ancestor_q |= Q(path=path[:steplen * k], depth=k)
+
+        ancestor_ids = list(Food.objects.filter(ancestor_q).values_list('id', flat=True)) if ancestor_q else []
+        all_ids = set(matched_ids) | set(ancestor_ids)
+
+        expanded = Food.objects.filter(id__in=all_ids, space=self.request.space)
+        expanded = self._annotate_and_prefetch(expanded)
+        expanded = expanded.annotate(
+            matched_filter=Case(
+                When(id__in=matched_ids, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            ),
+        )
+        return expanded.order_by(Lower('name').asc())
+
+    def _has_list_filters(self):
+        """True if any FoodViewSet list-filter query param is set."""
+        keys = (
+            'onhand', 'has_substitute', 'in_shopping_list', 'has_children',
+            'has_recipe', 'used_in_recipes', 'ignore_shopping',
+            'supermarket_category', 'has_inventory', 'inventory_location',
+            'expired', 'expiring_soon', 'query',
+        )
+        params = self.request.query_params
+        return any(params.get(k) not in (None, '') for k in keys)
+
+    def _compute_substitute_flags(self, foods):
+        """
+        Batch-compute substitute_onhand and substitute_inventory for a page of foods.
+        Replaces per-food N+1 queries in the serializer with 2–4 batch queries.
+        """
+        shared_users = self._shared_users
+        try:
+            household = self.request.user_space.household
+        except AttributeError:
+            household = None
+
+        # Build each food's full substitute ID set (direct + siblings + children)
+        food_sub_ids = {f.id: set(s.id for s in f.substitute.all()) for f in foods}
+
+        # Batch-fetch sibling IDs (1 query for all foods with substitute_siblings)
+        sibling_foods = [f for f in foods if f.substitute_siblings]
+        if sibling_foods:
+            sibling_q = Q()
+            for f in sibling_foods:
+                parent_path = f.path[:Food.steplen * (f.depth - 1)]
+                sibling_q |= Q(path__startswith=parent_path, depth=f.depth)
+            candidates = list(Food.objects.filter(sibling_q).values_list('id', 'path', 'depth'))
+            for f in sibling_foods:
+                parent_path = f.path[:Food.steplen * (f.depth - 1)]
+                for cid, cpath, cdepth in candidates:
+                    if cdepth == f.depth and cpath.startswith(parent_path) and cid != f.id:
+                        food_sub_ids[f.id].add(cid)
+
+        # Batch-fetch child IDs (1 query for all foods with substitute_children)
+        children_foods = [f for f in foods if f.substitute_children]
+        if children_foods:
+            children_q = Q()
+            for f in children_foods:
+                children_q |= Q(path__startswith=f.path, depth__gt=f.depth)
+            candidates = list(Food.objects.filter(children_q).values_list('id', 'path', 'depth'))
+            for f in children_foods:
+                for cid, cpath, cdepth in candidates:
+                    if cpath.startswith(f.path) and cdepth > f.depth:
+                        food_sub_ids[f.id].add(cid)
+
+        all_sub_ids = set()
+        for sids in food_sub_ids.values():
+            all_sub_ids |= sids
+
+        if not all_sub_ids:
+            empty = {f.id: False for f in foods}
+            return empty, empty.copy()
+
+        from cookbook.helper.food_availability_helper import _is_available
+
+        # 1 query: which substitutes are available (legacy onhand_users OR inventory)?
+        available_ids = set(
+            Food.objects.filter(id__in=all_sub_ids).filter(_is_available(household, shared_users))
+            .values_list('id', flat=True)
+        )
+
+        # 1 query: which substitutes have inventory only? (drives substitute_inventory)
+        inventory_q = Q(inventoryentry__amount__gt=0)
+        if household is not None:
+            inventory_q &= Q(inventoryentry__inventory_location__household=household)
+        inventory_ids = set(
+            Food.objects.filter(id__in=all_sub_ids).filter(inventory_q)
+            .values_list('id', flat=True)
+        )
+
+        sub_onhand = {f.id: bool(food_sub_ids[f.id] & available_ids) for f in foods}
+        sub_inventory = {f.id: bool(food_sub_ids[f.id] & inventory_ids) for f in foods}
+        return sub_onhand, sub_inventory
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        foods = page if page is not None else list(queryset)
+
+        serializer = self.get_serializer(foods, many=True)
+
+        # Batch-compute substitute flags for the full serializer (skip for ?simple=true)
+        if not request.query_params.get('simple', False):
+            sub_onhand, sub_inventory = self._compute_substitute_flags(foods)
+            serializer.context['_substitute_onhand'] = sub_onhand
+            serializer.context['_substitute_inventory'] = sub_inventory
+
+        if page is not None:
+            return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
 
     def get_serializer_class(self):
         if self.request and self.request.query_params.get('simple', False):
             return FoodSimpleSerializer
         return self.serializer_class
 
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=FoodStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        shared_users = self._shared_users
+        base_qs = Food.objects.filter(space=request.space)
+
+        base_qs = base_qs.annotate(
+            _has_inventory=Exists(self._inventory_subquery(request.space)),
+            _has_expired=Exists(self._expired_subquery(request.space)),
+        )
+
+        if shared_users:
+            shopping_sub = ShoppingListEntry.objects.filter(
+                space=request.space,
+                food=OuterRef('id'),
+                checked=False,
+                created_by__in=shared_users,
+            )
+            agg = base_qs.annotate(_shopping=Exists(shopping_sub)).aggregate(
+                onhand=Count('pk', filter=Q(onhand_users__id__in=shared_users), distinct=True),
+                shopping=Count('pk', filter=Q(_shopping=True), distinct=True),
+                ignored=Count('pk', filter=Q(ignore_shopping=True), distinct=True),
+                inventory=Count('pk', filter=Q(_has_inventory=True), distinct=True),
+                expired=Count('pk', filter=Q(_has_expired=True), distinct=True),
+                total=Count('pk', distinct=True),
+            )
+        else:
+            agg = base_qs.aggregate(
+                ignored=Count('pk', filter=Q(ignore_shopping=True)),
+                inventory=Count('pk', filter=Q(_has_inventory=True)),
+                expired=Count('pk', filter=Q(_has_expired=True)),
+                total=Count('pk'),
+            )
+            agg.update(onhand=0, shopping=0)
+
+        return Response({k: v or 0 for k, v in agg.items()})
+
     # TODO I could not find any usage of this and it causes schema generation issues, so commenting it for now
     # this is used on the Shopping Badge
-    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
+    @decorators.action(detail=True, methods=['PUT'])
     # # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
         if self.request.space.demo:
@@ -1118,14 +1501,20 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
         if unit is not None:
             unit = Unit.objects.filter(pk=unit, space=request.space).first()
-            if unit and unit is None:
-                raise APIException({'error': 'Unit not found in current space'}, code=status.HTTP_400_BAD_REQUEST)
+            if unit is None:
+                return Response({'error': 'Unit not found in current space'}, status=status.HTTP_400_BAD_REQUEST)
 
         ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space,
                                          created_by=request.user)
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
-    @decorators.action(detail=True, methods=['POST'], )
+    @decorators.action(detail=True, methods=['GET'], serializer_class=FoodSimpleSerializer)
+    def substitutes(self, request, pk):
+        obj = self.get_object()
+        qs = obj.get_substitutes()
+        return Response(FoodSimpleSerializer(qs, many=True).data)
+
+    @decorators.action(detail=True, methods=['POST'])
     def fdc(self, request, pk):
         """
         updates the food with all possible data from the FDC Api
@@ -1735,11 +2124,16 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int, many=True),
     OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int, many=True),
 
-    OpenApiParameter(name='units', description=_('ID of unit a recipe should have.'), type=int),
+    OpenApiParameter(name='units', description=_('ID of unit a recipe should have. For multiple repeat parameter. Equivalent to units_or'), type=int, many=True),
+    OpenApiParameter(name='units_or', description=_('Unit IDs, repeat for multiple. Return recipes with any of the units'), type=int, many=True),
+    OpenApiParameter(name='units_and', description=_('Unit IDs, repeat for multiple. Return recipes with all of the units.'), type=int, many=True),
+    OpenApiParameter(name='units_or_not', description=_('Unit IDs, repeat for multiple. Exclude recipes with any of the units.'), type=int, many=True),
+    OpenApiParameter(name='units_and_not', description=_('Unit IDs, repeat for multiple. Exclude recipes with all of the units.'), type=int, many=True),
 
     OpenApiParameter(name='rating', description=_('Exact rating of recipe'), type=int),
     OpenApiParameter(name='rating_gte', description=_('Rating a recipe should have or greater.'), type=int),
     OpenApiParameter(name='rating_lte', description=_('Rating a recipe should have or smaller.'), type=int),
+    OpenApiParameter(name='unrated', description=_('If only unrated recipes (never rated by the current user) should be returned. Mutually exclusive with rating. [''true''/''<b>false</b>'']'), type=bool),
 
     OpenApiParameter(name='timescooked', description=_('Filter recipes cooked X times.'), type=int),
     OpenApiParameter(name='timescooked_gte', description=_('Filter recipes cooked X times or more.'), type=int),
@@ -1778,6 +2172,26 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     permission_classes = [CustomRecipePermission & CustomTokenHasReadWriteScope]
     pagination_class = RecipePagination
 
+    def _annotated_food_prefetch(self):
+        """Build a Prefetch for ingredient foods with inventory/shopping annotations,
+        matching the same pattern used by FoodViewSet._annotate_and_prefetch()."""
+        try:
+            shared_users = get_household_user_ids(self.request.user_space)
+        except AttributeError:
+            shared_users = []
+
+        food_qs = Food.objects.all()
+        if shared_users:
+            shopping_filter = {'space': self.request.space, 'food': OuterRef('id'), 'checked': False, 'created_by__in': shared_users}
+            food_qs = food_qs.annotate(shopping_status=Exists(ShoppingListEntry.objects.filter(**shopping_filter).values('id')))
+        else:
+            food_qs = food_qs.annotate(shopping_status=Value(False, output_field=BooleanField()))
+
+        food_qs = food_qs.annotate(
+            has_inventory_status=Exists(InventoryEntry.objects.filter(food=OuterRef('id'), amount__gt=0, space=self.request.space))
+        )
+        return Prefetch('steps__ingredients__food', queryset=food_qs)
+
     def get_queryset(self):
         share = self.request.GET.get('share', None)
 
@@ -1793,7 +2207,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                                                                'steps__ingredients',
                                                                'steps__ingredients__step_set',
                                                                'steps__ingredients__step_set__recipe_set',
-                                                               'steps__ingredients__food',
+                                                               self._annotated_food_prefetch(),
                                                                'steps__ingredients__food__properties',
                                                                'steps__ingredients__food__properties__property_type',
                                                                'steps__ingredients__food__inherit_fields',
@@ -1819,10 +2233,12 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             space=self.request.space).filter(
             Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
 
-        params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x
-                  in list(self.request.GET)}
-        search = RecipeSearch(self.request, **params)
-        self.queryset = search.get_queryset(self.queryset).prefetch_related('keywords', 'cooklog_set')
+        search = RecipeSearch(self.request, self.request.GET)
+        self.queryset = search.get_queryset(self.queryset).with_rating(
+            self.request.user
+        ).with_last_cooked(
+            self.request.user, self.request.space
+        ).prefetch_related('keywords', 'cooklog_set')
         return self.queryset
 
     def list(self, request, *args, **kwargs):
@@ -1845,6 +2261,46 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         serializer = self.get_serializer(instance)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @extend_schema(responses=RecipeStatsSerializer(many=False))
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=RecipeStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        """Aggregate counts over the user-visible recipe set (space scoped,
+        private-visibility enforced). Used by the SearchPage stats footer."""
+        user = request.user
+        base_qs = Recipe.objects.filter(space=request.space).filter(
+            Q(private=False) | (Q(private=True) & (Q(created_by=user) | Q(shared=user)))
+        ).distinct()
+
+        new_cutoff = timezone.now() - datetime.timedelta(days=7)
+
+        unrated_sub = CookLog.objects.filter(
+            recipe=OuterRef('pk'), created_by=user, rating__isnull=False, rating__gt=0,
+        )
+        cooked_sub = CookLog.objects.filter(recipe=OuterRef('pk'), created_by=user)
+
+        annotated = base_qs.annotate(
+            _rated=Exists(unrated_sub),
+            _cooked=Exists(cooked_sub),
+        )
+
+        user_space = getattr(request, 'user_space', None)
+        if user_space is not None:
+            household = getattr(user_space, 'household', None)
+            shopping_users = get_household_user_ids(user_space)
+            makenow_ready = base_qs.cookable(household, shopping_users, missing=0).count()
+        else:
+            makenow_ready = 0
+
+        agg = annotated.aggregate(
+            total=Count('pk', distinct=True),
+            new=Count('pk', filter=Q(created_at__gte=new_cutoff), distinct=True),
+            unrated=Count('pk', filter=Q(_rated=False), distinct=True),
+            never_cooked=Count('pk', filter=Q(_cooked=False), distinct=True),
+            private=Count('pk', filter=Q(private=True), distinct=True),
+        )
+        agg['makenow_ready'] = makenow_ready
+        return Response({k: (v or 0) for k, v in agg.items()})
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=RecipeImageSerializer,
                        parser_classes=[MultiPartParser], )
@@ -2261,12 +2717,16 @@ class ShoppingListViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMix
         return queryset
 
 
-@extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='updated_after',
-                     description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'),
-                     type=datetime.datetime),
-    OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int)
-]))
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='updated_after', description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'), type=datetime.datetime),
+            OpenApiParameter(name='mealplan', description=_('Returns only entries associated with the given mealplan id'), type=int),
+            OpenApiParameter(name='food', description=_('Returns only entries for the given food id'), type=int),
+            OpenApiParameter(name='checked', description=_('Filter by checked state. When omitted, returns unchecked entries plus recently-completed ones within the shopping_recent_days window.'), type=bool),
+        ]
+    )
+)
 class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     """
     individual entries of a shopping list
@@ -2299,15 +2759,26 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         updated_after = self.request.query_params.get('updated_after', None)
         mealplan = self.request.query_params.get('mealplan', None)
+        food = self.request.query_params.get('food', None)
+        checked = self.request.query_params.get('checked', None)
 
         if not self.detail:
-            # to keep the endpoint small, only return entries as old as user preference recent days
-            today_start = timezone.now().replace(hour=0, minute=0, second=0)
-            week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
-            self.queryset = self.queryset.filter((Q(checked=False) | Q(completed_at__gte=week_ago)))
+            if checked is not None:
+                self.queryset = self.queryset.filter(checked=str2bool(checked))
+            else:
+                # to keep the endpoint small, only return entries as old as user preference recent days
+                today_start = timezone.now().replace(hour=0, minute=0, second=0)
+                week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
+                self.queryset = self.queryset.filter((Q(checked=False) | Q(completed_at__gte=week_ago)))
 
             if mealplan is not None:
                 self.queryset = self.queryset.filter(list_recipe__mealplan_id=mealplan)
+
+            if food is not None:
+                try:
+                    self.queryset = self.queryset.filter(food_id=int(food))
+                except ValueError:
+                    self.queryset = self.queryset.none()
 
         try:
             if updated_after:
@@ -2381,29 +2852,71 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             return Response(serializer.errors, 400)
 
 
-class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: created_at, -created_at, recipe__name, -recipe__name. Ignored when query is active.'
+    ),
+]))
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='query', description='lookup if query string is contained within the recipe name, case insensitive', type=str),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: created_at, -created_at, recipe__name, -recipe__name. Ignored when query is active.'
+    ),
+]))
+class ViewLogViewSet(OrderingMixin, LoggingMixin, viewsets.ModelViewSet):
     queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    ordering_lower_fields = {
+        'recipe__name': Lower('recipe__name').asc(),
+        '-recipe__name': Lower('recipe__name').desc(),
+    }
+    ordering_plain_fields = {'created_at', '-created_at'}
+
     def get_queryset(self):
         # working backwards from the test - this is supposed to be limited to user view logs only??
-        return self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
+        qs = self.queryset.select_related('recipe').filter(created_by=self.request.user).filter(space=self.request.space)
+        query = self.request.query_params.get('query', None)
+        if query:
+            qs = qs.filter(recipe__name__icontains=query)
+        return self._apply_ordering(qs)
 
 
-@extend_schema_view(list=extend_schema(
-    parameters=[OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int), ]))
-class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int),
+    OpenApiParameter(name='query', description='lookup if query string is contained within the recipe name, case insensitive', type=str),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: created_at, -created_at, rating, -rating, recipe__name, -recipe__name. Ignored when query is active.'
+    ),
+]))
+class CookLogViewSet(OrderingMixin, LoggingMixin, viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    ordering_lower_fields = {
+        'recipe__name': Lower('recipe__name').asc(),
+        '-recipe__name': Lower('recipe__name').desc(),
+    }
+    ordering_plain_fields = {'created_at', '-created_at', 'rating', '-rating'}
+
     def get_queryset(self):
+        self.queryset = self.queryset.select_related('recipe')
         if self.request.query_params.get('recipe', None):
             self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
-        return self.queryset.filter(space=self.request.space)
+        query = self.request.query_params.get('query', None)
+        if query:
+            self.queryset = self.queryset.filter(recipe__name__icontains=query)
+        return self._apply_ordering(self.queryset.filter(space=self.request.space))
 
 
 class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -2442,41 +2955,66 @@ class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space, created_by=self.request.user).all()
 
 
-class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, file_size_kb, -file_size_kb, created_at, -created_at. Ignored when query is active.'
+    ),
+]))
+# destroy() 403s (not 500s) when a protected FK — e.g. Step.file — blocks deletion
+class UserFileViewSet(ProtectedDestroyMixin, OrderingMixin, LoggingMixin, StandardFilterModelViewSet, DeleteRelationMixing):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     parser_classes = [MultiPartParser]
 
+    ordering_lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+    ordering_plain_fields = {'file_size_kb', '-file_size_kb', 'created_at', '-created_at'}
+
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()
-        return super().get_queryset()
+        return self._apply_ordering(super().get_queryset())
 
 
-class AutomationViewSet(LoggingMixin, StandardFilterModelViewSet):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
+        name='type',
+        description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
+        type=str,
+        many=True,
+        enum=[a[0] for a in Automation.automation_types]
+    ),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, type, -type, order, -order. Ignored when query is active.'
+    ),
+]))
+class AutomationViewSet(OrderingMixin, LoggingMixin, StandardFilterModelViewSet):
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
-    @extend_schema(
-        parameters=[OpenApiParameter(
-            name='type',
-            description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
-            type=str,
-            many=True,
-            enum=[a[0] for a in Automation.automation_types])
-        ]
-    )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+    ordering_lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+    ordering_plain_fields = {'type', '-type', 'order', '-order'}
 
     def get_queryset(self):
         automation_type = self.request.query_params.getlist('type', [])
         if automation_type:
             self.queryset = self.queryset.filter(type__in=automation_type)
-        return self.queryset.filter(space=self.request.space).all()
+        return self._apply_ordering(self.queryset.filter(space=self.request.space).all())
+
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=AutomationStatsSerializer, url_path='stats', url_name='stats')
+    def stats(self, request):
+        agg = Automation.objects.filter(space=request.space).aggregate(
+            enabled=Count('pk', filter=Q(disabled=False)),
+            disabled=Count('pk', filter=Q(disabled=True)),
+            total=Count('pk'),
+        )
+        return Response({k: v or 0 for k, v in agg.items()})
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -2505,29 +3043,36 @@ class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
             return None
 
 
-@extend_schema_view(list=extend_schema(
-    parameters=[OpenApiParameter(
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(
         name='type',
         description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
         type=str,
         many=True,
-        enum=[m[0] for m in CustomFilter.MODELS])
-    ]
-))
-class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
+        enum=[m[0] for m in CustomFilter.MODELS]
+    ),
+    OpenApiParameter(
+        name='ordering',
+        type=str,
+        description='Order results by field. Allowed: name, -name, type, -type, created_at, -created_at. Ignored when query is active.'
+    ),
+]))
+class CustomFilterViewSet(OrderingMixin, LoggingMixin, StandardFilterModelViewSet):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    ordering_lower_fields = {'name': Lower('name').asc(), '-name': Lower('name').desc()}
+    ordering_plain_fields = {'type', '-type', 'created_at', '-created_at'}
+
     def get_queryset(self):
-        # TODO add tests for filter
         filter_type = self.request.query_params.getlist('type', [])
         if filter_type:
             self.queryset = self.queryset.filter(type__in=filter_type)
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
-        return super().get_queryset()
+        return self._apply_ordering(super().get_queryset())
 
 
 class AccessTokenViewSet(LoggingMixin, viewsets.ModelViewSet):

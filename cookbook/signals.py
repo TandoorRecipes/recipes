@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
 from django.core.cache import caches
-from django.db.models.signals import post_delete, post_save, pre_save
+from django.db.models.signals import m2m_changed, post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django.utils import translation
 from django_scopes import scopes_disabled
@@ -145,23 +145,52 @@ def capture_old_household(sender, instance=None, **kwargs):
         instance._old_household_id = None
 
 
+def _fan_out_household_cache_delete(space_id, household_id):
+    """Delete per-user cache keys for every current member of a household."""
+    for member_user_id in UserSpace.objects.filter(
+        space_id=space_id, household_id=household_id
+    ).values_list('user_id', flat=True):
+        caches['default'].delete(f'household_user_ids_{space_id}_{household_id}_user_{member_user_id}')
+
+
 @receiver(post_save, sender=UserSpace)
 def invalidate_household_cache_on_save(sender, instance=None, **kwargs):
     if not instance:
         return
-    # Invalidate the new household's cache
+    # Invalidate the new household's cache (fan out — cache is per-user)
     if instance.household_id:
-        caches['default'].delete(f'household_user_ids_{instance.space_id}_{instance.household_id}')
-    # Invalidate the old household's cache if it changed
+        _fan_out_household_cache_delete(instance.space_id, instance.household_id)
+    # Invalidate the old household's cache if it changed. The fan-out skips
+    # this user (they're no longer a member), so delete their key explicitly.
     old_household_id = getattr(instance, '_old_household_id', None)
     if old_household_id and old_household_id != instance.household_id:
-        caches['default'].delete(f'household_user_ids_{instance.space_id}_{old_household_id}')
-    # Invalidate the per-user fallback cache if user has no household
-    if not instance.household_id:
-        caches['default'].delete(f'household_user_ids_{instance.space_id}_user_{instance.user_id}')
+        _fan_out_household_cache_delete(instance.space_id, old_household_id)
+        caches['default'].delete(f'household_user_ids_{instance.space_id}_{old_household_id}_user_{instance.user_id}')
+    # Always invalidate the per-user fallback cache for this user
+    caches['default'].delete(f'household_user_ids_{instance.space_id}_user_{instance.user_id}')
 
 
 @receiver(post_delete, sender=UserSpace)
 def invalidate_household_cache_on_delete(sender, instance=None, **kwargs):
-    if instance and instance.household_id:
-        caches['default'].delete(f'household_user_ids_{instance.space_id}_{instance.household_id}')
+    if not instance:
+        return
+    if instance.household_id:
+        _fan_out_household_cache_delete(instance.space_id, instance.household_id)
+        # The deleted UserSpace is gone from the DB, so the fan-out missed it.
+        caches['default'].delete(f'household_user_ids_{instance.space_id}_{instance.household_id}_user_{instance.user_id}')
+    caches['default'].delete(f'household_user_ids_{instance.space_id}_user_{instance.user_id}')
+
+
+@receiver(m2m_changed, sender=UserPreference.shopping_share.through)
+def invalidate_household_cache_on_shopping_share(sender, instance=None, action=None, **kwargs):
+    """A user's shopping_share is mixed into their cached household_user_ids
+    (get_household_user_ids), but it was only invalidated on UserSpace changes — a
+    plain shopping_share add/remove left the cache stale for up to the TTL. Clear the
+    owner's per-user cache entries (across all their spaces) on any share change."""
+    if action not in ('post_add', 'post_remove', 'post_clear') or not isinstance(instance, UserPreference):
+        return
+    user_id = instance.user_id
+    for us in UserSpace.objects.filter(user_id=user_id):
+        if us.household_id:
+            caches['default'].delete(f'household_user_ids_{us.space_id}_{us.household_id}_user_{user_id}')
+        caches['default'].delete(f'household_user_ids_{us.space_id}_user_{user_id}')
