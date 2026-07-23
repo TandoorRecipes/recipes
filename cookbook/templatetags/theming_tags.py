@@ -28,8 +28,6 @@ def get_theming_values(request):
         UserPreference.TANDOOR: 'themes/tandoor.min.css',
         UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
     }
-    nav_text_type_mapping = {Space.DARK: 'navbar-light',
-                             Space.LIGHT: 'navbar-dark'}  # inverted since navbar-dark means the background
 
     tv = {
         'logo_color_32': static('assets/logo_color_32.png'),
@@ -53,8 +51,6 @@ def get_theming_values(request):
             tv['theme'] = static(themes[request.user.userpreference.theme])
         if request.user.userpreference.nav_bg_color:
             tv['nav_bg_color'] = request.user.userpreference.nav_bg_color
-        if request.user.userpreference.nav_text_color and request.user.userpreference.nav_text_color in nav_text_type_mapping:
-            tv['nav_text_class'] = nav_text_type_mapping[request.user.userpreference.nav_text_color]
         if not request.user.userpreference.nav_sticky:
             tv['sticky_nav'] = ''
 
@@ -71,8 +67,6 @@ def get_theming_values(request):
             tv['nav_logo'] = space.nav_logo.file.url
         if space.nav_bg_color:
             tv['nav_bg_color'] = space.nav_bg_color
-        if space.nav_text_color and space.nav_text_color in nav_text_type_mapping:
-            tv['nav_text_class'] = nav_text_type_mapping[space.nav_text_color]
         if space.app_name:
             tv['app_name'] = space.app_name
     return tv

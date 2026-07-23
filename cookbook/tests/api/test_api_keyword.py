@@ -1,11 +1,14 @@
 import json
+import uuid
 
 import pytest
+from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Keyword
+from cookbook.models import Keyword, Recipe
 from cookbook.tests.conftest import get_random_recipe
+from cookbook.tests.factories import KeywordFactory
 
 #    ------------------ IMPORTANT -------------------
 #
@@ -20,10 +23,51 @@ LIST_URL = 'api:keyword-list'
 DETAIL_URL = 'api:keyword-detail'
 MOVE_URL = 'api:keyword-move'
 MERGE_URL = 'api:keyword-merge'
+STATS_URL = 'api:keyword-stats'
 if (Keyword.node_order_by):
     node_location = 'sorted-child'
 else:
     node_location = 'last-child'
+
+
+def get_stats(client):
+    """Helper to GET the dedicated keyword stats endpoint and return parsed results."""
+    r = client.get(reverse(STATS_URL))
+    assert r.status_code == 200
+    return json.loads(r.content)
+
+
+def test_stats_endpoint_returns_counts(u1_s1, space_1):
+    stats = get_stats(u1_s1)
+    assert isinstance(stats['total'], int)
+    assert isinstance(stats['with_recipe'], int)
+    assert isinstance(stats['with_children'], int)
+
+
+def test_stats_with_children_counts_tree_parents(u1_s1, space_1):
+    """with_children counts keywords that have at least one child (numchild > 0)."""
+    baseline = get_stats(u1_s1)
+    with scopes_disabled():
+        parent = Keyword.add_root(name=str(uuid.uuid4()), space=space_1)
+        parent.add_child(name=str(uuid.uuid4()), space=space_1)
+
+    stats = get_stats(u1_s1)
+    assert stats['total'] == baseline['total'] + 2
+    assert stats['with_children'] == baseline['with_children'] + 1  # only the parent
+
+
+def test_stats_with_recipe_counts_keywords_on_recipes(u1_s1, space_1):
+    """with_recipe counts keywords linked to at least one recipe."""
+    baseline = get_stats(u1_s1)
+    with scopes_disabled():
+        KeywordFactory(space=space_1)  # unused keyword
+        used = KeywordFactory(space=space_1)
+        recipe = Recipe.objects.create(
+            name=str(uuid.uuid4()), created_by=auth.get_user(u1_s1), space=space_1, internal=True)
+        recipe.keywords.add(used)
+
+    stats = get_stats(u1_s1)
+    assert stats['with_recipe'] == baseline['with_recipe'] + 1
 
 
 @pytest.fixture()
@@ -370,3 +414,15 @@ def test_tree_filter(obj_1, obj_1_1, obj_1_1_1, obj_2, obj_3, u1_s1):
     assert response['count'] == 4
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={obj_1.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
+
+
+def test_ordering_name(u1_s1, space_1):
+    with scopes_disabled():
+        Keyword.objects.get_or_create(name='zzz_ordering', space=space_1)
+        Keyword.objects.get_or_create(name='aaa_ordering', space=space_1)
+
+    asc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=name').content)
+    assert asc['results'][0]['name'] == 'aaa_ordering'
+
+    desc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=-name').content)
+    assert desc['results'][0]['name'] == 'zzz_ordering'

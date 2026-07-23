@@ -1,69 +1,74 @@
 <template>
     <v-form>
-        <p class="text-h6">{{ $t('Cosmetic') }}</p>
-        <v-divider class="mb-3"></v-divider>
+        <v-expansion-panels multiple v-model="openPanels">
 
-        <language-select></language-select>
+            <!-- Appearance -->
+            <v-expansion-panel value="appearance">
+                <v-expansion-panel-title>
+                    <v-icon start icon="fa-solid fa-palette" />
+                    {{ $t('Appearance') }}
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <v-select
+                        :label="$t('Theme')"
+                        class="mt-2"
+                        v-model="userPrefs.userSettings.theme"
+                        :items="[{title: 'Tandoor', value: 'TANDOOR'}, {title: 'Tandoor Dark', value: 'TANDOOR_DARK'}]"
+                    />
 
-        <v-label>{{$t('Nav_Color')}}</v-label>
-        <v-color-picker v-model="useUserPreferenceStore().userSettings.navBgColor" mode="hex" :modes="['hex']" show-swatches :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
+                    <v-label class="mt-2">{{ $t('Nav_Color') }}</v-label>
+                    <v-color-picker
+                        v-model="userPrefs.userSettings.navBgColor"
+                        mode="hex"
+                        :modes="['hex']"
+                        show-swatches
+                        :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"
+                        class="mb-2"
+                    />
 
-        <v-select :label="$t('Theme')" class="mt-4" v-model="useUserPreferenceStore().userSettings.theme" :items="[{title: 'Tandoor', value: 'TANDOOR'}, {title: 'Tandoor Dark', value: 'TANDOOR_DARK'}, ]">
-        </v-select>
+                    <v-checkbox :label="$t('Show_Logo')" :hint="$t('Show_Logo_Help')" persistent-hint v-model="userPrefs.userSettings.navShowLogo" />
+                    <v-checkbox :label="$t('Sticky_Nav')" :hint="$t('Sticky_Nav_Help')" persistent-hint v-model="userPrefs.userSettings.navSticky" />
 
-        <v-checkbox :label="$t('Show_Logo')" :hint="$t('Show_Logo_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.navShowLogo"></v-checkbox>
-        <v-checkbox :label="$t('Sticky_Nav')" :hint="$t('Sticky_Nav_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.navSticky"></v-checkbox>
+                    <div class="mt-2">
+                        <language-select />
+                    </div>
 
-        <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{$t('Save')}}</v-btn>
+                    <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
 
-        <p class="text-h6 mt-3">{{ $t('Preferences') }}</p>
-        <v-divider class="mb-3"></v-divider>
+            <!-- Recipe Display -->
+            <v-expansion-panel value="recipe-display">
+                <v-expansion-panel-title>
+                    <v-icon start icon="fa-solid fa-utensils" />
+                    {{ $t('Recipe_Display') }}
+                </v-expansion-panel-title>
+                <v-expansion-panel-text>
+                    <v-checkbox :label="$t('Use_Fractions')" :hint="$t('Use_Fractions_Help')" persistent-hint v-model="userPrefs.userSettings.useFractions" />
+                    <v-number-input v-model="userPrefs.userSettings.ingredientDecimals" :label="$t('Decimals')" :step="1" :min="0" :max="4" class="mt-2" />
+                    <v-text-field v-model="userPrefs.userSettings.defaultUnit" :label="$t('Default_Unit')" class="mt-2" />
+                    <v-checkbox :label="$t('show_step_ingredients_setting')" :hint="$t('show_step_ingredients_setting_help')" persistent-hint v-model="userPrefs.userSettings.showStepIngredients" />
+                    <v-checkbox :label="$t('Comments_setting')" v-model="userPrefs.userSettings.comments" />
+                    <v-checkbox :label="$t('left_handed')" :hint="$t('left_handed_help')" persistent-hint v-model="userPrefs.userSettings.leftHanded" />
 
-        <v-text-field v-model="useUserPreferenceStore().userSettings.defaultUnit" :label="$t('Default_Unit')"></v-text-field>
-        <v-number-input v-model="useUserPreferenceStore().userSettings.ingredientDecimals" :label="$t('Decimals')" :step="1" :min="0" :max="4"></v-number-input>
+                    <v-btn class="mt-4" color="success" @click="userPrefs.updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
+                </v-expansion-panel-text>
+            </v-expansion-panel>
 
-<!--        <v-select-->
-<!--            :label="$t('DefaultPage')"-->
-<!--            v-model="useUserPreferenceStore().userSettings.defaultPage"-->
-<!--            :items="availableDefaultPages"-->
-<!--            item-title="label"-->
-<!--            item-value="page"-->
-<!--        ></v-select>-->
-
-        <v-checkbox :label="$t('Use_Fractions')" :hint="$t('Use_Fractions_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.useFractions"></v-checkbox>
-        <v-checkbox :label="$t('Comments_setting')" v-model="useUserPreferenceStore().userSettings.comments"></v-checkbox>
-        <v-checkbox :label="$t('left_handed')" :hint="$t('left_handed_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.leftHanded"></v-checkbox>
-        <v-checkbox :label="$t('show_step_ingredients_setting')" :hint="$t('show_step_ingredients_setting_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.showStepIngredients"></v-checkbox>
-        <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{$t('Save')}}</v-btn>
+        </v-expansion-panels>
     </v-form>
 </template>
 
-
 <script setup lang="ts">
-
-
-import {onMounted, ref} from "vue";
-import {ApiApi, Localization} from "@/openapi";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {useI18n} from "vue-i18n";
-import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
-import LanguageSelect from "@/components/inputs/LanguageSelect.vue";
+import {ref} from "vue"
+import {useI18n} from "vue-i18n"
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore"
+import LanguageSelect from "@/components/inputs/LanguageSelect.vue"
 
 const {t} = useI18n()
-
-const availableDefaultPages = ref([
-    {page: 'SEARCH', label: t('Search')},
-    {page: 'SHOPPING', label: t('Shopping_list')},
-    {page: 'PLAN', label: t('Meal_Plan')},
-    {page: 'BOOKS', label: t('Books')},
-])
-
-onMounted(() => {
-
-})
+const userPrefs = useUserPreferenceStore()
+const openPanels = ref(['appearance', 'recipe-display'])
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

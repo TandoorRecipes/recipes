@@ -2,7 +2,7 @@
     <v-card class="mt-1" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode" :loading="loading">
         <v-card-text>
             <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment" auto-grow></v-textarea>
-            <v-row dense>
+            <v-row density="compact">
                 <v-col cols="12" md="4">
                     <v-label>{{ $t('Rating') }}</v-label>
                     <br/>
@@ -73,7 +73,7 @@ import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, CookLog, Recipe} from "@/openapi";
 import {DateTime} from "luxon";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {VDateInput} from 'vuetify/labs/VDateInput'
+import {VDateInput} from 'vuetify/components'
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 

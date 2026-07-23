@@ -2,7 +2,7 @@ import {useI18n} from "vue-i18n";
 import {VDivider, VListItem} from "vuetify/components";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
-import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import {TANDOOR_PLUGINS} from "@/plugin_registry.ts";
 import {plugin} from "@/plugins/open_data_plugin/plugin.ts";
 
 /**

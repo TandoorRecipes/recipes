@@ -1,13 +1,8 @@
-from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.postgres.search import SearchVector
 from django.core.management.base import BaseCommand
-from django.utils import translation
-from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 
-from cookbook.managers import DICTIONARY
-from cookbook.models import Recipe, Step, Space
+from cookbook.models import Space
 
 
 class Command(BaseCommand):

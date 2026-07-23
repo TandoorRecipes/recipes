@@ -14,14 +14,13 @@ import {
     SupermarketCategory, Sync, SyncLog,
     Unit,
     UnitConversion, User, UserFile,
-    UserSpace, ViewLog, Household
+    UserSpace, ViewLog, Household,
+    type PaginatedGenericModelReferenceList
 } from "@/openapi";
-import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {defineAsyncComponent, shallowRef} from "vue";
-
-type VDataTableProps = InstanceType<typeof VDataTable>['$props']
+import type {FilterDef, ActionDef, BatchAction, HeaderAction, ListSettings, ColumnType, SortDef, StatDef} from "@/composables/modellist/types";
 
 /**
  * returns a GenericModel instance with the given model type
@@ -32,9 +31,57 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  */
 export function getGenericModelFromString(modelName: EditorSupportedModels, t: any): false | GenericModel {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
-        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
+        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase())!, t)
     } else {
         return false
+    }
+}
+
+/**
+ * Models surfaced as a list on the Database page (one <database-model-col> each).
+ * This is the single source of truth for which models are reachable via /list/:model
+ * from the UI. The generic router accepts ANY model string, so without this gate a
+ * typed URL like /list/RecipeBookEntry renders an unwired (often empty/blank) page.
+ * Kept in sync with DatabasePage.vue by a drift test in __tests__/types/Models.test.ts.
+ */
+export const DATABASE_MODELS: ReadonlySet<string> = new Set([
+    'Food', 'Unit', 'Keyword', 'PropertyType',
+    'Supermarket', 'ShoppingList', 'SupermarketCategory', 'MealType',
+    'InventoryLocation',
+    'Space', 'UserSpace', 'Household', 'InviteLink',
+    'AiProvider', 'AiLog',
+    'UnitConversion', 'Automation', 'UserFile', 'CustomFilter', 'CookLog', 'ViewLog',
+    'Sync', 'SyncLog', 'Storage', 'RecipeImport', 'ConnectorConfig',
+])
+
+export type ModelRouteOperation = 'list' | 'edit' | 'delete'
+
+/**
+ * Whether the generic /list, /edit or /delete route should render for a given model.
+ * The router auto-generates these routes for every registered model, but most models
+ * are relational/internal (no editor, not wired into the UI). A disallowed route is
+ * redirected to 404 instead of rendering a blank shell.
+ *
+ *   edit   → the model has an editor component (a form exists)
+ *   list   → the model is surfaced on the Database page (DATABASE_MODELS)
+ *   delete → either of the above (a user-facing model can have its rows deleted)
+ *
+ * Case-insensitive: call-sites use both 'Food' and 'food'.
+ */
+export function canRouteToModel(modelName: string, operation: ModelRouteOperation): boolean {
+    const model = SUPPORTED_MODELS.get(modelName.toLowerCase())
+    if (!model) return false
+    const editable = !!model.editorComponent
+    const listable = DATABASE_MODELS.has(model.name)
+    switch (operation) {
+        case 'edit':
+            return editable
+        case 'list':
+            return listable
+        case 'delete':
+            return editable || listable
+        default:
+            return false
     }
 }
 
@@ -47,25 +94,14 @@ export function registerModel(model: Model) {
 }
 
 /**
- * returns a list of models that should be shown in the list/database view
- */
-export function getListModels() {
-    let modelList: Model[] = []
-    SUPPORTED_MODELS.forEach((model) => {
-        if (!model.disableListView) {
-            modelList.push(model)
-        }
-    })
-    return modelList
-}
-
-/**
  * common list parameters shared by all generic models
+ * index signature allows filter params to pass through to API
  */
 type GenericListRequestParameter = {
     page: number,
     pageSize: number,
     query: string,
+    [key: string]: any,
 }
 
 /**
@@ -85,11 +121,37 @@ type DeleteRelationRequestParameter = {
  *
  * converted to VDataTableHeaders by the GenericModel instance
  */
-type ModelTableHeaders = {
+export type ModelTableHeaders = {
     title: string,
     key: string,
-    align: 'end' | 'start',
+    align?: 'end' | 'start',
     hidden?: boolean,
+    /** Enhanced column config: cell renderer type */
+    type?: ColumnType,
+    /** For boolean-indicator type: icon when true */
+    trueIcon?: string,
+    /** For boolean-indicator type: icon when false */
+    falseIcon?: string,
+    /** Whether this column supports display mode switching (icon vs text) */
+    hasDisplayMode?: boolean,
+    /** Default display mode if hasDisplayMode is true */
+    defaultDisplayMode?: 'icon' | 'text',
+    /** Dot-path to data field if different from key */
+    field?: string,
+    /** For number type: apply font-weight-medium when value > 0 */
+    emphasizeNonZero?: boolean,
+    /** For number type: when value > 0, render as a router-link that
+     *  drills into the matching filter on the target page (typically
+     *  SearchPage). Param value is the row's `id`. */
+    filterLink?: {route: string, param: string},
+    /** For label-chip type: maps stringified values to chip display. Special key '_default' for catch-all. */
+    chipMap?: Record<string, {label: string, color: string}>,
+    /** For label-chip type: resolves the chip map key from the full item (when logic needs more than the cell value) */
+    chipValueResolver?: (item: Record<string, any>) => string,
+    /** For text type with array values: joins array items by this sub-field (e.g., 'name' → item[key].map(x => x.name).join(', ')) */
+    joinField?: string,
+    /** For label-chip type: optional click handler on the chip */
+    chipClickHandler?: (item: Record<string, any>) => void,
 }
 
 /**
@@ -113,7 +175,6 @@ export type Model = {
     disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
     disableSearch?: boolean | undefined,
-    disableListView?: boolean | undefined,
 
     isAdvancedDelete: boolean | undefined,
     isPaginated: boolean | undefined,
@@ -122,6 +183,15 @@ export type Model = {
     isTree?: boolean | undefined,
 
     tableHeaders: ModelTableHeaders[],
+
+    /** Enhanced list capabilities (optional — when absent, ModelListPage uses current behavior) */
+    filterDefs?: FilterDef[],
+    actionDefs?: ActionDef[],
+    batchActions?: BatchAction[],
+    headerActions?: HeaderAction[],
+    statDefs?: StatDef[],
+    listSettings?: ListSettings,
+    sortDefs?: SortDef[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
@@ -213,6 +283,15 @@ export type EditorSupportedTypes =
     | Household
     | Group
 
+import {FOOD_FILTER_DEFS, FOOD_ACTION_DEFS, FOOD_BATCH_ACTIONS, FOOD_STAT_DEFS, FOOD_LIST_SETTINGS, FOOD_SORT_OPTIONS} from "@/composables/modellist/FoodList";
+import {KEYWORD_FILTER_DEFS, KEYWORD_ACTION_DEFS, KEYWORD_STAT_DEFS, KEYWORD_LIST_SETTINGS, KEYWORD_SORT_OPTIONS} from "@/composables/modellist/KeywordList";
+import {UNIT_FILTER_DEFS, UNIT_ACTION_DEFS, UNIT_STAT_DEFS, UNIT_LIST_SETTINGS, UNIT_SORT_OPTIONS} from "@/composables/modellist/UnitList";
+import {AUTOMATION_FILTER_DEFS, AUTOMATION_ACTION_DEFS, AUTOMATION_STAT_DEFS, AUTOMATION_LIST_SETTINGS, AUTOMATION_SORT_OPTIONS} from "@/composables/modellist/AutomationList";
+import {COOKLOG_FILTER_DEFS, COOKLOG_ACTION_DEFS, COOKLOG_LIST_SETTINGS, COOKLOG_SORT_OPTIONS} from "@/composables/modellist/CookLogList";
+import {VIEWLOG_LIST_SETTINGS, VIEWLOG_SORT_OPTIONS} from "@/composables/modellist/ViewLogList";
+import {USERFILE_ACTION_DEFS, USERFILE_LIST_SETTINGS, USERFILE_SORT_OPTIONS} from "@/composables/modellist/UserFileList";
+import {CUSTOMFILTER_FILTER_DEFS, CUSTOMFILTER_ACTION_DEFS, CUSTOMFILTER_LIST_SETTINGS, CUSTOMFILTER_SORT_OPTIONS} from "@/composables/modellist/CustomFilterList";
+
 export const TFood = {
     name: 'Food',
     localizationKey: 'Food',
@@ -229,11 +308,20 @@ export const TFood = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Category', key: 'supermarketCategory.name'},
-        {title: 'Plural', key: 'plural', hidden: true},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Category', key: 'supermarketCategory.name', type: 'text'},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end',
+            filterLink: {route: 'SearchPage', param: 'foods'}},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true, emphasizeNonZero: true},
+        {title: 'Plural', key: 'pluralName', type: 'text'},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: FOOD_FILTER_DEFS,
+    actionDefs: FOOD_ACTION_DEFS,
+    batchActions: FOOD_BATCH_ACTIONS,
+    statDefs: FOOD_STAT_DEFS,
+    listSettings: FOOD_LIST_SETTINGS,
+    sortDefs: FOOD_SORT_OPTIONS,
 } as Model
 registerModel(TFood)
 
@@ -252,10 +340,17 @@ export const TUnit = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Plural', key: 'plural', hidden: true},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Plural', key: 'pluralName', type: 'text', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true,
+            filterLink: {route: 'SearchPage', param: 'units'}},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: UNIT_FILTER_DEFS,
+    actionDefs: UNIT_ACTION_DEFS,
+    statDefs: UNIT_STAT_DEFS,
+    listSettings: UNIT_LIST_SETTINGS,
+    sortDefs: UNIT_SORT_OPTIONS,
 } as Model
 registerModel(TUnit)
 
@@ -275,9 +370,18 @@ export const TKeyword = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'FullName', key: 'fullName', type: 'text', hidden: true},
+        {title: 'Recipes', key: 'numrecipe', type: 'number', align: 'end', hidden: true,
+            filterLink: {route: 'SearchPage', param: 'keywords'}},
+        {title: 'Children', key: 'numchild', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: KEYWORD_FILTER_DEFS,
+    actionDefs: KEYWORD_ACTION_DEFS,
+    statDefs: KEYWORD_STAT_DEFS,
+    listSettings: KEYWORD_LIST_SETTINGS,
+    sortDefs: KEYWORD_SORT_OPTIONS,
 } as Model
 registerModel(TKeyword)
 
@@ -293,7 +397,6 @@ export const TRecipe = {
     isAdvancedDelete: true,
     toStringKeys: ['name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -311,7 +414,6 @@ export const TStep = {
     isPaginated: true,
     toStringKeys: ['name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -329,7 +431,6 @@ export const TIngredient = {
     isPaginated: true,
     toStringKeys: ['id'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'id'},
@@ -340,6 +441,7 @@ registerModel(TIngredient)
 
 export const TMealType = {
     name: 'MealType',
+    disableSearch: true,
     localizationKey: 'Meal_Type',
     localizationKeyDescription: 'MealTypeHelp',
     icon: 'fa-solid fa-utensils',
@@ -353,7 +455,11 @@ export const TMealType = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TMealType)
 
@@ -368,7 +474,6 @@ export const TMealPlan = {
     isPaginated: true,
     toStringKeys: ['title', 'recipe.name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Title', key: 'title'},
@@ -390,7 +495,6 @@ export const TRecipeBook = {
     isAdvancedDelete: true,
     toStringKeys: ['name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -408,7 +512,6 @@ export const TRecipeBookEntry = {
     isPaginated: true,
     toStringKeys: ['book.name', 'recipe.name'],
 
-    disableListView: true,
 
     tableHeaders: [
         {title: 'Book', key: 'book.name'},
@@ -430,9 +533,14 @@ export const TCustomFilter = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Type', key: 'type', type: 'text', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: CUSTOMFILTER_FILTER_DEFS,
+    actionDefs: CUSTOMFILTER_ACTION_DEFS,
+    listSettings: CUSTOMFILTER_LIST_SETTINGS,
+    sortDefs: CUSTOMFILTER_SORT_OPTIONS,
 } as Model
 registerModel(TCustomFilter)
 
@@ -445,7 +553,6 @@ export const TUser = {
     disableCreate: true,
     disableDelete: true,
     disableUpdate: true,
-    disableListView: true,
 
     isPaginated: false,
     toStringKeys: ['displayName'],
@@ -467,7 +574,6 @@ export const TGroup = {
     disableCreate: true,
     disableDelete: true,
     disableUpdate: true,
-    disableListView: true,
 
     isPaginated: false,
     toStringKeys: ['name'],
@@ -495,7 +601,11 @@ export const TSupermarket = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSupermarket)
 
@@ -515,7 +625,11 @@ export const TSupermarketCategory = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSupermarketCategory)
 
@@ -528,13 +642,12 @@ export const TShoppingList = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ShoppingListEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Color', key: 'color'},
+        {title: 'Color', key: 'color', type: 'color-chip'},
         {title: 'Description', key: 'description'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
@@ -549,7 +662,6 @@ export const TShoppingListEntry = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ShoppingListEntryEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['amount', 'unit.name', 'food.name'],
 
@@ -564,6 +676,7 @@ registerModel(TShoppingListEntry)
 
 export const TPropertyType = {
     name: 'PropertyType',
+    disableSearch: true,
     localizationKey: 'Property',
     localizationKeyDescription: 'PropertyTypeHelp',
     icon: 'fa-solid fa-database',
@@ -577,7 +690,11 @@ export const TPropertyType = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TPropertyType)
 
@@ -589,7 +706,6 @@ export const TProperty = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/PropertyEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['propertyAmount', 'propertyType.name'],
 
@@ -636,9 +752,13 @@ export const TUserFile = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Size', key: 'fileSizeKb', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: USERFILE_ACTION_DEFS,
+    listSettings: USERFILE_LIST_SETTINGS,
+    sortDefs: USERFILE_SORT_OPTIONS,
 } as Model
 registerModel(TUserFile)
 
@@ -654,10 +774,17 @@ export const TAutomation = {
     toStringKeys: ['name'],
 
     tableHeaders: [
-        {title: 'Name', key: 'name'},
-        {title: 'Type', key: 'type'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Name', key: 'name', type: 'text'},
+        {title: 'Type', key: 'type', type: 'text'},
+        {title: 'Disabled', key: 'disabled', type: 'boolean-indicator', align: 'center', hidden: true},
+        {title: 'Order', key: 'order', type: 'number', align: 'end', hidden: true},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: AUTOMATION_FILTER_DEFS,
+    actionDefs: AUTOMATION_ACTION_DEFS,
+    statDefs: AUTOMATION_STAT_DEFS,
+    listSettings: AUTOMATION_LIST_SETTINGS,
+    sortDefs: AUTOMATION_SORT_OPTIONS,
 } as Model
 registerModel(TAutomation)
 
@@ -672,13 +799,20 @@ export const TCookLog = {
     disableCreate: true,
 
     isPaginated: true,
+    itemLabel: 'recipeName',
     toStringKeys: ['recipe'],
 
     tableHeaders: [
-        {title: 'Recipe', key: 'recipe'},
-        {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Recipe', key: 'recipeName', type: 'text'},
+        {title: 'Rating', key: 'rating', type: 'number', align: 'end', hidden: true},
+        {title: 'Servings', key: 'servings', type: 'number', align: 'end', hidden: true},
+        {title: 'Created', key: 'createdAt', type: 'text'},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    filterDefs: COOKLOG_FILTER_DEFS,
+    actionDefs: COOKLOG_ACTION_DEFS,
+    listSettings: COOKLOG_LIST_SETTINGS,
+    sortDefs: COOKLOG_SORT_OPTIONS,
 } as Model
 registerModel(TCookLog)
 
@@ -692,13 +826,15 @@ export const TViewLog = {
     disableCreate: true,
     disableUpdate: true,
     disableDelete: true,
+    itemLabel: 'recipeName',
     toStringKeys: ['recipe'],
 
     tableHeaders: [
-        {title: 'Recipe', key: 'recipe'},
-        {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Recipe', key: 'recipeName', type: 'text'},
+        {title: 'Created', key: 'createdAt', type: 'text'},
+    ],
+    listSettings: VIEWLOG_LIST_SETTINGS,
+    sortDefs: VIEWLOG_SORT_OPTIONS,
 } as Model
 registerModel(TViewLog)
 
@@ -710,7 +846,6 @@ export const TAccessToken = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/AccessTokenEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['token'],
 
@@ -743,13 +878,13 @@ registerModel(THousehold)
 
 export const TUserSpace = {
     name: 'UserSpace',
+    disableSearch: true,
     localizationKey: 'SpaceMembers',
     localizationKeyDescription: 'SpaceMembersHelp',
     icon: 'fa-solid fa-users',
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/UserSpaceEditor.vue`)),
 
-    disableListView: true,
     isPaginated: true,
     toStringKeys: ['user.displayName'],
 
@@ -757,10 +892,18 @@ export const TUserSpace = {
 
     tableHeaders: [
         {title: 'User', key: 'user.displayName'},
-        {title: 'Group', key: 'groups'},
+        {title: 'Group', key: 'groups', type: 'text', joinField: 'name'},
         {title: 'Household', key: 'household.name'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    headerActions: [
+        {type: 'button', key: 'invites', labelKey: 'Invites', icon: 'fa-solid fa-link',
+            routeName: 'ModelListPage', routeParams: {model: 'InviteLink'}},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TUserSpace)
 
@@ -787,6 +930,7 @@ registerModel(TInviteLink)
 
 export const TSpace = {
     name: 'Space',
+    disableSearch: true,
     localizationKey: 'Space',
     localizationKeyDescription: 'SpaceHelp',
     icon: 'fa-solid fa-hard-drive',
@@ -800,10 +944,27 @@ export const TSpace = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Owner', key: 'createdBy.displayName'},
-        {title: 'Active', key: 'active'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
-} as Model
+        {title: 'Active', key: 'active', type: 'label-chip',
+            chipValueResolver: (item: any) => item.id === useUserPreferenceStore().activeSpace.id ? 'active' : 'select',
+            chipMap: {active: {label: 'Active', color: 'success'}, select: {label: 'Select', color: 'info'}},
+            chipClickHandler: (item: any) => useUserPreferenceStore().switchSpace(item)},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'leave', labelKey: 'LeaveSpace', icon: 'fa-solid fa-arrow-right-from-bracket', group: 'Actions', isDanger: true, reloadAfterAction: true,
+            visible: (item: any) => item.createdBy?.id !== useUserPreferenceStore().userSettings.user?.id,
+            handler: async (item: any) => {
+                const api = new ApiApi()
+                const store = useUserPreferenceStore()
+                const userSpace = store.userSpaces.find((us: UserSpace) => us.space === item.id)
+                if (userSpace) {
+                    await api.apiUserSpaceDestroy({id: userSpace.id!})
+                }
+            },
+        },
+    ],
+} as unknown as Model
 registerModel(TSpace)
 
 export const TStorage = {
@@ -814,7 +975,6 @@ export const TStorage = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/StorageEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -828,6 +988,7 @@ registerModel(TStorage)
 
 export const TInventoryLocation = {
     name: 'InventoryLocation',
+    disableSearch: true,
     localizationKey: 'InventoryLocation',
     localizationKeyDescription: 'InventoryLocationHelp',
     icon: 'fa-solid fa-warehouse',
@@ -843,7 +1004,11 @@ export const TInventoryLocation = {
         {title: 'Household', key: 'household.name'},
         {title: 'Freezer', key: 'isFreezer'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TInventoryLocation)
 
@@ -901,7 +1066,6 @@ export const TSync = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/SyncEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['path'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -910,8 +1074,13 @@ export const TSync = {
         {title: 'SyncedPath', key: 'path'},
         {title: 'ExternalStorage', key: 'storage.name'},
         {title: 'Updated', key: 'lastChecked'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'edit', labelKey: 'Edit', icon: 'fa-solid fa-pen', group: 'Actions', routeName: 'ModelEditPage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+        {key: 'sync-import', labelKey: 'Import', icon: 'fa-solid fa-rotate', group: 'Actions'},
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item, modelName) => ({model: modelName, id: item.id})},
+    ],
 } as Model
 registerModel(TSync)
 
@@ -921,7 +1090,6 @@ export const TSyncLog = {
     localizationKeyDescription: 'SyncLogHelp',
     icon: 'fa-solid fa-bars-staggered',
 
-    disableListView: false,
     toStringKeys: ['sync.path'],
     isPaginated: true,
 
@@ -944,7 +1112,6 @@ export const TRecipeImport = {
     localizationKeyDescription: 'ExternalRecipeImportHelp',
     icon: 'fa-solid fa-file-half-dashed',
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
 
@@ -956,9 +1123,27 @@ export const TRecipeImport = {
         {title: 'Name', key: 'name'},
         {title: 'Storage', key: 'storage.name'},
         {title: 'Created', key: 'createdAt'},
-        {title: 'Actions', key: 'action', align: 'end'},
-    ]
-} as Model
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
+    ],
+    actionDefs: [
+        {key: 'import', labelKey: 'Import', icon: 'fa-solid fa-rotate', group: 'Actions',
+            reloadAfterAction: true,
+            handler: async (item: any) => {
+                const api = new ApiApi()
+                await api.apiRecipeImportImportRecipeCreate({id: item.id, recipeImport: item as RecipeImport})
+            },
+        },
+        {key: 'delete', labelKey: 'Delete', icon: 'fa-solid fa-trash', group: 'Actions', isDanger: true, routeName: 'ModelDeletePage', routeParams: (item: any, modelName: string) => ({model: modelName, id: item.id})},
+    ],
+    headerActions: [
+        {type: 'button', key: 'importAll', labelKey: 'ImportAll', icon: 'fa-solid fa-rotate', color: 'success',
+            handler: async () => {
+                const api = new ApiApi()
+                await api.apiRecipeImportImportAllCreate({recipeImport: {} as RecipeImport})
+            },
+        },
+    ],
+} as unknown as Model
 registerModel(TRecipeImport)
 
 export const TConnectorConfig = {
@@ -969,7 +1154,6 @@ export const TConnectorConfig = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/ConnectorConfigEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -994,7 +1178,6 @@ export const TAiProvider = {
 
     editorComponent: defineAsyncComponent(() => import(`@/components/model_editors/AiProviderEditor.vue`)),
 
-    disableListView: false,
     toStringKeys: ['name'],
     isPaginated: true,
     isAdvancedDelete: true,
@@ -1005,8 +1188,10 @@ export const TAiProvider = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Global', key: 'space'},
-        {title: 'Actions', key: 'action', align: 'end'},
+        {title: 'Global', key: 'space', type: 'label-chip',
+            chipValueResolver: (item) => item.space == null ? 'global' : 'space',
+            chipMap: {global: {label: 'Global', color: 'success'}, space: {label: 'Space', color: 'info'}}},
+        {title: 'Actions', key: 'action', type: 'action-menu', align: 'end'},
     ]
 } as Model
 registerModel(TAiProvider)
@@ -1017,7 +1202,6 @@ export const TAiLog = {
     localizationKeyDescription: 'AiLogHelp',
     icon: 'fa-solid fa-wand-magic-sparkles',
 
-    disableListView: false,
     toStringKeys: ['aiProvider.name', 'function', 'created_at'],
     isPaginated: true,
 
@@ -1032,7 +1216,10 @@ export const TAiLog = {
         {title: 'FromBalance', key: 'creditsFromBalance',},
         {title: 'CreatedAt', key: 'createdAt'},
         {title: 'Actions', key: 'action', align: 'end'},
-    ]
+    ],
+    headerActions: [
+        {type: 'widget', component: defineAsyncComponent(() => import('@/components/display/AiCreditsBar.vue'))},
+    ],
 } as Model
 registerModel(TAiLog)
 
@@ -1042,7 +1229,6 @@ export const TFoodInheritField = {
     localizationKeyDescription: 'food_inherit_info',
     icon: 'fa-solid fa-list',
 
-    disableListView: true,
     toStringKeys: ['name'],
 
     disableCreate: true,
@@ -1059,7 +1245,6 @@ export const TSearchFields = {
     localizationKeyDescription: '',
     icon: 'fa-solid fa-search',
 
-    disableListView: true,
     toStringKeys: ['name'],
 
     disableCreate: true,
@@ -1077,7 +1262,7 @@ registerModel(TSearchFields)
  */
 export class GenericModel {
 
-    api: Object
+    api: ApiApi & Record<string, (...args: any[]) => any>
     model: Model
     // TODO find out the type of the t useI18n object and use it here
     // TODO decouple context from Generic model so t does not need to be passed
@@ -1094,28 +1279,20 @@ export class GenericModel {
         this.t = t
     }
 
-    getTableHeaders(): VDataTableProps['headers'][] {
-        let tableHeaders: VDataTableProps['headers'][] = []
-        this.model.tableHeaders.forEach(header => {
-            if (!header.hidden) {
-                header.title = this.t(header.title)
-                tableHeaders.push(header as unknown as VDataTableProps['headers'])
-            }
-        })
-        return tableHeaders
-    }
-
     /**
      * query the models list endpoint using the given generic parameters
      * @param genericListRequestParameter parameters
      * @return promise of request
      */
-    list(genericListRequestParameter: GenericListRequestParameter, initOverrides?: RequestInit) {
+    list(genericListRequestParameter: GenericListRequestParameter, initOverrides?: RequestInit): Promise<{ count: number, results: any[], next?: string | null }> {
         if (this.model.disableList) {
             throw new Error('Cannot list on this model!')
-        } else {
-            return this.api[`api${this.model.name}List`](genericListRequestParameter, initOverrides)
         }
+        // Non-paginated endpoints (model.isPaginated === false, e.g. User/Group) return a bare
+        // array; paginated ones return {count, results, next}. Normalize to a single envelope so
+        // every caller gets a consistent shape (branch on the response, robust to a mis-set flag).
+        return this.api[`api${this.model.name}List`](genericListRequestParameter, initOverrides)
+            .then((raw: any) => Array.isArray(raw) ? { count: raw.length, results: raw, next: null } : raw)
     }
 
     /**
@@ -1222,7 +1399,7 @@ export class GenericModel {
      * @return promise of request
      */
     getDeleteProtecting(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
-        return this.api[`api${this.model.name}ProtectingList`](deleteRelationRequestParameter)
+        return this.deleteRelation('Protecting', deleteRelationRequestParameter)
     };
 
     /**
@@ -1231,7 +1408,7 @@ export class GenericModel {
      * @return promise of request
      */
     getDeleteCascading(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
-        return this.api[`api${this.model.name}CascadingList`](deleteRelationRequestParameter)
+        return this.deleteRelation('Cascading', deleteRelationRequestParameter)
     };
 
     /**
@@ -1240,7 +1417,27 @@ export class GenericModel {
      * @return promise of request
      */
     getDeleteNulling(deleteRelationRequestParameter: DeleteRelationRequestParameter) {
-        return this.api[`api${this.model.name}NullingList`](deleteRelationRequestParameter)
+        return this.deleteRelation('Nulling', deleteRelationRequestParameter)
+    };
+
+    /**
+     * dispatch a delete-relationship list endpoint (Protecting/Cascading/Nulling).
+     * These endpoints only exist on the generated client for models whose viewset
+     * has DeleteRelationMixing; for the rest the method is absent. Guard on the
+     * real client (the source of truth) rather than the hand-maintained
+     * isAdvancedDelete flag: degrade to an empty result instead of throwing, but
+     * shout in DEV if the flag claims the endpoint should exist (stale client).
+     */
+    private deleteRelation(suffix: 'Protecting' | 'Cascading' | 'Nulling', deleteRelationRequestParameter: DeleteRelationRequestParameter): Promise<PaginatedGenericModelReferenceList> {
+        const name = `api${this.model.name}${suffix}List`
+        if (typeof (this.api as any)[name] !== 'function') {
+            if (this.model.isAdvancedDelete && import.meta.env.DEV) {
+                console.error(`[GenericModel] expected ${name} on the generated API client but it is missing — stale OpenAPI client?`)
+            }
+            return Promise.resolve({count: 0, results: []})
+        }
+        // index inline to preserve `this` binding on the generated method
+        return (this.api as any)[name](deleteRelationRequestParameter)
     };
 
     /**
@@ -1257,6 +1454,16 @@ export class GenericModel {
             })
         }
         return name
+    }
+
+    /**
+     * fetch aggregate stats from the dedicated stats endpoint
+     * @return promise resolving to stats object, or empty object if not supported
+     */
+    stats(): Promise<Record<string, number>> {
+        const method = `api${this.model.name}StatsRetrieve`
+        if (typeof this.api[method] !== 'function') return Promise.resolve({})
+        return this.api[method]()
     }
 
 }

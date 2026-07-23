@@ -7,10 +7,38 @@ from django.urls import reverse
 from django_scopes import scopes_disabled
 
 from cookbook.models import Food, Ingredient, ShoppingListEntry, Unit
+from cookbook.tests.factories import IngredientFactory, UnitFactory
 
 LIST_URL = 'api:unit-list'
 DETAIL_URL = 'api:unit-detail'
 MERGE_URL = 'api:unit-merge'
+STATS_URL = 'api:unit-stats'
+
+
+def get_stats(client):
+    """Helper to GET the dedicated unit stats endpoint and return parsed results."""
+    r = client.get(reverse(STATS_URL))
+    assert r.status_code == 200
+    return json.loads(r.content)
+
+
+def test_stats_endpoint_returns_counts(u1_s1, space_1):
+    stats = get_stats(u1_s1)
+    assert isinstance(stats['total'], int)
+    assert isinstance(stats['with_recipe'], int)
+
+
+def test_stats_with_recipe_counts_units_used_in_ingredients(u1_s1, space_1):
+    """with_recipe counts units referenced by at least one ingredient; total counts all units."""
+    baseline = get_stats(u1_s1)
+    with scopes_disabled():
+        UnitFactory(space=space_1)  # orphan unit, not used by any ingredient
+        used = UnitFactory(space=space_1)
+        IngredientFactory(space=space_1, unit=used)
+
+    stats = get_stats(u1_s1)
+    assert stats['total'] == baseline['total'] + 2
+    assert stats['with_recipe'] == baseline['with_recipe'] + 1
 
 
 def random_food(space_1, u1_s1):
@@ -247,3 +275,15 @@ def test_merge(
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
         assert Food.find_problems() == ([], [], [], [], [])
+
+
+def test_ordering_name(u1_s1, space_1):
+    with scopes_disabled():
+        Unit.objects.get_or_create(name='zzz_ordering', space=space_1)
+        Unit.objects.get_or_create(name='aaa_ordering', space=space_1)
+
+    asc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=name').content)
+    assert asc['results'][0]['name'] == 'aaa_ordering'
+
+    desc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=-name').content)
+    assert desc['results'][0]['name'] == 'zzz_ordering'

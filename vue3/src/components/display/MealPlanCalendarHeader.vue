@@ -30,9 +30,9 @@
 
 <script setup lang="ts">
 
-import {IHeaderProps} from "vue-simple-calendar/dist/src/IHeaderProps";
+import type {IHeaderProps} from "vue-simple-calendar/interfaces";
 import {ref, watch} from "vue";
-import {VDateInput} from "vuetify/labs/VDateInput";
+import {VDateInput} from "vuetify/components";
 import {DateTime} from "luxon";
 
 const emit = defineEmits(['input'])

@@ -1,0 +1,38 @@
+name: Vue Continuous Integration
+
+on:
+  push:
+    branches-ignore: [preview]
+  workflow_call:
+
+jobs:
+  vue-tests:
+    runs-on: ubuntu-latest
+    # Node 25 currently fails on a jsdom / localStorage polyfill mismatch
+    # (`storage.getItem is not a function`). Tracked in ROADMAP under
+    # Developer Experience — when fixed, add Node 25 to required checks.
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["24", "25"]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+          cache-dependency-path: ./vue3/yarn.lock
+
+      - name: Install Vue dependencies
+        working-directory: ./vue3
+        run: yarn install
+
+      - name: Run Vue tests
+        working-directory: ./vue3
+        run: yarn test
+
+      - name: Dev server health check
+        working-directory: ./vue3
+        run: yarn healthcheck
