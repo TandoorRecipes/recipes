@@ -247,3 +247,15 @@ def test_merge(
     # run diagnostic to find problems - none should be found
     with scopes_disabled():
         assert Food.find_problems() == ([], [], [], [], [])
+
+
+def test_ordering_name(u1_s1, space_1):
+    with scopes_disabled():
+        Unit.objects.get_or_create(name='zzz_ordering', space=space_1)
+        Unit.objects.get_or_create(name='aaa_ordering', space=space_1)
+
+    asc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=name').content)
+    assert asc['results'][0]['name'] == 'aaa_ordering'
+
+    desc = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?ordering=-name').content)
+    assert desc['results'][0]['name'] == 'zzz_ordering'

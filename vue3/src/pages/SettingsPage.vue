@@ -39,7 +39,7 @@
 <script setup lang="ts">
 
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
-import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import {TANDOOR_PLUGINS} from "@/plugin_registry.ts";
 
 const {getDjangoUrl} = useDjangoUrls()
 

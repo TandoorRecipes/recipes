@@ -66,7 +66,7 @@
 
                         <v-btn color="create" @click="unitConversions.push({food: editingObj} as UnitConversion)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
 
-                        <v-card class="mt-2" border v-for="uc in unitConversions" dense>
+                        <v-card class="mt-2" border v-for="uc in unitConversions">
                             <v-card-title>
                                 <span v-if="uc.baseUnit">{{ uc.baseAmount }} {{ uc.baseUnit.name }}</span>
                                 <v-icon size="x-small" icon="fa-solid fa-arrows-left-right" class="me-2 ms-2"></v-icon>
@@ -80,7 +80,7 @@
                                 </v-btn>
                             </v-card-title>
                             <v-card-text class="d-none d-md-block">
-                                <v-row dense>
+                                <v-row density="compact">
                                     <v-col md="6">
                                         <v-number-input :label="$t('Amount')" :step="10" v-model="uc.baseAmount" control-variant="stacked" :precision="3" hide-details></v-number-input>
                                     </v-col>
@@ -89,12 +89,12 @@
                                         <model-select v-model="uc.baseUnit" model="Unit" hide-details></model-select>
                                     </v-col>
                                 </v-row>
-                                <v-row dense>
+                                <v-row density="compact">
                                     <v-col cols="12" class="text-center">
                                         <v-icon icon="fa-solid fa-arrows-up-down" class="mt-4 mb-4"></v-icon>
                                     </v-col>
                                 </v-row>
-                                <v-row dense>
+                                <v-row density="compact">
                                     <v-col md="6">
                                         <v-number-input :label="$t('Amount')" :step="10" v-model="uc.convertedAmount" control-variant="stacked" :precision="3"></v-number-input>
                                     </v-col>

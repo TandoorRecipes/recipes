@@ -5,7 +5,7 @@ import type {
 
 import {createI18n} from "vue-i18n";
 import en from "@/locales/en.json";
-import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import {TANDOOR_PLUGINS} from "@/plugin_registry.ts";
 import {qualified as qualifiedLocales, coverage as localeCoverage, minCoverage as LOCALE_MIN_COVERAGE} from 'virtual:locale-coverage'
 import {Settings} from "luxon";
 
@@ -71,8 +71,8 @@ export function setupI18n() {
         locale = 'en'
     }
 
-    // load i18n with locale en by default (Legacy mode — locale is a plain string, not a Ref)
     const i18n = createI18n({
+        legacy: false,
         locale: 'en',
         fallbackLocale: 'en',
         messages: {
@@ -147,7 +147,7 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
 export function setLocale(i18n: I18n, locale: Locale): void {
-    i18n.global.locale = locale
+    i18n.global.locale.value = locale
     // set luxon locale
     Settings.defaultLocale = locale
 }

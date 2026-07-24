@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row dense>
+        <v-row density="compact">
             <v-col>
                 <v-card prepend-icon="fa-solid fa-boxes-stacked" :title="$t('InventoryBooking')">
                     <template #subtitle>
@@ -196,7 +196,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {computed, onMounted, ref, watch} from "vue";
 import {ApiApi, ApiInventoryEntryListRequest, Food, Ingredient, InventoryEntry, InventoryLocation, Unit} from "@/openapi";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
-import {VDateInput} from "vuetify/labs/VDateInput";
+import {VDateInput} from "vuetify/components";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
 import {VDataTableUpdateOptions} from "@/vuetify.ts";

@@ -18,7 +18,7 @@
                 </v-text-field>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <v-col>
                 <v-expansion-panels v-model="panel">
                     <v-expansion-panel value="search">
@@ -27,7 +27,9 @@
 
                                 <div v-for="filter in Object.values(filters)" :key="filter.id">
                                     <template v-if="filter.enabled">
-                                        <component :="filter" :is="filter.is" density="compact" v-model="filter.modelValue">
+                                        <component :is="filter.is" :id="filter.id" :label="filter.label" :hint="filter.hint"
+                                                     :items="filter.items" :model="filter.model" :mode="filter.mode"
+                                                     density="compact" v-model="filter.modelValue">
                                             <template #append>
                                                 <v-btn icon="fa-solid fa-times" size="small" variant="plain"
                                                        @click="filter.enabled = false; filter.modelValue = filter.default"></v-btn>
@@ -173,7 +175,7 @@ import {ApiApi, ApiRecipeListRequest, CustomFilter, RecipeOverview} from "@/open
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {VDateInput} from 'vuetify/labs/VDateInput'
+import {VDateInput} from 'vuetify/components'
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import {useRouter} from "vue-router";
 import KeywordsBar from "@/components/display/KeywordsBar.vue";
