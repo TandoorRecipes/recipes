@@ -2,6 +2,7 @@ import json
 
 from django.utils.translation import gettext as _
 
+from cookbook.helper.image_processing import set_primary_recipe_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Comment, CookLog, Ingredient, Keyword, Recipe, Step
@@ -50,8 +51,7 @@ class OpenEats(Integration):
             CookLog.objects.create(recipe=recipe, rating=comment['rating'], created_by=self.request.user, space=self.request.space)
 
         if file["photo"] != '':
-            recipe.image = f'recipes/openeats-import/{file["photo"]}'
-            recipe.save()
+            set_primary_recipe_image(recipe, f'recipes/openeats-import/{file["photo"]}', request=self.request)
 
         step = Step.objects.create(instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,)
 

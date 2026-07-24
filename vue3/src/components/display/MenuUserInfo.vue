@@ -1,7 +1,12 @@
 <template>
     <v-list-item class="mb-2">
         <template #prepend>
-            <v-avatar color="primary">{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</v-avatar>
+            <v-avatar color="primary" :aria-label="useUserPreferenceStore().userSettings.user.displayName">
+                <v-img v-if="useUserPreferenceStore().userSettings.image?.preview"
+                       :src="useUserPreferenceStore().userSettings.image.preview"
+                       :position="cropPosition(useUserPreferenceStore().userSettings.image?.cropData)" />
+                <span v-else>{{ useUserPreferenceStore().userSettings.user.displayName.charAt(0) }}</span>
+            </v-avatar>
         </template>
         <v-list-item-title>{{ useUserPreferenceStore().userSettings.user.displayName }}</v-list-item-title>
         <v-list-item-subtitle>
@@ -27,6 +32,7 @@
 import {THousehold, TSpace} from "@/types/Models.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useRouter} from "vue-router";
+import {cropPosition} from "@/utils/image_crop";
 
 let router = useRouter()
 </script>

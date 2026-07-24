@@ -69,7 +69,7 @@ class MealMaster(Integration):
             except UnicodeDecodeError:
                 try:
                     line = fl.decode("windows-1250")
-                except Exception as e:
+                except Exception:
                     line = "ERROR DECODING LINE"
 
             if (line.startswith('MMMMM') or line.startswith('-----')) and 'meal-master' in line.lower():

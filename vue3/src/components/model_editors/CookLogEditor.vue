@@ -14,7 +14,7 @@
             <v-form :disabled="loading">
 
                 <v-textarea :label="$t('Comment')" rows="2" v-model="editingObj.comment"></v-textarea>
-                <v-row dense>
+                <v-row density="compact">
                     <v-col cols="12" md="4">
                         <v-label>{{ $t('Rating') }}</v-label>
                         <br/>
@@ -41,7 +41,7 @@ import {onMounted, PropType, watch} from "vue";
 import {CookLog} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
-import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
+import {VDateInput} from 'vuetify/components'
 
 const props = defineProps({
     item: {type: {} as PropType<CookLog>, required: false, default: null},

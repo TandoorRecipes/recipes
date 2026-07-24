@@ -33,6 +33,12 @@ export interface ViewLog {
     recipe: number;
     /**
      * 
+     * @type {string}
+     * @memberof ViewLog
+     */
+    readonly recipeName: string;
+    /**
+     * 
      * @type {number}
      * @memberof ViewLog
      */
@@ -50,6 +56,7 @@ export interface ViewLog {
  */
 export function instanceOfViewLog(value: object): value is ViewLog {
     if (!('recipe' in value) || value['recipe'] === undefined) return false;
+    if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
@@ -67,6 +74,7 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
         
         'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'],
+        'recipeName': json['recipe_name'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
     };
@@ -76,7 +84,7 @@ export function ViewLogToJSON(json: any): ViewLog {
     return ViewLogToJSONTyped(json, false);
 }
 
-export function ViewLogToJSONTyped(value?: Omit<ViewLog, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function ViewLogToJSONTyped(value?: Omit<ViewLog, 'recipe_name'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

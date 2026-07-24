@@ -27,6 +27,13 @@ import {
     KeywordToJSON,
     KeywordToJSONTyped,
 } from './Keyword';
+import type { RecipeImage } from './RecipeImage';
+import {
+    RecipeImageFromJSON,
+    RecipeImageFromJSONTyped,
+    RecipeImageToJSON,
+    RecipeImageToJSONTyped,
+} from './RecipeImage';
 import type { Step } from './Step';
 import {
     StepFromJSON,
@@ -50,7 +57,9 @@ import {
 } from './NutritionInformation';
 
 /**
- * Adds nested create feature
+ * Expose the derived ``image`` URL + ``image_crop_data`` of a recipe's
+ * primary RecipeImage (pattern-014: the legacy ``Recipe.image`` column is no
+ * longer read).
  * @export
  * @interface Recipe
  */
@@ -79,6 +88,18 @@ export interface Recipe {
      * @memberof Recipe
      */
     readonly image: string | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof Recipe
+     */
+    readonly imageCropData: any | null;
+    /**
+     * 
+     * @type {Array<RecipeImage>}
+     * @memberof Recipe
+     */
+    readonly images: Array<RecipeImage>;
     /**
      * 
      * @type {Array<Keyword>}
@@ -219,6 +240,8 @@ export interface Recipe {
 export function instanceOfRecipe(value: object): value is Recipe {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('image' in value) || value['image'] === undefined) return false;
+    if (!('imageCropData' in value) || value['imageCropData'] === undefined) return false;
+    if (!('images' in value) || value['images'] === undefined) return false;
     if (!('steps' in value) || value['steps'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
@@ -243,6 +266,8 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'],
+        'imageCropData': json['image_crop_data'],
+        'images': ((json['images'] as Array<any>).map(RecipeImageFromJSON)),
         'keywords': json['keywords'] == null ? undefined : ((json['keywords'] as Array<any>).map(KeywordFromJSON)),
         'steps': ((json['steps'] as Array<any>).map(StepFromJSON)),
         'workingTime': json['working_time'] == null ? undefined : json['working_time'],
@@ -272,7 +297,7 @@ export function RecipeToJSON(json: any): Recipe {
     return RecipeToJSONTyped(json, false);
 }
 
-export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'image_crop_data'|'images'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

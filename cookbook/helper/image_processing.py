@@ -127,5 +127,49 @@ def handle_image(request, image_object, filetype):
             return rescale_image_webp(image_object)
         elif file_format == 'GIF':
             return rescale_image_gif(image_object)
-    
+
     return strip_image_meta(image_object, file_format)
+
+
+def get_primary_recipe_image(recipe):
+    """Return the primary RecipeImage for a recipe, or None (pattern-014).
+
+    Determinism: the first image by (order, pk) that is_primary; if none is
+    flagged primary, fall back to the first image overall by (order, pk).
+    Iterates ``recipe.images.all()`` in Python so callers that
+    ``prefetch_related('images')`` avoid an N+1 query.
+    """
+    images = sorted(recipe.images.all(), key=lambda i: (i.order, i.pk))
+    if not images:
+        return None
+    return next((i for i in images if i.is_primary), images[0])
+
+
+def set_primary_recipe_image(recipe, file, request=None, created_by=None):
+    """Create a RecipeImage for a recipe (pattern-014: replaces writing the
+    legacy Recipe.image column). The first image on a recipe is marked primary.
+
+    :param recipe: Recipe instance the image belongs to
+    :param file: an ImageField-compatible value (File/ImageFieldFile/path str)
+    :param request: optional request, used to fall back for created_by
+    :param created_by: optional explicit creator; defaults to
+        recipe.created_by, then request.user
+    :return: the created RecipeImage
+    """
+    # local import to avoid any import-cycle with cookbook.models
+    from cookbook.models import RecipeImage
+
+    creator = created_by or getattr(recipe, 'created_by', None)
+    if creator is None and request is not None:
+        creator = getattr(request, 'user', None)
+
+    has_images = RecipeImage.objects.filter(recipe=recipe).exists()
+
+    return RecipeImage.objects.create(
+        recipe=recipe,
+        file=file,
+        is_primary=not has_images,
+        order=0,
+        space=recipe.space,
+        created_by=creator,
+    )

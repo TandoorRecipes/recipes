@@ -3,7 +3,7 @@
         <p class="text-h6">{{ $t('Shopping_list') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-        <closable-help-alert :text="$t('HouseholdSettingsHelp')" :title="$t('Household')"></closable-help-alert>
+        <closable-help-alert :text="$t('HouseholdHelp')" :title="$t('Household')"></closable-help-alert>
 
         <v-number-input
             class="mt-2"

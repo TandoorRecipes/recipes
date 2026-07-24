@@ -14,7 +14,9 @@
 
 import { mapValues } from '../runtime';
 /**
- * Adds nested create feature
+ * Expose the derived ``image`` URL + ``image_crop_data`` of a recipe's
+ * primary RecipeImage (pattern-014: the legacy ``Recipe.image`` column is no
+ * longer read).
  * @export
  * @interface RecipeFlat
  */
@@ -37,6 +39,12 @@ export interface RecipeFlat {
      * @memberof RecipeFlat
      */
     readonly image: string | null;
+    /**
+     * 
+     * @type {any}
+     * @memberof RecipeFlat
+     */
+    readonly imageCropData: any | null;
 }
 
 /**
@@ -45,6 +53,7 @@ export interface RecipeFlat {
 export function instanceOfRecipeFlat(value: object): value is RecipeFlat {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('image' in value) || value['image'] === undefined) return false;
+    if (!('imageCropData' in value) || value['imageCropData'] === undefined) return false;
     return true;
 }
 
@@ -61,6 +70,7 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'image': json['image'],
+        'imageCropData': json['image_crop_data'],
     };
 }
 
@@ -68,7 +78,7 @@ export function RecipeFlatToJSON(json: any): RecipeFlat {
     return RecipeFlatToJSONTyped(json, false);
 }
 
-export function RecipeFlatToJSONTyped(value?: Omit<RecipeFlat, 'name'|'image'> | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeFlatToJSONTyped(value?: Omit<RecipeFlat, 'name'|'image'|'image_crop_data'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

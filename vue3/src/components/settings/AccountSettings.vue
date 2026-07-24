@@ -7,8 +7,16 @@
 
         <v-text-field class="mt-3" :label="$t('Username')" v-model="user.username" disabled :hint="$t('theUsernameCannotBeChanged')" persistent-hint></v-text-field>
 
-        <!--                    <v-label>Avatar</v-label><br/>-->
-        <!--                    <v-avatar class="mt-3 mb-3" style="height: 10vh; width: 10vh" color="info">V</v-avatar> Feature coming in a future Version of Tandoor.-->
+        <v-label class="mt-3">{{ $t('Avatar') }}</v-label>
+        <div class="d-flex align-center ga-4 mb-3">
+            <v-avatar size="64" color="primary">
+                <v-img v-if="userPrefs.userSettings.image?.preview" :src="userPrefs.userSettings.image.preview" />
+                <span v-else class="text-h5">{{ userPrefs.userSettings.user.displayName?.charAt(0) }}</span>
+            </v-avatar>
+            <div class="flex-grow-1">
+                <user-file-field v-model="userPrefs.userSettings.image" :label="$t('Avatar')" />
+            </div>
+        </div>
 
         <v-text-field :label="$t('First_name')" v-model="user.firstName"></v-text-field>
         <v-text-field :label="$t('Last_name')" v-model="user.lastName"></v-text-field>
@@ -28,8 +36,6 @@
         <p class="text-h6 mt-3">{{ $t('DeviceSettings') }}</p>
         <p class="text-disabled">{{ $t('DeviceSettingsHelp') }}</p>
 
-        <v-checkbox v-model="useUserPreferenceStore().deviceSettings.start_showMealPlan" :label="$t('ShowMealPlanOnStartPage')"></v-checkbox>
-
         <v-btn @click="useUserPreferenceStore().resetDeviceSettings()" color="warning">{{ $t('Reset') }}</v-btn>  <br/>
         <v-btn @click="useUserPreferenceStore().deviceSettings.general_closedHelpAlerts = []" color="warning" class="mt-1">{{ $t('ResetHelp') }}</v-btn> <br/>
         <v-btn color="info" class="mt-1">
@@ -43,15 +49,17 @@
 
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {ApiApi, User} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import ThankYouNote from "@/components/display/ThankYouNote.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
+import UserFileField from "@/components/inputs/UserFileField.vue";
 
 const {getDjangoUrl} = useDjangoUrls()
+const userPrefs = useUserPreferenceStore()
 
 const user = ref({} as User)
 
@@ -65,10 +73,26 @@ onMounted(() => {
     })
 })
 
+// Auto-persist avatar changes. UserFileField writes directly into
+// userPrefs.userSettings.image via v-model; the store persists that to
+// localStorage via useStorage — but the server-side UserPreference is
+// only updated by updateUserSettings() (called from the outer Save
+// button). Users expected the inner dialog's Save to be enough, got a
+// reverted avatar on reload because loadUserSettings() during init
+// overwrote their localStorage with the still-stale server state. This
+// watch closes the gap: when image.id changes in the store, PATCH it
+// silently so server and localStorage stay aligned.
+watch(() => userPrefs.userSettings.image?.id, (newId, oldId) => {
+    if (newId === oldId) return
+    userPrefs.updateUserSettings(true)
+})
+
 function save() {
     let api = new ApiApi()
     api.apiUserPartialUpdate({id: user.value.id!, patchedUser: user.value}).then(r => {
         user.value = r
+        return userPrefs.updateUserSettings()
+    }).then(() => {
         useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)

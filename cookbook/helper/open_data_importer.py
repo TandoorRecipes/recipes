@@ -504,7 +504,7 @@ class OpenDataImporter:
                                     od_response.total_untouched += 1
                     if not matching_existing_found:
                         create_list.append(obj)
-            except KeyError as e:
+            except KeyError:
                 traceback.print_exc()
                 od_response.total_errored += 1
                 print(self.data[datatype][k]['food'] + ' is not in self.slug_id_cache["food"]')

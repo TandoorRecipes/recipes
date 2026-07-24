@@ -1,6 +1,7 @@
 <template>
 
     <v-container>
+        <template v-if="!loadError">
         <v-row>
             <v-col>
                 <v-card>
@@ -15,14 +16,14 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row v-if="editingObj" dense>
+        <v-row v-if="editingObj" density="compact">
             <v-col>
                 <v-card>
-                    <v-card-title class="text-h4">{{ $t('Delete') }} {{ $t(genericModel.model.localizationKey) }}: {{ genericModel.getLabel(editingObj) }}</v-card-title>
+                    <v-card-title class="text-h4">{{ $t('Delete') }} {{ $t(genericModel.model.localizationKey) }}{{ deleteLabel ? ': ' + deleteLabel : '' }}</v-card-title>
                 </v-card>
             </v-col>
         </v-row>
-        <v-row dense v-if="protectingObjectsCount > 0 || cascadingObjectsCount > 0 || nullingObjectsCount > 0">
+        <v-row density="compact" v-if="protectingObjectsCount > 0 || cascadingObjectsCount > 0 || nullingObjectsCount > 0">
             <v-col>
                 <v-card>
                     <v-tabs v-model="tab" grow>
@@ -64,6 +65,11 @@
                                     <template #item.model="{item}">
                                         {{ $t(item.model) }}
                                     </template>
+                                    <template #item.name="{item}">
+                                        <div data-test="relation-name" class="relation-name cursor-pointer"
+                                             :class="{ 'relation-name--expanded': isRelationNameExpanded(item) }"
+                                             @click="toggleRelationName(item)">{{ item.name }}</div>
+                                    </template>
                                     <template #item.actions="{item}">
                                         <v-btn icon="$delete" variant="plain" size="small" target="_blank"
                                                v-if="getGenericModelFromString(item.model, $t) && getGenericModelFromString(item.model, $t).model.isAdvancedDelete"
@@ -97,6 +103,11 @@
                                 >
                                     <template #item.model="{item}">
                                         {{ $t(item.model) }}
+                                    </template>
+                                    <template #item.name="{item}">
+                                        <div data-test="relation-name" class="relation-name cursor-pointer"
+                                             :class="{ 'relation-name--expanded': isRelationNameExpanded(item) }"
+                                             @click="toggleRelationName(item)">{{ item.name }}</div>
                                     </template>
                                     <template #item.actions="{item}">
                                         <v-btn icon="$delete" variant="plain" size="small" target="_blank"
@@ -132,6 +143,11 @@
                                     <template #item.model="{item}">
                                         {{ $t(item.model) }}
                                     </template>
+                                    <template #item.name="{item}">
+                                        <div data-test="relation-name" class="relation-name cursor-pointer"
+                                             :class="{ 'relation-name--expanded': isRelationNameExpanded(item) }"
+                                             @click="toggleRelationName(item)">{{ item.name }}</div>
+                                    </template>
                                     <template #item.actions="{item}">
                                         <v-btn icon="$delete" variant="plain" size="small" target="_blank"
                                                v-if="getGenericModelFromString(item.model, $t) && getGenericModelFromString(item.model, $t).model.isAdvancedDelete"
@@ -155,7 +171,7 @@
 
             </v-col>
         </v-row>
-        <v-row v-if="genericModel.model.isMerge" dense>
+        <v-row v-if="genericModel.model.isMerge" density="compact">
             <v-col>
                 <v-card class="border-warning border-sm border-opacity-100">
                     <v-card-title>{{ $t('Merge') }}</v-card-title>
@@ -173,20 +189,29 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <v-col>
                 <v-card class="border-error border-sm border-opacity-100">
                     <v-card-title>{{ $t('Delete') }}</v-card-title>
                     <v-card-text>
-                        {{ $t('delete_confirmation', {source: `${$t(genericModel.model.localizationKey)} ${genericModel.getLabel(editingObj)}`}) }}
+                        {{ $t('delete_confirmation', {source: `${$t(genericModel.model.localizationKey)} ${deleteLabel}`}) }}
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="delete" prepend-icon="$delete" :disabled="protectingObjectsCount > 0" @click="deleteObject()" :loading="deleteLoading">{{
+                        <v-btn color="delete" prepend-icon="$delete" data-test="model-delete-button" :disabled="protectingObjectsCount > 0 || genericModel.model.disableDelete" @click="deleteObject()" :loading="deleteLoading">{{
                                 $t('Delete')
                             }}
                         </v-btn>
                     </v-card-actions>
 
+                </v-card>
+            </v-col>
+        </v-row>
+        </template>
+        <v-row v-else density="compact">
+            <v-col>
+                <v-card data-test="model-not-found" variant="flat" class="mt-md-4 text-center pa-8">
+                    <div class="text-h6 mb-4">{{ loadError === 'notfound' ? $t('NotFound') : $t('err_fetching_resource') }}</div>
+                    <v-btn :to="{name: 'ModelListPage', params: {model}}" color="primary" variant="tonal">{{ $t('Back') }}</v-btn>
                 </v-card>
             </v-col>
         </v-row>
@@ -196,7 +221,8 @@
 
 <script setup lang="ts">
 
-import {onBeforeMount, onMounted, PropType, ref} from "vue";
+import {computed, onBeforeMount, onMounted, PropType, ref} from "vue";
+import {DateTime} from "luxon";
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models.ts";
 import {useTitle} from "@vueuse/core";
 import {useI18n} from "vue-i18n";
@@ -218,17 +244,51 @@ const props = defineProps({
     id: {type: String, required: true},
 })
 
+// Compact for narrow screens: the related object's ID is low-value here, and the Name
+// column is click-to-expand (see relation-name slot), so the table fits a phone width.
 const tableHeaders = [
-    {title: 'ID', key: 'id',},
-    {title: t('Model'), key: 'model',},
-    {title: t('Name'), key: 'name',},
-    {title: t('Actions'), key: 'actions', align: 'end'},
+    {title: t('Model'), key: 'model', nowrap: true},
+    {title: t('Name'), key: 'name'},
+    {title: t('Actions'), key: 'actions', align: 'end', nowrap: true},
 ] as VDataTableHeaders[]
 
 const genericModel = ref({} as GenericModel)
 const editingObj = ref({} as EditorSupportedModels)
+
+/**
+ * human label for the object being deleted; falls back to "#id · created date"
+ * (or just "#id") for name-less models so the confirmation is never a dangling colon
+ */
+function resolveLabel(obj: any): string {
+    const label = (genericModel.value?.getLabel?.(obj) ?? '').trim()
+    if (label) return label
+    if (!obj?.id) return ''
+    const created = obj.createdAt
+        ? DateTime.fromJSDate(new Date(obj.createdAt)).toLocaleString(DateTime.DATE_MED)
+        : ''
+    return created ? `#${obj.id} · ${created}` : `#${obj.id}`
+}
+
+const deleteLabel = computed(() => resolveLabel(editingObj.value))
+
+// per-row expand state for the (truncated) relation Name column
+const expandedRelationNames = ref(new Set<string>())
+function relationKey(item: any): string {
+    return `${item?.model}-${item?.id}`
+}
+function isRelationNameExpanded(item: any): boolean {
+    return expandedRelationNames.value.has(relationKey(item))
+}
+function toggleRelationName(item: any) {
+    const key = relationKey(item)
+    const next = new Set(expandedRelationNames.value)
+    next.has(key) ? next.delete(key) : next.add(key)
+    expandedRelationNames.value = next
+}
+
 const tab = ref('protecting')
 const deleteLoading = ref(false)
+const loadError = ref<null | 'notfound' | 'error'>(null)
 
 const pageSize = ref(useUserPreferenceStore().deviceSettings.general_tableItemsPerPage)
 
@@ -267,9 +327,16 @@ onMounted(() => {
 function loadObject() {
     genericModel.value.retrieve(Number(props.id)).then(obj => {
         editingObj.value = obj
-        title.value = t('DeleteSomething', {item: `${t(genericModel.value.model.localizationKey)} ${genericModel.value.getLabel(editingObj.value)}`})
+        title.value = t('DeleteSomething', {item: `${t(genericModel.value.model.localizationKey)} ${resolveLabel(editingObj.value)}`})
     }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        // a missing object must render a clean not-found state, not the delete
+        // form for a phantom object (delete-page analog of RecipeViewPage)
+        if (err.response?.status == 404) {
+            loadError.value = 'notfound'
+        } else {
+            loadError.value = 'error'
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }
     })
 }
 
@@ -292,6 +359,9 @@ function deleteObject() {
  * @param cache if reload should occur using cached data or not
  */
 function reloadAll(cache: boolean = true) {
+    // only advanced-delete models expose apiXProtectingList/CascadingList/NullingList;
+    // calling them for others (Space, User, Group, ...) throws on mount
+    if (!genericModel.value.model.isAdvancedDelete) return
     loadProtected({page: 1, itemsPerPage: pageSize.value}, cache)
     loadCascading({page: 1, itemsPerPage: pageSize.value}, cache)
     loadNulling({page: 1, itemsPerPage: pageSize.value}, cache)
@@ -371,5 +441,20 @@ function deleteRelated(model: EditorSupportedModels, id: number) {
 </script>
 
 <style scoped>
+/* Relation Name column: full text on wide screens; on a phone, truncate to keep the
+   table (incl. the Actions column) on screen, with click-to-expand to the full wrapped text. */
+@media (max-width: 600px) {
+    .relation-name {
+        max-width: 90px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
+    .relation-name.relation-name--expanded {
+        white-space: normal;
+        overflow: visible;
+        word-break: break-word;
+    }
+}
 </style>

@@ -7,40 +7,40 @@
                 <v-stepper v-model="stepper">
                     <template v-slot:default="{ prev, next }">
                         <v-stepper-header>
-                            <v-stepper-item :title="$t('Type')" value="type" icon=" "></v-stepper-item>
+                            <v-stepper-item :title="$t('Type')" value="type"></v-stepper-item>
                             <v-divider></v-divider>
 
                             <template v-if="['url','ai', 'source'].includes(importType)">
-                                <v-stepper-item :title="$t('Import')" value="url" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="url"></v-stepper-item>
                                 <v-divider></v-divider>
                                 <template v-if="importResponse.duplicates && importResponse.duplicates.length > 0">
-                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates" icon=" "></v-stepper-item>
+                                    <v-stepper-item :title="$t('Duplicate')" value="duplicates"></v-stepper-item>
                                     <v-divider></v-divider>
                                 </template>
-                                <v-stepper-item :title="$t('Image')" value="image_chooser" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Image')" value="image_chooser"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Keywords')" value="keywords_chooser"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Steps')" value="step_editor" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Steps')" value="step_editor"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Save')" value="confirm" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Save')" value="confirm"></v-stepper-item>
                             </template>
                             <template v-if="importType == 'app'">
-                                <v-stepper-item :title="$t('App')" value="app" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('App')" value="app"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('File')" value="file" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('File')" value="file"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Import')" value="import_log" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="import_log"></v-stepper-item>
                             </template>
 
                             <template v-if="importType == 'bookmarklet'">
-                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Bookmarklet')" value="bookmarklet"></v-stepper-item>
                             </template>
 
                             <template v-if="importType == 'url-list'">
-                                <v-stepper-item :title="$t('UrlList')" value="url_list_input" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('UrlList')" value="url_list_input"></v-stepper-item>
                                 <v-divider></v-divider>
-                                <v-stepper-item :title="$t('Import')" value="url_list_import" icon=" "></v-stepper-item>
+                                <v-stepper-item :title="$t('Import')" value="url_list_import"></v-stepper-item>
                             </template>
 
                         </v-stepper-header>
@@ -216,16 +216,12 @@
                             <v-stepper-window-item value="image_chooser">
                                 <v-row>
                                     <v-col cols="12" md="6">
-                                        <h2 class="text-h5">{{ $t('Selected') }}</h2>
-                                        <v-img max-height="30vh" :src="importResponse.recipe.imageUrl"></v-img>
+                                        <h2 class="text-h5">{{ $t('Cover') }}</h2>
+                                        <v-img max-height="30vh" :src="selectedImages[0]"></v-img>
                                     </v-col>
                                     <v-col cols="12" md="6">
                                         <h2 class="text-h5">{{ $t('Available') }}</h2>
-                                        <v-row dense>
-                                            <v-col cols="4" v-for="i in importResponse.images">
-                                                <v-img max-height="10vh" cover aspect-ratio="1" :src="i" @click="importResponse.recipe.imageUrl = i"></v-img>
-                                            </v-col>
-                                        </v-row>
+                                        <source-image-picker :images="importResponse.images || []" v-model="selectedImages" show-cover-badge />
                                     </v-col>
                                 </v-row>
                                 <v-stepper-actions>
@@ -375,7 +371,20 @@
                                     <v-card-title>{{ importResponse.recipe.name }}</v-card-title>
                                     <v-row>
                                         <v-col cols="12" md="6">
-                                            <v-img v-if="importResponse.recipe.imageUrl" :src="importResponse.recipe.imageUrl"></v-img>
+                                            <template v-if="selectedImages.length">
+                                                <v-img :src="selectedImages[0]"></v-img>
+                                                <v-row v-if="selectedImages.length > 1" density="compact" class="mt-2">
+                                                    <v-col cols="3" v-for="i in selectedImages" :key="i">
+                                                        <v-card :variant="i === selectedImages[0] ? 'outlined' : 'flat'"
+                                                                :color="i === selectedImages[0] ? 'primary' : undefined" style="position: relative;">
+                                                            <v-img max-height="8vh" cover aspect-ratio="1" :src="i"></v-img>
+                                                            <v-chip v-if="i === selectedImages[0]" size="x-small" color="primary" variant="flat"
+                                                                    class="ma-1" style="position: absolute; top: 0; left: 0;">{{ $t('Cover') }}</v-chip>
+                                                        </v-card>
+                                                    </v-col>
+                                                </v-row>
+                                            </template>
+                                            <v-img v-else-if="importResponse.recipe.imageUrl" :src="importResponse.recipe.imageUrl"></v-img>
                                         </v-col>
                                         <v-col cols="12" md="6">
                                             <v-text-field :label="$t('Name')" v-model="importResponse.recipe.name" :rules="[['maxLength',128]]"></v-text-field>
@@ -539,7 +548,7 @@
                 </v-stepper>
             </v-col>
         </v-row>
-        <v-row dense>
+        <v-row density="compact">
             <v-col class="text-center">
                 <v-btn size="small" prepend-icon="fa-solid fa-arrow-rotate-left" variant="tonal" color="warning" @click="resetImporter()">{{ $t('Reset') }}</v-btn>
             </v-col>
@@ -554,7 +563,7 @@
 <script lang="ts" setup>
 
 import {useI18n} from "vue-i18n";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {
     AccessToken,
     AiProvider,
@@ -575,10 +584,11 @@ import {VueDraggable} from "vue-draggable-plus";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useFileApi} from "@/composables/useFileApi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import SourceImagePicker from "@/components/inputs/SourceImagePicker.vue";
 import {useDisplay} from "vuetify";
 import {useUrlSearchParams} from "@vueuse/core";
 import {INTEGRATIONS} from "@/utils/integration_utils";
-import {VFileUpload} from 'vuetify/labs/VFileUpload'
+import {VFileUpload} from 'vuetify/components'
 import ImportLogViewer from "@/components/display/ImportLogViewer.vue";
 import {DateTime} from "luxon";
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
@@ -602,9 +612,15 @@ function importFromUrlList() {
             if (sourceResponse.recipe) {
                 api.apiRecipeCreate({recipe: sourceResponse.recipe}).then(recipe => {
                     urlListImportedRecipes.value.push(recipe)
-                    updateRecipeImage(recipe.id!, null, sourceResponse.recipe?.imageUrl).then(imageResponse => {
-                        setTimeout(importFromUrlList, 500)
-                    })
+                    // Attach the scraped image if there is one, then continue the
+                    // batch regardless of whether the image import succeeded.
+                    const next = () => setTimeout(importFromUrlList, 500)
+                    const imageUrl = sourceResponse.recipe?.imageUrl
+                    if (imageUrl) {
+                        createRecipeImageFromUrl(recipe.id!, imageUrl).then(next).catch(next)
+                    } else {
+                        next()
+                    }
                 }).catch(err => {
                     setTimeout(importFromUrlList, 500)
                 }).finally(() => {
@@ -632,7 +648,7 @@ const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
 const {t} = useI18n()
-const {updateRecipeImage, doAiImport, doAppImport, fileApiLoading} = useFileApi()
+const {createRecipeImageFromUrl, doAiImport, doAppImport, fileApiLoading} = useFileApi()
 const {getFullUrl} = useDjangoUrls()
 
 const bookmarkletContent = computed(() => {
@@ -675,6 +691,13 @@ const editAfterImport = ref(false)
 const bookmarkletToken = ref("")
 
 const importResponse = ref({} as RecipeFromSourceResponse)
+// Images the user picked to import, in selection order; the first becomes the recipe's primary.
+const selectedImages = ref<string[]>([])
+// Pre-select the scraped primary when a source loads; the user adds/removes from the grid. Only
+// imageUrl (set by the scrape) drives this — toggleImage never writes imageUrl, so there's no loop.
+watch(() => importResponse.value?.recipe?.imageUrl, (url) => {
+    selectedImages.value = url ? [url] : []
+})
 const keywordSelect = ref<null | SourceImportKeyword>(null)
 const editingIngredient = ref({} as SourceImportIngredient)
 
@@ -810,13 +833,25 @@ function createRecipeFromImport() {
         importResponse.value.recipe.keywords = importResponse.value.recipe.keywords.filter(k => k.importKeyword)
 
         api.apiRecipeCreate({recipe: importResponse.value.recipe}).then(recipe => {
-            updateRecipeImage(recipe.id!, null, importResponse.value.recipe?.imageUrl).then(r => {
+            const navigate = () => {
                 if (editAfterImport.value) {
                     router.push({name: 'ModelEditPage', params: {id: recipe.id, model: 'recipe'}})
                 } else {
                     router.push({name: 'RecipeViewPage', params: {id: recipe.id}})
                 }
-            })
+            }
+            // Import each selected image; the first-created becomes primary (the backend flags the
+            // first image on a recipe). Fall back to the single scraped imageUrl when nothing was
+            // multi-selected. Navigate whether or not the image import succeeded.
+            const imageUrl = importResponse.value.recipe?.imageUrl
+            const urls = selectedImages.value.length ? selectedImages.value : (imageUrl ? [imageUrl] : [])
+            if (urls.length) {
+                // sequential so the backend sees "no primary yet" for the first URL only -> first = default
+                urls.reduce((chain, url) => chain.then(() => createRecipeImageFromUrl(recipe.id!, url)), Promise.resolve() as Promise<unknown>)
+                    .then(navigate).catch(navigate)
+            } else {
+                navigate()
+            }
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         }).finally(() => {
@@ -964,6 +999,9 @@ function loadOrCreateBookmarkletToken() {
 function resetImporter() {
     location.reload()
 }
+
+// Exposed for testing the post-import image-attach flow.
+defineExpose({createRecipeFromImport, importFromUrlList, importResponse, selectedImages, editAfterImport})
 
 </script>
 
