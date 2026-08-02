@@ -64,7 +64,8 @@ interface LocalizationWithCoverage {
 
 const availableLocalizations = ref([] as LocalizationWithCoverage[])
 const {locale} = useI18n()
-const selectedLocale = ref((document.documentElement.lang || locale.value).replace(/_/g, '-').toLowerCase())
+const htmlLocale = document.documentElement.lang.replace(/_/g, '-').toLowerCase()
+const selectedLocale = ref(resolveLocale(htmlLocale) ? htmlLocale : locale.value)
 const helpDialog = ref(false)
 const helpDrawer = ref(true)
 

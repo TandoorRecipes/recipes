@@ -181,9 +181,9 @@ export function setLocale(i18n: I18n, locale: Locale, formattingLocale: string =
     i18n.global.locale = locale
     Settings.defaultLocale = formattingLocale
 
-    const vuetifyLocale = toVuetifyLocale(locale)
-    // Vuetify uses this key for messages, but needs the regional locale for dates.
-    vuetify.date.options.locale[vuetifyLocale] = formattingLocale
-    vuetify.locale.current.value = vuetifyLocale
+    const vuetifyMessageLocale = toVuetifyLocale(locale)
+    vuetify.locale.messages.value[formattingLocale] = vuetify.locale.messages.value[vuetifyMessageLocale]!
+    vuetify.locale.rtl.value[formattingLocale] = vuetify.locale.rtl.value[vuetifyMessageLocale] ?? false
+    vuetify.locale.current.value = formattingLocale
     vuetify.date.instance.locale = formattingLocale
 }

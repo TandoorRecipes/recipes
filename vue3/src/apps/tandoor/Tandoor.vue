@@ -122,8 +122,7 @@
 <script lang="ts" setup>
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 
-import {useDisplay, useLocale} from "vuetify"
-import {toVuetifyLocale} from "@/vuetify"
+import {useDisplay} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
@@ -149,13 +148,6 @@ onMounted(() => {
             router.push({name: 'WelcomePage'})
         }
     })
-
-
-    const {current} = useLocale()
-    let locale = document.querySelector('html')!.getAttribute('lang')
-    if (locale != null) {
-        current.value = toVuetifyLocale(locale.toLowerCase())
-    }
 })
 
 /**
