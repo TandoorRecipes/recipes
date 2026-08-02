@@ -8,6 +8,7 @@ import en from "@/locales/en.json";
 import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
 import {qualified as qualifiedLocales, coverage as localeCoverage, minCoverage as LOCALE_MIN_COVERAGE} from 'virtual:locale-coverage'
 import {Settings} from "luxon";
+import vuetify, {toVuetifyLocale} from "@/vuetify.ts";
 
 /**
  * lazy loading of translation, resources:
@@ -61,6 +62,34 @@ export function resolveLocale(code: string): string | null {
     return null
 }
 
+/**
+ * Preserve an explicitly selected region for formatting. For generic locales,
+ * prefer a browser locale for the same language (e.g. en + en-GB -> en-GB).
+ */
+export function resolveFormattingLocale(code: string, browserLocales: readonly string[] = []): string {
+    let requested: Intl.Locale
+    try {
+        requested = new Intl.Locale(code.replace(/_/g, '-'))
+    } catch {
+        return 'en-US'
+    }
+
+    if (requested.region) return requested.baseName
+
+    for (const browserCode of browserLocales) {
+        try {
+            const browserLocale = new Intl.Locale(browserCode)
+            const sameLanguage = browserLocale.language === requested.language
+            const sameScript = !requested.script || browserLocale.maximize().script === requested.maximize().script
+            if (sameLanguage && sameScript) return browserLocale.baseName
+        } catch {
+            // Ignore invalid browser locale entries and try the next one.
+        }
+    }
+
+    return requested.baseName
+}
+
 export function setupI18n() {
     const htmlLang = document.querySelector('html')!.getAttribute('lang')
     let locale = htmlLang ? resolveLocale(htmlLang) : null
@@ -70,6 +99,8 @@ export function setupI18n() {
         }
         locale = 'en'
     }
+    const browserLocales = navigator.languages?.length ? navigator.languages : [navigator.language]
+    const formattingLocale = resolveFormattingLocale(htmlLang || locale, browserLocales)
 
     // load i18n with locale en by default (Legacy mode — locale is a plain string, not a Ref)
     const i18n = createI18n({
@@ -88,7 +119,7 @@ export function setupI18n() {
     })
 
     // async load user locale into existing i18n instance
-    loadLocaleMessages(i18n, locale).catch(console.error)
+    loadLocaleMessages(i18n, locale, formattingLocale).catch(console.error)
 
     return i18n
 }
@@ -98,7 +129,7 @@ export function setupI18n() {
  * @param i18n instance of Vue i18n
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
-export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
+export async function loadLocaleMessages(i18n: I18n, locale: Locale, formattingLocale: string = locale) {
     // load locale messages, clone to avoid mutating the imported module object
     let messages = {...en}
     if (locale != 'en') {
@@ -138,7 +169,7 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
     })
 
     // switch to given locale
-    setLocale(i18n, locale)
+    setLocale(i18n, locale, formattingLocale)
 }
 
 /**
@@ -146,8 +177,13 @@ export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
  * @param i18n instance of Vue i18n
  * @param locale string locale code to set (should be in SUPPORT_LOCALES)
  */
-export function setLocale(i18n: I18n, locale: Locale): void {
+export function setLocale(i18n: I18n, locale: Locale, formattingLocale: string = locale): void {
     i18n.global.locale = locale
-    // set luxon locale
-    Settings.defaultLocale = locale
+    Settings.defaultLocale = formattingLocale
+
+    const vuetifyLocale = toVuetifyLocale(locale)
+    // Vuetify uses this key for messages, but needs the regional locale for dates.
+    vuetify.date.options.locale[vuetifyLocale] = formattingLocale
+    vuetify.locale.current.value = vuetifyLocale
+    vuetify.date.instance.locale = formattingLocale
 }
