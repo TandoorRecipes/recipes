@@ -80,8 +80,7 @@ export function resolveFormattingLocale(code: string, browserLocales: readonly s
         try {
             const browserLocale = new Intl.Locale(browserCode)
             const sameLanguage = browserLocale.language === requested.language
-            const sameScript = !requested.script || browserLocale.maximize().script === requested.maximize().script
-            if (sameLanguage && sameScript) return browserLocale.baseName
+            if (sameLanguage) return browserLocale.baseName
         } catch {
             // Ignore invalid browser locale entries and try the next one.
         }
