@@ -1,12 +1,13 @@
 import os
 from io import BytesIO
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 def rescale_image_jpeg(image_object, base_width=1020):
     img = Image.open(image_object)
-    icc_profile = img.info.get('icc_profile')  # remember color profile to not mess up colors
+    img = ImageOps.exif_transpose(img)
+    icc_profile = img.info.get('icc_profile')
     width_percent = (base_width / float(img.size[0]))
     height = int((float(img.size[1]) * float(width_percent)))
 
