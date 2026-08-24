@@ -16,6 +16,7 @@ import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
+    {path: '/login', component: () => import("@/pages/LoginPage.vue"), name: 'LoginPage'},
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
@@ -51,6 +52,7 @@ let routes = [
 let settings = {
     path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',
     children: [
+        {path: 'profile', component: () => import("@/components/settings/ProfileSettings.vue"), name: 'ProfileSettings', meta: {title: 'Settings'}},
         {path: 'account', component: () => import("@/components/settings/AccountSettings.vue"), name: 'AccountSettings', meta: {title: 'Settings'}},
         {path: 'cosmetic', component: () => import("@/components/settings/CosmeticSettings.vue"), name: 'CosmeticSettings', meta: {title: 'Settings'}},
         {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings', meta: {title: 'Settings'}},

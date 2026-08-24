@@ -51,7 +51,14 @@ def index(request, path=None, resource=None):
     if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
         return render(request, 'frontend/tandoor.html', {})
     else:
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+        return HttpResponseRedirect(reverse('view_login') + '?next=' + request.path)
+
+
+def login_view(request):
+    if not request.user.is_authenticated:
+        return render(request, 'frontend/tandoor.html', {})
+    else:
+        return HttpResponseRedirect(reverse('index'))
 
 
 def redirect_recipe_view(request, pk):
@@ -394,7 +401,8 @@ def invite_link(request, token):
                         link.save()
 
                     UserSpace.objects.filter(user=request.user).update(active=False)
-                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household, active=True)
+                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household,
+                                                          active=True)
 
                     user_space.groups.add(link.group)
 

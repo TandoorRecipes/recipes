@@ -3,7 +3,8 @@
         <v-row>
             <v-col cols="12" md="3" offset-md="1" offset-xl="2" xl="2">
                 <v-list class="bg-transparent">
-                    <v-list-item :to="{name: 'AccountSettings'}" prepend-icon="fa-solid fa-user">{{ $t('Profile') }}</v-list-item>
+                    <v-list-item :to="{name: 'ProfileSettings'}" prepend-icon="fa-solid fa-user">{{ $t('Profile') }}</v-list-item>
+                    <v-list-item :to="{name: 'AccountSettings'}" prepend-icon="fa-solid fa-lock">{{ $t('Account') }}</v-list-item>
 
                     <v-divider></v-divider>
                     <v-list-subheader>{{ $t('Settings') }}</v-list-subheader>

@@ -158,11 +158,13 @@ export const useMessageStore = defineStore('message_store', () => {
         }
 
         if (preparedMessage == PreparedMessage.RATE_LIMIT) {
-            data.response.json().then(responseJson => {
-                addMessage(MessageType.WARNING, {title: t(''), text: t('RateLimitHelp') + '\n' + responseJson.detail} as StructuredMessage, 6000, data)
-            }).catch(() => {
+            try {
+                data.response.json().then(responseJson => {
+                    addMessage(MessageType.WARNING, {title: t(''), text: t('RateLimitHelp') + '\n' + responseJson.detail} as StructuredMessage, 6000, data)
+                })
+            } catch (e) {
                 addMessage(MessageType.WARNING, {title: t(''), text: t('RateLimitHelp')} as StructuredMessage, 6000, data)
-            })
+            }
         }
     }
 
