@@ -3243,6 +3243,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['imprint_url'] = settings.IMPRINT_URL
         s['hosted'] = settings.HOSTED
         s['debug'] = settings.DEBUG
+        s['email'] = settings.EMAIL_HOST != ''
         s['version'] = TANDOOR_VERSION
         s['unauthenticated_theme_from_space'] = settings.UNAUTHENTICATED_THEME_FROM_SPACE
         s['force_theme_from_space'] = settings.FORCE_THEME_FROM_SPACE

@@ -48,17 +48,7 @@ def index(request, path=None, resource=None):
         request.session.modified = True
         return HttpResponseRedirect(reverse('view_invite', args=[value]))
 
-    if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
-        return render(request, 'frontend/tandoor.html', {})
-    else:
-        return HttpResponseRedirect(reverse('view_login') + '?next=' + request.path)
-
-
-def login_view(request):
-    if not request.user.is_authenticated:
-        return render(request, 'frontend/tandoor.html', {})
-    else:
-        return HttpResponseRedirect(reverse('index'))
+    return render(request, 'frontend/tandoor.html', {})
 
 
 def redirect_recipe_view(request, pk):

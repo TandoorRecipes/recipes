@@ -6,7 +6,6 @@ from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.exceptions import AuthenticationFailed
 
-
 from cookbook.helper.permission_helper import create_space_for_user
 from cookbook.views import views
 from recipes import settings
@@ -34,23 +33,24 @@ class ScopeMiddleware:
                 request.space = None
                 return self.get_response(request)
 
+        # views that should be served with scopes_disabled
+        NO_SCOPE_VIEWS = ['/admin/']
+        # views that should be served even when no space context is available
+        NO_SPACE_VIEWS = ['/invite/', '/accounts/', '/switch-space/']  # TODO verify this is all still needed in v2
+        # views that should be served without redirection when not authenticated
+        NO_AUTH_VIEWS = ['/login/', '/signup/', '/password-reset/', '/manifest.json', '/_allauth/']
+        if settings.DEBUG:
+            NO_AUTH_VIEWS.append('/__debug__/')
+
         if request.user.is_authenticated:
+            for nsv in NO_SCOPE_VIEWS:
+                if request.path.startswith(prefix + nsv):
+                    with scopes_disabled():
+                        return self.get_response(request)
 
-            if request.path.startswith(prefix + '/admin/'):
-                with scopes_disabled():
+            for nspv in NO_SPACE_VIEWS:
+                if request.path.startswith(prefix + nspv):
                     return self.get_response(request)
-
-            if request.path.startswith(prefix + '/signup/') or request.path.startswith(prefix + '/invite/'):
-                return self.get_response(request)
-
-            if request.path.startswith(prefix + '/accounts/'):
-                return self.get_response(request)
-
-            if request.path.startswith(prefix + '/switch-space/'):
-                return self.get_response(request)
-
-            if request.path.startswith(prefix + '/invite/'):
-                return self.get_response(request)
 
             # get active user space, if for some reason more than one space is active select first (group permission checks will fail, this is not intended at this point)
             user_space = request.user.userspace_set.filter(active=True).first()
@@ -79,6 +79,7 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
+            # annotate space to requests to api with token auth
             if request.path.startswith(prefix + '/api/'):
                 try:
                     if auth := OAuth2Authentication().authenticate(request):
@@ -91,6 +92,17 @@ class ScopeMiddleware:
                 except AuthenticationFailed:
                     pass
 
-            with scopes_disabled():
+            # allow frontend to be served for shared recipe links
+            if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
                 request.space = None
-                return self.get_response(request)
+                with scopes_disabled():
+                    return self.get_response(request)
+
+            # allow frontend to be served for public pages
+            for nav in NO_AUTH_VIEWS:
+                if request.path.startswith(prefix + nav):
+                    request.space = None
+                    with scopes_disabled():
+                        return self.get_response(request)
+
+            return HttpResponseRedirect('/login/?next=' + request.path)

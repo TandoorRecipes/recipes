@@ -147,7 +147,7 @@ const router = useRouter()
 
 onMounted(() => {
     useUserPreferenceStore().init().then(() => {
-        if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
+        if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
             router.push({name: 'WelcomePage'})
         }
     })
@@ -164,7 +164,7 @@ onMounted(() => {
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
-    if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
+    if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
     } else if (to.name == 'StartPage' &&
         useUserPreferenceStore().initCompleted &&

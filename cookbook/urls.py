@@ -84,7 +84,6 @@ urlpatterns = [
 
     path('setup/', views.setup, name='view_setup'),
     path('no-group/', views.no_groups, name='view_no_group'),
-    path('login/', views.login_view, name='view_login'),
     #path('space-overview/', views.space_overview, name='view_space_overview'),
     #path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     #path('no-perm/', views.no_perm, name='view_no_perm'),

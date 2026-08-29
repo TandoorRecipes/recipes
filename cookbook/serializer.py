@@ -1935,6 +1935,7 @@ class ServerSettingsSerializer(serializers.Serializer):
     hosted = serializers.BooleanField()
     debug = serializers.BooleanField()
     version = serializers.CharField()
+    email = serializers.BooleanField()
 
     unauthenticated_theme_from_space = serializers.IntegerField()
     force_theme_from_space = serializers.IntegerField()
