@@ -41,6 +41,12 @@ import {
     AiProviderToJSON,
     AiProviderToJSONTyped,
 } from './AiProvider';
+import type { Unit } from './Unit';
+import {
+    UnitFromJSON,
+    UnitFromJSONTyped,
+    UnitToJSON,
+} from './Unit';
 import type { FoodInheritField } from './FoodInheritField';
 import {
     FoodInheritFieldFromJSON,
@@ -249,13 +255,19 @@ export interface Space {
      */
     aiEnabled?: boolean;
     /**
-     * 
+     *
      * @type {AiProvider}
      * @memberof Space
      */
     aiDefaultProvider?: AiProvider | null;
     /**
-     * 
+     *
+     * @type {Unit}
+     * @memberof Space
+     */
+    defaultUnit?: Unit;
+    /**
+     *
      * @type {boolean}
      * @memberof Space
      */
@@ -330,6 +342,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'defaultUnit': json['default_unit'] == null ? undefined : UnitFromJSON(json['default_unit']),
         'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
         'householdSetupCompleted': json['household_setup_completed'] == null ? undefined : json['household_setup_completed'],
     };
@@ -367,6 +380,7 @@ export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'
         'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
         'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'default_unit': UnitToJSON(value['defaultUnit']),
         'space_setup_completed': value['spaceSetupCompleted'],
         'household_setup_completed': value['householdSetupCompleted'],
     };
