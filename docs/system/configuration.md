@@ -44,14 +44,14 @@ ALLOWED_HOSTS=recipes.mydomain.com
 Multiple parameters are required to configure the database.
 *Note: You can setup parameters for a test database by defining all of the parameters preceded by `TEST_` e.g. TEST_DB_ENGINE=*
 
-| Var               | Options                                                            | Description                                                             |
-|-------------------|--------------------------------------------------------------------|-------------------------------------------------------------------------|
-| DB_ENGINE         | django.db.backends.postgresql (default) django.db.backends.sqlite3 | Type of database connection. Production should always use postgresql.   |
-| POSTGRES_HOST     | any                                                                | Used to connect to database server. Use container name in docker setup. |
-| POSTGRES_DB       | any                                                                | Name of database.                                                       |
-| POSTGRES_PORT     | 1-65535                                                            | Port of database, Postgresql default `5432`                             |
-| POSTGRES_USER     | any                                                                | Username for database connection.                                       |
-| POSTGRES_PASSWORD | any                                                                | Password for database connection.                                       |
+| Var               | Options                                                                          | Description                                                             |
+|-------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| DB_ENGINE         | django.db.backends.postgresql (recommended) django.db.backends.sqlite3 (default) | Type of database connection. Production should always use postgresql.   |
+| POSTGRES_HOST     | any                                                                              | Used to connect to database server. Use container name in docker setup. |
+| POSTGRES_DB       | any                                                                              | Name of database.                                                       |
+| POSTGRES_PORT     | 1-65535                                                                          | Port of database, Postgresql default `5432`                             |
+| POSTGRES_USER     | any                                                                              | Username for database connection.                                       |
+| POSTGRES_PASSWORD | any                                                                              | Password for database connection.                                       |
 
 #### Password file
 
