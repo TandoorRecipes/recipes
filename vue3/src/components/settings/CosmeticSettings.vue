@@ -34,6 +34,7 @@
         <v-checkbox :label="$t('Comments_setting')" v-model="useUserPreferenceStore().userSettings.comments"></v-checkbox>
         <v-checkbox :label="$t('left_handed')" :hint="$t('left_handed_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.leftHanded"></v-checkbox>
         <v-checkbox :label="$t('show_step_ingredients_setting')" :hint="$t('show_step_ingredients_setting_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.showStepIngredients"></v-checkbox>
+        <v-checkbox :label="$t('show_ingredient_notes_setting')" :hint="$t('show_ingredient_notes_setting_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.showIngredientNotes"></v-checkbox>
         <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{$t('Save')}}</v-btn>
     </v-form>
 </template>
