@@ -82,13 +82,25 @@ export interface UserPreference {
      */
     image?: UserFileView | null;
     /**
-     * 
+     *
      * @type {ThemeEnum}
      * @memberof UserPreference
      */
     theme?: ThemeEnum;
     /**
-     * 
+     *
+     * @type {ThemeEnum}
+     * @memberof UserPreference
+     */
+    lightTheme?: ThemeEnum;
+    /**
+     *
+     * @type {ThemeEnum}
+     * @memberof UserPreference
+     */
+    darkTheme?: ThemeEnum;
+    /**
+     *
      * @type {string}
      * @memberof UserPreference
      */
@@ -266,10 +278,12 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
         return json;
     }
     return {
-        
+
         'user': UserFromJSON(json['user']),
         'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
         'theme': json['theme'] == null ? undefined : ThemeEnumFromJSON(json['theme']),
+        'lightTheme': json['light_theme'] == null ? undefined : ThemeEnumFromJSON(json['light_theme']),
+        'darkTheme': json['dark_theme'] == null ? undefined : ThemeEnumFromJSON(json['dark_theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
         'navTextColor': json['nav_text_color'] == null ? undefined : UserPreferenceNavTextColorEnumFromJSON(json['nav_text_color']),
         'navShowLogo': json['nav_show_logo'] == null ? undefined : json['nav_show_logo'],
@@ -309,9 +323,11 @@ export function UserPreferenceToJSONTyped(value?: Omit<UserPreference, 'user'|'f
     }
 
     return {
-        
+
         'image': UserFileViewToJSON(value['image']),
         'theme': ThemeEnumToJSON(value['theme']),
+        'light_theme': value['lightTheme'],
+        'dark_theme': value['darkTheme'],
         'nav_bg_color': value['navBgColor'],
         'nav_text_color': UserPreferenceNavTextColorEnumToJSON(value['navTextColor']),
         'nav_show_logo': value['navShowLogo'],

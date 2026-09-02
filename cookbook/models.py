@@ -519,7 +519,11 @@ class UserPreference(models.Model, PermissionModelMixin):
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
 
+    # Theme preferences - separate fields for light and dark themes
+    # System theme preference determines which is used
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
+    light_theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR, help_text='Theme used in light mode')
+    dark_theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR_DARK, help_text='Theme used in dark mode')
     nav_bg_color = models.CharField(max_length=8, default='#ddbf86')
     nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=DARK)
     nav_show_logo = models.BooleanField(default=True)
