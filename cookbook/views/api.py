@@ -2003,9 +2003,11 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
             if 'shared_add' in serializer.validated_data:
                 shared_relation = []
+                space_user_ids = UserSpace.objects.filter(space=request.space).values_list('id', flat=True)
                 for r in recipes:
                     for u in serializer.validated_data['shared_add']:
-                        shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                        if u in space_user_ids:
+                            shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
                 Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
 
             if 'shared_remove' in serializer.validated_data:
@@ -2015,9 +2017,11 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             if 'shared_set' in serializer.validated_data and len(serializer.validated_data['shared_set']) > 0:
                 shared_relation = []
                 Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                space_user_ids = UserSpace.objects.filter(space=request.space).values_list('id', flat=True)
                 for r in recipes:
                     for u in serializer.validated_data['shared_set']:
-                        shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                        if u in space_user_ids:
+                            shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
                 Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
 
             if 'shared_remove_all' in serializer.validated_data and serializer.validated_data['shared_remove_all']:
