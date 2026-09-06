@@ -1545,6 +1545,7 @@ class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = AutoMealPlanSerializer
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     http_method_names = ['post', 'options']
 
     def create(self, request):
@@ -1554,11 +1555,11 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             servings = serializer.validated_data['servings']
-            shared = serializer.get_initial().get('shared', None)
-            shared_pks = list()
-            if shared is not None:
-                for i in range(len(shared)):
-                    shared_pks.append(shared[i]['id'])
+            # shared = serializer.get_initial().get('shared', None)
+            # shared_pks = list()
+            # if shared is not None:
+            #     for i in range(len(shared)):
+            #         shared_pks.append(shared[i]['id'])
 
             days = min((end_date - start_date).days + 1, 14)
 
@@ -2411,7 +2412,7 @@ class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [((CustomIsOwner | CustomIsAdmin) | (IsReadOnlyDRF & CustomIsUser)) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
