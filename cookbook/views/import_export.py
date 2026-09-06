@@ -3,11 +3,12 @@ import threading
 
 from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportExportBase
-from cookbook.helper.permission_helper import group_required
+from cookbook.helper.permission_helper import has_group_permission
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
@@ -92,8 +93,10 @@ def get_integration(request, export_type):
         return Gourmet(request, export_type)
 
 
-@group_required('user')
 def export_file(request, pk):
+    if not has_group_permission(request, ['user']):
+        return redirect(reverse('index'))
+
     el = get_object_or_404(ExportLog, pk=pk, space=request.space)
 
     cacheData = cache.get(f'export_file_{el.pk}')

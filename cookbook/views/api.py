@@ -80,7 +80,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                CustomRecipePermission, CustomTokenHasReadWriteScope,
                                                CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF,
                                                above_space_limit,
-                                               group_required, has_group_permission, is_space_owner,
+                                               has_group_permission, is_space_owner,
                                                switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly, CustomIsHousehold,
                                                get_household_user_ids)
 from cookbook.helper.recipe_search import RecipeSearch
@@ -745,7 +745,7 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
         # >= admins can see all users, guest/user can only see themselves
-        if has_group_permission(self.request.user, ['admin']):
+        if has_group_permission(self.request, ['admin']):
             return self.queryset.filter(space=self.request.space)
         else:
             return self.queryset.filter(space=self.request.space, user=self.request.user)
@@ -2125,7 +2125,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
     @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
     def delete_external(self, request, pk):
         obj = self.get_object()
-        if obj.get_space() != request.space and has_group_permission(request.user, ['user']):
+        if obj.get_space() != request.space and has_group_permission(request, ['user']):
             raise PermissionDenied(detail='You do not have the required permission to perform this action', code=403)
 
         if obj.storage:
@@ -3362,7 +3362,6 @@ def get_recipe_file(request, pk):
         return FileResponse()
 
 
-@group_required('user')
 # TODO add rate limiting
 # TODO change to some sort of asynchronous trigger
 def sync_all(request):
@@ -3370,6 +3369,9 @@ def sync_all(request):
         messages.add_message(request, messages.ERROR,
                              _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
+
+    if not has_group_permission(request, ['user']):
+        return redirect(reverse('index'))
 
     monitors = Sync.objects.filter(active=True).filter(space=request.user.userspace_set.filter(active=1).first().space)
 
@@ -3405,7 +3407,7 @@ def sync_all(request):
 @api_view(['GET'])
 @permission_classes([CustomRecipePermission & CustomTokenHasReadWriteScope])
 def share_link(request, pk):
-    if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
+    if request.space.allow_sharing and has_group_permission(request, ('user',)):
         recipe = get_object_or_404(Recipe, pk=pk)
         # manual object permission check for FBV
         for permission in [CustomRecipePermission()]:
