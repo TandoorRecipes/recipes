@@ -11,18 +11,18 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-04-21 18:37+0000\n"
-"Last-Translator: Borys G <borysgnacinski@gmail.com>\n"
+"PO-Revision-Date: 2026-09-06 11:10+0000\n"
+"Last-Translator: Rudolf Starzewski <sirtah1995@gmail.com>\n"
 "Language-Team: Polish <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
-"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
-"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -210,19 +210,19 @@ msgstr "Stworzyłem to"
 
 #: .\cookbook\integration\integration.py:67
 msgid "Too many files in zip"
-msgstr ""
+msgstr "W pliku zip znajduje się zbyt wiele plików"
 
 #: .\cookbook\integration\integration.py:71
 msgid "Zip file too large"
-msgstr ""
+msgstr "Plik ZIP jest zbyt duży"
 
 #: .\cookbook\integration\integration.py:84
 msgid "Nested zip files too deep"
-msgstr ""
+msgstr "Pliki ZIP zagnieżdżone zbyt głęboko"
 
 #: .\cookbook\integration\integration.py:92
 msgid "File in zip too large"
-msgstr ""
+msgstr "Plik w archiwum ZIP jest zbyt duży"
 
 #: .\cookbook\integration\integration.py:270
 msgid ""
@@ -1805,6 +1805,8 @@ msgstr "Błędy są przechowywane przez 24 godziny (do 50 błędów)."
 #: .\cookbook\templates\system.html:288
 msgid "No recent social login errors."
 msgstr ""
+"Nie odnotowano ostatnio żadnych błędów związanych z logowaniem za pomocą "
+"serwisów społecznościowych."
 
 #: .\cookbook\templates\system.html:303
 msgid "False"
@@ -1928,12 +1930,16 @@ msgid ""
 "If true also return empty entries, if false (default) only return entries "
 "with amount > 0."
 msgstr ""
+"Jeśli wartość jest prawdziwa, zwracane są również puste wpisy; jeśli "
+"fałszywa (wartość domyślna), zwracane są tylko wpisy o kwocie większej niż 0."
 
 #: .\cookbook\views\api.py:868
 msgid ""
 "Returns all entries with the same food as the given code. If code is given "
 "food parameter is ignored"
 msgstr ""
+"Zwraca wszystkie wpisy zawierające tę samą food, co podany kod. Jeśli podano "
+"kod, parametr food jest ignorowany"
 
 #: .\cookbook\views\api.py:869 .\cookbook\views\api.py:903
 msgid "Returns all entries with the given food id"
@@ -1946,10 +1952,8 @@ msgid "Returns all entries with the given inventory location id"
 msgstr "Zwraca tylko wpisy powiązane z podanym identyfikatorem planu posiłków"
 
 #: .\cookbook\views\api.py:904
-#, fuzzy
-#| msgid "Returns only entries associated with the given mealplan id"
 msgid "Returns all entries with the given entry id"
-msgstr "Zwraca tylko wpisy powiązane z podanym identyfikatorem planu posiłków"
+msgstr "Zwraca wszystkie wpisy o podanym identyfikatorze wpisu"
 
 #: .\cookbook\views\api.py:1107
 #, python-brace-format
@@ -1976,20 +1980,20 @@ msgstr ""
 "roboczej."
 
 #: .\cookbook\views\api.py:1484
-#, fuzzy
-#| msgid "Filter meal plans from date (inclusive)."
 msgid ""
 "Filter meal plans from date (inclusive). If nothing is given its today - 90 "
 "days."
-msgstr "Filtruj plany posiłków od daty początkowej (włącznie)."
+msgstr ""
+"Filtruj plany posiłków według daty (włącznie). Jeśli nie podano żadnej daty, "
+"domyślnie przyjmowana jest dzisiejsza data – 90 dni."
 
 #: .\cookbook\views\api.py:1486
-#, fuzzy
-#| msgid "Filter meal plans to date (inclusive)."
 msgid ""
 "Filter meal plans to date (inclusive). If nothing is given its today + 360 "
 "days."
-msgstr "Filtruj plany posiłków do daty końcowej (włącznie)."
+msgstr ""
+"Filtruj plany posiłków według daty (włącznie). Jeśli nie podano żadnej daty, "
+"brana jest pod uwagę dzisiejsza data + 360 dni."
 
 #: .\cookbook\views\api.py:1489
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -1998,10 +2002,8 @@ msgstr ""
 "powtórzeń."
 
 #: .\cookbook\views\api.py:1578
-#, fuzzy
-#| msgid "No recipes selected"
 msgid "No recipes found."
-msgstr "Nie wybrano przepisów"
+msgstr "Nie znaleziono żadnych przepisów."
 
 #: .\cookbook\views\api.py:1677
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
