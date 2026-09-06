@@ -510,7 +510,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'household','active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'household', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -582,7 +582,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -671,6 +671,7 @@ class RecipeImportSerializer(WritableNestedModelSerializer, SpacedModelSerialize
     class Meta:
         model = RecipeImport
         fields = ('id', 'storage', 'name', 'file_uid', 'file_path', 'created_at')
+        read_only_fields = ('id', 'created_at', 'file_uid', 'file_path', 'created_at', 'storage')
 
 
 class SyncSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
@@ -1219,7 +1220,7 @@ class RecipeSerializer(RecipeBaseSerializer):
             'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
             'last_cooked', 'private', 'shared'
         )
-        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties']
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path',]
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)
@@ -1315,7 +1316,6 @@ class UserSpaceBatchUpdateSerializer(serializers.Serializer):
     group_set = serializers.ListField(child=serializers.IntegerField())
 
 
-
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
 
@@ -1367,7 +1367,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
             raise NotFound(detail=None, code=None)
 
         crp = CustomRecipePermission()
-        if not crp.has_object_permission(self.context['request'], None,recipe):
+        if not crp.has_object_permission(self.context['request'], None, recipe):
             raise NotFound(detail=None, code=None)
 
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
