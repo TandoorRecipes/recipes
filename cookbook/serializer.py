@@ -28,7 +28,7 @@ from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
-from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids
+from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids, CustomRecipePermission
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
@@ -1354,7 +1354,11 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     @extend_schema_field(RecipeOverviewSerializer)
     def get_recipe_content(self, obj):
-        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
+        crp = CustomRecipePermission()
+        if not crp.has_object_permission(self.context['request'], None, obj.recipe):
+            return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
+        else:
+            raise NotFound(detail=None, code=None)
 
     def create(self, validated_data):
         book = validated_data['book']
@@ -1431,13 +1435,13 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
         mealplan = super().create(validated_data)
         if add_to_shopping and self.context['request'].data.get('recipe', None):
-            SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
+            SLR = RecipeShoppingEditor(self.context['request'], user=validated_data['created_by'], space=validated_data['space'])
             SLR.create(mealplan=mealplan, servings=validated_data['servings'])
         return mealplan
 
     def update(self, obj, validated_data):
         if sr := ShoppingListRecipe.objects.filter(mealplan=obj.id).first():
-            SLR = RecipeShoppingEditor(user=obj.created_by, space=obj.space, id=sr.id)
+            SLR = RecipeShoppingEditor(self.context['request'], user=obj.created_by, space=obj.space, id=sr.id)
             SLR.edit(mealplan=obj, servings=validated_data['servings'])
 
         return super().update(obj, validated_data)
@@ -1476,7 +1480,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
-            SLR = RecipeShoppingEditor(user=self.context['request'].user, space=self.context['request'].space)
+            SLR = RecipeShoppingEditor(self.context['request'], user=self.context['request'].user, space=self.context['request'].space)
             SLR.edit_servings(servings=validated_data['servings'], id=instance.id)
         return super().update(instance, validated_data)
 

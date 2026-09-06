@@ -1561,7 +1561,8 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
 
             days = min((end_date - start_date).days + 1, 14)
 
-            recipes = Recipe.objects.filter(space=request.space, internal=True)
+            recipes = Recipe.objects.filter(space=request.space, internal=True).filter(
+                Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
 
             keywords = serializer.validated_data.get('keywords', [])
             keyword_mode = serializer.validated_data.get('keyword_mode', 'and')
@@ -1609,7 +1610,7 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
                 m.shared.set(shared_pks)
 
                 if request.data.get('addshopping', False):
-                    SLR = RecipeShoppingEditor(user=request.user, space=request.space)
+                    SLR = RecipeShoppingEditor(request)
                     SLR.create(mealplan=m, servings=servings)
 
                 else:
@@ -1911,7 +1912,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
         mealplan = request.data.get('mealplan', None)
-        SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj, mealplan=mealplan,
+        SLR = RecipeShoppingEditor(request ,id=list_recipe, recipe=obj, mealplan=mealplan,
                                    servings=servings)
 
         if servings and servings <= 0:
