@@ -765,7 +765,7 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     @decorators.action(detail=False, methods=['PUT'], serializer_class=UserSpaceBatchUpdateSerializer)
     def batch_update(self, request):
         if self.request.space.created_by != self.request.user:
-            return Response({"msg":"No Permission"}, 403)
+            return Response({"msg": "No Permission"}, 403)
 
         serializer = self.serializer_class(data=request.data, partial=True)
 
@@ -1276,7 +1276,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 }
                 if ai_provider.url:
                     if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
+                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -1958,8 +1958,10 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         serializer = self.serializer_class(data=request.data, partial=True)
 
         if serializer.is_valid():
-            recipes = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
-            safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values_list('id', flat=True)
+            recipes = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(
+                Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user))))
+            safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(
+                Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values_list('id', flat=True)
 
             if 'keywords_add' in serializer.validated_data:
                 keyword_relations = []
@@ -2093,7 +2095,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 }
                 if ai_provider.url:
                     if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
+                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -2820,7 +2822,7 @@ class AiImportView(APIView):
                 }
                 if ai_provider.url:
                     if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
+                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
             except LitellmTimeout:
@@ -2934,7 +2936,7 @@ class AiStepSortView(APIView):
                 }
                 if ai_provider.url:
                     if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise  Exception(f'AI provider URL not allowed: {ai_provider.url}')
+                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
 
@@ -3012,12 +3014,15 @@ class AppExportView(APIView):
         serializer = ExportRequestSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             if serializer.validated_data['all']:
-                recipes = Recipe.objects.filter(space=request.space, internal=True).all()
+                recipes = Recipe.objects.filter(space=request.space, internal=True).filter(
+                    Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()
             elif serializer.validated_data['custom_filter']:
                 search = RecipeSearch(request, filter=serializer.initial_data['custom_filter']['id'])
-                recipes = search.get_queryset(Recipe.objects.filter(space=request.space, internal=True))
+                recipes = search.get_queryset(Recipe.objects.filter(space=request.space, internal=True).filter(
+                    Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))))
             elif len(serializer.validated_data['recipes']) > 0:
-                recipes = Recipe.objects.filter(space=request.space, internal=True, id__in=[item['id'] for item in serializer.initial_data['recipes']]).all()
+                recipes = Recipe.objects.filter(space=request.space, internal=True, id__in=[item['id'] for item in serializer.initial_data['recipes']]).filter(
+                    Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()
 
             integration = get_integration(request, serializer.validated_data['type'])
 
