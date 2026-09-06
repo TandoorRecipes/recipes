@@ -1355,7 +1355,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     @extend_schema_field(RecipeOverviewSerializer)
     def get_recipe_content(self, obj):
         crp = CustomRecipePermission()
-        if not crp.has_object_permission(self.context['request'], None, obj.recipe):
+        if crp.has_object_permission(self.context['request'], None, obj.recipe):
             return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
         else:
             raise NotFound(detail=None, code=None)
@@ -1365,6 +1365,11 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         recipe = validated_data['recipe']
         if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
+
+        crp = CustomRecipePermission()
+        if not crp.has_object_permission(self.context['request'], None,recipe):
+            raise NotFound(detail=None, code=None)
+
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
 
