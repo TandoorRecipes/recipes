@@ -1609,8 +1609,6 @@ class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericVie
             MealPlan.objects.bulk_create(meal_plans)
 
             for m in meal_plans:
-                m.shared.set(shared_pks)
-
                 if request.data.get('addshopping', False):
                     SLR = RecipeShoppingEditor(request)
                     SLR.create(mealplan=m, servings=servings)
