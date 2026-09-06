@@ -36,7 +36,7 @@ django-treebeard==4.7.1
 django-cors-headers==4.9.0
 django-storages==1.14.6
 boto3==1.41.5
-django-prometheus==2.4.1
+django-prometheus==2.5.0
 django-hCaptcha==0.2.0
 python-ldap==3.4.5
 django-auth-ldap==5.3.0
