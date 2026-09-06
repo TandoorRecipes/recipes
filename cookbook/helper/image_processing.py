@@ -1,11 +1,11 @@
 import os
 from io import BytesIO
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 def rescale_image_jpeg(image_object, base_width=1020):
-    img = Image.open(image_object)
+    img = ImageOps.exif_transpose(Image.open(image_object))
     icc_profile = img.info.get('icc_profile')  # remember color profile to not mess up colors
     width_percent = (base_width / float(img.size[0]))
     height = int((float(img.size[1]) * float(width_percent)))
@@ -18,7 +18,7 @@ def rescale_image_jpeg(image_object, base_width=1020):
 
 
 def rescale_image_png(image_object, base_width=1020):
-    image_object = Image.open(image_object)
+    image_object = ImageOps.exif_transpose(Image.open(image_object))
     wpercent = (base_width / float(image_object.size[0]))
     hsize = int((float(image_object.size[1]) * float(wpercent)))
     img = image_object.resize((base_width, hsize), Image.LANCZOS)
@@ -29,7 +29,7 @@ def rescale_image_png(image_object, base_width=1020):
 
 
 def rescale_image_webp(image_object, base_width=1020):
-    image_object = Image.open(image_object)
+    image_object = ImageOps.exif_transpose(Image.open(image_object))
     wpercent = (base_width / float(image_object.size[0]))
     hsize = int((float(image_object.size[1]) * float(wpercent)))
     img = image_object.resize((base_width, hsize), Image.LANCZOS)
@@ -42,7 +42,7 @@ def rescale_image_webp(image_object, base_width=1020):
 def rescale_image_gif(image_object, base_width=1020):
     image_object = Image.open(image_object)
     im_io = BytesIO()
-    
+
     if getattr(image_object, "is_animated", False):
         image_object.save(im_io, 'GIF', save_all=True)
     else:
@@ -86,6 +86,7 @@ def strip_image_meta(image_object, file_format):
             image_object.save(im_io, file_format)
         return im_io
 
+    image_object = ImageOps.exif_transpose(image_object)
     data = list(image_object.getdata())
     image_without_exif = Image.new(image_object.mode, image_object.size)
     image_without_exif.putdata(data)
@@ -127,5 +128,5 @@ def handle_image(request, image_object, filetype):
             return rescale_image_webp(image_object)
         elif file_format == 'GIF':
             return rescale_image_gif(image_object)
-    
+
     return strip_image_meta(image_object, file_format)
