@@ -774,7 +774,8 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
             safe_user_space_ids = UserSpace.objects.filter(id__in=serializer.validated_data['user_spaces'], space=self.request.space).values_list('id', flat=True)
 
             if 'household' in serializer.validated_data:
-                user_spaces.update(household_id=serializer.validated_data['household'])
+                if Household.objects.filter(id=serializer.validated_data['household'], space=self.request.space).exists():
+                    user_spaces.update(household_id=serializer.validated_data['household'])
 
             if 'group_set' in serializer.validated_data and len(serializer.validated_data['group_set']) > 0:
                 set_relation(UserSpace.groups.through, 'userspace_id', safe_user_space_ids, 'group_id', serializer.validated_data['group_set'])
