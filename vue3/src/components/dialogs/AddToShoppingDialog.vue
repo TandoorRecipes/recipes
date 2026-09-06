@@ -3,7 +3,7 @@
         <v-card :loading="loading">
             <v-closable-card-title :title="$t('Add_Servings_to_Shopping', {servings: servings})" v-model="dialog"></v-closable-card-title>
             <v-card-text>
-                <model-select model="ShoppingList" mode="tags" :hint="$t('LeaveEmptyForDefaultList')" v-model="selectedShoppingLists"></model-select>
+                <v-model-select model="ShoppingList" chips :hint="$t('LeaveEmptyForDefaultList')" v-model="selectedShoppingLists"></v-model-select>
                 <v-expansion-panels variant="accordion" v-model="panel">
                     <v-expansion-panel v-for="r in dialogRecipes" :key="r.recipe.id!" :value="r.recipe.id!">
                         <v-expansion-panel-title>{{ r.recipe.name }}</v-expansion-panel-title>
@@ -48,6 +48,7 @@ import {calculateFoodAmount} from "@/utils/number_utils";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ingredientToUnitString, ingredientToFoodString} from "@/utils/model_utils.ts";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emit = defineEmits(['created'])
 

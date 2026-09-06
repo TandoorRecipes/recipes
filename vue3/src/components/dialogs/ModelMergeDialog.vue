@@ -11,7 +11,7 @@
 
             <v-card-text>
                 {{ $t('merge_selection', {source: sourceNames, type: $t(genericModel.model.localizationKey)}) }}
-                <model-select :model="props.model" v-model="target" allow-create></model-select>
+                <v-model-select :model="props.model" v-model="target" create></v-model-select>
 
                 <v-row>
                     <v-col>
@@ -58,6 +58,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import {useI18n} from "vue-i18n";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {ApiApi, Automation} from "@/openapi";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emit = defineEmits(['change'])
 

@@ -81,31 +81,28 @@ const {t} = useI18n()
 const emit = defineEmits(['update:modelValue', 'create'])
 
 const props = defineProps({
-    model: {type: String as PropType<EditorSupportedModels>, required: true},
 
-    id: {type: String, required: false, default: Math.floor(Math.random() * 10000).toString()},
-
-    limit: {type: Number, default: 25},
-
-    disabled: {type: Boolean, default: false},
-    canClear: {type: Boolean, default: true},
-
-    mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
-    appendToBody: {type: Boolean, default: false},
-    object: {type: Boolean, default: true}, // TODO broken either fix or finally get other multiselect working
-
-    allowCreate: {type: Boolean, default: false},
-    placeholder: {type: String, default: undefined},
 
     noOptionsText: {type: String, default: undefined},
     noResultsText: {type: String, default: undefined},
-    label: {type: String, default: ''},
 
+
+    // implemented in vmodelselet
+    model: {type: String as PropType<EditorSupportedModels>, required: true},
+    id: {type: String, required: false, default: Math.floor(Math.random() * 10000).toString()},
+    canClear: {type: Boolean, default: true},
+    label: {type: String, default: ''},
+    disabled: {type: Boolean, default: false},
     hint: {type: String, default: ''},
     hideDetails: {type: Boolean, default: false},
     density: {type: String as PropType<'' | 'compact' | 'comfortable'>, default: ''},
-
+    mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
+    appendToBody: {type: Boolean, default: false},
+    object: {type: Boolean, default: true}, // TODO broken either fix or finally get other multiselect working
+    allowCreate: {type: Boolean, default: false},
+    placeholder: {type: String, default: undefined},
     searchOnLoad: {type: Boolean, default: false},
+    limit: {type: Number, default: 25},
 })
 
 /**

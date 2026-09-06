@@ -57,7 +57,7 @@ export interface PatchedEnterpriseSpace {
      * @type {EnterpriseBillingPlan}
      * @memberof PatchedEnterpriseSpace
      */
-    billingPlan?: EnterpriseBillingPlan;
+    readonly billingPlan?: EnterpriseBillingPlan;
     /**
      * 
      * @type {string}
@@ -118,14 +118,13 @@ export function PatchedEnterpriseSpaceToJSON(json: any): PatchedEnterpriseSpace 
     return PatchedEnterpriseSpaceToJSONTyped(json, false);
 }
 
-export function PatchedEnterpriseSpaceToJSONTyped(value?: Omit<PatchedEnterpriseSpace, 'space'|'billing_licensed_modules'|'billing_customer_id'|'billing_subscription_id'|'billing_subscription_status'|'billing_monthly_price'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedEnterpriseSpaceToJSONTyped(value?: Omit<PatchedEnterpriseSpace, 'space'|'billing_licensed_modules'|'billing_customer_id'|'billing_plan'|'billing_subscription_id'|'billing_subscription_status'|'billing_monthly_price'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'billing_plan': EnterpriseBillingPlanToJSON(value['billingPlan']),
         'billing_region': BillingRegionEnumToJSON(value['billingRegion']),
     };
 }

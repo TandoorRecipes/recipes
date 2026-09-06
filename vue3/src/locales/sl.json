@@ -992,5 +992,6 @@
     "HouseholdSetup4": "Če ne potrebujete skupne rabe, lahko to nastavitev preskočite. Gospodinjstva lahko kadar koli ustvarite in upravljate z uporabo pogleda baze podatkov.",
     "HouseholdWelcome": "Vnesite ime za svoje prvo gospodinjstvo, ki ga želite ustvariti in se mu pridružiti. To omogoča enostavno deljenje nakupovalnih seznamov, načrtov obrokov in še več. Če deljenja zaenkrat ne potrebujete, pustite polje prazno. ",
     "Households": "Gospodinjstva",
-    "AllowedAiUrlHelp": "URL-ji morajo biti dovoljeni v nastavitvah strežnika AI_ALLOWED_URLS."
+    "AllowedAiUrlHelp": "URL-ji morajo biti dovoljeni v nastavitvah strežnika AI_ALLOWED_URLS.",
+    "Editor": "Urejevalnik"
 }

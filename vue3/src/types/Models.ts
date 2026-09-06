@@ -14,7 +14,7 @@ import {
     SupermarketCategory, Sync, SyncLog,
     Unit,
     UnitConversion, User, UserFile,
-    UserSpace, ViewLog, Household
+    UserSpace, ViewLog, Household, Group
 } from "@/openapi";
 import {VDataTable} from "vuetify/components";
 import {getNestedProperty} from "@/utils/utils";
@@ -92,6 +92,12 @@ type ModelTableHeaders = {
     hidden?: boolean,
 }
 
+type ModelTableColumns = {
+    slot: string,
+    component: any,
+    function?: (x:any) => (any)
+}
+
 /**
  * custom type containing all attributes needed by the generic model system to properly handle all functions
  */
@@ -122,6 +128,7 @@ export type Model = {
     isTree?: boolean | undefined,
 
     tableHeaders: ModelTableHeaders[],
+    tableColumns: ModelTableColumns[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
@@ -231,8 +238,11 @@ export const TFood = {
     tableHeaders: [
         {title: 'Name', key: 'name'},
         {title: 'Category', key: 'supermarketCategory.name'},
-        {title: 'Plural', key: 'plural', hidden: true},
         {title: 'Actions', key: 'action', align: 'end'},
+    ],
+
+    tableColumns: [
+        {slot:'name', function: (x) => (x), component: defineAsyncComponent(() => import(`@/components/model_list/cells/PluralCell.vue`))}
     ]
 } as Model
 registerModel(TFood)
@@ -253,8 +263,11 @@ export const TUnit = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
-        {title: 'Plural', key: 'plural', hidden: true},
         {title: 'Actions', key: 'action', align: 'end'},
+    ],
+
+    tableColumns: [
+        {slot:'name', function: (x) => (x), component: defineAsyncComponent(() => import(`@/components/model_list/cells/PluralCell.vue`))}
     ]
 } as Model
 registerModel(TUnit)
@@ -537,6 +550,10 @@ export const TShoppingList = {
         {title: 'Color', key: 'color'},
         {title: 'Description', key: 'description'},
         {title: 'Actions', key: 'action', align: 'end'},
+    ],
+
+    tableColumns: [
+        {slot:'color', component: defineAsyncComponent(() => import(`@/components/model_list/cells/ColorCell.vue`))}
     ]
 } as Model
 registerModel(TShoppingList)
@@ -774,6 +791,7 @@ export const TInviteLink = {
 
     disableSearch: true,
     isPaginated: true,
+    isAdvancedDelete: true,
     toStringKeys: ['email', 'role'],
 
     tableHeaders: [
@@ -781,6 +799,10 @@ export const TInviteLink = {
         {title: 'Role', key: 'group.name'},
         {title: 'Valid Until', key: 'validUntil'},
         {title: 'Actions', key: 'action', align: 'end'},
+    ],
+
+    tableColumns: [
+        {slot:'validUntil', component: defineAsyncComponent(() => import(`@/components/model_list/cells/DateCell.vue`))}
     ]
 } as Model
 registerModel(TInviteLink)
@@ -843,6 +865,10 @@ export const TInventoryLocation = {
         {title: 'Household', key: 'household.name'},
         {title: 'Freezer', key: 'isFreezer'},
         {title: 'Actions', key: 'action', align: 'end'},
+    ],
+
+    tableColumns: [
+        {slot:'isFreezer', component: defineAsyncComponent(() => import(`@/components/model_list/cells/BoolCell.vue`))}
     ]
 } as Model
 registerModel(TInventoryLocation)

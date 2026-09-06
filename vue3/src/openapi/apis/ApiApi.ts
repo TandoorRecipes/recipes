@@ -1208,7 +1208,7 @@ export interface ApiEnterpriseSocialRecipeUpdateRequest {
 }
 
 export interface ApiEnterpriseSpaceCreateRequest {
-    enterpriseSpace: Omit<EnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
+    enterpriseSpace?: Omit<EnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingPlan'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
 }
 
 export interface ApiEnterpriseSpaceDestroyRequest {
@@ -1222,7 +1222,7 @@ export interface ApiEnterpriseSpaceListRequest {
 
 export interface ApiEnterpriseSpacePartialUpdateRequest {
     space: number;
-    patchedEnterpriseSpace?: Omit<PatchedEnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
+    patchedEnterpriseSpace?: Omit<PatchedEnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingPlan'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
 }
 
 export interface ApiEnterpriseSpaceRetrieveRequest {
@@ -1231,7 +1231,7 @@ export interface ApiEnterpriseSpaceRetrieveRequest {
 
 export interface ApiEnterpriseSpaceUpdateRequest {
     space: number;
-    enterpriseSpace: Omit<EnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
+    enterpriseSpace?: Omit<EnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingPlan'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
 }
 
 export interface ApiExportCreateRequest {
@@ -1582,6 +1582,13 @@ export interface ApiInventoryLogRetrieveRequest {
     id: number;
 }
 
+export interface ApiInviteLinkCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiInviteLinkCreateRequest {
     inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
 }
@@ -1601,9 +1608,23 @@ export interface ApiInviteLinkListRequest {
     updatedAt?: string;
 }
 
+export interface ApiInviteLinkNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiInviteLinkPartialUpdateRequest {
     id: number;
     patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
+}
+
+export interface ApiInviteLinkProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiInviteLinkRetrieveRequest {
@@ -8307,13 +8328,6 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiEnterpriseSpaceCreateRaw(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
-        if (requestParameters['enterpriseSpace'] == null) {
-            throw new runtime.RequiredError(
-                'enterpriseSpace',
-                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceCreate().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -8340,7 +8354,7 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiEnterpriseSpaceCreate(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+    async apiEnterpriseSpaceCreate(requestParameters: ApiEnterpriseSpaceCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
         const response = await this.apiEnterpriseSpaceCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -8541,13 +8555,6 @@ export class ApiApi extends runtime.BaseAPI {
             throw new runtime.RequiredError(
                 'space',
                 'Required parameter "space" was null or undefined when calling apiEnterpriseSpaceUpdate().'
-            );
-        }
-
-        if (requestParameters['enterpriseSpace'] == null) {
-            throw new runtime.RequiredError(
-                'enterpriseSpace',
-                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceUpdate().'
             );
         }
 
@@ -11841,6 +11848,59 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInviteLinkCascadingListRaw(requestParameters: ApiInviteLinkCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInviteLinkCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/invite-link/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInviteLinkCascadingList(requestParameters: ApiInviteLinkCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInviteLinkCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkCreateRaw(requestParameters: ApiInviteLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
@@ -11989,6 +12049,59 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInviteLinkNullingListRaw(requestParameters: ApiInviteLinkNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInviteLinkNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/invite-link/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInviteLinkNullingList(requestParameters: ApiInviteLinkNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInviteLinkNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkPartialUpdateRaw(requestParameters: ApiInviteLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
@@ -12029,6 +12142,59 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiInviteLinkPartialUpdate(requestParameters: ApiInviteLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InviteLink> {
         const response = await this.apiInviteLinkPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInviteLinkProtectingListRaw(requestParameters: ApiInviteLinkProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInviteLinkProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/invite-link/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInviteLinkProtectingList(requestParameters: ApiInviteLinkProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInviteLinkProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

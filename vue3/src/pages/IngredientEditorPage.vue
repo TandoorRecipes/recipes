@@ -13,7 +13,7 @@
                 <v-row>
                     <v-col cols="12" md="6">
 
-                        <model-select model="Food" v-model="selectedFood" @update:modelValue="refreshPage()" append-to-body>
+                        <v-model-select model="Food" v-model="selectedFood" @update:modelValue="refreshPage()">
                             <template #append>
                                 <v-btn icon variant="plain">
                                     <v-icon icon="$menu"></v-icon>
@@ -46,10 +46,10 @@
                                 </v-btn>
                                 <v-btn icon="fa-solid fa-carrot" :to="{name: 'ModelListPage', params: {model: 'food'}}" variant="plain"></v-btn>
                             </template>
-                        </model-select>
+                        </v-model-select>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <model-select model="Unit" v-model="selectedUnit" @update:modelValue="refreshPage()" append-to-body>
+                        <v-model-select model="Unit" v-model="selectedUnit" @update:modelValue="refreshPage()">
                             <template #append>
                                 <v-btn icon variant="plain">
                                     <v-icon icon="$menu"></v-icon>
@@ -80,7 +80,7 @@
                                 </v-btn>
                                 <v-btn icon="fa-solid fa-scale-balanced" :to="{name: 'ModelListPage', params: {model: 'unit'}}" variant="plain"></v-btn>
                             </template>
-                        </model-select>
+                        </v-model-select>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -119,13 +119,13 @@
                                     @update:modelValue="item.changed = true" :precision="2"></v-number-input>
                 </template>
                 <template v-slot:item.unit="{ item }">
-                    <model-select model="Unit" v-model="item.unit" density="compact" hide-details allow-create append-to-body
+                    <v-model-select model="Unit" v-model="item.unit" density="compact" hide-details create
                                   @update:modelValue="item.changed = true">
-                    </model-select>
+                    </v-model-select>
                 </template>
                 <template v-slot:item.food="{ item }">
-                    <model-select model="Food" v-model="item.food" density="compact" hide-details allow-create append-to-body
-                                  @update:modelValue="item.changed = true"></model-select>
+                    <v-model-select model="Food" v-model="item.food" density="compact" hide-details create
+                                  @update:modelValue="item.changed = true"></v-model-select>
                 </template>
                 <template v-slot:item.note="{ item }">
                     <v-text-field v-model="item.note" :label="$t('Note')" density="compact" hide-details @update:modelValue="item.changed = true"></v-text-field>
@@ -163,6 +163,7 @@ import {useUrlSearchParams} from "@vueuse/core";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import ModelMergeDialog from "@/components/dialogs/ModelMergeDialog.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {t} = useI18n()
 const params = useUrlSearchParams('history', {})

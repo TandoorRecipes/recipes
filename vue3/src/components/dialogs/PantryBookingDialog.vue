@@ -9,29 +9,29 @@
                 <v-row v-if="['add','remove','move'].includes(bookingMode)">
                     <v-col>
                         <v-form>
-                            <model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)"
+                            <v-model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)"
                                           @update:modelValue="inventoryEntrySelected()">
-                            </model-select>
+                            </v-model-select>
 
-                            <model-select model="Food" allow-create v-model="food" v-if="['add'].includes(bookingMode)"></model-select>
+                            <v-model-select model="Food" create v-model="food" v-if="['add'].includes(bookingMode)"></v-model-select>
 
-                            <model-select model="InventoryLocation" v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)">
+                            <v-model-select model="InventoryLocation" v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)">
                                 <template #append>
                                     <v-btn icon>
                                         <v-icon icon="$create"></v-icon>
                                         <model-edit-dialog model="InventoryLocation" @create="args => inventoryLocation = args"></model-edit-dialog>
                                     </v-btn>
                                 </template>
-                            </model-select>
+                            </v-model-select>
 
                             <v-number-input :label="$t('Amount')" :precision="2" v-model="amount" v-if="['add', 'remove'].includes(bookingMode)"></v-number-input>
-                            <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)" hide-details>
+                            <v-model-select model="Unit" create v-model="unit" v-if="['add'].includes(bookingMode)" hide-details>
                                 <template #append-inner>
                                     <v-chip v-for="u in commonUnits" :key="u.id" @click="unit = u" size="small" class="mr-1">
                                         {{ u.name }}
                                     </v-chip>
                                 </template>
-                            </model-select>
+                            </v-model-select>
                             <v-chip-group v-if="['add'].includes(bookingMode)" class="mb-2">
                                 <v-chip v-for="u in commonUnits" :key="u.id" @click="unit = u" size="small" class="mr-1">
                                     {{ u.name }}
@@ -121,6 +121,7 @@ import {useI18n} from "vue-i18n";
 import {computed, onMounted, ref, watch} from "vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emits = defineEmits(['update'])
 
@@ -128,6 +129,7 @@ const dialog = defineModel<boolean>()
 const props = defineProps<{
     bookingMode: string,
     inventoryEntryId?: number,
+    foodId?: number,
 }>()
 
 const {t} = useI18n()
@@ -179,51 +181,54 @@ watch(dialog, (newValue, oldValue) => {
     if (!newValue) {
         resetForm()
     } else {
+        const promises: Promise<unknown>[] = []
+        const api = new ApiApi()
+
+        formLoading.value = true
         bookingMode.value = props.bookingMode
 
         if (props.inventoryEntryId) {
             let api = new ApiApi()
-            api.apiInventoryEntryRetrieve({id: props.inventoryEntryId}).then(r => {
+            promises.push(api.apiInventoryEntryRetrieve({id: props.inventoryEntryId}).then(r => {
                 inventoryEntry.value = r
                 inventoryEntrySelected()
-            })
+            }))
         }
-    }
-})
+        if (props.foodId) {
+            let api = new ApiApi()
+            promises.push(api.apiFoodRetrieve({id: props.foodId}).then(r => {
+                food.value = r
+            }))
+        }
 
-onMounted(() => {
-    let api = new ApiApi()
-    bookingMode.value = props.bookingMode
+        api.apiInventoryEntryList({pageSize: 1}).then(r => {
+            promises.push(api.apiInventoryEntryList({pageSize: 100, page: Math.max(1, Math.ceil(r.count / 100))}).then(r => {
+                const counts = new Map<number, { unit: Unit, count: number }>()
+                r.results.forEach(entry => {
+                    if (entry.unit) {
+                        const u = entry.unit
+                        const count = counts.get(u.id!) || {unit: u, count: 0}
+                        count.count++
+                        counts.set(u.id!, count)
+                    }
+                })
 
-    if (props.inventoryEntryId) {
-        
-        api.apiInventoryEntryRetrieve({id: props.inventoryEntryId}).then(r => {
-            inventoryEntry.value = r
-            inventoryEntrySelected()
+                commonUnits.value = Array.from(counts.values())
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 5)
+                    .map(c => c.unit)
+            }).catch(err => {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }))
+
+            Promise.allSettled(promises).finally(() => {
+                formLoading.value = false
+            })
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
-    
-    // TODO tidy up, do I need to load the last page?
-    api.apiInventoryEntryList({pageSize: 100}).then(r => {
-        const counts = new Map<number, { unit: Unit, count: number }>()
-        r.results.forEach(entry => {
-            if (entry.unit) {
-                const u = entry.unit
-                const count = counts.get(u.id!) || {unit: u, count: 0}
-                count.count++
-                counts.set(u.id!, count)
-            }
-        })
-
-        commonUnits.value = Array.from(counts.values())
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 5)
-            .map(c => c.unit)
-    }).catch(err => {
-        
-    })
 })
-
 
 
 /**

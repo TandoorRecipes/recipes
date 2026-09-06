@@ -47,8 +47,7 @@
                             </v-col>
                         </v-row>
 
-                        <v-label>{{ $t('Keywords') }}</v-label>
-                        <model-select mode="tags" v-model="editingObj.keywords" model="Keyword" allow-create></model-select>
+                        <v-model-select multiple chips v-model="editingObj.keywords" model="Keyword" create></v-model-select>
                         <v-row dense>
                             <v-col cols="12" md="6">
                                 <v-number-input :label="$t('WaitingTime')" v-model="editingObj.waitingTime" :step="5"></v-number-input>
@@ -130,9 +129,6 @@
                     <v-form :disabled="loading || fileApiLoading">
                         <closable-help-alert :text="$t('PropertiesFoodHelp')"></closable-help-alert>
                         <properties-editor v-model="editingObj" :amount-for="$t('Serving')"></properties-editor>
-
-                        <!-- TODO remove once append to body for model select is working properly -->
-                        <v-spacer style="margin-top: 100px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
@@ -142,8 +138,8 @@
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
                         <v-checkbox :label="$t('Private_Recipe')" persistent-hint :hint="$t('Private_Recipe_Help')" v-model="editingObj._private"></v-checkbox>
-                        <model-select mode="tags" model="User" :label="$t('Share')" persistent-hint v-model="editingObj.shared"
-                                      append-to-body v-if="editingObj._private"></model-select>
+                        <v-model-select chips multiple model="User" :label="$t('Share')" persistent-hint v-model="editingObj.shared"
+                                      append-to-body v-if="editingObj._private"></v-model-select>
 
                         <div class="mt-2" v-if="editingObj.filePath">
                             {{ $t('ExternalRecipe') }}
@@ -209,6 +205,7 @@ import {ErrorMessageType, MessageType, StructuredMessage, useMessageStore} from 
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import {useI18n} from "vue-i18n";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 
 const props = defineProps({
@@ -267,6 +264,15 @@ function initializeEditor() {
         itemDefaults: props.itemDefaults,
         onAfterSave: () => {
             saveRecipeImage()
+        },
+        onBeforeSave: () => {
+            editingObj.value.steps.forEach(step => {
+                step.ingredients.forEach(ingredient => {
+                    if (!ingredient.amount) {
+                        ingredient.amount = 0
+                    }
+                })
+            })
         }
     })
 }

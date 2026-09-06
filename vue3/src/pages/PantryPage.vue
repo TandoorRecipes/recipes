@@ -24,11 +24,11 @@
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" md="6">
-                                <model-select model="Food" v-model="food" hide-details></model-select>
+                                <v-model-select model="Food" v-model="food" hide-details></v-model-select>
                             </v-col>
 
                             <v-col cols="12" md="6">
-                                <model-select model="InventoryLocation" v-model="inventoryLocation" hide-details></model-select>
+                                <v-model-select model="InventoryLocation" v-model="inventoryLocation" hide-details></v-model-select>
                             </v-col>
                         </v-row>
 
@@ -99,6 +99,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import PantryBookingDialog from "@/components/dialogs/PantryBookingDialog.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {t} = useI18n()
 
