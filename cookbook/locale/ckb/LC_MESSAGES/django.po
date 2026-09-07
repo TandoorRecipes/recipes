@@ -8,57 +8,65 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-09-07 16:04+0000\n"
+"Last-Translator: Mr Jico <hawar4bug@gmail.com>\n"
+"Language-Team: Kurdish (Sorani) <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/ckb/>\n"
 "Language: ckb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
-msgstr ""
+msgstr "بنەڕەتی"
 
 #: .\cookbook\forms.py:90
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"بۆ ڕێگریکردن لە دووبارەبوونەوەی ڕێچکەکان بە هەمان ناوی ئەوانەی هەن پشتگوێ "
+"دەخرێن. بۆ هاوردەکردنی هەموو شتێک ئەم بۆکسە هەڵبژێرە."
 
 #: .\cookbook\forms.py:120
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "ژمارەی زۆرترین بەکارهێنەران بۆ ئەم شوێنە گەیشتووەتە ئاستی کۆتایی."
 
 #: .\cookbook\forms.py:126
 msgid "Email address already taken!"
-msgstr ""
+msgstr "ناونیشانی ئیمەیڵەکە پێشتر بەکارهێنراوە!"
 
 #: .\cookbook\forms.py:134
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"ناونیشانی ئیمەیڵ پێویست نییە، بەڵام ئەگەر هەبێت، بەستەری بانگهێشتکردنەکە بۆ "
+"بەکارهێنەر دەنێررێت."
 
 #: .\cookbook\forms.py:149
 msgid "Name already taken."
-msgstr ""
+msgstr "ناوەکە پێشتر بەکارهێنراوە."
 
 #: .\cookbook\forms.py:160 .\cookbook\forms.py:174
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "مەرجەکانی بەکارهێنان و تایبەتمەندی نهێنی قبوڵ بکە"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:55
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"بۆ ڕێگریکردن لە سپام، ئیمەیڵی داواکراو نەگەیەندرا. تکایە چەند خولەکێک چاوەڕێ "
+"بکە و دووبارە هەوڵ بدەوە."
 
 #: .\cookbook\helper\permission_helper.py:215
 #: .\cookbook\helper\permission_helper.py:236 .\cookbook\views\views.py:149
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "تۆ نەچوویتە ژوورەوە بۆیە ناتوانیت ئەم پەڕەیە ببینیت!"
 
 #: .\cookbook\helper\permission_helper.py:218
 #: .\cookbook\helper\permission_helper.py:223
@@ -71,108 +79,110 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:420
 #: .\cookbook\helper\permission_helper.py:436
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "تۆ مۆڵەتی پێویستت نییە بۆ بینینی ئەم لاپەڕەیە!"
 
 #: .\cookbook\helper\permission_helper.py:241
 #: .\cookbook\helper\permission_helper.py:264
 #: .\cookbook\helper\permission_helper.py:294
 #: .\cookbook\helper\permission_helper.py:309
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "ناتوانیت کارلێک لەگەڵ ئەم تەنەدا بکەیت چونکە موڵکی تۆ نییە!"
 
 #: .\cookbook\helper\permission_helper.py:323
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
 msgstr ""
+"ناتوانیت کارلێک لەگەڵ ئەم تەنەدا بکەیت چونکە لە هەمان خێزاندا نییت لەگەڵ ئەو "
+"بەکارهێنەرەی کە دروستی کردووە!"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "گەیشتووی بە زۆرترین ژمارەی ڕێچکەکان بۆ شوێنەکەت."
 
 #: .\cookbook\helper\permission_helper.py:517
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "ژمارەی بەکارهێنەران لە شوێنەکەتدا لە بڕی ڕێگەپێدراو تێپەڕیوە."
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "reverse rotation"
-msgstr ""
+msgstr "پێچەوانەکردنەوەی خولانەوە"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "careful rotation"
-msgstr ""
+msgstr "خولانەوەی ورد"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "knead"
-msgstr ""
+msgstr "شێلان"
 
 #: .\cookbook\helper\recipe_url_import.py:315
 msgid "thicken"
-msgstr ""
+msgstr "خەستکردنەوە"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "warm up"
-msgstr ""
+msgstr "گەرمکردنەوە"
 
 #: .\cookbook\helper\recipe_url_import.py:317
 msgid "ferment"
-msgstr ""
+msgstr "ترشاندن"
 
 #: .\cookbook\helper\recipe_url_import.py:318
 msgid "slow cook"
-msgstr ""
+msgstr "لێنانی هێواش"
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
-msgstr ""
+msgstr "کوڵێنەری هێلکە"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
-msgstr ""
+msgstr "قۆری"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
-msgstr ""
+msgstr "تێکەڵکردن"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "pre-clean"
-msgstr ""
+msgstr "خاوێنکردنەوەی پێشوەختە"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
-msgstr ""
+msgstr "پلەی گەرمیی بەرز"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
-msgstr ""
+msgstr "برنج‌ پێژ"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
-msgstr ""
+msgstr "کارامێلکردن"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
-msgstr ""
+msgstr "توێکڵکەر"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "slicer"
-msgstr ""
+msgstr "قاشکەر"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
-msgstr ""
+msgstr "ڕەندە"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
-msgstr ""
+msgstr "لوولپێچکەر"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
-msgstr ""
+msgstr "سوو-ڤید"
 
 #: .\cookbook\helper\shopping_helper.py:154
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "پێویستە قەبارەی ژەمەکان دیاری بکەیت"
 
 #: .\cookbook\helper\template_helper.py:156
 #: .\cookbook\helper\template_helper.py:158
@@ -180,202 +190,213 @@ msgstr ""
 #: .\cookbook\helper\template_helper.py:162
 #: .\cookbook\helper\template_helper.py:164
 msgid "Could not parse template code."
-msgstr ""
+msgstr "کێشە لە شیکردنەوەی کۆدی قاڵبەکەدا هەیە."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "خوازراو"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "من ئەمەم دروست کردووە"
 
 #: .\cookbook\integration\integration.py:67
 msgid "Too many files in zip"
-msgstr ""
+msgstr "ژمارەی فایلەکان لەناو پەڕگەی زیپدا زۆرە"
 
 #: .\cookbook\integration\integration.py:71
 msgid "Zip file too large"
-msgstr ""
+msgstr "قەبارەی پەڕگەی زیپ زۆر گەورەیە"
 
 #: .\cookbook\integration\integration.py:84
+#, fuzzy
 msgid "Nested zip files too deep"
-msgstr ""
+msgstr "فایلە زیپکراوە ناویەکتردا زۆر قووڵن"
 
 #: .\cookbook\integration\integration.py:92
 msgid "File in zip too large"
-msgstr ""
+msgstr "قەبارەی فایل لەناو پەڕگەی زیپدا زۆر گەورەیە"
 
 #: .\cookbook\integration\integration.py:270
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"هاوردەکار چاوەڕێی پەڕگەیەکی زیپ (zip.) دەکات. ئایا جۆری هاوردەکەری ڕاستت بۆ "
+"داتاکانت هەڵبژاردووە؟"
 
 #: .\cookbook\integration\integration.py:272
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"هەڵەیەکی چاوەڕواننەکراو لە کاتی هاوردەکردنەکەدا ڕوویدا. تکایە دڵنیا ببەرەوە "
+"کە پەڕگەیەکی ڕەوات بارکردووە."
 
 #: .\cookbook\integration\integration.py:276
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "ڕەچەتەکانی خوارەوە پشتگوێ خراون چونکە پێشتر بونیان هەبوو:"
 
 #: .\cookbook\integration\integration.py:279
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "%s ڕەچەتە سەرکەوتووانە هاوردە کران."
 
 #: .\cookbook\integration\mealie1.py:242
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "کالۆری"
 
 #: .\cookbook\integration\mealie1.py:243
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "کاربۆهیدرات"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "کولسترۆڵ"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "چەوری"
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "ڕیشاڵ"
 
 #: .\cookbook\integration\mealie1.py:247
 msgid "Protein"
-msgstr ""
+msgstr "پڕۆتین"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "‮چەوریی تێر"
 
 #: .\cookbook\integration\mealie1.py:249
+#, fuzzy
 msgid "Sodium"
-msgstr ""
+msgstr "سۆدیۆم"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "شەکر"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
-msgstr ""
+msgstr "چەوریی ترانس"
 
 #: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "چەوریی ناتێر"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr ""
+msgstr "سەرچاوەی ڕەچەتە:"
 
 #: .\cookbook\integration\paprika.py:47
 msgid "Notes"
-msgstr ""
+msgstr "تێبینییەکان"
 
 #: .\cookbook\integration\paprika.py:50
 msgid "Nutritional Information"
-msgstr ""
+msgstr "زانیاریی خۆراکی"
 
 #: .\cookbook\integration\paprika.py:54 .\cookbook\templates\system.html:242
 msgid "Source"
-msgstr ""
+msgstr "سەرچاوە"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "کردار لە یەکخستنی پاشەکەوتدا بەردەست نییە"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"هەناردەکردنی PDF لە ئێستادا بەردەست نییە. تکایە بۆ پاشەکەوتکردنی ڕەچەتەکان "
+"وەکو PDF، فەنکشنی چاپکردنی وێبگەڕەکەت (Ctrl+P) بەکاربهێنە."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr ""
+msgstr "هاوردەکراوە لە"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr ""
+msgstr "ژەمەکان"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "کاتی چاوەڕوانی"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "کاتی ئامادەکردن"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:6
 msgid "Cookbook"
-msgstr ""
+msgstr "کتێبی ڕەچەتەکان"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "بەش"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "چاککردنی خواردنەکان لەگەڵ "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "دوبارە دروستکردنەوەی پێڕستی گەڕانی دەقی تەواو لەسەر ڕەچەتە"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"تەنها بنکەدراوەکانی Postgresql لە گەڕانی دەقی تەواو کەڵک وەردەگرن، هیچ "
+"پێڕستێک بۆ دوبارە دروستکردنەوە نییە"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "پێڕستی ڕەچەتەکان بە سەرکەوتوویی دروست کرایەوە."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "پێڕستی ڕەچەتەکان سەرکەوتوو نەبوو لە دروستکردنەوەیدا."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "ژەمی بەیانی"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "ژەمی نیوەڕۆ"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "ژەمی ئێوارە"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 #: .\cookbook\models.py:1002
 msgid "Other"
-msgstr ""
+msgstr "هیتر"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
+#, fuzzy
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "پرۆتینەکان"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "کالۆری"
 
 #: .\cookbook\models.py:313
 msgid ""
