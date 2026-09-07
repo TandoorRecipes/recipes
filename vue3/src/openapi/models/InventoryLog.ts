@@ -18,18 +18,21 @@ import {
     BookingTypeEnumFromJSON,
     BookingTypeEnumFromJSONTyped,
     BookingTypeEnumToJSON,
+    BookingTypeEnumToJSONTyped,
 } from './BookingTypeEnum';
 import type { InventoryEntry } from './InventoryEntry';
 import {
     InventoryEntryFromJSON,
     InventoryEntryFromJSONTyped,
     InventoryEntryToJSON,
+    InventoryEntryToJSONTyped,
 } from './InventoryEntry';
 import type { InventoryLocation } from './InventoryLocation';
 import {
     InventoryLocationFromJSON,
     InventoryLocationFromJSONTyped,
     InventoryLocationToJSON,
+    InventoryLocationToJSONTyped,
 } from './InventoryLocation';
 
 /**
@@ -85,7 +88,7 @@ export interface InventoryLog {
      * @type {string}
      * @memberof InventoryLog
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {Date}
@@ -93,6 +96,8 @@ export interface InventoryLog {
      */
     readonly createdAt: Date;
 }
+
+
 
 /**
  * Check if a given object implements the InventoryLog interface.
@@ -127,10 +132,15 @@ export function InventoryLogFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function InventoryLogToJSON(value?: Omit<InventoryLog, 'createdAt'> | null): any {
+export function InventoryLogToJSON(json: any): InventoryLog {
+    return InventoryLogToJSONTyped(json, false);
+}
+
+export function InventoryLogToJSONTyped(value?: Omit<InventoryLog, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

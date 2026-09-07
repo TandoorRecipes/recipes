@@ -89,10 +89,15 @@ export function ImportOpenDataVersionMetaDataFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function ImportOpenDataVersionMetaDataToJSON(value?: ImportOpenDataVersionMetaData | null): any {
+export function ImportOpenDataVersionMetaDataToJSON(json: any): ImportOpenDataVersionMetaData {
+    return ImportOpenDataVersionMetaDataToJSONTyped(json, false);
+}
+
+export function ImportOpenDataVersionMetaDataToJSONTyped(value?: ImportOpenDataVersionMetaData | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'food': value['food'],

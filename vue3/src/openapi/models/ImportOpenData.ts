@@ -71,10 +71,15 @@ export function ImportOpenDataFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function ImportOpenDataToJSON(value?: ImportOpenData | null): any {
+export function ImportOpenDataToJSON(json: any): ImportOpenData {
+    return ImportOpenDataToJSONTyped(json, false);
+}
+
+export function ImportOpenDataToJSONTyped(value?: ImportOpenData | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'selected_version': value['selectedVersion'],

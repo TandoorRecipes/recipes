@@ -18,6 +18,7 @@ import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 
 /**
@@ -78,10 +79,15 @@ export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function SupermarketCategoryRelationToJSON(value?: SupermarketCategoryRelation | null): any {
+export function SupermarketCategoryRelationToJSON(json: any): SupermarketCategoryRelation {
+    return SupermarketCategoryRelationToJSONTyped(json, false);
+}
+
+export function SupermarketCategoryRelationToJSONTyped(value?: SupermarketCategoryRelation | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

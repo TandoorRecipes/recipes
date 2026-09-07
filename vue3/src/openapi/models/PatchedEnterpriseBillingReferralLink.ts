@@ -30,7 +30,7 @@ export interface PatchedEnterpriseBillingReferralLink {
      * @type {number}
      * @memberof PatchedEnterpriseBillingReferralLink
      */
-    createdBy?: number;
+    createdBy?: number | null;
     /**
      * 
      * @type {number}
@@ -76,10 +76,15 @@ export function PatchedEnterpriseBillingReferralLinkFromJSONTyped(json: any, ign
     };
 }
 
-export function PatchedEnterpriseBillingReferralLinkToJSON(value?: Omit<PatchedEnterpriseBillingReferralLink, 'createdAt'> | null): any {
+export function PatchedEnterpriseBillingReferralLinkToJSON(json: any): PatchedEnterpriseBillingReferralLink {
+    return PatchedEnterpriseBillingReferralLinkToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseBillingReferralLinkToJSONTyped(value?: Omit<PatchedEnterpriseBillingReferralLink, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,6 +18,7 @@ import {
     InvoiceSystemEnumFromJSON,
     InvoiceSystemEnumFromJSONTyped,
     InvoiceSystemEnumToJSON,
+    InvoiceSystemEnumToJSONTyped,
 } from './InvoiceSystemEnum';
 
 /**
@@ -100,6 +101,8 @@ export interface PatchedEnterpriseBillingInvoice {
     readonly createdAt?: Date;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedEnterpriseBillingInvoice interface.
  */
@@ -132,10 +135,15 @@ export function PatchedEnterpriseBillingInvoiceFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function PatchedEnterpriseBillingInvoiceToJSON(value?: Omit<PatchedEnterpriseBillingInvoice, 'createdAt'> | null): any {
+export function PatchedEnterpriseBillingInvoiceToJSON(json: any): PatchedEnterpriseBillingInvoice {
+    return PatchedEnterpriseBillingInvoiceToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseBillingInvoiceToJSONTyped(value?: Omit<PatchedEnterpriseBillingInvoice, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -145,7 +153,7 @@ export function PatchedEnterpriseBillingInvoiceToJSON(value?: Omit<PatchedEnterp
         'invoice_id': value['invoiceId'],
         'invoice_number': value['invoiceNumber'],
         'language_code': value['languageCode'],
-        'invoice_date': value['invoiceDate'] == null ? undefined : ((value['invoiceDate']).toISOString().substring(0,10)),
+        'invoice_date': value['invoiceDate'] == null ? value['invoiceDate'] : value['invoiceDate'].toISOString().substring(0,10),
         'price_net': value['priceNet'],
         'price_gross': value['priceGross'],
         'printed': value['printed'],

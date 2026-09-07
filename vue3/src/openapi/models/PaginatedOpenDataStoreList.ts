@@ -18,6 +18,7 @@ import {
     OpenDataStoreFromJSON,
     OpenDataStoreFromJSONTyped,
     OpenDataStoreToJSON,
+    OpenDataStoreToJSONTyped,
 } from './OpenDataStore';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedOpenDataStoreList {
      * @type {string}
      * @memberof PaginatedOpenDataStoreList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedOpenDataStoreList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<OpenDataStore>}
@@ -85,17 +86,22 @@ export function PaginatedOpenDataStoreListFromJSONTyped(json: any, ignoreDiscrim
     };
 }
 
-export function PaginatedOpenDataStoreListToJSON(value?: PaginatedOpenDataStoreList | null): any {
+export function PaginatedOpenDataStoreListToJSON(json: any): PaginatedOpenDataStoreList {
+    return PaginatedOpenDataStoreListToJSONTyped(json, false);
+}
+
+export function PaginatedOpenDataStoreListToJSONTyped(value?: PaginatedOpenDataStoreList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(OpenDataStoreToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

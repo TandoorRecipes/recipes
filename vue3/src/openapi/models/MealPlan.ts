@@ -18,12 +18,14 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -49,7 +51,7 @@ export interface MealPlan {
      * @type {RecipeOverview}
      * @memberof MealPlan
      */
-    recipe?: RecipeOverview;
+    recipe?: RecipeOverview | null;
     /**
      * 
      * @type {number}
@@ -160,10 +162,15 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'> | null): any {
+export function MealPlanToJSON(json: any): MealPlan {
+    return MealPlanToJSONTyped(json, false);
+}
+
+export function MealPlanToJSONTyped(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -171,8 +178,8 @@ export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'
         'recipe': RecipeOverviewToJSON(value['recipe']),
         'servings': value['servings'],
         'note': value['note'],
-        'from_date': ((value['fromDate']).toISOString()),
-        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
+        'from_date': value['fromDate'].toISOString(),
+        'to_date': value['toDate'] == null ? value['toDate'] : value['toDate'].toISOString(),
         'meal_type': MealTypeToJSON(value['mealType']),
         'addshopping': value['addshopping'],
     };

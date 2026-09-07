@@ -30,7 +30,7 @@ export interface UserSpaceBatchUpdate {
      * @type {number}
      * @memberof UserSpaceBatchUpdate
      */
-    household?: number;
+    household?: number | null;
     /**
      * 
      * @type {Array<number>}
@@ -64,10 +64,15 @@ export function UserSpaceBatchUpdateFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function UserSpaceBatchUpdateToJSON(value?: UserSpaceBatchUpdate | null): any {
+export function UserSpaceBatchUpdateToJSON(json: any): UserSpaceBatchUpdate {
+    return UserSpaceBatchUpdateToJSONTyped(json, false);
+}
+
+export function UserSpaceBatchUpdateToJSONTyped(value?: UserSpaceBatchUpdate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'user_spaces': value['userSpaces'],

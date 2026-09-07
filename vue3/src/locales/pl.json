@@ -985,5 +985,12 @@
     "ConnectorConfigHelp": "Dzięki złączom możesz automatycznie synchronizować dane z Tandoor z usługami zewnętrznymi. ",
     "ConfirmAction": "{action} {name}?",
     "PropertyType": "Typ właściwości",
-    "ShoppingListRecipe": "Przepis na liście zakupów"
+    "ShoppingListRecipe": "Przepis na liście zakupów",
+    "CreateAndJoin": "Utwórz i dołącz",
+    "HouseholdSetup1": "Domostwa zostały wprowadzone w wersji 2.6.0 wypuszczonej 30.03.2026. Zastępują one udostępnianie poszczególnych Planów Posiłków i List Zakupów w poprzednich wersjach.",
+    "HouseholdSetup2": "Domostwa sprawiają, że współpraca jest łatwiejsza przez automatyczne udostępnianie planów posiłków i list zakupów między członkami. ",
+    "Households": "Domostwa",
+    "HouseholdSetup3": "Elementy wcześniej udostępnione nie są obecnie widoczne. Utwórz swoje pierwsze Domostwo i dodaj do niego członków, aby odzyskać dostęp do udostępnionych elementów.",
+    "HouseholdSetup4": "Jeżeli nie potrzebujesz udostępniania, możesz pominąć tą konfigurację. Możesz tworzyć i zarządzać domostwami w dowolnym momencie używając widoku Bazy danych.",
+    "HouseholdWelcome": "Wpisz nazwę swojego pierwszego domostwa, aby je utworzyć i do niego dołączyć. Umożliwia to łatwe udostępnianie List Zakupów, Planów Posiłków i innych. Pozostaw pole pustym jeżeli na tą chwilę nie potrzebujesz udostępniania. "
 }

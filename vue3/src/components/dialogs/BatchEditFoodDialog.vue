@@ -16,29 +16,29 @@
                         <v-col cols="12" md="6">
                             <v-card :title="$t('Miscellaneous')" prepend-icon="fa-solid fa-list" variant="flat">
                                 <v-card-text>
-                                    <model-select model="SupermarketCategory" v-model="batchUpdateRequest.foodBatchUpdate.category" :object="false" allow-create mode="single">
-                                    </model-select>
+                                    <v-model-select model="SupermarketCategory" v-model="batchUpdateRequest.foodBatchUpdate.category" :return-object="false" create>
+                                    </v-model-select>
 
                                     <v-select :items="boolUpdateOptions" :label="$t('Ignore_Shopping')" clearable v-model="batchUpdateRequest.foodBatchUpdate.ignoreShopping"></v-select>
                                     <v-select :items="boolUpdateOptions" :label="$t('OnHand')" clearable v-model="batchUpdateRequest.foodBatchUpdate.onHand"></v-select>
 
                                     <v-spacer></v-spacer>
                                     <v-label :text="$t('Substitutes')"></v-label>
-                                    <model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteAdd" :object="false" allow-create mode="tags">
+                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteAdd" :return-object="false" create>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-add"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteRemove" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteRemove" :return-object="false" create>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-minus"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteSet" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteSet" :return-object="false" create>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
+                                    </v-model-select>
                                     <v-checkbox :label="$t('RemoveAllType', {type: $t('Substitutes')})" hide-details
                                                 v-model="batchUpdateRequest.foodBatchUpdate.substituteRemoveAll"></v-checkbox>
 
@@ -53,32 +53,32 @@
                         <v-col cols="12" md="6">
                             <v-card :title="$t('Hierarchy')" prepend-icon="fa-solid fa-folder-tree" variant="flat">
                                 <v-card-text>
-                                    <model-select model="Food" :label="$t('Parent')" :object="false" allow-create clearable v-model="batchUpdateRequest.foodBatchUpdate.parentSet">
+                                    <v-model-select model="Food" :label="$t('Parent')" :return-object="false" create clearable v-model="batchUpdateRequest.foodBatchUpdate.parentSet">
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
+                                    </v-model-select>
 
                                     <v-select :items="boolUpdateOptions" :label="$t('RemoveParent')" clearable v-model="batchUpdateRequest.foodBatchUpdate.parentRemove"></v-select>
 
                                     <v-spacer></v-spacer>
 
                                     <v-label :text="$t('InheritFields')"></v-label>
-                                    <model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsAdd" :object="false" allow-create mode="tags">
+                                    <v-model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsAdd" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-add"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsRemove" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsRemove" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-minus"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsSet" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsSet" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
+                                    </v-model-select>
                                     <v-checkbox :label="$t('RemoveAllType', {type: $t('InheritFields')})" hide-details
                                                 v-model="batchUpdateRequest.foodBatchUpdate.inheritFieldsRemoveAll"></v-checkbox>
 
@@ -86,21 +86,21 @@
                                     <v-spacer></v-spacer>
                                     <v-label :text="$t('ChildInheritFields')"></v-label>
 
-                                    <model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsAdd" :object="false" allow-create mode="tags">
+                                    <v-model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsAdd" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-add"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsRemove" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsRemove" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-minus"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsSet" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="FoodInheritField" v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsSet" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
+                                    </v-model-select>
                                     <v-checkbox :label="$t('RemoveAllType', {type: $t('ChildInheritFields')})" hide-details
                                                 v-model="batchUpdateRequest.foodBatchUpdate.childInheritFieldsRemoveAll"></v-checkbox>
 
@@ -130,6 +130,7 @@ import {useI18n} from "vue-i18n";
 import {ApiApi, ApiFoodBatchUpdateUpdateRequest, ApiRecipeBatchUpdateUpdateRequest, Food, Recipe, RecipeOverview} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emit = defineEmits(['change'])
 

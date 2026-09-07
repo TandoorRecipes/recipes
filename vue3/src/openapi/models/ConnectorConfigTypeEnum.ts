@@ -26,7 +26,7 @@ export type ConnectorConfigTypeEnum = typeof ConnectorConfigTypeEnum[keyof typeo
 export function instanceOfConnectorConfigTypeEnum(value: any): boolean {
     for (const key in ConnectorConfigTypeEnum) {
         if (Object.prototype.hasOwnProperty.call(ConnectorConfigTypeEnum, key)) {
-            if (ConnectorConfigTypeEnum[key] === value) {
+            if (ConnectorConfigTypeEnum[key as keyof typeof ConnectorConfigTypeEnum] === value) {
                 return true;
             }
         }
@@ -44,5 +44,9 @@ export function ConnectorConfigTypeEnumFromJSONTyped(json: any, ignoreDiscrimina
 
 export function ConnectorConfigTypeEnumToJSON(value?: ConnectorConfigTypeEnum | null): any {
     return value as any;
+}
+
+export function ConnectorConfigTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): ConnectorConfigTypeEnum {
+    return value as ConnectorConfigTypeEnum;
 }
 

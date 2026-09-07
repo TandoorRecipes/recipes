@@ -18,6 +18,7 @@ import {
     InventoryLocationFromJSON,
     InventoryLocationFromJSONTyped,
     InventoryLocationToJSON,
+    InventoryLocationToJSONTyped,
 } from './InventoryLocation';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedInventoryLocationList {
      * @type {string}
      * @memberof PaginatedInventoryLocationList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedInventoryLocationList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<InventoryLocation>}
@@ -85,17 +86,22 @@ export function PaginatedInventoryLocationListFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function PaginatedInventoryLocationListToJSON(value?: PaginatedInventoryLocationList | null): any {
+export function PaginatedInventoryLocationListToJSON(json: any): PaginatedInventoryLocationList {
+    return PaginatedInventoryLocationListToJSONTyped(json, false);
+}
+
+export function PaginatedInventoryLocationListToJSONTyped(value?: PaginatedInventoryLocationList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(InventoryLocationToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -2,29 +2,32 @@
     <v-container>
         <v-card>
             <v-card-title class="text-h5">
-               <v-icon :icon="THousehold.icon" size="small" class="mr-3"></v-icon> {{ $t('Households') }}
+                <v-icon :icon="THousehold.icon" size="small" class="mr-3"></v-icon>
+                {{ $t('Households') }}
             </v-card-title>
             <v-card-text class="text-body-1">
-                <p>{{$t('HouseholdSetup1')}}</p>
-                <p class="mt-2">{{$t('HouseholdSetup2')}}</p>
-                <p class="mt-2">{{$t('HouseholdSetup3')}}</p>
-                <p class="mt-2">{{$t('HouseholdSetup4')}}</p>
+                <p>{{ $t('HouseholdSetup1') }}</p>
+                <p class="mt-2">{{ $t('HouseholdSetup2') }}</p>
+                <p class="mt-2">{{ $t('HouseholdSetup3') }}</p>
+                <p class="mt-2">{{ $t('HouseholdSetup4') }}</p>
 
                 <v-row>
                     <v-col>
                         <v-text-field v-model="householdName" :label="$t('Household')" :disabled="useUserPreferenceStore().activeUserSpace?.household != null" class="mt-4">
                         </v-text-field>
-                        <v-btn color="success" @click="createAndJoinHousehold" :loading="loading" :disabled="useUserPreferenceStore().activeUserSpace?.household != null">{{ $t('CreateAndJoin') }}</v-btn>
+                        <v-btn color="success" @click="createAndJoinHousehold" :loading="loading" :disabled="useUserPreferenceStore().activeUserSpace?.household != null">
+                            {{ $t('CreateAndJoin') }}
+                        </v-btn>
                     </v-col>
                 </v-row>
 
                 <v-row>
-                    <database-model-col model="UserSpace" :disabled="useUserPreferenceStore().activeUserSpace?.household == null || loading" ></database-model-col>
+                    <database-model-col model="UserSpace" :disabled="useUserPreferenceStore().activeUserSpace?.household == null || loading"></database-model-col>
                 </v-row>
 
             </v-card-text>
             <v-card-actions>
-                <v-btn color="warning" variant="tonal">{{ $t('Skip') }}</v-btn>
+                <v-btn color="warning" variant="tonal" @click=" skipHouseholdSetup()" :loading="loading">{{ $t('Skip') }}</v-btn>
             </v-card-actions>
         </v-card>
 
@@ -85,9 +88,24 @@ function createAndJoinHousehold() {
             loading.value = false
         })
     }
-
-
 }
+
+function skipHouseholdSetup() {
+    let api = new ApiApi()
+
+    useUserPreferenceStore().activeSpace.householdSetupCompleted = true
+    loading.value = true
+
+    api.apiSpacePartialUpdate({id: useUserPreferenceStore().activeSpace.id!, patchedSpace: useUserPreferenceStore().activeSpace}).then(r => {
+        useUserPreferenceStore().activeSpace = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    }).finally(() => {
+        loading.value = false
+        router.push({name: 'StartPage'})
+    })
+}
+
 
 </script>
 

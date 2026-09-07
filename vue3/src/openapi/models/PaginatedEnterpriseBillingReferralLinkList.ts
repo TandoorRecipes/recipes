@@ -18,6 +18,7 @@ import {
     EnterpriseBillingReferralLinkFromJSON,
     EnterpriseBillingReferralLinkFromJSONTyped,
     EnterpriseBillingReferralLinkToJSON,
+    EnterpriseBillingReferralLinkToJSONTyped,
 } from './EnterpriseBillingReferralLink';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedEnterpriseBillingReferralLinkList {
      * @type {string}
      * @memberof PaginatedEnterpriseBillingReferralLinkList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedEnterpriseBillingReferralLinkList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<EnterpriseBillingReferralLink>}
@@ -85,17 +86,22 @@ export function PaginatedEnterpriseBillingReferralLinkListFromJSONTyped(json: an
     };
 }
 
-export function PaginatedEnterpriseBillingReferralLinkListToJSON(value?: PaginatedEnterpriseBillingReferralLinkList | null): any {
+export function PaginatedEnterpriseBillingReferralLinkListToJSON(json: any): PaginatedEnterpriseBillingReferralLinkList {
+    return PaginatedEnterpriseBillingReferralLinkListToJSONTyped(json, false);
+}
+
+export function PaginatedEnterpriseBillingReferralLinkListToJSONTyped(value?: PaginatedEnterpriseBillingReferralLinkList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(EnterpriseBillingReferralLinkToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -26,7 +26,7 @@
 
                 <v-checkbox :label="$t('LogCredits')" :hint="$t('LogCreditsHelp')" v-model="editingObj.logCreditCost" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint
                             class="mb-2"></v-checkbox>
-                <v-text-field :label="$t('Url')" v-model="editingObj.url"></v-text-field>
+                <v-text-field :label="$t('Url')" v-model="editingObj.url" :hint="$t('AllowedAiUrlHelp')"></v-text-field>
 
                 <v-checkbox :label="$t('Global')" :hint="$t('GlobalHelp')" v-model="globalProvider" v-if="useUserPreferenceStore().userSettings.user.isSuperuser" persistent-hint
                             class="mb-2"></v-checkbox>
@@ -67,7 +67,7 @@ watch([() => props.item, () => props.itemId], () => {
 })
 
 // object specific data (for selects/display)
-const aiModels = ref(['gemini/gemini-2.5-pro', 'gemini/gemini-2.5-flash', 'gemini/gemini-2.5-flash-lite', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano'])
+const aiModels = ref(['gemini/gemini-pro-latest', 'gemini/gemini-flash-latest', 'gemini/gemini-flash-lite-latest', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano'])
 
 const globalProvider = ref(false)
 

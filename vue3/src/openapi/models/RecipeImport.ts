@@ -18,6 +18,7 @@ import {
     StorageFromJSON,
     StorageFromJSONTyped,
     StorageToJSON,
+    StorageToJSONTyped,
 } from './Storage';
 
 /**
@@ -93,10 +94,15 @@ export function RecipeImportFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function RecipeImportToJSON(value?: Omit<RecipeImport, 'createdAt'> | null): any {
+export function RecipeImportToJSON(json: any): RecipeImport {
+    return RecipeImportToJSONTyped(json, false);
+}
+
+export function RecipeImportToJSONTyped(value?: Omit<RecipeImport, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

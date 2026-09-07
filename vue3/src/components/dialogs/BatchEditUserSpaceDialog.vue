@@ -10,29 +10,19 @@
             <v-divider></v-divider>
 
             <v-card-text>
-
                 <v-form>
                     <v-row>
-
                         <v-col cols="12">
+                                    <v-model-select model="Household" v-model="batchUpdateRequest.userSpaceBatchUpdate.household" :return-object="false" create>
+                                    </v-model-select>
 
-
-                                    <model-select model="Household" v-model="batchUpdateRequest.userSpaceBatchUpdate.household" :object="false" allow-create mode="single">
-                                    </model-select>
-
-                                    <model-select model="Group" v-model="batchUpdateRequest.userSpaceBatchUpdate.groupSet" :object="false" mode="tags">
+                                    <v-model-select model="Group" v-model="batchUpdateRequest.userSpaceBatchUpdate.groupSet" :return-object="false" multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
-
-                                    <v-spacer class="mt-10"></v-spacer>
+                                    </v-model-select>
                         </v-col>
-
-
                     </v-row>
-
-
                 </v-form>
             </v-card-text>
             <v-card-actions>
@@ -45,13 +35,13 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref, watch} from "vue";
-import {EditorSupportedModels, EditorSupportedTypes, getGenericModelFromString, TFood, TKeyword, TRecipe, TUserSpace} from "@/types/Models.ts";
+import {PropType, ref, watch} from "vue";
+import {TUserSpace} from "@/types/Models.ts";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {useI18n} from "vue-i18n";
-import {ApiApi, ApiFoodBatchUpdateUpdateRequest, ApiRecipeBatchUpdateUpdateRequest, ApiUserSpaceBatchUpdateUpdateRequest, Food, Recipe, RecipeOverview, UserSpace} from "@/openapi";
+import {ApiApi, ApiUserSpaceBatchUpdateUpdateRequest, UserSpace} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emit = defineEmits(['change'])
 
@@ -59,8 +49,6 @@ const props = defineProps({
     items: {type: Array as PropType<Array<UserSpace>>, required: true},
     activator: {type: String, default: 'parent'},
 })
-
-const {t} = useI18n()
 
 const dialog = defineModel<boolean>({default: false})
 const loading = ref(false)

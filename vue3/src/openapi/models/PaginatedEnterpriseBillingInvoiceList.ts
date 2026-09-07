@@ -18,6 +18,7 @@ import {
     EnterpriseBillingInvoiceFromJSON,
     EnterpriseBillingInvoiceFromJSONTyped,
     EnterpriseBillingInvoiceToJSON,
+    EnterpriseBillingInvoiceToJSONTyped,
 } from './EnterpriseBillingInvoice';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedEnterpriseBillingInvoiceList {
      * @type {string}
      * @memberof PaginatedEnterpriseBillingInvoiceList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedEnterpriseBillingInvoiceList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<EnterpriseBillingInvoice>}
@@ -85,17 +86,22 @@ export function PaginatedEnterpriseBillingInvoiceListFromJSONTyped(json: any, ig
     };
 }
 
-export function PaginatedEnterpriseBillingInvoiceListToJSON(value?: PaginatedEnterpriseBillingInvoiceList | null): any {
+export function PaginatedEnterpriseBillingInvoiceListToJSON(json: any): PaginatedEnterpriseBillingInvoiceList {
+    return PaginatedEnterpriseBillingInvoiceListToJSONTyped(json, false);
+}
+
+export function PaginatedEnterpriseBillingInvoiceListToJSONTyped(value?: PaginatedEnterpriseBillingInvoiceList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(EnterpriseBillingInvoiceToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

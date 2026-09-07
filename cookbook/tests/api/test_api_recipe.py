@@ -55,7 +55,7 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
 
 
-def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
+def test_share_permission(recipe_1_s1,ext_recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
     # Same space user can access
     assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
     # Different space user cannot access without share link
@@ -80,12 +80,34 @@ def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
         recipe_1_s1.private = True
         recipe_1_s1.save()
 
+        ext_recipe_1_s1.created_by = auth.get_user(u1_s1)
+        ext_recipe_1_s1.private = True
+        ext_recipe_1_s1.save()
+
     # Private recipe still accessible with share link
     assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
     assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
     assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
     # Private recipe NOT accessible without share link (non-owner)
     assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 403
+
+    # Private recipe NOT accessible through utility endpoints (non-owner)
+    assert u2_s1.get(reverse('api_get_recipe_file', args=[recipe_1_s1.pk])).status_code == 403
+    assert u2_s1.get(reverse('api_get_external_file_link', args=[ext_recipe_1_s1.pk])).status_code == 403
+    assert u2_s1.get(reverse('api_share_link', args=[recipe_1_s1.pk])).status_code == 403
+
+    # Private recipe shared with user IS accessible
+    with scopes_disabled():
+        recipe_1_s1.shared.add(auth.get_user(u2_s1))
+        recipe_1_s1.save()
+
+        ext_recipe_1_s1.shared.add(auth.get_user(u2_s1))
+        ext_recipe_1_s1.save()
+    
+    assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
+    assert u2_s1.get(reverse('api_get_recipe_file', args=[recipe_1_s1.pk])).status_code == 200
+    assert u2_s1.get(reverse('api_get_external_file_link', args=[ext_recipe_1_s1.pk])).status_code == 200
+    assert u2_s1.get(reverse('api_share_link', args=[recipe_1_s1.pk])).status_code == 200
 
 
 def test_share_permission_invalid(recipe_1_s1, u1_s2):

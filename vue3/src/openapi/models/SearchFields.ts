@@ -64,13 +64,13 @@ export interface SearchFields {
      * @type {string}
      * @memberof SearchFields
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof SearchFields
      */
-    field?: string;
+    field?: string | null;
 }
 
 /**
@@ -96,10 +96,15 @@ export function SearchFieldsFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function SearchFieldsToJSON(value?: SearchFields | null): any {
+export function SearchFieldsToJSON(json: any): SearchFields {
+    return SearchFieldsToJSONTyped(json, false);
+}
+
+export function SearchFieldsToJSONTyped(value?: SearchFields | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

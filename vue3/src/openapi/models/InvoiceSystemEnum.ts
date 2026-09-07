@@ -16,11 +16,13 @@
 /**
  * * `ERPNEXT` - ErpNext
  * * `SEVDESK` - SevDesk
+ * * `STRIPE` - Stripe
  * @export
  */
 export const InvoiceSystemEnum = {
     Erpnext: 'ERPNEXT',
-    Sevdesk: 'SEVDESK'
+    Sevdesk: 'SEVDESK',
+    Stripe: 'STRIPE'
 } as const;
 export type InvoiceSystemEnum = typeof InvoiceSystemEnum[keyof typeof InvoiceSystemEnum];
 
@@ -28,7 +30,7 @@ export type InvoiceSystemEnum = typeof InvoiceSystemEnum[keyof typeof InvoiceSys
 export function instanceOfInvoiceSystemEnum(value: any): boolean {
     for (const key in InvoiceSystemEnum) {
         if (Object.prototype.hasOwnProperty.call(InvoiceSystemEnum, key)) {
-            if (InvoiceSystemEnum[key] === value) {
+            if (InvoiceSystemEnum[key as keyof typeof InvoiceSystemEnum] === value) {
                 return true;
             }
         }
@@ -46,5 +48,9 @@ export function InvoiceSystemEnumFromJSONTyped(json: any, ignoreDiscriminator: b
 
 export function InvoiceSystemEnumToJSON(value?: InvoiceSystemEnum | null): any {
     return value as any;
+}
+
+export function InvoiceSystemEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): InvoiceSystemEnum {
+    return value as InvoiceSystemEnum;
 }
 

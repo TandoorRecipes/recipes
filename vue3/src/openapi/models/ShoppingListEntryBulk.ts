@@ -30,7 +30,7 @@ export interface ShoppingListEntryBulk {
      * @type {boolean}
      * @memberof ShoppingListEntryBulk
      */
-    checked?: boolean;
+    checked?: boolean | null;
     /**
      * 
      * @type {Date}
@@ -92,10 +92,15 @@ export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function ShoppingListEntryBulkToJSON(value?: Omit<ShoppingListEntryBulk, 'timestamp'> | null): any {
+export function ShoppingListEntryBulkToJSON(json: any): ShoppingListEntryBulk {
+    return ShoppingListEntryBulkToJSONTyped(json, false);
+}
+
+export function ShoppingListEntryBulkToJSONTyped(value?: Omit<ShoppingListEntryBulk, 'timestamp'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'ids': value['ids'],

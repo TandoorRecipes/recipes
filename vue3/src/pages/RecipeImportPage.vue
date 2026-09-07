@@ -142,11 +142,11 @@
                                 <div v-if="importType == 'ai'">
                                     <v-row>
                                         <v-col cols="12" md="6">
-                                            <ModelSelect model="AiProvider" v-model="selectedAiProvider" hide-details>
+                                            <v-model-select model="AiProvider" v-model="selectedAiProvider" hide-details>
                                                 <template #append>
                                                     <v-btn icon="$settings" :to="{name:'ModelListPage', params: {model: 'AiProvider'}}" color="success"></v-btn>
                                                 </template>
-                                            </ModelSelect>
+                                            </v-model-select>
                                         </v-col>
                                         <v-col cols="12" md="6">
                                             <v-btn-toggle class="mb-2" border divided v-model="aiMode">
@@ -242,21 +242,34 @@
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <v-btn prepend-icon="fa-solid fa-square-check" @click="setAllKeywordsImportStatus(true)">{{ $t('SelectAll') }}</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-square-minus" @click="setAllKeywordsImportStatus(false)">{{ $t('SelectNone') }}</v-btn>
+                                            <ai-action-button 
+                                                :text="$t('Auto_Sort')" 
+                                                prepend-icon="$ai" 
+                                                :loading="aiStepSortLoading" 
+                                                @selected="aiStepSort" 
+                                                :disabled="!importResponse.recipe?.steps || importResponse.recipe.steps.length < 1">
+                                            </ai-action-button>
+                                            
+                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()">
+                                                <span v-if="!mobile">{{ $t('Split') }}</span>
+                                            </v-btn>
+                                            
+                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()">
+                                                <span v-if="!mobile">{{ $t('Merge') }}</span>
+                                            </v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
 
                                 <v-row>
                                     <v-col>
-                                        <model-select model="Keyword" v-model="keywordSelect" allow-create>
+                                        <v-model-select model="Keyword" v-model="keywordSelect" create>
                                             <template #append>
                                                 <v-btn icon="$add" color="success"
                                                        @click="keywordSelect.importKeyword = true; importResponse.recipe.keywords.push(keywordSelect); keywordSelect= null"
                                                        :disabled="keywordSelect == null"></v-btn>
                                             </template>
-                                        </model-select>
+                                        </v-model-select>
                                     </v-col>
                                 </v-row>
 
@@ -585,6 +598,7 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import bookmarkletJs from '@/assets/bookmarklet_v3?url'
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
 import {mergeAllSteps, splitAllSteps, splitStep} from "@/utils/step_utils.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 function doListImport() {
     urlList.value = urlListImportInput.value.split('\n')
@@ -628,6 +642,7 @@ function importFromUrlList() {
     }
 }
 
+const aiStepSortLoading = ref(false)
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
@@ -873,6 +888,25 @@ function mergeStep(step: SourceImportStep) {
  */
 function deleteIngredient(step: SourceImportStep, ingredient: SourceImportIngredient) {
     step.ingredients = step.ingredients.filter(i => i != ingredient)
+}
+
+/**
+ * sort steps and ingredients using AI and update recipe with result
+ * @param providerId provider to use for request
+ */
+function aiStepSort(providerId: number) {
+    if (!importResponse.value.recipe) return;
+
+    let api = new ApiApi()
+    aiStepSortLoading.value = true
+
+    api.apiAiStepSortCreate({recipe: importResponse.value.recipe, provider: providerId}).then(r => {
+        importResponse.value.recipe = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        aiStepSortLoading.value = false
+    })
 }
 
 /**

@@ -13,7 +13,7 @@
         <v-card-text>
             <v-form>
                 <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object multiple v-model="editingObj.groups"></v-select>
-                <model-select model="Household" v-model="editingObj.household" allow-create></model-select>
+                <v-model-select model="Household" v-model="editingObj.household" create></v-model-select>
 
                 <v-spacer class="mt-10"></v-spacer>
             </v-form>
@@ -34,6 +34,7 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<UserSpace>, required: false, default: null},

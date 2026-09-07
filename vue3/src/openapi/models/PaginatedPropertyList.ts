@@ -18,6 +18,7 @@ import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedPropertyList {
      * @type {string}
      * @memberof PaginatedPropertyList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedPropertyList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Property>}
@@ -85,17 +86,22 @@ export function PaginatedPropertyListFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PaginatedPropertyListToJSON(value?: PaginatedPropertyList | null): any {
+export function PaginatedPropertyListToJSON(json: any): PaginatedPropertyList {
+    return PaginatedPropertyListToJSONTyped(json, false);
+}
+
+export function PaginatedPropertyListToJSONTyped(value?: PaginatedPropertyList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(PropertyToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

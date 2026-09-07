@@ -18,12 +18,14 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { KeywordModeEnum } from './KeywordModeEnum';
 import {
     KeywordModeEnumFromJSON,
     KeywordModeEnumFromJSONTyped,
     KeywordModeEnumToJSON,
+    KeywordModeEnumToJSONTyped,
 } from './KeywordModeEnum';
 
 /**
@@ -73,7 +75,7 @@ export interface AutoMealPlan {
      * @type {Array<User>}
      * @memberof AutoMealPlan
      */
-    shared?: Array<User>;
+    shared?: Array<User> | null;
     /**
      * 
      * @type {boolean}
@@ -81,6 +83,8 @@ export interface AutoMealPlan {
      */
     addshopping: boolean;
 }
+
+
 
 /**
  * Check if a given object implements the AutoMealPlan interface.
@@ -115,14 +119,19 @@ export function AutoMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function AutoMealPlanToJSON(value?: AutoMealPlan | null): any {
+export function AutoMealPlanToJSON(json: any): AutoMealPlan {
+    return AutoMealPlanToJSONTyped(json, false);
+}
+
+export function AutoMealPlanToJSONTyped(value?: AutoMealPlan | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
-        'start_date': ((value['startDate']).toISOString()),
-        'end_date': ((value['endDate']).toISOString()),
+        'start_date': value['startDate'].toISOString(),
+        'end_date': value['endDate'].toISOString(),
         'meal_type_id': value['mealTypeId'],
         'keywords': value['keywords'],
         'keyword_mode': KeywordModeEnumToJSON(value['keywordMode']),

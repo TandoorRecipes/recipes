@@ -54,7 +54,7 @@ export interface NutritionInformation {
      * @type {string}
      * @memberof NutritionInformation
      */
-    source?: string;
+    source?: string | null;
 }
 
 /**
@@ -87,10 +87,15 @@ export function NutritionInformationFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function NutritionInformationToJSON(value?: NutritionInformation | null): any {
+export function NutritionInformationToJSON(json: any): NutritionInformation {
+    return NutritionInformationToJSONTyped(json, false);
+}
+
+export function NutritionInformationToJSONTyped(value?: NutritionInformation | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

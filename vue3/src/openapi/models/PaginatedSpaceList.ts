@@ -18,6 +18,7 @@ import {
     SpaceFromJSON,
     SpaceFromJSONTyped,
     SpaceToJSON,
+    SpaceToJSONTyped,
 } from './Space';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedSpaceList {
      * @type {string}
      * @memberof PaginatedSpaceList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSpaceList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Space>}
@@ -85,17 +86,22 @@ export function PaginatedSpaceListFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PaginatedSpaceListToJSON(value?: PaginatedSpaceList | null): any {
+export function PaginatedSpaceListToJSON(json: any): PaginatedSpaceList {
+    return PaginatedSpaceListToJSONTyped(json, false);
+}
+
+export function PaginatedSpaceListToJSONTyped(value?: PaginatedSpaceList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SpaceToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

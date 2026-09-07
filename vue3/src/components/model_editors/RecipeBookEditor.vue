@@ -26,20 +26,20 @@
                     <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" rows="3"></v-textarea>
-                        <model-select model="User" v-model="editingObj.shared" mode="tags"></model-select>
-                        <model-select model="CustomFilter" v-model="editingObj.filter"></model-select>
+                        <v-model-select model="User" v-model="editingObj.shared" chips multiple></v-model-select>
+                        <v-model-select model="CustomFilter" v-model="editingObj.filter"></v-model-select>
                         <v-number-input :label="$t('Order')" :hint="$t('OrderInformation')" v-model="editingObj.order"></v-number-input>
                     </v-form>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="recipes">
-                    <model-select model="Recipe" v-model="selectedRecipes" mode="tags">
+                    <v-model-select model="Recipe" v-model="selectedRecipes" multiple chips>
                         <template #append>
                             <v-btn icon color="create" @click="addRecipesToBook()">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
                         </template>
-                    </model-select>
+                    </v-model-select>
                     <v-data-table-server
                         @update:options="loadRecipeBookEntries"
                         :items="recipeBookEntries"
@@ -69,6 +69,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useI18n} from "vue-i18n";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<RecipeBook>, required: false, default: null},

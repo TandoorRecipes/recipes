@@ -9,6 +9,7 @@ export * from './AutoMealPlan';
 export * from './Automation';
 export * from './AutomationTypeEnum';
 export * from './BaseUnitEnum';
+export * from './BillingRegionEnum';
 export * from './BookingTypeEnum';
 export * from './BookmarkletImport';
 export * from './BookmarkletImportList';

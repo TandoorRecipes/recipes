@@ -18,12 +18,14 @@ import {
     SourceImportUnitFromJSON,
     SourceImportUnitFromJSONTyped,
     SourceImportUnitToJSON,
+    SourceImportUnitToJSONTyped,
 } from './SourceImportUnit';
 import type { SourceImportFood } from './SourceImportFood';
 import {
     SourceImportFoodFromJSON,
     SourceImportFoodFromJSONTyped,
     SourceImportFoodToJSON,
+    SourceImportFoodToJSONTyped,
 } from './SourceImportFood';
 
 /**
@@ -61,7 +63,7 @@ export interface SourceImportIngredient {
      * @type {number}
      * @memberof SourceImportIngredient
      */
-    order?: number;
+    order?: number | null;
     /**
      * 
      * @type {string}
@@ -100,10 +102,15 @@ export function SourceImportIngredientFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function SourceImportIngredientToJSON(value?: SourceImportIngredient | null): any {
+export function SourceImportIngredientToJSON(json: any): SourceImportIngredient {
+    return SourceImportIngredientToJSONTyped(json, false);
+}
+
+export function SourceImportIngredientToJSONTyped(value?: SourceImportIngredient | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'amount': value['amount'],

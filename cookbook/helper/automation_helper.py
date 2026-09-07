@@ -1,10 +1,11 @@
-import re
+import regex
 
 from django.core.cache import caches
 from django.db.models.functions import Lower
 
 from cookbook.models import Automation
 
+REGEX_TIMEOUT = 0.05
 
 class AutomationEngine:
     request = None
@@ -173,13 +174,13 @@ class AutomationEngine:
         if self.transpose_words:
             for key, value in self.transpose_words.items():
                 if value[0] in tokens and value[1] in tokens:
-                    string = re.sub(rf"\b({value[0]})\W*({value[1]})\b", r"\2 \1", string, flags=re.IGNORECASE)
+                    string = regex.sub(rf"\b({value[0]})\W*({value[1]})\b", r"\2 \1", string, flags=regex.IGNORECASE, timeout=REGEX_TIMEOUT)
         else:
             for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
                     .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
                     .filter(param_1_lower__in=tokens, param_2_lower__in=tokens).order_by('order')[:512]:
                 if rule.param_1 in tokens and rule.param_2 in tokens:
-                    string = re.sub(rf"\b({rule.param_1})\W*({rule.param_2})\b", r"\2 \1", string, flags=re.IGNORECASE)
+                    string = regex.sub(rf"\b({rule.param_1})\W*({rule.param_2})\b", r"\2 \1", string, flags=regex.IGNORECASE, timeout=REGEX_TIMEOUT)
         return string
 
     def apply_regex_replace_automation(self, string, automation_type):
@@ -217,11 +218,11 @@ class AutomationEngine:
 
         if self.regex_replace[automation_type]:
             for rule in self.regex_replace[automation_type].values():
-                if re.match(rule[0], (self.source)[:512]):
-                    string = re.sub(rule[1], rule[2], string, flags=re.IGNORECASE)
+                if regex.match(rule[0], (self.source)[:512], timeout=REGEX_TIMEOUT):
+                    string = regex.sub(rule[1], rule[2], string, flags=regex.IGNORECASE, timeout=REGEX_TIMEOUT)
         else:
             for rule in Automation.objects.filter(space=self.request.space, disabled=False, type=automation_type).only(
                     'param_1', 'param_2', 'param_3').order_by('order').all()[:512]:
-                if re.match(rule.param_1, (self.source)[:512]):
-                    string = re.sub(rule.param_2, rule.param_3, string, flags=re.IGNORECASE)
+                if regex.match(rule.param_1, (self.source)[:512], timeout=REGEX_TIMEOUT):
+                    string = regex.sub(rule.param_2, rule.param_3, string, flags=regex.IGNORECASE, timeout=REGEX_TIMEOUT)
         return string

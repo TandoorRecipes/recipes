@@ -18,6 +18,7 @@ import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -131,10 +132,15 @@ export function PatchedOpenDataCategoryFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedOpenDataCategoryToJSON(value?: Omit<PatchedOpenDataCategory, 'createdBy'> | null): any {
+export function PatchedOpenDataCategoryToJSON(json: any): PatchedOpenDataCategory {
+    return PatchedOpenDataCategoryToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataCategoryToJSONTyped(value?: Omit<PatchedOpenDataCategory, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

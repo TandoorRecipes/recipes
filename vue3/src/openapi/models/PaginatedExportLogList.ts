@@ -18,6 +18,7 @@ import {
     ExportLogFromJSON,
     ExportLogFromJSONTyped,
     ExportLogToJSON,
+    ExportLogToJSONTyped,
 } from './ExportLog';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedExportLogList {
      * @type {string}
      * @memberof PaginatedExportLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedExportLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ExportLog>}
@@ -85,17 +86,22 @@ export function PaginatedExportLogListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedExportLogListToJSON(value?: PaginatedExportLogList | null): any {
+export function PaginatedExportLogListToJSON(json: any): PaginatedExportLogList {
+    return PaginatedExportLogListToJSONTyped(json, false);
+}
+
+export function PaginatedExportLogListToJSONTyped(value?: PaginatedExportLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ExportLogToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

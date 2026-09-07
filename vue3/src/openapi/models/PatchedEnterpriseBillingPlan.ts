@@ -78,13 +78,13 @@ export interface PatchedEnterpriseBillingPlan {
      * @type {number}
      * @memberof PatchedEnterpriseBillingPlan
      */
-    priceDiscount?: number;
+    priceDiscount?: number | null;
     /**
      * Text to show as reason for the discount
      * @type {string}
      * @memberof PatchedEnterpriseBillingPlan
      */
-    discountReason?: string;
+    discountReason?: string | null;
     /**
      * 
      * @type {number}
@@ -167,10 +167,15 @@ export function PatchedEnterpriseBillingPlanFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PatchedEnterpriseBillingPlanToJSON(value?: PatchedEnterpriseBillingPlan | null): any {
+export function PatchedEnterpriseBillingPlanToJSON(json: any): PatchedEnterpriseBillingPlan {
+    return PatchedEnterpriseBillingPlanToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseBillingPlanToJSONTyped(value?: PatchedEnterpriseBillingPlan | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

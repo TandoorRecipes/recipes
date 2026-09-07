@@ -14,6 +14,14 @@
                                  link
                                  @click="date = DateTime.now().plus({months: c.months}).toJSDate(); dialog = false">
                     </v-list-item>
+
+                    <v-list-item
+                                 prepend-icon="$close"
+                                 :title="$t('Close')"
+
+                                 link
+                                 @click="dialog = false">
+                    </v-list-item>
                 </v-list>
 
             </v-card-text>

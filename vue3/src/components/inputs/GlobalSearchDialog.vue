@@ -194,7 +194,7 @@ watch(debouncedSearchQuery, (val) => {
         api.apiRecipeList({query: val}, {signal: signal.value}).then(r => {
             asyncSearchResults.value = r.results
         }).catch(err => {
-            if (err.name !== 'AbortError') {
+            if (err.name !== 'AbortError' && err.cause.name !== 'AbortError') {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         }).finally(() => {

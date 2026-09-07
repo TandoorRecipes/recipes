@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2026-04-03 01:22+0000\n"
-"Last-Translator: am9zZWY <tandoor@jmueller.simplelogin.com>\n"
+"POT-Creation-Date: 2026-06-24 18:06+0200\n"
+"PO-Revision-Date: 2026-07-19 09:49+0000\n"
+"Last-Translator: Julian <julianrottenberg@mailbox.org>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/de/>\n"
 "Language: de\n"
@@ -35,8 +35,8 @@ msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
-"Um Duplikate zu vermeiden werden Rezepte mit dem gleichen Namen ignoriert. "
-"Aktivieren Sie dieses Kontrollkästchen, um alles zu importieren."
+"Haken setzen, um Rezepte mit bestehenden Namen dennoch zu importieren "
+"(Standard: Duplikate überspringen)."
 
 #: .\cookbook\forms.py:120
 msgid "Maximum number of users for this space reached."
@@ -97,13 +97,12 @@ msgstr ""
 "Du kannst mit diesem Objekt nicht interagieren, da es dir nicht gehört!"
 
 #: .\cookbook\helper\permission_helper.py:323
-#, fuzzy
-#| msgid "You cannot interact with this object as it is not owned by you!"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
 msgstr ""
-"Du kannst mit diesem Objekt nicht interagieren, da es dir nicht gehört!"
+"Du kannst mit diesem Objekt nicht interagieren, da du nicht dem gleichen "
+"Haushalt angehörst, wie der Nutzer, der es erstellt hat!"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -138,10 +137,8 @@ msgid "ferment"
 msgstr "Fermentieren"
 
 #: .\cookbook\helper\recipe_url_import.py:318
-#, fuzzy
-#| msgid "Last cooked"
 msgid "slow cook"
-msgstr "Zuletzt gekocht"
+msgstr "langsam kochen"
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
@@ -195,11 +192,11 @@ msgstr "Sous-vide"
 msgid "You must supply a servings size"
 msgstr "Sie müssen eine Portionsgröße angeben"
 
-#: .\cookbook\helper\template_helper.py:135
-#: .\cookbook\helper\template_helper.py:137
-#: .\cookbook\helper\template_helper.py:139
-#: .\cookbook\helper\template_helper.py:141
-#: .\cookbook\helper\template_helper.py:143
+#: .\cookbook\helper\template_helper.py:156
+#: .\cookbook\helper\template_helper.py:158
+#: .\cookbook\helper\template_helper.py:160
+#: .\cookbook\helper\template_helper.py:162
+#: .\cookbook\helper\template_helper.py:164
 msgid "Could not parse template code."
 msgstr "Konnte den Template code nicht verarbeiten."
 
@@ -212,7 +209,23 @@ msgstr "Favorit"
 msgid "I made this"
 msgstr "Von mir gekocht"
 
-#: .\cookbook\integration\integration.py:233
+#: .\cookbook\integration\integration.py:67
+msgid "Too many files in zip"
+msgstr "Zu viele Dateien in zip"
+
+#: .\cookbook\integration\integration.py:71
+msgid "Zip file too large"
+msgstr "Zip Datei zu groß"
+
+#: .\cookbook\integration\integration.py:84
+msgid "Nested zip files too deep"
+msgstr "ZIP-Datei zu tief verschachtelt"
+
+#: .\cookbook\integration\integration.py:92
+msgid "File in zip too large"
+msgstr "Datei in ZIP zu groß"
+
+#: .\cookbook\integration\integration.py:270
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
@@ -220,7 +233,7 @@ msgstr ""
 "Importer erwartet eine .zip Datei. Hast du den richtigen Importer-Typ für "
 "deine Daten ausgewählt?"
 
-#: .\cookbook\integration\integration.py:235
+#: .\cookbook\integration\integration.py:272
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
@@ -228,11 +241,11 @@ msgstr ""
 "Ein unerwarteter Fehler trat beim Importieren auf. Bitte stelle sicher, dass "
 "die hochgeladene Datei gültig ist."
 
-#: .\cookbook\integration\integration.py:239
+#: .\cookbook\integration\integration.py:276
 msgid "The following recipes were ignored because they already existed:"
 msgstr "Die folgenden Rezepte wurden ignoriert da sie bereits existieren:"
 
-#: .\cookbook\integration\integration.py:242
+#: .\cookbook\integration\integration.py:279
 #, python-format
 msgid "Imported %s recipes."
 msgstr "%s Rezepte importiert."
@@ -262,7 +275,7 @@ msgstr "Ballaststoffe"
 
 #: .\cookbook\integration\mealie1.py:247
 msgid "Protein"
-msgstr "Proteine"
+msgstr "Protein"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
@@ -302,13 +315,15 @@ msgstr "Quelle"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Diese Funktion wurde für diese Speicherintegration nicht implementiert"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"PDF Export ist aktuell nicht verfügbar. Nutze die Drucken-Funktion deines "
+"Browsers (Strg+P/Cmd+P) um ein Rezept als PDF zu speichern."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -346,8 +361,8 @@ msgstr "Generiert den Index für die Rezept-Volltextsuche neu"
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Nur PostgreSQL Datenbanken verwenden Volltextsuche, es muss kein Index neu "
-"generiert werden"
+"Nur PostgreSQL-Datenbanken nutzen Volltextsuche – kein Index zum Neuaufbau "
+"vorhanden."
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
@@ -431,7 +446,7 @@ msgstr "Ziel"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -439,10 +454,8 @@ msgid "Remove"
 msgstr "Entfernen"
 
 #: .\cookbook\models.py:1409
-#, fuzzy
-#| msgid "Move Up"
 msgid "Move"
-msgstr "Nach oben"
+msgstr "Verschieben"
 
 #: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -482,7 +495,7 @@ msgstr "Anleitung ersetzen"
 
 #: .\cookbook\models.py:1687
 msgid "Never Unit"
-msgstr "Nie Einheit"
+msgstr "Keine Einheit"
 
 #: .\cookbook\models.py:1688
 msgid "Transpose Words"
@@ -535,10 +548,8 @@ msgid "Space Name must be unique."
 msgstr "Der Space-Name muss einmalig sein."
 
 #: .\cookbook\serializer.py:505
-#, fuzzy
-#| msgid "You must select at least one field to search!"
 msgid "You must select at least one group."
-msgstr "Es muss mindestens ein Feld ausgewählt sein!"
+msgstr "Es muss mindestens eine Gruppe ausgewählt sein."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -1050,10 +1061,10 @@ msgid ""
 "editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
-"Es ist schwierig, Markdown-Tabellen von Hand zu erstellen. Daher bietet es "
-"sich an, Werkzeuge wie <a href=\"https://www.tablesgenerator.com/"
-"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">dieses hier</"
-"a> zu verwenden."
+"Markdown-Tabellen sind manuell schwer zu erstellen. Es wird empfohlen, einen "
+"Tabelleneditor wie <a href=\"https://www.tablesgenerator.com/"
+"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">diesen</a> "
+"zu verwenden."
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1133,12 +1144,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Das optimieren der Suchergebnisse ist kompliziert und stark abhängig "
-"von deiner persönlichen Konfiguration.  \n"
-"        Auch einzelne Einstellungen können die Geschwindigkeit und Qualität "
-"der Suchergebnisse maßgeblich beinflussen..\n"
-"        Die Suchtypen \"Trigram\" und Volltext sind nur verfügbar falls eine "
-"PostgreSQL Datenbank verwendet wird..\n"
+"        Die optimale Suche einzurichten ist komplex und hängt stark von "
+"Ihrer persönlichen Konfiguration ab. Änderungen an den Sucheinstellungen "
+"können die Geschwindigkeit und Qualität der Ergebnisse erheblich "
+"beeinflussen. Suchmethoden, Trigramme und Volltextsuche-Konfigurationen "
+"stehen nur zur Verfügung, wenn Sie PostgreSQL als Datenbank verwenden.\n"
 "    "
 
 #: .\cookbook\templates\search_info.html:19
@@ -1267,14 +1277,15 @@ msgid ""
 "            "
 msgstr ""
 " \n"
-"            Eine weitere Suchmethode (welche ebenfalls PostgreSQL erfordert) "
-"ist die unscharfe Suche oder Trigramm-Suche. Ein Trigramm sind 3 "
-"aufeinanderfolgende Zeichen.\n"
-"            Beispiel: Die Suche nach \"Apfel\" erzeugt die Trigramme \"Apf"
-"\", \"pfl\" und \"fel\". Die Suchergebnisse erhalten dann eine Wertung "
-"abhängig davon wie gut sie mit den Trigrammen übereinstimmen.\n"
-"            Ein Vorteil der Trigramm-Suche ist das korrekte Suchwörter wie "
-"\"Apfel\", Tippfehler in Suchfeldern (wie z.B. \"Afpel\") finden.\n"
+"            Ein weiterer Suchansatz, der ebenfalls PostgreSQL voraussetzt, "
+"ist die Fuzzy-Suche bzw. Trigramm-Ähnlichkeit. Ein Trigramm ist eine Gruppe "
+"von drei aufeinanderfolgenden Zeichen.\n"
+"Eine Suche nach „Apfel“ erzeugt beispielsweise die Trigramme „Apf“, „pfe“, „"
+"fel“ und berechnet eine Bewertung (Score), wie stark Wörter mit den "
+"generierten Trigrammmen übereinstimmen.\n"
+"Ein Vorteil der Trigramm-Suche ist, dass eine Suche nach „Sandwich“ auch "
+"falsch geschriebene Wörter wie „Sandwhich“ findet, die andere Methoden "
+"übersehen würden.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:69
@@ -1399,10 +1410,8 @@ msgstr ""
 "Es ist ein Fehler aufgetreten bei der Anmeldung über dein soziales Netzwerk."
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:30
-#, fuzzy
-#| msgid "Please contact your administrator."
 msgid "If this problem persists, please contact your administrator."
-msgstr "Bitte kontaktiere einen Administrator."
+msgstr "Wenn das Problem weiterhin bestehen, kontaktiere deinen Administrator."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
@@ -1726,10 +1735,8 @@ msgstr ""
 "        "
 
 #: .\cookbook\templates\system.html:230
-#, fuzzy
-#| msgid "Connect %(provider)s"
 msgid "Configured Providers"
-msgstr "Verbinde zu %(provider)s"
+msgstr "Konfigurierte Anbieter"
 
 #: .\cookbook\templates\system.html:239
 msgid "Name"
@@ -1737,21 +1744,19 @@ msgstr "Name"
 
 #: .\cookbook\templates\system.html:240 .\cookbook\templates\system.html:270
 msgid "Provider"
-msgstr ""
+msgstr "Anbieter"
 
 #: .\cookbook\templates\system.html:241
 msgid "Client ID"
-msgstr ""
+msgstr "Client ID"
 
 #: .\cookbook\templates\system.html:243
-#, fuzzy
-#| msgid "Account"
 msgid "Linked Accounts"
-msgstr "Account"
+msgstr "Verknüpfte Profile"
 
 #: .\cookbook\templates\system.html:259
 msgid "Recent Login Errors"
-msgstr ""
+msgstr "Kürzlich fehlgeschlagene Anmeldeversuche"
 
 #: .\cookbook\templates\system.html:269
 msgid "Time"
@@ -1759,21 +1764,21 @@ msgstr "Zeit"
 
 #: .\cookbook\templates\system.html:271
 msgid "Error Code"
-msgstr ""
+msgstr "Fehlercode"
 
 #: .\cookbook\templates\system.html:272
-#, fuzzy
-#| msgid "Emails"
 msgid "Details"
-msgstr "E-Mail Adressen"
+msgstr "Details"
 
 #: .\cookbook\templates\system.html:286
 msgid "Errors are cached for 24 hours. Maximum 50 entries stored."
 msgstr ""
+"Fehler werden für 24 Stunden gecached. Maximal 50 Einträge werden "
+"gespeichert."
 
 #: .\cookbook\templates\system.html:288
 msgid "No recent social login errors."
-msgstr ""
+msgstr "Keine kürzlichen Social Login Fehler."
 
 #: .\cookbook\templates\system.html:303
 msgid "False"
@@ -1801,48 +1806,36 @@ msgstr "Exportieren"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:5
 #: .\cookbook\templates\usersessions\usersession_list.html:8
-#, fuzzy
-#| msgid "No Permissions"
 msgid "Sessions"
-msgstr "Keine Berechtigungen"
+msgstr "Sitzungen"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:9
-#, fuzzy
-#| msgid "The following e-mail addresses are associated with your account:"
 msgid "The following sessions are currently active on your account."
-msgstr "Die folgenden Email-Adressen sind mit deinem Account verknüpft:"
+msgstr "Die folgenden Sitzungen sind aktuell in deinem Profil aktiv."
 
 #: .\cookbook\templates\usersessions\usersession_list.html:16
-#, fuzzy
-#| msgid "Saturated Fat"
 msgid "Started At"
-msgstr "Gesättigte Fette"
+msgstr "Gestartet um"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:17
-#, fuzzy
-#| msgid "E-mail Addresses"
 msgid "IP Address"
-msgstr "Email-Adressen"
+msgstr "IP-Adresse"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:18
-#, fuzzy
-#| msgid "API Browser"
 msgid "Browser"
-msgstr "API Browser"
+msgstr "Browser"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:20
-#, fuzzy
-#| msgid "Last viewed"
 msgid "Last Seen"
-msgstr "Zuletzt angesehen"
+msgstr "Zuletzt gesehen"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:36
 msgid "Current"
-msgstr ""
+msgstr "Aktuell"
 
 #: .\cookbook\templates\usersessions\usersession_list.html:45
 msgid "Sign Out Other Sessions"
-msgstr ""
+msgstr "Andere Sitzungen abmelden"
 
 #: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
@@ -1907,91 +1900,89 @@ msgid ""
 "If true also return empty entries, if false (default) only return entries "
 "with amount > 0."
 msgstr ""
+"Wenn wahr, gebe auch leere Einträge zurück. Wenn falsch (Standard), gebe nur "
+"Einträge mit amount > 0 zurück."
 
 #: .\cookbook\views\api.py:868
 msgid ""
 "Returns all entries with the same food as the given code. If code is given "
 "food parameter is ignored"
 msgstr ""
+"Gibt alle Einträge mit demselben Lebensmittel wie der angegebene Code "
+"zurück. Wenn code angegeben ist, wird der Parameter food ignoriert."
 
-#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:902
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
+#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:903
 msgid "Returns all entries with the given food id"
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
+msgstr "Gibt alle Einträge mit der angegebenen Lebensmittel-ID zurück."
 
 #: .\cookbook\views\api.py:870
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
 msgid "Returns all entries with the given inventory location id"
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
+msgstr "Gibt alle Einträge mit der angegebenen Lagerort-ID zurück"
 
-#: .\cookbook\views\api.py:903
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
+#: .\cookbook\views\api.py:904
 msgid "Returns all entries with the given entry id"
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
+msgstr "Gibt alle Einträge mit der angegebenen Eintrags-ID zurück"
 
-#: .\cookbook\views\api.py:1106
+#: .\cookbook\views\api.py:1107
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} wurde von der Einkaufsliste entfernt."
 
-#: .\cookbook\views\api.py:1111 .\cookbook\views\api.py:1912
+#: .\cookbook\views\api.py:1112 .\cookbook\views\api.py:1922
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} wurde der Einkaufsliste hinzugefügt."
 
-#: .\cookbook\views\api.py:1228 .\cookbook\views\api.py:2030
-#: .\cookbook\views\api.py:2710 .\cookbook\views\api.py:2871
+#: .\cookbook\views\api.py:1229 .\cookbook\views\api.py:2040
+#: .\cookbook\views\api.py:2722 .\cookbook\views\api.py:2889
 msgid "You must select an AI provider to perform your request."
-msgstr ""
+msgstr "Zum Ausführen dieser Anfrage muss ein KI Anbieter ausgewählt werden."
 
-#: .\cookbook\views\api.py:1235 .\cookbook\views\api.py:2037
-#: .\cookbook\views\api.py:2717 .\cookbook\views\api.py:2878
+#: .\cookbook\views\api.py:1236 .\cookbook\views\api.py:2047
+#: .\cookbook\views\api.py:2729 .\cookbook\views\api.py:2896
 msgid ""
 "You don't have any credits remaining to use AI or AI features are not "
 "enabled for your space."
 msgstr ""
+"Es sind keine AI Credits übrig oder AI Features sind für diesen Space nicht "
+"aktiviert."
 
-#: .\cookbook\views\api.py:1479
-#, fuzzy
-#| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
+#: .\cookbook\views\api.py:1484
 msgid ""
 "Filter meal plans from date (inclusive). If nothing is given its today - 90 "
 "days."
-msgstr "Speisepläne ab einschließlich Datum filtern."
+msgstr ""
+"Filtert Essenspläne ab dem angegebenen Datum (einschließlich). Standardwert: "
+"Heute minus 90 Tage."
 
-#: .\cookbook\views\api.py:1481
-#, fuzzy
-#| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
+#: .\cookbook\views\api.py:1486
 msgid ""
 "Filter meal plans to date (inclusive). If nothing is given its today + 360 "
 "days."
-msgstr "Speisepläne bis einschließlich Datum filtern."
+msgstr ""
+"Filtert Essenspläne bis zum angegebenen Datum (einschließlich). "
+"Standardwert: Heute + 360 Tage."
 
-#: .\cookbook\views\api.py:1484
+#: .\cookbook\views\api.py:1489
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
 "Filtern Sie Mahlzeitenpläne nach der MealType ID. Für mehrere "
 "Wiederholungsparameter."
 
-#: .\cookbook\views\api.py:1573
-#, fuzzy
-#| msgid "No recipes selected"
+#: .\cookbook\views\api.py:1578
 msgid "No recipes found."
-msgstr "Keine Rezepte ausgewählt"
+msgstr "Keine Rezepte gefunden."
 
-#: .\cookbook\views\api.py:1670
+#: .\cookbook\views\api.py:1677
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
 "ID des Rezeptes zu dem ein Schritt gehört. Kann mehrfach angegeben werden."
 
-#: .\cookbook\views\api.py:1672
+#: .\cookbook\views\api.py:1679
 msgid "Query string matched (fuzzy) against object name."
 msgstr "Abfragezeichenfolge, die mit dem Objektnamen übereinstimmt (ungenau)."
 
-#: .\cookbook\views\api.py:1708
+#: .\cookbook\views\api.py:1718
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
@@ -1999,7 +1990,7 @@ msgstr ""
 "Suchbegriff wird mit dem Rezeptnamen abgeglichen. In Zukunft auch "
 "Volltextsuche."
 
-#: .\cookbook\views\api.py:1710
+#: .\cookbook\views\api.py:1720
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
@@ -2007,212 +1998,169 @@ msgstr ""
 "ID des Stichwortes, das ein Rezept haben muss. Kann mehrfach angegeben "
 "werden. Äquivalent zu keywords_or"
 
-#: .\cookbook\views\api.py:1711
+#: .\cookbook\views\api.py:1721
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 "Stichwort IDs. Kann mehrfach angegeben werden. Listet Rezepte zu jedem der "
 "angegebenen Stichwörter"
 
-#: .\cookbook\views\api.py:1712
+#: .\cookbook\views\api.py:1722
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 "Stichwort IDs. Kann mehrfach angegeben werden. Listet Rezepte mit allen "
 "angegebenen Stichwörtern."
 
-#: .\cookbook\views\api.py:1713
+#: .\cookbook\views\api.py:1723
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 "Stichwort ID. Kann mehrfach angegeben werden. Schließt Rezepte einem der "
 "angegebenen Stichwörtern aus."
 
-#: .\cookbook\views\api.py:1714
+#: .\cookbook\views\api.py:1724
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 "Stichwort IDs. Kann mehrfach angegeben werden. Schließt Rezepte mit allen "
 "angegebenen Stichwörtern aus."
 
-#: .\cookbook\views\api.py:1716
+#: .\cookbook\views\api.py:1726
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
 "ID einer Zutat, zu der Rezepte gelistet werden sollen. Kann mehrfach "
 "angegeben werden."
 
-#: .\cookbook\views\api.py:1717
+#: .\cookbook\views\api.py:1727
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 "Zutat ID. Kann mehrfach angegeben werden. Listet Rezepte mindestens einer "
 "der Zutaten"
 
-#: .\cookbook\views\api.py:1718
+#: .\cookbook\views\api.py:1728
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 "Zutat ID. Kann mehrfach angegeben werden. Listet Rezepte mit allen "
 "angegebenen Zutaten."
 
-#: .\cookbook\views\api.py:1719
+#: .\cookbook\views\api.py:1729
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 "Zutat ID. Kann mehrfach angegeben werden. Schließt Rezepte aus, die eine der "
 "angegebenen Zutaten enthalten."
 
-#: .\cookbook\views\api.py:1720
+#: .\cookbook\views\api.py:1730
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 "Zutat ID. Kann mehrfach angegeben werden. Schließt Rezepte aus, die alle "
 "angegebenen Zutaten enthalten."
 
-#: .\cookbook\views\api.py:1722
+#: .\cookbook\views\api.py:1732
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr "Buch ID, in dem das Rezept ist. Kann mehrfach angegeben werden."
 
-#: .\cookbook\views\api.py:1723
+#: .\cookbook\views\api.py:1733
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
 "Buch ID. Kann mehrfach angegeben werden. Listet alle Rezepte aus den "
 "angegebenen Büchern"
 
-#: .\cookbook\views\api.py:1724
+#: .\cookbook\views\api.py:1734
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
 "Buch ID. Kann mehrfach angegeben werden. Listet die Rezepte, die in allen "
 "Büchern enthalten sind."
 
-#: .\cookbook\views\api.py:1725
+#: .\cookbook\views\api.py:1735
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 "Buch IDs. Kann mehrfach angegeben werden. Schließt Rezepte aus den "
 "angegebenen Büchern aus."
 
-#: .\cookbook\views\api.py:1726
+#: .\cookbook\views\api.py:1736
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
 "Buch IDs. Kann mehrfach angegeben werden. Schließt Rezepte aus, die in allen "
 "angegebenen Büchern enthalten sind."
 
-#: .\cookbook\views\api.py:1728
+#: .\cookbook\views\api.py:1738
 msgid "ID of unit a recipe should have."
 msgstr "ID der Einheit, die ein Rezept haben sollte."
 
-#: .\cookbook\views\api.py:1730
+#: .\cookbook\views\api.py:1740
 msgid "Exact rating of recipe"
 msgstr "Genaue Rezeptbewertung"
 
-#: .\cookbook\views\api.py:1731
-#, fuzzy
-#| msgid "Rating a recipe should have. [0 - 5]"
+#: .\cookbook\views\api.py:1741
 msgid "Rating a recipe should have or greater."
-msgstr "Bewertung, die ein Rezept haben sollte. [ 0 - 5]"
+msgstr "Die Bewertung muss einen Wert haben."
 
-#: .\cookbook\views\api.py:1732
-#, fuzzy
-#| msgid "Rating a recipe should have. [0 - 5]"
+#: .\cookbook\views\api.py:1742
 msgid "Rating a recipe should have or smaller."
-msgstr "Bewertung, die ein Rezept haben sollte. [ 0 - 5]"
+msgstr "Die Bewertung muss einen Wert haben."
 
-#: .\cookbook\views\api.py:1734
-msgid "Filter recipes cooked X times."
-msgstr ""
-
-#: .\cookbook\views\api.py:1735
-#, fuzzy
-#| msgid ""
-#| "Filter recipes cooked X times or more.  Negative values returns cooked "
-#| "less than X times"
-msgid "Filter recipes cooked X times or more."
-msgstr ""
-"Rezepte listen, die mindestens x-mal gekocht wurden. Eine negative Zahl "
-"listet Rezepte, die weniger als x-mal gekocht wurden"
-
-#: .\cookbook\views\api.py:1736
-msgid "Filter recipes cooked X times or less."
-msgstr ""
-
-#: .\cookbook\views\api.py:1738
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
-msgid "Filter recipes created on the given date."
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
-
-#: .\cookbook\views\api.py:1739
-#, fuzzy
-#| msgid ""
-#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-#| "before date."
-msgid "Filter recipes created on the given date or after."
-msgstr ""
-"Rezepte listen, die am angegebenen Datum oder später erstellt wurden. Wenn - "
-"vorangestellt wird, wird am oder vor dem Datum gelistet."
-
-#: .\cookbook\views\api.py:1740
-#, fuzzy
-#| msgid ""
-#| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
-#| "before date."
-msgid "Filter recipes created on the given date or before."
-msgstr ""
-"Rezepte listen, die am angegebenen Datum oder später erstellt wurden. Wenn - "
-"vorangestellt wird, wird am oder vor dem Datum gelistet."
-
-#: .\cookbook\views\api.py:1742 .\cookbook\views\api.py:1743
 #: .\cookbook\views\api.py:1744
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
-msgid "Filter recipes updated on the given date."
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
+msgid "Filter recipes cooked X times."
+msgstr "Nach Rezepten filtern, die X-mal gekocht wurden."
+
+#: .\cookbook\views\api.py:1745
+msgid "Filter recipes cooked X times or more."
+msgstr "Nach Rezepten filtern, die mindestens X-mal gekocht wurden."
 
 #: .\cookbook\views\api.py:1746
-#, fuzzy
-#| msgid ""
-#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
-msgid "Filter recipes last cooked on the given date or after."
-msgstr ""
-"Rezepte anzeigen, die zuletzt am angegebenen Datum oder später gekocht "
-"wurden. Mit vorangestelltem - , werden Rezepte am oder vor dem Datum "
-"gelistet."
+msgid "Filter recipes cooked X times or less."
+msgstr "Nach Rezepten filtern, die maximal X-mal gekocht wurden."
 
-#: .\cookbook\views\api.py:1747
-#, fuzzy
-#| msgid ""
-#| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
+#: .\cookbook\views\api.py:1748
+msgid "Filter recipes created on the given date."
+msgstr "Nach Rezepten mit bestimmten Erstellungsdatum filtern."
+
+#: .\cookbook\views\api.py:1749
+msgid "Filter recipes created on the given date or after."
+msgstr ""
+"Nach Rezepten filtern, die seit dem eingetragenen Datum erstellt wurden."
+
+#: .\cookbook\views\api.py:1750
+msgid "Filter recipes created on the given date or before."
+msgstr "Nach Rezepten filtern, die vor dem eingetragenen Datum erstellt wurden."
+
+#: .\cookbook\views\api.py:1752 .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1754
+msgid "Filter recipes updated on the given date."
+msgstr ""
+"Nach Rezepten filtern, die an dem eingetragenen Datum aktualisiert wurden."
+
+#: .\cookbook\views\api.py:1756
+msgid "Filter recipes last cooked on the given date or after."
+msgstr "Nach Rezepten filtern, die seit dem ausgewählten Datum gekocht wurden."
+
+#: .\cookbook\views\api.py:1757
 msgid "Filter recipes last cooked on the given date or before."
 msgstr ""
-"Rezepte anzeigen, die zuletzt am angegebenen Datum oder später gekocht "
-"wurden. Mit vorangestelltem - , werden Rezepte am oder vor dem Datum "
-"gelistet."
+"Nach Rezepten filtern, die vor oder an dem ausgewählten Datum gekocht wurden."
 
-#: .\cookbook\views\api.py:1749 .\cookbook\views\api.py:1750
-#, fuzzy
-#| msgid ""
-#| "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters "
-#| "on or before date."
+#: .\cookbook\views\api.py:1759 .\cookbook\views\api.py:1760
 msgid "Filter recipes lasts viewed on the given date."
 msgstr ""
-"Rezepte listen, die am angegebenen Datum oder später zuletzt angesehen "
-"wurden. Wenn - vorangestellt wird, wird am oder vor dem Datum gelistet."
+"Nach Rezepten filtern, die zuletzt an dem ausgewählten Datum angesehen "
+"wurden."
 
-#: .\cookbook\views\api.py:1752
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
+#: .\cookbook\views\api.py:1762
 msgid "Filter recipes for ones created by the given user ID"
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
+msgstr "Nach Rezepten filtern, die von dem angegebenen Nutzer erstellt wurden"
 
-#: .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1763
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr "Nur interne Rezepte sollen gelistet werden. [ja/<b>nein</b>]"
 
-#: .\cookbook\views\api.py:1754
+#: .\cookbook\views\api.py:1764
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr ""
 "Die Suchergebnisse sollen in zufälliger Reihenfolge gelistet werden. [ja/"
 "<b>nein</b>]"
 
-#: .\cookbook\views\api.py:1756
+#: .\cookbook\views\api.py:1766
 msgid ""
 "Determines the order of the results. Options are: score,-score,name,-name,"
 "lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
@@ -2222,12 +2170,12 @@ msgstr ""
 "name,lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,"
 "created_at,-created_at,lastviewed,-lastviewed"
 
-#: .\cookbook\views\api.py:1758
+#: .\cookbook\views\api.py:1768
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
 "Die neuesten Suchergebnisse sollen zuerst angezeigt werden. [ja/<b>nein</b>]"
 
-#: .\cookbook\views\api.py:1759
+#: .\cookbook\views\api.py:1769
 msgid ""
 "Returns the given number of recently viewed recipes before search results "
 "(if given)"
@@ -2235,24 +2183,25 @@ msgstr ""
 "Gibt die Anzahl der zuletzt gesehenen Rezepte vor jedem Suchergebnis zurück "
 "(wenn gegeben)"
 
-#: .\cookbook\views\api.py:1760
+#: .\cookbook\views\api.py:1770
 msgid "ID of a custom filter. Returns all recipes matched by that filter."
 msgstr ""
+"ID eines benutzerdefinierten Filters. Zeigt alle auf den Filter zutreffenden "
+"Rezepte an."
 
-#: .\cookbook\views\api.py:1761
+#: .\cookbook\views\api.py:1771
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 "Rezepte listen, die mit vorhandenen Zutaten gekocht werden können. [ja/"
 "<b>nein</b>]"
 
-#: .\cookbook\views\api.py:1762
-#, fuzzy
-#| msgid "Returns new results first in search results. [true/<b>false</b>]"
+#: .\cookbook\views\api.py:1772
 msgid "Include child keywords and foods in search results. [<b>true</b>/false]"
 msgstr ""
-"Die neuesten Suchergebnisse sollen zuerst angezeigt werden. [ja/<b>nein</b>]"
+"Schließt untergeordnete Schlagwörter und Lebensmittel in die Suchergebnisse "
+"ein. [<b>true</b>/false]"
 
-#: .\cookbook\views\api.py:2147
+#: .\cookbook\views\api.py:2159
 msgid ""
 "Return the PropertyTypes matching the property category.  Repeat for "
 "multiple."
@@ -2260,94 +2209,91 @@ msgstr ""
 "Gibt die PropertyTypes zurück, die der property Kategorie entsprechen.  "
 "Wiederhole für mehrere."
 
-#: .\cookbook\views\api.py:2178 .\cookbook\views\api.py:2256
-#, fuzzy
-#| msgid "Filter for entries with the given recipe"
+#: .\cookbook\views\api.py:2190 .\cookbook\views\api.py:2268
 msgid "Returns only entries associated with the given mealplan id"
-msgstr "Filter für Einträge mit dem angegebenen Rezept"
+msgstr ""
+"Gibt nur Einträge zurück, die mit der angegebenen Essensplan-ID verknüpft "
+"sind."
 
-#: .\cookbook\views\api.py:2254
+#: .\cookbook\views\api.py:2266
 msgid ""
 "Returns only elements updated after the given timestamp in ISO 8601 format."
 msgstr ""
+"Zeige Einträge die nach dem angegebenen Zeitpunkt (in ISO 8601 Format) "
+"aktualisiert wurden."
 
-#: .\cookbook\views\api.py:2454
-#, fuzzy
-#| msgid ""
-#| "Return the Automations matching the automation type.  Multiple values "
-#| "allowed."
+#: .\cookbook\views\api.py:2466
 msgid ""
 "Return the Automations matching the automation type.  Repeat for multiple."
 msgstr ""
-"Zeigt Automationen, die dem Automationstyp entsprechen. Kann mehrfach "
-"angegeben werden."
+"Gibt die Automationen zurück, die dem Automatisierungstyp entsprechen. Für "
+"mehrere Typen wiederholen."
 
-#: .\cookbook\views\api.py:2471
+#: .\cookbook\views\api.py:2483
 msgid ""
 "Text field to store data that gets carried over to the UserSpace created "
 "from the InviteLink"
 msgstr ""
+"Textfeld zum Speichern von Daten, die an den über den Einladungslink "
+"erstellten UserSpace übergeben werden."
 
-#: .\cookbook\views\api.py:2472
+#: .\cookbook\views\api.py:2484
 msgid "Only return InviteLinks that have not been used yet."
-msgstr ""
+msgstr "Zeige ungenutzte Einladungslinks."
 
-#: .\cookbook\views\api.py:2499
-#, fuzzy
-#| msgid ""
-#| "Return the Automations matching the automation type.  Multiple values "
-#| "allowed."
+#: .\cookbook\views\api.py:2511
 msgid "Return the CustomFilters matching the model type.  Repeat for multiple."
 msgstr ""
-"Zeigt Automationen, die dem Automationstyp entsprechen. Kann mehrfach "
-"angegeben werden."
+"Gibt die CustomFilter zurück, die dem Modelltyp entsprechen. Für mehrere "
+"Typen wiederholen."
 
-#: .\cookbook\views\api.py:2599
+#: .\cookbook\views\api.py:2611
 msgid "Nothing to do."
 msgstr "Nichts zu tun."
 
-#: .\cookbook\views\api.py:2644
-#, fuzzy, python-format
-#| msgid "The requested page could not be found."
+#: .\cookbook\views\api.py:2656
+#, python-format
 msgid ""
 "The requested page could not be loaded. The server returned %(status_code)s."
-msgstr "Die angefragte Seite konnte nicht gefunden werden."
+msgstr "Die Seite konnte nicht geladen werden. Fehler: %(status_code)s"
 
-#: .\cookbook\views\api.py:2652
+#: .\cookbook\views\api.py:2664
 msgid "Connection Refused."
 msgstr "Verbindung fehlgeschlagen."
 
-#: .\cookbook\views\api.py:2656
+#: .\cookbook\views\api.py:2668
 msgid "Bad URL Schema."
 msgstr "Ungültiges URL Schema."
 
-#: .\cookbook\views\api.py:2681
+#: .\cookbook\views\api.py:2693
 msgid "No usable data could be found."
 msgstr "Es konnten keine passenden Daten gefunden werden."
 
-#: .\cookbook\views\api.py:2950 .\cookbook\views\api.py:3119
+#: .\cookbook\views\api.py:2970 .\cookbook\views\api.py:3139
 msgid "File is above space limit"
 msgstr "Datei überschreitet das Speicherplatzlimit"
 
-#: .\cookbook\views\api.py:2973 .\cookbook\views\api.py:3136
+#: .\cookbook\views\api.py:2993 .\cookbook\views\api.py:3156
 msgid "Importing is not implemented for this provider"
 msgstr "Importieren ist für diesen Anbieter noch nicht implementiert"
 
-#: .\cookbook\views\api.py:3002
+#: .\cookbook\views\api.py:3022
 msgid ""
 "PDF export is no longer available. Use your browser's print function (Ctrl"
 "+P) to save recipes as PDF."
 msgstr ""
+"Die PDF Export Funktion ist nicht mehr verfügbar. Nutzen Sie die Druck-"
+"Funktion (STRG+P) Ihres Browsers um das Rezept als PDF zu speichern."
 
-#: .\cookbook\views\api.py:3335
+#: .\cookbook\views\api.py:3365
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "Diese Funktion ist in dieser Version von Tandoor noch nicht verfügbar!"
 
-#: .\cookbook\views\api.py:3356
+#: .\cookbook\views\api.py:3386
 msgid "Sync successful!"
 msgstr "Synchronisation erfolgreich!"
 
-#: .\cookbook\views\api.py:3359
+#: .\cookbook\views\api.py:3389
 msgid "Error synchronizing with Storage"
 msgstr "Fehler beim Synchronisieren"
 

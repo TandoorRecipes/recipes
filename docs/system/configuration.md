@@ -546,6 +546,13 @@ Ratelimit for AI API
 AI_RATELIMIT=60/hour
 ```
 
+If you want to use your own AI provider/AI Server/AI Proxy you need to configure the allowed remote endpoints using the following setting.
+This prevents malicious users from providing a malicious endpoint that might cause SSRF attacks.
+> default `[]`
+```
+AI_ALLOWED_URLS=https://my-ai-server.com/api/v1/,https://my-ai-proxy.com/api/v1/
+```
+
 #### FDC Api
 
 The FDC Api is used to automatically load nutrition information from

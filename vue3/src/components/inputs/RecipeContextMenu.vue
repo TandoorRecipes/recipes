@@ -16,6 +16,9 @@
                 <v-list-item :to="{ name: 'PropertyEditorPage', query: {recipe: recipe.id} }" prepend-icon="fa-solid fa-table" link>
                     {{ $t('Property_Editor') }}
                 </v-list-item>
+                <v-list-item prepend-icon="$pantry" @click="addToPantry()" :loading="pantryLoading" link>
+                    {{ $t('Pantry') }}
+                </v-list-item>
                 <v-list-item prepend-icon="fa-solid fa-share-nodes" link>
                     {{ $t('Share') }}
                     <recipe-share-dialog :recipe="props.recipe"></recipe-share-dialog>
@@ -26,7 +29,8 @@
                         <v-progress-circular v-if="duplicateLoading" indeterminate size="small"></v-progress-circular>
                     </template>
                 </v-list-item>
-                <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true', servings: props.servings} }" :active="false" target="_blank" prepend-icon="fa-solid fa-print">
+                <v-list-item :to="{ name: 'RecipeViewPage', params: { id: recipe.id}, query: {print: 'true', servings: props.servings} }" :active="false" target="_blank"
+                             prepend-icon="fa-solid fa-print">
                     {{ $t('Print') }}
                 </v-list-item>
             </v-list>
@@ -35,6 +39,8 @@
 
     <model-edit-dialog model="MealPlan" :itemDefaults="{recipe: recipe, servings: recipe.servings}" :close-after-create="false" :close-after-save="false"
                        v-model="mealPlanDialog"></model-edit-dialog>
+
+    <pantry-booking-dialog booking-mode="add" v-model="pantryDialog" :food-id="pantryFoodId"></pantry-booking-dialog>
 
 </template>
 
@@ -48,6 +54,7 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useRouter} from "vue-router";
 import {useFileApi} from "@/composables/useFileApi.ts";
 import {useI18n} from "vue-i18n";
+import PantryBookingDialog from "@/components/dialogs/PantryBookingDialog.vue";
 
 const router = useRouter()
 const {t} = useI18n()
@@ -61,6 +68,9 @@ const props = defineProps({
 
 const mealPlanDialog = ref(false)
 const duplicateLoading = ref(false)
+const pantryDialog = ref(false)
+const pantryLoading = ref(false)
+const pantryFoodId = ref<number | undefined>(undefined)
 
 /**
  * create a duplicate of the recipe by pulling its current data and creating a new recipe with the same data
@@ -109,6 +119,24 @@ function duplicateRecipe() {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         duplicateLoading.value = false
     })
+}
+
+/**
+ * create a food based on the recipe name (or re-use existing one) and open the pantry booking dialog
+ */
+function addToPantry() {
+    const api = new ApiApi()
+    if (props.recipe) {
+        pantryLoading.value = true
+        api.apiFoodCreate({food: {name: props.recipe.name}}).then(r => {
+            pantryFoodId.value = r.id
+            pantryDialog.value = true
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        }).finally(() => {
+            pantryLoading.value = false
+        })
+    }
 }
 
 </script>

@@ -1,7 +1,9 @@
 <template>
     <v-app>
         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
-
+            <a href="https://tandoor.dev">
+                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" ></v-img>
+            </a>
         </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor"
                    flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode"
@@ -13,7 +15,6 @@
                 <v-img :src="useUserPreferenceStore().activeSpace.navLogo.preview" width="140px" class="ms-2"
                        v-if="useUserPreferenceStore().userSettings.navShowLogo && useUserPreferenceStore().activeSpace.navLogo != undefined"></v-img>
             </router-link>
-
 
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
@@ -44,7 +45,7 @@
                    v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
-                <v-btn color="success" size="small" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
+                <v-btn color="success" size="small" variant="flat" :to="{name: 'EnterpriseSettingsBillingSubscription'}">{{ $t('UpgradeNow') }}</v-btn>
             </p>
         </v-app-bar>
         <v-app-bar color="warning" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
@@ -104,6 +105,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
+                        <menu-user-info></menu-user-info>
                         <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
                     </v-list>
                 </v-bottom-sheet>

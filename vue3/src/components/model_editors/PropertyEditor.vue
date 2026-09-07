@@ -17,7 +17,7 @@
                         <v-chip class="me-4">{{ editingObj.propertyType.unit }}</v-chip>
                     </template>
                 </v-number-input>
-                <model-select :label="$t('Property')" v-model="editingObj.propertyType" model="PropertyType"></model-select>
+                <v-model-select v-model="editingObj.propertyType" model="PropertyType"></v-model-select>
             </v-form>
         </v-card-text>
     </model-editor-base>
@@ -33,6 +33,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 
 const props = defineProps({

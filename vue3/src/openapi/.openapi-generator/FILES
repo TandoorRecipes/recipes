@@ -11,6 +11,7 @@ models/AutoMealPlan.ts
 models/Automation.ts
 models/AutomationTypeEnum.ts
 models/BaseUnitEnum.ts
+models/BillingRegionEnum.ts
 models/BookingTypeEnum.ts
 models/BookmarkletImport.ts
 models/BookmarkletImportList.ts

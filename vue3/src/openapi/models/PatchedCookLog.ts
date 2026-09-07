@@ -18,6 +18,7 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -43,19 +44,19 @@ export interface PatchedCookLog {
      * @type {number}
      * @memberof PatchedCookLog
      */
-    servings?: number;
+    servings?: number | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedCookLog
      */
-    rating?: number;
+    rating?: number | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedCookLog
      */
-    comment?: string;
+    comment?: string | null;
     /**
      * 
      * @type {User}
@@ -104,10 +105,15 @@ export function PatchedCookLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedCookLogToJSON(value?: Omit<PatchedCookLog, 'createdBy'|'updatedAt'> | null): any {
+export function PatchedCookLogToJSON(json: any): PatchedCookLog {
+    return PatchedCookLogToJSONTyped(json, false);
+}
+
+export function PatchedCookLogToJSONTyped(value?: Omit<PatchedCookLog, 'created_by'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -115,7 +121,7 @@ export function PatchedCookLogToJSON(value?: Omit<PatchedCookLog, 'createdBy'|'u
         'servings': value['servings'],
         'rating': value['rating'],
         'comment': value['comment'],
-        'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
+        'created_at': value['createdAt'] == null ? value['createdAt'] : value['createdAt'].toISOString(),
     };
 }
 

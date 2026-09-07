@@ -78,13 +78,13 @@ export interface EnterpriseBillingPlan {
      * @type {number}
      * @memberof EnterpriseBillingPlan
      */
-    priceDiscount?: number;
+    priceDiscount?: number | null;
     /**
      * Text to show as reason for the discount
      * @type {string}
      * @memberof EnterpriseBillingPlan
      */
-    discountReason?: string;
+    discountReason?: string | null;
     /**
      * 
      * @type {number}
@@ -172,10 +172,15 @@ export function EnterpriseBillingPlanFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function EnterpriseBillingPlanToJSON(value?: EnterpriseBillingPlan | null): any {
+export function EnterpriseBillingPlanToJSON(json: any): EnterpriseBillingPlan {
+    return EnterpriseBillingPlanToJSONTyped(json, false);
+}
+
+export function EnterpriseBillingPlanToJSONTyped(value?: EnterpriseBillingPlan | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

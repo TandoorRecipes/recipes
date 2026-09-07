@@ -25,8 +25,8 @@
 
                         <v-row>
                             <v-col cols="12" md="6">
-                                <ModelSelect model="Recipe" v-model="editingObj.recipe"
-                                             @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></ModelSelect>
+                                <v-model-select model="Recipe" v-model="editingObj.recipe"
+                                             @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></v-model-select>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="editingObj.recipe" :servings="editingObj.servings" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
@@ -80,7 +80,7 @@
                                     </v-btn-group>
                                 </v-input>
 
-                                <ModelSelect model="MealType" :allow-create="true" v-model="editingObj.mealType"></ModelSelect>
+                                <v-model-select model="MealType" create v-model="editingObj.mealType"></v-model-select>
                                 <v-number-input control-variant="split" :min="0" v-model="editingObj.servings" :label="$t('Servings')" :precision="2"></v-number-input>
                             </v-col>
 
@@ -128,6 +128,7 @@ import ClosableHelpAlert from "@/components/display/ClosableHelpAlert.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import ShoppingListView from "@/components/display/ShoppingListView.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<MealPlan>, required: false, default: null},

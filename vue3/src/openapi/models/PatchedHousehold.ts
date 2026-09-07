@@ -69,10 +69,15 @@ export function PatchedHouseholdFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedHouseholdToJSON(value?: Omit<PatchedHousehold, 'createdAt'|'updatedAt'> | null): any {
+export function PatchedHouseholdToJSON(json: any): PatchedHousehold {
+    return PatchedHouseholdToJSONTyped(json, false);
+}
+
+export function PatchedHouseholdToJSONTyped(value?: Omit<PatchedHousehold, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

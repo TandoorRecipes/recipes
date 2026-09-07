@@ -18,12 +18,14 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 import type { Household } from './Household';
 import {
     HouseholdFromJSON,
     HouseholdFromJSONTyped,
     HouseholdToJSON,
+    HouseholdToJSONTyped,
 } from './Household';
 
 /**
@@ -61,7 +63,7 @@ export interface PatchedInviteLink {
      * @type {Household}
      * @memberof PatchedInviteLink
      */
-    household?: Household;
+    household?: Household | null;
     /**
      * 
      * @type {Date}
@@ -73,7 +75,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    readonly usedBy?: number;
+    readonly usedBy?: number | null;
     /**
      * 
      * @type {boolean}
@@ -85,7 +87,7 @@ export interface PatchedInviteLink {
      * @type {string}
      * @memberof PatchedInviteLink
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
@@ -138,17 +140,22 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'> | null): any {
+export function PatchedInviteLinkToJSON(json: any): PatchedInviteLink {
+    return PatchedInviteLinkToJSONTyped(json, false);
+}
+
+export function PatchedInviteLinkToJSONTyped(value?: Omit<PatchedInviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'email': value['email'],
         'group': GroupToJSON(value['group']),
         'household': HouseholdToJSON(value['household']),
-        'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),
+        'valid_until': value['validUntil'] == null ? value['validUntil'] : value['validUntil'].toISOString().substring(0,10),
         'reusable': value['reusable'],
         'internal_note': value['internalNote'],
     };

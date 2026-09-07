@@ -18,12 +18,14 @@ import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 import type { FoodSimple } from './FoodSimple';
 import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
+    FoodSimpleToJSONTyped,
 } from './FoodSimple';
 
 /**
@@ -61,7 +63,7 @@ export interface IngredientSimple {
      * @type {string}
      * @memberof IngredientSimple
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
@@ -85,7 +87,7 @@ export interface IngredientSimple {
      * @type {string}
      * @memberof IngredientSimple
      */
-    originalText?: string;
+    originalText?: string | null;
     /**
      * Just laziness to have a checked field on the frontend API client
      * @type {boolean}
@@ -128,10 +130,15 @@ export function IngredientSimpleFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function IngredientSimpleToJSON(value?: Omit<IngredientSimple, 'checked'> | null): any {
+export function IngredientSimpleToJSON(json: any): IngredientSimple {
+    return IngredientSimpleToJSONTyped(json, false);
+}
+
+export function IngredientSimpleToJSONTyped(value?: Omit<IngredientSimple, 'checked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
