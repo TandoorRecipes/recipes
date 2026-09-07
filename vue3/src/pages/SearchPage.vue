@@ -353,7 +353,7 @@ function enableFiltersWithValues() {
 function isFilterDefaultValue(filter: any) {
     if (Array.isArray(filter.default) && Array.isArray(filter.modelValue)) {
         return filter.default.length == filter.modelValue.length
-    } else if (isNaN(filter.default) && isNaN(filter.modelValue)) {
+    } else if (Number.isNaN(filter.default) && Number.isNaN(filter.modelValue)) {
         return true
     } else {
         return toRaw(filter.default) === filter.modelValue
