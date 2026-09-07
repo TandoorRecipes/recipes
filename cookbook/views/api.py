@@ -50,6 +50,8 @@ from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
+
+from cookbook.helper.ai_schema import Recipe, PropertyExtractionResult
 from rest_framework import decorators, status, viewsets
 from rest_framework import mixins
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -1272,7 +1274,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": PropertyExtractionResult.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -1291,19 +1293,18 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 }
                 return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
+                pass
+            except (JSONDecodeError, ValueError) as err:
                 response = {
                     'error': True,
-                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                    'msg': 'The AI response could not be parsed as valid JSON. Please try again.',
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            except Exception as err:
-                traceback.print_exc()
-                response = {
-                    'error': True,
-                    'msg': 'An unexpected error occurred while processing your AI request. \n\n' + str(err),
-                }
-                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response = {
+            'error': True,
+            'msg': 'The AI could not process your request. \n\n' + err.message,
+        }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, *args, **kwargs):
         try:
@@ -2095,7 +2096,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": PropertyExtractionResult.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -2114,19 +2115,18 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 }
                 return Response(response, status=status.HTTP_408_REQUEST_TIMEOUT)
             except BadRequestError as err:
+                pass
+            except (JSONDecodeError, ValueError) as err:
                 response = {
                     'error': True,
-                    'msg': 'The AI could not process your request. \n\n' + err.message,
+                    'msg': 'The AI response could not be parsed as valid JSON. Please try again.',
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            except Exception as err:
-                traceback.print_exc()
-                response = {
-                    'error': True,
-                    'msg': 'An unexpected error occurred while processing your AI request. \n\n' + str(err),
-                }
-                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response = {
+            'error': True,
+            'msg': 'The AI could not process your request. \n\n' + err.message,
+        }
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(responses=RecipeSerializer(many=False))
     @decorators.action(detail=True, pagination_class=None, methods=['PATCH'], serializer_class=RecipeSerializer)
@@ -2822,7 +2822,7 @@ class AiImportView(APIView):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": Recipe.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -2936,7 +2936,7 @@ class AiStepSortView(APIView):
                 ai_request = {
                     'api_key': ai_provider.api_key,
                     'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
+                    'response_format': {"type": "json_schema", "json_schema": Recipe.model_json_schema()},
                     'messages': messages,
                 }
                 if ai_provider.url:
@@ -2961,14 +2961,12 @@ class AiStepSortView(APIView):
                     'msg': 'The AI could not process your request. \n\n' + err.message,
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-            except Exception as err:
-                traceback.print_exc()
+            except (JSONDecodeError, ValueError) as err:
                 response = {
                     'error': True,
-                    'msg': 'An unexpected error occurred while processing your AI request. \n\n' + str(err),
+                    'msg': 'The AI response could not be parsed as valid JSON. Please try again.',
                 }
-                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AppImportView(APIView):
