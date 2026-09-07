@@ -67,7 +67,7 @@ watch([() => props.item, () => props.itemId], () => {
 })
 
 // object specific data (for selects/display)
-const aiModels = ref(['gemini/gemini-2.5-pro', 'gemini/gemini-2.5-flash', 'gemini/gemini-2.5-flash-lite', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano'])
+const aiModels = ref(['gemini/gemini-pro-latest', 'gemini/gemini-flash-latest', 'gemini/gemini-flash-lite-latest', 'gpt-5', 'gpt-5-mini', 'gpt-5-nano'])
 
 const globalProvider = ref(false)
 
