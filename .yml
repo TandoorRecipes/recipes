@@ -1,0 +1,148 @@
+[1mdiff --git a/README.md b/README.md[m
+[1mindex 4bbb632f7..e2679fc72 100644[m
+[1m--- a/README.md[m
+[1m+++ b/README.md[m
+[36m@@ -9,12 +9,12 @@[m
+ <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>[m
+ [m
+ <p align="center">[m
+[31m-<a href="https://github.com/vabene1111/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/vabene1111/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>[m
+[31m-<a href="https://github.com/vabene1111/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/vabene1111/recipes" ></a>[m
+[31m-<a href="https://github.com/vabene1111/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/vabene1111/recipes" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes" target="_blank" rel="noopener noreferrer"><img src="https://github.com/TandoorRecipes/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/TandoorRecipes/recipes" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/TandoorRecipes/recipes" ></a>[m
+ <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/badge/icon/discord?icon=discord&label" ></a>[m
+[31m-<a href="https://hub.docker.com/r/vabene1111/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/vabene1111/recipes" ></a>[m
+[31m-<a href="https://github.com/vabene1111/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/vabene1111/recipes" ></a>[m
+[32m+[m[32m<a href="https://hub.docker.com/r/TandoorRecipes/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/TandoorRecipes/recipes" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/TandoorRecipes/recipes" ></a>[m
+ <a href="https://app.tandoor.dev/e/demo-auto-login/" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>[m
+ </p>[m
+ [m
+[36m@@ -102,7 +102,7 @@[m [mBeginning with version 0.10.0 the code in this repository is licensed under the[m
+ [m
+ > NOTE: There appears to be a whole range of legal issues with licensing anything other than the standard completely open licenses.[m
+ > I am in the process of getting some professional legal advice to sort out these issues. [m
+[31m-> Please also see [Issue 238](https://github.com/vabene1111/recipes/issues/238) for some discussion and **reasoning** regarding the topic.[m
+[32m+[m[32m> Please also see [Issue 238](https://github.com/TandoorRecipes/recipes/issues/238) for some discussion and **reasoning** regarding the topic.[m
+ [m
+ **Reasoning**[m
+ **This software and *all* its features are and will always be free for everyone to use and enjoy.**[m
+[1mdiff --git a/docs/contribute/documentation.md b/docs/contribute/documentation.md[m
+[1mindex 3587f9bc0..5b505530e 100644[m
+[1m--- a/docs/contribute/documentation.md[m
+[1m+++ b/docs/contribute/documentation.md[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-The documentation is built from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)[m
+[32m+[m[32mThe documentation is built from the markdown files in the [docs](https://github.com/TandoorRecipes/recipes/tree/develop/docs)[m
+ folder of the GitHub repository.[m
+ [m
+ In order to contribute to the documentation, there are a couple of methods that you can use.[m
+[36m@@ -22,5 +22,5 @@[m [mIf you want to test the documentation, locally run `mkdocs serve` from the proje[m
+ [m
+ ## Super Low Tech[m
+ [m
+[31m-Create your documentation in any work processor (or even create a video!) and [open a feature request](https://github.com/vabene1111/recipes/issues)[m
+[32m+[m[32mCreate your documentation in any work processor (or even create a video!) and [open a feature request](https://github.com/TandoorRecipes/recipes/issues)[m
+ attaching your document and requesting that someone add the documentation to Tandoor.[m
+[1mdiff --git a/docs/faq.md b/docs/faq.md[m
+[1mindex 358b9e9c7..ecf5dd5dd 100644[m
+[1m--- a/docs/faq.md[m
+[1m+++ b/docs/faq.md[m
+[36m@@ -70,11 +70,11 @@[m [mIf you are getting CSRF Errors this is most likely due to a reverse proxy not pa[m
+ If you are using swag by linuxserver you might need `proxy_set_header X-Forwarded-Proto $scheme;` in your nginx config.[m
+ If you are using a plain ngix you might need `proxy_set_header Host $http_host;`.[m
+ [m
+[31m-Further discussions can be found in this [Issue #518](https://github.com/vabene1111/recipes/issues/518)[m
+[32m+[m[32mFurther discussions can be found in this [Issue #518](https://github.com/TandoorRecipes/recipes/issues/518)[m
+ [m
+ ## Why are images not loading?[m
+ If images are not loading this might be related to the same issue as the CSRF errors (see above).[m
+[31m-A discussion about that can be found at [Issue #452](https://github.com/vabene1111/recipes/issues/452)[m
+[32m+[m[32mA discussion about that can be found at [Issue #452](https://github.com/TandoorRecipes/recipes/issues/452)[m
+ [m
+ The other common issue is that the recommended nginx container is removed from the deployment stack.[m
+ If removed, the nginx webserver needs to be replaced by something else that servers the /mediafiles/ directory or[m
+[36m@@ -155,4 +155,4 @@[m [mPostgres requires manual intervention when updating from one major version to an[m
+ [m
+ If anything fails, go back to the old postgres version and data directory and try again. [m
+ [m
+[31m-There are many articles and tools online that might provide a good starting point to help you upgrade [1](https://thomasbandt.com/postgres-docker-major-version-upgrade), [2](https://github.com/tianon/docker-postgres-upgrade), [3](https://github.com/vabene1111/DockerPostgresBackups). [m
+[32m+[m[32mThere are many articles and tools online that might provide a good starting point to help you upgrade [1](https://thomasbandt.com/postgres-docker-major-version-upgrade), [2](https://github.com/tianon/docker-postgres-upgrade), [3](https://github.com/TandoorRecipes/DockerPostgresBackups).[m[41m [m
+[1mdiff --git a/docs/index.md b/docs/index.md[m
+[1mindex 8a3e73ef1..4d5203229 100644[m
+[1m--- a/docs/index.md[m
+[1m+++ b/docs/index.md[m
+[36m@@ -1,6 +1,6 @@[m
+ <h1 align="center">[m
+   <br>[m
+[31m-  <a href="https://tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>[m
+[32m+[m[32m  <a href="https://tandoor.dev"><img src="https://github.com/TandoorRecipes/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>[m
+   <br>[m
+   Tandoor Recipes[m
+   <br>[m
+[36m@@ -9,12 +9,12 @@[m
+ <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>[m
+ [m
+ <p align="center">[m
+[31m-<a href="https://github.com/vabene1111/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/vabene1111/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>[m
+[31m-<a href="https://github.com/vabene1111/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/vabene1111/recipes" ></a>[m
+[31m-<a href="https://github.com/vabene1111/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/vabene1111/recipes" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/TandoorRecipes/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/TandoorRecipes/recipes" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/TandoorRecipes/recipes" ></a>[m
+ <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/badge/icon/discord?icon=discord&label" ></a>[m
+[31m-<a href="https://hub.docker.com/r/vabene1111/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/vabene1111/recipes" ></a>[m
+[31m-<a href="https://github.com/vabene1111/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/vabene1111/recipes" ></a>[m
+[32m+[m[32m<a href="https://hub.docker.com/r/TandoorRecipes/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/TandoorRecipes/recipes" ></a>[m
+[32m+[m[32m<a href="https://github.com/TandoorRecipes/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/TandoorRecipes/recipes" ></a>[m
+ <a href="https://app.tandoor.dev/e/demo-auto-login/" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>[m
+ </p>[m
+ [m
+[36m@@ -81,7 +81,7 @@[m [mThis application has been under rapid development over the last year.[m
+ During this time I have learnt a lot and added tons of features, I have also moved to some new technologies like Vue.js.[m
+ This has led to some great features but has left the Quality unsatisfactory in regard to the details and technical implementation.[m
+ [m
+[31m-So in addition to the new Features and Ideas which can always be found in the [Issues & Milestones](https://github.com/vabene1111/recipes/issues)[m
+[32m+[m[32mSo in addition to the new Features and Ideas which can always be found in the [Issues & Milestones](https://github.com/TandoorRecipes/recipes/issues)[m
+ there are some greater overall goals for the future (in no particular order)[m
+ [m
+ - Improve the UI! The Design is inconsistent and many pages work but don't look great. This needs to change.[m
+[1mdiff --git a/docs/install/manual.md b/docs/install/manual.md[m
+[1mindex 2135b172f..4f04cb39d 100644[m
+[1m--- a/docs/install/manual.md[m
+[1m+++ b/docs/install/manual.md[m
+[36m@@ -16,7 +16,7 @@[m [mUpdate the repositories and upgrade your OS: `sudo apt update && sudo apt upgrad[m
+ [m
+ Install all prerequisits `sudo apt install -y git curl python3 python3-pip python3-venv nginx`[m
+ [m
+[31m-Get the last version from the repository: `git clone https://github.com/vabene1111/recipes.git -b master`[m
+[32m+[m[32mGet the last version from the repository: `git clone https://github.com/TandoorRecipes/recipes.git -b master`[m
+ [m
+ Move it to the `/var/www` directory: `mv recipes /var/www`[m
+ [m
+[36m@@ -113,7 +113,7 @@[m [mexit[m
+ [m
+ Download the `.env` configuration file and **edit it accordingly**.[m
+ ```shell[m
+[31m-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O /var/www/recipes/.env[m
+[32m+[m[32mwget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template -O /var/www/recipes/.env[m
+ ```[m
+ [m
+ Things to edit:[m
+[1mdiff --git a/mkdocs.yml b/mkdocs.yml[m
+[1mindex a11f293b3..13dc6a88e 100644[m
+[1m--- a/mkdocs.yml[m
+[1m+++ b/mkdocs.yml[m
+[36m@@ -1,8 +1,8 @@[m
+ site_name: Tandoor Recipes[m
+ site_description: Tandoor Recipe Documentation[m
+ site_author: vabene1111[m
+[31m-repo_url: https://github.com/vabene1111/recipes[m
+[31m-edit_uri: https://github.com/vabene1111/recipes/tree/develop/docs[m
+[32m+[m[32mrepo_url: https://github.com/TandoorRecipes/recipes[m
+[32m+[m[32medit_uri: https://github.com/TandoorRecipes/recipes/tree/develop/docs[m
+ extra_css:[m
+   - stylesheets/extra.css[m
+ [m
